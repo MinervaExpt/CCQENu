@@ -5,8 +5,10 @@ here is how to build CCQEMAT using the new MAT
 setup root, CVSROOT and get the MAT code installed using the documentation in [github.com/MinervaExpt/MAT-MINERvA](https://github.com/MinervaExpt/MAT-MINERvA)
 
 pro tip - if you do this multiple times, you might want to 
+```
   cd opt
   ln -s $OLDMATINSTALL/opt/etc $WHEREMATPUTISITCODE/opt/etc 
+  ```
 that avoids duplicating 2GB of files locally
 
 then... 
