@@ -22,3 +22,5 @@ cd $CCQEMAT
 cmake mat  
 make
 ```
+
+Note -  you can find how to modify an old cmake file to this setup by doing  diff build/CMakelist.txt mat/CMakelist.txt
