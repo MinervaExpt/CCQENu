@@ -1,0 +1,7 @@
+GetInt
+GetDouble
+GetVecElem
+GetVecElemInt
+GetVecDouble
+GetVecInt
+GetVec<double>

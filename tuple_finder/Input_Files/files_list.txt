@@ -1,0 +1,3 @@
+/home/gilligas/Minerva/Ana/PickledCCQENu/ana/make_hists/include
+/home/gilligas/gitMinerva/MAT-MINERvA
+/home/gilligas/gitMinerva/MAT

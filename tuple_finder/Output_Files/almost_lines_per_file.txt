@@ -1,0 +1,15 @@
+/home/gilligas/gitMinerva/MAT-MINERvA/calculators/LowRecoilFunctions.h
+
+    MasterAnaDev_recoil_E
+        30  return GetDouble("MasterAnaDev_recoil_E");
+
+
+/home/gilligas/Minerva/Ana/PickledCCQENu/ana/make_hists/include/CVUniverse.h
+
+    hadron_track_length_area
+       310  double TLA = GetVecElem("hadron_track_length_area", hadron);
+
+    tdead
+       335  return GetInt("tdead");
+
+

@@ -1,0 +1,15 @@
+config.Get
+GetName
+cut.Get
+GetShifts
+GetCVHistoWithError
+GetTotalError
+Getenv
+somefile.Get
+functions.Get
+GetIntegratedTargetFlux
+GetTargetFluxMnvH1D
+GetReweightedDaisySum
+GetDaisyParamMnvH1D
+GetArray()
+Get(
