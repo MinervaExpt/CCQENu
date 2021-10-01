@@ -1,5 +1,9 @@
 # CCQENUMAT - MAT implementation of CCCQENU
 
+This repository contains the MAT hist creation and analysis codes
+
+utilities/ useful utililties for analysis
+
 here is how to build CCQEMAT using the new MAT
 
 setup root, CVSROOT and get the MAT code installed using the documentation in [github.com/MinervaExpt/MAT-MINERvA](https://github.com/MinervaExpt/MAT-MINERvA)
