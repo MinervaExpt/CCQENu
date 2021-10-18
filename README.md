@@ -1,6 +1,6 @@
 # CCQENUMAT - MAT implementation of CCCQENU
 
-This repository contains the MAT hist creation and analysis codes
+This repository will contain the MAT hist creation and analysis codes
 
 utilities/ useful utililties for analysis
 
