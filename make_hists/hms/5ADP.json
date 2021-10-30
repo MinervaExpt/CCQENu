@@ -1,0 +1,29 @@
+{
+  "version":4,  // April 12, 2021  test of sidebands
+ // "mcIn":"./local/minervame5A_MC.txt",
+ // "dataIn":"./local/minervame5A_Data.txt",
+"dataIn":"hep01/Merged_data_tracker_ana_minervame5A_TBV.txt",
+"mcIn":"hep01/Merged_mc_tracker_ana_minervame5A_TBV_0-10.txt",
+  "prescale":100,
+  "playlist":"minervame5A",
+  "recoName":"MasterAnaDev",
+  "pdg":-14,
+    "runsamples":["QEresult","sideband1","sideband2","sideband3"],
+  "cutsFile":"config/SideBandCuts_v3.json",
+  "varsFile":"config/Variables_v3.json",
+  "samplesFile":"config/Samples_v3.json",
+  "outRoot":"DP",
+  "AnalyzeVariables":["recoil","Q2QE","EnuCCQE","pzmu","ptmu"],
+  "Analyze2DVariables":["Q2QE_recoil"],
+  "signal":"qelike",
+  "background":"qelikenot",
+  "data":"data",
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}

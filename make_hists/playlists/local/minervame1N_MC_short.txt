@@ -1,0 +1,3 @@
+/Users/schellma/data/playlists/MC/CCQENu_mc_AnaTuple_run00113270.root
+/Users/schellma/data/playlists/MC/CCQENu_mc_AnaTuple_run00113271.root
+/Users/schellma/data/playlists/MC/CCQENu_mc_AnaTuple_run00113272.root

@@ -1,0 +1,29 @@
+{
+  "version":4,  // April 12, 2021  test of sidebands
+ // "mcIn":"./remote/CCQENu_minervame1N_MC_Inextinguishable_merged.txt",
+ // "dataIn":"./remote/CCQENu_minervame1N_DATA_Inextinguishable_merged.txt" ,
+"prescale":100,
+  "dataIn":"./hep01/minervame1N_Data.txt",
+  "mcIn":"./hep01/minervame1N_MC.txt",
+  "playlist":"minervame1N",
+  "recoName":"CCQENu",
+  "pdg":14,
+  "runsamples":["Nu_QEresult","Nu_sideband1"],
+  "cutsFile":"config/NuSideBandCuts_v3.json",
+  "varsFile":"config/Variables_v3.json",
+  "samplesFile":"config/NuSamples_v3.json",
+  "outRoot":"SB",
+  "AnalyzeVariables":["recoil","Q2QE","EnuQE","ptmu","pzmu"],
+  "Analyze2DVariables":["Q2QE_recoil","pzmu_ptmu"],
+  "signal":"qelike",
+  "background":"qelikenot",
+  "data":"data",
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}

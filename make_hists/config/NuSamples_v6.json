@@ -1,0 +1,17 @@
+{
+  "Nu_QElike":[
+  {"true":"qelike","for":["selected_reco","selected_truth","truth","response"]},
+  {"true":"qelikenot","for":["selected_reco"]},
+  {"true":"data","for":["data"]}
+  ],
+  "Nu_sideband1":[
+  {"true":"qelike","for":["selected_reco"]},
+  {"true":"qelikenot","for":["selected_reco"]},
+  {"true":"data","for":["data"]}
+  ],
+  "Nu_sideband2":[{"true":"qelike","for":["selected_reco"]},
+  {"true":"qelikenot","for":["selected_reco"]},
+  {"true":"data","for":["data"]}
+]
+}
+
