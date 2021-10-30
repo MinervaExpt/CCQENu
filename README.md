@@ -17,18 +17,22 @@ that avoids duplicating 2GB of files locally
 then... 
 
 ```
-export WHEREMATPUTSITSCODE=<directory where MAT code is> 
-source $WHEREMATPUTSITSCODE/opt/build/setup.sh
+export WHEREMIPUTMYCODE=<directory where MAT code is> 
+source $WHEREIPUTMYCODE/opt/build/setup.sh
 
-# now get the CCQEMAT code out of CVS
-cd $WHEREMATPUTSITSCODE
-export WHEREIPUTMYCODE=$WHEREMATPUTSITSCODE
-cvs co Ana/PickledCCQENu
-export CCQEMAT=$WHEREIPUTMYCODE/Ana/PickledCCQENu/ana/make_hists
+# now get the CCQEMAT code
+cd $WHEREMIPUTMYCODE
+git clone https://github.com/MinervaExpt/CCQENu
+
+export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
 
 # on mac's you need to:
 
 export DYLD_LIBRARY_PATH=${PLOTUTILSROOT}
+
+If you get json related errors install jsoncpp on your machine or on fnal machines.  I think you can get this with conda
+
+export JSONCPP_DIR=/minerva/app/users/schellma/LocalApps/jsoncpp-build
 
 cd $CCQEMAT
 # I haven't figured out how to do Andrew style builds yet so this builds on the source directory. But there is a MAT compatible cmake now.  
