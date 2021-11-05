@@ -8,7 +8,7 @@ source $WHEREIPUTMYCODE/opt/build/setup.sh     # you have to have this
 
 export JSONCPP_DIR=$HOME/LocalApps/jsoncpp-build # need to change this probably
 
-export CCQEMAT=$WHEREIPUTMYCODE/Ana/PickledCCQENu/ana/make_hists
+export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
 
 export DYLD_LIBRARY_PATH=${PLOTUTILSROOT}
 
