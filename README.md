@@ -41,4 +41,4 @@ cmake mat 
 make
 ```
 
-Note -  you can find how to modify an old cmake file to this setup by doing  diff build/CMakelist.txt mat/CMakelist.txt
+Note -  the old build against cvs PlotUtils is in directory build. you can find how to modify an old cmake file to this setup by doing  diff build/CMakelist.txt mat/CMakelist.txt
