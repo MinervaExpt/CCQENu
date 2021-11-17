@@ -97,6 +97,77 @@ public:
   virtual int GetDeadTime() const{
     return GetInt("phys_n_dead_discr_pair_upstream_prim_track_proj") ;
   }
+
+  // ----------------- Added by Sean for Neutrino ---------------------------------
+  
+  virtual int GetHasInteractionVertex() const {
+    return GetInt("has_interaction_vertex");
+  }
+  
+  virtual int GetNBlobs() const {
+    // define and get applicable variables
+    int n_blobs = 0;
+    int kmax = GetInt("nonvtx_iso_blobs_start_position_z_in_prong_sz");
+    std::vector<double> blob_z_starts = GetVecDouble("nonvtx_iso_blobs_start_position_z_in_prong");
+    // counts blobs with zvertex greater than set value
+    for(int k=0; k<kmax; ++k){
+      if(blob_z_starts[k] > 4750) n_blobs++; // why 4750? how can this be defined in a config file?
+    }
+    return n_blobs;
+  }
+
+  virtual int GetTrueImprovedMichelElectron() const {
+    return GetInt("truth_improved_michel_electron");
+  }
+
+  virtual int GetImprovedMichelVtxTypeSz() const {
+    return GetInt("improved_michel_vertex_type_sz");
+  }
+
+  virtual double GetProtonScore() const {
+    return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
+  }
+
+  virtual int GetTrueHasSingleProton() const {
+    return GetInt("truth_reco_has_single_proton");
+  }
+
+  virtual int GetIsSingleProton() const {
+    // define and get applicable variables
+    double tree_Q2 = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_Q2").c_str());
+    double proton_score1 = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
+    
+    // How to define Q2 and proton score limits in config?
+    if(tree_Q2<0.2 && proton_score1<0.2) return 0;
+    else if(tree_Q2>=0.2 && tree_Q2<0.6 && proton_score1<0.1) return 0;
+    else if(tree_Q2>=0.6 && proton_score1<0.0) return 0;
+    else return 1; // if false not returned by now must be true
+  }
+  
+  virtual int GetAllExtraTracksProtons() const {
+    // get secondary proton candidates
+    int n_sec_proton_scores1 = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
+    // if 0, return true (vacuously)
+    if(n_sec_proton_scores1==0) return 1;
+    
+    // define and get applicable variables
+    double tree_Q2 = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_Q2").c_str());
+    std::vector<double> sec_proton_scores1 = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1").c_str());
+    
+    // How to define Q2 and proton score limits in config?
+    if(tree_Q2<0.2){
+      for(int i=0; i<n_sec_proton_scores1; i++) if(sec_proton_scores1[i]<0.2) return 0;
+    }
+    else if(tree_Q2>=0.2 && tree_Q2<0.6){
+      for(int i=0; i<n_sec_proton_scores1; i++) if(sec_proton_scores1[i]<0.1) return 0;
+    }
+    else if(tree_Q2>=0.6){
+       for(int i=0; i<n_sec_proton_scores1; i++) if(sec_proton_scores1[i]<0.0) return 0;
+    }
+    // if false not returned by now must be true
+    return 1;
+  }
+
   // ----------------------- Analysis-related Variables ------------------------
   
   

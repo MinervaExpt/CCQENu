@@ -84,6 +84,18 @@ public:
     
     trueintfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
     
+    // Added by Sean for Neutrino
+
+    recointfunctions["HasInteractionVertex"] = &CVUNIVERSE::GetHasInteractionVertex;
+    recofunctions["ImprovedMichelTypeSz"] = &CVUNIVERSE::GetImprovedMichelVtxTypeSz;
+    recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
+    recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
+    recointfunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
+    recofunctions["ProtonScore"] = &CVUNIVERSE::GetProtonScore;
+
+    trueintfunctions["TrueHasSingleProton"] = &CVUNIVERSE::GetTrueHasSingleProton;
+    trueintfunctions["TrueImprovedMichelElectrons"] = &CVUNIVERSE::GetTrueImprovedMichelElectron;
+
   };
   
   std::vector<std::string> GetRecoKeys()const{
