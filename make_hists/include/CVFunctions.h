@@ -87,14 +87,21 @@ public:
     // Added by Sean for Neutrino
 
     recointfunctions["HasInteractionVertex"] = &CVUNIVERSE::GetHasInteractionVertex;
-    recofunctions["HasMichelElectron"] = &CVUNIVERSE::GetHasMichelElectron;
+    recointfunctions["HasMichelElectron"] = &CVUNIVERSE::GetHasMichelElectron;
+    recofunctions["MichelElectronCandidates"] = &CVUNIVERSE::GetMichelElectronCandidates;
     recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
     recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
-    recofunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
+    recointfunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
     recofunctions["SingleProtonScore"] = &CVUNIVERSE::GetSingleProtonScore;
 
+    trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
     truefunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
+    trueintfunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
     truefunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
+    
+    trueintfunctions["HasSingleChargedPion"] = &CVUNIVERSE::GetHasSingleChargedPion;
+    trueintfunctions["HasSingleNeutralPion"] = &CVUNIVERSE::GetHasSingleNeutralPion;
+    trueintfunctions["HasMultiPion"] = &CVUNIVERSE::GetHasMultiPion;
 
   };
   
