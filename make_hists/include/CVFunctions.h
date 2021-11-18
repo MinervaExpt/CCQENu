@@ -87,14 +87,14 @@ public:
     // Added by Sean for Neutrino
 
     recointfunctions["HasInteractionVertex"] = &CVUNIVERSE::GetHasInteractionVertex;
-    recofunctions["ImprovedMichelTypeSz"] = &CVUNIVERSE::GetImprovedMichelVtxTypeSz;
+    recofunctions["HasMichelElectron"] = &CVUNIVERSE::GetHasMichelElectron;
     recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
     recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
-    recointfunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
-    recofunctions["ProtonScore"] = &CVUNIVERSE::GetProtonScore;
+    recofunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
+    recofunctions["SingleProtonScore"] = &CVUNIVERSE::GetSingleProtonScore;
 
-    trueintfunctions["TrueHasSingleProton"] = &CVUNIVERSE::GetTrueHasSingleProton;
-    trueintfunctions["TrueImprovedMichelElectrons"] = &CVUNIVERSE::GetTrueImprovedMichelElectron;
+    truefunctions["TrueHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
+    truefunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
 
   };
   

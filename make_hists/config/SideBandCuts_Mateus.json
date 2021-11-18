@@ -1,9 +1,9 @@
 {
 "QElike":[
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
-    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
-    {"name":"ImprovedMichel","max":0,"variable":"ImprovedMichelTypeSz"},
-    {"name":"Is Single Proton","equals":1,"variable":"IsSingleProton"},
+    {"name":"Has Vertex","equals":1,"variable":"HasInteractionVertex"},
+    {"name":"Has Michel","max":0,"variable":"HasMichelElectron"},
+    {"name":"Is Single Proton","min":1,"variable":"IsSingleProton"},
     {"name":"All Extra Tracks Protons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
@@ -19,9 +19,9 @@
   ],
   "MichelSideBand":[
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
-    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
-    {"name":"ImprovedMichel","min":1,"variable":"ImprovedMichelTypeSz"},
-    {"name":"Is Single Proton","equals":1,"variable":"IsSingleProton"},
+    {"name":"Has Vertex","equals":1,"variable":"HasInteractionVertex"},
+    {"name":"Has Michel","min":1,"variable":"HasMichelElectron"},
+    {"name":"Is Single Proton","min":1,"variable":"IsSingleProton"},
     {"name":"All Extra Tracks Protons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
@@ -37,9 +37,9 @@
   ],
   "BlobSideBand":[
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
-    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
-    {"name":"ImprovedMichel","max":0,"variable":"ImprovedMichelTypeSz"},
-    {"name":"Is Single Proton","equals":1,"variable":"IsSingleProton"},
+    {"name":"Has Vertex","equals":1,"variable":"HasInteractionVertex"},
+    {"name":"Has Michel","max":0,"variable":"HasMichelElectron"},
+    {"name":"Is Single Proton","min":1,"variable":"IsSingleProton"},
     {"name":"All Extra Tracks Protons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
@@ -55,9 +55,9 @@
   ],
   "MicBlobSideBand":[
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
-    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
-    {"name":"ImprovedMichel","min":1,"variable":"ImprovedMichelTypeSz"},
-    {"name":"Is Single Proton","equals":1,"variable":"IsSingleProton"},
+    {"name":"Has Vertex","equals":1,"variable":"HasInteractionVertex"},
+    {"name":"Has Michel","min":1,"variable":"HasMichelElectron"},
+    {"name":"Is Single Proton","min":1,"variable":"IsSingleProton"},
     {"name":"All Extra Tracks Protons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
@@ -77,7 +77,9 @@
     {"name":"Z Vertex","min":5980,"max":8410,"variable":"TrueZVertex"},
     {"name":"MuonMomentumMin","min":1.5,"variable":"TruePmuGeV"},
     {"name":"MuonMomentumMax","max":20.,"variable":"TruePmuGeV"},
-    {"name":"Max Muon Angle in Degrees","max":20.,"variable":"TrueThetamuDegrees"}
+    {"name":"Max Muon Angle in Degrees","max":20.,"variable":"TrueThetamuDegrees"},
+    {"name":"Has Michel","max":0,"variable":"TruthHasMichel"},
+    {"name":"Is Single Proton","min":1,"variable":"TruthHasSingleProton"}
   ],
   "signal":[
     {"name":"PDG","equals":14,"variable":"TruthNuPDG"},  // mod for Nu
@@ -108,4 +110,3 @@
   ],
   "data":[] // data doesn't cut anything at truth level
 }
-

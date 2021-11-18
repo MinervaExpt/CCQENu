@@ -3,7 +3,7 @@
 
 export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
-export WHEREIPUTMYCODE=/minerva/app/users/$USER/standalone   # change this here if you want a different location
+export WHEREIPUTMYCODE=/minerva/app/users/$USER/gitMinerva   # change this here if you want a different location
 source $WHEREIPUTMYCODE/opt/build/setup.sh     # you have to have this
 
 export JSONCPP_DIR=/minerva/app/users/schellma/LocalApps/jsoncpp-build
