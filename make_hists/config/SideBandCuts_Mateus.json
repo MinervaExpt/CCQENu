@@ -89,7 +89,7 @@
     {"name":"IsCCQELike","equals":1,"variable":"IsCCQELike","protonKECutMeV":120.}
   ],
   "qelikenot":[
-    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
     {"name":"IsCC","equals":1,"variable":"IsCC"},
     {"name":"IsCCQELike","equals":0,"variable":"IsCCQELike","protonKECutMeV":120.}
   ],
