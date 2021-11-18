@@ -93,7 +93,7 @@ public:
     recofunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
     recofunctions["SingleProtonScore"] = &CVUNIVERSE::GetSingleProtonScore;
 
-    truefunctions["TrueHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
+    truefunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
     truefunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
 
   };

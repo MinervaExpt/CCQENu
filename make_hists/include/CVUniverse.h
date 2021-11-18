@@ -116,33 +116,35 @@ public:
     return n_blobs;
   }
 
-  virtual double GetTruthHasMichel() const {
-    return static_cast<double>(GetInt("truth_has_michel_electron"));
+  virtual int GetTruthHasMichel() const {
+    //return static_cast<double>(GetInt("truth_reco_has_michel_electron"));
+    return GetInt("truth_reco_has_michel_electron");
   }
 
-  virtual double GetHasMichelElectron() const {
-    if(GetInt("improved_michel_vertex_type_sz")>0) return 1.;
-    else return 0.;
+  virtual int GetHasMichelElectron() const {
+    if(GetInt("improved_michel_vertex_type_sz")>0) return 1;
+    else return 0;
   }
 
   virtual double GetSingleProtonScore() const {
     return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
   }
 
-  virtual double GetTruthHasSingleProton() const {
-    return static_cast<double>(GetInt("truth_reco_has_single_proton"));
+  virtual int GetTruthHasSingleProton() const {
+    //return static_cast<double>(GetInt("truth_reco_has_single_proton"));
+    return GetInt("truth_reco_has_single_proton");
   }
 
-  virtual double GetIsSingleProton() const {
+  virtual int GetIsSingleProton() const {
     // define and get applicable variables
     double tree_Q2 = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_Q2").c_str());
     double proton_score1 = GetSingleProtonScore();
     
     // How to define Q2 and proton score limits in config?
-    if(tree_Q2<0.2 && proton_score1<0.2) return 0.;
-    else if(tree_Q2>=0.2 && tree_Q2<0.6 && proton_score1<0.1) return 0.;
-    else if(tree_Q2>=0.6 && proton_score1<0.0) return 0.;
-    else return 1.; // if false not returned by now must be true
+    if(tree_Q2<0.2 && proton_score1<0.2) return 0;
+    else if(tree_Q2>=0.2 && tree_Q2<0.6 && proton_score1<0.1) return 0;
+    else if(tree_Q2>=0.6 && proton_score1<0.0) return 0;
+    else return 1; // if false not returned by now must be true
   }
   
   virtual int GetAllExtraTracksProtons() const {
