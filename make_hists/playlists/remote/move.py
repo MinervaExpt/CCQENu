@@ -6,7 +6,7 @@ g = open(sys.argv[1].replace(".txt",".sh"),'w')
 files = f.readlines()
 for file in files:
     newloc = file.replace(oldpath,newpath)
-    newline = file.replace("root:","xrdcopy root:")
+    newline = file.replace("root:","nohup xrdcopy root:")
     newline = newline.replace(".root",".root "+newloc)
     g.write(newline)
     print (newline)
