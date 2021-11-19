@@ -7,9 +7,7 @@ export WHEREIPUTMYCODE=/home/gilligas/gitMinerva   # change this here if you wan
 source $WHEREIPUTMYCODE/opt/build/setup.sh     # you have to have this
 
 export JSONCPP_DIR=/home/gilligas/JSON/jsoncpp-build
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${JSONCPP_DIR}/lib
 
 export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
-
-#export DYLD_LIBRARY_PATH=${PLOTUTILSROOT}
-
 export THEDATA=/home/gilligas/gitMinerva/data/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron

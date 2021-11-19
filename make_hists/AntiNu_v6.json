@@ -1,7 +1,7 @@
 {
   "version":6,  // October 25, 2021  get ready for github
-  "mcIn":"./playlists/local/minervame5A_MC.txt",
-  "dataIn":"./playlists/local/minervame5A_Data.txt",
+  "mcIn":"./playlists/hep01/minervame5A_MC.txt",
+  "dataIn":"./playlists/hep01/minervame5A_Data.txt",
   "prescale":100,
   "playlist":"minervame5A",
   "recoName":"CCQENu",

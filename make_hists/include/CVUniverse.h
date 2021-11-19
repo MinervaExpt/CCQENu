@@ -97,6 +97,150 @@ public:
   virtual int GetDeadTime() const{
     return GetInt("phys_n_dead_discr_pair_upstream_prim_track_proj") ;
   }
+
+  // ----------------- Added by Sean for Neutrino ---------------------------------
+  
+  virtual int GetHasInteractionVertex() const {
+    return GetInt("has_interaction_vertex");
+  }
+  
+  virtual int GetNBlobs() const {
+    // define and get applicable variables
+    int n_blobs = 0;
+    int kmax = GetInt("nonvtx_iso_blobs_start_position_z_in_prong_sz");
+    std::vector<double> blob_z_starts = GetVecDouble("nonvtx_iso_blobs_start_position_z_in_prong");
+    // counts blobs with zvertex greater than set value
+    for(int k=0; k<kmax; ++k){
+      if(blob_z_starts[k] > 4750) n_blobs++; // why 4750? how can this be defined in a config file?
+    }
+    return n_blobs;
+  }
+
+  virtual int GetTruthHasMichel() const {
+    return GetInt("truth_reco_has_michel_electron");
+  }
+
+  virtual int GetMichelElectronCandidates() const {
+    return GetInt("improved_michel_vertex_type_sz");
+  }
+
+  virtual int GetHasMichelElectron() const {
+    if(GetMichelElectronCandidates()) return 1;
+    else return 0;
+  }
+
+  virtual double GetSingleProtonScore() const {
+    return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
+  }
+
+  virtual int GetTruthHasSingleProton() const {
+    return GetInt("truth_reco_has_single_proton");
+  }
+
+  virtual int GetIsSingleProton() const {
+    // define and get applicable variables
+    double tree_Q2 = GetQ2QEGeV();
+    double proton_score1 = GetSingleProtonScore();
+    
+    // How to define Q2 and proton score limits in config?
+    if(tree_Q2<0.2 && proton_score1<0.2) return 0;
+    else if(tree_Q2>=0.2 && tree_Q2<0.6 && proton_score1<0.1) return 0;
+    else if(tree_Q2>=0.6 && proton_score1<0.0) return 0;
+    else return 1; // if false not returned by now must be true
+  }
+  
+  virtual int GetAllExtraTracksProtons() const {
+    // get secondary proton candidates
+    int n_sec_proton_scores1 = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
+    // if 0, return true (vacuously)
+    if(n_sec_proton_scores1==0) return 1;
+    
+    // define and get applicable variables
+    double tree_Q2 = GetQ2QEGeV();
+    std::vector<double> sec_proton_scores1 = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1").c_str());
+    
+    // How to define Q2 and proton score limits in config?
+    if(tree_Q2<0.2){
+      for(int i=0; i<n_sec_proton_scores1; i++) if(sec_proton_scores1[i]<0.2) return 0;
+    }
+    else if(tree_Q2>=0.2 && tree_Q2<0.6){
+      for(int i=0; i<n_sec_proton_scores1; i++) if(sec_proton_scores1[i]<0.1) return 0;
+    }
+    else if(tree_Q2>=0.6){
+       for(int i=0; i<n_sec_proton_scores1; i++) if(sec_proton_scores1[i]<0.0) return 0;
+    }
+    // if false not returned by now must be true
+    return 1;
+  }
+  
+  virtual int GetHasSingleChargedPion() const {
+    int num_pion = 0;
+    int num_charged_pion = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 211 || mc_FSPartPDG[i] == -211){
+        num_charged_pion++;
+        num_pion++;
+      }
+      if( mc_FSPartPDG[i] == 111){
+        num_pion++;
+      }
+    }
+    if(num_charged_pion==1 && num_pion==1) return 1;
+    return 0;
+  }
+  
+  virtual int GetHasSingleNeutralPion() const {
+    int num_pion = 0;
+    int num_neutral_pion = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 211 || mc_FSPartPDG[i] == -211){
+        num_pion++;
+      }
+      if( mc_FSPartPDG[i] == 111){
+        num_neutral_pion++;
+        num_pion++;
+      }
+    }
+    if(num_neutral_pion==1 && num_pion==1) return 1;
+    return 0;
+  }
+  
+  virtual int GetHasMultiPion() const {
+    int num_pion = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if(mc_FSPartPDG[i] == 211 || mc_FSPartPDG[i] == -211 || mc_FSPartPDG[i] == 111){
+        num_pion++;
+      }
+    }
+    int found_eta = 0;
+    int nerpart = GetInt("mc_er_nPart");
+    std::vector<int> erpartID = GetVecInt("mc_er_ID");
+    std::vector<int> erpartstatus = GetVecInt("mc_er_status");
+    for(int i = 0; i < nerpart; i++){
+      bool neutrinoMode = GetAnalysisNuPDG() > 0;
+      if(neutrinoMode){
+        if(erpartstatus[i] == 14 && erpartID[i] == 221){
+          found_eta = 1;
+          break;
+        }
+      }
+      else{
+        if(erpartstatus[i] == -14 && erpartID[i] == 221){
+          found_eta = 1;
+          break;
+        }
+      }
+    }
+    if(num_pion > 1 || found_eta == 1) return 1;
+    return 0;
+  }
+
   // ----------------------- Analysis-related Variables ------------------------
   
   
@@ -464,16 +608,16 @@ public:
      
       if(neutrinoMode){
         if( genie_n_muons         == 1 &&
-           genie_n_mesons        == 0 &&
-           genie_n_heavy_baryons_plus_pi0s == 0 &&
-           genie_n_photons       == 0 ) return true;
+            genie_n_mesons        == 0 &&
+            genie_n_heavy_baryons_plus_pi0s == 0 &&
+            genie_n_photons       == 0 ) return true;
       }
       else{
         if( genie_n_muons         == 1 &&
-           genie_n_mesons        == 0 &&
-           genie_n_heavy_baryons_plus_pi0s == 0 &&
-           genie_n_photons       == 0 &&
-           genie_n_protons        == 0 ) return true;
+            genie_n_mesons        == 0 &&
+            genie_n_heavy_baryons_plus_pi0s == 0 &&
+            genie_n_photons       == 0 &&
+            genie_n_protons        == 0 ) return true;
       }
       return false;
     }
