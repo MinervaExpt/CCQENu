@@ -4,6 +4,8 @@ import os,sys
 from PlotUtils import MnvH1D,MnvH2D,MnvPlotter
 from CCQEPlotUtils import *
 import array as array
+
+ 
 gStyle.SetEndErrorSize(10)
 ratio = True
 reference="CV"
@@ -27,10 +29,18 @@ hvar = "pzmu_ptmu"
 if var == "q2" or var == "enu":
   hvar = "enu_q2"
 
+if var == "q2":
+    from q2_chi2list import *
+if var == "enu":
+    from enu_chi2list import *
+if var == "ptmu":
+    from ptmu_chi2list import *
+if var == "pzmu":
+    from pzmu_chi2list import *
 #MnvKellycolors
 colors = CCQEColors()
 
-
+print ("Chi2",chi2vals)
 dhist= "h_%s_dataCrossSection"%hvar
 mchist = "h_%s_qelike_recoCrossSection"%hvar
 #file_prefix = "minervame5A6A6B6C6D6E6F6G6H6I6J_Nominal_nue_"
@@ -54,6 +64,8 @@ print ("models",models)
 #compare_xsectionmodels_variations_ratio.py:ymcptunerpa.SetLineColor(colors[4])
 #compare_xsectionmodels_variations_ratio.py:ymcptune2p2h.SetLineColor(colors[5])
 colorcode = {"NA":2, "2p2hrpa":3, "rpapiontune":4, "piontune2p2h":5,"2p2h":6, "CV":2, "CV2":7,"piontune":8,"rpa":9}
+
+linecode = {"NA":10, "2p2hrpa":9, "rpapiontune":10, "2p2hpiontune":9,"2p2h":9, "CV":1, "CV2":1,"piontune":2,"rpa":10}
 file = {}
 mc = {}
 
@@ -168,10 +180,10 @@ if not ratio:
     ydn.SetMinimum(5.E-42/scale)
     ydn.SetMaximum(2.E-37/scale)
 else:
-  xdn.SetMinimum(0.)
-  xdn.SetMaximum(3.)
-  ydn.SetMinimum(0.)
-  ydn.SetMaximum(3.)
+  xdn.SetMinimum(0.5)
+  xdn.SetMaximum(2.5)
+  ydn.SetMinimum(0.5)
+  ydn.SetMaximum(2.5)
 
 
 #xdn.Print("ALL")
@@ -199,10 +211,12 @@ canvas.cd()
 
 
 for m in models:
-  xn[m].SetLineWidth(3)
-  yn[m].SetLineWidth(3)
+  xn[m].SetLineWidth(5)
+  yn[m].SetLineWidth(5)
   xn[m].SetLineColor(colors[colorcode[m]])
+  xn[m].SetLineStyle(linecode[m])
   yn[m].SetLineColor(colors[colorcode[m]])
+  yn[m].SetLineStyle(linecode[m])
   
 normx = xn["CV"].Clone()
 normy = yn["CV"].Clone()
@@ -224,15 +238,15 @@ if (not ratio):
     leg = CCQELegend(0.6,0.6,0.8,0.9)
 else:
   print ()
-leg = CCQELegend(0.25,0.7,0.9,0.9)
+leg = CCQELegend(0.25,0.6,0.9,0.9)
 
 leg.SetHeader("MINERvA Preliminary","")
-leg.SetNColumns(2)
+#leg.SetNColumns(2)
 leg.AddEntry(xdn,"MINERvA #bar{#nu}_{#mu} data","pe")
 
 #leg.AddEntry(xmcdefault,"GENIE 2.12.6","l")
 for m in models:
-  leg.AddEntry(xn[m],modelnames[m],"l")
+  leg.AddEntry(xn[m],"%s  #chi^{2}/dof.=%4.1f/%d"%(modelnames[m],chi2vals[m][0],chi2vals[m][1]),"l")
 #leg.AddEntry(xn["2p2h"],"GENIE+RPA","l")
 #leg.AddEntry(xn["CV"],"MINERvA Tune v1","l")
 #leg.AddEntry(xmcptune2p2h,"GENIE+#pi tune+2p2h","l")
@@ -282,8 +296,10 @@ if (ratio):
 #ydsn.Print("ALL")
 
 if ratio:
-  xdn.SetMaximum(3.)
-  ydn.SetMaximum(3.)
+  xdn.SetMaximum(2.5)
+  ydn.SetMaximum(2.5)
+  xdn.SetMinimum(0.5)
+  ydn.SetMinimum(0.5)
 xdn.Draw("P E1")
 xdsn.Draw("P E1 SAME")
 for m in models:

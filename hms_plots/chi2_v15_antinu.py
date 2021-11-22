@@ -783,6 +783,8 @@ if var in ["q2","enu","ptmu","pzmu"]:
    datadraw.Write()
  
 ofile["ALL"].write(head)
+bfile = open(var+"_chi2list.py",'w')
+bfile.write("chi2vals={")
 h_chi2cont = {}
 n  = covmx["CV"].GetNrows()
 counter = 0
@@ -819,6 +821,8 @@ for model in models:
     
     #print "chi2", model, syst, totchi2, dof, totlogchi2
     outs =  "%s &\t %10.1f &\t %10.1f \\\\\n"%(translate[model],totchi2, totlogchi2)
+    bfile.write('\"%s\":[%5.1f,%d],'%(model,totchi2,dof))
+    print ("bfile,",'\"%s\":%f4.2,'%(model,totchi2/dof))
     print ("dump of contributions", model)
     print (outs)
     #chi2diag.Print()
@@ -856,7 +860,8 @@ for model in models:
         mcdraw[model].Delete()
       except:
         print ("failed to delete" ,model)
-
+bfile.write("}")
+bfile.close()
 #ofile[model].close()
 #    mchist[model].Delete()
 #    mcfile.Close()
