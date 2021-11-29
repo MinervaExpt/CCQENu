@@ -278,21 +278,24 @@ template<class MnvHistoType>
     fluxplaylist["minervame1E"] = FluxReweighter::minervame1E;
     fluxplaylist["minervame1F"] = FluxReweighter::minervame1F;
     fluxplaylist["minervame1G"] = FluxReweighter::minervame1G;
-  //  fluxplaylist["minervame1H"] = FluxReweighter::minervame1H;
-  //  fluxplaylist["minervame1I"] = FluxReweighter::minervame1I;
-  //  fluxplaylist["minervame1J"] = FluxReweighter::minervame1J;
-  //  fluxplaylist["minervame1K"] = FluxReweighter::minervame1K;
+    fluxplaylist["minervame1H"] = FluxReweighter::minervame1H;
+    fluxplaylist["minervame1I"] = FluxReweighter::minervame1I;
+    fluxplaylist["minervame1J"] = FluxReweighter::minervame1J;
+    fluxplaylist["minervame1K"] = FluxReweighter::minervame1K;
     fluxplaylist["minervame1L"] = FluxReweighter::minervame1L;
     fluxplaylist["minervame1M"] = FluxReweighter::minervame1M;
     fluxplaylist["minervame1N"] = FluxReweighter::minervame1N;
     fluxplaylist["minervame5A"] = FluxReweighter::minervame5A;
     fluxplaylist["minervame6A"] = FluxReweighter::minervame6A;
-    fluxplaylist["minervame6B"] = FluxReweighter::minervame6B;
-    fluxplaylist["minervame6C"] = FluxReweighter::minervame6C;
-    fluxplaylist["minervame6D"] = FluxReweighter::minervame6D;
-    fluxplaylist["minervame6E"] = FluxReweighter::minervame6E;
-    fluxplaylist["minervame6F"] = FluxReweighter::minervame6F;
-    fluxplaylist["minervame6G"] = FluxReweighter::minervame6G;
+    fluxplaylist["minervame6B"] = FluxReweighter::minervame6A;
+    fluxplaylist["minervame6C"] = FluxReweighter::minervame6A;
+    fluxplaylist["minervame6D"] = FluxReweighter::minervame6A;
+    fluxplaylist["minervame6E"] = FluxReweighter::minervame6A;
+    fluxplaylist["minervame6F"] = FluxReweighter::minervame6A;
+    fluxplaylist["minervame6G"] = FluxReweighter::minervame6A;
+    fluxplaylist["minervame6H"] = FluxReweighter::minervame6A;
+    fluxplaylist["minervame6I"] = FluxReweighter::minervame6A;
+    fluxplaylist["minervame6J"] = FluxReweighter::minervame6A;
 
     if( fluxplaylist.find(playlist) == fluxplaylist.end() ){
       std::cout << " playlist " << playlist << " not yet implemented in RebinFlux.h " << std::endl;
