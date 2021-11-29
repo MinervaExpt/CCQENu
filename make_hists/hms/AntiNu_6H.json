@@ -1,0 +1,27 @@
+{
+  "version":6,  // October 25, 2021  get ready for github
+  "mcIn":"./playlists/local/local_CCQENu_minervame6H_MC_Inextinguishable_merged.txt",
+  "dataIn":"./playlists/local/local_CCQENu_minervame6H_DATA_Inextinguishable_merged.txt",
+  "prescale":100,
+  "playlist":"minervame6H",
+  "recoName":"CCQENu",
+  "pdg":-14,
+    "runsamples":["QElike","sideband1","sideband2"],
+  "cutsFile":"config/AntiNuCuts_v6.json",
+  "varsFile":"config/Variables_v6.json",
+  "samplesFile":"config/AntiNuSamples_v6.json",
+  "outRoot":"SB",
+    "AnalyzeVariables":["recoil","Q2QE","pzmu","ptmu","EnuQE"],
+  "Analyze2DVariables":["Q2QE_recoil"],
+  "signal":"qelike",
+  "background":"qelikenot",
+  "data":"data",
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}
