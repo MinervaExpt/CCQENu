@@ -285,6 +285,9 @@ template<class MnvHistoType>
     fluxplaylist["minervame1L"] = FluxReweighter::minervame1G;
     fluxplaylist["minervame1M"] = FluxReweighter::minervame1M;
     fluxplaylist["minervame1N"] = FluxReweighter::minervame1N;
+    fluxplaylist["minervame1O"] = FluxReweighter::minervame1N;
+    fluxplaylist["minervame1P"] = FluxReweighter::minervame1N;
+//anti-nu
     fluxplaylist["minervame5A"] = FluxReweighter::minervame5A;
     fluxplaylist["minervame6A"] = FluxReweighter::minervame6A;
     fluxplaylist["minervame6B"] = FluxReweighter::minervame6A;
