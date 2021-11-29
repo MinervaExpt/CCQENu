@@ -113,12 +113,15 @@ MnvH1D* GetFlux(const NuConfig config){
   fluxplaylist["minervame1N"] = FluxReweighter::minervame1N;
   fluxplaylist["minervame5A"] = FluxReweighter::minervame5A;
   fluxplaylist["minervame6A"] = FluxReweighter::minervame6A;
-  fluxplaylist["minervame6B"] = FluxReweighter::minervame6B;
-  fluxplaylist["minervame6C"] = FluxReweighter::minervame6C;
-  fluxplaylist["minervame6D"] = FluxReweighter::minervame6D;
-  fluxplaylist["minervame6E"] = FluxReweighter::minervame6E;
-  fluxplaylist["minervame6F"] = FluxReweighter::minervame6F;
-  fluxplaylist["minervame6G"] = FluxReweighter::minervame6G;
+  fluxplaylist["minervame6B"] = FluxReweighter::minervame6A;
+  fluxplaylist["minervame6C"] = FluxReweighter::minervame6A;
+  fluxplaylist["minervame6D"] = FluxReweighter::minervame6A;
+  fluxplaylist["minervame6E"] = FluxReweighter::minervame6A;
+  fluxplaylist["minervame6F"] = FluxReweighter::minervame6A;
+  fluxplaylist["minervame6G"] = FluxReweighter::minervame6A;
+  fluxplaylist["minervame6H"] = FluxReweighter::minervame6A;
+  fluxplaylist["minervame6I"] = FluxReweighter::minervame6A;
+  fluxplaylist["minervame6J"] = FluxReweighter::minervame6A;
 
   if( fluxplaylist.find(playlist) == fluxplaylist.end() ){
     std::cout << " playlist " << playlist << " not yet implemented in RebinFlux.h " << std::endl;
