@@ -6,7 +6,7 @@
   "playlist":"minervame5A",
   "recoName":"CCQENu",
   "pdg":-14,
-    "runsamples":["QElike","sideband1","sideband2"],
+    "runsamples":["QElike"],
   "cutsFile":"config/AntiNuCuts_v6.json",
   "varsFile":"config/Variables_v6.json",
   "samplesFile":"config/AntiNuSamples_v6.json",
