@@ -1,7 +1,7 @@
 {
   "version":6,  // October 25, 2021  get ready for github
-  "mcIn":"./playlists/local/minervame6E_MC.txt",
-  "dataIn":"./playlists/local/minervame6E_Data.txt",
+  "mcIn":"./playlists/local/local_CCQENu_minervame6E_MC_Inextinguishable_merged.txt",
+  "dataIn":"./playlists/local/local_CCQENu_minervame6E_DATA_Inextinguishable_merged.txt",
   "prescale":1,
   "playlist":"minervame6E",
   "recoName":"CCQENu",
