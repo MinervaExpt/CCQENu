@@ -608,12 +608,16 @@ template<class MnvHistoType>
 
     std::map< std::string, bool> fluxnorm = CheckFluxNorm(config,variable);
     if(DEBUG) std::cout << " fluxnorm: " << fluxnorm["fluxnorm"] << ", xfluxnorm: " << fluxnorm["xfluxnorm"] << ", yfluxnorm: " << fluxnorm["yfluxnorm"] << std::endl;
+    
+    // HMS dec-1-2021 - flip these? 
     if (fluxnorm["fluxnorm"]) {
-      binwid = true;
-    }
-    if (!fluxnorm["fluxnorm"]) {
       binwid = false;
     }
+    if (!fluxnorm["fluxnorm"]) {
+      binwid = true;
+    }
+    
+   
 
     std::vector<MnvHistoType*> sigmaVec = DoNormalization(config,basename,fluxnorm,norm,effcorr,ialltruhist,h_flux_dewidthed);
     MnvHistoType* sigma = sigmaVec[0];
