@@ -11,7 +11,7 @@
   "varsFile":"config/Variables_v6.json",
   "samplesFile":"config/AntiNuSamples_v6.json",
   "outRoot":"SB",
-    "AnalyzeVariables":["recoil","Q2QE","pzmu","ptmu","EnuQE"],
+    "AnalyzeVariables":["recoil","Q2QE","pzmu","ptmu","EnuCCQE"],
   "Analyze2DVariables":["Q2QE_recoil"],
   "signal":"qelike",
   "background":"qelikenot",
