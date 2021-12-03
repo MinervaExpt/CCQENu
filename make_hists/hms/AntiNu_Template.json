@@ -1,5 +1,5 @@
 {
-  "version":7,  // October 25, 2021  get ready for github
+  "version":7,
   "mcIn":"./playlists/local/local_CCQENu_minervameTemplate_MC_Inextinguishable_merged.txt",
   "dataIn":"./playlists/local/local_CCQENu_minervameTemplate_DATA_Inextinguishable_merged.txt",
   "prescale":1,
@@ -20,8 +20,8 @@
     "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
   "fluxUniverses":200,
   "NuEConstraint":1,
-  "DeuteriumGeniePiTune":1, // set to true?
-  "NonResPiReweight":1, // set to true?
-  "Geant4NeutronCV":1, // set true by default docdb 28556
-  "Geant4Elastics":1 // set to true by default
+  "DeuteriumGeniePiTune":1,
+  "NonResPiReweight":1,
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1 
 }
