@@ -1,0 +1,17 @@
+{
+  "QElike":[
+    {"true":"qelike","for":["selected_reco","selected_truth","truth","response"],"phase_space":"phase_space"},
+    {"true":"qelikenot","for":["selected_reco"],"phase_space":"phase_space"},
+    {"true":"data","for":["data"],"phase_space":"phase_space"}
+  ],
+  "QElikeNP":[
+    {"true":"qelikenp","for":["selected_reco","selected_truth","truth","response"],"phase_space":"phase_space"},
+    {"true":"qelikenotnp","for":["selected_reco"],"phase_space":"phase_space"},
+    {"true":"data","for":["data"],"phase_space":"phase_space"}
+  ],
+  "QElikeALL":[
+    {"true":"qelikenp","for":["selected_reco","selected_truth","truth","response"],"phase_space":"phase_space_all"},
+    {"true":"qelikenotnp","for":["selected_reco"],"phase_space":"phase_space_all"},
+    {"true":"data","for":["data"],"phase_space":"phase_space_all"}
+  ]
+}

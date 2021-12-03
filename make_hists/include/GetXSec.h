@@ -427,9 +427,20 @@ template<class MnvHistoType>
 
     // Get "category" tags set in config. Needs to match ones used in the event loop.
     //TODO: Make this a map in config.
-    std::string sig = config.GetString("signal");
-    std::string bkg = config.GetString("background");
-    std::string dat = config.GetString("data");
+    
+    
+    // this can come out of the sample information:
+    
+    NuConfig sigkey = config.GetConfig("signal");
+    sigkey.Print();
+    std::string sig = sigkey.GetString(sample);
+    NuConfig bkgkey = config.GetConfig("background");
+    std::string bkg = bkgkey.GetString(sample);
+    bkgkey.Print();
+    NuConfig datkey = config.GetConfig("data");
+    std::string dat = datkey.GetString(sample);
+    //std::string bkg = config.GetString("background");
+    // std::string dat = config.GetString("data");
 
     // parse out variable to get axes
     std::vector<std::string> varparse;
@@ -611,7 +622,7 @@ template<class MnvHistoType>
     
     // HMS dec-1-2021 - flip these? 
     if (fluxnorm["fluxnorm"]) {
-      binwid = false;
+      binwid =  true;
     }
     if (!fluxnorm["fluxnorm"]) {
       binwid = true;
