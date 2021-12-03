@@ -87,17 +87,25 @@ public:
     // Added by Sean for Neutrino
 
     recointfunctions["HasInteractionVertex"] = &CVUNIVERSE::GetHasInteractionVertex;
-    recointfunctions["HasMichelElectron"] = &CVUNIVERSE::GetHasMichelElectron;
-    recofunctions["MichelElectronCandidates"] = &CVUNIVERSE::GetMichelElectronCandidates;
+    
     recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
+    
+    recointfunctions["HasMichelElectron"] = &CVUNIVERSE::GetHasMichelElectron;
+    recointfunctions["MichelElectronCandidates"] = &CVUNIVERSE::GetMichelElectronCandidates;
+    recofunctions["MichelElectronCandidates"] = &CVUNIVERSE::GetMichelElectronCandidates;
+    trueintfunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
+    truefunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
+
     recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
     recointfunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
     recofunctions["SingleProtonScore"] = &CVUNIVERSE::GetSingleProtonScore;
-
     trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
     truefunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
-    trueintfunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
-    truefunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
+    
+    recointfunctions["ChargedPionCount"] = &CVUNIVERSE::GetChargedPionCount;
+    recofunctions["ChargedPionCount"] = &CVUNIVERSE::GetChargedPionCount;
+    recointfunctions["NeutralPionCount"] = &CVUNIVERSE::GetNeutralPionCount;
+    recofunctions["NeutralPionCount"] = &CVUNIVERSE::GetNeutralPionCount;
     
     trueintfunctions["HasSingleChargedPion"] = &CVUNIVERSE::GetHasSingleChargedPion;
     trueintfunctions["HasSingleNeutralPion"] = &CVUNIVERSE::GetHasSingleNeutralPion;

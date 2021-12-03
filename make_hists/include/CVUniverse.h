@@ -98,11 +98,17 @@ public:
     return GetInt("phys_n_dead_discr_pair_upstream_prim_track_proj") ;
   }
 
+  // ------------------------------------------------------------------------------
   // ----------------- Added by Sean for Neutrino ---------------------------------
+  // ------------------------------------------------------------------------------
+  
+  // Interaction Vertex
   
   virtual int GetHasInteractionVertex() const {
     return GetInt("has_interaction_vertex");
   }
+  
+  // Isolated Blobs
   
   virtual int GetNBlobs() const {
     // define and get applicable variables
@@ -115,26 +121,26 @@ public:
     }
     return n_blobs;
   }
-
-  virtual int GetTruthHasMichel() const {
-    return GetInt("truth_reco_has_michel_electron");
-  }
+  
+  // Michel Electrons
 
   virtual int GetMichelElectronCandidates() const {
     return GetInt("improved_michel_vertex_type_sz");
   }
-
+  
   virtual int GetHasMichelElectron() const {
-    if(GetMichelElectronCandidates()) return 1;
-    else return 0;
+    if(GetMichelElectronCandidates() > 0) return 1;
+    return 0;
   }
+
+  virtual int GetTruthHasMichel() const {
+    return GetInt("truth_reco_has_michel_electron");
+  }
+  
+  // Protons
 
   virtual double GetSingleProtonScore() const {
     return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
-  }
-
-  virtual int GetTruthHasSingleProton() const {
-    return GetInt("truth_reco_has_single_proton");
   }
 
   virtual int GetIsSingleProton() const {
@@ -147,6 +153,10 @@ public:
     else if(tree_Q2>=0.2 && tree_Q2<0.6 && proton_score1<0.1) return 0;
     else if(tree_Q2>=0.6 && proton_score1<0.0) return 0;
     else return 1; // if false not returned by now must be true
+  }
+  
+  virtual int GetTruthHasSingleProton() const {
+    return GetInt("truth_reco_has_single_proton");
   }
   
   virtual int GetAllExtraTracksProtons() const {
@@ -171,6 +181,90 @@ public:
     }
     // if false not returned by now must be true
     return 1;
+  }
+  
+  virtual int GetChargedPionCount() const { // pion+ and pion-
+    int num_charged_pion = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 211 || mc_FSPartPDG[i] == -211){
+        num_charged_pion++;
+      }
+    }
+    return num_charged_pion;
+  }
+  
+  virtual int GetNeutralPionCount() const { // pion0
+    int num_neutral_pion = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 111){
+        num_neutral_pion++;
+      }
+    }
+    return num_neutral_pion;
+  }
+  
+  virtual int GetLightMesonCount() const { // Just base etas right now
+    int num_light_meson = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 221){
+        num_light_meson++;
+      }
+    }
+    return num_light_meson; 
+  }
+  
+  virtual int GetCharmedMesonCount() const { // D_+ and D_0
+    int num_charmed_meson = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 411 || mc_FSPartPDG[i] == 421){
+        num_charmed_meson++;
+      }
+    }
+    return num_charmed_meson; 
+  }
+  
+  virtual int GetStrangeMesonCount() const { // K__L0, K_S0, K_0, K_*(892)0, K_+, K_*(892)+
+    int num_strange_meson = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 130 || mc_FSPartPDG[i] == 310 || mc_FSPartPDG[i] == 311 || mc_FSPartPDG[i] == 313 || abs(mc_FSPartPDG[i]) == 321 || abs(mc_FSPartPDG[i]) == 323){
+        num_strange_meson++;
+      }
+    }
+    return num_strange_meson;
+  }
+  
+  virtual int GetCharmedBaryonCount() const { // Sigma_c0, Lambda_c+, Sigma_c+, Sigma_c++
+    int num_charmed_baryon = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 4112 || mc_FSPartPDG[i] == 4122 || mc_FSPartPDG[i] == 4212 || mc_FSPartPDG[i] == 4222){
+        num_charmed_baryon++;
+      }
+    }
+    return num_charmed_baryon; 
+  }
+  
+  virtual int GetStrangeBaryonCount() const { // Sigma_-, Lambda, Sigma_0, Sigma_+
+    int num_strange_baryon = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 3112 || mc_FSPartPDG[i] == 3122 || mc_FSPartPDG[i] == 3212 || mc_FSPartPDG[i] == 3222){
+        num_strange_baryon++;
+      }
+    }
+    return num_strange_baryon; 
   }
   
   virtual int GetHasSingleChargedPion() const {
