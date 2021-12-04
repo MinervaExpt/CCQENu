@@ -20,7 +20,7 @@
     "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
   "fluxUniverses":200,
   "NuEConstraint":1,
-  "DeuteriumGeniePiTune":1, // set to true?
+  "DeuteriumGeniePiTune":1,
   "NonResPiReweight":1, // set to true?
   "Geant4NeutronCV":1, // set true by default docdb 28556
   "Geant4Elastics":1 // set to true by default

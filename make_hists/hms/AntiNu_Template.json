@@ -1,10 +1,5 @@
 {
-  "version":7,  // October 25, 2021  get ready for github
-  //"mcIn":"./playlists/local/minervame5A_MC.txt",
-  //"dataIn":"./playlists/local/minervame5A_Data.txt",
-  //"prescale":100,
-  //"playlist":"minervame5A",
-  "mcIn":"./playlists/local/local_CCQENu_minervameTemplate_MC_Inextinguishable_merged.txt",
+  "version":7,  // Dec 2021 large scale tests "mcIn":"./playlists/local/local_CCQENu_minervameTemplate_MC_Inextinguishable_merged.txt",
   "dataIn":"./playlists/local/local_CCQENu_minervameTemplate_DATA_Inextinguishable_merged.txt",
   "prescale":1,
   "playlist":"minervameTemplate",
@@ -12,7 +7,7 @@
   "pdg":-14,
     "runsamples":["QElike","QElikeNP","QElikeALL"],
   "cutsFile":"hms/AntiNuCuts_v7.json",
-  "varsFile":"config/Variables_v6.json",
+  "varsFile":"hms/Variables_v7.json",
   "samplesFile":"hms/AntiNuSamples_v7.json",
   "outRoot":"SB",
     "AnalyzeVariables":["Q2QE","pzmu","ptmu","EnuCCQE","Enu"],
