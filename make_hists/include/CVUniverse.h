@@ -428,10 +428,10 @@ public:
    virtual int GetGoodRecoil() const{ // implement Cheryl's cut
      double Q2 = GetQ2QEGeV();
      double recoil = GetRecoilEnergyGeV();
-     double offset=0.0;
-     if( Q2 < 0.175 ) return ( recoil <= 0.08);
-     else if( Q2 < 1.4 )return (recoil <= 0.03 + 0.3*Q2);
-     else return (recoil <= 0.45); //antinu
+     double offset=0.05;
+     if( Q2 < 0.175 ) return ( recoil <= 0.08+offset);
+     else if( Q2 < 1.4 )return (recoil <= 0.03 + 0.3*Q2+offset);
+     else return (recoil <= 0.45+offset); //antinu
    }
   
   virtual int GetIsCC() const{
