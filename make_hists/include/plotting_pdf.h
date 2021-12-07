@@ -26,6 +26,7 @@ std::string("CovAreaNorm") :
 std::string("POT");
 
 void PlotErrorSummary(PlotUtils::MnvH1D* hist, std::string label);
+void PlotErrorSummary(PlotUtils::MnvH2D* hist, std::string label){std::cout<<"no error bands for 2D" << std::endl;}
 void PlotVertBand(std::string band, std::string method_str, PlotUtils::MnvH1D* hist);
 void PlotLatBand(std::string band,  std::string method_str, PlotUtils::MnvH1D* hist);
 void PlotVertUniverse(std::string band, unsigned int universe, std::string method_str, PlotUtils::MnvH1D* hist);
@@ -46,6 +47,8 @@ void PlotTotalError(PlotUtils::MnvH1D* hist, std::string method_str ){
   hTotalErr->Draw();
   cF.Print(Form("%s_TotalUncertainty_%s_%s_%s.png",hist->GetName() , do_fractional_uncertainty_str.c_str(), do_cov_area_norm_str.c_str(), method_str.c_str()));
 }
+
+void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH2D* hist, std::string label, int logscale){std::cout<<" no error summary for 2D" << std::endl;}
 
 void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, int logscale){
   PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
