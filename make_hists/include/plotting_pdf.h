@@ -55,46 +55,64 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
   //TCanvas cE ("c1","c1");
   // hist->GetXaxis()->SetTitle(hist->GetTitle());
   // std::string xaxis = mc->GetXaxis()->GetTitle();
-
+  //mnvPlotter.error_color_map.clear();
+  
+  mnvPlotter.axis_maximum=0.2;
+  mnvPlotter.axis_minimum=0.0;
+  mnvPlotter.error_color_map["Flux"]                    = kViolet+6;
+  mnvPlotter.error_color_map["Recoil Reconstruction"]   = kOrange+2;
+  mnvPlotter.error_color_map["Cross Section Models"]         = kMagenta;
+  mnvPlotter.error_color_map["FSI Model"]              = kRed;
+  mnvPlotter.error_color_map["Muon Reconstruction"]     = kGreen;
+  mnvPlotter.error_color_map["Muon Energy"]     = kGreen+3;
+  mnvPlotter.error_color_map["Muon_Energy_MINERvA"]     = kRed-3;
+  mnvPlotter.error_color_map["Muon_Energy_MINOS"]     = kViolet-3;
+  mnvPlotter.error_color_map["Other"]                  = kGreen+3;
+  mnvPlotter.error_color_map["Low Recoil Fits"]         = kRed+3;
+  mnvPlotter.error_color_map["GEANT4"]                = kBlue;
+  mnvPlotter.error_color_map["Background Subtraction"] = kGreen;
+  mnvPlotter.error_color_map["Tune"]=kOrange+2;
+  
   mnvPlotter.error_summary_group_map.clear();
 #ifndef NOGENIE
   //std::cout << " include GENIE" << std::endl;
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_FrAbs_N");
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_FrAbs_pi");
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_FrCEx_N");
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_FrCEx_pi");
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_FrElas_N");
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_FrElas_pi");
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_FrInel_N");
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_FrInel_pi");
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_FrPiProd_N");
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_FrPiProd_pi");
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_MFP_N");
-  mnvPlotter.error_summary_group_map["Genie_FSI"].push_back("GENIE_MFP_pi");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_AGKYxF1pi");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_AhtBY");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_BhtBY");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_CCQEPauliSupViaKF");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_CV1uBY");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_CV2uBY");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_EtaNCEL");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_MaCCQE");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_MaCCQEshape");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_MaNCEL");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_MaRES");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_MvRES");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_NormCCQE");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_NormCCRES");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_NormDISCC");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_NormNCRES");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_RDecBR1gamma");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_Rvn1pi");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_Rvn2pi");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_Rvn3pi");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_Rvp1pi");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_Rvp2pi");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_Theta_Delta2Npi");
-  mnvPlotter.error_summary_group_map["Genie_InteractionModel"].push_back("GENIE_VecFFCCQEshape");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_FrAbs_N");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_FrAbs_pi");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_FrCEx_N");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_FrCEx_pi");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_FrElas_N");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_FrElas_pi");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_FrInel_N");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_FrInel_pi");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_FrPiProd_N");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_FrPiProd_pi");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_MFP_N");
+  mnvPlotter.error_summary_group_map["FSI Model"].push_back("GENIE_MFP_pi");
+  //
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_AGKYxF1pi");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_AhtBY");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_BhtBY");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_CCQEPauliSupViaKF");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_CV1uBY");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_CV2uBY");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_EtaNCEL");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_MaCCQE");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_MaCCQEshape");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_MaNCEL");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_MaRES");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_MvRES");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_NormCCQE");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_NormCCRES");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_NormDISCC");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_NormNCRES");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_RDecBR1gamma");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_Rvn1pi");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_Rvn2pi");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_Rvn3pi");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_Rvp1pi");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_Rvp2pi");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_Theta_Delta2Npi");
+  mnvPlotter.error_summary_group_map["Genie Interaction Model"].push_back("GENIE_VecFFCCQEshape");
 #endif
   mnvPlotter.error_summary_group_map["Tune"].push_back("RPA_LowQ2");
   mnvPlotter.error_summary_group_map["Tune"].push_back("RPA_HighQ2");
@@ -116,22 +134,23 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
   mnvPlotter.error_summary_group_map["Response"].push_back("response_mid_neutron");
   mnvPlotter.error_summary_group_map["Response"].push_back("response_high_neutron");
 
-  mnvPlotter.error_summary_group_map["geant"].push_back("GEANT_Neutron");
-  mnvPlotter.error_summary_group_map["geant"].push_back("GEANT_Proton");
-  mnvPlotter.error_summary_group_map["geant"].push_back("GEANT_Pion");
+  mnvPlotter.error_summary_group_map["Geant"].push_back("GEANT_Neutron");
+  mnvPlotter.error_summary_group_map["Geant"].push_back("GEANT_Proton");
+  mnvPlotter.error_summary_group_map["Geant"].push_back("GEANT_Pion");
   //
-  //  mnvPlotter.error_summary_group_map["Muon_Energy"].push_back("Muon_Energy_MINOS");
-  //  mnvPlotter.error_summary_group_map["Muon_Energy"].push_back("Muon_Energy_MINERvA");
-  //  mnvPlotter.error_summary_group_map["Muon_Energy"].push_back("MinosEfficiency");
-  //  mnvPlotter.error_summary_group_map["Muon_Energy"].push_back("Muon_Energy_Resolution");
+   mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_MINOS");
+ mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_MINERvA");
+  mnvPlotter.error_summary_group_map["Muon Energy"].push_back("MINOS_Reconstruction_Efficiency");
+   mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_Resolution");
 
-  //  mnvPlotter.error_summary_group_map["Unfolding"].push_back("Unfolding");
+//  mnvPlotter.error_summary_group_map["Unfolding"].push_back("Unfolding");
 
 
   mnvPlotter.DrawErrorSummary(hist,"TR",include_stat_error,true,0.0, do_cov_area_norm, "",do_fractional_uncertainty);
   std::string plotname = Form("Title: ErrorSummary_%s_%s_%s", hist->GetName(),do_cov_area_norm_str.c_str(),label.c_str());
-  TText *t = new TText(.3,.9,label.c_str());
+  TText *t = new TText(.3,.95,label.c_str());
   t->SetNDC(1);
+  t->SetTextSize(.03);
   gPad->SetLogy(false);
   gPad->SetLogx(false);
   if (logscale== 2 || logscale ==3){
@@ -232,8 +251,11 @@ void PlotCVAndError(TCanvas & cE, PlotUtils::MnvH1D* idatahist,PlotUtils::MnvH1D
   }
   if (logscale== 1 || logscale ==3) gPad->SetLogx();
   cov_area = false;
-  TText *t = new TText(.3,.9,label.c_str());
+  TText *t = new TText(.3,.95,label.c_str());
   t->SetNDC(1);
+  t->SetTextSize(.03);
+  
+  
   //std::cout << label << " BinWidthNorm before" << datahist->GetNormBinWidth() << std::endl;
   //datahist->SetNormBinWidth(1.0);
   //hist->SetNormBinWidth(1);
@@ -293,9 +315,9 @@ void Plot2D(TCanvas & cE, MnvH2D* ihist, std::string label, int logscale=0, bool
   gPad->SetLogx(false);
   if (logscale == 2 || logscale == 3) gPad->SetLogy();
   if (logscale == 1 || logscale == 3) gPad->SetLogx();
-  TText *t = new TText(.3,.9,title.c_str());
+  TText *t = new TText(.3,.95,title.c_str());
   t->SetNDC(1);
-
+  t->SetTextSize(.03);
   std::string plotname = Form("Title: %s_CV_%s",hist->GetName(),label.c_str());
   t->Draw();
   hist->Draw("COLZ");
