@@ -15,7 +15,7 @@ int nbins   = 30;
 
 const bool do_fractional_uncertainty = true;
 const bool do_cov_area_norm          = false;
-const bool include_stat_error        = false;
+const bool include_stat_error        = true;
 
 
 const std::string do_fractional_uncertainty_str = do_fractional_uncertainty ?
@@ -56,7 +56,7 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
   // hist->GetXaxis()->SetTitle(hist->GetTitle());
   // std::string xaxis = mc->GetXaxis()->GetTitle();
   //mnvPlotter.error_color_map.clear();
-  
+
   mnvPlotter.axis_maximum=0.2;
   mnvPlotter.axis_minimum=0.0;
   mnvPlotter.error_color_map["Flux"]                    = kViolet+6;
@@ -146,7 +146,7 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
 //  mnvPlotter.error_summary_group_map["Unfolding"].push_back("Unfolding");
 
 
-  mnvPlotter.DrawErrorSummary(hist,"TR",include_stat_error,true,0.0, do_cov_area_norm, "",do_fractional_uncertainty);
+  mnvPlotter.DrawErrorSummary(hist,"TR",include_stat_error,false,0.0, do_cov_area_norm, "",do_fractional_uncertainty);
   std::string plotname = Form("Title: ErrorSummary_%s_%s_%s", hist->GetName(),do_cov_area_norm_str.c_str(),label.c_str());
   TText *t = new TText(.3,.95,label.c_str());
   t->SetNDC(1);
