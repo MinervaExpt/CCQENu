@@ -9,9 +9,14 @@
     {"true":"qelikenotnp","for":["selected_reco"],"phase_space":"phase_space"},
     {"true":"data","for":["data"],"phase_space":"phase_space"}
   ],
-  "QElikeALL":[
-    {"true":"qelikenp","for":["selected_reco","selected_truth","truth","response"],"phase_space":"phase_space_all"},
-    {"true":"qelikenotnp","for":["selected_reco"],"phase_space":"phase_space_all"},
-    {"true":"data","for":["data"],"phase_space":"phase_space_all"}
+  "QElikeALLAngles":[
+    {"true":"qelikenp","for":["selected_reco","selected_truth","truth","response"],"phase_space":"phase_space_all_angles"},
+    {"true":"qelikenotnp","for":["selected_reco"],"phase_space":"phase_space_all_angles"},
+    {"true":"data","for":["data"],"phase_space":"phase_space_all_angles"}
+  ],
+  "QElikeFULL":[
+    {"true":"qelikenp","for":["selected_reco","selected_truth","truth","response"],"phase_space":"phase_space_full"},
+    {"true":"qelikenotnp","for":["selected_reco"],"phase_space":"phase_space_full"},
+    {"true":"data","for":["data"],"phase_space":"phase_space_full"}
   ]
 }
