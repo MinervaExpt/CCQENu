@@ -1,6 +1,6 @@
 {
-    "version":7,  // Dec 2021 large scale tests
-    "mcIn":"./playlists/local/local_CCQENu_minervameTemplate_MC_Inextinguishable_merged.txt",
+  "version":7,  // Dec 2021 large scale tests
+  "mcIn":"./playlists/local/local_CCQENu_minervameTemplate_MC_Inextinguishable_merged.txt",
   "dataIn":"./playlists/local/local_CCQENu_minervameTemplate_DATA_Inextinguishable_merged.txt",
   "prescale":1,
   "playlist":"minervameTemplate",
