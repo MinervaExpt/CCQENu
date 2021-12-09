@@ -23,20 +23,22 @@ namespace CCQENu{
 
 
 
-class SubSample{
+class Component{
 private:
   std::string m_truth;
   std::string m_name;
   std::vector<std::string> m_for;
-  std::vector<std::string> m_variables;
+  std::string m_phase_space;
+  bool m_is_signal;
   NuConfig m_config;
 public:
-  SubSample(){};
+  Component(){};
   // constructor;
-  SubSample(const std::string samplename, const NuConfig config){
+  Component(const std::string samplename, const NuConfig config){
     m_name = samplename; // this is the name of the associated sample
     m_for = config.GetStringVector("for");
-    m_truth = config.GetString("true");
+    m_is_signal = config.GetInt("signal");
+    
     m_config = config;
   }
   
@@ -50,27 +52,26 @@ public:
     return IsInVector(s,m_for);
   }
   // get various name back
-  std::string GetSampleName()const{return m_name;};
-  std::string GetSubSampleName()const{return m_truth;};
-  
-  // this one is the tag for this Sample/SubSample pair
-  std::string GetJoinedName()const{
-      std::string tag= Form("%s:%s",m_name.c_str(),m_truth.c_str());
-    return tag;
-  }
+  std::string GetName()const{return m_name;};
+  std::string GetPhaseSpace()const{return m_phase_space;};
+  bool IsSignal()const{return m_is_signal;}
 };
 
 class Sample{
 private:
   std::string m_name;
-  std::map<const std::string, SubSample> m_subsamples;
+  std::string m_reco;
+  std::map<const std::string, Component> m_components;
+  m_phase_space = config.GetString("phase_space");
 public:
   Sample( const std::string key, const NuConfig config){
     m_name = key;
-    std::vector<NuConfig> subsamplelist = config.GetConfigVector();
-    for (auto subsampleconfig:subsamplelist){
-      SubSample subsample(key,subsampleconfig);
-      m_subsamples[subsample.GetSubSampleName()] = subsample;
+    m_reco = config.GetString("reco");
+    NuConfig components = config.GetConfig("components");
+    std::vector<std::string> Componentlist = components.GetKeys();
+    for (auto key:Componentlist){
+      Component newcomponent(key,components.GetConfig(key));
+      m_components[newcomponent.GetComponentName()] = newomponent;
     }
   }
   
@@ -78,33 +79,33 @@ public:
   
   std::vector<std::string> GetTags()const{
   std::vector<std::string> v;
-    for (auto s:m_subsamples){
-      v.push_back(s.second.GetJoinedName());
+    for (auto s:m_Components){
+      v.push_back(s.second.GetName());
     }
     return v;
   }
   std::vector<std::string> GetFor(const std::string t){
-    return m_subsamples[t].GetFor();
+    return m_Components[t].GetFor();
   }
   
   bool HasFor(const std::string t, const std::string k) {
-    return m_subsamples[t].HasFor(k);
+    return m_Components[t].HasFor(k);
   }
   
   bool HasTag(const std::string k)const{
     return IsInVector(k,GetTags());
   }
   
-  std::vector<std::string> GetSubSampleNames()const{
+  std::vector<std::string> GetComponentNames()const{
     std::vector<std::string> keys;
-    for (auto k:m_subsamples){
+    for (auto k:m_Components){
       keys.push_back(k.first);
     }
     return keys;
   }
   
   std::string GetJoinedName(const std::string sub){
-    return m_subsamples[sub].GetJoinedName();
+    return m_Components[sub].GetName();
   }
  
 };
