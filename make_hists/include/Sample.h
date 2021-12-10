@@ -25,11 +25,9 @@ namespace CCQENu{
 
 class Component{
 private:
-  std::string m_truth;
   std::string m_name;
   std::vector<std::string> m_for;
-  std::string m_phase_space;
-  bool m_is_signal;
+
   NuConfig m_config;
 public:
   Component(){};
@@ -37,7 +35,6 @@ public:
   Component(const std::string samplename, const NuConfig config){
     m_name = samplename; // this is the name of the associated sample
     m_for = config.GetStringVector("for");
-    m_is_signal = config.GetInt("signal");
     
     m_config = config;
   }
@@ -46,32 +43,38 @@ public:
   std::vector<std::string> GetFor()const {
     return m_for;
   }
-  
   // return if key s is in for
   bool HasFor(const std::string s) const{
     return IsInVector(s,m_for);
   }
   // get various name back
-  std::string GetName()const{return m_name;};
-  std::string GetPhaseSpace()const{return m_phase_space;};
-  bool IsSignal()const{return m_is_signal;}
+  std::string GetName()const
+    {return m_name;
+    };
 };
 
 class Sample{
 private:
   std::string m_name;
   std::string m_reco;
+  NuConfig m_config;
+  std::string m_phase_space;
   std::map<const std::string, Component> m_components;
-  m_phase_space = config.GetString("phase_space");
+  std::vector<std::string> m_signals;
+  std::vector<std::string> m_backgrounds;
 public:
   Sample( const std::string key, const NuConfig config){
+    m_config = config;
     m_name = key;
     m_reco = config.GetString("reco");
+    m_signals = config.GetStringVector("signal");
+    m_backgrounds = config.GetStringVector("background");
     NuConfig components = config.GetConfig("components");
     std::vector<std::string> Componentlist = components.GetKeys();
+    m_phase_space = config.GetString("phase_space");
     for (auto key:Componentlist){
       Component newcomponent(key,components.GetConfig(key));
-      m_components[newcomponent.GetComponentName()] = newomponent;
+      m_components[key] = newcomponent;
     }
   }
   
@@ -79,33 +82,38 @@ public:
   
   std::vector<std::string> GetTags()const{
   std::vector<std::string> v;
-    for (auto s:m_Components){
+    for (auto s:m_components){
       v.push_back(s.second.GetName());
     }
     return v;
   }
-  std::vector<std::string> GetFor(const std::string t){
-    return m_Components[t].GetFor();
-  }
   
-  bool HasFor(const std::string t, const std::string k) {
-    return m_Components[t].HasFor(k);
-  }
+  std::string GetPhaseSpace()const{return m_phase_space;};
   
   bool HasTag(const std::string k)const{
     return IsInVector(k,GetTags());
   }
   
+  std::string GetRecoName()const{
+    return m_reco;
+  }
+  
   std::vector<std::string> GetComponentNames()const{
     std::vector<std::string> keys;
-    for (auto k:m_Components){
+    for (auto k:m_components){
       keys.push_back(k.first);
     }
     return keys;
   }
   
-  std::string GetJoinedName(const std::string sub){
-    return m_Components[sub].GetName();
+  std::string GetName(const std::string sub){
+    const std::string local = sub;
+    return m_components[local].GetName();
+  }
+  
+  const Component GetComponent(const std::string sub){
+    const std::string local = sub;
+    return m_components[local];
   }
  
 };

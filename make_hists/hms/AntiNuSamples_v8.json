@@ -1,40 +1,34 @@
-{ // possible design for components
+{
   "QElike":{
     "reco":"QElike",
+    "phase_space":"phase_space",
+    "signal":["qelike1p","qelike2p2h"],
+    "background":["qelikenot"],
     "components":{
       "qelike1p":{
-        "for":["selected_reco","selected_truth","truth","response"],
-        "phase_space":"phase_space",
-        "signal":1
-        }
-      "qelike2p2h":{
-        "for":["selected_reco","selected_truth","truth","response"],
-        "phase_space":"phase_space",
-        "signal":1
+        "for":["selected_reco","selected_truth","truth","response"]
         },
-      "qelikenot":{"for":["selected_reco"],
-        "signal":0,
-        "phase_space":"phase_space"
+      "qelike2p2h":{
+        "for":["selected_reco","selected_truth","truth","response"]
+        },
+      "qelikenot":{"for":["selected_reco"]
         }
       }
    },
    "QElikeFULL":{
      "reco":"QElike",
+     "phase_space":"phase_space_full",
+     "signal":["qelike1p_np","qelike2p2h_np"],
+     "background":["qelikenot_np"],
      "components":{
        "qelike1p_np":{
-         "for":["selected_reco","selected_truth","truth","response"],
-         "phase_space_full":"phase_space_full",
-         "signal":1
+         "for":["selected_reco","selected_truth","truth","response"]
         },
        "qelike2p2h_np":{
-         "for":["selected_reco","selected_truth","truth","response"],
-        "phase_space_full":"phase_space_full",
-         "signal":1
+         "for":["selected_reco","selected_truth","truth","response"]
        },
        "qelikenot_np":{
-         "for":["selected_reco"],
-         "phase_space_full":"phase_space_full",
-         "signal":0
+         "for":["selected_reco"]
        }
      }
   }
