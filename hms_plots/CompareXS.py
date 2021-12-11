@@ -7,7 +7,7 @@ import array as array
 
  
 gStyle.SetEndErrorSize(10)
-ratio = True
+ratio = False
 reference="CV"
 sratio = ""
 if ratio:
@@ -21,7 +21,7 @@ else:
   print ("arg 1 needs to be enu, q2 or pzmu")
   sys.exit(1)
   
-if var != "q2" and var != "pzmu" and var != "enu":
+if var != "q2" and var != "pzmu" and var != "enu" and var != "ptmu":
   print ("arg 1 needs to be enu, q2 or pzmu")
   sys.exit(1)
 mnv = MnvPlotter()
@@ -81,6 +81,8 @@ for m in models:
     filename = "%sXS_%s_%s.root"%(path,var,m)
   if var == "pzmu":
     filename = "%sXS_%s_%s.root"%(path,var,m)
+  if var == "ptmu":
+    filename = "%sXS_%s_%s.root"%(path,"pzmu",m)
   if not os.path.exists(filename):
     print ("Skipping this model as no input file",m,filename)
     continue
@@ -171,14 +173,15 @@ if not ratio:
     ydn.SetMaximum(10.E-38/scale)
   if (var == "enu"):
     xdn.SetMinimum(0.0/scale)
-    xdn.SetMaximum(1.E-38/scale)
+    xdn.SetMaximum(2.E-38/scale)
    # ydn.SetMinimum(1.E-41/scale)
    # ydn.SetMaximum(2.E-38/scale)
-  if (var == "pzmu"):
+  if (var == "pzmu" or var == "ptmu"):
     xdn.SetMinimum(0.0/scale)
-    xdn.SetMaximum(0.2E-38/scale)
+    xdn.SetMaximum(0.3E-38/scale)
     ydn.SetMinimum(5.E-42/scale)
-    ydn.SetMaximum(2.E-37/scale)
+    ydn.SetMaximum(20.E-37/scale)
+ 
 else:
   xdn.SetMinimum(0.5)
   xdn.SetMaximum(2.5)

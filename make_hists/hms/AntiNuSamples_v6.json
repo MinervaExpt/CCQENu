@@ -2,17 +2,17 @@
   "QElike":[
     {"true":"qelike","for":["selected_reco","selected_truth","truth","response"],"phase_space":"phase_space"},
     {"true":"qelikenot","for":["selected_reco"],"phase_space":"phase_space"},
-    {"true":"data","for":["data"],"phase_space":"phase_space"}
+    {"true":"data","for":["data"]}
   ],
   "sideband1":[
     {"true":"qelike","for":["selected_reco"],"phase_space":"phase_space"},
     {"true":"qelikenot","for":["selected_reco"],"phase_space":"phase_space"},
-    {"true":"data","for":["data"],"phase_space":"phase_space"}
+    {"true":"data","for":["data"]}
   ],
   "sideband2":[
     {"true":"qelike","for":["selected_reco"],"phase_space":"phase_space"},
     {"true":"qelikenot","for":["selected_reco"],"phase_space":"phase_space"},
-    {"true":"data","for":["data"],"phase_space":"phase_space"}
+    {"true":"data","for":["data"]}
   ],
   "QElikeALL":[
     {"true":"qelikeall","for":["selected_reco","selected_truth","truth","response"],"phase_space":"phase_space_all"},

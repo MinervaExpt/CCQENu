@@ -186,8 +186,8 @@ template <class MnvHistoType>
     unsmeared->Multiply(unsmeared,unsmearing,1.,1.);
 
     // Commenting out since may not be necessary.
-    // SyncBands(unsmeared);
-    // SyncBands(unsmearing);
+    SyncBands(unsmeared);
+    SyncBands(unsmearing);
     outUnsmearingVec.push_back(unsmeared);
     outUnsmearingVec.push_back(unsmearing);
     // Returns a vector of size two of < (roughly unsmeared variable hist), ( rough unsmearing hist ) >
@@ -205,6 +205,7 @@ template <class MnvHistoType>
     std::string unsmearedname = std::string(bkgsub->GetName()) + "_notunfolded";
     MnvHistoType* unsmeared = (MnvHistoType*)idatahist->Clone(unsmearedname.c_str());
     unsmeared->SetDirectory(0);
+    SyncBands(unsmeared);
     std::cout << " WARNING: something's wrong, used default response unfolding that does nothing." << std::endl;
     return unsmeared;
   }
@@ -214,10 +215,11 @@ template<> MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* ire
   MnvH2D* migration = (MnvH2D*)iresponse->Clone();
   if (migration == 0) {
   std::cout << " no migration, stop here for " << basename << std::endl;
+    SyncBands(bkgsub);
     return bkgsub;
   }
   // Commenting out since may not be necessary.
-  // SyncBands(migration);
+  SyncBands(migration);
   // you can't put the cv in as the unfolding code does not expect it.
   migration->PopVertErrorBand("cv");
 
@@ -237,7 +239,7 @@ template<> MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* ire
 
   unsmeared->FillSysErrorMatrix("Unfolding",covmatrix);
   // Commenting out since may not be necessary.
-  // SyncBands(unsmeared);
+  SyncBands(unsmeared);
   return unsmeared;
 };
 
@@ -251,7 +253,7 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
     return bkgsub;
   }
   // Commenting out since may not be necessary.
-  // SyncBands(migration);
+  SyncBands(migration);
   // you can't put the cv in as the unfolding code does not expect it.
   migration->PopVertErrorBand("cv");
   // std::cout << " Migration matrix has size " << migration->GetErrorBandNames().size() << std::endl;
@@ -270,7 +272,7 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
   std::cout << " Done with 2D unfolding " << std::endl;
 
   // Commenting out since may not be necessary.
-  // SyncBands(unsmeared);
+  SyncBands(unsmeared);
   return unsmeared;
 };
 
@@ -300,6 +302,7 @@ template<class MnvHistoType>
       // Output is a vector of size one < (unsmeared variable hist) >
       std::vector<MnvHistoType*> unsmearedVec;
       MnvHistoType* unsmeared = DoResponseUnfolding(basename,iresponse,imcsighist,iseltruhist,bkgsub,idatahist,unfold,num_iter);
+      SyncBands(unsmeared);
       unsmearedVec.push_back(unsmeared);
 
       return unsmearedVec;
@@ -331,13 +334,17 @@ template <class MnvHistoType>
 
     // apply the efficiency
     efficiency->AddMissingErrorBandsAndFillWithCV(*ialltruhist); //should be seltruhists?
-    efficiency->Divide(efficiency,ialltruhist,1.,1.,"B");
+    SyncBands(efficiency);
+    // make certain efficiency has all error bands for thing it will be applied to
     efficiency->AddMissingErrorBandsAndFillWithCV(*unsmeared);
+    SyncBands(efficiency);
+    efficiency->Divide(efficiency,ialltruhist,1.,1.,"B");
+    //efficiency->AddMissingErrorBandsAndFillWithCV(*unsmeared);
     // Commenting out since may not be necessary.
-    // SyncBands(efficiency);
+    SyncBands(efficiency);
     effcorr->Divide(unsmeared,efficiency,1.,1.);
     // Commenting out since may not be necessary.
-    // SyncBands(effcorr);
+    SyncBands(effcorr);
 
     outEffVec.push_back(effcorr);
     outEffVec.push_back(efficiency);
@@ -393,6 +400,7 @@ template<class MnvHistoType>
       sigma->Divide(sigma,h_flux_ebins);
       // target normalization
       sigma->Scale(norm);
+      SyncBands(sigma);
       // if (DEBUG) sigma->GetSysErrorMatrix("Unfolding").Print();
 
       h_flux_ebins->AddMissingErrorBandsAndFillWithCV(*sigmaMC);
@@ -400,8 +408,10 @@ template<class MnvHistoType>
       sigmaMC->Divide(sigmaMC,h_flux_ebins,1.0,1.0);
       // target normalization
       sigmaMC->Scale(norm);
+      
     }
-
+    SyncBands(sigma);
+    SyncBands(sigmaMC);
     std::vector<MnvHistoType*> sigmaVec;
     sigmaVec.push_back(sigma);
     sigmaVec.push_back(sigmaMC);
@@ -427,9 +437,20 @@ template<class MnvHistoType>
 
     // Get "category" tags set in config. Needs to match ones used in the event loop.
     //TODO: Make this a map in config.
-    std::string sig = config.GetString("signal");
-    std::string bkg = config.GetString("background");
-    std::string dat = config.GetString("data");
+    
+    
+    // this can come out of the sample information:
+    
+    NuConfig sigkey = config.GetConfig("signal");
+    sigkey.Print();
+    std::string sig = sigkey.GetString(sample);
+    NuConfig bkgkey = config.GetConfig("background");
+    std::string bkg = bkgkey.GetString(sample);
+    bkgkey.Print();
+    NuConfig datkey = config.GetConfig("data");
+    std::string dat = datkey.GetString(sample);
+    //std::string bkg = config.GetString("background");
+    // std::string dat = config.GetString("data");
 
     // parse out variable to get axes
     std::vector<std::string> varparse;
@@ -516,6 +537,7 @@ template<class MnvHistoType>
     if(DEBUG)mc->Print();
     mc->Write();
     PlotCVAndError(canvas,idatahist,mc, "DATA_vs_MC" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,mc,"Raw MC Systematics" ,logscale );
 
     //================================Signal Fraction===========================
 
@@ -525,6 +547,7 @@ template<class MnvHistoType>
     if(DEBUG) signalFraction->Print();
     signalFraction->Write();
     PlotCVAndError(canvas,signalFraction,signalFraction, "Signal Fraction" ,true,logscale,false);
+    PlotErrorSummary(canvas,signalFraction,"Signal Fraction Systematics" ,0);
 
     //============================Background Subtraction========================
 
@@ -534,6 +557,7 @@ template<class MnvHistoType>
     if(DEBUG)bkgsub->Print();
     bkgsub->Write();
     PlotCVAndError(canvas,bkgsub,imcsighist, "BKGsub vs. MC signal" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,bkgsub,"BKGsub Systematics" ,0);
 
     //==================================Unfolding===============================
 
@@ -554,6 +578,7 @@ template<class MnvHistoType>
       if (DEBUG) unsmeared->Print();
       unsmeared->Write();
       PlotCVAndError(canvas,bkgsub,unsmeared,"Data Before and After Unsmearing", true,logscale,binwid);
+      
     }
     if(unsmearedVec.size()==2){
       // Output for crude ratio unfolding, DOES include "unsmearing" hist, so this picks that up
@@ -564,7 +589,7 @@ template<class MnvHistoType>
     }
 
     PlotCVAndError(canvas,unsmeared,iseltruhist, "Unsmeared Data Compared to Selected MC" ,true,logscale,binwid);
-
+    PlotErrorSummary(canvas,unsmeared,"Unsmeared Data Systematics" ,0);
 
     //==================================Efficiency==============================
 
@@ -586,7 +611,9 @@ template<class MnvHistoType>
     efficiency->Write();
     PlotCVAndError(canvas,iseltruhist,ialltruhist, "efficiency: selected and true" ,true,logscale,binwid);
     PlotCVAndError(canvas,effcorr,ialltruhist, "effcorr data vs truth" ,true,logscale,binwid);
-
+    PlotErrorSummary(canvas,efficiency,"Efficiency Factor Systematics" ,0);
+    PlotErrorSummary(canvas,effcorr,"Efficiency Corrected Data Systematics" ,0);
+    
     //============================POT/Flux Normalization========================
     // bool energydep = false;
     // bool energydepx = false;
@@ -611,7 +638,7 @@ template<class MnvHistoType>
     
     // HMS dec-1-2021 - flip these? 
     if (fluxnorm["fluxnorm"]) {
-      binwid = false;
+      binwid =  true;
     }
     if (!fluxnorm["fluxnorm"]) {
       binwid = true;
@@ -630,6 +657,7 @@ template<class MnvHistoType>
     sigmaMC->Print();
 
     PlotCVAndError(canvas,sigma,sigmaMC, "sigma" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,sigma,"Cross Section Systematics" ,0);
 
     //============================Binwidth Normalization============================
     // Just a check on bin width corrections...

@@ -283,9 +283,9 @@ int main(const int argc, const char *argv[] ) {
   
   const std::string truth_tree_name("Truth");
 
-  const std::string background_tag = config.GetString("background");
-  const std::string signal_tag = config.GetString("signal");
-  const std::string data_tag = config.GetString("data");
+  //const std::string background_tag = config.GetString("background");
+  //const std::string signal_tag = config.GetString("signal");
+  //const std::string data_tag = config.GetString("data");
   const bool do_truth = true;
 
   PlotUtils::MacroUtil util(reco_tree_name, mc_file_list, data_file_list,
@@ -372,6 +372,7 @@ int main(const int argc, const char *argv[] ) {
   std::vector<std::pair<std::string,std::string> >samples;
   std::map<std::string, std::map<std::string,std::vector<std::string> > > type_list;
   std::map<std::string, std::map<std::string,std::string > > h_name;
+  std::map<std::string, std::map<std::string,std::string > > phasespaces;
   // loop over samples
   for (auto key:samplelist){
     std::cout << key  << " " ;
@@ -382,6 +383,7 @@ int main(const int argc, const char *argv[] ) {
   if (version <= 5){
     samplesToDo = samplelist;
   }
+  
   for (auto key:samplesToDo){
     if (!IsInVector<std::string>(key,samplelist)){
       std::cout << " runsamples is asking for a sample " << key << " that has not been configured in "<< samplesfilename << std::endl;
@@ -392,29 +394,22 @@ int main(const int argc, const char *argv[] ) {
     std::cout << " configure sample " << key << std::endl;
     // get the subsamples
     for (auto sampleconfig:subsamples){
+      sampleconfig.Print();
       std::string truecuts=sampleconfig.GetString("true");
+      if (sampleconfig.IsMember("phase_space")){
+        std::string phasespace=sampleconfig.GetString("phase_space");
+        phasespaces[key][truecuts] = sampleconfig.GetString("phase_space");
+      }
+      else{
+        phasespaces[key][truecuts] = "None";
+      }
       std::pair<std::string,std::string>  temp = make_pair(key,truecuts);
       samples.push_back(temp);
       type_list[key][truecuts] = sampleconfig.GetStringVector("for");
+      //std::cout << "phasespace" << phasespaces[key][truecuts] << std::endl;
       h_name[key][truecuts] = Form("%s___%s",key.c_str(),truecuts.c_str());
     }
   }
-
-
-  //std::vector<std::pair<std::string,std::string> >samples ={{"QEresult","qelike"},{"sideband1","qelike"}
-  //  ,{"sideband1","qelikenot"},{"sideband2","qelike"},{"sideband2","qelikenot"},{"QEresult","data"},{"sideband1","data"},{"sideband2","data"}};
-
-
-  //  NuConfig recocuts  = cutsConfig.GetValue("result");
-  //  NuConfig recocuts  = cutsConfig.GetValue("result");
-  //  NuConfig signalcuts = cutsConfig.GetValue("signal");
-  //  NuConfig bkgcuts = cutsConfig.GetValue("background");
-  // set a default phasespace
-  
-  // NuConfig phasespace;
-  // future feature  NuConfig defaultPhasespace = cutsConfig.GetValue("phase_space");  // doesn't work for now....
-  
-  NuConfig phasespace = cutsConfig.GetValue("phase_space");
 
   PlotUtils::cuts_t<CVUniverse> noSidebands;
   PlotUtils::constraints_t<CVUniverse> signal, phaseSpace;
@@ -426,14 +421,10 @@ int main(const int argc, const char *argv[] ) {
     std::cout << " load in cuts for samples" << sample.first << " " << sample.second << std::endl;
     NuConfig recocuts = cutsConfig.GetValue(sample.first);
     NuConfig truecuts = cutsConfig.GetValue(sample.second);
-//    if (truecuts.IsMember("phase_space")){  // this doesn't really work yet. 
-//
-//      NuConfig phasespace = truecuts.GetValue("phase_space");
-//      std::cout << "override default phase space with " << phasespace.GetString("name");
-//    }
-//    else{
-//      NuConfig phasespace = defaultPhasespace;
-//    }
+    truecuts.Print();
+
+    NuConfig phasespace = cutsConfig.GetValue(phasespaces[sample.first][sample.second]);
+
     std::string tag = h_name[sample.first][sample.second];
     tags.push_back(tag);
     selectionCriteria[tag] = new PlotUtils::Cutter<CVUniverse> (\
@@ -447,11 +438,6 @@ int main(const int argc, const char *argv[] ) {
   //=========================================
 
 
-
-
-  //  for (auto cuts:selectionCriteria){
-  //    tags.push_back(cuts.first);
-  //  }
   std::vector<std::string> vars1D = config.GetStringVector("AnalyzeVariables");
   std::vector<std::string> vars2D = config.GetStringVector("Analyze2DVariables");
 

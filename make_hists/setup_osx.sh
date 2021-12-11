@@ -11,5 +11,5 @@ export JSONCPP_DIR=$HOME/LocalApps/jsoncpp-build # need to change this probably
 export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
 
 export DYLD_LIBRARY_PATH=${PLOTUTILSROOT}
-
+export PYTHONPATH=$WHEREIPUTMYCODE/MAT-MINERvA/python:$WHEREIPUTMYCODE/MAT-MINERvA/python/PlotUtils:$PYTHONPATH
 export THEDATA=/pnfs/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron
