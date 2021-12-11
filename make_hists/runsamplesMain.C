@@ -155,17 +155,29 @@ int main(const int argc, const char *argv[] ) {
   std::map<std::string,PlotUtils::Cutter<CVUniverse> *> selectionCriteria;
   
   std::vector<std::string> tags;
-  
+  std::string tag;
   for (auto sample:samples){
     std::string name = sample.GetName();
+    std::string tag = name+"___data";
+    tags.push_back(tag);
     std::cout << " load in cuts for samples" << name << std::endl;
     NuConfig recocuts = cutsConfig.GetValue(sample.GetReco());
     NuConfig phasespace = cutsConfig.GetValue(sample.GetPhaseSpace());
+    NuConfig truecuts = cutsConfig.GetValue("data");
+    // do data here
+    selectionCriteria[tag] = new PlotUtils::Cutter<CVUniverse> (\
+                                                                config_reco::GetCCQECutsFromConfig<CVUniverse>(recocuts),\
+                                                                std::move(noSidebands),\
+                                                                config_truth::GetCCQESignalFromConfig<CVUniverse>(truecuts),\
+                                                                config_truth::GetCCQEPhaseSpaceFromConfig<CVUniverse>(phasespace));
+    
+    // now do for signal components
     std::map<const std::string, CCQENu::Component> components = sample.GetComponents();
+
     for (auto component:components){
       std::string cname = component.first;
-      std::string tag = name+"___"+cname;
-      tags.push_back(tag);
+      tag = name + "___" + cname;
+      std::cout << "make a tag " << tag << std::endl;
       if (!cutsConfig.IsMember(cname)){
         std::cout << " sample component " << cname << " does not have an associated  cut in " << cutsfilename << std::endl;
         assert(0);
@@ -229,28 +241,37 @@ int main(const int argc, const char *argv[] ) {
   for (auto sample:samples){
     std::map<const std::string, CCQENu::Component> components = sample.GetComponents();
     std::string datatag = sample.GetName()+"___data";
+    
     datatags.push_back(datatag);
+    tags.push_back(datatag);
     for (auto component:components){
       std::string cname = component.first;
       std::vector<std::string> forlist = component.second.GetFor();
       std::string tag = sample.GetName()+"___"+cname;
-      
+      std::cout << "make a tag " << tag << std::endl;
       
       if (IsInVector<std::string>("selected_reco",forlist)){
         selected_reco_tags.push_back(tag);
+        tags.push_back(tag);
       }
       if (IsInVector<std::string>("selected_truth",forlist)){
         selected_truth_tags.push_back(tag);
+        tags.push_back(tag);
       }
       if(IsInVector<std::string>("truth",forlist )){
         truthtags.push_back(tag);
+        tags.push_back(tag);
       }
       if(IsInVector<std::string>("response",forlist)){
         responsetags.push_back(tag);
+        tags.push_back(tag);
       }
     }
   }
   
+  for (auto tag:tags){
+  std:cout << "tag: " << tag << std::endl;
+  }
   // here we initialist ghem
   
   for (auto var1D : variablesmap1D) {
