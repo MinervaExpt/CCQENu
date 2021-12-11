@@ -2,7 +2,7 @@
 #define VARIABLEFromConfig_H
 
 #include "CVUniverse.h"
-#include "PlotUtils/HistFolio.h"
+//#include "PlotUtils/HistFolio.h"  - gives annoying error messages
 #include "HistWrapperMap.h"
 #include "MinervaUnfold/MnvResponse.h"
 #include "utils/NuConfig.h"
@@ -23,7 +23,7 @@ private:
   typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
   typedef PlotUtils::HistWrapperMap<CVUniverse> HM;
   typedef PlotUtils::MnvH1D MH1D;
-  typedef PlotUtils::HistFolio<PlotUtils::MnvH1D> FOLIO;
+  //  typedef PlotUtils::HistFolio<PlotUtils::MnvH1D> FOLIO;
  
   
 public:

@@ -33,8 +33,8 @@
        }
      }
   },
-  "QElikeFULL":{
-     "name":"QElikeFULL",
+  "QElikeALLAngles":{
+     "name":"QElikeALLAngles",
      "reco":"QElike",
      "phase_space":"phase_space_full",
      "signal":["qelike1p_np","qelike2p2h_np"],

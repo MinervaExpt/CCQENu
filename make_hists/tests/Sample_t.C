@@ -19,7 +19,7 @@ int main(){
   for (auto name:samplenames){
     std::cout << " sample name is " << name << std::endl;
     NuConfig sample_config = config.GetConfig(name);
-    samples.push_back(Sample(name,sample_config));
+    samples.push_back(Sample(sample_config));
   }
   
   for (auto sample:samples){

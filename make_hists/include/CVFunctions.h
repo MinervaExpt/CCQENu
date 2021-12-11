@@ -84,6 +84,8 @@ public:
     
     trueintfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
     
+    trueintfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
+    
   };
   
   std::vector<std::string> GetRecoKeys()const{
@@ -109,8 +111,14 @@ public:
   };
   
   PointerToCVUniverseFunction GetTrueFunction(const std::string name) {
-    assert (truefunctions.count(name));
-    return truefunctions[name];
+    // try a real function first
+    if (truefunctions.count(name)){
+      return truefunctions[name];
+    }
+    else{
+      assert(trueintfunctions.count(name));
+      return trueintfunctions[name];
+    }
   };
   
   const PointerToCVUniverseIntFunction GetRecoIntFunction(const std::string name) {
