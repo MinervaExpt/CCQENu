@@ -140,6 +140,7 @@ public:
     }
     return a;
   };
+  
 
   // do this when you already have the vector of configs in hand
   std::vector<NuConfig> GetConfigVector()const{
