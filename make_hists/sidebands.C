@@ -290,7 +290,7 @@ int main(const int argc, const char *argv[] ) {
   const bool is_grid = false;
 
   PlotUtils::MacroUtil util(reco_tree_name, mc_file_list, data_file_list,
-                            plist_string, do_truth, is_grid);
+                            plist_string, do_truth);
 
   //Data, MC reco, and Truth trees
 

@@ -334,8 +334,12 @@ template <class MnvHistoType>
 
     // apply the efficiency
     efficiency->AddMissingErrorBandsAndFillWithCV(*ialltruhist); //should be seltruhists?
-    efficiency->Divide(efficiency,ialltruhist,1.,1.,"B");
+    SyncBands(efficiency);
+    // make certain efficiency has all error bands for thing it will be applied to
     efficiency->AddMissingErrorBandsAndFillWithCV(*unsmeared);
+    SyncBands(efficiency);
+    efficiency->Divide(efficiency,ialltruhist,1.,1.,"B");
+    //efficiency->AddMissingErrorBandsAndFillWithCV(*unsmeared);
     // Commenting out since may not be necessary.
     SyncBands(efficiency);
     effcorr->Divide(unsmeared,efficiency,1.,1.);
