@@ -1,5 +1,5 @@
-{
-  "QElike":{
+{"QElike":
+   {"name":"QElike",
     "reco":"QElike",
     "phase_space":"phase_space",
     "signal":["qelike1p","qelike2p2h"],
@@ -15,7 +15,26 @@
         }
       }
    },
-   "QElikeFULL":{
+  "QElikeNP":{
+     "name":"QElikeNP",
+     "reco":"QElike",
+     "phase_space":"phase_space",
+     "signal":["qelike1p_np","qelike2p2h_np"],
+     "background":["qelikenot_np"],
+     "components":{
+       "qelike1p_np":{
+         "for":["selected_reco","selected_truth","truth","response"]
+        },
+       "qelike2p2h_np":{
+         "for":["selected_reco","selected_truth","truth","response"]
+       },
+       "qelikenot_np":{
+         "for":["selected_reco"]
+       }
+     }
+  },
+  "QElikeFULL":{
+     "name":"QElikeFULL",
      "reco":"QElike",
      "phase_space":"phase_space_full",
      "signal":["qelike1p_np","qelike2p2h_np"],

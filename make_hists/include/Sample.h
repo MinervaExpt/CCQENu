@@ -14,14 +14,6 @@ bool IsInVector(const std::string  what, const std::vector<std::string>  &vec)
 };
 
 namespace CCQENu{
-// helper function
-
-//bool IsInVector(const std::string  what, const std::vector<const std::string>  &vec)
-//{
-//  return std::find(vec.begin(),vec.end(),what)!=vec.end();
-//};
-
-
 
 class Component{
 private:
@@ -32,8 +24,9 @@ private:
 public:
   Component(){};
   // constructor;
-  Component(const std::string samplename, const NuConfig config){
-    m_name = samplename; // this is the name of the associated sample
+  Component(const std::string key, const NuConfig config){
+    
+    m_name = key;
     m_for = config.GetStringVector("for");
     
     m_config = config;
@@ -63,9 +56,9 @@ private:
   std::vector<std::string> m_signals;
   std::vector<std::string> m_backgrounds;
 public:
-  Sample( const std::string key, const NuConfig config){
+  Sample( const NuConfig config){
     m_config = config;
-    m_name = key;
+    m_name = config.GetString("name");
     m_reco = config.GetString("reco");
     m_signals = config.GetStringVector("signal");
     m_backgrounds = config.GetStringVector("background");
@@ -94,7 +87,7 @@ public:
     return IsInVector(k,GetTags());
   }
   
-  std::string GetRecoName()const{
+  std::string GetReco()const{
     return m_reco;
   }
   
@@ -114,6 +107,9 @@ public:
   const Component GetComponent(const std::string sub){
     const std::string local = sub;
     return m_components[local];
+  }
+  std::map<const std::string, Component> GetComponents(){
+    return m_components;
   }
  
 };
