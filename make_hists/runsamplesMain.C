@@ -177,6 +177,7 @@ int main(const int argc, const char *argv[] ) {
     for (auto component:components){
       std::string cname = component.first;
       tag = name + "___" + cname;
+      tags.push_back(tag);
       std::cout << "make a tag " << tag << std::endl;
       if (!cutsConfig.IsMember(cname)){
         std::cout << " sample component " << cname << " does not have an associated  cut in " << cutsfilename << std::endl;
@@ -240,31 +241,35 @@ int main(const int argc, const char *argv[] ) {
   
   for (auto sample:samples){
     std::map<const std::string, CCQENu::Component> components = sample.GetComponents();
-    std::string datatag = sample.GetName()+"___data";
-    
-    datatags.push_back(datatag);
-    tags.push_back(datatag);
+    std::string data_tag = sample.GetName()+"___data";
+    datatags.push_back(data_tag);
     for (auto component:components){
       std::string cname = component.first;
       std::vector<std::string> forlist = component.second.GetFor();
+      std::cout << "for ";
+      for (auto f:forlist){
+        std::cout << " " << f;
+      }
+      std::cout << std::endl;
+      
       std::string tag = sample.GetName()+"___"+cname;
       std::cout << "make a tag " << tag << std::endl;
       
       if (IsInVector<std::string>("selected_reco",forlist)){
         selected_reco_tags.push_back(tag);
-        tags.push_back(tag);
+        
       }
       if (IsInVector<std::string>("selected_truth",forlist)){
         selected_truth_tags.push_back(tag);
-        tags.push_back(tag);
+       
       }
       if(IsInVector<std::string>("truth",forlist )){
         truthtags.push_back(tag);
-        tags.push_back(tag);
+       
       }
       if(IsInVector<std::string>("response",forlist)){
         responsetags.push_back(tag);
-        tags.push_back(tag);
+        
       }
     }
   }

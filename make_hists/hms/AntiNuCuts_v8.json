@@ -92,7 +92,7 @@
     {"name":"IsCC","equals":1,"variable":"IsCC"},
     {"name":"IsCCQELike","equals":0,"variable":"IsCCQELike","protonKECutMeV":120.}
   ],
-  "qelikenp":[
+  "qelike_np":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
     {"name":"IsCC","equals":1,"variable":"IsCC"},
     {"name":"IsCCQELikeAll","equals":1,"variable":"IsCCQELikeAll"}

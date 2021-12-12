@@ -1,11 +1,14 @@
-{"QElike":  // this one reproduces the older format
+{"QElike":
    {"name":"QElike",
     "reco":"QElike",
     "phase_space":"phase_space",
-    "signal":["qelike"],
+    "signal":["qelike1p","qelike2p2h"],
     "background":["qelikenot"],
     "components":{
-      "qelike":{
+      "qelike1p":{
+        "for":["selected_reco","selected_truth","truth","response"]
+        },
+      "qelike2p2h":{
         "for":["selected_reco","selected_truth","truth","response"]
         },
       "qelikenot":{"for":["selected_reco"]
@@ -16,12 +19,15 @@
      "name":"QElikeNP",
      "reco":"QElike",
      "phase_space":"phase_space",
-     "signal":["qelike_np"],
+     "signal":["qelike1p_np","qelike2p2h_np"],
      "background":["qelikenot_np"],
      "components":{
-       "qelike_np":{
+       "qelike1p_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
+       "qelike2p2h_np":{
+         "for":["selected_reco","selected_truth","truth","response"]
+       },
        "qelikenot_np":{
          "for":["selected_reco"]
        }
@@ -31,12 +37,15 @@
      "name":"QElikeALLAngles",
      "reco":"QElike",
      "phase_space":"phase_space_full",
-     "signal":["qelike_np"],
+     "signal":["qelike1p_np","qelike2p2h_np"],
      "background":["qelikenot_np"],
      "components":{
-       "qelike_np":{
+       "qelike1p_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
+       "qelike2p2h_np":{
+         "for":["selected_reco","selected_truth","truth","response"]
+       },
        "qelikenot_np":{
          "for":["selected_reco"]
        }
