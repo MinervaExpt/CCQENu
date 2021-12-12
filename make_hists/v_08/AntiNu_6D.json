@@ -1,0 +1,27 @@
+{
+  "version":8,  // Dec 2021 large scale tests
+  "mcIn":"./playlists/hep01/local_CCQENu_minervame6D_MC_Inextinguishable_merged.txt",
+  "dataIn":"./playlists/hep01/local_CCQENu_minervame6D_DATA_Inextinguishable_merged.txt",
+  "prescale":1,
+  "playlist":"minervame6D",
+  "recoName":"CCQENu",
+  "pdg":-14,
+    "runsamples":["QElike","QElikeNP","QElikeALLAngles"],
+  "cutsFile":"v_08/AntiNuCuts_v8.json",
+  "varsFile":"v_08/Variables_v8.json",
+  "samplesFile":"v_08/AntiNuSamples_v8.json",
+  "outRoot":"SB",
+    "AnalyzeVariables":["Q2QE","pzmu","ptmu","EnuCCQE","Enu"],
+  "Analyze2DVariables":[],
+  "signal":{"QElike":"qelike","QElikeNP":"qelikenp","QElikeALLAngles":"qelikenp"},
+  "background":{"QElike":"qelikenot","QElikeNP":"qelikenotnp","QElikeALLAngles":"qelikenotnp"},
+  "data":{"QElike":"data","QElikeNP":"data","QElikeALLAllAngles":"data"},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}

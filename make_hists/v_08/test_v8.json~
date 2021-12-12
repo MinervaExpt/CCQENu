@@ -1,0 +1,27 @@
+{
+    "version":8,  // October 25, 2021  get ready for github
+    "mcIn":"./playlists/hep01/minervame5A_MC.txt",
+    "dataIn":"./playlists/hep01/minervame5A_DATA.txt",
+    "prescale":1,
+  "playlist":"minervame5A",
+  "recoName":"CCQENu",
+  "pdg":-14,
+    "runsamples":["QElike","QElikeNP","QElikeALLAngles"],
+  "cutsFile":"hms/AntiNuCuts_v8.json",
+  "varsFile":"hms/Variables_v7.json",
+  "samplesFile":"hms/AntiNuSamples_v8.json",
+  "outRoot":"CK",
+    "AnalyzeVariables":["Q2QE","EnuCCQE","Enu"],
+  "Analyze2DVariables":[""],
+  "signal":{"QElike":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np","QElikeFULL":"qelike_np"},
+  "background":{"QElike":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np","QElikeFULL":"qelikenot_np"},
+  "data":{"QElike":"data","QElikeNP":"data","QElikeALLAngles":"data","QElikeFULL":"data"},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":200,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1,
+  "NonResPiReweight":1,
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1
+}
