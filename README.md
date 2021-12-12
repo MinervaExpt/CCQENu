@@ -30,6 +30,12 @@ export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
 
 export DYLD_LIBRARY_PATH=${PLOTUTILSROOT}
 
+or 
+
+source $CCQEMAT/setup_osx.sh #on osx
+
+source $CCQEMAT/setup_unx.sh #on unix
+
 If you get json related errors install jsoncpp on your machine or on fnal machines.  I think you can get this with conda
 
 export JSONCPP_DIR=/minerva/app/users/schellma/LocalApps/jsoncpp-build
@@ -37,8 +43,10 @@ export JSONCPP_DIR=/minerva/app/users/schellma/LocalApps/jsoncpp-build
 cd $CCQEMAT
 # I haven't figured out how to do Andrew style builds yet so this builds on the source directory. But there is a MAT compatible cmake now.  
 
-cmake mat  
+cmake mat  # for older versions
 make
+
+cmake v_08 # for the new version 8 with multiple signal components for Sean
 ```
 
 Note -  the old build against cvs PlotUtils is in directory build. you can find how to modify an old cmake file to this setup by doing  diff build/CMakelist.txt mat/CMakelist.txt
