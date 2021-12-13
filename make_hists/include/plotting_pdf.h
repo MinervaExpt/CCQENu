@@ -25,6 +25,22 @@ const std::string do_cov_area_norm_str = do_cov_area_norm ?
 std::string("CovAreaNorm") :
 std::string("POT");
 
+void setLogScale(int logscale){
+  gPad->SetLogy(false);
+  gPad->SetLogx(false);
+  if (logscale == 0) return;
+  if (logscale== 2 || logscale ==3){
+    gPad->SetLogy(true);
+  }
+  if (logscale== 1 || logscale ==3) gPad->SetLogx(true);
+}
+
+void resetLogScale(){
+  gPad->SetLogy(false);
+  gPad->SetLogx(false);
+}
+  
+
 void PlotErrorSummary(PlotUtils::MnvH1D* hist, std::string label);
 void PlotErrorSummary(PlotUtils::MnvH2D* hist, std::string label){std::cout<<"no error bands for 2D" << std::endl;}
 void PlotVertBand(std::string band, std::string method_str, PlotUtils::MnvH1D* hist);
@@ -52,6 +68,7 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH2D* hist, std::string label, 
 
 void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, int logscale){
   PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
+  resetLogScale();
   //TCanvas cE ("c1","c1");
   // hist->GetXaxis()->SetTitle(hist->GetTitle());
   // std::string xaxis = mc->GetXaxis()->GetTitle();
@@ -151,15 +168,17 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
   TText *t = new TText(.3,.95,label.c_str());
   t->SetNDC(1);
   t->SetTextSize(.03);
-  gPad->SetLogy(false);
-  gPad->SetLogx(false);
-  if (logscale== 2 || logscale ==3){
-    gPad->SetLogy();
-    hist->SetMinimum(0.001);
-  }
-  if (logscale== 1 || logscale ==3) gPad->SetLogx();
+  setLogScale(logscale);
+//  gPad->SetLogy(false);
+//  gPad->SetLogx(false);
+//  if (logscale== 2 || logscale ==3){
+//    gPad->SetLogy();
+//    hist->SetMinimum(0.001);
+//  }
+//  if (logscale== 1 || logscale ==3) gPad->SetLogx();
   t->Draw();
   cE.Print(cE.GetName(),plotname.c_str());
+  resetLogScale();
   //mnvPlotter.MultiPrint(&cE, plotname, "pdf");
   //  mnvPlotter.DrawErrorSummary(hist,"TR",include_stat_error,true,0.0, do_cov_area_norm, "Angle",false);
   //  plotname = Form("ResponseErrorSummary_%s_%s_%s", hist->GetName(),do_cov_area_norm_str.c_str(),label.c_str());
@@ -213,6 +232,7 @@ void PlotLatUniverse(std::string band, unsigned int universe, std::string method
 }
 
 void PlotCVAndError(TCanvas & cE, PlotUtils::MnvH1D* idatahist,PlotUtils::MnvH1D* ihist, std::string label,bool cov_area=do_cov_area_norm, int logscale=0, bool binwid = true){
+  resetLogScale();
   // PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
   PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kDefaultStyle);
   //mnvPlotter.SetBinWidthNorm(false);
@@ -244,12 +264,13 @@ void PlotCVAndError(TCanvas & cE, PlotUtils::MnvH1D* idatahist,PlotUtils::MnvH1D
   const PlotUtils::MnvH1D* bkgdHist     = NULL;
   const PlotUtils::MnvH1D* dataBkgdHist = NULL;
   //datahist->Print("ALL");
-  gPad->SetLogy(false);
-  gPad->SetLogx(false);
-  if (logscale== 2 || logscale ==3) {
-    gPad->SetLogy();
-  }
-  if (logscale== 1 || logscale ==3) gPad->SetLogx();
+//  gPad->SetLogy(false);
+//  gPad->SetLogx(false);
+//  if (logscale== 2 || logscale ==3) {
+//    gPad->SetLogy();
+//  }
+//  if (logscale== 1 || logscale ==3) gPad->SetLogx();
+  setLogScale(logscale);
   cov_area = false;
   TText *t = new TText(.3,.95,label.c_str());
   t->SetNDC(1);
@@ -262,6 +283,7 @@ void PlotCVAndError(TCanvas & cE, PlotUtils::MnvH1D* idatahist,PlotUtils::MnvH1D
   //mnvPlotter.SetBinWidthNorm(!binwid);
   //std::cout << label << " BinWidthNorm after" << datahist->GetNormBinWidth() << std::endl;
   mnvPlotter.SetROOT6Palette(57); // kBird
+
   mnvPlotter.DrawDataMCWithErrorBand(datahist, hist, mcScale, "TL", useHistTitles, NULL, NULL,cov_area, statPlusSys);
   //mnvPlotter.DrawMCWithErrorBand(hist); //I think that this call only shows stat errors.
   std::string plotname = Form("Title: %s_CV_w_err_%s",datahist->GetName() ,label.c_str());
@@ -293,15 +315,16 @@ void PlotCVAndError(TCanvas & cE, PlotUtils::MnvH1D* idatahist,PlotUtils::MnvH1D
   std::string plotname2 = Form("Title: ratio %s_CV_w_err_%s",datahist->GetName() ,label.c_str());
 
   cE.Print(cE.GetName(),plotname2.c_str());
-
+  resetLogScale();
   //mnvPlotter.MultiPrint(&cE, plotname, "pdf");
   // mnvPlotter.MultiPrint(&cE, plotname, "C");
 }
 
 void Plot2D(TCanvas & cE, MnvH2D* ihist, std::string label, int logscale=0, bool binwid = true){
-
+  setLogScale(logscale);
   MnvH2D* hist = (MnvH2D*)ihist->Clone();
   hist->SetDirectory(0);
+  setLogScale(logscale);
 
   std::string xtitle = hist->GetXaxis()->GetTitle();
   std::string ytitle = hist->GetYaxis()->GetTitle();
@@ -311,10 +334,10 @@ void Plot2D(TCanvas & cE, MnvH2D* ihist, std::string label, int logscale=0, bool
   hist->GetYaxis()->CenterTitle();
   hist->SetTitle(Form("%s",title.c_str()));
 
-  gPad->SetLogy(false);
-  gPad->SetLogx(false);
-  if (logscale == 2 || logscale == 3) gPad->SetLogy();
-  if (logscale == 1 || logscale == 3) gPad->SetLogx();
+//  gPad->SetLogy(false);
+//  gPad->SetLogx(false);
+//  if (logscale == 2 || logscale == 3) gPad->SetLogy();
+//  if (logscale == 1 || logscale == 3) gPad->SetLogx();
   TText *t = new TText(.3,.95,title.c_str());
   t->SetNDC(1);
   t->SetTextSize(.03);
@@ -322,11 +345,12 @@ void Plot2D(TCanvas & cE, MnvH2D* ihist, std::string label, int logscale=0, bool
   t->Draw();
   hist->Draw("COLZ");
   cE.Print(cE.GetName(),plotname.c_str());
-
+  resetLogScale();
 }
 
 void PlotCVAndError(TCanvas & cE, MnvH2D* idatahist, MnvH2D* imchist, std::string label,bool cov_area=do_cov_area_norm, int logscale=0, bool binwid = true){
-
+  setLogScale(logscale);
+  
   MnvH2D* d = (MnvH2D*)idatahist->Clone();
   d->SetDirectory(0);
   MnvH2D* mc = (MnvH2D*)imchist->Clone();
@@ -352,9 +376,13 @@ void PlotCVAndError(TCanvas & cE, MnvH2D* idatahist, MnvH2D* imchist, std::strin
   std::string dlabel = d->GetTitle();
   std::string mclabel = mc->GetTitle();
   Plot2D(cE,d,dlabel,logscale,binwid);
+  resetLogScale();
   Plot2D(cE,mc,dlabel,logscale,binwid);
-  PlotCVAndError(cE,d_xhist,mc_xhist,mclabel,0,binwid);
-  PlotCVAndError(cE,d_yhist,mc_yhist,mclabel,0,binwid);
+  resetLogScale();
+  PlotCVAndError(cE,d_xhist,mc_xhist,mclabel,false,logscale,binwid);
+  resetLogScale();
+  PlotCVAndError(cE,d_yhist,mc_yhist,mclabel,false,logscale,binwid);
+  resetLogScale();
 }
 
 
