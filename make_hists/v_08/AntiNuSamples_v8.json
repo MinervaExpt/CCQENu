@@ -27,10 +27,25 @@
        }
      }
   },
+  "QElikeFULL":{
+     "name":"QElikeFULL",
+     "reco":"QElike",
+     "phase_space":"phase_space_full",
+     "signal":["qelike_np"],
+     "background":["qelikenot_np"],
+     "components":{
+       "qelike_np":{
+         "for":["selected_reco","selected_truth","truth","response"]
+        },
+       "qelikenot_np":{
+         "for":["selected_reco"]
+       }
+     }
+  },
   "QElikeALLAngles":{
      "name":"QElikeALLAngles",
      "reco":"QElike",
-     "phase_space":"phase_space_full",
+     "phase_space":"phase_space_all_angles",
      "signal":["qelike_np"],
      "background":["qelikenot_np"],
      "components":{
