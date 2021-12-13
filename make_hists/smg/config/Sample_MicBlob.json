@@ -1,0 +1,8 @@
+{
+  "MicBlobSideBand":[
+    {"true":"multipion","for":["selected_reco","selected_truth","truth","response"],"phase_space":"phase_space"},
+    {"true":"multipion_not","for":["selected_reco"],"phase_space":"phase_space"},
+    {"true":"data","for":["data"]}
+  ],
+}
+

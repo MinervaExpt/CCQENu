@@ -1,0 +1,8 @@
+{
+  "BlobSideBand":[
+    {"true":"1chargedpion","for":["selected_reco","selected_truth","truth","response"],"phase_space":"phase_space"},
+    {"true":"1chargedpion_not","for":["selected_reco"],"phase_space":"phase_space"},
+    {"true":"data","for":["data"]}
+  ]
+}
+

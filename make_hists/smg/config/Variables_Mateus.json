@@ -16,7 +16,8 @@
     "zmin":{"reco":"ZVertex","true":"TrueZVertex","name":"zmin","title":"z near start","nbins":100,"min":5700.,"max":5900.,"fluxnorm":false},
     "curv":{"reco":"Curvature","true":"TrueCurvature","name":"curv","title":"curvature in MINOS, m-1","nbins":100,"min":-2.,"max":2.,"for":["data","selected_reco"],"fluxnorm":false},
     "recoil":{"reco":"RecoilEnergyGeV","true":"TrueRecoilEnergyGeV","name":"recoil","title":"Recoil in GeV","nbins":25,"min":0.0,"max":0.5,"for":["data","selected_reco"],"fluxnorm":false},
-    "michelCount":{"reco":"MichelElectronCandidates","true":"TruthHasMichel","name":"michelCount","title":"Number of Michel Candidates","nbins":11,"min":0.,"max":10.,"fluxnorm":false},
-    "primaryProtonScore":{"reco":"SingleProtonScore","true":"TruthHasSingleProton","name":"primaryProtonScore","title":"Proton Score of Primary non-Muon Track","nbins":21,"min":0.0,"max":1.05,"fluxnorm":false}
+    "michelCount":{"reco":"MichelElectronCandidates","true":"NeutralPionCount","name":"michelCount","title":"Number of Michel Candidates","nbins":11,"min":0.,"max":10.,"fluxnorm":false},
+    "primaryProtonScore":{"reco":"SingleProtonScore","true":"TruthHasSingleProton","name":"primaryProtonScore","title":"Proton Score of Primary non-Muon Track","nbins":21,"min":0.0,"max":1.05,"fluxnorm":false},
+    "blobCount":{"reco":"NBlobs","true":"NeutralPionCount","name":"blobCount","title":"Blob Count","nbins":11,"min":0.,"max":10.,"fluxnorm":false}
   }
 }

@@ -1,0 +1,27 @@
+{
+  "version":5,  // July 15, 2021  test of sidebands - make runsamples actually work
+  "mcIn":"../playlists/local/local_1A_MC.txt",
+  "dataIn":"../playlists/local/local_1A_DATA.txt",
+  "prescale":100,
+  "playlist":"minervame1A",
+  "recoName":"CCQENu",
+  "pdg":14,
+  "runsamples":["QElike","MichelSideBand","BlobSideBand","MicBlobSideBand"],
+  "cutsFile":"config/SideBandCuts_Mateus.json",
+  "varsFile":"config/Variables_Mateus.json",
+  "samplesFile":"config/Samples_Mateus.json",
+  "outRoot":"SB",
+  "AnalyzeVariables":["EnuCCQE","recoil","Q2QE","ptmu","pzmu"],
+  "Analyze2DVariables":["pzmu_ptmu"],
+  "signal":"qelike",
+  "background":"other",
+  "data":"data",
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}

@@ -98,18 +98,34 @@ public:
 
     recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
     recointfunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
-    recofunctions["SingleProtonScore"] = &CVUNIVERSE::GetSingleProtonScore;
     trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
-    truefunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
     
-    recointfunctions["ChargedPionCount"] = &CVUNIVERSE::GetChargedPionCount;
-    recofunctions["ChargedPionCount"] = &CVUNIVERSE::GetChargedPionCount;
-    recointfunctions["NeutralPionCount"] = &CVUNIVERSE::GetNeutralPionCount;
-    recofunctions["NeutralPionCount"] = &CVUNIVERSE::GetNeutralPionCount;
+    // genie particle counts
+    trueintfunctions["ChargedPionCount"] = &CVUNIVERSE::GetChargedPionCount;
+    truefunctions["ChargedPionCount"] = &CVUNIVERSE::GetChargedPionCount;
+    trueintfunctions["NeutralPionCount"] = &CVUNIVERSE::GetNeutralPionCount;
+    truefunctions["NeutralPionCount"] = &CVUNIVERSE::GetNeutralPionCount;
+    trueintfunctions["PionCount"] = &CVUNIVERSE::GetPionCount;
+    truefunctions["PionCount"] = &CVUNIVERSE::GetPionCount;
+    
+    trueintfunctions["CharmedBaryonCount"] = &CVUNIVERSE::GetCharmedBaryonCount;
+    truefunctions["CharmedBaryonCount"] = &CVUNIVERSE::GetCharmedBaryonCount;
+    trueintfunctions["StrangeBaryonCount"] = &CVUNIVERSE::GetStrangeBaryonCount;
+    truefunctions["StrangeBaryonCount"] = &CVUNIVERSE::GetStrangeBaryonCount;
+    
+    trueintfunctions["CharmedMesonCount"] = &CVUNIVERSE::GetCharmedMesonCount;
+    truefunctions["CharmedMesonCount"] = &CVUNIVERSE::GetCharmedMesonCount;
+    trueintfunctions["StrangeMesonCount"] = &CVUNIVERSE::GetStrangeMesonCount;
+    truefunctions["StrangeMesonCount"] = &CVUNIVERSE::GetStrangeMesonCount;
     
     trueintfunctions["HasSingleChargedPion"] = &CVUNIVERSE::GetHasSingleChargedPion;
     trueintfunctions["HasSingleNeutralPion"] = &CVUNIVERSE::GetHasSingleNeutralPion;
     trueintfunctions["HasMultiPion"] = &CVUNIVERSE::GetHasMultiPion;
+    
+    truefunctions["EventRecordEtaCount"] = &CVUNIVERSE::GetEventRecordEtaCount;
+    trueintfunctions["EventRecordEtaCount"] = &CVUNIVERSE::GetEventRecordEtaCount;
+    
+    trueintfunctions["IsQELike"] = &CVUNIVERSE::GetIsQELike;
 
   };
   

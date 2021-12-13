@@ -80,45 +80,25 @@
     {"name":"ZVertex","min":5980,"max":8410,"variable":"TrueZVertex"},
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"TrueThetamuDegrees"}
   ],
-  "ccqe_signal":[
+  "signal":[
     {"name":"PDG","equals":14,"variable":"TruthNuPDG"},  // mod for Nu
     {"name":"IsCC","equals":1,"variable":"IsCC"},
     {"name":"IsCCQELike","equals":1,"variable":"IsCCQELike"}
   ],
-  "qe_signal":[
-    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},  // mod for Nu
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsQELike","equals":1,"variable":"IsQELike"}
-  ],
-  "ccqe_background":[
+  "background":[
     {"name":"PDG","equals":14,"variable":"TruthNuPDG"}, // mod for Nue
     {"name":"IsCC","equals":1,"variable":"IsCC"},
     {"name":"IsCCQELike","equals":0,"variable":"IsCCQELike"}
   ],
-  "qe_background":[
-    {"name":"PDG","equals":14,"variable":"TruthNuPDG"}, // mod for Nue
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsQELike","equals":0,"variable":"IsQELike"}
-  ],
-  "ccqelike":[
+  "qelike":[
     {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
     {"name":"IsCC","equals":1,"variable":"IsCC"},
     {"name":"IsCCQELike","equals":1,"variable":"IsCCQELike","protonKECutMeV":120.}
   ],
-  "ccqelike_not":[
-    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELike","equals":0,"variable":"IsCCQELike","protonKECutMeV":120.}
-  ],
-  "qelike":[
-    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsQELike","equals":1,"variable":"IsQELike","protonKECutMeV":120.}
-  ],
   "qelike_not":[
     {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
     {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsQELike","equals":0,"variable":"IsQELike","protonKECutMeV":120.}
+    {"name":"IsCCQELike","equals":0,"variable":"IsCCQELike","protonKECutMeV":120.}
   ],
   "1chargedpion":[
     {"name":"PDG","equals":14,"variable":"TruthNuPDG"},

@@ -1,0 +1,8 @@
+{
+  "MichelSideBand":[
+    {"true":"1neutralpion","for":["selected_reco","selected_truth","truth","response"],"phase_space":"phase_space"},
+    {"true":"1neutralpion_not","for":["selected_reco"],"phase_space":"phase_space"},
+    {"true":"data","for":["data"]}
+  ]
+}
+

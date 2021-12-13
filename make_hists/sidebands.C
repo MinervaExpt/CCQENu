@@ -283,9 +283,9 @@ int main(const int argc, const char *argv[] ) {
   
   const std::string truth_tree_name("Truth");
 
-  const std::string background_tag = config.GetString("background");
-  const std::string signal_tag = config.GetString("signal");
-  const std::string data_tag = config.GetString("data");
+  //const std::string background_tag = config.GetString("background");
+  //const std::string signal_tag = config.GetString("signal");
+  //const std::string data_tag = config.GetString("data");
   const bool do_truth = true;
 
   PlotUtils::MacroUtil util(reco_tree_name, mc_file_list, data_file_list,
