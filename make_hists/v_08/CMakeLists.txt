@@ -46,6 +46,7 @@ set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
 set(SRC_FILES
 include/Get2DVariablesFromConfig.cxx
 include/GetVariablesFromConfig.cxx
+include/CVUniverse.cxx
 )
 
 # tell it about the header files
