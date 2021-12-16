@@ -306,9 +306,7 @@ public:
   }
 
   virtual int GetTruthNuPDG() const {
-    
     return GetInt("mc_incoming");
-    
   }
 
   virtual int GetCurrent() const {
