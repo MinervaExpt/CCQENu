@@ -3,7 +3,7 @@
 
 export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
-export WHEREIPUTMYCODE=$HOME/Dropbox/TOPMAT    # change this here if you want a different location
+#export WHEREIPUTMYCODE=$HOME/Dropbox/BIGMAT    # change this here if you want a different location
 source $WHEREIPUTMYCODE/opt/build/setup.sh     # you have to have this
 
 export JSONCPP_DIR=$HOME/LocalApps/jsoncpp-build # need to change this probably
