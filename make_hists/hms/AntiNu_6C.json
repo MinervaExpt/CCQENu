@@ -1,27 +1,27 @@
 {
-  "version":7,  // Dec 2021 large scale tests
-  "mcIn":"./playlists/local/local_CCQENu_minervame6C_MC_Inextinguishable_merged.txt",
-  "dataIn":"./playlists/local/local_CCQENu_minervame6C_DATA_Inextinguishable_merged.txt",
-  "prescale":1,
+    "version":8, // new version with multiple components
+    "mcIn":"./playlists/local/local_CCQENu_minervame6C_MC_Inextinguishable_merged.txt",
+    "dataIn":"./playlists/local/local_CCQENu_minervame6C_DATA_Inextinguishable_merged.txt",
+    "prescale":1,
   "playlist":"minervame6C",
   "recoName":"CCQENu",
   "pdg":-14,
-    "runsamples":["QElike","QElikeNP","QElikeALL"],
-  "cutsFile":"hms/AntiNuCuts_v7.json",
-  "varsFile":"hms/Variables_v7.json",
-  "samplesFile":"hms/AntiNuSamples_v7.json",
-  "outRoot":"SB",
-    "AnalyzeVariables":["Q2QE","pzmu","ptmu","EnuCCQE","Enu"],
-  "Analyze2DVariables":[],
-  "signal":{"QElike":"qelike","QElikeNP":"qelikenp","QElikeALL":"qelikenp"},
-  "background":{"QElike":"qelikenot","QElikeNP":"qelikenotnp","QElikeALL":"qelikenotnp"},
-  "data":{"QElike":"data","QElikeNP":"data","QElikeALL":"data"},
+    "runsamples":["QElike","QElikeNP","QElikeALLAngles","QElikeFULL"],
+  "cutsFile":"v_08/AntiNuCuts_v8.json",
+  "varsFile":"v_08/Variables_v8.json",
+  "samplesFile":"v_08/AntiNuSamples_v8.json",
+  "outRoot":"CK",
+    "AnalyzeVariables":["Q2QE","EnuCCQE","Enu","pzmu","ptmu"],
+    "Analyze2DVariables":["EnuCCQE_Q2QE","pzmu_ptmu"],
+  "signal":{"QElike":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np","QElikeFULL":"qelike_np"},
+  "background":{"QElike":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np","QElikeFULL":"qelikenot_np"},
+  "data":{"QElike":"data","QElikeNP":"data","QElikeALLAngles":"data","QElikeFULL":"data"},
   "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
     "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
   "fluxUniverses":100,
   "NuEConstraint":1,
-  "DeuteriumGeniePiTune":1, // set to true?
-  "NonResPiReweight":1, // set to true?
-  "Geant4NeutronCV":1, // set true by default docdb 28556
-  "Geant4Elastics":1 // set to true by default
+  "DeuteriumGeniePiTune":1,
+  "NonResPiReweight":1,
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1
 }
