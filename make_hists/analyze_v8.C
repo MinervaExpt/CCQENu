@@ -312,6 +312,9 @@ int main(const int argc, const char *argv[] ) {
     for (auto variables:hists1D[sample]){  // only do this for a subset to save output time.
       std::string variable = variables.first;
       std::string basename = "h_"+sample+"_"+variable;
+        if (singlesample){
+            basename = "h_"+variable;
+        }
       int exit = GetCrossSection(sample,variable,basename,hists1D[sample][variable],response1D[sample][variable],config,canvas1D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG);
       if (DEBUG) std::cout << exit << std::endl;
     }
@@ -334,6 +337,9 @@ int main(const int argc, const char *argv[] ) {
     for (auto variables:hists2D[sample]){  // only do this for a subset to save output time.
       std::string variable = variables.first;
       std::string basename = "h2D_"+sample+"_"+variable;
+        if (singlesample){
+            basename = "h_"+variable;
+        }
       int exit = GetCrossSection(sample,variable,basename,hists2D[sample][variable],response2D[sample][variable],config,canvas2D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG);
       if (DEBUG) std::cout << exit << std::endl;
     }
@@ -341,6 +347,7 @@ int main(const int argc, const char *argv[] ) {
   std::cout << " end of 2D loop" << std::endl;
   canvas2D.Print(pdfend2D.c_str(),"pdf");
   // Close pdf for 2D plots.
+  
 
   o->Close();
   exit(0);

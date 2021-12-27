@@ -145,6 +145,21 @@ template <class MnvHistoType>
 template MnvH1D* GetSignalFraction<MnvH1D>(std::string basename, MnvH1D* imcsighist, MnvH1D* mc);
 template MnvH2D* GetSignalFraction<MnvH2D>(std::string basename, MnvH2D* imcsighist, MnvH2D* mc);
 
+template <class MnvHistoType>
+  MnvHistoType* GetBkgFraction(std::string basename, MnvHistoType* imcbkghist, MnvHistoType* mc){
+    std::string fracname = basename+"_bkgfraction";
+    MnvHistoType* bkgFraction = (MnvHistoType*)imcbkghist->Clone(fracname.c_str());
+    bkgFraction->SetDirectory(0);
+
+    bkgFraction->Divide(imcbkghist,mc,1.,1.,"B");
+    SyncBands(bkgFraction);
+
+    return bkgFraction;
+  }
+template MnvH1D* GetBkgFraction<MnvH1D>(std::string basename, MnvH1D* imcbkghist, MnvH1D* mc);
+template MnvH2D* GetBkgFraction<MnvH2D>(std::string basename, MnvH2D* imcbkghist, MnvH2D* mc);
+
+
 
 //========================== Background Subtraction ============================
 // Rough background subtraction using input signal fraction
@@ -544,8 +559,12 @@ template<class MnvHistoType>
     if (DEBUG) std::cout << " Start signal fraction... " << std::endl;
     // std::string fracname = basename+"_signalfraction";
     MnvHistoType* signalFraction = GetSignalFraction(basename,imcsighist,mc);
+    MnvHistoType* bkgFraction = GetBkgFraction(basename,imcbkghist,mc);
     if(DEBUG) signalFraction->Print();
     signalFraction->Write();
+    bkgFraction->Write();
+    Plot2DFraction(canvas, signalFraction,bkgFraction, "fractions");
+      
     PlotCVAndError(canvas,signalFraction,signalFraction, "Signal Fraction" ,true,logscale,false);
     PlotErrorSummary(canvas,signalFraction,"Signal Fraction Systematics" ,0);
 
