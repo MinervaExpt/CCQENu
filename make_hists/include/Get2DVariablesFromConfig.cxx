@@ -3,6 +3,7 @@
 #include "VariableFromConfig.h"
 #include "Variable2DFromConfig.h"
 #include "CVUniverse.h"
+#include <cassert>
 
 std::vector<std::string> intersection(std::vector<std::string> &v1, std::vector<std::string> &v2){
     std::vector<std::string> v3;
@@ -95,16 +96,35 @@ std::map<std::string, CCQENu::Variable2DFromConfig*> Get2DVariablesFromConfig( s
         }
         else if( !foundx ) {
           std::cout << " Warning - have requested an unimplemented 1D variable in Get2DVariablesFromConfig " << xvarname << std::endl;
+            assert(0);
         }
         else if( !foundy ){
           std::cout << " Warning - have requested an unimplemented 1D variable in Get2DVariablesFromConfig " << xvarname << std::endl;
+            assert(0);
         }
       }
     }
     if(!found){
-      std::cout << "GetVariables2D: 2D variable " << key << " configured but not requested in main config" << std::endl;
+      std::cout << "Get2DVariablesFromConfig: 2D variable " << key << " configured but not requested in main config" << std::endl;
+        
     }
   }
+    
+// check that all requested variables are defined.
+  for (auto v:vars2D){
+      bool found = false;
+      for (auto key:keys){
+          if (v == key){
+              found = true;
+              break;
+          }
+        }
+
+      if (!found){
+        std::cout << "Get2DVariablesFromConfig: Warning - have requested an unimplemented variable in Get2DVariablesFromConfig " << v << std::endl;
+          assert(0);
+      }
+    }
 
   return variables2Dmap;
 }
