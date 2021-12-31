@@ -6,18 +6,30 @@
   "playlist":"minervame6I",
   "recoName":"CCQENu",
   "pdg":-14,
-    "runsamples":["QElike","QElikeNP","QElikeALLAngles","QElikeFULL"],
-  "cutsFile":"v_08/AntiNuCuts_v8.json",
-  "varsFile":"v_08/Variables_v8.json",
-  "samplesFile":"v_08/AntiNuSamples_v8.json",
+  "runsamples":["QElike","Background"],
+  "cutsFile":"hms/AntiNuCuts_v8.json",
+  "varsFile":"hms/Variables_v8.json",
+  "samplesFile":"hms/AntiNuSamples_v8.json",
   "outRoot":"CK",
-    "AnalyzeVariables":["Q2QE","EnuCCQE","Enu","pzmu","ptmu"],
-    "Analyze2DVariables":["EnuCCQE_Q2QE","pzmu_ptmu"],
-  "signal":{"QElike":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np","QElikeFULL":"qelike_np"},
-  "background":{"QElike":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np","QElikeFULL":"qelikenot_np"},
-  "data":{"QElike":"data","QElikeNP":"data","QElikeALLAngles":"data","QElikeFULL":"data"},
+  "AnalyzeVariables":["Q2QE","EnuCCQE","Enu","pzmu","ptmu","recoil"],
+  "Analyze2DVariables":["EnuCCQE_Q2QE","pzmu_ptmu","Q2QE_recoil"],
+  "signal":{"QElike":"qelike"
+      ,"QElikeNP":"qelike_np"
+      ,"QElikeALLAngles":"qelike_np"
+      ,"QElikeFULL":"qelike_np"
+      ,"Background":"qelike"
+  },
+  "background":{"QElike":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np","QElikeFULL":"qelikenot_np"
+      ,"Background":"qelikenot"
+  },
+  "data":{"QElike":"data"
+      ,"QElikeNP":"data"
+      ,"QElikeALLAngles":"data"
+      ,"QElikeFULL":"data"
+      ,"Background":"data"
+  },
   "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
-    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+      "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
   "fluxUniverses":100,
   "NuEConstraint":1,
   "DeuteriumGeniePiTune":1,
