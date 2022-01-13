@@ -1,0 +1,2 @@
+/minerva/data/ME/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/Spec2p2h_minervame5Apass1/CCQENu_mc_AnaTuple_run00123000.root
+/minerva/data/ME/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/Spec2p2h_minervame5Apass1/CCQENu_mc_AnaTuple_run00123001.root

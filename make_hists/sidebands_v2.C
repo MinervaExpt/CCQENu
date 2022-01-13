@@ -22,7 +22,7 @@
 #include <iostream>
 #include <vector>
 #include "utils/NuConfig.h"
-
+#include "utils/gitVersion.h"
 #include "PlotUtils/MacroUtil.h"
 #include "include/CVUniverse.h"
 
