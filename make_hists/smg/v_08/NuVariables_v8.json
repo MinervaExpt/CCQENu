@@ -1,0 +1,28 @@
+{
+  "2D":{
+    "pzmu_ptmu":{"name":"pzmu_ptmu","xvar":"pzmu","yvar":"ptmu"},
+    "EnuCCQE_Q2QE":{"name":"EnuCCQE_Q2QE","xvar":"EnuCCQE","yvar":"Q2QE"},
+    "Q2QE_recoil":{"name":"Q2QE_recoil","xvar":"Q2QE","yvar":"recoil"},
+    "EnuCCQE_ThetamuDegrees":{"name":"EnuCCQE_ThetamuDegrees","xvar":"EnuCCQE","yvar":"ThetamuDegrees"},
+    "pmu_ThetamuDegrees":{"name":"pmu_ThetamuDegrees","xvar":"pmu","yvar":"ThetamuDegrees"}
+  },
+  "1D":{
+    "EnuCCQE":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"EnuCCQE","title":"E_{#nu}_{QE} (GeV)","bins":[2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0],"fluxnorm":1},
+    "Enu":{"reco":"EnuCCQEGeV","true":"TrueEnuGeV","name":"Enu","title":"E_{#nu} (GeV)","bins":[2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0],"fluxnorm":1},
+    "EnuHad":{"reco":"EnuHadGeV","true":"TrueEnuGeV","name":"EnuHad","title":"E_{#nu}_{hadronic} (GeV)","bins":[2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0],"fluxnorm":1},
+    "total":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"total","title":"total for Enu from 2 to 15 GeV","bins":[2.0,15.0],"fluxnorm":0},
+    "ptmu":{"reco":"PperpMuGeV","true":"TruePperpMuGeV","name":"ptmu","title":"muon p_{T} (GeV/c)","bins":[0.0,0.075,0.15,0.25,0.325,0.4,0.475,0.55,0.7,0.85,1,1.25,1.5,2.5],"fluxnorm":false},
+    "pzmu":{"reco":"PparMuGeV","true":"TruePparMuGeV","name":"pzmu","title":"muon p_{||} (GeV/c)","bins":[0., 1., 2. , 3. , 4. , 5. , 6. , 7. , 8. , 9. , 10. , 15. ],"fluxnorm":false},
+    "pmu":{"reco":"PmuGeV","true":"TruePmuGeV","name":"pmu","title":"muon p (GeV/c)","bins":[0., 0.5, 1., 1.5, 2. , 3. , 4. , 5. , 6. , 7. , 8. , 9. , 10. , 15. ],"fluxnorm":false},
+    "Q2QE":{"reco":"Q2QEGeV","true":"TrueQ2QEGeV","name":"Q2QE","title":"Q^{2} (QE) (GeV^{2})","bins":[0.001, 0.00625, 0.0125, 0.025, 0.0375, 0.05, 0.10, 0.20, 0.30, 0.40, 0.60, 0.80, 1.0, 1.2, 2.0],"fluxnorm":false},
+    "zmax":{"reco":"ZVertex","true":"TrueZVertex","name":"zmax","title":"z near end","nbins":100,"min":8300.,"max":8500.,"fluxnorm":false},
+    "zmin":{"reco":"ZVertex","true":"TrueZVertex","name":"zmin","title":"z near start","nbins":100,"min":5700.,"max":5900.,"fluxnorm":false},
+    "curv":{"reco":"Curvature","true":"TrueCurvature","name":"curv","title":"curvature in MINOS, m-1","nbins":100,"min":-2.,"max":2.,"for":["data","selected_reco"],"fluxnorm":false},
+    "recoil":{"reco":"RecoilEnergyGeV","true":"TrueRecoilEnergyGeV","name":"recoil","title":"Recoil in GeV","nbins":25,"min":0.0,"max":0.5,"for":["data","selected_reco"],"fluxnorm":false},
+    "ThetamuDegrees":{"reco":"ThetamuDegrees","true":"TrueThetamuDegrees","name":"ThetamuDegrees","title":"theta_mu (degrees)","nbins":20,"min":0.,"max":40.,"fluxnorm":false},
+    "michelCount":{"reco":"MichelElectronCandidates","true":"NeutralPionCount","name":"michelCount","title":"Number of Michel Candidates","nbins":11,"min":0.,"max":10.,"fluxnorm":false},
+    "primaryProtonScore":{"reco":"SingleProtonScore","true":"TruthHasSingleProton","name":"primaryProtonScore","title":"Proton Score of Primary non-Muon Track","nbins":21,"min":0.0,"max":1.05,"fluxnorm":false},
+    "blobCount":{"reco":"NBlobs","true":"NeutralPionCount","name":"blobCount","title":"Blob Count","nbins":11,"min":0.,"max":10.,"fluxnorm":false}
+  }
+}
+

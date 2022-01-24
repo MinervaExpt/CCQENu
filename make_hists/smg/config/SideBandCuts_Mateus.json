@@ -1,3 +1,4 @@
+
 {
 "QElike":[
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
@@ -160,3 +161,4 @@
   ],
   "data":[] // data doesn't cut anything at truth level
 }
+
