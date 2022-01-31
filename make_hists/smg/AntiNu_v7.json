@@ -1,0 +1,27 @@
+{
+  "version":7,  // October 25, 2021  get ready for github
+  "mcIn":"/home/gilligas/gitMinerva/data/playlists/local_5A_MC.txt",
+  "dataIn":"/home/gilligas/gitMinerva/data/playlists/local_5A_DATA.txt",
+  "prescale":100,
+  "playlist":"minervame5A",
+  "recoName":"CCQENu",
+  "pdg":-14,
+  "runsamples":["QElike","QElikeNP,"QElikeALL"],
+  "cutsFile":"/home/gilligas/gitMinerva/CCQENu/make_hists/config/AntiNuCuts_v6.json",
+  "varsFile":"/home/gilligas/gitMinerva/CCQENu/make_hists/config/Variables_v6.json",
+  "samplesFile":"/home/gilligas/gitMinerva/CCQENu/make_hists/config/AntiNuSamples_v6.json",
+  "outRoot":"SB",
+  "AnalyzeVariables":["recoil","Q2QE","pzmu","ptmu","EnuCCQE"],
+  "Analyze2DVariables":["Q2QE_recoil"],
+  "signal":{"QElike":"qelike","QElikeNP":"qelikenp","QElikeALL":"qelikenp"},
+  "background":{"QElike":"qelikenot","QElikeNP":"qelikenotnp","QElikeALL":"qelikenotnp"},
+  "data":{"QElike":"data","QElikeNP":"data","QElikeALL":"data"},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}

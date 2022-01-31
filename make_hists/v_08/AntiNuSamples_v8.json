@@ -3,56 +3,56 @@
     "reco":"QElike",
     "phase_space":"phase_space",
     "signal":["qelike"],
-    "background":["qelike_not"],
+    "background":["qelikenot"],
     "components":{
       "qelike":{
         "for":["selected_reco","selected_truth","truth","response"]
         },
-      "qelike_not":{"for":["selected_reco"]
+      "qelikenot":{"for":["selected_reco"]
         }
       }
    },
-  "MichelSideBand":{
-     "name":"MichelSideBand",
-     "reco":"MichelSideBand",
+  "QElikeNP":{
+     "name":"QElikeNP",
+     "reco":"QElike",
      "phase_space":"phase_space",
-     "signal":["1neutralpion"],
-     "background":["1neutralpion_not"],
+     "signal":["qelike_np"],
+     "background":["qelikenot_np"],
      "components":{
-       "1neutralpion":{
+       "qelike_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
-       "1neutralpion_not":{
+       "qelikenot_np":{
          "for":["selected_reco"]
        }
      }
   },
-  "BlobSideBand":{
-     "name":"BlobSideBand",
-     "reco":"BlobSideBand",
-     "phase_space":"phase_space",
-     "signal":["1chargedpion"],
-     "background":["1chargedpion_not"],
+  "QElikeFULL":{
+     "name":"QElikeFULL",
+     "reco":"QElike",
+     "phase_space":"phase_space_full",
+     "signal":["qelike_np"],
+     "background":["qelikenot_np"],
      "components":{
-       "1chargedpion":{
+       "qelike_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
-       "1chargedpion_not":{
+       "qelikenot_np":{
          "for":["selected_reco"]
        }
      }
   },
-  "MicBlobSideBand":{
-     "name":"MicBlobSideBand",
-     "reco":"MicBlobSideBand",
-     "phase_space":"phase_space",
-     "signal":["multipion"],
-     "background":["multipion_not"],
+  "QElikeALLAngles":{
+     "name":"QElikeALLAngles",
+     "reco":"QElike",
+     "phase_space":"phase_space_all_angles",
+     "signal":["qelike_np"],
+     "background":["qelikenot_np"],
      "components":{
-       "multipion":{
+       "qelike_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
-       "multipion_not":{
+       "qelikenot_np":{
          "for":["selected_reco"]
        }
      }

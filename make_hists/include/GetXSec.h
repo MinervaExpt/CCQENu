@@ -427,9 +427,18 @@ template<class MnvHistoType>
 
     // Get "category" tags set in config. Needs to match ones used in the event loop.
     //TODO: Make this a map in config.
-    std::string sig = config.GetString("signal");
-    std::string bkg = config.GetString("background");
-    std::string dat = config.GetString("data");
+    
+    //std::string sig = config.GetString("signal");
+    //std::string bkg = config.GetString("background");
+    //std::string dat = config.GetString("data");
+    
+    NuConfig sigs = config.GetValue("signal");
+    NuConfig bkgs = config.GetValue("background");
+    NuConfig dats = config.GetValue("data");
+    
+    std::string sig = sigs.GetString(sample);
+    std::string bkg = bkgs.GetString(sample);
+    std::string dat = dats.GetString(sample);
 
     // parse out variable to get axes
     std::vector<std::string> varparse;
@@ -515,7 +524,7 @@ template<class MnvHistoType>
     MnvHistoType* mc = MakeMC(basename,imcsighist,imcbkghist);
     if(DEBUG)mc->Print();
     mc->Write();
-    PlotCVAndError(canvas,idatahist,mc, "DATA_vs_MC" ,true,logscale,binwid);
+    PlotCVAndError(canvas,idatahist,mc, sample+" DATA_vs_MC" ,true,logscale,binwid);
 
     //================================Signal Fraction===========================
 
@@ -524,7 +533,7 @@ template<class MnvHistoType>
     MnvHistoType* signalFraction = GetSignalFraction(basename,imcsighist,mc);
     if(DEBUG) signalFraction->Print();
     signalFraction->Write();
-    PlotCVAndError(canvas,signalFraction,signalFraction, "Signal Fraction" ,true,logscale,false);
+    PlotCVAndError(canvas,signalFraction,signalFraction, sample+" Signal Fraction" ,true,logscale,false);
 
     //============================Background Subtraction========================
 
@@ -533,7 +542,7 @@ template<class MnvHistoType>
     MnvHistoType* bkgsub = DoBkgSubtraction(basename,idatahist,mc,signalFraction);
     if(DEBUG)bkgsub->Print();
     bkgsub->Write();
-    PlotCVAndError(canvas,bkgsub,imcsighist, "BKGsub vs. MC signal" ,true,logscale,binwid);
+    PlotCVAndError(canvas,bkgsub,imcsighist, sample+" BKGsub vs. MC signal" ,true,logscale,binwid);
 
     //==================================Unfolding===============================
 
@@ -553,7 +562,7 @@ template<class MnvHistoType>
       unsmeared = unsmearedVec[0];
       if (DEBUG) unsmeared->Print();
       unsmeared->Write();
-      PlotCVAndError(canvas,bkgsub,unsmeared,"Data Before and After Unsmearing", true,logscale,binwid);
+      PlotCVAndError(canvas,bkgsub,unsmeared,sample+" Data Before and After Unsmearing", true,logscale,binwid);
     }
     if(unsmearedVec.size()==2){
       // Output for crude ratio unfolding, DOES include "unsmearing" hist, so this picks that up
@@ -563,7 +572,7 @@ template<class MnvHistoType>
       // PlotCVAndError(canvas,imcsighist,iseltruhist,"Fractional Unfolding" ,true,logscale,binwid);
     }
 
-    PlotCVAndError(canvas,unsmeared,iseltruhist, "Unsmeared Data Compared to Selected MC" ,true,logscale,binwid);
+    PlotCVAndError(canvas,unsmeared,iseltruhist, sample+" Unsmeared Data Compared to Selected MC" ,true,logscale,binwid);
 
 
     //==================================Efficiency==============================
@@ -584,8 +593,8 @@ template<class MnvHistoType>
     MnvHistoType* efficiency = vecEffCorr[1];
     if (DEBUG) efficiency->Print();
     efficiency->Write();
-    PlotCVAndError(canvas,iseltruhist,ialltruhist, "efficiency: selected and true" ,true,logscale,binwid);
-    PlotCVAndError(canvas,effcorr,ialltruhist, "effcorr data vs truth" ,true,logscale,binwid);
+    PlotCVAndError(canvas,iseltruhist,ialltruhist, sample+" efficiency: selected and true" ,true,logscale,binwid);
+    PlotCVAndError(canvas,effcorr,ialltruhist, sample+" effcorr data vs truth" ,true,logscale,binwid);
 
     //============================POT/Flux Normalization========================
     // bool energydep = false;
@@ -629,7 +638,7 @@ template<class MnvHistoType>
     sigmaMC->Write();
     sigmaMC->Print();
 
-    PlotCVAndError(canvas,sigma,sigmaMC, "sigma" ,true,logscale,binwid);
+    PlotCVAndError(canvas,sigma,sigmaMC, sample+" sigma" ,true,logscale,binwid);
 
     //============================Binwidth Normalization============================
     // Just a check on bin width corrections...
