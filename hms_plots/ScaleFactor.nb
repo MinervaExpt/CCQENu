@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      8791,        234]
-NotebookOptionsPosition[      6786,        191]
-NotebookOutlinePosition[      7121,        206]
-CellTagsIndexPosition[      7078,        203]
+NotebookDataLength[      9808,        255]
+NotebookOptionsPosition[      7700,        211]
+NotebookOutlinePosition[      8035,        226]
+CellTagsIndexPosition[      7992,        223]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -162,18 +162,24 @@ Cell[BoxData[""], "Input",
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"Solve", "[", 
+ RowBox[{"Simplify", "[", 
   RowBox[{
-   RowBox[{
-    RowBox[{"(", 
+   RowBox[{"Solve", "[", 
+    RowBox[{
      RowBox[{
-      RowBox[{"bweight", "*", "measf0"}], " ", "+", " ", 
-      RowBox[{"sweight", "*", 
-       RowBox[{"(", 
-        RowBox[{"1", "-", "measf0"}], ")"}]}]}], ")"}], " ", "\[Equal]", " ", 
-    "1"}], ",", " ", "sweight"}], "]"}]], "Input",
- CellChangeTimes->{{3.850839470019058*^9, 3.8508395224581633`*^9}},
- CellLabel->"In[90]:=",ExpressionUUID->"93c822d1-4503-4c02-ae0a-b07a4418eef2"],
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"bweight", "*", "measf0"}], " ", "+", " ", 
+        RowBox[{"sweight", "*", 
+         RowBox[{"(", 
+          RowBox[{"1", "-", "measf0"}], ")"}]}]}], ")"}], " ", "\[Equal]", 
+      " ", "1"}], ",", " ", "sweight"}], "]"}], " ", "/.", " ", 
+   RowBox[{"measf1", " ", "\[Rule]", " ", 
+    RowBox[{"measf0", "*", "bweight"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.850839470019058*^9, 3.8508395224581633`*^9}, {
+  3.852656183275372*^9, 3.852656206820599*^9}, {3.852656241018121*^9, 
+  3.8526562464916077`*^9}},
+ CellLabel->"In[2]:=",ExpressionUUID->"93c822d1-4503-4c02-ae0a-b07a4418eef2"],
 
 Cell[BoxData[
  RowBox[{"{", 
@@ -181,13 +187,27 @@ Cell[BoxData[
    RowBox[{"sweight", "\[Rule]", 
     FractionBox[
      RowBox[{
-      RowBox[{"-", "1"}], "+", "measf1"}], 
+      RowBox[{"-", "1"}], "+", 
+      RowBox[{"bweight", " ", "measf0"}]}], 
      RowBox[{
       RowBox[{"-", "1"}], "+", "measf0"}]]}], "}"}], "}"}]], "Output",
  CellChangeTimes->{
-  3.850839426357533*^9, {3.8508395114017477`*^9, 3.850839540084744*^9}},
- CellLabel->"Out[90]=",ExpressionUUID->"c926fd9e-fab1-47d7-a3a6-450473379cc4"]
-}, Open  ]]
+  3.850839426357533*^9, {3.8508395114017477`*^9, 3.850839540084744*^9}, 
+   3.8526562079895563`*^9, 3.8526562469324408`*^9},
+ CellLabel->"Out[2]=",ExpressionUUID->"7513390a-14c7-46dd-a381-3bd18a2eb967"]
+}, Open  ]],
+
+Cell["\<\
+Heidi comment - might be a lot easier to do this with signal scale factor \
+instead of background scale factor.  In that case you could for any variable \
+X histogram the scale factor as a function of X and then use that to correct \
+the signal fraction as a function of X.  Not completely correct as you really \
+want the average of s*f0 not the <average of s > *f0.  But a decent \
+approximation.  \
+\>", "Subsubsection",
+ CellChangeTimes->{{3.852657552028092*^9, 
+  3.852657661499456*^9}},ExpressionUUID->"c0960ab6-0df9-45ad-9266-\
+925ca6c23444"]
 },
 WindowSize->{808, 758},
 WindowMargins->{{4, Automatic}, {Automatic, 4}},
@@ -233,9 +253,10 @@ Cell[4952, 140, 323, 5, 52, "Output",ExpressionUUID->"1c647947-174b-429a-800b-ef
 Cell[5290, 148, 209, 3, 30, "Input",ExpressionUUID->"96b441f6-52e1-41bd-96c8-6fdac2e1e1d9"],
 Cell[5502, 153, 351, 6, 30, "Input",ExpressionUUID->"c3c5476a-dcc3-4e13-a3be-38936233a348"],
 Cell[CellGroupData[{
-Cell[5878, 163, 479, 12, 30, "Input",ExpressionUUID->"93c822d1-4503-4c02-ae0a-b07a4418eef2"],
-Cell[6360, 177, 410, 11, 52, "Output",ExpressionUUID->"c926fd9e-fab1-47d7-a3a6-450473379cc4"]
-}, Open  ]]
+Cell[5878, 163, 747, 18, 52, "Input",ExpressionUUID->"93c822d1-4503-4c02-ae0a-b07a4418eef2"],
+Cell[6628, 183, 494, 13, 52, "Output",ExpressionUUID->"7513390a-14c7-46dd-a381-3bd18a2eb967"]
+}, Open  ]],
+Cell[7137, 199, 559, 10, 149, "Subsubsection",ExpressionUUID->"c0960ab6-0df9-45ad-9266-925ca6c23444"]
 }
 ]
 *)
