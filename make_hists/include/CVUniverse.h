@@ -193,6 +193,45 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
   // all CCQElike without proton cut enabled
   
   virtual int GetIsCCQELikeAll() const;  // cut hardwired for now
+  
+  // ----------------------- Sean Neutrino Functions ------------------------------------------
+  
+  // Interaction Vertex
+  
+  virtual int GetHasInteractionVertex() const;
+  
+  // Isolated Blobs and Charged Pions
+  
+  virtual int GetNBlobs() const;
+  virtual int GetHasSingleChargedPion() const;
+  virtual int GetChargedPionCount() const;
+  
+  // Michel Electrons and Neutral Pions
+  
+  virtual int GetMichelElectronCandidates() const;
+  virtual int GetHasMichelElectron() const;
+  virtual int GetTruthHasMichel() const;
+  virtual int GetHasSingleNeutralPion() const;
+  virtual int GetNeutralPionCount() const;
+  
+  // Michel+Blobs and MultiPion
+  
+  virtual int GetHasMultiPion() const;
+  virtual int GetPionCount() const;
+  virtual int GetEventRecordEtaCount() const;
+  virtual double GetSingleProtonScore() const;
+  virtual int GetIsSingleProton() const;
+  virtual int GetTruthHasSingleProton() const;
+  virtual int GetAllExtraTracksProtons() const;
+  
+  // Particle Counts
+  
+  virtual int GetProtonCount() const;
+  virtual int GetLightMesonCount() const;
+  virtual int GetCharmedMesonCount() const;
+  virtual int GetStrangeMesonCount() const;
+  virtual int GetCharmedBaryonCount() const;
+  virtual int GetStrangeBaryonCount() const;
     
 };
 #endif
