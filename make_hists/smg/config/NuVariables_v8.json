@@ -22,7 +22,7 @@
     "ThetamuDegrees":{"reco":"ThetamuDegrees","true":"TrueThetamuDegrees","name":"ThetamuDegrees","title":"theta_mu (degrees)","nbins":20,"min":0.,"max":40.,"fluxnorm":false},
     "michelCount":{"reco":"MichelElectronCandidates","true":"NeutralPionCount","name":"michelCount","title":"Number of Michel Candidates","nbins":11,"min":0.,"max":10.,"fluxnorm":false},
     "primaryProtonScore":{"reco":"SingleProtonScore","true":"TruthHasSingleProton","name":"primaryProtonScore","title":"Proton Score of Primary non-Muon Track","nbins":21,"min":0.0,"max":1.05,"fluxnorm":false},
-    "blobCount":{"reco":"NBlobs","true":"NeutralPionCount","name":"blobCount","title":"Blob Count","nbins":11,"min":0.,"max":10.,"fluxnorm":false}
+    "blobCount":{"reco":"NBlobs","true":"ChargedPionCount","name":"blobCount","title":"Blob Count","nbins":11,"min":0.,"max":10.,"fluxnorm":false}
   }
 }
 

@@ -204,7 +204,6 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
   
   virtual int GetNBlobs() const;
   virtual int GetHasSingleChargedPion() const;
-  virtual int GetChargedPionCount() const;
   
   // Michel Electrons and Neutral Pions
   
@@ -226,6 +225,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
   
   // Particle Counts
   
+  virtual int GetChargedPionCount() const;
   virtual int GetProtonCount() const;
   virtual int GetLightMesonCount() const;
   virtual int GetCharmedMesonCount() const;

@@ -450,7 +450,9 @@ namespace {
                pdg      ==  421   ) genie_n_charmed_meson++;
       else if( pdg      == 2212 && 
                KEp  > proton_KECut) genie_n_protons++;
-    }
+    } // Add else for mystery particle
+    // Call functions instead
+    // Place functions likely to be true first
     
     if(neutrinoMode){
       if(genie_n_muons          == 1 &&
@@ -798,7 +800,7 @@ namespace {
              tree_Q2        < 0.6 &&
              proton_score1  < 0.1   ) return 0;
     else if( tree_Q2       >= 0.6 &&
-             proton_score1  < 0.0) return 0;
+             proton_score1  < 0.0   ) return 0;
     else return 1; // if false not returned by now must be true
   }
   

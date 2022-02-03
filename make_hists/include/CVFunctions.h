@@ -86,9 +86,13 @@ public:
     
     trueintfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
     
-    // Added by Sean for Neutrino
+    // ----------------------- Sean Neutrino Functions ------------------------------------------
+  
+    // Interaction Vertex
 
     recointfunctions["HasInteractionVertex"] = &CVUNIVERSE::GetHasInteractionVertex;
+    
+    // Isolated Blobs and Charged Pions
     
     recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
     
