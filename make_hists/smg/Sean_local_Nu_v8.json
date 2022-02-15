@@ -1,0 +1,36 @@
+{
+  "version":8,  // Dec 2021 large scale tests
+  "mcIn":"/home/gilligas/gitMinerva/data/playlists/local_1A_MC.txt",
+  "dataIn":"/home/gilligas/gitMinerva/data/playlists/local_1A_DATA.txt",
+  "prescale":1,
+  "playlist":"minervame1A",
+  "recoName":"CCQENu",
+  "pdg":14,
+  "runsamples":["QElike","MichelSideBand","BlobSideBand","MicBlobSideBand"],
+  "cutsFile":"/home/gilligas/gitMinerva/CCQENu/make_hists/smg/config/NuCuts_v8.json",
+  "varsFile":"/home/gilligas/gitMinerva/CCQENu/make_hists/smg/config/NuVariables_v8.json",
+  "samplesFile":"/home/gilligas/gitMinerva/CCQENu/make_hists/smg/config/NuSamples_v8.json",
+  "outRoot":"SB",
+  "AnalyzeVariables":["Q2QE","pzmu","ptmu","EnuCCQE","Enu"],
+  "Analyze2DVariables":[],
+  "signal":{"QElike":"qelike",
+            "MichelSideBand":"1neutralpion",
+            "BlobSideBand":"1chargedpion",
+            "MicBlobSideBand":"multipion"},
+  "background":{"QElike":"qelike_not",
+                "MichelSideBand":"1neutralpion_not",
+                "BlobSideBand":"1chargedpion_not",
+                "MicBlobSideBand":"multipion_not"},
+  "data":{"QElike":"data",
+          "MichelSideBand":"data",
+          "BlobSideBand":"data",
+          "MicBlobSideBand":"data"},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+                 "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}

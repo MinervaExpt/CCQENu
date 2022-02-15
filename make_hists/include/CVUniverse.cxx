@@ -408,41 +408,75 @@ namespace {
   // helper function
   bool CVUniverse::passTrueCCQELike(bool neutrinoMode, std::vector<int> mc_FSPartPDG, std::vector<double> mc_FSPartE, int mc_nFSPart, double proton_KECut) const {
     int genie_n_muons = 0;
-    int genie_n_mesons        = 0;
-    int genie_n_heavy_baryons_plus_pi0s = 0;
-    int genie_n_photons       = 0;
-    int genie_n_protons       = 0; //antinu
+    int genie_n_charged_pion = 0;
+    int genie_n_neutral_pion = 0;
+    int genie_n_photons = 0;
+    int genie_n_strange_baryon = 0;
+    int genie_n_charmed_baryon = 0;
+    int genie_n_strange_meson = 0;
+    int genie_n_charmed_meson = 0;
+    int genie_n_protons = 0;
     
-    for(int i = 0; i < mc_nFSPart; ++i) {
+    for(int i = 0; i < mc_nFSPart; i++){
       int pdg =  mc_FSPartPDG[i];
       double energy = mc_FSPartE[i];
-      double KEp = energy-MinervaUnits::M_p;
+      double KEp = energy - MinervaUnits::M_p;
       
       // implement 120 MeV KE cut, if needed
       
       
       //The photon energy cut is hard-coded at 10 MeV at present. We're happy to make it general, if the need arises !
-      if( abs(pdg) == 13 ) genie_n_muons++;
-      else if( pdg == 22 && energy >10 ) genie_n_photons++;
-      else if( abs(pdg) == 211 || abs(pdg) == 321 || abs(pdg) == 323 || pdg == 111 || pdg == 130 || pdg == 310 || pdg == 311 || pdg == 313 ) genie_n_mesons++;
-      else if( pdg == 3112 || pdg == 3122 || pdg == 3212 || pdg == 3222 || pdg == 4112 || pdg == 4122 || pdg == 4212 || pdg == 4222 || pdg == 411 || pdg == 421 || pdg == 111 ) genie_n_heavy_baryons_plus_pi0s++;
-      else if( pdg == 2212 && KEp > proton_KECut) genie_n_protons++; //antinu
+      
+      if(      abs(pdg) ==   13   ) genie_n_muons++;
+      else if( abs(pdg) ==  211   ) genie_n_charged_pion++;
+      else if( pdg      ==  111   ) genie_n_neutral_pion++;
+      else if( pdg      ==   22 && 
+               energy    >   10   ) genie_n_photons++;
+      else if( pdg      == 3112 || 
+               pdg      == 3122 || 
+               pdg      == 3212 || 
+               pdg      == 3222   ) genie_n_strange_baryon++;
+      else if( pdg      == 4112 || 
+               pdg      == 4122 || 
+               pdg      == 4212 || 
+               pdg      == 4222   ) genie_n_charmed_baryon++;
+      else if( pdg      ==  130 ||
+               pdg      ==  310 ||
+               pdg      ==  311 ||
+               pdg      ==  313 ||
+               abs(pdg) ==  321 ||
+               abs(pdg) ==  323   ) genie_n_strange_meson++;
+      else if( pdg      ==  411 ||
+               pdg      ==  421   ) genie_n_charmed_meson++;
+      else if( pdg      == 2212 && 
+               KEp  > proton_KECut) genie_n_protons++;
+    } // Add else for mystery particle
+    // Call functions instead
+    // Place functions likely to be true first
+    
+    if(neutrinoMode){
+      if(genie_n_muons          == 1 &&
+         genie_n_neutral_pion   == 0 && 
+         genie_n_charged_pion   == 0 &&
+         genie_n_photons        == 0 &&
+         genie_n_strange_baryon == 0 &&
+         genie_n_charmed_baryon == 0 &&
+         genie_n_strange_meson  == 0 &&
+         genie_n_charmed_meson  == 0   ) return 1;
     }
-     
-      if(neutrinoMode){
-        if( genie_n_muons         == 1 &&
-           genie_n_mesons        == 0 &&
-           genie_n_heavy_baryons_plus_pi0s == 0 &&
-           genie_n_photons       == 0 ) return true;
-      }
-      else{
-        if( genie_n_muons         == 1 &&
-           genie_n_mesons        == 0 &&
-           genie_n_heavy_baryons_plus_pi0s == 0 &&
-           genie_n_photons       == 0 &&
-           genie_n_protons        == 0 ) return true;
-      }
-      return false;
+    else{
+      if(genie_n_muons          == 1 &&
+         genie_n_neutral_pion   == 0 && 
+         genie_n_charged_pion   == 0 &&
+         genie_n_photons        == 0 &&
+         genie_n_strange_baryon == 0 &&
+         genie_n_charmed_baryon == 0 &&
+         genie_n_strange_meson  == 0 &&
+         genie_n_charmed_meson  == 0 &&
+         genie_n_protons        == 0   ) return 1;
+    }
+    return 0;   
+    
   }
   
   int CVUniverse::GetIsCCQELike() const{  // cut hardwired for now
@@ -471,6 +505,414 @@ namespace {
     
     return passes;
     
+  }
+  
+  // ------------------------------------------------------------------------------
+  // ----------------- Added by Sean for Neutrino ---------------------------------
+  // ------------------------------------------------------------------------------
+  
+  
+  
+  // Interaction Vertex
+  
+  int CVUniverse::GetHasInteractionVertex() const {
+    return GetInt("has_interaction_vertex");
+  }
+  
+  // Isolated Blobs and Charged Pions
+  
+  int CVUniverse::GetNBlobs() const {
+    // define and get applicable variables
+    int n_blobs = 0;
+    int kmax = GetInt("nonvtx_iso_blobs_start_position_z_in_prong_sz");
+    std::vector<double> blob_z_starts = GetVecDouble("nonvtx_iso_blobs_start_position_z_in_prong");
+    // counts blobs with zvertex greater than set value
+    for(int k=0; k<kmax; ++k){
+      if(blob_z_starts[k] > 4750) n_blobs++; // why 4750? how can this be defined in a config file?
+    }
+    return n_blobs;
+  }
+  
+  int CVUniverse::GetHasSingleChargedPion() const {
+    int genie_n_charged_pion = 0;
+    int genie_n_neutral_pion = 0;
+    int genie_n_photons = 0;
+    int genie_n_strange_baryon = 0;
+    int genie_n_charmed_baryon = 0;
+    int genie_n_strange_meson = 0;
+    int genie_n_charmed_meson = 0;
+    
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    
+    for(int i = 0; i < mc_nFSPart; i++){
+      int pdg =  mc_FSPartPDG[i];
+      double energy = mc_FSPartE[i];
+      double KEp = energy - MinervaUnits::M_p;
+      
+      if(      abs(pdg) ==  211   ) genie_n_charged_pion++;
+      else if( pdg      ==  111   ) genie_n_neutral_pion++;
+      else if( pdg      ==   22 && 
+               energy    >   10   ) genie_n_photons++;
+      else if( pdg      == 3112 || 
+               pdg      == 3122 || 
+               pdg      == 3212 || 
+               pdg      == 3222   ) genie_n_strange_baryon++;
+      else if( pdg      == 4112 || 
+               pdg      == 4122 || 
+               pdg      == 4212 || 
+               pdg      == 4222   ) genie_n_charmed_baryon++;
+      else if( pdg      ==  130 ||
+               pdg      ==  310 ||
+               pdg      ==  311 ||
+               pdg      ==  313 ||
+               abs(pdg) ==  321 ||
+               abs(pdg) ==  323   ) genie_n_strange_meson++;
+      else if( pdg      ==  411 ||
+               pdg      ==  421   ) genie_n_charmed_meson++;
+    }
+    
+    if(genie_n_neutral_pion   == 0 && 
+       genie_n_charged_pion   == 1 &&
+       genie_n_photons        == 0 &&
+       genie_n_strange_baryon == 0 &&
+       genie_n_charmed_baryon == 0 &&
+       genie_n_strange_meson  == 0 &&
+       genie_n_charmed_meson  == 0   ) return 1;
+    return 0;
+  }
+  
+  int CVUniverse::GetChargedPionCount() const {
+    int genie_n_charged_pion = 0;
+    
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    
+    for(int i = 0; i < mc_nFSPart; i++){
+      int pdg =  mc_FSPartPDG[i];
+      if( abs(pdg) == 211 ) genie_n_charged_pion++;
+    }
+
+    return genie_n_charged_pion;
+  }
+  
+  // Michel Electrons and Neutral Pions
+
+  int CVUniverse::GetMichelElectronCandidates() const {
+    return GetInt("improved_michel_vertex_type_sz");
+  }
+  
+  int CVUniverse::GetHasMichelElectron() const {
+    if(GetMichelElectronCandidates() > 0) return 1;
+    return 0;
+  }
+
+  int CVUniverse::GetTruthHasMichel() const {
+    return GetInt("truth_reco_has_michel_electron");
+  }
+  
+  int CVUniverse::GetHasSingleNeutralPion() const {
+    int genie_n_charged_pion = 0;
+    int genie_n_neutral_pion = 0;
+    int genie_n_photons = 0;
+    int genie_n_strange_baryon = 0;
+    int genie_n_charmed_baryon = 0;
+    int genie_n_strange_meson = 0;
+    int genie_n_charmed_meson = 0;
+    
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    
+    for(int i = 0; i < mc_nFSPart; i++){
+      int pdg =  mc_FSPartPDG[i];
+      double energy = mc_FSPartE[i];
+      
+      if(      abs(pdg) ==  211   ) genie_n_charged_pion++;
+      else if( pdg      ==  111   ) genie_n_neutral_pion++;
+      else if( pdg      ==   22 && 
+               energy    >   10   ) genie_n_photons++;
+      else if( pdg      == 3112 || 
+               pdg      == 3122 || 
+               pdg      == 3212 || 
+               pdg      == 3222   ) genie_n_strange_baryon++;
+      else if( pdg      == 4112 || 
+               pdg      == 4122 || 
+               pdg      == 4212 || 
+               pdg      == 4222   ) genie_n_charmed_baryon++;
+      else if( pdg      ==  130 ||
+               pdg      ==  310 ||
+               pdg      ==  311 ||
+               pdg      ==  313 ||
+               abs(pdg) ==  321 ||
+               abs(pdg) ==  323   ) genie_n_strange_meson++;
+      else if( pdg      ==  411 ||
+               pdg      ==  421   ) genie_n_charmed_meson++;
+    }
+    
+    if(genie_n_neutral_pion   == 1 && 
+       genie_n_charged_pion   == 0 &&
+       genie_n_photons        == 0 &&
+       genie_n_strange_baryon == 0 &&
+       genie_n_charmed_baryon == 0 &&
+       genie_n_strange_meson  == 0 &&
+       genie_n_charmed_meson  == 0   ) return 1;
+    return 0;
+  }
+  
+  int CVUniverse::GetNeutralPionCount() const {
+    int genie_n_neutral_pion = 0;
+    
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    
+    for(int i = 0; i < mc_nFSPart; i++){
+      int pdg =  mc_FSPartPDG[i];
+      if( pdg == 111 ) genie_n_neutral_pion++;
+    }
+
+    return genie_n_neutral_pion;
+  }
+  
+  // Michel+Blobs and MultiPion
+  
+  int CVUniverse::GetHasMultiPion() const {
+    int genie_n_charged_pion = 0;
+    int genie_n_neutral_pion = 0;
+    int genie_n_photons = 0;
+    int genie_n_strange_baryon = 0;
+    int genie_n_charmed_baryon = 0;
+    int genie_n_strange_meson = 0;
+    int genie_n_charmed_meson = 0;
+    int genie_er_n_eta = 0;
+    
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    
+    for(int i = 0; i < mc_nFSPart; i++){
+      int pdg =  mc_FSPartPDG[i];
+      double energy = mc_FSPartE[i];
+      
+      if(      abs(pdg) ==  211   ) genie_n_charged_pion++;
+      else if( pdg      ==  111   ) genie_n_neutral_pion++;
+      else if( pdg      ==   22 && 
+               energy    >   10   ) genie_n_photons++;
+      else if( pdg      == 3112 || 
+               pdg      == 3122 || 
+               pdg      == 3212 || 
+               pdg      == 3222   ) genie_n_strange_baryon++;
+      else if( pdg      == 4112 || 
+               pdg      == 4122 || 
+               pdg      == 4212 || 
+               pdg      == 4222   ) genie_n_charmed_baryon++;
+      else if( pdg      ==  130 ||
+               pdg      ==  310 ||
+               pdg      ==  311 ||
+               pdg      ==  313 ||
+               abs(pdg) ==  321 ||
+               abs(pdg) ==  323   ) genie_n_strange_meson++;
+      else if( pdg      ==  411 ||
+               pdg      ==  421   ) genie_n_charmed_meson++;
+    }
+    
+    int nerpart = GetInt("mc_er_nPart");
+    std::vector<int> erpartID = GetVecInt("mc_er_ID");
+    std::vector<int> erpartstatus = GetVecInt("mc_er_status");
+    
+    for(int i = 0; i < nerpart; i++){
+      bool neutrinoMode = GetAnalysisNuPDG() > 0;
+      int status = erpartstatus[i];
+      int id = erpartID[i];
+      
+      if(abs(status) == 14 && id == 221){
+        genie_er_n_eta = 1;
+        break;
+      }
+    }
+    
+    int genie_n_pion = genie_n_charged_pion + genie_n_neutral_pion;
+    if(genie_n_pion            > 1 && 
+       genie_n_photons        == 0 &&
+       genie_n_strange_baryon == 0 &&
+       genie_n_charmed_baryon == 0 &&
+       genie_n_strange_meson  == 0 &&
+       genie_n_charmed_meson  == 0   ) return 1;
+    else if(genie_er_n_eta         == 1 && 
+            genie_n_photons        == 0 &&
+            genie_n_strange_baryon == 0 &&
+            genie_n_charmed_baryon == 0 &&
+            genie_n_strange_meson  == 0 &&
+            genie_n_charmed_meson  == 0   ) return 1;
+    return 0;
+  }
+  
+  int CVUniverse::GetPionCount() const {
+    int genie_n_charged_pion = 0;
+    int genie_n_neutral_pion = 0;
+    
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    
+    for(int i = 0; i < mc_nFSPart; i++){
+      int pdg =  mc_FSPartPDG[i];
+      if(      abs(pdg) == 211 ) genie_n_charged_pion++;
+      else if( pdg      == 111 ) genie_n_neutral_pion++;
+    }
+
+    return genie_n_neutral_pion + genie_n_charged_pion;
+  }
+  
+  int CVUniverse::GetEventRecordEtaCount() const {
+    int genie_er_n_eta = 0;
+    
+    int nerpart = GetInt("mc_er_nPart");
+    std::vector<int> erpartID = GetVecInt("mc_er_ID");
+    std::vector<int> erpartstatus = GetVecInt("mc_er_status");
+    
+    for(int i = 0; i < nerpart; i++){
+      bool neutrinoMode = GetAnalysisNuPDG() > 0;
+      int status = erpartstatus[i];
+      int id = erpartID[i];
+      
+      if(abs(status) == 14 && id == 221) genie_er_n_eta++;
+    }
+
+    return genie_er_n_eta;
+  }
+  
+  // Protons
+
+  double CVUniverse::GetSingleProtonScore() const {
+    return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
+  }
+
+  int CVUniverse::GetIsSingleProton() const {
+    // define and get applicable variables
+    double tree_Q2 = GetQ2QEGeV();
+    double proton_score1 = GetSingleProtonScore();
+    
+    // How to define Q2 and proton score limits in config?
+    if(      tree_Q2        < 0.2 &&
+             proton_score1  < 0.2   ) return 0;
+    else if( tree_Q2       >= 0.2 &&
+             tree_Q2        < 0.6 &&
+             proton_score1  < 0.1   ) return 0;
+    else if( tree_Q2       >= 0.6 &&
+             proton_score1  < 0.0   ) return 0;
+    else return 1; // if false not returned by now must be true
+  }
+  
+  int CVUniverse::GetTruthHasSingleProton() const {
+    return GetInt("truth_reco_has_single_proton");
+  }
+  
+  int CVUniverse::GetAllExtraTracksProtons() const {
+    // get secondary proton candidates
+    int n_sec_proton_scores1 = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
+    // if 0, return true (vacuously)
+    if(n_sec_proton_scores1==0) return 1;
+    
+    // define and get applicable variables
+    double tree_Q2 = GetQ2QEGeV();
+    std::vector<double> sec_proton_scores1 = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1").c_str());
+    
+    // How to define Q2 and proton score limits in config?
+    if(tree_Q2<0.2){
+      for(int i=0; i<n_sec_proton_scores1; i++) if(sec_proton_scores1[i]<0.2) return 0;
+    }
+    else if(tree_Q2>=0.2 && tree_Q2<0.6){
+      for(int i=0; i<n_sec_proton_scores1; i++) if(sec_proton_scores1[i]<0.1) return 0;
+    }
+    else if(tree_Q2>=0.6){
+       for(int i=0; i<n_sec_proton_scores1; i++) if(sec_proton_scores1[i]<0.0) return 0;
+    }
+    // if false not returned by now must be true
+    return 1;
+  }
+  
+  int CVUniverse::GetProtonCount() const {
+    int genie_n_protons = 0;
+    
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    
+    for(int i = 0; i < mc_nFSPart; i++){
+      int pdg =  mc_FSPartPDG[i];
+      double energy = mc_FSPartE[i];
+      double KEp = energy - MinervaUnits::M_p;
+      double proton_KECut = NSFDefaults::TrueProtonKECutCentral;
+      if( pdg == 2212         && 
+          KEp  > proton_KECut   ) genie_n_protons++;
+    }
+
+    return genie_n_protons;
+  }
+  
+  // Other particles
+  
+  int CVUniverse::GetLightMesonCount() const { // Just base etas right now
+    int genie_n_light_meson = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 221) genie_n_light_meson++;
+    }
+    return genie_n_light_meson; 
+  }
+  
+  int CVUniverse::GetCharmedMesonCount() const { // D_+ and D_0
+    int genie_n_charmed_meson = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 411 || 
+          mc_FSPartPDG[i] == 421   ) genie_n_charmed_meson++;
+    }
+    return genie_n_charmed_meson; 
+  }
+  
+  int CVUniverse::GetStrangeMesonCount() const { // K__L0, K_S0, K_0, K_*(892)0, K_+, K_*(892)+
+    int genie_n_strange_meson = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i]      == 130 ||
+          mc_FSPartPDG[i]      == 310 || 
+          mc_FSPartPDG[i]      == 311 || 
+          mc_FSPartPDG[i]      == 313 || 
+          abs(mc_FSPartPDG[i]) == 321 || 
+          abs(mc_FSPartPDG[i]) == 323   ) genie_n_strange_meson++;
+    }
+    return genie_n_strange_meson;
+  }
+  
+  int CVUniverse::GetCharmedBaryonCount() const { // Sigma_c0, Lambda_c+, Sigma_c+, Sigma_c++
+    int genie_n_charmed_baryon = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 4112 || 
+          mc_FSPartPDG[i] == 4122 || 
+          mc_FSPartPDG[i] == 4212 || 
+          mc_FSPartPDG[i] == 4222   ) genie_n_charmed_baryon++;
+    }
+    return genie_n_charmed_baryon; 
+  }
+  
+  int CVUniverse::GetStrangeBaryonCount() const { // Sigma_-, Lambda, Sigma_0, Sigma_+
+    int genie_n_strange_baryon = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    for(int i = 0; i < mc_nFSPart; i++){
+      if( mc_FSPartPDG[i] == 3112 || 
+          mc_FSPartPDG[i] == 3122 || 
+          mc_FSPartPDG[i] == 3212 || 
+          mc_FSPartPDG[i] == 3222   ) genie_n_strange_baryon++;
+    }
+    return genie_n_strange_baryon; 
   }
     
 #endif

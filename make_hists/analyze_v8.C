@@ -309,8 +309,10 @@ int main(const int argc, const char *argv[] ) {
   std::cout << " just before 1D loop" << std::endl;
   for (auto samples:hists1D){
     std::string sample=samples.first;
+    std::cout << " Sample: " << sample << std::endl;
     for (auto variables:hists1D[sample]){  // only do this for a subset to save output time.
       std::string variable = variables.first;
+      std::cout << "  Variable: " << variable << std::endl;
       std::string basename = "h_"+sample+"_"+variable;
         if (singlesample){
             basename = "h_"+variable;

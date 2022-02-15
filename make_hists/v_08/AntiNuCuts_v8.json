@@ -24,7 +24,7 @@
       {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
       {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
     ],
-  "QElikeALLAngles":[
+    "QElikeALLAngles":[
       {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
       {"name":"ApothemX","max":850,"variable":"ApothemX"},
       {"name":"ApothemY","max":850,"variable":"ApothemY"},
@@ -37,7 +37,7 @@
       {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
       {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
     ],
-  "QElikeFULL":[
+    "QElikeFULL":[
       {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
       {"name":"ApothemX","max":850,"variable":"ApothemX"},
       {"name":"ApothemY","max":850,"variable":"ApothemY"},
@@ -50,7 +50,7 @@
       {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
       {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
     ],
-  "phase_space":[
+    "phase_space":[
     {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
     {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
     {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"},
@@ -70,12 +70,12 @@
     {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
     {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"}
   ],
- "qelike":[
+  "qelike":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
     {"name":"IsCC","equals":1,"variable":"IsCC"},
     {"name":"IsCCQELike","equals":1,"variable":"IsCCQELike","protonKECutMeV":120.}
   ],
- "qelike1p":[
+  "qelike1p":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
     {"name":"IsCC","equals":1,"variable":"IsCC"},
     {"name":"IsCCQELike","equals":1,"variable":"IsCCQELike","protonKECutMeV":120.},

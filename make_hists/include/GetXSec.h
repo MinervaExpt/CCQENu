@@ -464,6 +464,7 @@ template<class MnvHistoType>
     bkgkey.Print();
     NuConfig datkey = config.GetConfig("data");
     std::string dat = datkey.GetString(sample);
+    datkey.Print();
     //std::string bkg = config.GetString("background");
     // std::string dat = config.GetString("data");
 

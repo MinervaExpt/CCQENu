@@ -86,6 +86,51 @@ public:
     
     trueintfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
     
+    // ----------------------- Sean Neutrino Functions ------------------------------------------
+  
+    // Interaction Vertex
+
+    recointfunctions["HasInteractionVertex"] = &CVUNIVERSE::GetHasInteractionVertex;
+    
+    // Isolated Blobs and Charged Pions
+    
+    recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
+    
+    recointfunctions["HasMichelElectron"] = &CVUNIVERSE::GetHasMichelElectron;
+    recointfunctions["MichelElectronCandidates"] = &CVUNIVERSE::GetMichelElectronCandidates;
+    recofunctions["MichelElectronCandidates"] = &CVUNIVERSE::GetMichelElectronCandidates;
+    trueintfunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
+    truefunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
+
+    recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
+    recointfunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
+    trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
+    
+    // genie particle counts
+    trueintfunctions["ChargedPionCount"] = &CVUNIVERSE::GetChargedPionCount;
+    truefunctions["ChargedPionCount"] = &CVUNIVERSE::GetChargedPionCount;
+    trueintfunctions["NeutralPionCount"] = &CVUNIVERSE::GetNeutralPionCount;
+    truefunctions["NeutralPionCount"] = &CVUNIVERSE::GetNeutralPionCount;
+    trueintfunctions["PionCount"] = &CVUNIVERSE::GetPionCount;
+    truefunctions["PionCount"] = &CVUNIVERSE::GetPionCount;
+    
+    trueintfunctions["CharmedBaryonCount"] = &CVUNIVERSE::GetCharmedBaryonCount;
+    truefunctions["CharmedBaryonCount"] = &CVUNIVERSE::GetCharmedBaryonCount;
+    trueintfunctions["StrangeBaryonCount"] = &CVUNIVERSE::GetStrangeBaryonCount;
+    truefunctions["StrangeBaryonCount"] = &CVUNIVERSE::GetStrangeBaryonCount;
+    
+    trueintfunctions["CharmedMesonCount"] = &CVUNIVERSE::GetCharmedMesonCount;
+    truefunctions["CharmedMesonCount"] = &CVUNIVERSE::GetCharmedMesonCount;
+    trueintfunctions["StrangeMesonCount"] = &CVUNIVERSE::GetStrangeMesonCount;
+    truefunctions["StrangeMesonCount"] = &CVUNIVERSE::GetStrangeMesonCount;
+    
+    trueintfunctions["HasSingleChargedPion"] = &CVUNIVERSE::GetHasSingleChargedPion;
+    trueintfunctions["HasSingleNeutralPion"] = &CVUNIVERSE::GetHasSingleNeutralPion;
+    trueintfunctions["HasMultiPion"] = &CVUNIVERSE::GetHasMultiPion;
+    
+    truefunctions["EventRecordEtaCount"] = &CVUNIVERSE::GetEventRecordEtaCount;
+    trueintfunctions["EventRecordEtaCount"] = &CVUNIVERSE::GetEventRecordEtaCount;
+    
   };
   
   std::vector<std::string> GetRecoKeys()const{
