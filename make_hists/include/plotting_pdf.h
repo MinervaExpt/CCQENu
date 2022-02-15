@@ -369,10 +369,10 @@ void Plot2DFraction(TCanvas & cE, MnvH2D* ihist1, MnvH2D* ihist2, std::string la
   hist1.GetYaxis()->CenterTitle();
   hist1.SetTitle(Form("%s",title.c_str()));
 
-//  gPad->SetLogy(false);
-//  gPad->SetLogx(false);
-//  if (logscale == 2 || logscale == 3) gPad->SetLogy();
-//  if (logscale == 1 || logscale == 3) gPad->SetLogx();
+  gPad->SetLogy(false);
+  gPad->SetLogx(false);
+  if (logscale == 2 || logscale == 3) gPad->SetLogy();
+  if (logscale == 1 || logscale == 3) gPad->SetLogx();
   TText *t = new TText(.3,.90,label.c_str());
   
   hist1.SetLineColor(1);
