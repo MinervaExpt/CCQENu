@@ -31,12 +31,12 @@
      "reco":"QElike",
      "phase_space":"phase_space",
      "signal":["qelike_np"],
-     "background":["qelikenotnp"],
+     "background":["qelikenot_np"],
      "components":{
        "qelike_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
-       "qelikenotnp":{
+       "qelikenot_np":{
          "for":["selected_reco"]
        }
      }
@@ -46,12 +46,12 @@
      "reco":"QElike",
      "phase_space":"phase_space_full",
      "signal":["qelike_np"],
-     "background":["qelikenotnp"],
+     "background":["qelikenot_np"],
      "components":{
        "qelike_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
-       "qelikenotnp":{
+       "qelikenot_np":{
          "for":["selected_reco"]
        }
      }
