@@ -1,11 +1,11 @@
 {
   "version":9,  // Feb 22 large scale tests
-  "mcIn":"./playlists/hep01/local_CCQENu_6J_MC_Inextinguishable_merged.txt",
-  "dataIn":"./playlists/hep01/local_CCQENu_6J_DATA_Inextinguishable_merged.txt",
+  "mcIn":"./playlists/hep01/local_CCQENu_minervame6J_MC_Inextinguishable_merged.txt",
+  "dataIn":"./playlists/hep01/local_CCQENu_minervame6J_DATA_Inextinguishable_merged.txt",
   //"mcIn":"./playlists/local/minervame5A_MC.txt",
   //"dataIn":"./playlists/local/minervame5A_DATA.txt",
   "prescale":1,
-  "playlist":"6J",
+  "playlist":"minervame6J",
   "recoName":"CCQENu",
   "pdg":-14,
     "runsamples":["QElike","QElikeNP","QElikeALLAngles"],
