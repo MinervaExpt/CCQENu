@@ -9,24 +9,31 @@ gStyle.SetEndErrorSize(10)
 import sys,os,string
 
 if len(sys.argv)< 2:
-    print ("arg is the input filen name")
+    print ("arg is the input file name, var[Enu]")
     sys.exit(0)
     
 fname = sys.argv[1]
+var = "Enu"
+if len(sys.argv)> 2:
+    var = sys.argv[2]
 
 if not os.path.exists(fname):
     print ("no file named", name)
     sys.exit(0)
-    
+  
+  
 f = TFile.Open(fname,'READONLY')
-
+gStyle.SetEndErrorSize(10)
+gStyle.SetOptStat(0)
+ROOT.TH1.AddDirectory(ROOT.kFALSE)
 types = ["QElikeALLAngles", "QElikeNP" ,"QElike" ]
 colors =  {"QElike":ROOT.kBlack ,"QElikeNP":ROOT.kRed ,"QElikeALLAngles":ROOT.kBlue }
-names =  {"QElike":"no p > 120 MeV" ,"QElikeNP":"all p" ,"QElikeALLAngles":"all angles" }
+names =  {"QElike":"no proton > 120 MeV" ,"QElikeNP":"all proton KE" ,"QElikeALLAngles":"all angles" }
 palecolors =  {"QElike":ROOT.kGray ,"QElikeNP":ROOT.kRed-10 ,"QElikeALLAngles":ROOT.kBlue-10 }
 
-template = "h_XXX_Enu_bkgsub_unfolded_effcorr_sigma"
-templateMC = "h_XXX_Enu_sigmaMC"
+
+template = "h_XXX_YYY_bkgsub_unfolded_effcorr_sigma"
+templateMC = "h_XXX_YYY_sigmaMC"
 
 canvas = CCQECanvas("c1","c1",750,500)
 canvas.cd()
@@ -36,11 +43,25 @@ h_stat = {}
 h_mc = {}
 h_data = {}
 first = True
-leg = CCQELegend(0.5,0.2,0.9,0.4)
+if "Enu" in var:
+    leg = CCQELegend(0.5,0.2,0.9,0.4)
+else:
+    leg = CCQELegend(0.5,0.6,0.9,0.9)
+
+if var in ["Q2QE","ptmu"]:
+    print (var, "log")
+    canvas.SetLogy(1)
+    if var == "Q2QE":
+        canvas.SetLogx(1)
+else:
+    print (var, "nolog")
+    canvas.SetLogy(0)
+    canvas.SetLogx(0)
+    
 for type in types:
     
-    data = template.replace("XXX",type)
-    mc = templateMC.replace("XXX",type)
+    data = template.replace("XXX",type).replace("YYY",var)
+    mc = templateMC.replace("XXX",type).replace("YYY",var)
     print ("tags",data,mc)
     h_data[type] = MnvH1D()
     h_data[type] = f.Get(data)
@@ -67,8 +88,9 @@ for type in types:
     h_stat[type].SetFillColor(palecolor)
     if first:
         h_syst[type].Draw("PE")
-        h_syst[type].SetMinimum(0.)
-        h_syst[type].SetMaximum(1.E-38)
+        if var not in ["Q2QE","ptmu"]:
+            h_syst[type].SetMinimum(0.)
+            h_syst[type].SetMaximum(1.E-38)
     else:
         h_syst[type].Draw("same PE")
     first = False
@@ -78,4 +100,4 @@ for type in types:
     h_stat[type].Draw("PE2 same")
     h_stat[type].Draw("PE same")
 leg.Draw()
-canvas.Print("cross_section_vs_energy.png")
+canvas.Print("cross_section_vs_%s.png"%var)
