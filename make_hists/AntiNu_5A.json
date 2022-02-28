@@ -1,0 +1,27 @@
+{
+    "version":8, // new verison with multiple components 
+    "mcIn":"./playlists/local/minervame5A_MC.txt",
+    "dataIn":"./playlists/local/minervame5A_DATA.txt",
+    "prescale":1,
+  "playlist":"minervame5A",
+  "recoName":"CCQENu",
+  "pdg":-14,
+    "runsamples":["QElike","QElikeNP","QElikeALLAngles"],
+  "cutsFile":"v_08/AntiNuCuts_v8.json",
+  "varsFile":"v_08/Variables_v8.json",
+  "samplesFile":"v_08/AntiNuSamples_v8.json",
+  "outRoot":"CK",
+    "AnalyzeVariables":["Enu"],
+    "Analyze2DVariables":[],
+  "signal":{"QElike":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np","QElikeFULL":"qelike_np"},
+  "background":{"QElike":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np","QElikeFULL":"qelikenot_np"},
+  "data":{"QElike":"data","QElikeNP":"data","QElikeALLAngles":"data","QElikeFULL":"data"},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1,
+  "NonResPiReweight":1,
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1
+}

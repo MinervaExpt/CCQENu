@@ -552,8 +552,8 @@ template<class MnvHistoType>
     MnvHistoType* mc = MakeMC(basename,imcsighist,imcbkghist);
     if(DEBUG)mc->Print();
     mc->Write();
-    PlotCVAndError(canvas,idatahist,mc, "DATA_vs_MC" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,mc,"Raw MC Systematics" ,logscale );
+    PlotCVAndError(canvas,idatahist,mc,sample + "_"+ "DATA_vs_MC" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,mc,sample + "_"+"Raw MC Systematics" ,logscale );
 
     //================================Signal Fraction===========================
 
@@ -564,9 +564,9 @@ template<class MnvHistoType>
     if(DEBUG) signalFraction->Print();
     signalFraction->Write();
     bkgFraction->Write();
-    Plot2DFraction(canvas, signalFraction,bkgFraction, "fractions");
+    Plot2DFraction(canvas, signalFraction,bkgFraction, sample + "_fractions",logscale);
       
-    PlotCVAndError(canvas,signalFraction,signalFraction, "Signal Fraction" ,true,logscale,false);
+    PlotCVAndError(canvas,signalFraction,signalFraction, sample + "_"+"Signal Fraction" ,true,logscale,false);
     PlotErrorSummary(canvas,signalFraction,"Signal Fraction Systematics" ,0);
 
     //============================Background Subtraction========================
@@ -576,8 +576,8 @@ template<class MnvHistoType>
     MnvHistoType* bkgsub = DoBkgSubtraction(basename,idatahist,mc,signalFraction);
     if(DEBUG)bkgsub->Print();
     bkgsub->Write();
-    PlotCVAndError(canvas,bkgsub,imcsighist, "BKGsub vs. MC signal" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,bkgsub,"BKGsub Systematics" ,0);
+    PlotCVAndError(canvas,bkgsub,imcsighist, sample + "_"+"BKGsub vs. MC signal" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,bkgsub,sample + "_"+"BKGsub Systematics" ,0);
 
     //==================================Unfolding===============================
 
@@ -597,7 +597,7 @@ template<class MnvHistoType>
       unsmeared = unsmearedVec[0];
       if (DEBUG) unsmeared->Print();
       unsmeared->Write();
-      PlotCVAndError(canvas,bkgsub,unsmeared,"Data Before and After Unsmearing", true,logscale,binwid);
+      PlotCVAndError(canvas,bkgsub,unsmeared,sample + "_"+"Data Before and After Unsmearing", true,logscale,binwid);
       
     }
     if(unsmearedVec.size()==2){
@@ -608,8 +608,8 @@ template<class MnvHistoType>
       // PlotCVAndError(canvas,imcsighist,iseltruhist,"Fractional Unfolding" ,true,logscale,binwid);
     }
 
-    PlotCVAndError(canvas,unsmeared,iseltruhist, "Unsmeared Data Compared to Selected MC" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,unsmeared,"Unsmeared Data Systematics" ,0);
+    PlotCVAndError(canvas,unsmeared,iseltruhist,sample + "_"+ "Unsmeared Data Compared to Selected MC" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,unsmeared,sample + "_"+"Unsmeared Data Systematics" ,0);
 
     //==================================Efficiency==============================
 
@@ -629,10 +629,10 @@ template<class MnvHistoType>
     MnvHistoType* efficiency = vecEffCorr[1];
     if (DEBUG) efficiency->Print();
     efficiency->Write();
-    PlotCVAndError(canvas,iseltruhist,ialltruhist, "efficiency: selected and true" ,true,logscale,binwid);
-    PlotCVAndError(canvas,effcorr,ialltruhist, "effcorr data vs truth" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,efficiency,"Efficiency Factor Systematics" ,0);
-    PlotErrorSummary(canvas,effcorr,"Efficiency Corrected Data Systematics" ,0);
+    PlotCVAndError(canvas,iseltruhist,ialltruhist, sample + "_"+"efficiency: selected and true" ,true,logscale,binwid);
+    PlotCVAndError(canvas,effcorr,ialltruhist, sample + "_"+"effcorr data vs truth" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,efficiency,sample + "_"+"Efficiency Factor Systematics" ,0);
+    PlotErrorSummary(canvas,effcorr,sample + "_"+"Efficiency Corrected Data Systematics" ,0);
     
     //============================POT/Flux Normalization========================
     // bool energydep = false;
@@ -676,8 +676,8 @@ template<class MnvHistoType>
     sigmaMC->Write();
     sigmaMC->Print();
 
-    PlotCVAndError(canvas,sigma,sigmaMC, "sigma" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,sigma,"Cross Section Systematics" ,0);
+    PlotCVAndError(canvas,sigma,sigmaMC, sample + "_"+"sigma" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,sigma,sample + "_"+"Cross Section Systematics" ,0);
 
     //============================Binwidth Normalization============================
     // Just a check on bin width corrections...

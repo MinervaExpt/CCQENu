@@ -1,6 +1,7 @@
 {
   "2D":{
     "pzmu_ptmu":{"name":"pzmu_ptmu","xvar":"pzmu","yvar":"ptmu"},
+    "EnuCCQE_Enu":{"name":"EnuCCQE_Enu","xvar":"EnuCCQE","yvar":"Enu"},
     "EnuCCQE_Q2QE":{"name":"EnuCCQE_Q2QE","xvar":"EnuCCQE","yvar":"Q2QE"},
     "Q2QE_recoil":{"name":"Q2QE_recoil","xvar":"Q2QE","yvar":"recoil"},
     "EnuCCQE_ThetamuDegrees":{"name":"EnuCCQE_ThetamuDegrees","xvar":"EnuCCQE","yvar":"ThetamuDegrees"},

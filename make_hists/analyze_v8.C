@@ -90,6 +90,7 @@ int main(const int argc, const char *argv[] ) {
   config.Read(std::string(argv[1])+".json");
   config.Print();
   std::vector<std::string> AnalyzeVariables = config.GetStringVector("AnalyzeVariables");
+  std::vector<std::string> AnalyzeVariables2D = config.GetStringVector("Analyze2DVariables");
   std::vector<std::string> SampleRequest;
     
   // either get sample from command line or from the list in the config
@@ -311,12 +312,18 @@ int main(const int argc, const char *argv[] ) {
     std::string sample=samples.first;
     std::cout << " Sample: " << sample << std::endl;
     for (auto variables:hists1D[sample]){  // only do this for a subset to save output time.
+      
       std::string variable = variables.first;
+        if(!checktag(AnalyzeVariables,variable)){
+            std::cout << " don't do this variable for now" << variable << std::endl;
+            continue;
+        }
       std::cout << "  Variable: " << variable << std::endl;
       std::string basename = "h_"+sample+"_"+variable;
         if (singlesample){
             basename = "h_"+variable;
         }
+        std::cout << "basename is " << basename << std::endl;
       int exit = GetCrossSection(sample,variable,basename,hists1D[sample][variable],response1D[sample][variable],config,canvas1D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG);
       if (DEBUG) std::cout << exit << std::endl;
     }
@@ -336,8 +343,13 @@ int main(const int argc, const char *argv[] ) {
   std::cout << " just before 2D loop" << std::endl;
   for (auto samples:hists2D){
     std::string sample=samples.first;
+
     for (auto variables:hists2D[sample]){  // only do this for a subset to save output time.
       std::string variable = variables.first;
+        if(!checktag(AnalyzeVariables2D,variable)){
+            std::cout << " don't do this variable for now" << variable << std::endl;
+            continue;
+        }
       std::string basename = "h2D_"+sample+"_"+variable;
         if (singlesample){
             basename = "h_"+variable;
