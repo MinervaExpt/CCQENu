@@ -401,7 +401,7 @@ namespace {
      else return (recoil <= 0.45+offset); //antinu
    }
   
-  int CVUniverse::GetIsCC() const{
+  int CVUniverse::GetTruthIsCC() const{
     return CVUniverse::GetCurrent() == 1;
   }
   
@@ -475,11 +475,13 @@ namespace {
          genie_n_charmed_meson  == 0 &&
          genie_n_protons        == 0   ) return 1;
     }
-    return 0;   
+    return 0;   // Add else for mystery particle
+    // Call functions instead
+    // Place functions likely to be true first
     
   }
   
-  int CVUniverse::GetIsCCQELike() const{  // cut hardwired for now
+  int CVUniverse::GetTruthIsCCQELike() const{  // cut hardwired for now
     std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
     std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
     bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
@@ -494,7 +496,7 @@ namespace {
   
   // all CCQElike without proton cut enabled
   
-  int CVUniverse::GetIsCCQELikeAll() const{  // cut hardwired for now
+  int CVUniverse::GetTruthIsCCQELikeAll() const{  // cut hardwired for now
     std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
     std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
     bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
@@ -511,7 +513,22 @@ namespace {
   // ----------------- Added by Sean for Neutrino ---------------------------------
   // ------------------------------------------------------------------------------
   
-  
+  int CVUniverse::GetTruthIsOther() const{
+    std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
+    bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    int mc_incoming = GetInt("mc_incoming");
+    int mc_current = GetInt("mc_current");
+    
+    bool passesCCQE = CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, NSFDefaults::TrueProtonKECutCentral);
+    int passesSingleChargedPion = CVUniverse::GetTruthHasSingleChargedPion();
+    int passesSingleNeutralPion = CVUniverse::GetTruthHasSingleNeutralPion();
+    int passesMultiPion = CVUniverse::GetTruthHasMultiPion();
+    
+    if(passesCCQE || passesSingleChargedPion || passesSingleNeutralPion || passesMultiPion) return 0;
+    else return 1;
+  }
   
   // Interaction Vertex
   
@@ -533,7 +550,7 @@ namespace {
     return n_blobs;
   }
   
-  int CVUniverse::GetHasSingleChargedPion() const {
+  int CVUniverse::GetTruthHasSingleChargedPion() const {
     int genie_n_charged_pion = 0;
     int genie_n_neutral_pion = 0;
     int genie_n_photons = 0;
@@ -583,7 +600,7 @@ namespace {
     return 0;
   }
   
-  int CVUniverse::GetChargedPionCount() const {
+  int CVUniverse::GetTrueChargedPionCount() const {
     int genie_n_charged_pion = 0;
     
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
@@ -612,7 +629,7 @@ namespace {
     return GetInt("truth_reco_has_michel_electron");
   }
   
-  int CVUniverse::GetHasSingleNeutralPion() const {
+  int CVUniverse::GetTruthHasSingleNeutralPion() const {
     int genie_n_charged_pion = 0;
     int genie_n_neutral_pion = 0;
     int genie_n_photons = 0;
@@ -661,7 +678,7 @@ namespace {
     return 0;
   }
   
-  int CVUniverse::GetNeutralPionCount() const {
+  int CVUniverse::GetTrueNeutralPionCount() const {
     int genie_n_neutral_pion = 0;
     
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
@@ -677,7 +694,7 @@ namespace {
   
   // Michel+Blobs and MultiPion
   
-  int CVUniverse::GetHasMultiPion() const {
+  int CVUniverse::GetTruthHasMultiPion() const {
     int genie_n_charged_pion = 0;
     int genie_n_neutral_pion = 0;
     int genie_n_photons = 0;
@@ -748,7 +765,7 @@ namespace {
     return 0;
   }
   
-  int CVUniverse::GetPionCount() const {
+  int CVUniverse::GetTruePionCount() const {
     int genie_n_charged_pion = 0;
     int genie_n_neutral_pion = 0;
     
@@ -764,7 +781,7 @@ namespace {
     return genie_n_neutral_pion + genie_n_charged_pion;
   }
   
-  int CVUniverse::GetEventRecordEtaCount() const {
+  int CVUniverse::GetEventRecordTrueEtaCount() const {
     int genie_er_n_eta = 0;
     
     int nerpart = GetInt("mc_er_nPart");
@@ -832,7 +849,7 @@ namespace {
     return 1;
   }
   
-  int CVUniverse::GetProtonCount() const {
+  int CVUniverse::GetTrueProtonCount() const {
     int genie_n_protons = 0;
     
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
@@ -853,7 +870,7 @@ namespace {
   
   // Other particles
   
-  int CVUniverse::GetLightMesonCount() const { // Just base etas right now
+  int CVUniverse::GetTrueLightMesonCount() const { // Just base etas right now
     int genie_n_light_meson = 0;
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
     int mc_nFSPart = GetInt("mc_nFSPart");
@@ -863,7 +880,7 @@ namespace {
     return genie_n_light_meson; 
   }
   
-  int CVUniverse::GetCharmedMesonCount() const { // D_+ and D_0
+  int CVUniverse::GetTrueCharmedMesonCount() const { // D_+ and D_0
     int genie_n_charmed_meson = 0;
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
     int mc_nFSPart = GetInt("mc_nFSPart");
@@ -874,7 +891,7 @@ namespace {
     return genie_n_charmed_meson; 
   }
   
-  int CVUniverse::GetStrangeMesonCount() const { // K__L0, K_S0, K_0, K_*(892)0, K_+, K_*(892)+
+  int CVUniverse::GetTrueStrangeMesonCount() const { // K__L0, K_S0, K_0, K_*(892)0, K_+, K_*(892)+
     int genie_n_strange_meson = 0;
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
     int mc_nFSPart = GetInt("mc_nFSPart");
@@ -889,7 +906,7 @@ namespace {
     return genie_n_strange_meson;
   }
   
-  int CVUniverse::GetCharmedBaryonCount() const { // Sigma_c0, Lambda_c+, Sigma_c+, Sigma_c++
+  int CVUniverse::GetTrueCharmedBaryonCount() const { // Sigma_c0, Lambda_c+, Sigma_c+, Sigma_c++
     int genie_n_charmed_baryon = 0;
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
     int mc_nFSPart = GetInt("mc_nFSPart");
@@ -902,7 +919,7 @@ namespace {
     return genie_n_charmed_baryon; 
   }
   
-  int CVUniverse::GetStrangeBaryonCount() const { // Sigma_-, Lambda, Sigma_0, Sigma_+
+  int CVUniverse::GetTrueStrangeBaryonCount() const { // Sigma_-, Lambda, Sigma_0, Sigma_+
     int genie_n_strange_baryon = 0;
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
     int mc_nFSPart = GetInt("mc_nFSPart");

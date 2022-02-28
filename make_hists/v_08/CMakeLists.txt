@@ -103,6 +103,7 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{P
 #add_executable(runsamples runsamples.C)
 add_executable(sidebands_v2 sidebands_v2.C)
 add_executable(analyze_v8 analyze_v8.C)
+add_executable(pdgcounts smg/pdgcounts.C)
 
 
 
@@ -112,4 +113,5 @@ add_executable(analyze_v8 analyze_v8.C)
 #target_link_libraries(runsamples  PRIVATE ${PROJEC_NAME} )
 target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(pdgcounts  PRIVATE ${PROJECT_NAME} )
 

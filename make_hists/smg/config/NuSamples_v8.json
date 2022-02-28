@@ -1,60 +1,57 @@
-{"QElike":  // this one reproduces the older format
-   {"name":"QElike",
+{"QElike":{
+    "name":"QElike",
     "reco":"QElike",
     "phase_space":"phase_space",
     "signal":["qelike"],
-    "background":["qelike_not"],
+    "background":["1neutralpion","1chargedpion","multipion","other"],
     "components":{
-      "qelike":{
-        "for":["selected_reco","selected_truth","truth","response"]
-        },
-      "qelike_not":{"for":["selected_reco"]
-        }
-      }
-   },
-  "MichelSideBand":{
+         "qelike":{"for":["selected_reco","selected_truth","truth","response"]},
+         "1neutralpion":{"for":["selected_reco"]},
+         "1chargedpion":{"for":["selected_reco"]},
+         "multipion":{"for":["selected_reco"]},
+         "other":{"for":["selected_reco"]}
+    }
+ },
+ "MichelSideBand":{
      "name":"MichelSideBand",
      "reco":"MichelSideBand",
      "phase_space":"phase_space",
-     "signal":["1neutralpion"],
-     "background":["1neutralpion_not"],
+     "signal":["qelike"],
+     "background":["1neutralpion","1chargedpion","multipion","other"],
      "components":{
-       "1neutralpion":{
-         "for":["selected_reco","selected_truth","truth","response"]
-        },
-       "1neutralpion_not":{
-         "for":["selected_reco"]
-       }
+         "qelike":{"for":["selected_reco","selected_truth","truth","response"]},
+         "1neutralpion":{"for":["selected_reco"]},
+         "1chargedpion":{"for":["selected_reco"]},
+         "multipion":{"for":["selected_reco"]},
+         "other":{"for":["selected_reco"]}
      }
-  },
-  "BlobSideBand":{
+ },
+ "BlobSideBand":{
      "name":"BlobSideBand",
      "reco":"BlobSideBand",
      "phase_space":"phase_space",
-     "signal":["1chargedpion"],
-     "background":["1chargedpion_not"],
+     "signal":["qelike"],
+     "background":["1neutralpion","1chargedpion","multipion","other"],
      "components":{
-       "1chargedpion":{
-         "for":["selected_reco","selected_truth","truth","response"]
-        },
-       "1chargedpion_not":{
-         "for":["selected_reco"]
-       }
+         "qelike":{"for":["selected_reco","selected_truth","truth","response"]},
+         "1neutralpion":{"for":["selected_reco"]},
+         "1chargedpion":{"for":["selected_reco"]},
+         "multipion":{"for":["selected_reco"]},
+         "other":{"for":["selected_reco"]}
      }
-  },
-  "MicBlobSideBand":{
+ },
+ "MicBlobSideBand":{
      "name":"MicBlobSideBand",
      "reco":"MicBlobSideBand",
      "phase_space":"phase_space",
-     "signal":["multipion"],
-     "background":["multipion_not"],
+     "signal":["qelike"],
+     "background":["1neutralpion","1chargedpion","multipion","other"],
      "components":{
-       "multipion":{
-         "for":["selected_reco","selected_truth","truth","response"]
-        },
-       "multipion_not":{
-         "for":["selected_reco"]
-       }
+         "qelike":{"for":["selected_reco","selected_truth","truth","response"]},
+         "1neutralpion":{"for":["selected_reco"]},
+         "1chargedpion":{"for":["selected_reco"]},
+         "multipion":{"for":["selected_reco"]},
+         "other":{"for":["selected_reco"]}
      }
-  }
+ }
 }

@@ -77,16 +77,18 @@ public:
     
     recointfunctions["GoodRecoil"] = &CVUNIVERSE::GetGoodRecoil;
     
-    trueintfunctions["IsCCQELike"] = &CVUNIVERSE::GetIsCCQELike;
-    trueintfunctions["IsCCQELikeAll"] = &CVUNIVERSE::GetIsCCQELikeAll;
+    trueintfunctions["TruthIsCCQELike"] = &CVUNIVERSE::GetTruthIsCCQELike;
+    trueintfunctions["TruthIsCCQELikeAll"] = &CVUNIVERSE::GetTruthIsCCQELikeAll;
     
-    trueintfunctions["IsCC"] = &CVUNIVERSE::GetIsCC;
+    trueintfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
     
     trueintfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
     
     trueintfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
     
     // ----------------------- Sean Neutrino Functions ------------------------------------------
+  
+    trueintfunctions["TruthIsOther"] = &CVUNIVERSE::GetTruthIsOther;
   
     // Interaction Vertex
 
@@ -107,29 +109,29 @@ public:
     trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
     
     // genie particle counts
-    trueintfunctions["ChargedPionCount"] = &CVUNIVERSE::GetChargedPionCount;
-    truefunctions["ChargedPionCount"] = &CVUNIVERSE::GetChargedPionCount;
-    trueintfunctions["NeutralPionCount"] = &CVUNIVERSE::GetNeutralPionCount;
-    truefunctions["NeutralPionCount"] = &CVUNIVERSE::GetNeutralPionCount;
-    trueintfunctions["PionCount"] = &CVUNIVERSE::GetPionCount;
-    truefunctions["PionCount"] = &CVUNIVERSE::GetPionCount;
+    trueintfunctions["TrueChargedPionCount"] = &CVUNIVERSE::GetTrueChargedPionCount;
+    truefunctions["TrueChargedPionCount"] = &CVUNIVERSE::GetTrueChargedPionCount;
+    trueintfunctions["TrueNeutralPionCount"] = &CVUNIVERSE::GetTrueNeutralPionCount;
+    truefunctions["TrueNeutralPionCount"] = &CVUNIVERSE::GetTrueNeutralPionCount;
+    trueintfunctions["TruePionCount"] = &CVUNIVERSE::GetTruePionCount;
+    truefunctions["TruePionCount"] = &CVUNIVERSE::GetTruePionCount;
     
-    trueintfunctions["CharmedBaryonCount"] = &CVUNIVERSE::GetCharmedBaryonCount;
-    truefunctions["CharmedBaryonCount"] = &CVUNIVERSE::GetCharmedBaryonCount;
-    trueintfunctions["StrangeBaryonCount"] = &CVUNIVERSE::GetStrangeBaryonCount;
-    truefunctions["StrangeBaryonCount"] = &CVUNIVERSE::GetStrangeBaryonCount;
+    trueintfunctions["TrueCharmedBaryonCount"] = &CVUNIVERSE::GetTrueCharmedBaryonCount;
+    truefunctions["TrueCharmedBaryonCount"] = &CVUNIVERSE::GetTrueCharmedBaryonCount;
+    trueintfunctions["TrueStrangeBaryonCount"] = &CVUNIVERSE::GetTrueStrangeBaryonCount;
+    truefunctions["TrueStrangeBaryonCount"] = &CVUNIVERSE::GetTrueStrangeBaryonCount;
     
-    trueintfunctions["CharmedMesonCount"] = &CVUNIVERSE::GetCharmedMesonCount;
-    truefunctions["CharmedMesonCount"] = &CVUNIVERSE::GetCharmedMesonCount;
-    trueintfunctions["StrangeMesonCount"] = &CVUNIVERSE::GetStrangeMesonCount;
-    truefunctions["StrangeMesonCount"] = &CVUNIVERSE::GetStrangeMesonCount;
+    trueintfunctions["TrueCharmedMesonCount"] = &CVUNIVERSE::GetTrueCharmedMesonCount;
+    truefunctions["TrueCharmedMesonCount"] = &CVUNIVERSE::GetTrueCharmedMesonCount;
+    trueintfunctions["TrueStrangeMesonCount"] = &CVUNIVERSE::GetTrueStrangeMesonCount;
+    truefunctions["TrueStrangeMesonCount"] = &CVUNIVERSE::GetTrueStrangeMesonCount;
     
-    trueintfunctions["HasSingleChargedPion"] = &CVUNIVERSE::GetHasSingleChargedPion;
-    trueintfunctions["HasSingleNeutralPion"] = &CVUNIVERSE::GetHasSingleNeutralPion;
-    trueintfunctions["HasMultiPion"] = &CVUNIVERSE::GetHasMultiPion;
+    trueintfunctions["TruthHasSingleChargedPion"] = &CVUNIVERSE::GetTruthHasSingleChargedPion;
+    trueintfunctions["TruthHasSingleNeutralPion"] = &CVUNIVERSE::GetTruthHasSingleNeutralPion;
+    trueintfunctions["TruthHasMultiPion"] = &CVUNIVERSE::GetTruthHasMultiPion;
     
-    truefunctions["EventRecordEtaCount"] = &CVUNIVERSE::GetEventRecordEtaCount;
-    trueintfunctions["EventRecordEtaCount"] = &CVUNIVERSE::GetEventRecordEtaCount;
+    truefunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
+    trueintfunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
     
   };
   

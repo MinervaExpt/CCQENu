@@ -47,6 +47,12 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
   virtual ~CVUniverse() {}
   
   // ========================================================================
+  // Get 
+  // ========================================================================
+  
+  static std::map<std::string, int> GetEventParticleCounts()
+  
+  // ========================================================================
   // Get Weight
   // ========================================================================
 
@@ -183,18 +189,20 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
   
   virtual int GetGoodRecoil() const; // implement Cheryl's cut
   
-  virtual int GetIsCC() const;
+  virtual int GetTruthIsCC() const;
   
   // helper function
   bool passTrueCCQELike(bool neutrinoMode, std::vector<int> mc_FSPartPDG, std::vector<double> mc_FSPartE, int mc_nFSPart, double proton_KECut) const;
   
-  virtual int GetIsCCQELike() const;  // cut hardwired for now
+  virtual int GetTruthIsCCQELike() const;  // cut hardwired for now
   
   // all CCQElike without proton cut enabled
   
-  virtual int GetIsCCQELikeAll() const;  // cut hardwired for now
+  virtual int GetTruthIsCCQELikeAll() const;  // cut hardwired for now
   
   // ----------------------- Sean Neutrino Functions ------------------------------------------
+  
+  virtual int GetTruthIsOther() const;
   
   // Interaction Vertex
   
@@ -203,35 +211,36 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
   // Isolated Blobs and Charged Pions
   
   virtual int GetNBlobs() const;
-  virtual int GetHasSingleChargedPion() const;
+  virtual int GetTruthHasSingleChargedPion() const;
   
   // Michel Electrons and Neutral Pions
   
   virtual int GetMichelElectronCandidates() const;
   virtual int GetHasMichelElectron() const;
   virtual int GetTruthHasMichel() const;
-  virtual int GetHasSingleNeutralPion() const;
-  virtual int GetNeutralPionCount() const;
+  virtual int GetTruthHasSingleNeutralPion() const;
   
   // Michel+Blobs and MultiPion
   
-  virtual int GetHasMultiPion() const;
-  virtual int GetPionCount() const;
-  virtual int GetEventRecordEtaCount() const;
+  virtual int GetTruthHasMultiPion() const;
   virtual double GetSingleProtonScore() const;
   virtual int GetIsSingleProton() const;
   virtual int GetTruthHasSingleProton() const;
   virtual int GetAllExtraTracksProtons() const;
   
-  // Particle Counts
+  // GENIE Particle Counts
   
-  virtual int GetChargedPionCount() const;
-  virtual int GetProtonCount() const;
-  virtual int GetLightMesonCount() const;
-  virtual int GetCharmedMesonCount() const;
-  virtual int GetStrangeMesonCount() const;
-  virtual int GetCharmedBaryonCount() const;
-  virtual int GetStrangeBaryonCount() const;
-    
+  virtual int GetTrueChargedPionCount() const;
+  virtual int GetTrueNeutralPionCount() const;
+  virtual int GetTruePionCount() const;
+  virtual int GetTrueProtonCount() const;
+  virtual int GetTrueLightMesonCount() const;
+  virtual int GetTrueCharmedMesonCount() const;
+  virtual int GetTrueStrangeMesonCount() const;
+  virtual int GetTrueCharmedBaryonCount() const;
+  virtual int GetTrueStrangeBaryonCount() const;
+  
+  virtual int GetEventRecordTrueEtaCount() const;  
+  
 };
 #endif
