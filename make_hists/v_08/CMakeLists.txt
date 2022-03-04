@@ -59,6 +59,7 @@ include/CVUniverse.h
 include/GetCCQECutsFromConfig.h
 include/GetVariablesFromConfig.h
 include/Get2DVariablesFromConfig.h
+include/GetStacked.h
 include/Hist2DWrapperMap.h
 include/HistWrapperMap.h
 include/Systematics.h
@@ -103,7 +104,7 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{P
 #add_executable(runsamples runsamples.C)
 add_executable(sidebands_v2 sidebands_v2.C)
 add_executable(analyze_v8 analyze_v8.C)
-add_executable(pdgcounts smg/pdgcounts.C)
+add_executable(analyze_vSean smg/analyze_vSean.C)
 
 
 
@@ -113,5 +114,5 @@ add_executable(pdgcounts smg/pdgcounts.C)
 #target_link_libraries(runsamples  PRIVATE ${PROJEC_NAME} )
 target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
-target_link_libraries(pdgcounts  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(analyze_vSean  PRIVATE ${PROJECT_NAME} )
 

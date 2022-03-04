@@ -50,7 +50,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
   // Get 
   // ========================================================================
   
-  static std::map<std::string, int> GetEventParticleCounts()
+  static std::map<std::string, int> GetEventParticleCounts();
   
   // ========================================================================
   // Get Weight
