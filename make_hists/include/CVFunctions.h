@@ -68,6 +68,7 @@ public:
     recofunctions["DeadTime"] = &CVUNIVERSE::GetDeadTime;
     
     recofunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+    recointfunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
     
     // integer functions for equals
     
