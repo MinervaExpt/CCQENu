@@ -48,6 +48,7 @@ include/Get2DVariablesFromConfig.cxx
 include/GetVariablesFromConfig.cxx
 include/CVUniverse.cxx
 fits/ScaleFactors.cpp
+fits/MultiScaleFactors.cpp
 )
 
 # tell it about the header files
@@ -68,6 +69,7 @@ include/Variable2DFromConfig.h
 include/VariableFromConfig.h
 include/plotting_pdf.h
 fits/ScaleFactors.h
+fits/MultiScaleFactors.h
 )
 
 include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils)

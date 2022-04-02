@@ -52,6 +52,7 @@
 
 //Analysis includes
 #include "fits/ScaleFactors.h"
+#include "fits/MultiScaleFactors.h"
 
 //PlotUtils includes??? Trying anything at this point...
 #include "PlotUtils/MnvH1D.h"
@@ -62,6 +63,21 @@
 using namespace std;
 using namespace PlotUtils;
 
+// convert the vector of hists into something MnvPlotter wants
+
+TObjArray* Vec2TObjArray(std::vector<TH1D*> hists, std::vector<std::string> names){
+    TObjArray* newArray = new TObjArray();
+    newArray->SetOwner(kTRUE);
+    int i = 0;
+    for (int i = 0 ; i != hists.size(); i++){
+        MnvH1D* m = new MnvH1D(*hists[i]);
+        
+        m->SetTitle(names[i].c_str());
+        //m->Print();
+        newArray->Add(m);
+    }
+    return newArray;
+}
 
 //Borrowed Directly from Andrew.
 void printCorrMatrix(const ROOT::Math::Minimizer& minim, const int nPars)
@@ -109,7 +125,9 @@ int main(int argc, char* argv[]) {
     
     std::vector<std::string> sidebands = config.GetStringVector("Sidebands");
     std::vector<std::string> categories = config.GetStringVector("Categories");
+    std::string signal = config.GetString("Signal");
     std::string varName = config.GetString("Variable");
+    
     
     /*
      int lowBin1 = 6;
@@ -180,45 +198,46 @@ int main(int argc, char* argv[]) {
     char cname[1000];
     
     
-    std::map<std::string, TH1D*> dataHistCV1;
-    std::map<std::string,std::vector<TH1D*>> fitHistsCV1;
-    std::map<std::string,std::vector<TH1D*>> unfitHistsCV1;
+    std::map<std::string, TH1D*> dataHistCV;
+    std::map<std::string,std::vector<TH1D*>> fitHistsCV;
+    
+    std::map<std::string,std::vector<TH1D*>> unfitHistsCV;
     TString name = varName;
     for (auto side:sidebands){
         std::string cat="data";
         std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
         std::cout << " look for " << cname << std::endl;
         MnvH1D* dataHist = (MnvH1D*)dataFile->Get(cname);
-        dataHistCV1[side] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
+        dataHistCV[side] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
         
         
         for (auto cat:categories){
             std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
             name = TString(cname);
             MnvH1D* MCHist = (MnvH1D*)dataFile->Get(cname);
-            TH1D* NewMCCV1 = (TH1D*)MCHist->GetCVHistoWithStatError().Clone(TString("new_")+MCHist->GetName());
-            TH1D* OldMCCV1 = (TH1D*)MCHist->GetCVHistoWithStatError().Clone(TString("old_")+MCHist->GetName());
+            TH1D* NewMCCV = (TH1D*)MCHist->GetCVHistoWithStatError().Clone(TString("new_")+MCHist->GetName());
+            TH1D* OldMCCV = (TH1D*)MCHist->GetCVHistoWithStatError().Clone(TString("old_")+MCHist->GetName());
             
             cout << "Testing Fitting for: " << name << endl;
-            unfitHistsCV1[side].push_back(NewMCCV1);
-            fitHistsCV1[side].push_back(OldMCCV1);
+            unfitHistsCV[side].push_back(NewMCCV);
+            fitHistsCV[side].push_back(OldMCCV);
         }
     }
     
-    TFile* outputfile = TFile::Open(OutputFileName.c_str(),"RECREATE");
+    
     for (auto side:sidebands){
         int lowBin = 1;
-        int hiBin = dataHistCV1[side]->GetXaxis()->GetNbins();
-        fit::ScaleFactors func1(fitHistsCV1[side],unfitHistsCV1[side],dataHistCV1[side],lowBin,hiBin);
+        int hiBin = dataHistCV[side]->GetXaxis()->GetNbins();
+        fit::ScaleFactors func1(fitHistsCV[side],unfitHistsCV[side],dataHistCV[side],lowBin,hiBin);
         
         
-        auto* mini1 = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kMigrad);
+        auto* mini = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kMigrad);
         
         
         int nextPar = 0;
-        for(unsigned int i=0; i < fitHistsCV1[side].size(); ++i){
+        for(unsigned int i=0; i < fitHistsCV[side].size(); ++i){
             string var = "par"+to_string(i);
-            mini1->SetLowerLimitedVariable(nextPar,categories[i],1.0,0.1,0.0);
+            mini->SetLowerLimitedVariable(nextPar,categories[i],1.0,0.1,0.0);
             nextPar++;
         }
         
@@ -229,47 +248,196 @@ int main(int argc, char* argv[]) {
         
         
         
-        mini1->SetFunction(func1);
+        mini->SetFunction(func1);
         
         
         cout << "Fitting " << side << endl;
-        if(!mini1->Minimize()){
+        if(!mini->Minimize()){
             cout << "Printing Results." << endl;
-            mini1->PrintResults();
-            printCorrMatrix(*mini1, func1.NDim());
+            mini->PrintResults();
+            printCorrMatrix(*mini, func1.NDim());
             cout << "FIT FAILED" << endl;
             //return 7;
         }
         else{
             cout << "Printing Results." << endl;
-            mini1->PrintResults();
-            printCorrMatrix(*mini1, func1.NDim());
+            mini->PrintResults();
+            printCorrMatrix(*mini, func1.NDim());
             //cout << mini->X() << endl;
             //cout << mini->Errors() << endl;
             cout << "FIT SUCCEEDED" << endl;
         }
+        const double* scaleResults = mini->X();
+        for (int i = 0; i < fitHistsCV[side].size(); i++){
+            fitHistsCV[side][i]->Scale(scaleResults[i]);
+        }
+        
+    }
+    // now try a combined fit
+    std::vector<std::vector<TH1D*>> combFitHistsCV;
+    std::vector<std::vector<TH1D*>> combUnfitHistsCV;
+    std::vector<TH1D*> combDataHistCV;
+    
+    
+    /// put the combo into the list of sidebands just for fun.
+ 
+
+     
+    
+    
+    TFile* outputfile = TFile::Open(OutputFileName.c_str(),"RECREATE");
+    for (auto side:sidebands){
         outputfile->cd();
-        dataHistCV1[side]->Write();
-        TH1F* tot = (TH1F*)dataHistCV1[side]->Clone(TString("AfterFit_"+side));
+        dataHistCV[side]->Write();
+        TH1F* tot = (TH1F*)dataHistCV[side]->Clone(TString("AfterFit_"+side));
         tot->Reset();
-        for (auto h:fitHistsCV1[side]){
+        for (auto h:fitHistsCV[side]){
             h->Write();
             tot->Add(tot,h,1.,1.);
         }
         tot->Write();
-        TH1F* pre = (TH1F*) dataHistCV1[side]->Clone(TString("PreFit_"+side));
+        TH1F* pre = (TH1F*) dataHistCV[side]->Clone(TString("PreFit_"+side));
         pre->Reset();
-        for (auto h:unfitHistsCV1[side]){
+        for (auto h:unfitHistsCV[side]){
             h->Write();
             pre->Add(pre,h,1.,1.);
         }
         pre->Write();
         
     }
+    PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
+    TCanvas cF("fit","fit");
+    std::map<std::string, TObjArray*> mcin;
+    std::map<std::string, TObjArray*> mcout;
+    for (auto side:sidebands){
+        
+        mcin[side] = Vec2TObjArray(unfitHistsCV[side],categories);
+        mcout[side] = Vec2TObjArray(fitHistsCV[side],categories);
+        std::cout << " before call to DrawStack" << std::endl;
+        
+        TH1D test = ((MnvH1D*)mcin[side]->At(0))->GetCVHistoWithError();
+        
+        //test.Print();
+        MnvH1D* data = new MnvH1D(*(dataHistCV[side]));
+        data->SetTitle("Data");
+        mnvPlotter.DrawDataStackedMC(data,mcin[side],1.0,"TR");
+        cF.Print(TString(side+"_prefit.png").Data());
+        mnvPlotter.DrawDataStackedMC(data,mcout[side],1.0,"TR");
+        cF.Print(TString(side+"_postfit.png").Data());
+    }
+    
+     
+    // same for combined fit results
+    
+    // make a common list for all histos
+    
+    std::cout << "Start combined fit " << std::endl;
+    for (int i = 0 ; i < sidebands.size(); i++){
+        std::string side = sidebands[i];
+        if (side == "QElike") continue;
+        combDataHistCV.push_back(dataHistCV[side]);
+        combUnfitHistsCV.push_back(unfitHistsCV[side]);
+        combFitHistsCV.push_back(fitHistsCV[side]);
+    }
+    
+    std::cout << "Have made the arrays " << std::endl;
+    int lowBin = 1;
+    int hiBin = dataHistCV["QElike"]->GetXaxis()->GetNbins();
+    std::cout << "Have made the arrays " << std::endl;
+  
+    fit::MultiScaleFactors func2(combFitHistsCV,combUnfitHistsCV,combDataHistCV,lowBin,hiBin);
+    
+    std::cout << "Have made the fitter " << std::endl;
+    
+    auto* mini2 = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kMigrad);
+    
+    std::cout << " now set up another set of parameters" << std::endl;
+    int nextPar = 0;
+    for(unsigned int i=0; i < categories.size(); ++i){
+        mini2->SetLowerLimitedVariable(nextPar,categories[i],1.0,0.1,0.0);
+        nextPar++;
+    }
+    
+    if (nextPar != func2.NDim()){
+        cout << "The number of parameters was unexpected for some reason for fitHists1." << endl;
+        return 6;
+    }
+    
+    std::cout << "Have set up the parameters " << std::endl;
+    
+    mini2->SetFunction(func2);
+    
+    
+    cout << "Fitting " << "combination" << endl;
+    if(!mini2->Minimize()){
+        cout << "Printing Results." << endl;
+        mini2->PrintResults();
+        printCorrMatrix(*mini2, func2.NDim());
+        cout << "FIT FAILED" << endl;
+        //return 7;
+    }
+    else{
+        cout << "Printing Results." << endl;
+        mini2->PrintResults();
+        printCorrMatrix(*mini2, func2.NDim());
+        cout << mini2->X() << endl;
+        cout << mini2->Errors() << endl;
+        cout << "FIT SUCCEEDED" << endl;
+    }
+    const double* combScaleResults = mini2->X();
+    for (int side = 0 ; side < combDataHistCV.size(); side++){
+        for (int i = 0; i < combFitHistsCV[side].size(); i++){
+            combFitHistsCV[side][i]->Scale(combScaleResults[i]);
+        }
+    }
+    
+    
+    for (int side = 0 ; side < combDataHistCV.size(); side++){
+        outputfile->cd();
+        combDataHistCV[side]->Write();
+        TH1F* tot = (TH1F*)combDataHistCV[side]->Clone(TString("AfterFit_"+sidebands[side]));
+        tot->Reset();
+        for (auto h:combFitHistsCV.at(side)){
+            h->Write();
+            tot->Add(tot,h,1.,1.);
+        }
+        tot->Write();
+        TH1F* pre = (TH1F*) combDataHistCV[side]->Clone(TString("PreFit_"+sidebands[side]));
+        pre->Reset();
+        for (auto h:combUnfitHistsCV[side]){
+            h->Write();
+            pre->Add(pre,h,1.,1.);
+        }
+        pre->Write();
+        
+    }
+    //PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
+    //TCanvas cF("fit","fit");
+    std::vector< TObjArray*> combmcin;
+    std::vector< TObjArray*> combmcout;
+    for (int side = 0 ; side < dataHistCV.size(); side++){
+        
+        combmcin[side] = Vec2TObjArray(combUnfitHistsCV[side],categories);
+        combmcout[side] = Vec2TObjArray(combFitHistsCV[side],categories);
+        std::cout << " before call to DrawStack" << std::endl;
+        
+        TH1D test = ((MnvH1D*)combmcin[side]->At(0))->GetCVHistoWithError();
+        
+        //test.Print();
+        MnvH1D* data = new MnvH1D(*(combDataHistCV[side]));
+        data->SetTitle("Data");
+        mnvPlotter.DrawDataStackedMC(data,combmcin[side],1.0,"TR");
+        cF.Print(TString(sidebands[side]+"_prefit_combined.png").Data());
+        mnvPlotter.DrawDataStackedMC(data,combmcout[side],1.0,"TR");
+        cF.Print(TString(sidebands[side]+"_postfit_combined.png").Data());
+    }
+    
+    
     outputfile->Close();
     cout << "Closing Files... Does this solve the issue of seg fault." << endl;
    
     dataFile->Close();
+
     
     cout << "HEY YOU DID IT!!!" << endl;
     return 0;
