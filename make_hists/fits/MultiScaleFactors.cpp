@@ -5,6 +5,7 @@
 //      as of 03/16/2022.
 //
 //Author: David Last dlast@sas.upenn.edu/lastd44@gmail.com
+// Modified extensively by Heidi Schellman (hschellman on github)
 
 #include "fits/MultiScaleFactors.h"
 
@@ -66,15 +67,15 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
     //For now just copying in the chi^2 function more or less directly from Andrew
     double chi2 = 0.0;
     if (!fDoFit) return chi2;
-    
-    double fitSum = 0.0;
+    double fitSum;
+#ifdef DEBUG
     std::cout << "parameters ";
-    int ndim = NDim();
-    for (int i = 0; i < ndim; i++){
+    for (int i = 0; i < fNdim; i++){
          std::cout << parameters[i] << " ";
     }
     std::cout << std::endl;
-    for (auto const sample:fUnfitHists){
+#endif
+    for (auto const sample:fUnfitHists){ // loop over samples
         std::string whichsample = sample.first;
         if (!fInclude.at(whichsample)) continue; // skip some samples
         for (int whichBin = fFirstBin; whichBin <= fLastBin; ++whichBin){
@@ -87,16 +88,16 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
             double dataErr = fDataHist.at(whichsample)->GetBinError(whichBin);
             double diff = fitSum-dataContent;
             
+#ifdef DEBUG
             std::cout << whichsample << "Fit Sum: " << fitSum << ", Data: " << dataContent << ", Difference: " << diff << ", Error: " << dataErr << std::endl;
-            //std::cout << "How the chi2 should change: " << (diff*diff)/(dataErr*dataErr) << std::endl;
-            if (dataErr > 1e-10) chi2 += (diff*diff)/(dataErr*dataErr);
+#endif
+             if (dataErr > 1e-10) chi2 += (diff*diff)/(dataErr*dataErr);
         }
-        //std::cout << "Updated chi2: " << chi2 << std::endl;
     }
     
-    
+#ifdef DEBUG
     std::cout << "About to return chi2 of: " << chi2 << std::endl;
-    
+#endif
     return chi2;
 }
 
