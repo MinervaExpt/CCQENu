@@ -10,18 +10,19 @@
 
 
 namespace fit{
-MultiScaleFactors::MultiScaleFactors(const std::map<const std::string, std::vector <TH1D*>> unfitHists, const std::map<const std::string, TH1D*> dataHist, const std::map<const std::string, bool> include, const int firstBin, const int lastBin):IBaseFunctionMultiDimTempl<double>(),fUnfitHists(unfitHists), fDataHist(dataHist), fInclude(include), fFirstBin(firstBin), fLastBin(lastBin), fDoFit(true)
+MultiScaleFactors::MultiScaleFactors(const std::vector<std::vector<TH1D*>> fitHists, const std::vector<std::vector<TH1D*>> unfitHists, const std::vector<TH1D*> dataHist, const int firstBin, const int lastBin):IBaseFunctionMultiDimTempl<double>(),fFitHists(fitHists),
+fUnfitHists(unfitHists), fDataHist(dataHist), fFirstBin(firstBin), fLastBin(lastBin), fDoFit(true)
 {
-//    //std::cout << " making the MultiScaleFactor" << fFitHists.size() <<  std::endl;
-//
-//    //if (fFitHists.size() == 0 || fFitHists[0].size() == 0){
-//        std::cout << "Function has no histos to fit... Setting the fit condition to false." << std::endl;
-//        fDoFit = false;
-//    }
-//    std::cout << " making the MultiScaleFactor" << fFitHists[0].size() <<  std::endl;
-//
-//    int nBins = 0;
-//    if (fDoFit) nBins = fFitHists.at(0).at(0)->GetNbinsX();
+    std::cout << " making the MultiScaleFactor" << fFitHists.size() <<  std::endl;
+
+    if (fFitHists.size() == 0 || fFitHists[0].size() == 0){
+        std::cout << "Function has no histos to fit... Setting the fit condition to false." << std::endl;
+        fDoFit = false;
+    }
+    std::cout << " making the MultiScaleFactor" << fFitHists[0].size() <<  std::endl;
+    
+    int nBins = 0;
+    if (fDoFit) nBins = fFitHists.at(0).at(0)->GetNbinsX();
     
     //    for(unsigned int iFit; iFit < fFitHists.size(); ++iFit){
     //      if (!fDoFit) break;
@@ -44,22 +45,14 @@ MultiScaleFactors::MultiScaleFactors(const std::map<const std::string, std::vect
     //      fDoFit = false;
     //    }
     
-//    //Avoid fitting overflow
-//    if (fDoFit && fLastBin < 0 || fLastBin > nBins) fLastBin=nBins;
-    int check = 0;
-    for (auto side:fUnfitHists){
-        fNdim = side.second.size();
-        if (check !=0 && fNdim != check){
-            std::cout << " inconsistent number of fit templates" << check << side.first << fNdim << std::endl;
-        }
-        check = fNdim;
-    }
+    //Avoid fitting overflow
+    if (fDoFit && fLastBin < 0 || fLastBin > nBins) fLastBin=nBins;
     std::cout << " made the MultiScaleFactor" << std::endl;
 }
 
 unsigned int MultiScaleFactors::NDim() const{
     if (!fDoFit) return 0;
-    else return fNdim;
+    else return fFitHists[0].size();
 }
 
 double MultiScaleFactors::DoEval(const double* parameters) const{
@@ -74,12 +67,10 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
          std::cout << parameters[i] << " ";
     }
     std::cout << std::endl;
-    for (auto const sample:fUnfitHists){
-        std::string whichsample = sample.first;
-        if (!fInclude.at(whichsample)) continue; // skip some samples
+    for (unsigned int whichsample=0; whichsample < fUnfitHists.size(); ++whichsample){
         for (int whichBin = fFirstBin; whichBin <= fLastBin; ++whichBin){
             double fitSum = 0.0;
-            for (int whichFit = 0; whichFit < fNdim; whichFit++){
+            for(unsigned int whichFit=0; whichFit < ndim; ++whichFit){
                 double temp = fUnfitHists.at(whichsample).at(whichFit)->GetBinContent(whichBin)*parameters[whichFit];
                 fitSum += temp;
             }
@@ -87,7 +78,7 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
             double dataErr = fDataHist.at(whichsample)->GetBinError(whichBin);
             double diff = fitSum-dataContent;
             
-            std::cout << whichsample << "Fit Sum: " << fitSum << ", Data: " << dataContent << ", Difference: " << diff << ", Error: " << dataErr << std::endl;
+            //std::cout << "Fit Sum: " << fitSum << ", Data: " << dataContent << ", Difference: " << diff << ", Error: " << dataErr << std::endl;
             //std::cout << "How the chi2 should change: " << (diff*diff)/(dataErr*dataErr) << std::endl;
             if (dataErr > 1e-10) chi2 += (diff*diff)/(dataErr*dataErr);
         }
@@ -102,7 +93,7 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
 
 //Required for ROOT fittable function base class :( (indeed this is sad, Andrew)
 ROOT::Math::IBaseFunctionMultiDimTempl<double>* MultiScaleFactors::Clone() const{
-    return new MultiScaleFactors( fUnfitHists, fDataHist, fInclude, fFirstBin, fLastBin);
+    return new MultiScaleFactors(fFitHists, fUnfitHists, fDataHist, fFirstBin, fLastBin);
 }
 
 }

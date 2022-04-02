@@ -23,23 +23,19 @@
 namespace fit{
   class MultiScaleFactors: public ROOT::Math::IBaseFunctionMultiDimTempl<double>{
   private:
-    //Members to hold the histos -
-    // order is sample, category
-    // the category templates need to be in a vector to make the fitting indexing work well.
-    std::map<const std::string, std::vector< TH1D*> > fFitHists;
-    std::map<const std::string, std::vector< TH1D*> > fUnfitHists;
-    std::map<const std::string, TH1D*>  fDataHist;
-    // this says which samples to include
-    std::map<const std::string, bool> fInclude;
-      // in principle, each sample may be a different variable so need to make these into maps in future.
+    //Members to hold the histos
+    std::vector<std::vector<TH1D*>> fFitHists;
+    std::vector<std::vector<TH1D*>> fUnfitHists;
+    std::vector<TH1D*> fDataHist;
+    //Members for fit range
+    std::string fSignal;
     int fFirstBin;
     int fLastBin;
-    int fNdim;
     bool fDoFit;
 
   public:
     //CTOR
-    MultiScaleFactors(const std::map<const std::string, std::vector< TH1D*> > unfitHists, const std::map<const std::string, TH1D*>  dataHist, const std::map<const std::string, bool> Include, const int firstBin = 1, const int lastBin = -1);
+    MultiScaleFactors(const std::vector<std::vector<TH1D*>> fitHists, const std::vector<std::vector<TH1D*>> unfitHists, const std::vector<TH1D*> dataHist, const int firstBin = 1, const int lastBin = -1);
 
     unsigned int NDim() const override;
 
