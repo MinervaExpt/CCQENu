@@ -11,42 +11,9 @@
 
 
 namespace fit{
-MultiScaleFactors::MultiScaleFactors(const std::map<const std::string, std::vector <TH1D*>> unfitHists, const std::map<const std::string, TH1D*> dataHist, const std::map<const std::string, bool> include, const int firstBin, const int lastBin):IBaseFunctionMultiDimTempl<double>(),fUnfitHists(unfitHists), fDataHist(dataHist), fInclude(include), fFirstBin(firstBin), fLastBin(lastBin), fDoFit(true)
+MultiScaleFactors::MultiScaleFactors(const std::map<const std::string, std::vector <TH1D*>> unfitHists, const std::map<const std::string, TH1D*> dataHist, const std::map<const std::string, bool> include,
+                                     fit_type type, const int firstBin, const int lastBin):IBaseFunctionMultiDimTempl<double>(),fUnfitHists(unfitHists), fDataHist(dataHist), fInclude(include), fType(type), fFirstBin(firstBin), fLastBin(lastBin), fDoFit(true)
 {
-//    //std::cout << " making the MultiScaleFactor" << fFitHists.size() <<  std::endl;
-//
-//    //if (fFitHists.size() == 0 || fFitHists[0].size() == 0){
-//        std::cout << "Function has no histos to fit... Setting the fit condition to false." << std::endl;
-//        fDoFit = false;
-//    }
-//    std::cout << " making the MultiScaleFactor" << fFitHists[0].size() <<  std::endl;
-//
-//    int nBins = 0;
-//    if (fDoFit) nBins = fFitHists.at(0).at(0)->GetNbinsX();
-    
-    //    for(unsigned int iFit; iFit < fFitHists.size(); ++iFit){
-    //      if (!fDoFit) break;
-    //      if (fFitHists.at(iFit)->GetNbinsX() != nBins){
-    //	std::cout << "No. of bins not consistent... Setting the fit condition to false." << std::endl;
-    //	fDoFit = false;
-    //      }
-    //    }
-    //
-    //    for(unsigned int iFit; iFit < fUnfitHists.size(); ++iFit){
-    //      if (!fDoFit) break;
-    //      if (fUnfitHists.at(iFit)->GetNbinsX() != nBins){
-    //	std::cout << "No. of bins not consistent... Setting the fit condition to false." << std::endl;
-    //	fDoFit = false;
-    //      }
-    //    }
-    //
-    //    if (fDataHist->GetNbinsX() != nBins){
-    //      std::cout << "No. of bins not consistent... Setting the fit condition to false." << std::endl;
-    //      fDoFit = false;
-    //    }
-    
-//    //Avoid fitting overflow
-//    if (fDoFit && fLastBin < 0 || fLastBin > nBins) fLastBin=nBins;
     int check = 0;
     for (auto side:fUnfitHists){
         fNdim = side.second.size();
@@ -84,14 +51,24 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
                 double temp = fUnfitHists.at(whichsample).at(whichFit)->GetBinContent(whichBin)*parameters[whichFit];
                 fitSum += temp;
             }
+           
             double dataContent = fDataHist.at(whichsample)->GetBinContent(whichBin);
-            double dataErr = fDataHist.at(whichsample)->GetBinError(whichBin);
-            double diff = fitSum-dataContent;
-            
+            if (fType == kFastChi2){
+                double dataErr = fDataHist.at(whichsample)->GetBinError(whichBin);
+                double diff = fitSum-dataContent;
+                if (dataErr > 1e-10) chi2 += (diff*diff)/(dataErr*dataErr);
+            }
+            if (fType == kSlowChi2){ // use the MC as a better estimator
+                double MCval = fitSum>0?fitSum:-fitSum;
+                double diff = fitSum-dataContent;
+                chi2 += (diff*diff)/MCval;
+            }
+            if (fType == kML){
+                chi2 -= 2.*TMath::Log(TMath::Poisson(dataContent,fitSum));
+            }
 #ifdef DEBUG
             std::cout << whichsample << "Fit Sum: " << fitSum << ", Data: " << dataContent << ", Difference: " << diff << ", Error: " << dataErr << std::endl;
 #endif
-             if (dataErr > 1e-10) chi2 += (diff*diff)/(dataErr*dataErr);
         }
     }
     
@@ -103,7 +80,7 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
 
 //Required for ROOT fittable function base class :( (indeed this is sad, Andrew)
 ROOT::Math::IBaseFunctionMultiDimTempl<double>* MultiScaleFactors::Clone() const{
-    return new MultiScaleFactors( fUnfitHists, fDataHist, fInclude, fFirstBin, fLastBin);
+    return new MultiScaleFactors( fUnfitHists, fDataHist, fInclude, fType, fFirstBin, fLastBin);
 }
 
 }

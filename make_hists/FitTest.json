@@ -3,5 +3,6 @@
     "IncludeInFit":["MichelSideBand","BlobSideBand","MicBlobSideBand"],
     "Categories":["qelike","1chargedpion","1neutralpion","multipion","other"],
     "Variable":"ptmu",
+    "FitType":"ML", //
     "OutputFile":"Fitresult.root"
 }

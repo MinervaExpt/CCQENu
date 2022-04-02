@@ -21,6 +21,8 @@
 #include <bitset>
 
 namespace fit{
+enum fit_type{kFastChi2,kSlowChi2,kML};
+
   class MultiScaleFactors: public ROOT::Math::IBaseFunctionMultiDimTempl<double>{
   private:
     //Members to hold the histos -
@@ -35,11 +37,12 @@ namespace fit{
     int fFirstBin;
     int fLastBin;
     int fNdim;
+    fit_type fType;
     bool fDoFit;
 
   public:
     //CTOR
-    MultiScaleFactors(const std::map<const std::string, std::vector< TH1D*> > unfitHists, const std::map<const std::string, TH1D*>  dataHist, const std::map<const std::string, bool> Include, const int firstBin = 1, const int lastBin = -1);
+    MultiScaleFactors(const std::map<const std::string, std::vector< TH1D*> > unfitHists, const std::map<const std::string, TH1D*>  dataHist, const std::map<const std::string, bool> Include, const fit_type type,  const int firstBin = 1, const int lastBin = -1);
 
     unsigned int NDim() const override;
 

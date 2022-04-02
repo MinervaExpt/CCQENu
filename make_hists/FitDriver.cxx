@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
     }
     std::string varName = config.GetString("Variable");
  
-    
+    std::string fitType = config.GetString("FitType");
     // read in the data and parse it
   
     TFile* inputFile = new TFile(inputFileName.c_str(),"READ");
@@ -186,8 +186,14 @@ int main(int argc, char* argv[]) {
     
     int lowBin = 1;
     int hiBin = dataHistCV[include[0]]->GetXaxis()->GetNbins();
-  
-    fit::MultiScaleFactors func2(unfitHistsCV,dataHistCV,includeInFit,lowBin,hiBin);
+    fit::fit_type type;
+    type = fit::kFastChi2;
+    if (fitType == "FastChi2")type = fit::kFastChi2;
+    if (fitType == "SlowChi2")type = fit::kSlowChi2;
+    if (fitType == "ML")type = fit::kML;
+    
+    fit::MultiScaleFactors func2(unfitHistsCV,dataHistCV,includeInFit,type,lowBin,hiBin);
+   
     
     std::cout << "Have made the fitter " << std::endl;
     
@@ -238,7 +244,6 @@ int main(int argc, char* argv[]) {
             fitHistsCV[side][i]->Print();
         }
     }
-    
     std::cout << " Try to write it out " << std::endl;
     TFile* outputfile = TFile::Open(outputFileName.c_str(),"RECREATE");
     outputfile->cd();
@@ -281,16 +286,12 @@ int main(int argc, char* argv[]) {
         std::cout << "got an array back " << std::endl;
         combmcout = Vec2TObjArray(fitHistsCV[side],categories);
         std::cout << " before call to DrawStack" << std::endl;
-        
-        TH1D test = ((MnvH1D*)combmcin->At(0))->GetCVHistoWithError();
-        
-        //test.Print();
         MnvH1D* data = new MnvH1D(*(dataHistCV[side]));
         data->SetTitle("Data");
         mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
         cF.Print(TString(side+"_prefit_combined.png").Data());
         mnvPlotter.DrawDataStackedMC(data,combmcout,1.0,"TR");
-        cF.Print(TString(side+"_postfit_combined.png").Data());
+        cF.Print(TString(side+"_"+fitType+"_postfit_combined.png").Data());
     }
     outputfile->Close();
     cout << "Closing Files... Does this solve the issue of seg fault." << endl;
