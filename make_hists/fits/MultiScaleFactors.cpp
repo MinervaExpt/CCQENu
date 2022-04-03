@@ -8,7 +8,7 @@
 // Modified extensively by Heidi Schellman (hschellman on github)
 
 #include "fits/MultiScaleFactors.h"
-#define DEBUG 1
+//#define DEBUG 0
 
 namespace fit{
 MultiScaleFactors::MultiScaleFactors(const std::map<const std::string, std::vector <TH1D*>> unfitHists, const std::map<const std::string, TH1D*> dataHist, const std::map<const std::string, bool> include,
@@ -51,19 +51,21 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
                 double temp = fUnfitHists.at(whichsample).at(whichFit)->GetBinContent(whichBin)*parameters[whichFit];
                 fitSum += temp;
             }
-           
+            double diff;
+            double dataErr=0.0;
             double dataContent = fDataHist.at(whichsample)->GetBinContent(whichBin);
             if (fType == kFastChi2){
-                double dataErr = fDataHist.at(whichsample)->GetBinError(whichBin);
-                double diff = fitSum-dataContent;
+                dataErr = fDataHist.at(whichsample)->GetBinError(whichBin);
+                diff = fitSum-dataContent;
                 if (dataErr > 1e-10) chi2 += (diff*diff)/(dataErr*dataErr);
             }
             if (fType == kSlowChi2){ // use the MC as a better estimator
                 double MCval = fitSum>0?fitSum:-fitSum;
-                double diff = fitSum-dataContent;
+                diff = fitSum-dataContent;
                 chi2 += (diff*diff)/MCval;
             }
             if (fType == kML){
+                diff = fitSum-dataContent;
                 chi2 -= 2.*TMath::Log(TMath::Poisson(dataContent,fitSum));
             }
 #ifdef DEBUG

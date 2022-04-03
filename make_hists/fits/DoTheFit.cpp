@@ -1,26 +1,23 @@
-#ifndef fitfunction_h
-#define fitfunction_h
+#include "fits/DoTheFit.h"
 #include "fits/MultiScaleFactors.h"
 #include "Minuit2/Minuit2Minimizer.h"
 #include "TMinuitMinimizer.h"
-#include "PlotUtils/MnvH1D.h"
-#include <map>
-#include <vector>
+
 
 namespace fit{
 
-int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHists, const std::map<const std::string, std::vector< PlotUtils::MnvH1D*> > unfitHists, const std::map<const std::string, PlotUtils::MnvH1D*>  dataHist, const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type, const int lowBin = 1, const int hiBin = -1){
+int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHists, const std::map<const std::string, std::vector< PlotUtils::MnvH1D*> > unfitHists, const std::map<const std::string, PlotUtils::MnvH1D*>  dataHist, const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type, const int lowBin, const int hiBin ){
     
     std::map<const std::string, std::vector< TH1D*>> unfitHistsCV;
     std::map<const std::string, TH1D* > dataHistCV;
     
     // first pull out  the right hists in the PlotUtils::MnvH1D
-    ROOT::Minuit2::Minuit2Minimizer * mini2;
+    
     
     std::string univ = "Flux";
     int nuniv = 0;
     
-    std::cout << " do the fit for " << univ << " " << nuniv << std::endl;
+    std::cout << " now do the fit for " << univ << " " << nuniv << std::endl;
     
     for (auto sample:dataHist){
         std::cout << " sample is " << sample.first << std::endl;
@@ -31,9 +28,10 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
         for (auto sample:unfitHists){
             std::cout << univ << " sample size " << sample.first << " " <<  sample.second.size() << " " << categories.size() << std::endl;
             for (int i = 0; i < categories.size(); i++){
-                TH1D* hist = (TH1D*) unfitHists.at(sample.first).at(i)->Clone(TString(errorband->GetHist(nuniv)->GetName()+"_"+univ));
-                hist->Print();
+                TString name = unfitHists.at(sample.first).at(i)->GetName()+TString("_"+univ);
+                TH1D* hist = (TH1D*) unfitHists.at(sample.first).at(i)->Clone(name);
                 unfitHistsCV[sample.first].push_back(hist);
+                hist->Print();
             }
         }
     }
@@ -45,16 +43,23 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
                 if (errorband == 0){
                     std::cout << " no such band " << std::endl;
                 }
-                TH1D* hist = (TH1D*) errorband->GetHist(nuniv)->Clone(TString(errorband->GetHist(nuniv)->GetName()+"_"+univ));
+                TString name = errorband->GetName();
+                name += TString("_" + univ);
+                TH1D* hist = (TH1D*) errorband->GetHist(nuniv)->Clone(name);
                 unfitHistsCV[sample.first].push_back(hist);
-                
+                hist->Print();
             }
         }
     }
     
     std::cout << " have made the local samples for this universe"<< std::endl;
     
+    
+    
     fit::MultiScaleFactors func2(unfitHistsCV,dataHistCV,includeInFit,type,lowBin,hiBin);
+    
+    auto* mini2 = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kMigrad);
+    
     
     std::cout << "Have made the fitter " << std::endl;
     
@@ -79,6 +84,8 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
     std::cout << "Have set up the parameters " << std::endl;
     
     mini2->SetFunction(func2);
+    
+    std::cout << " check link to function" << mini2->NDim() << std::endl; 
     
     mini2->PrintResults();
     
@@ -135,4 +142,4 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
     
 }
 //end namespace
-#endif
+

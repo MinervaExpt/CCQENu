@@ -59,7 +59,7 @@
 #include "PlotUtils/MnvH1D.h"
 #include "PlotUtils/MnvPlotter.h"
 #include "utils/NuConfig.h"
-#include "fits/FitFunction.h"
+#include "fits/DoTheFit.h"
 
 
 using namespace std;
@@ -189,10 +189,8 @@ int main(int argc, char* argv[]) {
     if (fitType == "FastChi2")type = fit::kFastChi2;
     if (fitType == "SlowChi2")type = fit::kSlowChi2;
     if (fitType == "ML")type = fit::kML;
-    
-    auto* mini2 = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kMigrad);
-    
-    int ret = DoTheFit(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin);
+     
+    int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin);
     
     
 
