@@ -67,20 +67,20 @@ using namespace PlotUtils;
 
 // convert the vector of hists into something MnvPlotter wants
 
-TObjArray* Vec2TObjArray(std::vector<TH1D*> hists, std::vector<std::string> names){
+TObjArray* Vec2TObjArray(std::vector<MnvH1D*> hists, std::vector<std::string> names){
     TObjArray* newArray = new TObjArray();
     newArray->SetOwner(kTRUE);
-    std::cout << " try to make an ObjArray" << hists.size() << std::endl;
+    //std::cout << " try to make an ObjArray" << hists.size() << std::endl;
     int i = 0;
     if (hists.size() != names.size()){
         std::cout << " problem with objec array names " << std::endl;
     }
     for (int i = 0 ; i != hists.size(); i++){
-        PlotUtils::MnvH1D* m = new PlotUtils::MnvH1D(*hists[i]);
+        //PlotUtils::MnvH1D* m = new PlotUtils::MnvH1D(*hists[i]);
         
-        m->SetTitle(names[i].c_str());
-        m->Print();
-        newArray->Add(m);
+        //m->SetTitle(names[i].c_str());
+        //m->Print();
+        newArray->Add(hists[i]);
     }
     return newArray;
 }
@@ -169,7 +169,7 @@ int main(int argc, char* argv[]) {
         std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
         std::cout << " look for " << cname << std::endl;
         dataHist[side] = (PlotUtils::MnvH1D*)inputFile->Get(cname);
-        //dataHistCV[sidename] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
+        //dataHist[sidename] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
         for (auto cat:categories){
             std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
             name = TString(cname);
@@ -194,7 +194,7 @@ int main(int argc, char* argv[]) {
     
     
 
-//    fit::FitFunction(mini2,fitHistsCV, unfitHistsCV,dataHistCV,includeInFit,type,lowBin,hiBin);
+//    fit::FitFunction(mini2,fitHists, unfitHists,dataHist,includeInFit,type,lowBin,hiBin);
 //
 //
 //    std::cout << "Have made the fitter " << std::endl;
@@ -242,63 +242,80 @@ int main(int argc, char* argv[]) {
 //    const double* combScaleResults = mini2->X();
 //    for (auto side:sidebands){
 //        for (int i = 0; i < categories.size(); i++){
-//            fitHistsCV[side][i]->Scale(combScaleResults[i]);
-//            fitHistsCV[side][i]->Print();
+//            fitHists[side][i]->Scale(combScaleResults[i]);
+//            fitHists[side][i]->Print();
 //        }
 //    }
-//    std::cout << " Try to write it out " << std::endl;
-//    TFile* outputfile = TFile::Open(outputFileName.c_str(),"RECREATE");
-//    outputfile->cd();
-//    for (auto side:sidebands){
-//        dataHistCV[side]->Print();
-//        dataHistCV[side]->Write();
-//
-//        TH1F* tot = (TH1F*)dataHistCV[side]->Clone(TString("AfterFit_"+side));
-//        tot->Reset();
-//        for (int i = 0; i < categories.size(); i++){
-//            fitHistsCV[side][i]->Write();
-//            tot->Add(tot,fitHistsCV[side][i],1.,1.);
-//        }
-//        tot->Print();
-//        tot->Write();
-//    }
-//    std::cout << "wrote the results " << std::endl;
-//
-//    for (auto side:sidebands){
-//        TH1F* pre = (TH1F*) dataHistCV[side]->Clone(TString("PreFit_"+side));
-//        pre->Reset();
-//        for (int i = 0; i < categories.size(); i++){
-//            unfitHistsCV[side][i]->Write();
-//            pre->Add(pre,unfitHistsCV[side][i],1.,1.);
-//        }
-//        pre->Print();
-//        pre->Write();
-//
-//    }
-//    std::cout << "wrote the inputs " << std::endl;
-//
-//    // now make some amusing plots
-//
-//    PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
-//    TCanvas cF("fit","fit");
-//    TObjArray* combmcin;
-//    TObjArray* combmcout;
-//    for (auto side:sidebands){
-//        combmcin  = Vec2TObjArray(unfitHistsCV[side],categories);
-//        std::cout << "got an array back " << std::endl;
-//        combmcout = Vec2TObjArray(fitHistsCV[side],categories);
-//        std::cout << " before call to DrawStack" << std::endl;
-//        PlotUtils::MnvH1D* data = new PlotUtils::MnvH1D(*(dataHistCV[side]));
-//        data->SetTitle("Data");
-//        mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
-//        cF.Print(TString(side+"_prefit_combined.png").Data());
-//        mnvPlotter.DrawDataStackedMC(data,combmcout,1.0,"TR");
-//        cF.Print(TString(side+"_"+fitType+"_postfit_combined.png").Data());
-//    }
-//    outputfile->Close();
-//    cout << "Closing Files... Does this solve the issue of seg fault." << endl;
-//
-//    inputFile->Close();
+    std::cout << " Try to write it out " << std::endl;
+    TFile* outputfile = TFile::Open(outputFileName.c_str(),"RECREATE");
+    outputfile->cd();
+    PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
+    TCanvas cF("fit","fit");
+    for (auto side:sidebands){
+        dataHist[side]->Print();
+        dataHist[side]->Write();
+
+        MnvH1D* tot;
+       
+        for (int i = 0; i < categories.size(); i++){
+            fitHists[side][i]->Write();
+            if (i == 0){
+                tot = (MnvH1D*)fitHists[side][i]->Clone(TString("AfterFit_"+side));
+            }
+            else{
+                tot->Add(fitHists[side][i]);
+            }
+        }
+        tot->Print();
+        tot->Write();
+        tot->MnvH1DToCSV(tot->GetName()+std::string(".txt"),"./csv/");
+        mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot, 1., "TR");
+        cF.Print(TString(side+"_postfit_compare.png").Data());
+        delete tot;
+    }
+    std::cout << "wrote the results " << std::endl;
+
+    for (auto side:sidebands){
+        MnvH1D* pre ;
+        for (int i = 0; i < categories.size(); i++){
+            unfitHists[side][i]->Write();
+            if (i == 0){
+                pre = (MnvH1D*)unfitHists[side][i]->Clone(TString("BeforeFit_"+side));
+            }
+            else{
+                pre->Add(unfitHists[side][i]);
+            }
+        }
+        pre->Print();
+        pre->Write();
+        pre->MnvH1DToCSV(pre->GetName()+std::string(".txt"),"./csv/");
+        mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre, 1., "TR");
+        cF.Print(TString(side+"_prefit_compare.png").Data());
+        delete pre;
+    }
+    std::cout << "wrote the inputs " << std::endl;
+
+    // now make some amusing plots
+
+
+    TObjArray* combmcin;
+    TObjArray* combmcout;
+    for (auto side:sidebands){
+        combmcin  = Vec2TObjArray(unfitHists[side],categories);
+        std::cout << "got an array back " << std::endl;
+        combmcout = Vec2TObjArray(fitHists[side],categories);
+        std::cout << " before call to DrawStack" << std::endl;
+        PlotUtils::MnvH1D* data = new PlotUtils::MnvH1D(*(dataHist[side]));
+        data->SetTitle("Data");
+        mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
+        cF.Print(TString(side+"_prefit_combined.png").Data());
+        mnvPlotter.DrawDataStackedMC(data,combmcout,1.0,"TR");
+        cF.Print(TString(side+"_"+fitType+"_postfit_combined.png").Data());
+    }
+    outputfile->Close();
+    cout << "Closing Files... Does this solve the issue of seg fault." << endl;
+
+    inputFile->Close();
 
     
     cout << "HEY YOU DID IT!!!" << endl;
