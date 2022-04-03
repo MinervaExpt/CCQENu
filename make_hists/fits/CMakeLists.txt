@@ -49,6 +49,7 @@ include/GetVariablesFromConfig.cxx
 include/CVUniverse.cxx
 fits/ScaleFactors.cpp
 fits/MultiScaleFactors.cpp
+fits/DoTheFit.cpp
 )
 
 # tell it about the header files
@@ -70,6 +71,7 @@ include/VariableFromConfig.h
 include/plotting_pdf.h
 fits/ScaleFactors.h
 fits/MultiScaleFactors.h
+fits/DoTheFit.h
 )
 
 include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils)
@@ -108,6 +110,7 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{P
 #add_executable(runsamples runsamples.C)
 add_executable(sidebands_v2 sidebands_v2.C)
 add_executable(analyze_v8 analyze_v8.C)
+add_executable(MnvFitDriver MnvFitDriver.cxx)
 add_executable(FitDriver FitDriver.cxx)
 add_executable(analyze_vSean smg/analyze_vSean.C)
 
@@ -120,5 +123,6 @@ add_executable(analyze_vSean smg/analyze_vSean.C)
 target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(FitDriver PRIVATE ${PROJECT_NAME} )
+target_link_libraries(MnvFitDriver PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_vSean  PRIVATE ${PROJECT_NAME} )
 
