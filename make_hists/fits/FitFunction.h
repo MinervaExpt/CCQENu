@@ -9,57 +9,75 @@
 
 namespace fit{
 
-int DoTheFit(std::map<const std::string, std::vector< MnvH1D*>> fitHists, const std::map<const std::string, std::vector< MnvH1D*> > unfitHists, const std::map<const std::string, MnvH1D*>  dataHist, const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type, const int lowBin = 1, const int hiBin = -1){
+int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHists, const std::map<const std::string, std::vector< PlotUtils::MnvH1D*> > unfitHists, const std::map<const std::string, PlotUtils::MnvH1D*>  dataHist, const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type, const int lowBin = 1, const int hiBin = -1){
     
     std::map<const std::string, std::vector< TH1D*>> unfitHistsCV;
     std::map<const std::string, TH1D* > dataHistCV;
     
-    // first pull out  the right hists in the MnvH1D
+    // first pull out  the right hists in the PlotUtils::MnvH1D
     ROOT::Minuit2::Minuit2Minimizer * mini2;
     
     std::string univ = "CV";
     int nuniv = 0;
     
+    std::cout << " do the fit for " << univ << " " << nuniv << std::endl;
+    
     for (auto sample:dataHist){
-        dataHistCV.at(sample.first) = (TH1D*) dataHist.at(sample.first);
+        std::cout << " sample is " << sample.first << std::endl;
+        dataHistCV[sample.first] = (TH1D*) dataHist.at(sample.first);
     }
     
     if (univ == "CV"){
         for (auto sample:unfitHists){
-            for (int i = 0; i < sample.second.size(); i++){
-                
-                unfitHistsCV.at(sample.first).at(i) = (TH1D*) unfitHists.at(sample.first).at(i);
+            std::cout << " sample size " << sample.first << " " <<  sample.second.size() << " " << categories.size() << std::endl;
+            for (int i = 0; i < categories.size(); i++){
+                TH1D* hist = (TH1D*) unfitHists.at(sample.first).at(i);
+                hist->Print();
+                unfitHistsCV[sample.first].push_back(hist);
             }
         }
     }
     else{
         for (auto sample:unfitHists){
             for (int i = 0; i < sample.second.size(); i++){
-                MnvVertErrorBand*  errorband = unfitHists.at(sample.first).at(i)->GetVertErrorBand(univ);
-                unfitHistsCV.at(sample.first).at(i) = (TH1D*) errorband->GetHist(nuniv);
+                PlotUtils::MnvVertErrorBand*  errorband = unfitHists.at(sample.first).at(i)->GetVertErrorBand(univ);
+                unfitHistsCV[sample.first].push_back((TH1D*) errorband->GetHist(nuniv));
             }
         }
     }
     
+    std::cout << " have made the local samples for this universe"<< std::endl;
     
     fit::MultiScaleFactors func2(unfitHistsCV,dataHistCV,includeInFit,type,lowBin,hiBin);
     
+   
     
     std::cout << "Have made the fitter " << std::endl;
-    
     
     std::cout << " now set up parameters" << func2.NDim() <<std::endl;
     
     int nextPar = 0;
-    for(unsigned int i=0; i < func2.NDim(); ++i){
-        mini2->SetLowerLimitedVariable(nextPar,categories[i],1.0,0.1,0.0);
-        nextPar++;
-    }
     
-    if (nextPar != func2.NDim()){
-        cout << "The number of parameters was unexpected for some reason for fitHists1." << endl;
-        return 6;
-    }
+    mini2->SetLowerLimitedVariable(0,"0",1.0,0.1,0.0);
+    std::cout << " made one parameter" << std::endl;
+    mini2->SetLowerLimitedVariable(1,"1",1.0,0.1,0.0);
+    mini2->SetLowerLimitedVariable(2,"2",1.0,0.1,0.0);
+    mini2->SetLowerLimitedVariable(3,"3",1.0,0.1,0.0);
+    mini2->SetLowerLimitedVariable(4,"4",1.0,0.1,0.0);
+    
+//    for(unsigned int i=0; i < func2.NDim(); ++i){
+//
+//        std::string name = categories[i];
+//        std::cout << " set parameter " << i << " " << name << std::endl;
+//        mini2->SetLowerLimitedVariable(i,name,1.0,0.1,0.0);
+//        nextPar++;
+//    }
+//
+//
+//    if (nextPar != func2.NDim()){
+//        std::cout << "The number of parameters was unexpected for some reason for fitHists1." << std::endl;
+//        return 6;
+//    }
     
     std::cout << "Have set up the parameters " << std::endl;
     
@@ -67,21 +85,21 @@ int DoTheFit(std::map<const std::string, std::vector< MnvH1D*>> fitHists, const 
     
     mini2->PrintResults();
     
-    cout << "Fitting " << "combination" << endl;
+    std::cout << "Fitting " << "combination" << std::endl;
     if(!mini2->Minimize()){
-        cout << "Printing Results." << endl;
+        std::cout << "Printing Results." << std::endl;
         mini2->PrintResults();
         //printCorrMatrix(*mini2, func2.NDim());
-        cout << "FIT FAILED" << endl;
+        std::cout << "FIT FAILED" << std::endl;
         //return 7;
     }
     else{
-        cout << "Printing Results." << endl;
+        std::cout << "Printing Results." << std::endl;
         mini2->PrintResults();
         //printCorrMatrix(*mini2, func2.NDim());
         //cout << mini2->X() << endl;
         //cout << mini2->Errors() << endl;
-        cout << "FIT SUCCEEDED" << endl;
+        std::cout << "FIT SUCCEEDED" << std::endl;
     }
     
     // have done the fit, now rescale all histograms by the appropriate scale factors
@@ -105,10 +123,12 @@ int DoTheFit(std::map<const std::string, std::vector< MnvH1D*>> fitHists, const 
         }
     }
     else{
+        // tweak other error bands
         for (auto sample:fitHists){
             for (int i = 0; i < categories.size(); i++){
-                MnvVertErrorBand*  errorband = fitHists.at(sample.first).at(i)->GetVertErrorBand(univ);
-                errorband->SetUnivWgt(nuniv,combScaleResults[i]);
+                PlotUtils::MnvVertErrorBand*  errorband = fitHists.at(sample.first).at(i)->GetVertErrorBand(univ);
+                TH1D* hist = errorband->GetHist(nuniv);
+                hist->Scale(combScaleResults[i]);
             }
         }
         

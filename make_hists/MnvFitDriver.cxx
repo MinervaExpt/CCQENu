@@ -76,7 +76,7 @@ TObjArray* Vec2TObjArray(std::vector<TH1D*> hists, std::vector<std::string> name
         std::cout << " problem with objec array names " << std::endl;
     }
     for (int i = 0 ; i != hists.size(); i++){
-        MnvH1D* m = new MnvH1D(*hists[i]);
+        PlotUtils::MnvH1D* m = new PlotUtils::MnvH1D(*hists[i]);
         
         m->SetTitle(names[i].c_str());
         m->Print();
@@ -160,25 +160,26 @@ int main(int argc, char* argv[]) {
     
     std::string h_template = "h___%s___%s___%s___reconstructed";
     char cname[1000];
-    std::map<const std::string, MnvH1D*> dataHist;
-    std::map<const std::string,std::vector<MnvH1D*>> fitHists;
-    std::map<const std::string,std::vector<MnvH1D*>> unfitHists;
+    std::map<const std::string, PlotUtils::MnvH1D*> dataHist;
+    std::map<const std::string,std::vector<PlotUtils::MnvH1D*>> fitHists;
+    std::map<const std::string,std::vector<PlotUtils::MnvH1D*>> unfitHists;
     TString name = varName;
-    for (auto side:sidebands){
-        std::string cat="data";
+    for (auto const side:sidebands){
+        std::string cat = "data";
         std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
         std::cout << " look for " << cname << std::endl;
-        MnvH1D* dataHist[side] = (MnvH1D*)inputFile->Get(cname);
-        dataHistCV[side] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
+        dataHist[side] = (PlotUtils::MnvH1D*)inputFile->Get(cname);
+        //dataHistCV[sidename] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
         for (auto cat:categories){
             std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
             name = TString(cname);
-            MnvH1D* unfitHists[side] = (MnvH1D*)inputFile->Get(cname);
-            MnvH1D* fitHists[side] = (MnvH1D*)unfitHists[side]->Clone(TString("new_")+MCHist->GetName());
+            unfitHists[side].push_back((PlotUtils::MnvH1D*)inputFile->Get(cname));
+            fitHists[side].push_back((PlotUtils::MnvH1D*)inputFile->Get(cname)->Clone(TString("new_"+name)));
 //
         }
     }
 
+    std::cout << "have extracted the inputs" << std::endl;
     
     // now have made a common map for all histograms
     int lowBin = 1;
@@ -289,7 +290,7 @@ int main(int argc, char* argv[]) {
 //        std::cout << "got an array back " << std::endl;
 //        combmcout = Vec2TObjArray(fitHistsCV[side],categories);
 //        std::cout << " before call to DrawStack" << std::endl;
-//        MnvH1D* data = new MnvH1D(*(dataHistCV[side]));
+//        PlotUtils::MnvH1D* data = new PlotUtils::MnvH1D(*(dataHistCV[side]));
 //        data->SetTitle("Data");
 //        mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
 //        cF.Print(TString(side+"_prefit_combined.png").Data());

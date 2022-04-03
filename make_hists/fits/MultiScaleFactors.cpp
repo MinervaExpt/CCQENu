@@ -8,7 +8,7 @@
 // Modified extensively by Heidi Schellman (hschellman on github)
 
 #include "fits/MultiScaleFactors.h"
-
+#define DEBUG 1
 
 namespace fit{
 MultiScaleFactors::MultiScaleFactors(const std::map<const std::string, std::vector <TH1D*>> unfitHists, const std::map<const std::string, TH1D*> dataHist, const std::map<const std::string, bool> include,
