@@ -15,16 +15,16 @@ bool IsInVector(const std::string  what, const std::vector<std::string>  &vec)
 
 namespace CCQENu{
 
-class Component{
+class Category{
 private:
   std::string m_name;
   std::vector<std::string> m_for;
 
   NuConfig m_config;
 public:
-  Component(){};
+  Category(){};
   // constructor;
-  Component(const std::string key, const NuConfig config){
+  Category(const std::string key, const NuConfig config){
     
     m_name = key;
     m_for = config.GetStringVector("for");
@@ -52,7 +52,7 @@ private:
   std::string m_reco;
   NuConfig m_config;
   std::string m_phase_space;
-  std::map<const std::string, Component> m_components;
+  std::map<const std::string, Category> m_categories;
   std::vector<std::string> m_signals;
   std::vector<std::string> m_backgrounds;
 public:
@@ -62,12 +62,12 @@ public:
     m_reco = config.GetString("reco");
     m_signals = config.GetStringVector("signal");
     m_backgrounds = config.GetStringVector("background");
-    NuConfig components = config.GetConfig("components");
-    std::vector<std::string> Componentlist = components.GetKeys();
+    NuConfig categories = config.GetConfig("categories");
+    std::vector<std::string> Categorylist = categories.GetKeys();
     m_phase_space = config.GetString("phase_space");
-    for (auto key:Componentlist){
-      Component newcomponent(key,components.GetConfig(key));
-      m_components[key] = newcomponent;
+    for (auto key:Categorylist){
+      Category newcategory(key,categories.GetConfig(key));
+      m_categories[key] = newcategory;
     }
   }
   
@@ -75,7 +75,7 @@ public:
   
   std::vector<std::string> GetTags()const{
   std::vector<std::string> v;
-    for (auto s:m_components){
+    for (auto s:m_categories){
       v.push_back(s.second.GetName());
     }
     return v;
@@ -91,9 +91,9 @@ public:
     return m_reco;
   }
   
-  std::vector<std::string> GetComponentNames()const{
+  std::vector<std::string> GetCategoryNames()const{
     std::vector<std::string> keys;
-    for (auto k:m_components){
+    for (auto k:m_categories){
       keys.push_back(k.first);
     }
     return keys;
@@ -101,15 +101,15 @@ public:
   
   std::string GetName(const std::string sub){
     const std::string local = sub;
-    return m_components[local].GetName();
+    return m_categories[local].GetName();
   }
   
-  const Component GetComponent(const std::string sub){
+  const Category GetCategory(const std::string sub){
     const std::string local = sub;
-    return m_components[local];
+    return m_categories[local];
   }
-  std::map<const std::string, Component> GetComponents(){
-    return m_components;
+  std::map<const std::string, Category> GetCategories(){
+    return m_categories;
   }
  
 };

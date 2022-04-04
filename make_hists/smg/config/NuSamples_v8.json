@@ -4,7 +4,7 @@
     "phase_space":"phase_space",
     "signal":["qelike"],
     "background":["1chargedpion","1neutralpion","multipion","other"],
-    "components":{
+    "categories":{
          "qelike":{"for":["selected_reco","selected_truth","truth","response"]},
          "1neutralpion":{"for":["selected_reco"]},
          "1chargedpion":{"for":["selected_reco"]},
@@ -34,7 +34,7 @@
      "phase_space":"phase_space",
      "signal":["qelike"],
      "background":["1chargedpion","1neutralpion","multipion","other"],
-     "components":{
+     "categories":{
          "qelike":{"for":["selected_reco","selected_truth","truth","response"]},
          "1neutralpion":{"for":["selected_reco"]},
          "1chargedpion":{"for":["selected_reco"]},
@@ -64,7 +64,7 @@
      "phase_space":"phase_space",
      "signal":["qelike"],
      "background":["1chargedpion","1neutralpion","multipion","other"],
-     "components":{
+     "categories":{
          "qelike":{"for":["selected_reco","selected_truth","truth","response"]},
          "1neutralpion":{"for":["selected_reco"]},
          "1chargedpion":{"for":["selected_reco"]},
@@ -94,7 +94,7 @@
      "phase_space":"phase_space",
      "signal":["qelike"],
      "background":["1chargedpion","1neutralpion","multipion","other"],
-     "components":{
+     "categories":{
          "qelike":{"for":["selected_reco","selected_truth","truth","response"]},
          "1neutralpion":{"for":["selected_reco"]},
          "1chargedpion":{"for":["selected_reco"]},

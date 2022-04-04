@@ -42,7 +42,7 @@ vaughann@oregonstate.edu
 */
 //============================ Some Useful Tools ===============================
 
-// Splits a string by given delimiter, useful for separating components of 2D variable names
+// Splits a string by given delimiter, useful for separating categories of 2D variable names
 std::vector<std::string> split (std::string s, std::string delimiter) {
   size_t pos_start = 0, pos_end, delim_len = delimiter.length();
   std::string token;
