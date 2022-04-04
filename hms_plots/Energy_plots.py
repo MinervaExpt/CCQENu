@@ -90,7 +90,8 @@ for type in types:
         h_syst[type].Draw("PE")
         if var not in ["Q2QE","ptmu"]:
             h_syst[type].SetMinimum(0.)
-            h_syst[type].SetMaximum(1.E-38)
+            if "Enu" in var:
+                h_syst[type].SetMaximum(1.E-38)
     else:
         h_syst[type].Draw("same PE")
     first = False
