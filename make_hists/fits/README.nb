@@ -1,0 +1,29 @@
+Fitting code that takes a CCQEMAT sidebands output file and fits them by category. 
+
+in the make_hists directory 
+
+cmake fits
+make
+
+then 
+
+./MnvFitDriver FitTest.json
+
+FitTest.json looks like 
+
+'''
+{ "InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_local_Nu_v8_1track_1.root",
+    "Sidebands":["QElike","MichelSideBand","BlobSideBand","MicBlobSideBand"],
+    "IncludeInFit":["MichelSideBand","BlobSideBand","MicBlobSideBand"],
+    "Categories":["qelike","1chargedpion","1neutralpion","multipion","other"],
+    "Variable":"ptmu",
+    "FitType":"SlowChi2", //
+  "OutputFile":"Fitresult1.root",
+  "LogPlot":false
+}
+'''
+
+This tells it which file to read, which sidebands are in the file, which ones to fit, and what categories to fit them too. 
+There are 3 fit types available. FastChi2 uses the sqrt(data) for the error, SlowChi2 uses the sqrt(mc), "ML" tries Maximum Likelihood but that fails a lot.
+
+
