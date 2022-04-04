@@ -81,7 +81,8 @@ TObjArray* Vec2TObjArray(std::vector<MnvH1D*> hists, std::vector<std::string> na
         //PlotUtils::MnvH1D* m = new PlotUtils::MnvH1D(*hists[i]);
         
         //m->SetTitle(names[i].c_str());
-        //m->Print();
+        //m->Print()
+        hists[i]->SetTitle(names[i].c_str());
         newArray->Add(hists[i]);
     }
     return newArray;
@@ -306,6 +307,7 @@ std:vector<double > potinfo(2);
     TObjArray* combmcout;
     
     for (auto side:sidebands){
+        
         std::string label;
         label = side+" "+varName;
         combmcin  = Vec2TObjArray(unfitHists[side],categories);
