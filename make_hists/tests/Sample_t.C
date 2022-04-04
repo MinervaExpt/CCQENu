@@ -7,7 +7,7 @@
 #include "include/Sample.h"
 
 using CCQENu::Sample;
-using CCQENu::Component;
+using CCQENu::Category;
 
 int main(){
   NuConfig config;
@@ -24,10 +24,10 @@ int main(){
   
   for (auto sample:samples){
     
-    std::vector<std::string> componentnames = sample.GetComponentNames();
-    for (auto component:componentnames){
-      std::cout << " Component is named " << sample.GetComponent(component).GetName() << std::endl;
-      std::vector<std::string> forvec = sample.GetComponent(component).GetFor();
+    std::vector<std::string> categorynames = sample.GetCategoryNames();
+    for (auto category:categorynames){
+      std::cout << " Category is named " << sample.GetCategory(category).GetName() << std::endl;
+      std::vector<std::string> forvec = sample.GetCategory(category).GetFor();
       std::cout << " forvec = ";
       for (auto f:forvec){
         std::cout << f << " " ;

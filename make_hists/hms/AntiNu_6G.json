@@ -1,5 +1,5 @@
 {
-    "version":8, // new version with multiple components
+    "version":8, // new version with multiple categories
     "mcIn":"./playlists/hep01/local_CCQENu_minervame6G_MC_Inextinguishable_merged.txt",
     "dataIn":"./playlists/hep01/local_CCQENu_minervame6G_DATA_Inextinguishable_merged.txt",
     "prescale":1,

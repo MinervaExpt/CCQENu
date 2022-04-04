@@ -1,9 +1,9 @@
 {
   "version":8,  // Dec 2021 large scale tests
-  "mcIn":"../playlists/remote/CCQENu_minervame1A_MC_Inextinguishable_merged.txt",
-  "dataIn":"../playlists/remote/CCQENu_minervame1A_DATA_Inextinguishable_merged.txt",
+  "mcIn":"../playlists/remote/CCQENu_minervame1N_MC_Inextinguishable_merged.txt",
+  "dataIn":"../playlists/remote/CCQENu_minervame1N_DATA_Inextinguishable_merged.txt",
   "prescale":1,
-  "playlist":"minervame1A",
+  "playlist":"minervame1N",
   "recoName":"CCQENu",
   "pdg":14,
   "runsamples":["QElike","MichelSideBand","BlobSideBand","MicBlobSideBand"],

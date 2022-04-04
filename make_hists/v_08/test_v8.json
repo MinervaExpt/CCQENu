@@ -1,5 +1,5 @@
 {
-    "version":8, // new verison with multiple components 
+    "version":8, // new verison with multiple categories 
     "mcIn":"./playlists/local/minervame5A_MC.txt",
     "dataIn":"./playlists/local/minervame5A_DATA.txt",
     "prescale":1,
