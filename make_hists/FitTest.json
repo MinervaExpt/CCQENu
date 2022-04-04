@@ -3,6 +3,6 @@
     "IncludeInFit":["MichelSideBand","BlobSideBand","MicBlobSideBand"],
     "Categories":["qelike","1chargedpion","1neutralpion","multipion","other"],
     "Variable":"ptmu",
-    "FitType":"ML", //
+    "FitType":"SlowChi2", //
     "OutputFile":"Fitresult.root"
 }

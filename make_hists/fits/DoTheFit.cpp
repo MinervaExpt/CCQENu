@@ -13,7 +13,7 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
     // first pull out  the right hists in the PlotUtils::MnvH1D
     
     
-    auto* mini2 = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kMigrad);
+    auto* mini2 = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kCombined);
     
     
     std::map<const std::string, TH1D* > dataHistCV;
@@ -49,20 +49,23 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
             std::cout << " now do the fit for " << univ << " " << iuniv << std::endl;
             std::map<const std::string, std::vector< TH1D*>> unfitHistsCV;
             
+            
             if (univ == "CV"){
                 for (auto sample:unfitHists){
                     std::cout << univ << " sample size " << sample.first << " " <<  sample.second.size() << " " << categories.size() << std::endl;
+                    double total=0.0;
                     for (int i = 0; i < categories.size(); i++){
                         TString name = unfitHists.at(sample.first).at(i)->GetName()+TString("_"+univ);
                         TH1D* hist = (TH1D*) unfitHists.at(sample.first).at(i)->Clone(name);
                         unfitHistsCV[sample.first].push_back(hist);
-                        hist->Print();
+                        total+=hist->Integral(lowBin,hiBin);
                     }
                 }
             }
             else{
                 for (auto sample:unfitHists){
                     std::cout << univ << " sample size " << sample.first << " " <<  sample.second.size() << " " << categories.size() << std::endl;
+                    double total = 0.0;
                     for (int i = 0; i < categories.size(); i++){
                         PlotUtils::MnvVertErrorBand*  errorband = unfitHists.at(sample.first).at(i)->GetVertErrorBand(univ);
                         if (errorband == 0){
@@ -72,7 +75,8 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
                         name += TString("_" + univ);
                         TH1D* hist = (TH1D*) errorband->GetHist(iuniv)->Clone(name);
                         unfitHistsCV[sample.first].push_back(hist);
-                        hist->Print();
+                        total+=hist->Integral(lowBin,hiBin);
+                        //hist->Print();
                     }
                 }
             }
@@ -111,14 +115,19 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
             
             std::cout << " check link to function" << mini2->NDim() << std::endl;
             
-            mini2->PrintResults();
-            
+            //mini2->PrintResults();
+            bool success = true;
             std::cout << "Fitting " << "combination" << std::endl;
-            if(!mini2->Minimize()){
+            mini2->Minimize();
+            int status = mini2->State().IsValid();
+            
+            std::cout << " fit status was " << status << std::endl;
+            if(status ==  0){
                 std::cout << "Printing Results." << std::endl;
                 mini2->PrintResults();
                 //printCorrMatrix(*mini2, func2.NDim());
                 std::cout << "FIT FAILED" << std::endl;
+                success=false;
                 //return 7;
             }
             else{
@@ -138,6 +147,7 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
             //            fitHistsCV[side.first][i]->Scale(combScaleResults[i]);
             //        }
             //    }
+            if (success){
             if (univ == "CV"){
                 // hack the main histogram by brute force
                 for (auto sample:fitHists){
@@ -156,9 +166,13 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
                     for (int i = 0; i < categories.size(); i++){
                         PlotUtils::MnvVertErrorBand*  errorband = fitHists.at(sample.first).at(i)->GetVertErrorBand(univ);
                         TH1D* hist = errorband->GetHist(iuniv);
+//                        std::cout << " see the effect " << std::endl;
+//                        hist->Print();
                         hist->Scale(combScaleResults[i]);
+//                        hist->Print();
                     }
                 }
+            }
             }
             //delete mini2;
         }
