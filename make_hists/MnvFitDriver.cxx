@@ -29,6 +29,7 @@
 #include "TROOT.h"
 #include "TH1F.h"
 #include "TH2F.h"
+#include "TPad.h"
 #include "THStack.h"
 #include "TFile.h"
 #include "TTree.h"
@@ -45,6 +46,7 @@
 #include "TColor.h"
 #include "TParameter.h"
 #include "TFractionFitter.h"
+#include "TText.h"
 #include "Math/IFunction.h"
 #include "Math/Minimizer.h"
 #include "Math/Factory.h"
@@ -123,8 +125,9 @@ int main(int argc, char* argv[]) {
     NuConfig config;
     config.Read(ConfigName);
     config.Print();
-    string inputFileName=config.GetString("InputFile");
-    string outputFileName = config.GetString("OutputFile");
+    std::string inputFileName=config.GetString("InputFile");
+    std::string outputFileName = config.GetString("OutputFile");
+    bool logPlot = config.GetBool("LogPlot");
     std::vector<std::string> sidebands = config.GetStringVector("Sidebands");
     std::vector<std::string> categories = config.GetStringVector("Categories");
     
@@ -138,15 +141,15 @@ int main(int argc, char* argv[]) {
         }
     }
     std::string varName = config.GetString("Variable");
- 
+    
     std::string fitType = config.GetString("FitType");
     // read in the data and parse it
-  
+    
     TFile* inputFile = new TFile(inputFileName.c_str(),"READ");
     
-   // std::vector<TString> tags = {""};
+    // std::vector<TString> tags = {""};
     TH1F* pot_summary = (TH1F*) inputFile->Get("POT_summary");
-    std:vector<double > potinfo(2);
+std:vector<double > potinfo(2);
     potinfo[0]=pot_summary->GetBinContent(1);
     potinfo[1]=pot_summary->GetBinContent(2);
     TParameter<double>* mcPOT = (TParameter<double>*) &potinfo[1];
@@ -175,10 +178,10 @@ int main(int argc, char* argv[]) {
             name = TString(cname);
             unfitHists[side].push_back((PlotUtils::MnvH1D*)inputFile->Get(cname));
             fitHists[side].push_back((PlotUtils::MnvH1D*)inputFile->Get(cname)->Clone(TString("new_"+name)));
-//
+            //
         }
     }
-
+    
     std::cout << "have extracted the inputs" << std::endl;
     
     // now have made a common map for all histograms
@@ -189,74 +192,75 @@ int main(int argc, char* argv[]) {
     if (fitType == "FastChi2")type = fit::kFastChi2;
     if (fitType == "SlowChi2")type = fit::kSlowChi2;
     if (fitType == "ML")type = fit::kML;
-     
+    
     int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin);
     
     
-
-//    fit::FitFunction(mini2,fitHists, unfitHists,dataHist,includeInFit,type,lowBin,hiBin);
-//
-//
-//    std::cout << "Have made the fitter " << std::endl;
-//
-//    auto* mini2 = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kMigrad);
-//
-//    std::cout << " now set up parameters" << func2.NDim() <<std::endl;
-//
-//    int nextPar = 0;
-//    for(unsigned int i=0; i < categories.size(); ++i){
-//        mini2->SetLowerLimitedVariable(nextPar,categories[i],1.0,0.1,0.0);
-//        nextPar++;
-//    }
-//
-//    if (nextPar != func2.NDim()){
-//        cout << "The number of parameters was unexpected for some reason for fitHists1." << endl;
-//        return 6;
-//    }
-//
-//    std::cout << "Have set up the parameters " << std::endl;
-//
-//    mini2->SetFunction(func2);
-//
-//    mini2->PrintResults();
-//
-//    cout << "Fitting " << "combination" << endl;
-//    if(!mini2->Minimize()){
-//        cout << "Printing Results." << endl;
-//        mini2->PrintResults();
-//        printCorrMatrix(*mini2, func2.NDim());
-//        cout << "FIT FAILED" << endl;
-//        //return 7;
-//    }
-//    else{
-//        cout << "Printing Results." << endl;
-//        mini2->PrintResults();
-//        printCorrMatrix(*mini2, func2.NDim());
-//        //cout << mini2->X() << endl;
-//        //cout << mini2->Errors() << endl;
-//        cout << "FIT SUCCEEDED" << endl;
-//    }
-//
-//    // have done the fit, now rescale all histograms by the appropriate scale factors
-//
-//    const double* combScaleResults = mini2->X();
-//    for (auto side:sidebands){
-//        for (int i = 0; i < categories.size(); i++){
-//            fitHists[side][i]->Scale(combScaleResults[i]);
-//            fitHists[side][i]->Print();
-//        }
-//    }
+    
+    //    fit::FitFunction(mini2,fitHists, unfitHists,dataHist,includeInFit,type,lowBin,hiBin);
+    //
+    //
+    //    std::cout << "Have made the fitter " << std::endl;
+    //
+    //    auto* mini2 = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kMigrad);
+    //
+    //    std::cout << " now set up parameters" << func2.NDim() <<std::endl;
+    //
+    //    int nextPar = 0;
+    //    for(unsigned int i=0; i < categories.size(); ++i){
+    //        mini2->SetLowerLimitedVariable(nextPar,categories[i],1.0,0.1,0.0);
+    //        nextPar++;
+    //    }
+    //
+    //    if (nextPar != func2.NDim()){
+    //        cout << "The number of parameters was unexpected for some reason for fitHists1." << endl;
+    //        return 6;
+    //    }
+    //
+    //    std::cout << "Have set up the parameters " << std::endl;
+    //
+    //    mini2->SetFunction(func2);
+    //
+    //    mini2->PrintResults();
+    //
+    //    cout << "Fitting " << "combination" << endl;
+    //    if(!mini2->Minimize()){
+    //        cout << "Printing Results." << endl;
+    //        mini2->PrintResults();
+    //        printCorrMatrix(*mini2, func2.NDim());
+    //        cout << "FIT FAILED" << endl;
+    //        //return 7;
+    //    }
+    //    else{
+    //        cout << "Printing Results." << endl;
+    //        mini2->PrintResults();
+    //        printCorrMatrix(*mini2, func2.NDim());
+    //        //cout << mini2->X() << endl;
+    //        //cout << mini2->Errors() << endl;
+    //        cout << "FIT SUCCEEDED" << endl;
+    //    }
+    //
+    //    // have done the fit, now rescale all histograms by the appropriate scale factors
+    //
+    //    const double* combScaleResults = mini2->X();
+    //    for (auto side:sidebands){
+    //        for (int i = 0; i < categories.size(); i++){
+    //            fitHists[side][i]->Scale(combScaleResults[i]);
+    //            fitHists[side][i]->Print();
+    //        }
+    //    }
     std::cout << " Try to write it out " << std::endl;
     TFile* outputfile = TFile::Open(outputFileName.c_str(),"RECREATE");
     outputfile->cd();
     PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
     TCanvas cF("fit","fit");
+    if (logPlot) gPad->SetLogy(1);
     for (auto side:sidebands){
         dataHist[side]->Print();
         dataHist[side]->Write();
-
+        
         MnvH1D* tot;
-       
+        
         for (int i = 0; i < categories.size(); i++){
             fitHists[side][i]->Write();
             if (i == 0){
@@ -274,7 +278,7 @@ int main(int argc, char* argv[]) {
         delete tot;
     }
     std::cout << "wrote the results " << std::endl;
-
+    
     for (auto side:sidebands){
         MnvH1D* pre ;
         for (int i = 0; i < categories.size(); i++){
@@ -294,29 +298,43 @@ int main(int argc, char* argv[]) {
         delete pre;
     }
     std::cout << "wrote the inputs " << std::endl;
-
+    
     // now make some amusing plots
-
-
+    
+    
     TObjArray* combmcin;
     TObjArray* combmcout;
+    
     for (auto side:sidebands){
+        std::string label;
+        label = side+" "+varName;
         combmcin  = Vec2TObjArray(unfitHists[side],categories);
-        std::cout << "got an array back " << std::endl;
         combmcout = Vec2TObjArray(fitHists[side],categories);
         std::cout << " before call to DrawStack" << std::endl;
         PlotUtils::MnvH1D* data = new PlotUtils::MnvH1D(*(dataHist[side]));
         data->SetTitle("Data");
+        label = side+" "+varName + " Before fit";
+        TText t(.3,.95,label.c_str());
+        t.SetTitle(label.c_str());
+        t.SetNDC(1);
+        t.SetTextSize(.03);
         mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
+        t.Draw("same");
         cF.Print(TString(side+"_prefit_combined.png").Data());
+        label = side+" "+varName + " After fit";
+        TText t2(.3,.95,label.c_str());
+        t2.SetTitle(label.c_str());
+        t2.SetNDC(1);
+        t2.SetTextSize(.03);
+        t2.SetTitle(label.c_str());
         mnvPlotter.DrawDataStackedMC(data,combmcout,1.0,"TR");
         cF.Print(TString(side+"_"+fitType+"_postfit_combined.png").Data());
     }
     outputfile->Close();
     cout << "Closing Files... Does this solve the issue of seg fault." << endl;
-
+    
     inputFile->Close();
-
+    
     
     cout << "HEY YOU DID IT!!!" << endl;
     return 0;

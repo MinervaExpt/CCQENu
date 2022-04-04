@@ -1,0 +1,9 @@
+{ "InputFile":"/Users/schellma/Dropbox/BIGMAT/CCQENu/make_hists/CK_AntiNuALL_1.root",
+    "Sidebands":["QElike"],
+    "IncludeInFit":["QElike"],
+    "Categories":["qelike","qelikenot"],
+    "Variable":"recoil",
+    "FitType":"SlowChi2",
+    "OutputFile":"FitRecoil.root",
+    "LogPlot":true
+}
