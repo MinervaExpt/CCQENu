@@ -4,5 +4,6 @@
     "Categories":["qelike","1chargedpion","1neutralpion","multipion","other"],
     "Variable":"ptmu",
     "FitType":"SlowChi2", //
-    "OutputFile":"Fitresult.root"
+  "OutputFile":"Fitresult.root",
+  "LogPlot":false
 }
