@@ -1,9 +1,10 @@
-{ "InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_mnv_Nu_v8_multitrack_1.root",
+{ //"InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_local_Nu_v8_1track_1.root",
+    "InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_mnv_Nu_v8_multitrack_1.root",
     "Sidebands":["QElike","MichelSideBand","BlobSideBand","MicBlobSideBand"],
     "IncludeInFit":["MichelSideBand","BlobSideBand","MicBlobSideBand"],
     "Categories":["qelike","1chargedpion","1neutralpion","multipion","other"],
     "Variable":"ptmu",
-    "FitType":"SlowChi2", //
-  "OutputFile":"Fitresult.root",
+    "FitType":"ML", //
+  "OutputFile":"Fitresult1.root",
   "LogPlot":false
 }

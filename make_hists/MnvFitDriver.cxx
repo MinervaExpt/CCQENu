@@ -193,7 +193,9 @@ std:vector<double > potinfo(2);
     if (fitType == "FastChi2")type = fit::kFastChi2;
     if (fitType == "SlowChi2")type = fit::kSlowChi2;
     if (fitType == "ML")type = fit::kML;
-    
+    std::cout << " Try to write it out " << std::endl;
+    TFile* outputfile = TFile::Open(outputFileName.c_str(),"RECREATE");
+    outputfile->cd();
     int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin);
     
     
@@ -250,9 +252,7 @@ std:vector<double > potinfo(2);
     //            fitHists[side][i]->Print();
     //        }
     //    }
-    std::cout << " Try to write it out " << std::endl;
-    TFile* outputfile = TFile::Open(outputFileName.c_str(),"RECREATE");
-    outputfile->cd();
+    
     PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
     TCanvas cF("fit","fit");
     if (logPlot) gPad->SetLogy(1);
