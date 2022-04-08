@@ -1,10 +1,13 @@
-{ //"InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_local_Nu_v8_1track_1.root",
+{"%%%%InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_local_Nu_v8_1track_1.root",
     "InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_mnv_Nu_v8_multitrack_1.root",
     "Sidebands":["QElike","MichelSideBand","BlobSideBand","MicBlobSideBand"],
     "IncludeInFit":["MichelSideBand","BlobSideBand","MicBlobSideBand"],
     "Categories":["qelike","1chargedpion","1neutralpion","multipion","other"],
-    "Variable":"ptmu",
-    "FitType":"ML", //
+ "Backgrounds":["1chargedpion","1neutralpion","multipion","other"],
+ "Variable":"ptmu",
+    "FitType":"ML",
   "OutputFile":"Fitresult1.root",
-  "LogPlot":false
+  "LogPlot":false,
+  "Template":"h___%s___%s___%s___reconstructed",
+  "FitTemplate":"h___%s___%s___%s___fitted"
 }

@@ -144,6 +144,10 @@ int main(int argc, char* argv[]) {
     std::string varName = config.GetString("Variable");
     
     std::string fitType = config.GetString("FitType");
+    
+    std::string h_template = config.GetString("Template");
+    std::string f_template = config.GetString("FitTemplate");
+    
     // read in the data and parse it
     
     TFile* inputFile = new TFile(inputFileName.c_str(),"READ");
@@ -162,8 +166,9 @@ std:vector<double > potinfo(2);
     
     // make and fill maps that contain pointers to the histograms you want to fit  uses CCQEMAT template
     
-    std::string h_template = "h___%s___%s___%s___reconstructed";
+    //std::string h_template = "h___%s___%s___%s___reconstructed";
     char cname[1000];
+    char fname[1000];
     std::map<const std::string, PlotUtils::MnvH1D*> dataHist;
     std::map<const std::string,std::vector<PlotUtils::MnvH1D*>> fitHists;
     std::map<const std::string,std::vector<PlotUtils::MnvH1D*>> unfitHists;
@@ -171,14 +176,16 @@ std:vector<double > potinfo(2);
     for (auto const side:sidebands){
         std::string cat = "data";
         std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
+        std::sprintf(fname,f_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
         std::cout << " look for " << cname << std::endl;
         dataHist[side] = (PlotUtils::MnvH1D*)inputFile->Get(cname);
         //dataHist[sidename] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
         for (auto cat:categories){
             std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
+            std::sprintf(fname,f_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
             name = TString(cname);
             unfitHists[side].push_back((PlotUtils::MnvH1D*)inputFile->Get(cname));
-            fitHists[side].push_back((PlotUtils::MnvH1D*)inputFile->Get(cname)->Clone(TString("new_"+name)));
+            fitHists[side].push_back((PlotUtils::MnvH1D*)inputFile->Get(cname)->Clone(TString(fname)));
             //
         }
     }

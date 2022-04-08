@@ -2,8 +2,11 @@
     "Sidebands":["QElike"],
     "IncludeInFit":["QElike"],
     "Categories":["qelike","qelikenot"],
+    "Backgrounds":["qelikenot"],
     "Variable":"recoil",
-    "FitType":"SlowChi2",
-    "OutputFile":"FitRecoil.root",
-    "LogPlot":true
+    "FitType":"FastChi2",
+  "OutputFile":"FitRecoil.root",
+  "LogPlot":true,
+  "Template":"h___%s___%s___%s___reconstructed",
+  "FitTemplate":"h___%s___%s___%s___fitted"
 }
