@@ -1,7 +1,7 @@
-//File: TMinFitting.cxx
+//File: FitDriver.cxx
 //Info: This script is intended to fit for scale factors (and scale factors only) in whatever distribution.
 //
-//Usage: TMinFitting <mc_file> <data_file>
+//Usage: FidDriver jsonfile
 //
 //IGNORE FOR THE TIME BEING <outdir> <do fits in bins of muon momentum (only 0 means no)> optional: <lowFitBinNum> <hiFitBinNum> TODO: Save the information beyond just printing it out
 //
@@ -49,6 +49,9 @@
 #include "Math/Factory.h"
 #include "Minuit2/Minuit2Minimizer.h"
 #include "TMinuitMinimizer.h"
+#include "PlotUtils/MnvH1D.h"
+
+
 
 //Analysis includes
 #include "fits/ScaleFactors.h"
@@ -74,7 +77,7 @@ TObjArray* Vec2TObjArray(std::vector<TH1D*> hists, std::vector<std::string> name
         std::cout << " problem with objec array names " << std::endl;
     }
     for (int i = 0 ; i != hists.size(); i++){
-        MnvH1D* m = new MnvH1D(*hists[i]);
+        PlotUtils::MnvH1D* m = new PlotUtils::MnvH1D(*hists[i]);
         
         m->SetTitle(names[i].c_str());
         m->Print();
@@ -166,12 +169,12 @@ int main(int argc, char* argv[]) {
         std::string cat="data";
         std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
         std::cout << " look for " << cname << std::endl;
-        MnvH1D* dataHist = (MnvH1D*)inputFile->Get(cname);
+        PlotUtils::MnvH1D* dataHist = (PlotUtils::MnvH1D*)inputFile->Get(cname);
         dataHistCV[side] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
         for (auto cat:categories){
             std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
             name = TString(cname);
-            MnvH1D* MCHist = (MnvH1D*)inputFile->Get(cname);
+            PlotUtils::MnvH1D* MCHist = (PlotUtils::MnvH1D*)inputFile->Get(cname);
             TH1D* NewMCCV = (TH1D*)MCHist->GetCVHistoWithStatError().Clone(TString("new_")+MCHist->GetName());
             TH1D* OldMCCV = (TH1D*)MCHist->GetCVHistoWithStatError().Clone(TString("old_")+MCHist->GetName());
             
@@ -286,7 +289,7 @@ int main(int argc, char* argv[]) {
         std::cout << "got an array back " << std::endl;
         combmcout = Vec2TObjArray(fitHistsCV[side],categories);
         std::cout << " before call to DrawStack" << std::endl;
-        MnvH1D* data = new MnvH1D(*(dataHistCV[side]));
+        PlotUtils::MnvH1D* data = new PlotUtils::MnvH1D(*(dataHistCV[side]));
         data->SetTitle("Data");
         mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
         cF.Print(TString(side+"_prefit_combined.png").Data());
