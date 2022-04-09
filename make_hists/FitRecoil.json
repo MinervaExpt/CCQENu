@@ -1,6 +1,6 @@
 { "InputFile":"/Users/schellma/Dropbox/BIGMAT/CCQENu/make_hists/CK_AntiNuALL_1.root",
-    "Sidebands":["QElike"],
-    "IncludeInFit":["QElike"],
+  "Sidebands":["Background","QElike"],
+    "IncludeInFit":["Background"],
     "Categories":["qelike","qelikenot"],
     "Backgrounds":["qelikenot"],
     "Variable":"recoil",
