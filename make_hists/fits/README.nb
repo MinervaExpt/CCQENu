@@ -12,18 +12,27 @@ then
 FitTest.json looks like 
 
 '''
-{ "InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_local_Nu_v8_1track_1.root",
+{
+    "InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_mnv_Nu_v8_multitrack_1.root",
     "Sidebands":["QElike","MichelSideBand","BlobSideBand","MicBlobSideBand"],
     "IncludeInFit":["MichelSideBand","BlobSideBand","MicBlobSideBand"],
     "Categories":["qelike","1chargedpion","1neutralpion","multipion","other"],
+    "Backgrounds":["1chargedpion","1neutralpion","multipion","other"],
     "Variable":"ptmu",
-    "FitType":"SlowChi2", //
-  "OutputFile":"Fitresult1.root",
-  "LogPlot":false
+    "FitType":"SlowChi2",
+    "OutputFile":"Fitresult1.root",
+    "LogPlot":false,
+    "Template":"h___%s___%s___%s___reconstructed",
+    "FitTemplate":"h___%s___%s___%s___fitted"
 }
 '''
 
 This tells it which file to read, which sidebands are in the file, which ones to fit, and what categories to fit them too. 
-There are 3 fit types available. FastChi2 uses the sqrt(data) for the error, SlowChi2 uses the sqrt(mc), "ML" tries Maximum Likelihood but that fails a lot.
+There are 3 fit types available. FastChi2 uses the sqrt(data) for the error, SlowChi2 uses the sqrt(mc), "ML" tries Maximum Likelihood but that fails more frequently.
+
+The fit function, parameters and covariance matrix are outputted as MnvH1D and 2D.
+
+And all of the input info should be carried forward from the input file so that this can be used as input to analyzer.
+
 
 
