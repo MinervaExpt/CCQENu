@@ -269,15 +269,15 @@ int main(int argc, char* argv[]) {
         
         for (int i = 0; i < categories.size(); i++){
             fitHists[side][i]->Write();
-            std::sprintf(cname,h_template.c_str(),side.c_str(), "all",varName.c_str());
+            std::sprintf(fname,f_template.c_str(),side.c_str(), "all",varName.c_str());
             if (i == 0){
-                tot[side] = (MnvH1D*)fitHists[side][i]->Clone(TString(cname));
+                tot[side] = (MnvH1D*)fitHists[side][i]->Clone(TString(fname));
             }
             else{
                 tot[side]->Add(fitHists[side][i]);
             }
         }
-        tot[side]->MnvH1DToCSV(tot[side]->GetName(),"./csv/");
+        tot[side]->MnvH1DToCSV(tot[side]->GetName(),"./csv/",1.,false);
         tot[side]->Print();
         tot[side]->Write();
         
@@ -296,38 +296,49 @@ int main(int argc, char* argv[]) {
         }
         pre[side]->Print();
         pre[side]->Write();
-        pre[side]->MnvH1DToCSV(pre[side]->GetName(),"./csv/");
+        pre[side]->MnvH1DToCSV(pre[side]->GetName(),"./csv/",1.,false);
     }
-    
+    // this loops over, finds the categories that are in the backgrounds and sums those to get a background
+    // uses this whole counter thing to avoid having to figure out how to do string searches in a list in C++
     
     for (auto side:sidebands){
-        for (int i = 0; i < backgrounds.size(); i++){
-            std::sprintf(cname,h_template.c_str(),side.c_str(), "bkg",varName.c_str());
-            if (i == 0){
-                bkg[side] = (MnvH1D*)unfitHists[side][i]->Clone(TString(cname));
+        int count = 0;
+        for (int i = 0; i < categories.size(); i++){
+            for (int j = 0; j < backgrounds.size(); j++){
+                //std::cout << "match " << categories[i] << " " << backgrounds[j] << " " << count << std::endl;
+                if (categories[i] == backgrounds[j]){
+                     std::sprintf(fname,f_template.c_str(),side.c_str(), "bkg",varName.c_str());
+                    if (count == 0){
+                        bkg[side] = (MnvH1D*)fitHists[side][i]->Clone(TString(fname));
+                        count +=1;
+                    }
+                    else{
+                        bkg[side]->Add(fitHists[side][i]);
+                    }
+                }
             }
-            else{
-                bkg[side]->Add(unfitHists[side][i]);
+            if (count > 0){
+                bkg[side]->Print();
+                bkg[side]->Write();
+                bkg[side]->MnvH1DToCSV(bkg[side]->GetName(),"./csv/",1.,false);
             }
         }
-        bkg[side]->Print();
-        bkg[side]->Write();
-        bkg[side]->MnvH1DToCSV(bkg[side]->GetName(),"./csv/");
     }
     for (auto side:sidebands){
-        std::sprintf(cname,h_template.c_str(),side.c_str(), "bkgsub",varName.c_str());
-        bkgsub[side]=(MnvH1D*)dataHist[side]->Clone(cname);
+        std::sprintf(fname,f_template.c_str(),side.c_str(), "bkgsub",varName.c_str());
+        bkgsub[side]=(MnvH1D*)dataHist[side]->Clone(fname);
         bkgsub[side]->AddMissingErrorBandsAndFillWithCV(*(fitHists[side][0]));
         bkgsub[side]->Add(bkg[side],-1);
         bkgsub[side]->Write();
-        bkgsub[side]->MnvH1DToCSV(bkgsub[side]->GetName(),"./csv/");
+        dataHist[side]->MnvH1DToCSV(dataHist[side]->GetName(),"./csv/",1.,false);
+        bkgsub[side]->MnvH1DToCSV(bkgsub[side]->GetName(),"./csv/",1.,false);
     }
     std::cout << "wrote the inputs and outputs " << std::endl;
     
     for (auto side:sidebands){
-        dataHist[side]->Print("ALL");
+        //dataHist[side]->Print("ALL");
         dataHist[side]->Scale(1.,"width");
-        dataHist[side]->Print("ALL");
+        //dataHist[side]->Print("ALL");
         tot[side]->Scale(1.,"width");
         pre[side]->Scale(1.,"width");
         bkg[side]->Scale(1.,"width");
