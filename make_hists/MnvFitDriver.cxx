@@ -166,6 +166,7 @@ int main(int argc, char* argv[]) {
     
     // use this to exclude or include sidebands in the global fit
     std::vector<std::string> include = config.GetStringVector("IncludeInFit");
+    std::vector<std::string> backgrounds = config.GetStringVector("Backgrounds");
     std::map<const std::string, bool> includeInFit;
     for (auto s:sidebands){
         includeInFit[s] = false;
@@ -254,9 +255,14 @@ int main(int argc, char* argv[]) {
     if (logPlot) gPad->SetLogy(1);
     std::map<const std::string, MnvH1D*> tot;
     std::map<const std::string, MnvH1D*> pre;
+    std::map<const std::string, MnvH1D*> bkg;
+    std::map<const std::string, MnvH1D*> sig;
+    std::map<const std::string, MnvH1D*> bkgsub;
     
     for (auto side:sidebands){
         dataHist[side]->Print();
+        
+
         //dataHist[side]->Write();
         
        
@@ -271,7 +277,7 @@ int main(int argc, char* argv[]) {
                 tot[side]->Add(fitHists[side][i]);
             }
         }
-        tot[side]->MnvH1DToCSV(tot[side]->GetName()+std::string(".txt"),"./csv/");
+        tot[side]->MnvH1DToCSV(tot[side]->GetName(),"./csv/");
         tot[side]->Print();
         tot[side]->Write();
         
@@ -290,7 +296,31 @@ int main(int argc, char* argv[]) {
         }
         pre[side]->Print();
         pre[side]->Write();
-        pre[side]->MnvH1DToCSV(pre[side]->GetName()+std::string(".txt"),"./csv/");
+        pre[side]->MnvH1DToCSV(pre[side]->GetName(),"./csv/");
+    }
+    
+    
+    for (auto side:sidebands){
+        for (int i = 0; i < backgrounds.size(); i++){
+            std::sprintf(cname,h_template.c_str(),side.c_str(), "bkg",varName.c_str());
+            if (i == 0){
+                bkg[side] = (MnvH1D*)unfitHists[side][i]->Clone(TString(cname));
+            }
+            else{
+                bkg[side]->Add(unfitHists[side][i]);
+            }
+        }
+        bkg[side]->Print();
+        bkg[side]->Write();
+        bkg[side]->MnvH1DToCSV(bkg[side]->GetName(),"./csv/");
+    }
+    for (auto side:sidebands){
+        std::sprintf(cname,h_template.c_str(),side.c_str(), "bkgsub",varName.c_str());
+        bkgsub[side]=(MnvH1D*)dataHist[side]->Clone(cname);
+        bkgsub[side]->AddMissingErrorBandsAndFillWithCV(*(fitHists[side][0]));
+        bkgsub[side]->Add(bkg[side],-1);
+        bkgsub[side]->Write();
+        bkgsub[side]->MnvH1DToCSV(bkgsub[side]->GetName(),"./csv/");
     }
     std::cout << "wrote the inputs and outputs " << std::endl;
     
@@ -300,6 +330,8 @@ int main(int argc, char* argv[]) {
         dataHist[side]->Print("ALL");
         tot[side]->Scale(1.,"width");
         pre[side]->Scale(1.,"width");
+        bkg[side]->Scale(1.,"width");
+        bkgsub[side]->Scale(1.,"width");
         for (int i = 0; i < categories.size(); i++){
             unfitHists[side][i]->Scale(1.,"width");
             fitHists[side][i]->Scale(1.,"width");
@@ -310,9 +342,13 @@ int main(int argc, char* argv[]) {
         
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot[side], 1., "TR");
         cF.Print(TString(side+"_postfit_compare.png").Data());
+        
   
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre[side], 1., "TR");
         cF.Print(TString(side+"_prefit_compare.png").Data());
+        
+        mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side], fitHists[side][0], 1., "TR");
+        cF.Print(TString(side+"_bkgsub_compare.png").Data());
     }
     
     TObjArray* combmcin;
@@ -344,6 +380,15 @@ int main(int argc, char* argv[]) {
         t2.SetTitle(label.c_str());
         mnvPlotter.DrawDataStackedMC(data,combmcout,1.0,"TR");
         cF.Print(TString(side+"_"+fitType+"_postfit_combined.png").Data());
+        label = side+" "+varName + "Background Subtracted";
+        
+        t2.SetTitle(label.c_str());
+        t2.SetNDC(1);
+        t2.SetTextSize(.03);
+        t2.SetTitle(label.c_str());
+        bkgsub[side]->SetTitle("bkgsub");
+        mnvPlotter.DrawDataStackedMC(bkgsub[side],combmcout,1.0,"TR");
+        cF.Print(TString(side+"_"+fitType+"_bkgsub_combined.png").Data());
     }
     
     
