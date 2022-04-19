@@ -193,12 +193,15 @@ int main(int argc, char* argv[]) {
     TH1F* pot_summary = (TH1F*) inputFile->Get("POT_summary");
     std:vector<double > potinfo(2);
     potinfo[0]=pot_summary->GetBinContent(1);
-    potinfo[1]=pot_summary->GetBinContent(2);
+    potinfo[1]=pot_summary->GetBinContent(3); // this includes any prescale
+  pot_summary->Print("ALL");
     TParameter<double>* mcPOT = (TParameter<double>*) &potinfo[1];
     TParameter<double>* dataPOT = (TParameter<double>*) &potinfo[0];
     std::cout << " dataPOT "<< potinfo[0] << " mcPOT " << potinfo[1] << std::endl;
     
-    double POTscale = dataPOT->GetVal()/mcPOT->GetVal();
+    //double POTscale = dataPOT->GetVal()/mcPOT->GetVal();
+    double POTscale = potinfo[0]/potinfo[1];
+  
     cout << "POT scale factor: " << POTscale << endl;
     
     // make and fill maps that contain pointers to the histograms you want to fit  uses CCQEMAT template
@@ -222,8 +225,16 @@ int main(int argc, char* argv[]) {
             std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
             std::sprintf(fname,f_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
             name = TString(cname);
-            unfitHists[side].push_back((PlotUtils::MnvH1D*)inputFile->Get(cname));
-            fitHists[side].push_back((PlotUtils::MnvH1D*)inputFile->Get(cname)->Clone(TString(fname)));
+          std::cout << " look for " << cname << std::endl;
+          MnvH1D* newhist = (PlotUtils::MnvH1D*)inputFile->Get(cname);
+          if (!newhist){
+            std::cout << " no " << cname << std::endl;
+          }
+          newhist->Print();
+          newhist->Scale(POTscale);
+          newhist->Print();
+            unfitHists[side].push_back(newhist);
+            fitHists[side].push_back((PlotUtils::MnvH1D*)newhist->Clone(TString(fname)));
             
         }
         /*for (int i = 0; i < categories.size(); i++){
