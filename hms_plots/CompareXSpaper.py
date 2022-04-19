@@ -67,10 +67,11 @@ print ("models",models)
 #compare_xsectionmodels_variations_ratio.py:ymc2p2hrpa.SetLineColor(colors[3])
 #compare_xsectionmodels_variations_ratio.py:ymcptunerpa.SetLineColor(colors[4])
 #compare_xsectionmodels_variations_ratio.py:ymcptune2p2h.SetLineColor(colors[5])
-colorcode = {"NA":2, "2p2hrpa":3, "rpapiontune":4, "2p2hpiontune":5,"2p2h":6, "CV":2, "CV2":7,"piontune":8,"rpa":9}
+colorcode = {"NA":0, "2p2hrpa":3, "rpapiontune":4, "2p2hpiontune":5,"2p2h":6, "CV":10, "CV2":5,"piontune":1,"rpa":9}
 
-linecode = {"NA":10, "2p2hrpa":9, "rpapiontune":9, "2p2hpiontune":9,"2p2h":1, "CV":1, "CV2":1,"piontune":2,"rpa":10}
+linecode = {"NA":1, "2p2hrpa":10, "rpapiontune":10, "2p2hpiontune":10,"2p2h":1, "CV":1, "CV2":1,"piontune":10,"rpa":1}
 
+linewidth = {"NA":6, "2p2hrpa":4, "rpapiontune":4, "2p2hpiontune":4,"2p2h":6, "CV":6, "CV2":6,"piontune":4,"rpa":6}
 
 file = {}
 mc = {}
@@ -224,8 +225,8 @@ canvas.cd()
 
 
 for m in models:
-  xn[m].SetLineWidth(5)
-  yn[m].SetLineWidth(5)
+  xn[m].SetLineWidth(linewidth[m])
+  yn[m].SetLineWidth(linewidth[m])
   xn[m].SetLineColor(colors[colorcode[m]])
   xn[m].SetLineStyle(linecode[m])
   yn[m].SetLineColor(colors[colorcode[m]])
@@ -251,7 +252,7 @@ if (not ratio):
     leg = CCQELegend(0.6,0.6,0.8,0.9)
 else:
   print ()
-leg = CCQELegend(0.25,0.6,0.9,0.9)
+leg = CCQELegend(0.20,0.6,0.9,0.9)
 
 leg.SetHeader("MINERvA Preliminary","")
 #leg.SetNColumns(2)
@@ -284,7 +285,7 @@ if var == "q2" or var == "enu":
   xdn.GetYaxis().SetTitle("#sigma(E_{#nu}^{QE})  (cm^{2}/nucleon)");
   xdn.GetXaxis().SetTitle("E_{#nu}^{QE}  (GeV)")
   ydn.GetYaxis().SetTitle("d#sigma/dQ^{2}  (cm^{2}/GeV^{2}/nucleon)");
-  ydn.GetXaxis().SetTitle("Q^{2}_{QE}  (GeV)")
+  ydn.GetXaxis().SetTitle("Q^{2}_{QE}  (GeV^{2})")
 else:
   ydn.GetYaxis().SetTitle("d#sigma/dp_{#perp}  (cm^{2}/GeV/c/nucleon)");
   ydn.GetXaxis().SetTitle("p_{#perp}  (GeV/c)")
@@ -311,8 +312,8 @@ if (ratio):
 if ratio:
   xdn.SetMaximum(2.5)
   ydn.SetMaximum(2.5)
-  xdn.SetMinimum(0.5)
-  ydn.SetMinimum(0.5)
+  xdn.SetMinimum(0.65)
+  ydn.SetMinimum(0.65)
 xdn.Draw("P E1")
 xdsn.Draw("P E1 SAME")
 for m in models:
