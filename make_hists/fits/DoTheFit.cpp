@@ -177,7 +177,7 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
                 for (auto sample:fitHists){
                     for (int i = 0; i < func2.NDim(); i++){
                         int nbins = fitHists[sample.first][i]->GetNbinsX();
-                        for (int j = 0; j < nbins+2; j++){
+                        for (int j = lowBin; j <= hiBin; j++){
                             fitHists[sample.first][i]->SetBinContent(j,fitHists[sample.first][i]->GetBinContent(j)*combScaleResults[i]);
                             fitHists[sample.first][i]->SetBinError(j,fitHists[sample.first][i]->GetBinError(j)*ScaleResults[i]);
                         }
@@ -201,7 +201,12 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
                     for (int i = 0; i < ncat; i++){
                         PlotUtils::MnvVertErrorBand*  errorband = fitHists.at(sample.first).at(i)->GetVertErrorBand(univ);
                         TH1D* hist = errorband->GetHist(iuniv);
-                        hist->Scale(ScaleResults[i]);
+                        for (int j = lowBin; j <= hiBin; j++){
+                          // HMS change to only do the bin range
+                          hist->SetBinContent(j,hist->GetBinContent(j)*combScaleResults[i]);
+                          hist->SetBinError(j,hist->GetBinError(j)*ScaleResults[i]);
+                      }
+                        //hist->Scale(ScaleResults[i]);
                     }
                 }
             }
