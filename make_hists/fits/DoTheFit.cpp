@@ -3,6 +3,7 @@
 #include "Minuit2/Minuit2Minimizer.h"
 #include "TMinuitMinimizer.h"
 #include "MnvH2D.h"
+#include "utils/SyncBands.h"
 
 
 namespace fit{
@@ -223,6 +224,17 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
             }
         } // end of nuniv loop
     }// end of universes loop
+    
+    for (auto sample:fitHists){
+        for (int i = 0; i < ncat; i++){
+            SyncBands(fitHists[sample.first][i]);
+        }
+    }
+   
+        SyncBands(&fcn);
+        SyncBands(&parameters);
+        SyncBands(&covariance);
+        
     fcn.MnvH1DToCSV("fcn","./csv/");
     fcn.Write();
     parameters.MnvH1DToCSV("parameters","./csv/");

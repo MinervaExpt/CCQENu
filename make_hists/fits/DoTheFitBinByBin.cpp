@@ -3,9 +3,11 @@
 #include "Minuit2/Minuit2Minimizer.h"
 #include "TMinuitMinimizer.h"
 #include "MnvH2D.h"
-
+#include "utils/SyncBands.h"
 
 namespace fit{
+
+
 
 int DoTheFitBinByBin(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHists, const std::map<const std::string, std::vector< PlotUtils::MnvH1D*> > unfitHists, const std::map<const std::string, PlotUtils::MnvH1D*>  dataHist, const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type, const int lowBin, const int hiBin ){
   
@@ -235,7 +237,6 @@ int DoTheFitBinByBin(std::map<const std::string, std::vector< PlotUtils::MnvH1D*
                 // HMS change to only do the bin range
                 hist->SetBinContent(j,hist->GetBinContent(j)*combScaleResults[i]);
                 hist->SetBinError(j,hist->GetBinError(j)*ScaleResults[i]);
-                
               }
               //hist->Scale(ScaleResults[i]);
             }
@@ -247,7 +248,17 @@ int DoTheFitBinByBin(std::map<const std::string, std::vector< PlotUtils::MnvH1D*
       } // end of bins loop
     } // end of nuniv loop
   }// end of universes loop
+    
+    // make certain error band CV's are still ok
+  for (auto sample:fitHists){
+      for (int i = 0; i < ncat; i++){
+          SyncBands(fitHists[sample.first][i]);
+      }
+  }
   for (int theBin = lowBin; theBin <= hiBin; theBin++){
+      SyncBands(fcn[theBin]);
+      SyncBands(parameters[theBin]);
+      SyncBands(covariance[theBin]);
   fcn[theBin]->MnvH1DToCSV("fcn","./csv/");
   fcn[theBin]->Write();
   parameters[theBin]->MnvH1DToCSV("parameters","./csv/");

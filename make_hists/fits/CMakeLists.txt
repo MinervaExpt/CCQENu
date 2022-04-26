@@ -51,6 +51,7 @@ fits/ScaleFactors.cpp
 fits/MultiScaleFactors.cpp
 fits/DoTheFit.cpp
 fits/DoTheFitBinByBin.cpp
+utils/SyncBands.cxx
 )
 
 # tell it about the header files
@@ -74,6 +75,7 @@ fits/ScaleFactors.h
 fits/MultiScaleFactors.h
 fits/DoTheFit.h
 fits/DoTheFitBinByBin.h
+utils/SyncBands.h
 )
 
 include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils)
