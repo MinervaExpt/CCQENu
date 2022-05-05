@@ -94,9 +94,11 @@ int main(const int argc, const char *argv[] ) {
     if (argc > 2){
       asample = argv[2];
     }
+    // see if the root file has already had fits done - these will be used in the cross section fit.
     hasbkgsub = f->Get("fitconfig")!=0;
   }
   else{
+    // this is the old way
     std::cout << "getting config from command line " << argv[1] << std::endl;
     configloc = "disk";
     int prescale = 100;
