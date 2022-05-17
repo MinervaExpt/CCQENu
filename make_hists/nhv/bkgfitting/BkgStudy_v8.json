@@ -1,0 +1,27 @@
+{
+  "version":8,  // Dec 2021 large scale tests
+  "dataIn":"./hep01/minervame5A_Data.txt",
+  "mcIn":"./hep01/minervame5A_MC.txt",
+  "prescale":1,
+  "playlist":"minervame5A",
+  "recoName":"CCQENu",
+  "pdg":-14,
+    "runsamples":["QElike","QElike_hiE","QElike_loE"],
+  "cutsFile":"nhv/bkgfitting/AntiNuCuts_bkgstudy_v8.json",
+  "varsFile":"nhv/bkgfitting/Variables_bkgstudy.json",
+  "samplesFile":"nhv/bkgfitting/Samples_bkgstudy_v8.json",
+  "outRoot":"BkgStudy",
+    "AnalyzeVariables":["recoil","Q2QE"],
+  "Analyze2DVariables":["Q2QE_recoil"],
+  "signal":{"QElike":"qelike","QElike_loE":"qelike","QElike_hiE":"qelike"},
+  "background":{"QElike":"qelikenot","QElike_loE":"qelikenot","QElike_hiE":"qelikenot"},
+  "data":{"QElike":"data","QElike_loE":"data","QElike_hiE":"data"},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}
