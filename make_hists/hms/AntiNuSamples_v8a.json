@@ -4,7 +4,7 @@
     "phase_space":"phase_space",
     "signal":["qelike1p","qelike2p2h"],
     "background":["qelikenot"],
-    "components":{
+    "categories":{
       "qelike1p":{
         "for":["selected_reco","selected_truth","truth","response"]
         },
@@ -21,7 +21,7 @@
      "phase_space":"phase_space",
      "signal":["qelike1p_np","qelike2p2h_np"],
      "background":["qelikenot_np"],
-     "components":{
+     "categories":{
        "qelike1p_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
@@ -39,7 +39,7 @@
      "phase_space":"phase_space_full",
      "signal":["qelike1p_np","qelike2p2h_np"],
      "background":["qelikenot_np"],
-     "components":{
+     "categories":{
        "qelike1p_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },

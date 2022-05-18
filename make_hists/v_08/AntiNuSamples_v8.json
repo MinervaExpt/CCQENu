@@ -4,7 +4,7 @@
     "phase_space":"phase_space",
     "signal":["qelike"],
     "background":["qelikenot"],
-    "components":{
+    "categories":{
       "qelike":{
         "for":["selected_reco","selected_truth","truth","response"]
         },
@@ -18,7 +18,7 @@
      "phase_space":"phase_space",
      "signal":["qelike_np"],
      "background":["qelikenot_np"],
-     "components":{
+     "categories":{
        "qelike_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
@@ -33,7 +33,7 @@
      "phase_space":"phase_space_full",
      "signal":["qelike_np"],
      "background":["qelikenot_np"],
-     "components":{
+     "categories":{
        "qelike_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
@@ -48,7 +48,7 @@
      "phase_space":"phase_space_all_angles",
      "signal":["qelike_np"],
      "background":["qelikenot_np"],
-     "components":{
+     "categories":{
        "qelike_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },

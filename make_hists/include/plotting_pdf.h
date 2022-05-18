@@ -338,12 +338,53 @@ void Plot2D(TCanvas & cE, MnvH2D* ihist, std::string label, int logscale=0, bool
 //  gPad->SetLogx(false);
 //  if (logscale == 2 || logscale == 3) gPad->SetLogy();
 //  if (logscale == 1 || logscale == 3) gPad->SetLogx();
-  TText *t = new TText(.3,.95,title.c_str());
+  TText *t = new TText(.3,.95,label.c_str());
+  hist->Draw("COLZ");
   t->SetNDC(1);
   t->SetTextSize(.03);
   std::string plotname = Form("Title: %s_CV_%s",hist->GetName(),label.c_str());
   t->Draw();
-  hist->Draw("COLZ");
+
+  cE.Print(cE.GetName(),plotname.c_str());
+  resetLogScale();
+}
+
+void Plot2DFraction(TCanvas & cE, MnvH1D* ihist1, MnvH1D* ihist2, std::string label, int logscale=0, bool binwid = false){ // null version for 1d
+}
+
+void Plot2DFraction(TCanvas & cE, MnvH2D* ihist1, MnvH2D* ihist2, std::string label, int logscale=0, bool binwid = false){
+    std::cout << "print 2D fraction" << ihist1->GetName() << std::endl;
+  setLogScale(logscale);
+  TH2D hist1 =  ihist1->GetCVHistoWithStatError();
+  TH2D hist2 =  ihist2->GetCVHistoWithStatError();
+  hist1.SetDirectory(0);
+  hist2.SetDirectory(0);
+  setLogScale(logscale);
+
+  std::string xtitle = hist1.GetXaxis()->GetTitle();
+  std::string ytitle = hist1.GetYaxis()->GetTitle();
+  std::string title = Form("%s by %s: %s",xtitle.c_str(),ytitle.c_str(),label.c_str());
+
+  hist1.GetXaxis()->CenterTitle();
+  hist1.GetYaxis()->CenterTitle();
+  hist1.SetTitle(Form("%s",title.c_str()));
+
+  gPad->SetLogy(false);
+  gPad->SetLogx(false);
+  if (logscale == 2 || logscale == 3) gPad->SetLogy();
+  if (logscale == 1 || logscale == 3) gPad->SetLogx();
+  TText *t = new TText(.3,.90,label.c_str());
+  
+  hist1.SetLineColor(1);
+  hist1.Draw("BOX");
+    t->SetNDC(1);
+    t->SetTextSize(.03);
+    std::string plotname = Form("Title: %s_CV_%s",hist1.GetName(),label.c_str());
+    t->Draw();
+  hist2.SetLineColor(2);
+  hist2.Draw("BOX SAME");
+  hist1.Print();
+  hist2.Print();
   cE.Print(cE.GetName(),plotname.c_str());
   resetLogScale();
 }

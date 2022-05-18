@@ -68,6 +68,7 @@ public:
     recofunctions["DeadTime"] = &CVUNIVERSE::GetDeadTime;
     
     recofunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+    recointfunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
     
     // integer functions for equals
     
@@ -77,14 +78,61 @@ public:
     
     recointfunctions["GoodRecoil"] = &CVUNIVERSE::GetGoodRecoil;
     
-    trueintfunctions["IsCCQELike"] = &CVUNIVERSE::GetIsCCQELike;
-    trueintfunctions["IsCCQELikeAll"] = &CVUNIVERSE::GetIsCCQELikeAll;
+    trueintfunctions["TruthIsCCQELike"] = &CVUNIVERSE::GetTruthIsCCQELike;
+    trueintfunctions["TruthIsCCQELikeAll"] = &CVUNIVERSE::GetTruthIsCCQELikeAll;
     
-    trueintfunctions["IsCC"] = &CVUNIVERSE::GetIsCC;
+    trueintfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
     
     trueintfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
     
     trueintfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
+    
+    // ----------------------- Sean Neutrino Functions ------------------------------------------
+  
+    trueintfunctions["TruthIsOther"] = &CVUNIVERSE::GetTruthIsOther;
+  
+    // Interaction Vertex
+
+    recointfunctions["HasInteractionVertex"] = &CVUNIVERSE::GetHasInteractionVertex;
+    
+    // Isolated Blobs and Charged Pions
+    
+    recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
+    
+    recointfunctions["HasMichelElectron"] = &CVUNIVERSE::GetHasMichelElectron;
+    recointfunctions["MichelElectronCandidates"] = &CVUNIVERSE::GetMichelElectronCandidates;
+    recofunctions["MichelElectronCandidates"] = &CVUNIVERSE::GetMichelElectronCandidates;
+    trueintfunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
+    truefunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
+
+    recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
+    recointfunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
+    trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
+    
+    // genie particle counts
+    trueintfunctions["TrueChargedPionCount"] = &CVUNIVERSE::GetTrueChargedPionCount;
+    truefunctions["TrueChargedPionCount"] = &CVUNIVERSE::GetTrueChargedPionCount;
+    trueintfunctions["TrueNeutralPionCount"] = &CVUNIVERSE::GetTrueNeutralPionCount;
+    truefunctions["TrueNeutralPionCount"] = &CVUNIVERSE::GetTrueNeutralPionCount;
+    trueintfunctions["TruePionCount"] = &CVUNIVERSE::GetTruePionCount;
+    truefunctions["TruePionCount"] = &CVUNIVERSE::GetTruePionCount;
+    
+    trueintfunctions["TrueCharmedBaryonCount"] = &CVUNIVERSE::GetTrueCharmedBaryonCount;
+    truefunctions["TrueCharmedBaryonCount"] = &CVUNIVERSE::GetTrueCharmedBaryonCount;
+    trueintfunctions["TrueStrangeBaryonCount"] = &CVUNIVERSE::GetTrueStrangeBaryonCount;
+    truefunctions["TrueStrangeBaryonCount"] = &CVUNIVERSE::GetTrueStrangeBaryonCount;
+    
+    trueintfunctions["TrueCharmedMesonCount"] = &CVUNIVERSE::GetTrueCharmedMesonCount;
+    truefunctions["TrueCharmedMesonCount"] = &CVUNIVERSE::GetTrueCharmedMesonCount;
+    trueintfunctions["TrueStrangeMesonCount"] = &CVUNIVERSE::GetTrueStrangeMesonCount;
+    truefunctions["TrueStrangeMesonCount"] = &CVUNIVERSE::GetTrueStrangeMesonCount;
+    
+    trueintfunctions["TruthHasSingleChargedPion"] = &CVUNIVERSE::GetTruthHasSingleChargedPion;
+    trueintfunctions["TruthHasSingleNeutralPion"] = &CVUNIVERSE::GetTruthHasSingleNeutralPion;
+    trueintfunctions["TruthHasMultiPion"] = &CVUNIVERSE::GetTruthHasMultiPion;
+    
+    truefunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
+    trueintfunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
     
   };
   

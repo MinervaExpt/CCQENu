@@ -1,0 +1,2717 @@
+ test NuConfig
+read in configuration file Sean_local_AntiNu_v8.json
+config Sean_local_AntiNu_v8.json {
+	"Analyze2DVariables" : [],
+	"AnalyzeVariables" : 
+	[
+		"Q2QE",
+		"pzmu",
+		"ptmu",
+		"EnuCCQE",
+		"Enu"
+	],
+	"DeuteriumGeniePiTune" : 1, // set to true?
+	"Geant4Elastics" : 1, // set to true by default
+	"Geant4NeutronCV" : 1, // set true by default docdb 28556
+	"NonResPiReweight" : 1, // set to true?
+	"NuEConstraint" : 1,
+	"background" : 
+	{
+		"QElike" : "qelikenot",
+		"QElikeALLAngles" : "qelikenot_np",
+		"QElikeNP" : "qelikenot_np"
+	},
+	"cutsFile" : "/home/gilligas/gitMinerva/CCQENu/make_hists/v_08/AntiNuCuts_v8.json",
+	"data" : 
+	{
+		"QElike" : "data",
+		"QElikeALLAllAngles" : "data",
+		"QElikeNP" : "data"
+	},
+	"dataIn" : "/home/gilligas/gitMinerva/data/playlists/local_5A_DATA.txt",
+	"fluxUniverses" : 100,
+	"mcIn" : "/home/gilligas/gitMinerva/data/playlists/local_5A_MC.txt",
+	"outRoot" : "SB",
+	"pdg" : -14,
+	"playlist" : "minervame5A",
+	"prescale" : 1,
+	"recoName" : "CCQENu",
+	"runsamples" : 
+	[
+		"QElike",
+		"QElikeNP",
+		"QElikeALLAngles"
+	],
+	"samplesFile" : "/home/gilligas/gitMinerva/CCQENu/make_hists/v_08/AntiNuSamples_v8.json",
+	"signal" : 
+	{
+		"QElike" : "qelike",
+		"QElikeALLAngles" : "qelike_np",
+		"QElikeNP" : "qelike_np"
+	},
+	"systematics" : 
+	[
+		"GENIE",
+		"Flux",
+		"GenieRvx1pi",
+		"RPA",
+		"2p2h",
+		"MuonMinerva",
+		"MuonMINOS",
+		"MuonResolution",
+		"MINOSEfficiency",
+		"Angle",
+		"geant4"
+	],
+	"varsFile" : "/home/gilligas/gitMinerva/CCQENu/make_hists/v_08/Variables_v8.json",
+	"version" : 8 // Dec 2021 large scale tests
+}
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-gen2thin-pdg14-minervame5A_rearrangedUniverses.root
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-gen2thin-pdg-14-minervame5A_rearrangedUniverses.root
+Applying flux constraint to nu histogram
+Applying flux constraint to nubar histogram
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-g4numiv6-pdg14-minervame5A_rearrangedUniverses.root
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-g4numiv6-pdg-14-minervame5A_rearrangedUniverses.root
+TFile**		SB_Sean_local_AntiNu_v8_100.root	
+ TFile*		SB_Sean_local_AntiNu_v8_100.root	
+  KEY: TNamed	main;1	{
+	"Analyze2DVariables" : [],
+	"AnalyzeVariables" : 
+	[
+		"Q2QE",
+		"pzmu",
+		"ptmu",
+		"EnuCCQE",
+		"Enu"
+	],
+	"DeuteriumGeniePiTune" : 1, // set to true?
+	"Geant4Elastics" : 1, // set to true by default
+	"Geant4NeutronCV" : 1, // set true by default docdb 28556
+	"NonResPiReweight" : 1, // set to true?
+	"NuEConstraint" : 1,
+	"background" : 
+	{
+		"QElike" : "qelikenot",
+		"QElikeALLAngles" : "qelikenotnp",
+		"QElikeNP" : "qelikenotnp"
+	},
+	"cutsFile" : "/home/gilligas/gitMinerva/CCQENu/make_hists/v_08/AntiNuCuts_v8.json",
+	"data" : 
+	{
+		"QElike" : "data",
+		"QElikeALLAllAngles" : "data",
+		"QElikeNP" : "data"
+	},
+	"dataIn" : "/home/gilligas/gitMinerva/data/playlists/local_5A_DATA.txt",
+	"fluxUniverses" : 100,
+	"mcIn" : "/home/gilligas/gitMinerva/data/playlists/local_5A_MC.txt",
+	"outRoot" : "SB",
+	"pdg" : -14,
+	"playlist" : "minervame5A",
+	"prescale" : 1,
+	"recoName" : "CCQENu",
+	"runsamples" : 
+	[
+		"QElike",
+		"QElikeNP",
+		"QElikeALLAngles"
+	],
+	"samplesFile" : "/home/gilligas/gitMinerva/CCQENu/make_hists/v_08/AntiNuSamples_v8.json",
+	"signal" : 
+	{
+		"QElike" : "qelike",
+		"QElikeALLAngles" : "qelikenp",
+		"QElikeNP" : "qelikenp"
+	},
+	"systematics" : 
+	[
+		"GENIE",
+		"Flux",
+		"GenieRvx1pi",
+		"RPA",
+		"2p2h",
+		"MuonMinerva",
+		"MuonMINOS",
+		"MuonResolution",
+		"MINOSEfficiency",
+		"Angle",
+		"geant4"
+	],
+	"varsFile" : "/home/gilligas/gitMinerva/CCQENu/make_hists/v_08/Variables_v8.json",
+	"version" : 8 // Dec 2021 large scale tests
+}
+
+  KEY: TNamed	varsFile;1	{
+	"1D" : 
+	{
+		"Enu" : 
+		{
+			"bins" : 
+			[
+				2.0,
+				2.5,
+				3.0,
+				3.5,
+				4.0,
+				4.5,
+				5.0,
+				6.0,
+				7.0,
+				8.0,
+				9.0,
+				10.0,
+				15.0
+			],
+			"fluxnorm" : 1,
+			"name" : "Enu",
+			"reco" : "EnuCCQEGeV",
+			"title" : "E_{#nu} (GeV)",
+			"true" : "TrueEnuGeV"
+		},
+		"EnuCCQE" : 
+		{
+			"bins" : 
+			[
+				2.0,
+				2.5,
+				3.0,
+				3.5,
+				4.0,
+				4.5,
+				5.0,
+				6.0,
+				7.0,
+				8.0,
+				9.0,
+				10.0,
+				15.0
+			],
+			"fluxnorm" : 1,
+			"name" : "EnuCCQE",
+			"reco" : "EnuCCQEGeV",
+			"title" : "E_{#nu}_{QE} (GeV)",
+			"true" : "TrueEnuCCQEGeV"
+		},
+		"EnuHad" : 
+		{
+			"bins" : 
+			[
+				2.0,
+				2.5,
+				3.0,
+				3.5,
+				4.0,
+				4.5,
+				5.0,
+				6.0,
+				7.0,
+				8.0,
+				9.0,
+				10.0,
+				15.0
+			],
+			"fluxnorm" : 1,
+			"name" : "EnuHad",
+			"reco" : "EnuHadGeV",
+			"title" : "E_{#nu}_{hadronic} (GeV)",
+			"true" : "TrueEnuGeV"
+		},
+		"Q2QE" : 
+		{
+			"bins" : 
+			[
+				0.001,
+				0.0062500000000000003,
+				0.012500000000000001,
+				0.025000000000000001,
+				0.037499999999999999,
+				0.050000000000000003,
+				0.10000000000000001,
+				0.20000000000000001,
+				0.29999999999999999,
+				0.40000000000000002,
+				0.59999999999999998,
+				0.80000000000000004,
+				1.0,
+				1.2,
+				2.0
+			],
+			"fluxnorm" : false,
+			"name" : "Q2QE",
+			"reco" : "Q2QEGeV",
+			"title" : "Q^{2} (QE) (GeV^{2})",
+			"true" : "TrueQ2QEGeV"
+		},
+		"ThetamuDegrees" : 
+		{
+			"fluxnorm" : false,
+			"max" : 40.0,
+			"min" : 0.0,
+			"name" : "ThetamuDegrees",
+			"nbins" : 20,
+			"reco" : "ThetamuDegrees",
+			"title" : "theta_mu (degrees)",
+			"true" : "TrueThetamuDegrees"
+		},
+		"curv" : 
+		{
+			"fluxnorm" : false,
+			"for" : 
+			[
+				"data",
+				"selected_reco"
+			],
+			"max" : 2.0,
+			"min" : -2.0,
+			"name" : "curv",
+			"nbins" : 100,
+			"reco" : "Curvature",
+			"title" : "curvature in MINOS, m-1",
+			"true" : "TrueCurvature"
+		},
+		"pmu" : 
+		{
+			"bins" : 
+			[
+				0.0,
+				0.5,
+				1.0,
+				1.5,
+				2.0,
+				3.0,
+				4.0,
+				5.0,
+				6.0,
+				7.0,
+				8.0,
+				9.0,
+				10.0,
+				15.0
+			],
+			"fluxnorm" : false,
+			"name" : "pmu",
+			"reco" : "PmuGeV",
+			"title" : "muon p (GeV/c)",
+			"true" : "TruePmuGeV"
+		},
+		"ptmu" : 
+		{
+			"bins" : 
+			[
+				0.0,
+				0.074999999999999997,
+				0.14999999999999999,
+				0.25,
+				0.32500000000000001,
+				0.40000000000000002,
+				0.47499999999999998,
+				0.55000000000000004,
+				0.69999999999999996,
+				0.84999999999999998,
+				1,
+				1.25,
+				1.5,
+				2.5
+			],
+			"fluxnorm" : false,
+			"name" : "ptmu",
+			"reco" : "PperpMuGeV",
+			"title" : "muon p_{T} (GeV/c)",
+			"true" : "TruePperpMuGeV"
+		},
+		"pzmu" : 
+		{
+			"bins" : 
+			[
+				0.0,
+				1.0,
+				2.0,
+				3.0,
+				4.0,
+				5.0,
+				6.0,
+				7.0,
+				8.0,
+				9.0,
+				10.0,
+				15.0
+			],
+			"fluxnorm" : false,
+			"name" : "pzmu",
+			"reco" : "PparMuGeV",
+			"title" : "muon p_{||} (GeV/c)",
+			"true" : "TruePparMuGeV"
+		},
+		"recoil" : 
+		{
+			"fluxnorm" : false,
+			"for" : 
+			[
+				"data",
+				"selected_reco"
+			],
+			"max" : 0.5,
+			"min" : 0.0,
+			"name" : "recoil",
+			"nbins" : 25,
+			"reco" : "RecoilEnergyGeV",
+			"title" : "Recoil in GeV",
+			"true" : "TrueRecoilEnergyGeV"
+		},
+		"total" : 
+		{
+			"bins" : 
+			[
+				2.0,
+				15.0
+			],
+			"fluxnorm" : 0,
+			"name" : "total",
+			"reco" : "EnuCCQEGeV",
+			"title" : "total for Enu from 2 to 15 GeV",
+			"true" : "TrueEnuCCQEGeV"
+		},
+		"zmax" : 
+		{
+			"fluxnorm" : false,
+			"max" : 8500.0,
+			"min" : 8300.0,
+			"name" : "zmax",
+			"nbins" : 100,
+			"reco" : "ZVertex",
+			"title" : "z near end",
+			"true" : "TrueZVertex"
+		},
+		"zmin" : 
+		{
+			"fluxnorm" : false,
+			"max" : 5900.0,
+			"min" : 5700.0,
+			"name" : "zmin",
+			"nbins" : 100,
+			"reco" : "ZVertex",
+			"title" : "z near start",
+			"true" : "TrueZVertex"
+		}
+	},
+	"2D" : 
+	{
+		"EnuCCQE_Q2QE" : 
+		{
+			"name" : "EnuCCQE_Q2QE",
+			"xvar" : "EnuCCQE",
+			"yvar" : "Q2QE"
+		},
+		"EnuCCQE_ThetamuDegrees" : 
+		{
+			"name" : "EnuCCQE_ThetamuDegrees",
+			"xvar" : "EnuCCQE",
+			"yvar" : "ThetamuDegrees"
+		},
+		"Q2QE_recoil" : 
+		{
+			"name" : "Q2QE_recoil",
+			"xvar" : "Q2QE",
+			"yvar" : "recoil"
+		},
+		"pmu_ThetamuDegrees" : 
+		{
+			"name" : "pmu_ThetamuDegrees",
+			"xvar" : "pmu",
+			"yvar" : "ThetamuDegrees"
+		},
+		"pzmu_ptmu" : 
+		{
+			"name" : "pzmu_ptmu",
+			"xvar" : "pzmu",
+			"yvar" : "ptmu"
+		}
+	}
+}
+
+  KEY: TNamed	cutsFile;1	{
+	"QElike" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 1,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"QElikeALLAngles" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 1,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"QElikeFULL" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 1,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"QElikeNP" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 1,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"data" : [], // data doesn't cut anything at truth level
+	"phase_space" : 
+	[
+		{
+			"max" : 850,
+			"name" : "TrueApothemX",
+			"variable" : "TrueApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "TrueApothemY",
+			"variable" : "TrueApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "TrueZVertex"
+		},
+		{
+			"min" : 1.5,
+			"name" : "TrueMuonMomentumMin",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "TrueMuonMomentumMax",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "TrueThetamuDegrees"
+		}
+	],
+	"phase_space_all_angles" : 
+	[
+		{
+			"max" : 850,
+			"name" : "TrueApothemX",
+			"variable" : "TrueApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "TrueApothemY",
+			"variable" : "TrueApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "TrueZVertex"
+		},
+		{
+			"min" : 1.5,
+			"name" : "TrueMuonMomentumMin",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "TrueMuonMomentumMax",
+			"variable" : "TruePmuGeV"
+		}
+	],
+	"phase_space_full" : 
+	[
+		{
+			"max" : 850,
+			"name" : "TrueApothemX",
+			"variable" : "TrueApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "TrueApothemY",
+			"variable" : "TrueApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "TrueZVertex"
+		}
+	],
+	"qelike" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "IsCCQELike"
+		}
+	],
+	"qelike1p" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "IsCCQELike"
+		},
+		{
+			"max" : 7,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike1p_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELikeAll",
+			"variable" : "IsCCQELikeAll"
+		},
+		{
+			"max" : 7,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike2p2h" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "IsCCQELike"
+		},
+		{
+			"equals" : 8,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike2p2h_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELikeAll",
+			"variable" : "IsCCQELikeAll"
+		},
+		{
+			"equals" : 8,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELikeAll",
+			"variable" : "IsCCQELikeAll"
+		}
+	],
+	"qelikenot" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 0,
+			"name" : "IsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "IsCCQELike"
+		}
+	],
+	"qelikenot_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 0,
+			"name" : "IsCCQELikeAll",
+			"variable" : "IsCCQELikeAll"
+		}
+	]
+}
+
+  KEY: TNamed	samplesFile;1	{
+	"QElike" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 1,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"QElikeALLAngles" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 1,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"QElikeFULL" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 1,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"QElikeNP" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 1,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"data" : [], // data doesn't cut anything at truth level
+	"phase_space" : 
+	[
+		{
+			"max" : 850,
+			"name" : "TrueApothemX",
+			"variable" : "TrueApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "TrueApothemY",
+			"variable" : "TrueApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "TrueZVertex"
+		},
+		{
+			"min" : 1.5,
+			"name" : "TrueMuonMomentumMin",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "TrueMuonMomentumMax",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "TrueThetamuDegrees"
+		}
+	],
+	"phase_space_all_angles" : 
+	[
+		{
+			"max" : 850,
+			"name" : "TrueApothemX",
+			"variable" : "TrueApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "TrueApothemY",
+			"variable" : "TrueApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "TrueZVertex"
+		},
+		{
+			"min" : 1.5,
+			"name" : "TrueMuonMomentumMin",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "TrueMuonMomentumMax",
+			"variable" : "TruePmuGeV"
+		}
+	],
+	"phase_space_full" : 
+	[
+		{
+			"max" : 850,
+			"name" : "TrueApothemX",
+			"variable" : "TrueApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "TrueApothemY",
+			"variable" : "TrueApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "TrueZVertex"
+		}
+	],
+	"qelike" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "IsCCQELike"
+		}
+	],
+	"qelike1p" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "IsCCQELike"
+		},
+		{
+			"max" : 7,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike1p_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELikeAll",
+			"variable" : "IsCCQELikeAll"
+		},
+		{
+			"max" : 7,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike2p2h" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "IsCCQELike"
+		},
+		{
+			"equals" : 8,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike2p2h_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELikeAll",
+			"variable" : "IsCCQELikeAll"
+		},
+		{
+			"equals" : 8,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCCQELikeAll",
+			"variable" : "IsCCQELikeAll"
+		}
+	],
+	"qelikenot" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 0,
+			"name" : "IsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "IsCCQELike"
+		}
+	],
+	"qelikenot_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "IsCC",
+			"variable" : "IsCC"
+		},
+		{
+			"equals" : 0,
+			"name" : "IsCCQELikeAll",
+			"variable" : "IsCCQELikeAll"
+		}
+	]
+}
+
+  KEY: TNamed	gitVersion;1	https://github.com/MinervaExpt/CCQENu/commit/GIT_COMMIT_HASH
+  KEY: PlotUtils::MnvH1D	h___QElike___data___Enu___reconstructed;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___Enu___reconstructed;1	Enu
+  KEY: PlotUtils::MnvH2D	h___QElike___qelike___Enu___response_migration;1	h___QElike___qelike___Enu___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___Enu___response_reco;1	h___QElike___qelike___Enu___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___Enu___response_truth;1	h___QElike___qelike___Enu___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___Enu___selected_truth;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___Enu___all_truth;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElike___qelikenot___Enu___reconstructed;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___data___Enu___reconstructed;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___Enu___reconstructed;1	Enu
+  KEY: PlotUtils::MnvH2D	h___QElikeNP___qelike_np___Enu___response_migration;1	h___QElikeNP___qelike_np___Enu___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___Enu___response_reco;1	h___QElikeNP___qelike_np___Enu___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___Enu___response_truth;1	h___QElikeNP___qelike_np___Enu___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___Enu___selected_truth;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___Enu___all_truth;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelikenot_np___Enu___reconstructed;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___data___Enu___reconstructed;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___Enu___reconstructed;1	Enu
+  KEY: PlotUtils::MnvH2D	h___QElikeALLAngles___qelike_np___Enu___response_migration;1	h___QElikeALLAngles___qelike_np___Enu___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___Enu___response_reco;1	h___QElikeALLAngles___qelike_np___Enu___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___Enu___response_truth;1	h___QElikeALLAngles___qelike_np___Enu___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___Enu___selected_truth;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___Enu___all_truth;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelikenot_np___Enu___reconstructed;1	Enu
+  KEY: PlotUtils::MnvH1D	h___QElike___data___EnuCCQE___reconstructed;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___EnuCCQE___reconstructed;1	EnuCCQE
+  KEY: PlotUtils::MnvH2D	h___QElike___qelike___EnuCCQE___response_migration;1	h___QElike___qelike___EnuCCQE___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___EnuCCQE___response_reco;1	h___QElike___qelike___EnuCCQE___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___EnuCCQE___response_truth;1	h___QElike___qelike___EnuCCQE___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___EnuCCQE___selected_truth;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___EnuCCQE___all_truth;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElike___qelikenot___EnuCCQE___reconstructed;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___data___EnuCCQE___reconstructed;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___EnuCCQE___reconstructed;1	EnuCCQE
+  KEY: PlotUtils::MnvH2D	h___QElikeNP___qelike_np___EnuCCQE___response_migration;1	h___QElikeNP___qelike_np___EnuCCQE___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___EnuCCQE___response_reco;1	h___QElikeNP___qelike_np___EnuCCQE___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___EnuCCQE___response_truth;1	h___QElikeNP___qelike_np___EnuCCQE___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___EnuCCQE___selected_truth;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___EnuCCQE___all_truth;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelikenot_np___EnuCCQE___reconstructed;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___data___EnuCCQE___reconstructed;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___EnuCCQE___reconstructed;1	EnuCCQE
+  KEY: PlotUtils::MnvH2D	h___QElikeALLAngles___qelike_np___EnuCCQE___response_migration;1	h___QElikeALLAngles___qelike_np___EnuCCQE___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___EnuCCQE___response_reco;1	h___QElikeALLAngles___qelike_np___EnuCCQE___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___EnuCCQE___response_truth;1	h___QElikeALLAngles___qelike_np___EnuCCQE___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___EnuCCQE___selected_truth;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___EnuCCQE___all_truth;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelikenot_np___EnuCCQE___reconstructed;1	EnuCCQE
+  KEY: PlotUtils::MnvH1D	h___QElike___data___Q2QE___reconstructed;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___Q2QE___reconstructed;1	Q2QE
+  KEY: PlotUtils::MnvH2D	h___QElike___qelike___Q2QE___response_migration;1	h___QElike___qelike___Q2QE___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___Q2QE___response_reco;1	h___QElike___qelike___Q2QE___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___Q2QE___response_truth;1	h___QElike___qelike___Q2QE___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___Q2QE___selected_truth;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___Q2QE___all_truth;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElike___qelikenot___Q2QE___reconstructed;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___data___Q2QE___reconstructed;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___Q2QE___reconstructed;1	Q2QE
+  KEY: PlotUtils::MnvH2D	h___QElikeNP___qelike_np___Q2QE___response_migration;1	h___QElikeNP___qelike_np___Q2QE___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___Q2QE___response_reco;1	h___QElikeNP___qelike_np___Q2QE___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___Q2QE___response_truth;1	h___QElikeNP___qelike_np___Q2QE___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___Q2QE___selected_truth;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___Q2QE___all_truth;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelikenot_np___Q2QE___reconstructed;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___data___Q2QE___reconstructed;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___Q2QE___reconstructed;1	Q2QE
+  KEY: PlotUtils::MnvH2D	h___QElikeALLAngles___qelike_np___Q2QE___response_migration;1	h___QElikeALLAngles___qelike_np___Q2QE___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___Q2QE___response_reco;1	h___QElikeALLAngles___qelike_np___Q2QE___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___Q2QE___response_truth;1	h___QElikeALLAngles___qelike_np___Q2QE___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___Q2QE___selected_truth;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___Q2QE___all_truth;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelikenot_np___Q2QE___reconstructed;1	Q2QE
+  KEY: PlotUtils::MnvH1D	h___QElike___data___ptmu___reconstructed;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___ptmu___reconstructed;1	ptmu
+  KEY: PlotUtils::MnvH2D	h___QElike___qelike___ptmu___response_migration;1	h___QElike___qelike___ptmu___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___ptmu___response_reco;1	h___QElike___qelike___ptmu___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___ptmu___response_truth;1	h___QElike___qelike___ptmu___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___ptmu___selected_truth;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___ptmu___all_truth;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElike___qelikenot___ptmu___reconstructed;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___data___ptmu___reconstructed;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___ptmu___reconstructed;1	ptmu
+  KEY: PlotUtils::MnvH2D	h___QElikeNP___qelike_np___ptmu___response_migration;1	h___QElikeNP___qelike_np___ptmu___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___ptmu___response_reco;1	h___QElikeNP___qelike_np___ptmu___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___ptmu___response_truth;1	h___QElikeNP___qelike_np___ptmu___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___ptmu___selected_truth;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___ptmu___all_truth;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelikenot_np___ptmu___reconstructed;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___data___ptmu___reconstructed;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___ptmu___reconstructed;1	ptmu
+  KEY: PlotUtils::MnvH2D	h___QElikeALLAngles___qelike_np___ptmu___response_migration;1	h___QElikeALLAngles___qelike_np___ptmu___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___ptmu___response_reco;1	h___QElikeALLAngles___qelike_np___ptmu___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___ptmu___response_truth;1	h___QElikeALLAngles___qelike_np___ptmu___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___ptmu___selected_truth;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___ptmu___all_truth;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelikenot_np___ptmu___reconstructed;1	ptmu
+  KEY: PlotUtils::MnvH1D	h___QElike___data___pzmu___reconstructed;1	pzmu
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___pzmu___reconstructed;1	pzmu
+  KEY: PlotUtils::MnvH2D	h___QElike___qelike___pzmu___response_migration;1	h___QElike___qelike___pzmu___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___pzmu___response_reco;1	h___QElike___qelike___pzmu___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___pzmu___response_truth;1	h___QElike___qelike___pzmu___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___pzmu___selected_truth;1	pzmu
+  KEY: PlotUtils::MnvH1D	h___QElike___qelike___pzmu___all_truth;1	pzmu
+  KEY: PlotUtils::MnvH1D	h___QElike___qelikenot___pzmu___reconstructed;1	pzmu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___data___pzmu___reconstructed;1	pzmu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___pzmu___reconstructed;1	pzmu
+  KEY: PlotUtils::MnvH2D	h___QElikeNP___qelike_np___pzmu___response_migration;1	h___QElikeNP___qelike_np___pzmu___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___pzmu___response_reco;1	h___QElikeNP___qelike_np___pzmu___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___pzmu___response_truth;1	h___QElikeNP___qelike_np___pzmu___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___pzmu___selected_truth;1	pzmu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelike_np___pzmu___all_truth;1	pzmu
+  KEY: PlotUtils::MnvH1D	h___QElikeNP___qelikenot_np___pzmu___reconstructed;1	pzmu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___data___pzmu___reconstructed;1	pzmu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___pzmu___reconstructed;1	pzmu
+  KEY: PlotUtils::MnvH2D	h___QElikeALLAngles___qelike_np___pzmu___response_migration;1	h___QElikeALLAngles___qelike_np___pzmu___response Migration
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___pzmu___response_reco;1	h___QElikeALLAngles___qelike_np___pzmu___response Reco
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___pzmu___response_truth;1	h___QElikeALLAngles___qelike_np___pzmu___response Truth
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___pzmu___selected_truth;1	pzmu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelike_np___pzmu___all_truth;1	pzmu
+  KEY: PlotUtils::MnvH1D	h___QElikeALLAngles___qelikenot_np___pzmu___reconstructed;1	pzmu
+  KEY: PlotUtils::MnvH1D	POT_summary;1	data, mc, Prescaled mc
+  KEY: TVector2	pot;1	A 2D physics vector
+ integrated luminosity is 1.13798e+25barns^-1
+ POT MC 1.02672e+17
+ POT DATA 3.51794e+18
+ key main
+ not parseable main
+ key varsFile
+ not parseable varsFile
+ key cutsFile
+ not parseable cutsFile
+ key samplesFile
+ not parseable samplesFile
+ key gitVersion
+ not parseable gitVersion
+ key h___QElike___data___Enu___reconstructed
+ add a sample: QElike
+ add a category: data
+ add a variable: Enu
+ add a type: reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElike___data___Enu___reconstructed, Entries= 2130, Total sum= 2099
+ hist 1D QElike Enu reconstructed data
+ key h___QElike___qelike___Enu___reconstructed
+ add a category: qelike
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Enu___reconstructed, Entries= 55, Total sum= 39.4837
+ hist 1D QElike Enu reconstructed qelike
+ key h___QElike___qelike___Enu___response_migration
+ add a type: response_migration
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Enu___response_migration, Entries= 55, Total sum= 39.4837
+ response QElike Enu response_migration qelike
+ key h___QElike___qelike___Enu___response_reco
+ add a type: response_reco
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Enu___response_reco, Entries= 55, Total sum= 39.4837
+ response QElike Enu response_reco qelike
+ key h___QElike___qelike___Enu___response_truth
+ add a type: response_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Enu___response_truth, Entries= 55, Total sum= 40.1889
+ response QElike Enu response_truth qelike
+ key h___QElike___qelike___Enu___selected_truth
+ add a type: selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Enu___selected_truth, Entries= 55, Total sum= 40.1889
+ hist 1D QElike Enu selected_truth qelike
+ key h___QElike___qelike___Enu___all_truth
+ add a type: all_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Enu___all_truth, Entries= 86, Total sum= 67.5453
+ hist 1D QElike Enu all_truth qelike
+ key h___QElike___qelikenot___Enu___reconstructed
+ add a category: qelikenot
+ Done with parsing
+TH1.Print Name  = h___QElike___qelikenot___Enu___reconstructed, Entries= 13, Total sum= 9.57593
+ hist 1D QElike Enu reconstructed qelikenot
+ key h___QElikeNP___data___Enu___reconstructed
+ add a sample: QElikeNP
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___data___Enu___reconstructed, Entries= 2130, Total sum= 2099
+ hist 1D QElikeNP Enu reconstructed data
+ key h___QElikeNP___qelike_np___Enu___reconstructed
+ add a category: qelike_np
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Enu___reconstructed, Entries= 56, Total sum= 40.3391
+ hist 1D QElikeNP Enu reconstructed qelike_np
+ key h___QElikeNP___qelike_np___Enu___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Enu___response_migration, Entries= 56, Total sum= 40.3391
+ response QElikeNP Enu response_migration qelike_np
+ key h___QElikeNP___qelike_np___Enu___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Enu___response_reco, Entries= 56, Total sum= 40.3391
+ response QElikeNP Enu response_reco qelike_np
+ key h___QElikeNP___qelike_np___Enu___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Enu___response_truth, Entries= 56, Total sum= 41.0443
+ response QElikeNP Enu response_truth qelike_np
+ key h___QElikeNP___qelike_np___Enu___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Enu___selected_truth, Entries= 56, Total sum= 41.0443
+ hist 1D QElikeNP Enu selected_truth qelike_np
+ key h___QElikeNP___qelike_np___Enu___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Enu___all_truth, Entries= 108, Total sum= 91.5616
+ hist 1D QElikeNP Enu all_truth qelike_np
+ key h___QElikeNP___qelikenot_np___Enu___reconstructed
+ add a category: qelikenot_np
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelikenot_np___Enu___reconstructed, Entries= 12, Total sum= 8.72052
+ hist 1D QElikeNP Enu reconstructed qelikenot_np
+ key h___QElikeALLAngles___data___Enu___reconstructed
+ add a sample: QElikeALLAngles
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___data___Enu___reconstructed, Entries= 2130, Total sum= 2099
+ hist 1D QElikeALLAngles Enu reconstructed data
+ key h___QElikeALLAngles___qelike_np___Enu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Enu___reconstructed, Entries= 56, Total sum= 40.3391
+ hist 1D QElikeALLAngles Enu reconstructed qelike_np
+ key h___QElikeALLAngles___qelike_np___Enu___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Enu___response_migration, Entries= 56, Total sum= 40.3391
+ response QElikeALLAngles Enu response_migration qelike_np
+ key h___QElikeALLAngles___qelike_np___Enu___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Enu___response_reco, Entries= 56, Total sum= 40.3391
+ response QElikeALLAngles Enu response_reco qelike_np
+ key h___QElikeALLAngles___qelike_np___Enu___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Enu___response_truth, Entries= 56, Total sum= 41.0443
+ response QElikeALLAngles Enu response_truth qelike_np
+ key h___QElikeALLAngles___qelike_np___Enu___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Enu___selected_truth, Entries= 56, Total sum= 41.0443
+ hist 1D QElikeALLAngles Enu selected_truth qelike_np
+ key h___QElikeALLAngles___qelike_np___Enu___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Enu___all_truth, Entries= 113, Total sum= 95.8777
+ hist 1D QElikeALLAngles Enu all_truth qelike_np
+ key h___QElikeALLAngles___qelikenot_np___Enu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelikenot_np___Enu___reconstructed, Entries= 12, Total sum= 8.72052
+ hist 1D QElikeALLAngles Enu reconstructed qelikenot_np
+ key h___QElike___data___EnuCCQE___reconstructed
+ add a variable: EnuCCQE
+ Done with parsing
+TH1.Print Name  = h___QElike___data___EnuCCQE___reconstructed, Entries= 2130, Total sum= 2099
+ hist 1D QElike EnuCCQE reconstructed data
+ key h___QElike___qelike___EnuCCQE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___EnuCCQE___reconstructed, Entries= 55, Total sum= 39.4837
+ hist 1D QElike EnuCCQE reconstructed qelike
+ key h___QElike___qelike___EnuCCQE___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___EnuCCQE___response_migration, Entries= 55, Total sum= 39.4837
+ response QElike EnuCCQE response_migration qelike
+ key h___QElike___qelike___EnuCCQE___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___EnuCCQE___response_reco, Entries= 55, Total sum= 39.4837
+ response QElike EnuCCQE response_reco qelike
+ key h___QElike___qelike___EnuCCQE___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___EnuCCQE___response_truth, Entries= 55, Total sum= 40.1889
+ response QElike EnuCCQE response_truth qelike
+ key h___QElike___qelike___EnuCCQE___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___EnuCCQE___selected_truth, Entries= 55, Total sum= 40.1889
+ hist 1D QElike EnuCCQE selected_truth qelike
+ key h___QElike___qelike___EnuCCQE___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___EnuCCQE___all_truth, Entries= 86, Total sum= 67.5453
+ hist 1D QElike EnuCCQE all_truth qelike
+ key h___QElike___qelikenot___EnuCCQE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElike___qelikenot___EnuCCQE___reconstructed, Entries= 13, Total sum= 9.57593
+ hist 1D QElike EnuCCQE reconstructed qelikenot
+ key h___QElikeNP___data___EnuCCQE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___data___EnuCCQE___reconstructed, Entries= 2130, Total sum= 2099
+ hist 1D QElikeNP EnuCCQE reconstructed data
+ key h___QElikeNP___qelike_np___EnuCCQE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___EnuCCQE___reconstructed, Entries= 56, Total sum= 40.3391
+ hist 1D QElikeNP EnuCCQE reconstructed qelike_np
+ key h___QElikeNP___qelike_np___EnuCCQE___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___EnuCCQE___response_migration, Entries= 56, Total sum= 40.3391
+ response QElikeNP EnuCCQE response_migration qelike_np
+ key h___QElikeNP___qelike_np___EnuCCQE___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___EnuCCQE___response_reco, Entries= 56, Total sum= 40.3391
+ response QElikeNP EnuCCQE response_reco qelike_np
+ key h___QElikeNP___qelike_np___EnuCCQE___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___EnuCCQE___response_truth, Entries= 56, Total sum= 41.0443
+ response QElikeNP EnuCCQE response_truth qelike_np
+ key h___QElikeNP___qelike_np___EnuCCQE___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___EnuCCQE___selected_truth, Entries= 56, Total sum= 41.0443
+ hist 1D QElikeNP EnuCCQE selected_truth qelike_np
+ key h___QElikeNP___qelike_np___EnuCCQE___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___EnuCCQE___all_truth, Entries= 108, Total sum= 91.5616
+ hist 1D QElikeNP EnuCCQE all_truth qelike_np
+ key h___QElikeNP___qelikenot_np___EnuCCQE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelikenot_np___EnuCCQE___reconstructed, Entries= 12, Total sum= 8.72052
+ hist 1D QElikeNP EnuCCQE reconstructed qelikenot_np
+ key h___QElikeALLAngles___data___EnuCCQE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___data___EnuCCQE___reconstructed, Entries= 2130, Total sum= 2099
+ hist 1D QElikeALLAngles EnuCCQE reconstructed data
+ key h___QElikeALLAngles___qelike_np___EnuCCQE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___EnuCCQE___reconstructed, Entries= 56, Total sum= 40.3391
+ hist 1D QElikeALLAngles EnuCCQE reconstructed qelike_np
+ key h___QElikeALLAngles___qelike_np___EnuCCQE___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___EnuCCQE___response_migration, Entries= 56, Total sum= 40.3391
+ response QElikeALLAngles EnuCCQE response_migration qelike_np
+ key h___QElikeALLAngles___qelike_np___EnuCCQE___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___EnuCCQE___response_reco, Entries= 56, Total sum= 40.3391
+ response QElikeALLAngles EnuCCQE response_reco qelike_np
+ key h___QElikeALLAngles___qelike_np___EnuCCQE___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___EnuCCQE___response_truth, Entries= 56, Total sum= 41.0443
+ response QElikeALLAngles EnuCCQE response_truth qelike_np
+ key h___QElikeALLAngles___qelike_np___EnuCCQE___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___EnuCCQE___selected_truth, Entries= 56, Total sum= 41.0443
+ hist 1D QElikeALLAngles EnuCCQE selected_truth qelike_np
+ key h___QElikeALLAngles___qelike_np___EnuCCQE___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___EnuCCQE___all_truth, Entries= 113, Total sum= 95.8777
+ hist 1D QElikeALLAngles EnuCCQE all_truth qelike_np
+ key h___QElikeALLAngles___qelikenot_np___EnuCCQE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelikenot_np___EnuCCQE___reconstructed, Entries= 12, Total sum= 8.72052
+ hist 1D QElikeALLAngles EnuCCQE reconstructed qelikenot_np
+ key h___QElike___data___Q2QE___reconstructed
+ add a variable: Q2QE
+ Done with parsing
+TH1.Print Name  = h___QElike___data___Q2QE___reconstructed, Entries= 2130, Total sum= 2079
+ hist 1D QElike Q2QE reconstructed data
+ key h___QElike___qelike___Q2QE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Q2QE___reconstructed, Entries= 55, Total sum= 40.2228
+ hist 1D QElike Q2QE reconstructed qelike
+ key h___QElike___qelike___Q2QE___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Q2QE___response_migration, Entries= 55, Total sum= 40.2228
+ response QElike Q2QE response_migration qelike
+ key h___QElike___qelike___Q2QE___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Q2QE___response_reco, Entries= 55, Total sum= 40.2228
+ response QElike Q2QE response_reco qelike
+ key h___QElike___qelike___Q2QE___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Q2QE___response_truth, Entries= 55, Total sum= 41.104
+ response QElike Q2QE response_truth qelike
+ key h___QElike___qelike___Q2QE___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Q2QE___selected_truth, Entries= 55, Total sum= 41.104
+ hist 1D QElike Q2QE selected_truth qelike
+ key h___QElike___qelike___Q2QE___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___Q2QE___all_truth, Entries= 86, Total sum= 65.8348
+ hist 1D QElike Q2QE all_truth qelike
+ key h___QElike___qelikenot___Q2QE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElike___qelikenot___Q2QE___reconstructed, Entries= 13, Total sum= 9.57593
+ hist 1D QElike Q2QE reconstructed qelikenot
+ key h___QElikeNP___data___Q2QE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___data___Q2QE___reconstructed, Entries= 2130, Total sum= 2079
+ hist 1D QElikeNP Q2QE reconstructed data
+ key h___QElikeNP___qelike_np___Q2QE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Q2QE___reconstructed, Entries= 56, Total sum= 41.0782
+ hist 1D QElikeNP Q2QE reconstructed qelike_np
+ key h___QElikeNP___qelike_np___Q2QE___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Q2QE___response_migration, Entries= 56, Total sum= 41.0782
+ response QElikeNP Q2QE response_migration qelike_np
+ key h___QElikeNP___qelike_np___Q2QE___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Q2QE___response_reco, Entries= 56, Total sum= 41.0782
+ response QElikeNP Q2QE response_reco qelike_np
+ key h___QElikeNP___qelike_np___Q2QE___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Q2QE___response_truth, Entries= 56, Total sum= 41.9594
+ response QElikeNP Q2QE response_truth qelike_np
+ key h___QElikeNP___qelike_np___Q2QE___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Q2QE___selected_truth, Entries= 56, Total sum= 41.9594
+ hist 1D QElikeNP Q2QE selected_truth qelike_np
+ key h___QElikeNP___qelike_np___Q2QE___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___Q2QE___all_truth, Entries= 108, Total sum= 89.8511
+ hist 1D QElikeNP Q2QE all_truth qelike_np
+ key h___QElikeNP___qelikenot_np___Q2QE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelikenot_np___Q2QE___reconstructed, Entries= 12, Total sum= 8.72052
+ hist 1D QElikeNP Q2QE reconstructed qelikenot_np
+ key h___QElikeALLAngles___data___Q2QE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___data___Q2QE___reconstructed, Entries= 2130, Total sum= 2079
+ hist 1D QElikeALLAngles Q2QE reconstructed data
+ key h___QElikeALLAngles___qelike_np___Q2QE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Q2QE___reconstructed, Entries= 56, Total sum= 41.0782
+ hist 1D QElikeALLAngles Q2QE reconstructed qelike_np
+ key h___QElikeALLAngles___qelike_np___Q2QE___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Q2QE___response_migration, Entries= 56, Total sum= 41.0782
+ response QElikeALLAngles Q2QE response_migration qelike_np
+ key h___QElikeALLAngles___qelike_np___Q2QE___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Q2QE___response_reco, Entries= 56, Total sum= 41.0782
+ response QElikeALLAngles Q2QE response_reco qelike_np
+ key h___QElikeALLAngles___qelike_np___Q2QE___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Q2QE___response_truth, Entries= 56, Total sum= 41.9594
+ response QElikeALLAngles Q2QE response_truth qelike_np
+ key h___QElikeALLAngles___qelike_np___Q2QE___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Q2QE___selected_truth, Entries= 56, Total sum= 41.9594
+ hist 1D QElikeALLAngles Q2QE selected_truth qelike_np
+ key h___QElikeALLAngles___qelike_np___Q2QE___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___Q2QE___all_truth, Entries= 113, Total sum= 94.1671
+ hist 1D QElikeALLAngles Q2QE all_truth qelike_np
+ key h___QElikeALLAngles___qelikenot_np___Q2QE___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelikenot_np___Q2QE___reconstructed, Entries= 12, Total sum= 8.72052
+ hist 1D QElikeALLAngles Q2QE reconstructed qelikenot_np
+ key h___QElike___data___ptmu___reconstructed
+ add a variable: ptmu
+ Done with parsing
+TH1.Print Name  = h___QElike___data___ptmu___reconstructed, Entries= 2130, Total sum= 2126
+ hist 1D QElike ptmu reconstructed data
+ key h___QElike___qelike___ptmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___ptmu___reconstructed, Entries= 55, Total sum= 41.104
+ hist 1D QElike ptmu reconstructed qelike
+ key h___QElike___qelike___ptmu___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___ptmu___response_migration, Entries= 55, Total sum= 41.104
+ response QElike ptmu response_migration qelike
+ key h___QElike___qelike___ptmu___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___ptmu___response_reco, Entries= 55, Total sum= 41.104
+ response QElike ptmu response_reco qelike
+ key h___QElike___qelike___ptmu___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___ptmu___response_truth, Entries= 55, Total sum= 41.104
+ response QElike ptmu response_truth qelike
+ key h___QElike___qelike___ptmu___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___ptmu___selected_truth, Entries= 55, Total sum= 41.104
+ hist 1D QElike ptmu selected_truth qelike
+ key h___QElike___qelike___ptmu___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___ptmu___all_truth, Entries= 86, Total sum= 67.5453
+ hist 1D QElike ptmu all_truth qelike
+ key h___QElike___qelikenot___ptmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElike___qelikenot___ptmu___reconstructed, Entries= 13, Total sum= 9.57593
+ hist 1D QElike ptmu reconstructed qelikenot
+ key h___QElikeNP___data___ptmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___data___ptmu___reconstructed, Entries= 2130, Total sum= 2126
+ hist 1D QElikeNP ptmu reconstructed data
+ key h___QElikeNP___qelike_np___ptmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___ptmu___reconstructed, Entries= 56, Total sum= 41.9594
+ hist 1D QElikeNP ptmu reconstructed qelike_np
+ key h___QElikeNP___qelike_np___ptmu___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___ptmu___response_migration, Entries= 56, Total sum= 41.9594
+ response QElikeNP ptmu response_migration qelike_np
+ key h___QElikeNP___qelike_np___ptmu___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___ptmu___response_reco, Entries= 56, Total sum= 41.9594
+ response QElikeNP ptmu response_reco qelike_np
+ key h___QElikeNP___qelike_np___ptmu___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___ptmu___response_truth, Entries= 56, Total sum= 41.9594
+ response QElikeNP ptmu response_truth qelike_np
+ key h___QElikeNP___qelike_np___ptmu___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___ptmu___selected_truth, Entries= 56, Total sum= 41.9594
+ hist 1D QElikeNP ptmu selected_truth qelike_np
+ key h___QElikeNP___qelike_np___ptmu___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___ptmu___all_truth, Entries= 108, Total sum= 91.5616
+ hist 1D QElikeNP ptmu all_truth qelike_np
+ key h___QElikeNP___qelikenot_np___ptmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelikenot_np___ptmu___reconstructed, Entries= 12, Total sum= 8.72052
+ hist 1D QElikeNP ptmu reconstructed qelikenot_np
+ key h___QElikeALLAngles___data___ptmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___data___ptmu___reconstructed, Entries= 2130, Total sum= 2126
+ hist 1D QElikeALLAngles ptmu reconstructed data
+ key h___QElikeALLAngles___qelike_np___ptmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___ptmu___reconstructed, Entries= 56, Total sum= 41.9594
+ hist 1D QElikeALLAngles ptmu reconstructed qelike_np
+ key h___QElikeALLAngles___qelike_np___ptmu___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___ptmu___response_migration, Entries= 56, Total sum= 41.9594
+ response QElikeALLAngles ptmu response_migration qelike_np
+ key h___QElikeALLAngles___qelike_np___ptmu___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___ptmu___response_reco, Entries= 56, Total sum= 41.9594
+ response QElikeALLAngles ptmu response_reco qelike_np
+ key h___QElikeALLAngles___qelike_np___ptmu___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___ptmu___response_truth, Entries= 56, Total sum= 41.9594
+ response QElikeALLAngles ptmu response_truth qelike_np
+ key h___QElikeALLAngles___qelike_np___ptmu___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___ptmu___selected_truth, Entries= 56, Total sum= 41.9594
+ hist 1D QElikeALLAngles ptmu selected_truth qelike_np
+ key h___QElikeALLAngles___qelike_np___ptmu___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___ptmu___all_truth, Entries= 113, Total sum= 95.8777
+ hist 1D QElikeALLAngles ptmu all_truth qelike_np
+ key h___QElikeALLAngles___qelikenot_np___ptmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelikenot_np___ptmu___reconstructed, Entries= 12, Total sum= 8.72052
+ hist 1D QElikeALLAngles ptmu reconstructed qelikenot_np
+ key h___QElike___data___pzmu___reconstructed
+ add a variable: pzmu
+ Done with parsing
+TH1.Print Name  = h___QElike___data___pzmu___reconstructed, Entries= 2130, Total sum= 2112
+ hist 1D QElike pzmu reconstructed data
+ key h___QElike___qelike___pzmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___pzmu___reconstructed, Entries= 55, Total sum= 40.7094
+ hist 1D QElike pzmu reconstructed qelike
+ key h___QElike___qelike___pzmu___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___pzmu___response_migration, Entries= 55, Total sum= 40.7094
+ response QElike pzmu response_migration qelike
+ key h___QElike___qelike___pzmu___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___pzmu___response_reco, Entries= 55, Total sum= 40.7094
+ response QElike pzmu response_reco qelike
+ key h___QElike___qelike___pzmu___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___pzmu___response_truth, Entries= 55, Total sum= 40.7094
+ response QElike pzmu response_truth qelike
+ key h___QElike___qelike___pzmu___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___pzmu___selected_truth, Entries= 55, Total sum= 40.7094
+ hist 1D QElike pzmu selected_truth qelike
+ key h___QElike___qelike___pzmu___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElike___qelike___pzmu___all_truth, Entries= 86, Total sum= 67.5453
+ hist 1D QElike pzmu all_truth qelike
+ key h___QElike___qelikenot___pzmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElike___qelikenot___pzmu___reconstructed, Entries= 13, Total sum= 9.57593
+ hist 1D QElike pzmu reconstructed qelikenot
+ key h___QElikeNP___data___pzmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___data___pzmu___reconstructed, Entries= 2130, Total sum= 2112
+ hist 1D QElikeNP pzmu reconstructed data
+ key h___QElikeNP___qelike_np___pzmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___pzmu___reconstructed, Entries= 56, Total sum= 41.5648
+ hist 1D QElikeNP pzmu reconstructed qelike_np
+ key h___QElikeNP___qelike_np___pzmu___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___pzmu___response_migration, Entries= 56, Total sum= 41.5648
+ response QElikeNP pzmu response_migration qelike_np
+ key h___QElikeNP___qelike_np___pzmu___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___pzmu___response_reco, Entries= 56, Total sum= 41.5648
+ response QElikeNP pzmu response_reco qelike_np
+ key h___QElikeNP___qelike_np___pzmu___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___pzmu___response_truth, Entries= 56, Total sum= 41.5648
+ response QElikeNP pzmu response_truth qelike_np
+ key h___QElikeNP___qelike_np___pzmu___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___pzmu___selected_truth, Entries= 56, Total sum= 41.5648
+ hist 1D QElikeNP pzmu selected_truth qelike_np
+ key h___QElikeNP___qelike_np___pzmu___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelike_np___pzmu___all_truth, Entries= 108, Total sum= 91.5616
+ hist 1D QElikeNP pzmu all_truth qelike_np
+ key h___QElikeNP___qelikenot_np___pzmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeNP___qelikenot_np___pzmu___reconstructed, Entries= 12, Total sum= 8.72052
+ hist 1D QElikeNP pzmu reconstructed qelikenot_np
+ key h___QElikeALLAngles___data___pzmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___data___pzmu___reconstructed, Entries= 2130, Total sum= 2112
+ hist 1D QElikeALLAngles pzmu reconstructed data
+ key h___QElikeALLAngles___qelike_np___pzmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___pzmu___reconstructed, Entries= 56, Total sum= 41.5648
+ hist 1D QElikeALLAngles pzmu reconstructed qelike_np
+ key h___QElikeALLAngles___qelike_np___pzmu___response_migration
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___pzmu___response_migration, Entries= 56, Total sum= 41.5648
+ response QElikeALLAngles pzmu response_migration qelike_np
+ key h___QElikeALLAngles___qelike_np___pzmu___response_reco
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___pzmu___response_reco, Entries= 56, Total sum= 41.5648
+ response QElikeALLAngles pzmu response_reco qelike_np
+ key h___QElikeALLAngles___qelike_np___pzmu___response_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___pzmu___response_truth, Entries= 56, Total sum= 41.5648
+ response QElikeALLAngles pzmu response_truth qelike_np
+ key h___QElikeALLAngles___qelike_np___pzmu___selected_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___pzmu___selected_truth, Entries= 56, Total sum= 41.5648
+ hist 1D QElikeALLAngles pzmu selected_truth qelike_np
+ key h___QElikeALLAngles___qelike_np___pzmu___all_truth
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelike_np___pzmu___all_truth, Entries= 113, Total sum= 95.8777
+ hist 1D QElikeALLAngles pzmu all_truth qelike_np
+ key h___QElikeALLAngles___qelikenot_np___pzmu___reconstructed
+ Done with parsing
+TH1.Print Name  = h___QElikeALLAngles___qelikenot_np___pzmu___reconstructed, Entries= 12, Total sum= 8.72052
+ hist 1D QElikeALLAngles pzmu reconstructed qelikenot_np
+ key POT_summary
+ not parseable POT_summary
+ key pot
+ not parseable pot
+ just before 1D loop
+ Sample: QElike
+  Variable: Enu
+config  {
+	"QElike" : "qelike",
+	"QElikeALLAngles" : "qelike_np",
+	"QElikeNP" : "qelike_np"
+}
+config  {
+	"QElike" : "qelikenot",
+	"QElikeALLAngles" : "qelikenot_np",
+	"QElikeNP" : "qelikenot_np"
+}
+config  {
+	"QElike" : "data",
+	"QElikeALLAllAngles" : "data",
+	"QElikeNP" : "data"
+}
+ analyze Enu
+logscale Enu 0
+ starting on variable QElike Enu
+hists key all_truth
+ POTScaled qelike
+hists key reconstructed
+ POTScaled qelike
+ POTScaled qelikenot
+hists key selected_truth
+ POTScaled qelike
+TH1.Print Name  = h___QElike___data___Enu___reconstructed, Entries= 2130, Total sum= 2099
+TH1.Print Name  = h___QElike___qelike___Enu___reconstructed, Entries= 55, Total sum= 1352.86
+TH1.Print Name  = h___QElike___qelikenot___Enu___reconstructed, Entries= 13, Total sum= 328.108
+ response scaled by POT for Enu
+ Start MakeMC... 
+TH1.Print Name  = h_QElike_Enu_mc_tot, Entries= 68, Total sum= 1680.97
+ Start signal fraction... 
+TH1.Print Name  = h_QElike_Enu_signalfraction, Entries= 68, Total sum= 8.23404
+ Start background subtraction... 
+TH1.Print Name  = h_QElike_Enu_bkgsub, Entries= 218, Total sum= 1603.64
+ Start unfolding... 
+ use response unfolding for h_QElike_Enu
+ Migration matrix has size 43
+ Data has  size 43
+MnvH1D::FillSysErrorMatrix: h_QElike_Enu_bkgsub_unfolded creating systematic error matrix Unfolding
+Unfolding Vector Size: 1
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+TH1.Print Name  = h_QElike_Enu_bkgsub_unfolded, Entries= 14, Total sum= 1610.62
+MnvH1D::FillSysErrorMatrix: h_QElike_Enu_bkgsub_unfolded creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_Enu_bkgsub_unfolded creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded by h_QElike_Enu_bkgsub_unfoldederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded by h_QElike_Enu_bkgsub_unfoldederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded modifying systematic error matrix unfoldingCov
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded by h___QElike___qelike___Enu___selected_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded by h___QElike___qelike___Enu___selected_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded modifying systematic error matrix unfoldingCov
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+ Start efficiency correction... 
+start DoEfficiencyCorrection
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+clone unsmeared
+make efficiency
+MnvH1D::FillSysErrorMatrix: h_QElike_Enu_efficiency creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_Enu_efficiency creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Enu_efficiency by h___QElike___qelike___Enu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_efficiency modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Enu_efficiency by h___QElike___qelike___Enu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_efficiency modifying systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded by h_QElike_Enu_efficiencyerror matrix from h1 is scaled by 1^2/1^2
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded_effcorr modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded by h_QElike_Enu_efficiencyerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded_effcorr modifying systematic error matrix unfoldingCov
+TH1.Print Name  = h_QElike_Enu_bkgsub_unfolded_effcorr, Entries= 14, Total sum= 3588.28
+TH1.Print Name  = h_QElike_Enu_efficiency, Entries= 86, Total sum= 8.40451
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded_effcorr by h___QElike___qelike___Enu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded_effcorr modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded_effcorr by h___QElike___qelike___Enu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded_effcorr modifying systematic error matrix unfoldingCov
+ Start normalization... 
+read in configuration file /home/gilligas/gitMinerva/CCQENu/make_hists/v_08/Variables_v8.json
+ NC: found 1D variable config for Enu
+ fluxnorm: 1, xfluxnorm: 0, yfluxnorm: 0
+ Using energy dependent flux normalization. 
+MnvH1D::FillSysErrorMatrix: h___QElike___qelike___Enu___all_truth_Flux creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h___QElike___qelike___Enu___all_truth_Flux creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded_effcorr_sigma by h___QElike___qelike___Enu___all_truth_Fluxerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded_effcorr_sigma by h___QElike___qelike___Enu___all_truth_Fluxerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix unfoldingCov
+MnvH1D::FillSysErrorMatrix: h_QElike_Enu_sigmaMC creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_Enu_sigmaMC creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Enu_sigmaMC by h___QElike___qelike___Enu___all_truth_Fluxerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_sigmaMC modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Enu_sigmaMC by h___QElike___qelike___Enu___all_truth_Fluxerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_sigmaMC modifying systematic error matrix unfoldingCov
+TH1.Print Name  = h_QElike_Enu_bkgsub_unfolded_effcorr_sigma, Entries= 5, Total sum= 2.24511e-37
+TH1.Print Name  = h_QElike_Enu_bkgsub_unfolded_effcorr_sigma, Entries= 5, Total sum= 2.24511e-37
+ fSumw[0]=0, x=1.45833, error=0
+ fSumw[1]=0, x=2.25, error=0
+ fSumw[2]=0, x=2.75, error=0
+ fSumw[3]=4.02784e-39, x=3.25, error=3.19069e-39
+ fSumw[4]=5.4096e-39, x=3.75, error=2.99231e-39
+ fSumw[5]=3.84477e-39, x=4.25, error=3.85569e-39
+ fSumw[6]=3.3595e-39, x=4.75, error=1.73525e-39
+ fSumw[7]=4.84113e-39, x=5.5, error=1.55709e-39
+ fSumw[8]=5.07273e-39, x=6.5, error=1.13652e-39
+ fSumw[9]=1.68314e-39, x=7.5, error=5.66824e-40
+ fSumw[10]=8.17963e-40, x=8.5, error=5.24698e-40
+ fSumw[11]=7.22162e-38, x=9.5, error=6.97539e-38
+ fSumw[12]=1.23238e-37, x=12.5, error=6.39906e-38
+ fSumw[13]=0, x=15.5417, error=0
+TH1.Print Name  = h_QElike_Enu_sigmaMC, Entries= 10, Total sum= 8.66383e-38
+MnvH1D::FillSysErrorMatrix: h_QElike_Enu_sigmaMC creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_Enu_sigmaMC creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded_effcorr_sigma by h_QElike_Enu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Enu_bkgsub_unfolded_effcorr_sigma by h_QElike_Enu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Enu_sigmaMC by h_QElike_Enu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_sigmaMC modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Enu_sigmaMC by h_QElike_Enu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Enu_sigmaMC modifying systematic error matrix unfoldingCov
+sigma Enu 7.09144e-37 2.24511e-37 2.87106e-37 8.66383e-38
+ end of loop over types 
+0
+  Variable: EnuCCQE
+config  {
+	"QElike" : "qelike",
+	"QElikeALLAngles" : "qelike_np",
+	"QElikeNP" : "qelike_np"
+}
+config  {
+	"QElike" : "qelikenot",
+	"QElikeALLAngles" : "qelikenot_np",
+	"QElikeNP" : "qelikenot_np"
+}
+config  {
+	"QElike" : "data",
+	"QElikeALLAllAngles" : "data",
+	"QElikeNP" : "data"
+}
+ analyze EnuCCQE
+logscale EnuCCQE 0
+ starting on variable QElike EnuCCQE
+hists key all_truth
+ POTScaled qelike
+hists key reconstructed
+ POTScaled qelike
+ POTScaled qelikenot
+hists key selected_truth
+ POTScaled qelike
+TH1.Print Name  = h___QElike___data___EnuCCQE___reconstructed, Entries= 2130, Total sum= 2099
+TH1.Print Name  = h___QElike___qelike___EnuCCQE___reconstructed, Entries= 55, Total sum= 1352.86
+TH1.Print Name  = h___QElike___qelikenot___EnuCCQE___reconstructed, Entries= 13, Total sum= 328.108
+ response scaled by POT for EnuCCQE
+ Start MakeMC... 
+TH1.Print Name  = h_QElike_EnuCCQE_mc_tot, Entries= 68, Total sum= 1680.97
+ Start signal fraction... 
+TH1.Print Name  = h_QElike_EnuCCQE_signalfraction, Entries= 68, Total sum= 8.23404
+ Start background subtraction... 
+TH1.Print Name  = h_QElike_EnuCCQE_bkgsub, Entries= 218, Total sum= 1603.64
+ Start unfolding... 
+ use response unfolding for h_QElike_EnuCCQE
+ Migration matrix has size 43
+ Data has  size 43
+MnvH1D::FillSysErrorMatrix: h_QElike_EnuCCQE_bkgsub_unfolded creating systematic error matrix Unfolding
+Unfolding Vector Size: 1
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+TH1.Print Name  = h_QElike_EnuCCQE_bkgsub_unfolded, Entries= 14, Total sum= 1610.62
+MnvH1D::FillSysErrorMatrix: h_QElike_EnuCCQE_bkgsub_unfolded creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_EnuCCQE_bkgsub_unfolded creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded by h_QElike_EnuCCQE_bkgsub_unfoldederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded by h_QElike_EnuCCQE_bkgsub_unfoldederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded modifying systematic error matrix unfoldingCov
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded by h___QElike___qelike___EnuCCQE___selected_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded by h___QElike___qelike___EnuCCQE___selected_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded modifying systematic error matrix unfoldingCov
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+ Start efficiency correction... 
+start DoEfficiencyCorrection
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+clone unsmeared
+make efficiency
+MnvH1D::FillSysErrorMatrix: h_QElike_EnuCCQE_efficiency creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_EnuCCQE_efficiency creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_EnuCCQE_efficiency by h___QElike___qelike___EnuCCQE___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_efficiency modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_EnuCCQE_efficiency by h___QElike___qelike___EnuCCQE___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_efficiency modifying systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded by h_QElike_EnuCCQE_efficiencyerror matrix from h1 is scaled by 1^2/1^2
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded_effcorr modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded by h_QElike_EnuCCQE_efficiencyerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded_effcorr modifying systematic error matrix unfoldingCov
+TH1.Print Name  = h_QElike_EnuCCQE_bkgsub_unfolded_effcorr, Entries= 28, Total sum= 3191.98
+TH1.Print Name  = h_QElike_EnuCCQE_efficiency, Entries= 86, Total sum= 7.25019
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded_effcorr by h___QElike___qelike___EnuCCQE___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded_effcorr modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded_effcorr by h___QElike___qelike___EnuCCQE___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded_effcorr modifying systematic error matrix unfoldingCov
+ Start normalization... 
+read in configuration file /home/gilligas/gitMinerva/CCQENu/make_hists/v_08/Variables_v8.json
+ NC: found 1D variable config for EnuCCQE
+ fluxnorm: 1, xfluxnorm: 0, yfluxnorm: 0
+ Using energy dependent flux normalization. 
+MnvH1D::FillSysErrorMatrix: h___QElike___qelike___EnuCCQE___all_truth_Flux creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h___QElike___qelike___EnuCCQE___all_truth_Flux creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded_effcorr_sigma by h___QElike___qelike___EnuCCQE___all_truth_Fluxerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded_effcorr_sigma by h___QElike___qelike___EnuCCQE___all_truth_Fluxerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix unfoldingCov
+MnvH1D::FillSysErrorMatrix: h_QElike_EnuCCQE_sigmaMC creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_EnuCCQE_sigmaMC creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_EnuCCQE_sigmaMC by h___QElike___qelike___EnuCCQE___all_truth_Fluxerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_sigmaMC modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_EnuCCQE_sigmaMC by h___QElike___qelike___EnuCCQE___all_truth_Fluxerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_sigmaMC modifying systematic error matrix unfoldingCov
+TH1.Print Name  = h_QElike_EnuCCQE_bkgsub_unfolded_effcorr_sigma, Entries= 7, Total sum= 1.78258e-37
+TH1.Print Name  = h_QElike_EnuCCQE_bkgsub_unfolded_effcorr_sigma, Entries= 7, Total sum= 1.78258e-37
+ fSumw[0]=0, x=1.45833, error=0
+ fSumw[1]=0, x=2.25, error=0
+ fSumw[2]=0, x=2.75, error=0
+ fSumw[3]=5.2002e-39, x=3.25, error=4.78792e-39
+ fSumw[4]=6.02981e-39, x=3.75, error=2.86096e-39
+ fSumw[5]=4.85749e-39, x=4.25, error=3.06403e-39
+ fSumw[6]=2.49265e-39, x=4.75, error=1.36462e-39
+ fSumw[7]=4.23459e-39, x=5.5, error=1.43331e-39
+ fSumw[8]=5.69766e-39, x=6.5, error=1.23068e-39
+ fSumw[9]=1.5578e-39, x=7.5, error=5.60864e-40
+ fSumw[10]=8.88405e-40, x=8.5, error=3.91016e-40
+ fSumw[11]=2.26637e-38, x=9.5, error=1.43233e-38
+ fSumw[12]=1.24635e-37, x=12.5, error=6.46882e-38
+ fSumw[13]=0, x=15.5417, error=0
+TH1.Print Name  = h_QElike_EnuCCQE_sigmaMC, Entries= 10, Total sum= 8.51518e-38
+MnvH1D::FillSysErrorMatrix: h_QElike_EnuCCQE_sigmaMC creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_EnuCCQE_sigmaMC creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded_effcorr_sigma by h_QElike_EnuCCQE_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_EnuCCQE_bkgsub_unfolded_effcorr_sigma by h_QElike_EnuCCQE_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_EnuCCQE_sigmaMC by h_QElike_EnuCCQE_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_sigmaMC modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_EnuCCQE_sigmaMC by h_QElike_EnuCCQE_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_EnuCCQE_sigmaMC modifying systematic error matrix unfoldingCov
+sigma EnuCCQE 6.67509e-37 1.78258e-37 2.8507e-37 8.51518e-38
+ end of loop over types 
+0
+  Variable: Q2QE
+config  {
+	"QElike" : "qelike",
+	"QElikeALLAngles" : "qelike_np",
+	"QElikeNP" : "qelike_np"
+}
+config  {
+	"QElike" : "qelikenot",
+	"QElikeALLAngles" : "qelikenot_np",
+	"QElikeNP" : "qelikenot_np"
+}
+config  {
+	"QElike" : "data",
+	"QElikeALLAllAngles" : "data",
+	"QElikeNP" : "data"
+}
+ analyze Q2QE
+logscale Q2QE 1
+ starting on variable QElike Q2QE
+hists key all_truth
+ POTScaled qelike
+hists key reconstructed
+ POTScaled qelike
+ POTScaled qelikenot
+hists key selected_truth
+ POTScaled qelike
+TH1.Print Name  = h___QElike___data___Q2QE___reconstructed, Entries= 2130, Total sum= 2079
+TH1.Print Name  = h___QElike___qelike___Q2QE___reconstructed, Entries= 55, Total sum= 1378.18
+TH1.Print Name  = h___QElike___qelikenot___Q2QE___reconstructed, Entries= 13, Total sum= 328.108
+ response scaled by POT for Q2QE
+ Start MakeMC... 
+TH1.Print Name  = h_QElike_Q2QE_mc_tot, Entries= 68, Total sum= 1706.29
+ Start signal fraction... 
+TH1.Print Name  = h_QElike_Q2QE_signalfraction, Entries= 68, Total sum= 10.322
+ Start background subtraction... 
+TH1.Print Name  = h_QElike_Q2QE_bkgsub, Entries= 327, Total sum= 1693.93
+ Start unfolding... 
+ use response unfolding for h_QElike_Q2QE
+ Migration matrix has size 43
+ Data has  size 43
+MnvH1D::FillSysErrorMatrix: h_QElike_Q2QE_bkgsub_unfolded creating systematic error matrix Unfolding
+Unfolding Vector Size: 1
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+TH1.Print Name  = h_QElike_Q2QE_bkgsub_unfolded, Entries= 16, Total sum= 1740.93
+MnvH1D::FillSysErrorMatrix: h_QElike_Q2QE_bkgsub_unfolded creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_Q2QE_bkgsub_unfolded creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded by h_QElike_Q2QE_bkgsub_unfoldederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded by h_QElike_Q2QE_bkgsub_unfoldederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded modifying systematic error matrix unfoldingCov
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded by h___QElike___qelike___Q2QE___selected_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded by h___QElike___qelike___Q2QE___selected_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded modifying systematic error matrix unfoldingCov
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+ Start efficiency correction... 
+start DoEfficiencyCorrection
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+clone unsmeared
+make efficiency
+MnvH1D::FillSysErrorMatrix: h_QElike_Q2QE_efficiency creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_Q2QE_efficiency creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Q2QE_efficiency by h___QElike___qelike___Q2QE___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_efficiency modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Q2QE_efficiency by h___QElike___qelike___Q2QE___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_efficiency modifying systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded by h_QElike_Q2QE_efficiencyerror matrix from h1 is scaled by 1^2/1^2
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded_effcorr modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded by h_QElike_Q2QE_efficiencyerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded_effcorr modifying systematic error matrix unfoldingCov
+TH1.Print Name  = h_QElike_Q2QE_bkgsub_unfolded_effcorr, Entries= 72, Total sum= 2448.07
+TH1.Print Name  = h_QElike_Q2QE_efficiency, Entries= 86, Total sum= 7.37599
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded_effcorr by h___QElike___qelike___Q2QE___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded_effcorr modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded_effcorr by h___QElike___qelike___Q2QE___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded_effcorr modifying systematic error matrix unfoldingCov
+ Start normalization... 
+read in configuration file /home/gilligas/gitMinerva/CCQENu/make_hists/v_08/Variables_v8.json
+ NC: found 1D variable config for Q2QE
+ fluxnorm: 0, xfluxnorm: 0, yfluxnorm: 0
+ Using flat flux normalization. 
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-gen2thin-pdg14-minervame5A_rearrangedUniverses.root
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-gen2thin-pdg-14-minervame5A_rearrangedUniverses.root
+Applying flux constraint to nu histogram
+Applying flux constraint to nubar histogram
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-g4numiv6-pdg14-minervame5A_rearrangedUniverses.root
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-g4numiv6-pdg-14-minervame5A_rearrangedUniverses.root
+MnvH1D::FillSysErrorMatrix: reweightedflux_integrated creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: reweightedflux_integrated creating systematic error matrix unfoldingCov
+Warning in <PlotUtils::MnvH1D::MnvH1D::PopVertErrorBand>: There is no vertical error band with name "Flux_BeamFocus".  Returning NULL.
+Warning in <PlotUtils::MnvH1D::MnvH1D::PopVertErrorBand>: There is no vertical error band with name "ppfx1_Total".  Returning NULL.
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded_effcorr_sigma by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded_effcorr_sigma by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix unfoldingCov
+MnvH1D::FillSysErrorMatrix: h_QElike_Q2QE_sigmaMC creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_Q2QE_sigmaMC creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Q2QE_sigmaMC by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_sigmaMC modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Q2QE_sigmaMC by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_sigmaMC modifying systematic error matrix unfoldingCov
+TH1.Print Name  = h_QElike_Q2QE_bkgsub_unfolded_effcorr_sigma, Entries= 72, Total sum= 4.45393e-39
+TH1.Print Name  = h_QElike_Q2QE_bkgsub_unfolded_effcorr_sigma, Entries= 72, Total sum= 4.45393e-39
+ fSumw[0]=0, x=-0.0703929, error=0
+ fSumw[1]=0, x=0.003625, error=0
+ fSumw[2]=0, x=0.009375, error=0
+ fSumw[3]=3.88798e-41, x=0.01875, error=1.23575e-41
+ fSumw[4]=2.52385e-40, x=0.03125, error=1.74396e-40
+ fSumw[5]=0, x=0.04375, error=0
+ fSumw[6]=6.00015e-40, x=0.075, error=1.3222e-40
+ fSumw[7]=7.45758e-40, x=0.15, error=1.49434e-40
+ fSumw[8]=4.10114e-40, x=0.25, error=2.09247e-40
+ fSumw[9]=9.39942e-40, x=0.35, error=2.20968e-40
+ fSumw[10]=1.04472e-39, x=0.5, error=3.16271e-40
+ fSumw[11]=2.20817e-40, x=0.7, error=9.11532e-41
+ fSumw[12]=0, x=0.9, error=0
+ fSumw[13]=0, x=1.1, error=0
+ fSumw[14]=2.01307e-40, x=1.6, error=5.78797e-41
+ fSumw[15]=0, x=2.07139, error=0
+TH1.Print Name  = h_QElike_Q2QE_sigmaMC, Entries= 80, Total sum= 4.10403e-39
+MnvH1D::FillSysErrorMatrix: h_QElike_Q2QE_sigmaMC creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_Q2QE_sigmaMC creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded_effcorr_sigma by h_QElike_Q2QE_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Q2QE_bkgsub_unfolded_effcorr_sigma by h_QElike_Q2QE_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_Q2QE_sigmaMC by h_QElike_Q2QE_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_sigmaMC modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_Q2QE_sigmaMC by h_QElike_Q2QE_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_Q2QE_sigmaMC modifying systematic error matrix unfoldingCov
+sigma Q2QE 6.57375e-40 4.45393e-39 6.09239e-40 4.10403e-39
+ end of loop over types 
+0
+  Variable: ptmu
+config  {
+	"QElike" : "qelike",
+	"QElikeALLAngles" : "qelike_np",
+	"QElikeNP" : "qelike_np"
+}
+config  {
+	"QElike" : "qelikenot",
+	"QElikeALLAngles" : "qelikenot_np",
+	"QElikeNP" : "qelikenot_np"
+}
+config  {
+	"QElike" : "data",
+	"QElikeALLAllAngles" : "data",
+	"QElikeNP" : "data"
+}
+ analyze ptmu
+logscale ptmu 0
+ starting on variable QElike ptmu
+hists key all_truth
+ POTScaled qelike
+hists key reconstructed
+ POTScaled qelike
+ POTScaled qelikenot
+hists key selected_truth
+ POTScaled qelike
+TH1.Print Name  = h___QElike___data___ptmu___reconstructed, Entries= 2130, Total sum= 2126
+TH1.Print Name  = h___QElike___qelike___ptmu___reconstructed, Entries= 55, Total sum= 1408.38
+TH1.Print Name  = h___QElike___qelikenot___ptmu___reconstructed, Entries= 13, Total sum= 328.108
+ response scaled by POT for ptmu
+ Start MakeMC... 
+TH1.Print Name  = h_QElike_ptmu_mc_tot, Entries= 68, Total sum= 1736.49
+ Start signal fraction... 
+TH1.Print Name  = h_QElike_ptmu_signalfraction, Entries= 68, Total sum= 9.12403
+ Start background subtraction... 
+TH1.Print Name  = h_QElike_ptmu_bkgsub, Entries= 236, Total sum= 1683.17
+ Start unfolding... 
+ use response unfolding for h_QElike_ptmu
+ Migration matrix has size 43
+ Data has  size 43
+MnvH1D::FillSysErrorMatrix: h_QElike_ptmu_bkgsub_unfolded creating systematic error matrix Unfolding
+Unfolding Vector Size: 1
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+TH1.Print Name  = h_QElike_ptmu_bkgsub_unfolded, Entries= 15, Total sum= 1683.17
+MnvH1D::FillSysErrorMatrix: h_QElike_ptmu_bkgsub_unfolded creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_ptmu_bkgsub_unfolded creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded by h_QElike_ptmu_bkgsub_unfoldederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded by h_QElike_ptmu_bkgsub_unfoldederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded modifying systematic error matrix unfoldingCov
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded by h___QElike___qelike___ptmu___selected_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded by h___QElike___qelike___ptmu___selected_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded modifying systematic error matrix unfoldingCov
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+ Start efficiency correction... 
+start DoEfficiencyCorrection
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+clone unsmeared
+make efficiency
+MnvH1D::FillSysErrorMatrix: h_QElike_ptmu_efficiency creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_ptmu_efficiency creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_ptmu_efficiency by h___QElike___qelike___ptmu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_efficiency modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_ptmu_efficiency by h___QElike___qelike___ptmu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_efficiency modifying systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded by h_QElike_ptmu_efficiencyerror matrix from h1 is scaled by 1^2/1^2
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded_effcorr modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded by h_QElike_ptmu_efficiencyerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded_effcorr modifying systematic error matrix unfoldingCov
+TH1.Print Name  = h_QElike_ptmu_bkgsub_unfolded_effcorr, Entries= 64, Total sum= 2534.36
+TH1.Print Name  = h_QElike_ptmu_efficiency, Entries= 86, Total sum= 6.31325
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded_effcorr by h___QElike___qelike___ptmu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded_effcorr modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded_effcorr by h___QElike___qelike___ptmu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded_effcorr modifying systematic error matrix unfoldingCov
+ Start normalization... 
+read in configuration file /home/gilligas/gitMinerva/CCQENu/make_hists/v_08/Variables_v8.json
+ NC: found 1D variable config for ptmu
+ fluxnorm: 0, xfluxnorm: 0, yfluxnorm: 0
+ Using flat flux normalization. 
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-gen2thin-pdg14-minervame5A_rearrangedUniverses.root
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-gen2thin-pdg-14-minervame5A_rearrangedUniverses.root
+Applying flux constraint to nu histogram
+Applying flux constraint to nubar histogram
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-g4numiv6-pdg14-minervame5A_rearrangedUniverses.root
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-g4numiv6-pdg-14-minervame5A_rearrangedUniverses.root
+MnvH1D::FillSysErrorMatrix: reweightedflux_integrated creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: reweightedflux_integrated creating systematic error matrix unfoldingCov
+Warning in <PlotUtils::MnvH1D::MnvH1D::PopVertErrorBand>: There is no vertical error band with name "Flux_BeamFocus".  Returning NULL.
+Warning in <PlotUtils::MnvH1D::MnvH1D::PopVertErrorBand>: There is no vertical error band with name "ppfx1_Total".  Returning NULL.
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded_effcorr_sigma by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded_effcorr_sigma by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix unfoldingCov
+MnvH1D::FillSysErrorMatrix: h_QElike_ptmu_sigmaMC creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_ptmu_sigmaMC creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_ptmu_sigmaMC by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_sigmaMC modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_ptmu_sigmaMC by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_sigmaMC modifying systematic error matrix unfoldingCov
+TH1.Print Name  = h_QElike_ptmu_bkgsub_unfolded_effcorr_sigma, Entries= 64, Total sum= 4.61093e-39
+TH1.Print Name  = h_QElike_ptmu_bkgsub_unfolded_effcorr_sigma, Entries= 64, Total sum= 4.61093e-39
+ fSumw[0]=0, x=-0.0961538, error=0
+ fSumw[1]=0, x=0.0375, error=0
+ fSumw[2]=1.91759e-40, x=0.1125, error=1.65812e-40
+ fSumw[3]=6.55858e-40, x=0.2, error=2.5366e-40
+ fSumw[4]=4.16011e-40, x=0.2875, error=1.02094e-40
+ fSumw[5]=4.99019e-40, x=0.3625, error=1.47277e-40
+ fSumw[6]=3.75545e-40, x=0.4375, error=1.1317e-40
+ fSumw[7]=3.61379e-40, x=0.5125, error=1.81408e-40
+ fSumw[8]=1.13695e-39, x=0.625, error=3.4986e-40
+ fSumw[9]=8.58093e-40, x=0.775, error=1.90204e-40
+ fSumw[10]=0, x=0.925, error=0
+ fSumw[11]=1.1632e-40, x=1.125, error=4.16832e-41
+ fSumw[12]=0, x=1.375, error=0
+ fSumw[13]=0, x=2, error=0
+ fSumw[14]=0, x=2.59615, error=0
+TH1.Print Name  = h_QElike_ptmu_sigmaMC, Entries= 82, Total sum= 4.21066e-39
+MnvH1D::FillSysErrorMatrix: h_QElike_ptmu_sigmaMC creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_ptmu_sigmaMC creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded_effcorr_sigma by h_QElike_ptmu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_ptmu_bkgsub_unfolded_effcorr_sigma by h_QElike_ptmu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_ptmu_sigmaMC by h_QElike_ptmu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_sigmaMC modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_ptmu_sigmaMC by h_QElike_ptmu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_ptmu_sigmaMC modifying systematic error matrix unfoldingCov
+sigma ptmu 5.322e-40 4.61093e-39 5.37034e-40 4.21066e-39
+ end of loop over types 
+0
+  Variable: pzmu
+config  {
+	"QElike" : "qelike",
+	"QElikeALLAngles" : "qelike_np",
+	"QElikeNP" : "qelike_np"
+}
+config  {
+	"QElike" : "qelikenot",
+	"QElikeALLAngles" : "qelikenot_np",
+	"QElikeNP" : "qelikenot_np"
+}
+config  {
+	"QElike" : "data",
+	"QElikeALLAllAngles" : "data",
+	"QElikeNP" : "data"
+}
+ analyze pzmu
+logscale pzmu 0
+ starting on variable QElike pzmu
+hists key all_truth
+ POTScaled qelike
+hists key reconstructed
+ POTScaled qelike
+ POTScaled qelikenot
+hists key selected_truth
+ POTScaled qelike
+TH1.Print Name  = h___QElike___data___pzmu___reconstructed, Entries= 2130, Total sum= 2112
+TH1.Print Name  = h___QElike___qelike___pzmu___reconstructed, Entries= 55, Total sum= 1394.86
+TH1.Print Name  = h___QElike___qelikenot___pzmu___reconstructed, Entries= 13, Total sum= 328.108
+ response scaled by POT for pzmu
+ Start MakeMC... 
+TH1.Print Name  = h_QElike_pzmu_mc_tot, Entries= 68, Total sum= 1722.96
+ Start signal fraction... 
+TH1.Print Name  = h_QElike_pzmu_signalfraction, Entries= 68, Total sum= 8.14193
+ Start background subtraction... 
+TH1.Print Name  = h_QElike_pzmu_bkgsub, Entries= 245, Total sum= 1648.02
+ Start unfolding... 
+ use response unfolding for h_QElike_pzmu
+ Migration matrix has size 43
+ Data has  size 43
+MnvH1D::FillSysErrorMatrix: h_QElike_pzmu_bkgsub_unfolded creating systematic error matrix Unfolding
+Unfolding Vector Size: 1
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+TH1.Print Name  = h_QElike_pzmu_bkgsub_unfolded, Entries= 13, Total sum= 1648.02
+MnvH1D::FillSysErrorMatrix: h_QElike_pzmu_bkgsub_unfolded creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_pzmu_bkgsub_unfolded creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded by h_QElike_pzmu_bkgsub_unfoldederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded by h_QElike_pzmu_bkgsub_unfoldederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded modifying systematic error matrix unfoldingCov
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded by h___QElike___qelike___pzmu___selected_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded by h___QElike___qelike___pzmu___selected_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded modifying systematic error matrix unfoldingCov
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+ Start efficiency correction... 
+start DoEfficiencyCorrection
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+clone unsmeared
+make efficiency
+MnvH1D::FillSysErrorMatrix: h_QElike_pzmu_efficiency creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_pzmu_efficiency creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_pzmu_efficiency by h___QElike___qelike___pzmu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_efficiency modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_pzmu_efficiency by h___QElike___qelike___pzmu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_efficiency modifying systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded by h_QElike_pzmu_efficiencyerror matrix from h1 is scaled by 1^2/1^2
+Error in <operator=(const TMatrixT &)>: matrices not compatible
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded_effcorr modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded by h_QElike_pzmu_efficiencyerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded_effcorr modifying systematic error matrix unfoldingCov
+TH1.Print Name  = h_QElike_pzmu_bkgsub_unfolded_effcorr, Entries= 29, Total sum= 2958.48
+TH1.Print Name  = h_QElike_pzmu_efficiency, Entries= 86, Total sum= 4.91213
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded_effcorr by h___QElike___qelike___pzmu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded_effcorr modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded_effcorr by h___QElike___qelike___pzmu___all_trutherror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded_effcorr modifying systematic error matrix unfoldingCov
+ Start normalization... 
+read in configuration file /home/gilligas/gitMinerva/CCQENu/make_hists/v_08/Variables_v8.json
+ NC: found 1D variable config for pzmu
+ fluxnorm: 0, xfluxnorm: 0, yfluxnorm: 0
+ Using flat flux normalization. 
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-gen2thin-pdg14-minervame5A_rearrangedUniverses.root
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-gen2thin-pdg-14-minervame5A_rearrangedUniverses.root
+Applying flux constraint to nu histogram
+Applying flux constraint to nubar histogram
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-g4numiv6-pdg14-minervame5A_rearrangedUniverses.root
+FRW: this is the flux file I'm using: /home/gilligas/gitMinerva/opt/lib/data/flux/flux-g4numiv6-pdg-14-minervame5A_rearrangedUniverses.root
+MnvH1D::FillSysErrorMatrix: reweightedflux_integrated creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: reweightedflux_integrated creating systematic error matrix unfoldingCov
+Warning in <PlotUtils::MnvH1D::MnvH1D::PopVertErrorBand>: There is no vertical error band with name "Flux_BeamFocus".  Returning NULL.
+Warning in <PlotUtils::MnvH1D::MnvH1D::PopVertErrorBand>: There is no vertical error band with name "ppfx1_Total".  Returning NULL.
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded_effcorr_sigma by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded_effcorr_sigma by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix unfoldingCov
+MnvH1D::FillSysErrorMatrix: h_QElike_pzmu_sigmaMC creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_pzmu_sigmaMC creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_pzmu_sigmaMC by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_sigmaMC modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_pzmu_sigmaMC by reweightedflux_integratederror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_sigmaMC modifying systematic error matrix unfoldingCov
+TH1.Print Name  = h_QElike_pzmu_bkgsub_unfolded_effcorr_sigma, Entries= 29, Total sum= 5.38255e-39
+TH1.Print Name  = h_QElike_pzmu_bkgsub_unfolded_effcorr_sigma, Entries= 29, Total sum= 5.38255e-39
+ fSumw[0]=0, x=-0.681818, error=0
+ fSumw[1]=0, x=0.5, error=0
+ fSumw[2]=0, x=1.5, error=0
+ fSumw[3]=0, x=2.5, error=0
+ fSumw[4]=1.34458e-39, x=3.5, error=5.68283e-40
+ fSumw[5]=1.32651e-39, x=4.5, error=3.47624e-40
+ fSumw[6]=1.03332e-39, x=5.5, error=2.77001e-40
+ fSumw[7]=7.65038e-40, x=6.5, error=1.91867e-40
+ fSumw[8]=0, x=7.5, error=0
+ fSumw[9]=1.05637e-40, x=8.5, error=4.12116e-41
+ fSumw[10]=1.03082e-40, x=9.5, error=3.89264e-41
+ fSumw[11]=7.04381e-40, x=12.5, error=6.60981e-40
+ fSumw[12]=0, x=15.6818, error=0
+TH1.Print Name  = h_QElike_pzmu_sigmaMC, Entries= 82, Total sum= 4.21066e-39
+MnvH1D::FillSysErrorMatrix: h_QElike_pzmu_sigmaMC creating systematic error matrix Unfolding
+MnvH1D::FillSysErrorMatrix: h_QElike_pzmu_sigmaMC creating systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded_effcorr_sigma by h_QElike_pzmu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_pzmu_bkgsub_unfolded_effcorr_sigma by h_QElike_pzmu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_bkgsub_unfolded_effcorr_sigma modifying systematic error matrix unfoldingCov
+ MnvH1D::Divide h_QElike_pzmu_sigmaMC by h_QElike_pzmu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_sigmaMC modifying systematic error matrix Unfolding
+ MnvH1D::Divide h_QElike_pzmu_sigmaMC by h_QElike_pzmu_sigmaMCerror matrix from h1 is scaled by 1^2/1^2
+MnvH1D::FillSysErrorMAtrix: h_QElike_pzmu_sigmaMC modifying systematic error matrix unfoldingCov
+sigma pzmu 8.20007e-39 5.38255e-39 5.02915e-39 4.21066e-39
+ end of loop over types 
+0
+ Sample: QElikeALLAngles
+  Variable: Enu
+config  {
+	"QElike" : "qelike",
+	"QElikeALLAngles" : "qelike_np",
+	"QElikeNP" : "qelike_np"
+}
+config  {
+	"QElike" : "qelikenot",
+	"QElikeALLAngles" : "qelikenot_np",
+	"QElikeNP" : "qelikenot_np"
+}
+NuConfig: QElikeALLAngles is not a valid member of  maybe you have a default? 
+analyze_v8: /home/gilligas/gitMinerva/CCQENu/make_hists/utils/NuConfig.h:90: std::string NuConfig::GetString(std::string) const: Assertion `CheckMember(key)' failed.
