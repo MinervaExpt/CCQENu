@@ -42,6 +42,28 @@ public:
     std::cout << "read in configuration file " << f_filename << std::endl;
     return true;
   };
+  
+  bool ReadFromString(const std::string inputstring){
+    JSONCPP_STRING err;
+    //Json::CharReader reader;
+    
+//    f_filename  = filename;
+//    Json::CharReaderBuilder rbuilder;
+//    // Configure the Builder, then ...
+//    std::ifstream f_buffer(f_filename, std::ifstream::binary);
+//    std::string errs;
+    //https://github.com/open-source-parsers/jsoncpp/blob/master/example/readFromString/readFromString.cpp  says to use this somewhat cumbersome method instead the old one
+    Json::CharReaderBuilder builder;
+    const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
+        if (!reader->parse(inputstring.c_str(), inputstring.c_str()+ inputstring.length(), &f_config,
+                           &err)) {
+          std::cout << "error" << err << std::endl;
+        
+          return EXIT_FAILURE;
+        }
+
+    return true;
+  };
 
   NuConfig(const Json::Value value){  // can read in a value from the file and then use that read in a subconfig
     f_config = value;

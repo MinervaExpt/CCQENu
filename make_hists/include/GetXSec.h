@@ -446,24 +446,35 @@ template<class MnvHistoType>
                       std::map< std::string, std::map <std::string, MnvHistoType*> > histsND,
                       std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
                       NuConfig config, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
-                      MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG) {
+                      MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub) {
     bool binwid = true;
     int logscale = 0; // 0 for none, 1 for x, 2 for y, 3 for both
 
     // Get "category" tags set in config. Needs to match ones used in the event loop.
     //TODO: Make this a map in config.
     
-    
+    std::cout << " at the top of GetXsec" << sample <<  std::endl;
     // this can come out of the sample information:
-    
+    config.Print();
     NuConfig sigkey = config.GetConfig("signal");
     sigkey.Print();
     std::string sig = sigkey.GetString(sample);
-    NuConfig bkgkey = config.GetConfig("background");
-    std::string bkg = bkgkey.GetString(sample);
-    bkgkey.Print();
+    std::cout << " got sig " << sig << std::endl;
+    NuConfig bkgkey;
+    std::string bkg;
+    if (!hasbkgsub){
+      // this likely needs to be fixed
+      bkgkey = config.GetConfig("background");
+      bkgkey.Print();
+      std::cout << bkgkey.CheckMember(sample) << std::endl;
+      bkg = bkgkey.GetString(sample);
+      std::cout << " got bkg " << bkg << std::endl;
+    }
     NuConfig datkey = config.GetConfig("data");
     std::string dat = datkey.GetString(sample);
+    std::cout << " got dat " << dat << std::endl;
+    
+    
     datkey.Print();
     //std::string bkg = config.GetString("background");
     // std::string dat = config.GetString("data");
@@ -506,9 +517,17 @@ template<class MnvHistoType>
     // MnvHistoType can be MnvH1D or MnvH2D so far. Response is always MnvH2D.
     MnvHistoType* idatahist = histsND["reconstructed"][dat];
     MnvHistoType* imcsighist = histsND["reconstructed"][sig];
-    MnvHistoType* imcbkghist = histsND["reconstructed"][bkg];
+    MnvHistoType* imcbkghist;
+    MnvHistoType* ibkgsubhist;
+    if (!hasbkgsub){
+      imcbkghist = histsND["reconstructed"][bkg];
+    }
+  
+    if (hasbkgsub) ibkgsubhist = histsND["fitted"]["bkgsub"];
     MnvHistoType* iseltruhist = histsND["selected_truth"][sig];
     MnvHistoType* ialltruhist = histsND["all_truth"][sig];
+    
+    
     MnvH2D* iresponse = responseND["response_migration"][sig];
     // TODO: POTScale by if (not data) --> POTScale
 
@@ -530,13 +549,16 @@ template<class MnvHistoType>
     imcsighist->Write();
     // if (DEBUG) std::cout << " MC sig scaled by POT for " << variable << std::endl;
 
-    if (imcbkghist == 0){
+    if (imcbkghist == 0 && !hasbkgsub){
       std::cout << " no bkg for " << variable << std::endl;
       return 1;
     }
     // imcbkghist->Scale(POTScale);
-    imcbkghist->Print();
-    imcbkghist->Write();
+    if (!hasbkgsub){
+      imcbkghist->Print();
+      imcbkghist->Write();
+    }
+    
     // if (DEBUG) std::cout << " MC bkg scaled by POT for " << variable << std::endl;
 
     // Where response is scaled by POT.
@@ -546,10 +568,12 @@ template<class MnvHistoType>
     }
 
     //==================================Make MC=====================================
-
+    MnvHistoType* mc;
+    MnvHistoType* signalFraction;
+    if (!hasbkgsub){
     if (DEBUG) std::cout << " Start MakeMC... " << std::endl;
     // std::string mcname = basename+"_mc_tot";
-    MnvHistoType* mc = MakeMC(basename,imcsighist,imcbkghist);
+    mc = MakeMC(basename,imcsighist,imcbkghist);
     if(DEBUG)mc->Print();
     mc->Write();
     PlotCVAndError(canvas,idatahist,mc,sample + "_"+ "DATA_vs_MC" ,true,logscale,binwid);
@@ -559,7 +583,7 @@ template<class MnvHistoType>
 
     if (DEBUG) std::cout << " Start signal fraction... " << std::endl;
     // std::string fracname = basename+"_signalfraction";
-    MnvHistoType* signalFraction = GetSignalFraction(basename,imcsighist,mc);
+    signalFraction = GetSignalFraction(basename,imcsighist,mc);
     MnvHistoType* bkgFraction = GetBkgFraction(basename,imcbkghist,mc);
     if(DEBUG) signalFraction->Print();
     signalFraction->Write();
@@ -568,14 +592,32 @@ template<class MnvHistoType>
       
     PlotCVAndError(canvas,signalFraction,signalFraction, sample + "_"+"Signal Fraction" ,true,logscale,false);
     PlotErrorSummary(canvas,signalFraction,"Signal Fraction Systematics" ,0);
+    }
+    else{
+      mc = (MnvHistoType*)imcsighist->Clone();
+    }
 
     //============================Background Subtraction========================
 
     if (DEBUG) std::cout << " Start background subtraction... " << std::endl;
-    // std::string bkgsubname = basename+"_bkgsub";
-    MnvHistoType* bkgsub = DoBkgSubtraction(basename,idatahist,mc,signalFraction);
+    // std::string bkgsubname = basename+"_bkgsub";;
+    MnvHistoType* bkgsub;
+    if (hasbkgsub){
+      if (ibkgsubhist){
+        bkgsub=(MnvHistoType*)ibkgsubhist->Clone((basename+"_bkgsub").c_str());
+      }
+      else{
+        std::cout << " failed to find background histogram" << std::endl;
+        exit(0);
+      }
+    }
+    else{
+       bkgsub = DoBkgSubtraction(basename,idatahist,mc,signalFraction);
+    }
     if(DEBUG)bkgsub->Print();
-    bkgsub->Write();
+      bkgsub->Write();
+ 
+    
     PlotCVAndError(canvas,bkgsub,imcsighist, sample + "_"+"BKGsub vs. MC signal" ,true,logscale,binwid);
     PlotErrorSummary(canvas,bkgsub,sample + "_"+"BKGsub Systematics" ,0);
 
@@ -694,10 +736,10 @@ template int GetCrossSection<MnvH1D>(std::string sample, std::string variable, s
                                      std::map< std::string, std::map <std::string, MnvH1D*> > histsND,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
                                      NuConfig config, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter,bool DEBUG);
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false, bool hasbksub=false);
 
 template int GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > histsND,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
                                      NuConfig config, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter,bool DEBUG);
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false,bool hasbksub=false);

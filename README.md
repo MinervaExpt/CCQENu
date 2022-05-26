@@ -47,6 +47,8 @@ cmake mat  # for older versions
 make
 
 cmake v_08 # for the new version 8 with multiple signal components for Sean
+
+cmake fits # adds in independent code that can do fits for backgrounds across multiple sample
 ```
 
 Note -  the old build against cvs PlotUtils is in directory build. you can find how to modify an old cmake file to this setup by doing  diff build/CMakelist.txt mat/CMakelist.txt

@@ -69,25 +69,58 @@ int main(const int argc, const char *argv[] ) {
     inputtag  = std::string(argv[1]);
   }
   else{
-    std::cout << " arguments are:\n analyze <config>_<prescale> " << std::endl;
+    std::cout << " arguments are:\n analyze <config>_<prescale> [sample] or <inputFile.root> [sample]" << std::endl;
     exit(0);
   }
-  int prescale = 100;
-  if (argc > 2){
-    inputtag+= "_"+std::string(argv[2]);
-  }
-  std::string asample;
+  NuConfig config;
+  TFile* f;
+  std::string inputname;
+  std::string configloc;
   bool singlesample;
-  if (argc > 3){
-      asample = std::string(argv[3]);
-      singlesample = 1;
+  std::string asample="";
+  bool hasbkgsub;
+  if(std::string(argv[1]).find(".root")!=std::string::npos){
+    configloc = "root";
+    std::cout << "getting config from root input " << argv[1] << std::endl;
+    inputname=std::string(argv[1]);
+    f = TFile::Open(inputname.c_str(),"READONLY");
+    f->ls();
+     
+    std::string main = std::string(f->Get("main")->GetTitle());
+    std::cout << " main is " << main << std::endl;
+    config.ReadFromString(main);
+    singlesample = 1;
+    asample = "QElike";
+    if (argc > 2){
+      asample = argv[2];
+    }
+    // see if the root file has already had fits done - these will be used in the cross section fit.
+    hasbkgsub = f->Get("fitconfig")!=0;
   }
   else{
-      singlesample = 0;
+    // this is the old way
+    std::cout << "getting config from command line " << argv[1] << std::endl;
+    configloc = "disk";
+    int prescale = 100;
+    if (argc > 2){
+      inputtag+= "_"+std::string(argv[2]);
+    }
+    std::string asample;
+    
+    if (argc > 3){
+        asample = std::string(argv[3]);
+        singlesample = 1;
+    }
+    else{
+        singlesample = 0;
+    }
+    config.Read(std::string(argv[1])+".json");
+    inputname = config.GetString("outRoot")+"_"+inputtag+".root";
+    f =  TFile::Open(inputname.c_str(),"READONLY");
+    f->ls();
   }
-  if (DEBUG) std::cout << " test NuConfig" << std::endl;
-  NuConfig config;
-  config.Read(std::string(argv[1])+".json");
+    
+  
   config.Print();
   std::vector<std::string> AnalyzeVariables = config.GetStringVector("AnalyzeVariables");
   std::vector<std::string> AnalyzeVariables2D = config.GetStringVector("Analyze2DVariables");
@@ -101,7 +134,7 @@ int main(const int argc, const char *argv[] ) {
       SampleRequest.push_back(asample);
   }
   std::string playlist = config.GetString("playlist");
-  std::string inputname = config.GetString("outRoot")+"_"+inputtag+".root";
+  
   int m_fluxUniverses = config.GetInt("fluxUniverses");
 
   //========================================= Now do some analysis
@@ -134,7 +167,7 @@ int main(const int argc, const char *argv[] ) {
   std::map<std::string, std::map< std::string, std::map< std::string, std::map <std::string, MnvH2D*> > > > response2D;
 
 
-  TFile* f = TFile::Open(inputname.c_str(),"READONLY");
+
   f->ls();
 
   std::vector<std::string> keys;
@@ -229,7 +262,7 @@ int main(const int argc, const char *argv[] ) {
           hists1D[sample][variable][type][category] = temp->Clone();
           hists1D[sample][variable][type][category]->Print();
           hists1D[sample][variable][type][category]->SetDirectory(0);
-          std::cout << " hist 1D " << sample << " " << variable << " " << type << " " << category << std::endl;
+          std::cout << " hist 1D " << sample << " " << variable << " " << type << " " << category << " " << hists1D[sample][variable][type][category]->GetName() <<  std::endl;
           delete temp;
         }
         else{
@@ -276,16 +309,16 @@ int main(const int argc, const char *argv[] ) {
     std::string pdfname;
     std::string outroot;
     if (singlesample){
-        outroot = "analyze8_"+asample+"_"+inputname;
+        outroot = "analyze9_"+asample+"_"+inputname;
         
         // set up the outputs
-        pdfname = "analyze8_"+asample+"_"+inputname.replace(inputname.end()-5,inputname.end(),"");
+        pdfname = "analyze9_"+asample+"_"+inputname.replace(inputname.end()-5,inputname.end(),"");
     }
     else{
-        outroot = "analyze8_"+inputname;
+        outroot = "analyze9_"+inputname;
     
         // set up the outputs
-        pdfname = "analyze8_"+inputname.replace(inputname.end()-5,inputname.end(),"");
+        pdfname = "analyze9_"+inputname.replace(inputname.end()-5,inputname.end(),"");
     }
     TFile* o = TFile::Open(outroot.c_str(),"RECREATE");
   std::string pdffilename1D = pdfname + "_1D.pdf";
@@ -324,7 +357,7 @@ int main(const int argc, const char *argv[] ) {
             basename = "h_"+variable;
         }
         std::cout << "basename is " << basename << std::endl;
-      int exit = GetCrossSection(sample,variable,basename,hists1D[sample][variable],response1D[sample][variable],config,canvas1D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG,false);
+      int exit = GetCrossSection(sample,variable,basename,hists1D[sample][variable],response1D[sample][variable],config,canvas1D,norm,POTScale,h_flux_dewidthed,unfold,num_iter, DEBUG, hasbkgsub);
       if (DEBUG) std::cout << exit << std::endl;
     }
   }
@@ -354,7 +387,7 @@ int main(const int argc, const char *argv[] ) {
         if (singlesample){
             basename = "h_"+variable;
         }
-      int exit = GetCrossSection(sample,variable,basename,hists2D[sample][variable],response2D[sample][variable],config,canvas2D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG,false);
+      int exit = GetCrossSection(sample,variable,basename,hists2D[sample][variable],response2D[sample][variable],config,canvas2D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG,hasbkgsub);
       if (DEBUG) std::cout << exit << std::endl;
     }
   }
