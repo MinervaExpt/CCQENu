@@ -4,7 +4,7 @@ import sys,os,time
 playlists = ["5A","6A","6B","6C","6D","6E","6F","6G","6H","6I","6J"]
 list = '_'.join(playlists)
 template = sys.argv[1]
-if "Anti" not in templatename":
+if "Anti" not in template:
     playlists = ["1A","1B","1C","1D","1E","1F","1G","1L","1M","1N","1O","1O"]
 
     
