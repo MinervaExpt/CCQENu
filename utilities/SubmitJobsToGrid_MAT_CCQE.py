@@ -19,16 +19,12 @@ def timeform():
   
 # Write the command you used to run your analysis
 def writeEventLoop(mywrapper,config,outdir):
-    mywrapper.write("echo \"get rundir and run it\"\n")
+    mywrapper.write("echo \"go to scratch dir and run it\"\n")
     mywrapper.write("cd $_CONDOR_SCRATCH_DIR\n")
     mywrapper.write("pwd;ls -lrt \n")
     mywrapper.write("echo \"check on weights\" $MPARAMFILESROOT;ls $MPARAMFILESROOT/data\n")
-    if opts.rundir != "NONE":
-       
-        mywrapper.write("cp -r $WHEREIPUTMYCODE/"+opts.rundir+"/* .\n")
-    mywrapper.write("export CCQEMAT=$PWD\n")
-    mywrapper.write("pwd;ls -lrt \n")
-    mywrapper.write("./sidebands_v2 "+config+ " 100\n")
+    #mywrapper.write("pwd;ls -lrt \n")
+    mywrapper.write("$CCQEMAT/sidebands_v2 $CCQEMAT/"+config+ " 100\n")
     mywrapper.write("echo \"run returned \" $?\n")
     mywrapper.write("ifdh cp ./*.root "+outdir+"\n")
     mywrapper.write("echo \"ifdh returned \" $?\n")
