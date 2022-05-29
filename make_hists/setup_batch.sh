@@ -10,7 +10,7 @@ setup boost v1_70_0 -q e19:prof -z /cvmfs/larsoft.opensciencegrid.org/products  
 setup python v3_7_2 -z /cvmfs/larsoft.opensciencegrid.org/products
 setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
 
-export WHEREIPUTMYCODE=$PWD    # change this here if you want a different location
+#export WHEREIPUTMYCODE=$PWD    # change this here if you want a different location
 export MPARAMFILESROOT=/cvmfs/minerva.opensciencegrid.org/minerva/CentralizedFluxAndReweightFiles/MParamFiles
 export MPARAMFILES=$MPARAMFILESROOT/data
 #
