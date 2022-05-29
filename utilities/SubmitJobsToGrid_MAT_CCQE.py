@@ -9,15 +9,16 @@ import datetime
 
 # HMS - modify to use dropbox and do cleaner tar
 
-tmpdir = "/minerva/data/users/$USER/"
+tmpdir = "/minerva/app/users/$USER/"
 
 # Write the command you used to run your analysis
 def writeEventLoop(mywrapper,config,outdir):
-    mywrapper.write("$CONDOR_DIR_OUTPUT")
-    mywrapper.write("cp -r $CCQEMAT/playlists .")
-    mywrapper.write("$CCQEMAT/sidebands_v2 $CCQEMAT/"+config+ "\n")
-    mywrapper.write("ifdh cp ./*.root "+outdir)
+    mywrapper.write("cd $CONDOR_DIR_OUTPUT\n")
+    mywrapper.write("cp -r $CCQEMAT/playlists .\n")
+    mywrapper.write("$CCQEMAT/sidebands_v2 $CCQEMAT/"+config+ " 100\n")
+    mywrapper.write("ifdh cp ./*.root "+outdir+"\n")
 def writeSetups(mywrapper,basedir):
+    
     mywrapper.write("cd $INPUT_TAR_DIR_LOCAL\n")
     mywrapper.write("env\n")
     mywrapper.write("pwd\n")
@@ -25,14 +26,15 @@ def writeSetups(mywrapper,basedir):
     
     topdir = "$INPUT_TAR_DIR_LOCAL/" + basedir
     mywrapper.write("cd "+topdir+"\n")
-    mywrapper.write("export WHEREIPUTMYCODE=$PWD")
+    mywrapper.write("export WHEREIPUTMYCODE=$PWD\n")
     #mywrapper.write("du\n")
     mywrapper.write("env\n")
     mywrapper.write("pwd\n")
     mywrapper.write("ls -lt \n")
     #mywrapper.write("cd Ana/PlotUtils/cmt\n")
     #mywrapper.write("cmt config\n")
-    mywrapper.write("sh -vx $WHEREIPUTMYCODE/CCQENu/make_hists/setup_batch.sh\n")
+    mywrapper.write("source $WHEREIPUTMYCODE/CCQENu/make_hists/setup_batch.sh\n")
+    mywrapper.write("setup ifdhc\n")
     #mywrapper.write("cd $CCQEMAT\n")
     #mywrapper.write("cd Ana/Minerva101/MAT_Tutorial\n")
     #mywrapper.write("echo Rint.Logon: ./rootlogon_grid.C > ./.rootrc\n")
@@ -59,7 +61,7 @@ def writeTarballProceedure(mywrapper,tag,basedir):
     mywrapper.write("cd $INPUT_TAR_DIR_LOCAL\n")
     mywrapper.write("env\n")
     mywrapper.write("ls\n")
-    mywrapper.write("tar -xvzf myareatar_%s.tar.gz\n"%tag)
+    #mywrapper.write("tar -xvzf myareatar_%s.tar.gz\n"%tag)
     #mywrapper.write("cd $CONDOR_DIR_INPUT\n")
     writeSetups(mywrapper,basedir)
 
