@@ -23,6 +23,7 @@ source ${INSTALL_DIR}/bin/setup_UnfoldUtils.sh
 #Don't repeat a lot of copies of INSTALL_DIR on PATH and LD_LIBRARY_PATH.
 #WARNING: This is very specific to the tutorial.  Don't copy this blindly!
 export PATH=${OLD_PATH}:${INSTALL_DIR}/bin
+export PLOTUTILSROOT=${WHEREIPUTMYCODE}/opt/lib  # need this for weights? 
 export LD_LIBRARY_PATH=${OLD_LIBS}:${INSTALL_DIR}/lib
 export MPARAMFILESROOT=/cvmfs/minerva.opensciencegrid.org/minerva/CentralizedFluxAndReweightFiles/MParamFiles
 export MPARAMFILES=$MPARAMFILESROOT/data

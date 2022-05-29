@@ -11,7 +11,7 @@
 
 inline std::string expandEnv(std::string text)
 {
-    std::cout << " expand text? " << text << std::endl;
+    //std::cout << " expand text? " << text << std::endl;
     static const std::regex env_re{R"--(\$\{([^}]+)\})--"};
     std::smatch match;
     while (std::regex_search(text, match, env_re)) {

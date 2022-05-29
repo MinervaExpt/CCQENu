@@ -1,4 +1,4 @@
-# unix version
+# osx version
 #source /cvmfs/fermilab.opensciencegrid.org/products/common/etc/setups
 
 export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
@@ -15,3 +15,5 @@ export PYTHONPATH=$CCQEMAT/python:$WHEREIPUTMYCODE/MAT-MINERvA/python:$WHEREIPUT
 export THEDATA=/pnfs/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron
 
 sed s+GIT_COMMIT_HASH+`git rev-parse --verify HEAD`+ utils/gitVersion.h.in > utils/gitVersion.h
+export MYPLAYLIST=minervame5A
+export PRESCALE=100

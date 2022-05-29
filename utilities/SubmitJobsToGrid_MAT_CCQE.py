@@ -18,17 +18,18 @@ def timeform():
   return nowtime
   
 # Write the command you used to run your analysis
-def writeEventLoop(mywrapper,config,outdir):
+def writeEventLoop(mywrapper,config,theoutdir,playlist,prescale):
     mywrapper.write("echo \"go to scratch dir and run it\"\n")
     mywrapper.write("cd $_CONDOR_SCRATCH_DIR\n")
     mywrapper.write("pwd;ls -lrt \n")
     mywrapper.write("echo \"check on weights\" $MPARAMFILESROOT;ls $MPARAMFILESROOT/data\n")
     #mywrapper.write("pwd;ls -lrt \n")
-    mywrapper.write("$CCQEMAT/sidebands_v2 $CCQEMAT/"+config+ " 100\n")
+    mywrapper.write("export MYPLAYLIST="+opts.playlist+"\n")
+    mywrapper.write("$CCQEMAT/sidebands_v2 $CCQEMAT/"+config+" "+prescale\n")
     mywrapper.write("echo \"run returned \" $?\n")
-    mywrapper.write("ifdh cp ./*.root "+outdir+"\n")
+    mywrapper.write("ifdh cp -D ./*.root "+theoutdir+"\n")
     mywrapper.write("echo \"ifdh returned \" $?\n")
-    mywrapper.write("env\n")
+    mywrapper.write("env | grep -v ups\n")
     
 def writeSetups(mywrapper,basedir):
     
@@ -61,7 +62,7 @@ def createTarball(tardir,tag,basedir):
     found = os.path.isfile("%s/myareatar_%s.tar.gz"%(tardir,tag))
     if(not found):
         #cmd = "tar -czf /minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
-        cmd = "tar --exclude={*.git,*.root,*.png,*.pdf,*.gif} -zcf  %s/myareatar_%s.tar.gz %s"%(tmpdir,tag,basedir)
+        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif} -zcf  %s/myareatar_%s.tar.gz %s"%(tmpdir,tag,basedir)
         print ("Making tar",cmd)
         os.system(cmd)
         cmd2 = "cp %s/myareatar_%s.tar.gz %s/"%(tmpdir,tag,tardir)
@@ -93,6 +94,7 @@ def writeOptions(parser):
     parser.add_option('--stage', dest='stage', help='Process type', default="NONE")
     parser.add_option('--sample', dest='sample', help='Sample type', default="NONE")
     parser.add_option('--playlist', dest='playlist', help='Playlist type', default="NONE")
+    parser.add_option('--prescale', dest='prescale', help='Prescale MC by this factor (CCQEMAT)', default="1")
     ##########################################################################
     #  Options for making tar files....Basically you can make tarfiles 
     #######################################################################
@@ -140,9 +142,12 @@ print ("******************************************************")
 # This is the output directory after the job is finished
 output_dir = "$CONDOR_DIR_HISTS/" 
 
+theoutdir = os.path.join(opts.outdir,tag_name)
+print ("output dir",theoutdir)
 # Make outdir if not exist
-if(not os.path.isdir(opts.outdir)):
-    os.makedirs(opts.outdir)
+if(not os.path.isdir(theoutdir)):
+    print ("make a new output dir",theoutdir)
+    os.makedirs(theoutdir)
 
 memory = 2000
 
@@ -176,7 +181,7 @@ writeTarballProceedure(mywrapper,tag_name,opts.basedir)
 
 # Now the add the command to run event loop 
 if(opts.stage=="eventLoop"):
-    writeEventLoop(mywrapper,opts.config,opts.outdir)
+    writeEventLoop(mywrapper,opts.config,theoutdir,opts.playlist,opts.prescale)
 
 mywrapper.close()
 
