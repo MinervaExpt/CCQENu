@@ -97,7 +97,7 @@ public:
   };
 
   std::string ToString() const{
-    return f_config.toStyledString();
+    return expandEnv(f_config.toStyledString());
   }
 
   double GetDouble(const std::string key)const{
@@ -114,7 +114,7 @@ public:
   };
   std::string GetString(const std::string key)const{
     assert(CheckMember(key));
-    return f_config.get(key,"None").asString();
+    return expandEnv(f_config.get(key,"None").asString());
   };
 
   std::vector <std::string> GetStringVector(const std::string key)const{
@@ -123,7 +123,7 @@ public:
     Json::Value array = f_config.get(key,0);
     for (const auto &el  : array){
       if (el.isString()){
-        a.push_back(el.asString());
+        a.push_back(expandEnv(el.asString()));
       }
     }
     return a;
@@ -204,7 +204,7 @@ public:
     return typeid(var_t) == typeid(double)?GetDouble(key):GetInt(key);
   }
 
-  NuConfig GetConfigVariable(std::string variable){
+  NuConfig GetConfigVariable(std::string variable){  /// this is specific to particular code and should go elsewher
     NuConfig varsconfig;
     NuConfig config1D;
     NuConfig config2D;

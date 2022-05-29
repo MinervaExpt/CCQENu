@@ -1,4 +1,5 @@
 { // reconstruction level definitions
+    "Comments":["v9 - May 28, 2022, remove the FULL cuts and stick with all angles"]
     "QElike":[
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
