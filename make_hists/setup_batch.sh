@@ -17,8 +17,8 @@ export INSTALL_DIR=$WHEREIPUTMYCODE/opt
 source ${INSTALL_DIR}/bin/setup_MAT.sh
 source ${INSTALL_DIR}/bin/setup_MAT-MINERvA.sh
 source ${INSTALL_DIR}/bin/setup_UnfoldUtils.sh
-source ${INSTALL_DIR}/bin/setup_MAT_IncPions.sh
-source ${INSTALL_DIR}/bin/setup_GENIEXSecExtract.sh
+#source ${INSTALL_DIR}/bin/setup_MAT_IncPions.sh
+#source ${INSTALL_DIR}/bin/setup_GENIEXSecExtract.sh
 
 #Don't repeat a lot of copies of INSTALL_DIR on PATH and LD_LIBRARY_PATH.
 #WARNING: This is very specific to the tutorial.  Don't copy this blindly!

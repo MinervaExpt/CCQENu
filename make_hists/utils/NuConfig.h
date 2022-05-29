@@ -7,6 +7,7 @@
 #include <cassert>
 #include <vector>
 #include <memory>
+#include "utils/expandEnv.h"
 
 class NuConfig{
 
@@ -18,6 +19,7 @@ public:
 
 public:
 
+    
   NuConfig(){};
   // copy constructor
   NuConfig(const NuConfig& f){
@@ -26,7 +28,7 @@ public:
   }
 
   bool Read(const std::string filename){
-    f_filename  = filename;
+    f_filename  = expandEnv(filename);
     Json::CharReaderBuilder rbuilder;
     // Configure the Builder, then ...
     std::ifstream f_buffer(f_filename, std::ifstream::binary);
@@ -44,8 +46,9 @@ public:
     return true;
   };
   
-  bool ReadFromString(const std::string inputstring){
+  bool ReadFromString(const std::string inputstringlong){
     JSONCPP_STRING err;
+      std::string inputstring=expandEnv(inputstringlong);
     //Json::CharReader reader;
     
 //    f_filename  = filename;

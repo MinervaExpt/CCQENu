@@ -1,4 +1,4 @@
-import os,sys,time
+import os,sys,time,datetime
 from optparse import OptionParser
 import datetime
 
@@ -11,18 +11,27 @@ import datetime
 
 tmpdir = "/minerva/app/users/$USER/"
 
+def timeform():
+  now = datetime.datetime.now()
+  timeFormat = "%Y%m%d%H%M%S"
+  nowtime = now.strftime(timeFormat)
+  return nowtime
+  
 # Write the command you used to run your analysis
 def writeEventLoop(mywrapper,config,outdir):
     mywrapper.write("echo \"get rundir and run it\"\n")
     mywrapper.write("cd $_CONDOR_SCRATCH_DIR\n")
     mywrapper.write("pwd;ls -lrt \n")
-    mywrapper.write("cp -r $WHEREIPUTMYCODE/"+opts.rundir+"/* .\n")
+    mywrapper.write("echo \"check on weights\" $MPARAMFILESROOT;ls $MPARAMFILESROOT/data\n")
+    if opts.rundir != "NONE":
+       
+        mywrapper.write("cp -r $WHEREIPUTMYCODE/"+opts.rundir+"/* .\n")
     mywrapper.write("export CCQEMAT=$PWD\n")
     mywrapper.write("pwd;ls -lrt \n")
-    mywrapper.write("$CCQEMAT/sidebands_v2 "+config+ " 100\n")
-    mywrapper.write("echo \"run returned \" $status\n")
+    mywrapper.write("./sidebands_v2 "+config+ " 100\n")
+    mywrapper.write("echo \"run returned \" $?\n")
     mywrapper.write("ifdh cp ./*.root "+outdir+"\n")
-    mywrapper.write("echo \"ifdh returned \" $status\n")
+    mywrapper.write("echo \"ifdh returned \" $?\n")
     mywrapper.write("env\n")
     
 def writeSetups(mywrapper,basedir):
@@ -41,8 +50,8 @@ def writeSetups(mywrapper,basedir):
     #mywrapper.write("cd Ana/PlotUtils/cmt\n")
     #mywrapper.write("cmt config\n")
 
-    mywrapper.write("echo \"setup.sh\"; cat $WHEREIPUTMYCODE/opt/build/setup.sh\n")
-    mywrapper.write("echo \"setup_batch.sh\"; cat $WHEREIPUTMYCODE/CCQENu/make_hists/setup_batch.sh")
+    #mywrapper.write("echo \"setup.sh\"; cat $WHEREIPUTMYCODE/opt/build/setup.sh\n")
+    mywrapper.write("echo \"setup_batch.sh\"; cat $WHEREIPUTMYCODE/CCQENu/make_hists/setup_batch.sh\n")
     mywrapper.write("source $WHEREIPUTMYCODE/CCQENu/make_hists/setup_batch.sh\n")
     mywrapper.write("setup ifdhc\n")
     mywrapper.write("echo \"after setup_batch.sh $CCQEMAT\";pwd;env | grep MAT\n")
@@ -126,7 +135,8 @@ if tag_name=="tag_":
 print ("Is everything fine till here*********")
 # Add the time stamp to tag
 if not opts.notimestamp:
-    tag_name += str(time_stamp)
+    tag_name += timeform()
+#    tag_name += str(time_stamp)
 
 print ("Tag for this version is ",tag_name)
 print ("******************************************************")
