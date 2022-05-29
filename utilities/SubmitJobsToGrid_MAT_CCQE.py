@@ -13,28 +13,39 @@ tmpdir = "/minerva/app/users/$USER/"
 
 # Write the command you used to run your analysis
 def writeEventLoop(mywrapper,config,outdir):
-    mywrapper.write("cd $CONDOR_DIR_OUTPUT\n")
-    mywrapper.write("cp -r $CCQEMAT/playlists .\n")
-    mywrapper.write("$CCQEMAT/sidebands_v2 $CCQEMAT/"+config+ " 100\n")
+    mywrapper.write("echo \"get rundir and run it\"\n")
+    mywrapper.write("cd $_CONDOR_SCRATCH_DIR\n")
+    mywrapper.write("pwd;ls -lrt \n")
+    mywrapper.write("cp -r $WHEREIPUTMYCODE/"+opts.rundir+"/* .\n")
+    mywrapper.write("export CCQEMAT=$PWD\n")
+    mywrapper.write("pwd;ls -lrt \n")
+    mywrapper.write("$CCQEMAT/sidebands_v2 "+config+ " 100\n")
+    mywrapper.write("echo \"run returned \" $status\n")
     mywrapper.write("ifdh cp ./*.root "+outdir+"\n")
+    mywrapper.write("echo \"ifdh returned \" $status\n")
+    mywrapper.write("env\n")
+    
 def writeSetups(mywrapper,basedir):
     
     mywrapper.write("cd $INPUT_TAR_DIR_LOCAL\n")
-    mywrapper.write("env\n")
+    mywrapper.write("echo \"in code directory\"\n")
     mywrapper.write("pwd\n")
     mywrapper.write("ls -lt \n")
     
     topdir = "$INPUT_TAR_DIR_LOCAL/" + basedir
     mywrapper.write("cd "+topdir+"\n")
     mywrapper.write("export WHEREIPUTMYCODE=$PWD\n")
-    #mywrapper.write("du\n")
-    mywrapper.write("env\n")
-    mywrapper.write("pwd\n")
+    mywrapper.write("ls\n")
+    mywrapper.write("echo \"set codelocation $WHEREIPUTMYCODE\";pwd; env|grep WHERE\n")
     mywrapper.write("ls -lt \n")
     #mywrapper.write("cd Ana/PlotUtils/cmt\n")
     #mywrapper.write("cmt config\n")
+
+    mywrapper.write("echo \"setup.sh\"; cat $WHEREIPUTMYCODE/opt/build/setup.sh\n")
+    mywrapper.write("echo \"setup_batch.sh\"; cat $WHEREIPUTMYCODE/CCQENu/make_hists/setup_batch.sh")
     mywrapper.write("source $WHEREIPUTMYCODE/CCQENu/make_hists/setup_batch.sh\n")
     mywrapper.write("setup ifdhc\n")
+    mywrapper.write("echo \"after setup_batch.sh $CCQEMAT\";pwd;env | grep MAT\n")
     #mywrapper.write("cd $CCQEMAT\n")
     #mywrapper.write("cd Ana/Minerva101/MAT_Tutorial\n")
     #mywrapper.write("echo Rint.Logon: ./rootlogon_grid.C > ./.rootrc\n")
@@ -59,7 +70,7 @@ def writeTarballProceedure(mywrapper,tag,basedir):
     print ("Path is",basedir)
     #mywrapper.write("source /cvmfs/minerva.opensciencegrid.org/minerva/software_releases/v22r1p1/setup.sh\n")
     mywrapper.write("cd $INPUT_TAR_DIR_LOCAL\n")
-    mywrapper.write("env\n")
+    #mywrapper.write("env\n")
     mywrapper.write("ls\n")
     #mywrapper.write("tar -xvzf myareatar_%s.tar.gz\n"%tag)
     #mywrapper.write("cd $CONDOR_DIR_INPUT\n")
@@ -73,6 +84,7 @@ def writeOptions(parser):
     
     parser.add_option('--tardir', dest='tardir', help='Tarball location', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
     parser.add_option('--basedir', dest='basedir', help='Base directory for making tarball', default = "NONE")
+    parser.add_option('--rundir', dest='rundir', help='relative path in basedir for the directory you run from, if different', default = ".")
     parser.add_option('--stage', dest='stage', help='Process type', default="NONE")
     parser.add_option('--sample', dest='sample', help='Sample type', default="NONE")
     parser.add_option('--playlist', dest='playlist', help='Playlist type', default="NONE")

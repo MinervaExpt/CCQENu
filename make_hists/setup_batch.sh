@@ -9,12 +9,25 @@ setup root v6_16_00 -q e17:prof -z /cvmfs/larsoft.opensciencegrid.org/products
 setup boost v1_70_0 -q e19:prof -z /cvmfs/larsoft.opensciencegrid.org/products  # do we still need this? 
 setup python v3_7_2 -z /cvmfs/larsoft.opensciencegrid.org/products
 setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
+# set up the MAT
+#use to be source $WHEREIPUTMYCODE/opt/build/setup.sh
+OLD_PATH=${PATH}
+OLD_LIBS=${LD_LIBRARY_PATH}
+export INSTALL_DIR=$WHEREIPUTMYCODE/opt
+source ${INSTALL_DIR}/bin/setup_MAT.sh
+source ${INSTALL_DIR}/bin/setup_MAT-MINERvA.sh
+source ${INSTALL_DIR}/bin/setup_UnfoldUtils.sh
+source ${INSTALL_DIR}/bin/setup_MAT_IncPions.sh
+source ${INSTALL_DIR}/bin/setup_GENIEXSecExtract.sh
 
-#export WHEREIPUTMYCODE=$PWD    # change this here if you want a different location
+#Don't repeat a lot of copies of INSTALL_DIR on PATH and LD_LIBRARY_PATH.
+#WARNING: This is very specific to the tutorial.  Don't copy this blindly!
+export PATH=${OLD_PATH}:${INSTALL_DIR}/bin
+export LD_LIBRARY_PATH=${OLD_LIBS}:${INSTALL_DIR}/lib
 export MPARAMFILESROOT=/cvmfs/minerva.opensciencegrid.org/minerva/CentralizedFluxAndReweightFiles/MParamFiles
 export MPARAMFILES=$MPARAMFILESROOT/data
-#
+# CCQEMAT special setup
 export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
 export JSONCPP_DIR=$WHEREIPUTMYCODE/jsoncpp-build # need to change this probably
-export LD_LIBRARY_PATH=$JSONCPP_DIR/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$CCQEMAT:$JSONCPP_DIR/lib:$LD_LIBRARY_PATH
 export PYTHONPATH=$CCQEMAT/python:$WHEREIPUTMYCODE/MAT-MINERvA/python:$WHEREIPUTMYCODE/MAT-MINERvA/python/PlotUtils:$PYTHONPATH
