@@ -7,4 +7,4 @@ Here is how it works:
 python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT_CCQE.py --stage=eventLoop --outdir=/pnfs/minerva/scratch/users/$USER/ccqe/ --ba
 sedir=NEWMAT --rundir=CCQENu/make_hists --playlist=minervame6J --tag=test --mail --prescale=999 --config=./test_v9
 
-# need to add the json file 
+# should add a sample argument so you can run single samples and single playlists and then submit a whole bunch
