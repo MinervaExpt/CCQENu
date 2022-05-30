@@ -1,0 +1,10 @@
+New script that submits a job to the grid.   
+
+I run this from the directory above my code distribution. 
+
+Here is how it works:
+
+python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT_CCQE.py --stage=eventLoop --outdir=/pnfs/minerva/scratch/users/$USER/ccqe/ --ba
+sedir=NEWMAT --rundir=CCQENu/make_hists --playlist=minervame6J --tag=test --mail --prescale=999
+
+# need to add the json file 
