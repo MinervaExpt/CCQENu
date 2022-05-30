@@ -91,7 +91,7 @@ def writeOptions(parser):
     print ("Now write options to the parser")
     # Directory to write output
     parser.add_option('--outdir', dest='outdir', help='Directory to write output to', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
-    parser.add_option('--config', dest='config', help='json config file name', default = "test_v9")
+    parser.add_option('--config', dest='config', help='json config file path relative to CCQEMAT', default = "test_v9")
     
     parser.add_option('--tardir', dest='tardir', help='Tarball location', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
     parser.add_option('--basedir', dest='basedir', help='Base directory for making tarball', default = "NONE")
@@ -99,6 +99,7 @@ def writeOptions(parser):
     parser.add_option('--stage', dest='stage', help='Process type', default="NONE")
     parser.add_option('--sample', dest='sample', help='Sample type', default="NONE")
     parser.add_option('--playlist', dest='playlist', help='Playlist type', default="NONE")
+
     parser.add_option('--prescale', dest='prescale', help='Prescale MC by this factor (CCQEMAT)', default="1")
     ##########################################################################
     #  Options for making tar files....Basically you can make tarfiles 
@@ -184,6 +185,9 @@ else:
 # This will unpack the tarball we just made above
 writeTarballProceedure(mywrapper,tag_name,opts.basedir)
 
+if (".json" in opts.config):
+    print ("stripping .json from ",opts.config)
+    opts.config = opts.config.replace(".json","")
 # Now the add the command to run event loop 
 if(opts.stage=="eventLoop"):
     writeEventLoop(mywrapper,opts.config,theoutdir,opts.playlist,opts.prescale)
