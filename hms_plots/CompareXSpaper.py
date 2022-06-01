@@ -54,8 +54,10 @@ mchist = "h_%s_qelike_recoCrossSection"%hvar
 #now do the comparison of data and different MC's....
 
 #models = ["2p2hrpa","2p2h","CV","piontune","rpapiontune","CV2","rpa"] # "CV goes last because it should be the last plotted
-modelnames = {"CV":"MINERvA Tune v1","2p2h":"GENIE+2p2h","2p2hrpa":"GENIE+2p2h+RPA","rpa":"GENIE+RPA","CV2":"MINERvA Tune v2","2p2hrpa":"GENIE+2p2h+RPA","piontune":"GENIE+#pi tune","rpapiontune":"GENIE+#pi tune+RPA","NA":"GENIE default"}
+modelnames = {"CV":"MINERvA Tune v1","2p2h":"GENIE+Low Recoil Tune ","2p2hpiontune":"GENIE+Low Recoil Tune+#pi tune","2p2hrpa":"GENIE+Low Recoil Tune+RPA","rpa":"GENIE+RPA","CV2":"MINERvA Tune v2","2p2hrpa":"GENIE+Low Recoil Tune+RPA","piontune":"GENIE+#pi tune","rpapiontune":"GENIE+#pi tune+RPA","NA":"GENIE default","Default":"GENIE w/o 2p2h"}
 models = list(modelnames.keys())
+models = ["CV", "CV2","Default", "NA", "piontune", "rpa","rpapiontune", "2p2h", "2p2hrpa",  \
+"2p2hpiontune"]
 print ("models",models)
 #xmcdefault.SetLineColor(colors[2])
 #compare_xsectionmodels_variations_ratio.py:xmc2p2hrpa.SetLineColor(colors[3])
@@ -65,9 +67,12 @@ print ("models",models)
 #compare_xsectionmodels_variations_ratio.py:ymc2p2hrpa.SetLineColor(colors[3])
 #compare_xsectionmodels_variations_ratio.py:ymcptunerpa.SetLineColor(colors[4])
 #compare_xsectionmodels_variations_ratio.py:ymcptune2p2h.SetLineColor(colors[5])
-colorcode = {"NA":2, "2p2hrpa":3, "rpapiontune":4, "piontune2p2h":5,"2p2h":6, "CV":2, "CV2":7,"piontune":8,"rpa":9}
+colorcode = {"NA":0, "2p2hrpa":3, "rpapiontune":4, "2p2hpiontune":5,"2p2h":6, "CV":10, "CV2":5,"piontune":1,"rpa":9}
 
-linecode = {"NA":10, "2p2hrpa":9, "rpapiontune":10, "2p2hpiontune":9,"2p2h":9, "CV":1, "CV2":1,"piontune":2,"rpa":10}
+linecode = {"NA":1, "2p2hrpa":10, "rpapiontune":10, "2p2hpiontune":10,"2p2h":1, "CV":1, "CV2":1,"piontune":10,"rpa":1}
+
+linewidth = {"NA":6, "2p2hrpa":4, "rpapiontune":4, "2p2hpiontune":4,"2p2h":6, "CV":6, "CV2":6,"piontune":4,"rpa":6}
+
 file = {}
 mc = {}
 
@@ -80,7 +85,7 @@ if version == "v27b":
 validmodels = []
 for m in models:
   if var == "q2":
-    filename = "%sXS_%s_proj_%s.root"%(path,var,m)
+    filename = "%sXS_%s_proj_%s_rebinned.root"%(path,var,m)
   if var == "enu":
     filename = "%sXS_%s_%s.root"%(path,var,m)
   if var == "pzmu":
@@ -189,9 +194,9 @@ if not ratio:
     ydn.SetMaximum(20.E-37/scale)
  
 else:
-  xdn.SetMinimum(0.5)
+  xdn.SetMinimum(0.6)
   xdn.SetMaximum(2.5)
-  ydn.SetMinimum(0.5)
+  ydn.SetMinimum(0.6)
   ydn.SetMaximum(2.5)
 
 
@@ -220,15 +225,15 @@ canvas.cd()
 
 
 for m in models:
-  xn[m].SetLineWidth(5)
-  yn[m].SetLineWidth(5)
+  xn[m].SetLineWidth(linewidth[m])
+  yn[m].SetLineWidth(linewidth[m])
   xn[m].SetLineColor(colors[colorcode[m]])
   xn[m].SetLineStyle(linecode[m])
   yn[m].SetLineColor(colors[colorcode[m]])
   yn[m].SetLineStyle(linecode[m])
   
-normx = xn["CV"].Clone()
-normy = yn["CV"].Clone()
+normx = xn[reference].Clone()
+normy = yn[reference].Clone()
 
 if ratio:
   xdn.Divide(xdn,normx)
@@ -247,7 +252,7 @@ if (not ratio):
     leg = CCQELegend(0.6,0.6,0.8,0.9)
 else:
   print ()
-leg = CCQELegend(0.25,0.6,0.9,0.9)
+leg = CCQELegend(0.20,0.6,0.9,0.9)
 
 leg.SetHeader("MINERvA Preliminary","")
 #leg.SetNColumns(2)
@@ -280,7 +285,7 @@ if var == "q2" or var == "enu":
   xdn.GetYaxis().SetTitle("#sigma(E_{#nu}^{QE})  (cm^{2}/nucleon)");
   xdn.GetXaxis().SetTitle("E_{#nu}^{QE}  (GeV)")
   ydn.GetYaxis().SetTitle("d#sigma/dQ^{2}  (cm^{2}/GeV^{2}/nucleon)");
-  ydn.GetXaxis().SetTitle("Q^{2}_{QE}  (GeV)")
+  ydn.GetXaxis().SetTitle("Q^{2}_{QE}  (GeV^{2})")
 else:
   ydn.GetYaxis().SetTitle("d#sigma/dp_{#perp}  (cm^{2}/GeV/c/nucleon)");
   ydn.GetXaxis().SetTitle("p_{#perp}  (GeV/c)")
@@ -307,8 +312,8 @@ if (ratio):
 if ratio:
   xdn.SetMaximum(2.5)
   ydn.SetMaximum(2.5)
-  xdn.SetMinimum(0.5)
-  ydn.SetMinimum(0.5)
+  xdn.SetMinimum(0.65)
+  ydn.SetMinimum(0.65)
 xdn.Draw("P E1")
 xdsn.Draw("P E1 SAME")
 for m in models:

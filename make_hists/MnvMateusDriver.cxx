@@ -62,6 +62,7 @@
 #include "PlotUtils/MnvPlotter.h"
 #include "utils/NuConfig.h"
 #include "fits/DoTheFit.h"
+#include "fits/DoTheFitBinByBin.h"
 
 
 using namespace std;
@@ -256,7 +257,8 @@ int main(int argc, char* argv[]) {
     std::cout << " Try to write it out " << std::endl;
     
     outputfile->cd();
-    int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin);
+  bool binbybin=true;
+    int ret = fit::DoTheFitBinByBin(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin);
     
     // set up for plots
     

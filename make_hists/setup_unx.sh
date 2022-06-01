@@ -11,6 +11,6 @@ export JSONCPP_DIR=/minerva/app/users/schellma/LocalApps/jsoncpp-build
 export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
 
 #export DYLD_LIBRARY_PATH=${PLOTUTILSROOT}
-export PYTHONPATH=$WHEREIPUTMYCODE/MAT-MINERvA/python:$WHEREIPUTMYCODE/MAT-MINERvA/python/PlotUtils:$PYTHONPATH
+export PYTHONPATH=$CCQEMAT/python:$WHEREIPUTMYCODE/MAT-MINERvA/python:$WHEREIPUTMYCODE/MAT-MINERvA/python/PlotUtils:$PYTHONPATH
 sed s+GIT_COMMIT_HASH+`git rev-parse --verify HEAD`+ utils/gitVersion.h.in > utils/gitVersion.h
 export THEDATA=/pnfs/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron
