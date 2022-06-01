@@ -9,7 +9,7 @@ import datetime
 
 # HMS - modify to use dropbox and do cleaner tar
 
-tmpdir = "/minerva/app/users/$USER/"
+#tmpdir = "/minerva/app/users/$USER/"
 
 def timeform():
   now = datetime.datetime.now()
@@ -49,21 +49,22 @@ def writeCCQEMAT(mywrapper,opts,theoutdir):
     
 # do generic setup of code
 
-def writeSetups(mywrapper,basedir,setup):
+def writeSetups(mywrapper,basedirname,setup):
     
     mywrapper.write("cd $INPUT_TAR_DIR_LOCAL\n")
     mywrapper.write("echo \"in code directory\"\n")
     mywrapper.write("pwd\n")
     mywrapper.write("ls -lt \n")
-    topdir = "$INPUT_TAR_DIR_LOCAL/" + basedir
+    topdir = "$INPUT_TAR_DIR_LOCAL/" + basedirname
     mywrapper.write("cd "+topdir+"\n")
     mywrapper.write("export BASEDIR=$PWD\n")
     mywrapper.write("export RUNDIR=$BASEDIR/"+opts.rundir+"\n")
     mywrapper.write("ls\n")
     mywrapper.write("echo \"set codelocation $BASEDIR\";pwd\n")
     mywrapper.write("ls -lt \n")
-    setuppath =  "$BASEDIR/"+opts.setup
-    if not os.path.exists(os.path.join(opts.basedir,opts.setup)):
+    # on the remote node the path is shorter.
+    setuppath =  os.path.join("$INPUT_TAR_DIR_LOCAL",basedirname,opts.setup)
+    if not os.path.exists(os.path.join(opts.basedirpath,opts.setup)):
         print ("setup path ",setuppath," does not exist")
         sys.exit(1)
     mywrapper.write("echo \"setup\"; cat "+setuppath+"\n")
@@ -73,12 +74,13 @@ def writeSetups(mywrapper,basedir,setup):
     
 
 # Define function to create tarball
-def createTarball(tardir,tag,basedir):
+def createTarball(tmpdir,tardir,tag,basedirname):
     
     found = os.path.isfile("%s/myareatar_%s.tar.gz"%(tardir,tag))
     if(not found):
         #cmd = "tar -czf /minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
-        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif} -zcf  %s/myareatar_%s.tar.gz %s"%(tmpdir,tag,basedir)
+        print (" in directory",os.getcwd())
+        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif} -zcf  %s/myareatar_%s.tar.gz ./%s"%(tmpdir,tag,basedirname)
         print ("Making tar",cmd)
         os.system(cmd)
         cmd2 = "cp %s/myareatar_%s.tar.gz %s/"%(tmpdir,tag,tardir)
@@ -101,7 +103,7 @@ def writeOptions(parser):
     # Directory to write output
     parser.add_option('--outdir', dest='outdir', help='Directory to write output to', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
     parser.add_option('--tardir', dest='tardir', help='Tarball location', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
-    parser.add_option('--basedir', dest='basedir', help='Base directory for making tarball', default = "NONE")
+    parser.add_option('--basedir', dest='basedirpath', help='Base directory for making tarball (full path)', default = "NONE")
     parser.add_option('--rundir', dest='rundir', help='relative path in basedir for the directory you run from, if different', default = ".")
     parser.add_option('--setup', dest='setup', help='relative path in basedir to the setup script', default = ".")
     parser.add_option('--config', dest='config', help='relative path in rundir for json config file (CCQEMAT)', default = "./test_v9")
@@ -120,6 +122,7 @@ def writeOptions(parser):
     parser.add_option('--M',dest='memory',help='memory request in MB',default="2000")
     parser.add_option('--notimestamp',dest='notimestamp',help='Flag to TURN OFF time stamp in the tag',default=False,action="store_true")
     parser.add_option('--debug',dest='debug',help='debug script locally so no ifdh',default=False,action="store_true")
+    parser.add_option('--tmpdir',dest='tmpdir',help='temporary local directory to store tarfile during this script',default=".")
 
 # Valid stages for the neutrinos (you can add more for your own analysis)
 valid_stages=["eventLoop","CCQEMAT"]
@@ -158,7 +161,7 @@ print ("******************************************************")
 
 # This is the output directory after the job is finished
 output_dir = "$CONDOR_DIR_HISTS/" 
-
+print ("--outdir=",opts.outdir,os.getenv("SCRATCH"))
 theoutdir = os.path.join(opts.outdir,tag_name)
 print ("output dir",theoutdir)
 # Make outdir if not exist
@@ -182,9 +185,20 @@ wrapper_name = "%s_%s_wrapper_%s.sh"%(opts.stage,opts.playlist,tag_name)
 mywrapper = open(wrapper_name,"w")
 mywrapper.write("#!/bin/sh\n")
 # Now create tarball
+print ("basedirpath",opts.basedirpath)
+basedirpath=os.path.dirname(opts.basedirpath)
+basedirname=os.path.basename(opts.basedirpath)
 if (not opts.debug):
     if (opts.sametar==False):
-        tarname = createTarball(opts.tardir,tag_name,opts.basedir)
+    # some tar voodoo to get a tarball that has the name of the directory the code is in but not the rest of the path.  Go into the directory above, tar up just that name.
+        here = os.getenv("PWD")
+        
+        os.chdir(basedirpath)
+        print (" move to directory",basedirpath,os.getcwd())
+        tarname = createTarball(opts.tmpdir,opts.tardir,tag_name,basedirname)
+        # and then go back to where we were.
+        os.chdir(here)
+        print (" move to directory",here,os.getcwd())
     else:
         tarname = str(opts.tarfilename)
         if not os.path.exists(opts.tardir+opts.tarfilename):
@@ -195,7 +209,7 @@ if (not opts.debug):
         os.system(cmd)
 
 # This will unpack the tarball we just made above
-    writeTarballProceedure(mywrapper,tag_name,opts.basedir)
+    writeTarballProceedure(mywrapper,tag_name,basedirname)
 
 if (".json" in opts.config):
     print ("stripping .json from ",opts.config)
@@ -203,7 +217,7 @@ if (".json" in opts.config):
     
 # write an environment setup
 
-writeSetups(mywrapper,opts.basedir,opts.setup)
+writeSetups(mywrapper,basedirname,opts.setup)
 
 # Now the add the command to run event loop
 if(opts.stage=="eventLoop"):
@@ -245,7 +259,11 @@ if not opts.debug:
     os.system(cmd)
 
     print ("Deleting the app area tar..... ")
-    os.system("rm  "+tmpdir+"myareatar_"+tag_name+".tar.gz")
+    localtar = os.path.join(opts.tmpdir,"myareatar_"+tag_name+".tar.gz")
+    os.system("rm  "+localtar)
+localscript = os.path.join(opts.tmpdir,wrapper_name)
+os.system("cp "+wrapper_name+" "+ localscript)
+    
 print ("Sleeping" )
 
 time.sleep(1)
