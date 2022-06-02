@@ -24,7 +24,7 @@
       {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
       {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
     ],
-  "QElikeALLAngles":[
+    "QElikeALLAngles":[
       {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
       {"name":"ApothemX","max":850,"variable":"ApothemX"},
       {"name":"ApothemY","max":850,"variable":"ApothemY"},
@@ -37,7 +37,7 @@
       {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
       {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
     ],
-  "QElikeFULL":[
+    "QElikeFULL":[
       {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
       {"name":"ApothemX","max":850,"variable":"ApothemX"},
       {"name":"ApothemY","max":850,"variable":"ApothemY"},
@@ -50,7 +50,7 @@
       {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
       {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
     ],
-  "phase_space":[
+    "phase_space":[
     {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
     {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
     {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"},
@@ -70,49 +70,49 @@
     {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
     {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"}
   ],
- "qelike":[
+  "qelike":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELike","equals":1,"variable":"IsCCQELike","protonKECutMeV":120.}
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.}
   ],
- "qelike1p":[
+  "qelike1p":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELike","equals":1,"variable":"IsCCQELike","protonKECutMeV":120.},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.},
     {"name":"MCIntType","max":7,"variable":"MCIntType"}
   ],
  "qelike2p2h":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELike","equals":1,"variable":"IsCCQELike","protonKECutMeV":120.},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.},
     {"name":"MCIntType","equals":8,"variable":"MCIntType"}
   ],
   "qelikenot":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELike","equals":0,"variable":"IsCCQELike","protonKECutMeV":120.}
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike","protonKECutMeV":120.}
   ],
   "qelike_np":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELikeAll","equals":1,"variable":"IsCCQELikeAll"}
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELikeAll","equals":1,"variable":"TruthIsCCQELikeAll"}
   ],
   "qelike1p_np":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELikeAll","equals":1,"variable":"IsCCQELikeAll"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELikeAll","equals":1,"variable":"TruthIsCCQELikeAll"},
     {"name":"MCIntType","max":7,"variable":"MCIntType"}
   ],
   "qelike2p2h_np":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELikeAll","equals":1,"variable":"IsCCQELikeAll"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELikeAll","equals":1,"variable":"TruthIsCCQELikeAll"},
     {"name":"MCIntType","equals":8,"variable":"MCIntType"}
   ],
   "qelikenot_np":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELikeAll","equals":0,"variable":"IsCCQELikeAll"}
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELikeAll","equals":0,"variable":"TruthIsCCQELikeAll"}
   ],
   "data":[] // data doesn't cut anything at truth level
 }

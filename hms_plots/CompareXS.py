@@ -7,6 +7,7 @@ import array as array
 
  
 gStyle.SetEndErrorSize(10)
+ROOT.TH1.AddDirectory(ROOT.kFALSE)
 ratio = False
 reference="CV"
 sratio = ""
@@ -97,6 +98,8 @@ models=validmodels
 data = MnvH2D()
 data = file["CV"].Get(dhist)
 
+print ("data from ",file["CV"].GetName())
+
 
 
 # make projections of data
@@ -170,7 +173,7 @@ if not ratio:
     #xdn.SetMinimum(5.E-41/scale)
     #xdn.SetMaximum(2.E-38/scale)
     ydn.SetMinimum(5.E-41/scale)
-    ydn.SetMaximum(10.E-38/scale)
+    ydn.SetMaximum(10.E-37/scale)
   if (var == "enu"):
     xdn.SetMinimum(0.0/scale)
     xdn.SetMaximum(2.E-38/scale)

@@ -4,7 +4,7 @@
     "phase_space":"phase_space",
     "signal":["qelike"],
     "background":["qelikenot"],
-    "components":{
+    "categories":{
       "qelike":{
         "for":["selected_reco","selected_truth","truth","response"]
         },
@@ -12,13 +12,27 @@
         }
       }
    },
+   "Background":  // this one reproduces the older format
+      {"name":"Background",
+       "reco":"NoRecoil",
+       "phase_space":"phase_space",
+       "signal":["qelike"],
+       "background":["qelikenot"],
+       "categories":{
+         "qelike":{
+           "for":["selected_reco"]
+           },
+         "qelikenot":{"for":["selected_reco"]
+           }
+         }
+      },
   "QElikeNP":{
      "name":"QElikeNP",
      "reco":"QElike",
      "phase_space":"phase_space",
      "signal":["qelike_np"],
      "background":["qelikenot_np"],
-     "components":{
+     "categories":{
        "qelike_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
@@ -33,7 +47,7 @@
      "phase_space":"phase_space_full",
      "signal":["qelike_np"],
      "background":["qelikenot_np"],
-     "components":{
+     "categories":{
        "qelike_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },
@@ -48,7 +62,7 @@
      "phase_space":"phase_space_all_angles",
      "signal":["qelike_np"],
      "background":["qelikenot_np"],
-     "components":{
+     "categories":{
        "qelike_np":{
          "for":["selected_reco","selected_truth","truth","response"]
         },

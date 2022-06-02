@@ -81,13 +81,13 @@
   ],
   "signal":[
     {"name":"PDG","equals":14,"variable":"TruthNuPDG"},  // mod for Nu
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELike","equals":1,"variable":"IsCCQELike"}
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike"}
   ],
   "background":[
     {"name":"PDG","equals":14,"variable":"TruthNuPDG"}, // mod for Nue
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELike","equals":0,"variable":"IsCCQELike"}
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike"}
   ],
   "phase_space_all":[
     {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
@@ -98,13 +98,13 @@
   ],
   "qelike":[
     {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELike","equals":1,"variable":"IsCCQELike","protonKECutMeV":120.}
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.}
   ],
   "qelikenot":[
     {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
-    {"name":"IsCC","equals":1,"variable":"IsCC"},
-    {"name":"IsCCQELike","equals":0,"variable":"IsCCQELike","protonKECutMeV":120.}
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike","protonKECutMeV":120.}
   ],
   "data":[] // data doesn't cut anything at truth level
 }

@@ -4,6 +4,7 @@
 #include "VariableFromConfig.h"
 #include "Variable2DFromConfig.h"
 #include "CVUniverse.h"
+#include <cassert>
 
 
 
@@ -101,7 +102,8 @@ std::map<std::string, CCQENu::VariableFromConfig*> GetVariablesFromConfig(const 
       }
     }
     if (!found){
-      std::cout << "GetVariables: Warning - have requested an unimplemented variable in GetVariablesFromConfig " << var << std::endl;
+      std::cout << "GetVariablesFromConfig: Warning - have requested an unimplemented variable in GetVariablesFromConfig " << var << std::endl;
+        assert(0);
     }
   }
   // clean up unused variables

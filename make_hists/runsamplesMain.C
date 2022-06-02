@@ -171,16 +171,16 @@ int main(const int argc, const char *argv[] ) {
                                                                 config_truth::GetCCQESignalFromConfig<CVUniverse>(truecuts),\
                                                                 config_truth::GetCCQEPhaseSpaceFromConfig<CVUniverse>(phasespace));
     
-    // now do for signal components
-    std::map<const std::string, CCQENu::Component> components = sample.GetComponents();
+    // now do for signal categories
+    std::map<const std::string, CCQENu::Category> categories = sample.GetCategories();
 
-    for (auto component:components){
-      std::string cname = component.first;
+    for (auto category:categories){
+      std::string cname = category.first;
       tag = name + "___" + cname;
       tags.push_back(tag);
       std::cout << "make a tag " << tag << std::endl;
       if (!cutsConfig.IsMember(cname)){
-        std::cout << " sample component " << cname << " does not have an associated  cut in " << cutsfilename << std::endl;
+        std::cout << " sample category " << cname << " does not have an associated  cut in " << cutsfilename << std::endl;
         assert(0);
       }
       NuConfig truecuts = cutsConfig.GetValue(cname);
@@ -240,12 +240,12 @@ int main(const int argc, const char *argv[] ) {
   // here we decide what histograms to fill
   
   for (auto sample:samples){
-    std::map<const std::string, CCQENu::Component> components = sample.GetComponents();
+    std::map<const std::string, CCQENu::Category> categories = sample.GetCategories();
     std::string data_tag = sample.GetName()+"___data";
     datatags.push_back(data_tag);
-    for (auto component:components){
-      std::string cname = component.first;
-      std::vector<std::string> forlist = component.second.GetFor();
+    for (auto category:categories){
+      std::string cname = category.first;
+      std::vector<std::string> forlist = category.second.GetFor();
       std::cout << "for ";
       for (auto f:forlist){
         std::cout << " " << f;
@@ -362,6 +362,9 @@ int main(const int argc, const char *argv[] ) {
   std::string sam = samplesConfig.ToString();
   TNamed samobj("samplesFile",cuts.c_str());
   samobj.Write();
+  std::string git = git::commitHash();
+  TNamed gitobj("gitVersion",git.c_str());
+  gitobj.Write();
   
   for (auto v : variables1D){
     v->WriteAllHistogramsToFile(*out);

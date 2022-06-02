@@ -46,6 +46,7 @@ set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
 set(SRC_FILES
 include/Get2DVariablesFromConfig.cxx
 include/GetVariablesFromConfig.cxx
+include/CVUniverse.cxx
 )
 
 # tell it about the header files
@@ -58,6 +59,7 @@ include/CVUniverse.h
 include/GetCCQECutsFromConfig.h
 include/GetVariablesFromConfig.h
 include/Get2DVariablesFromConfig.h
+include/GetStacked.h
 include/Hist2DWrapperMap.h
 include/HistWrapperMap.h
 include/Systematics.h
@@ -84,6 +86,8 @@ MESSAGE("PROJECT:${PROJECT_NAME}")
 target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT}  -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) #-L$ENV{JSONCPP_DIR}/lib
 #target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT} -lplotutils -L$ENV{UNFOLDUTILSROOT} -lunfoldutils -l$ENV{UNFOLDUTILSROOT} -lG__UnfoldUtilsDict.so)
 
+
+
 # Link each target with other targets or add options, etc.
 
 # Adding something we can run - Output name matches target name
@@ -99,7 +103,8 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{P
 
 #add_executable(runsamples runsamples.C)
 add_executable(sidebands_v2 sidebands_v2.C)
-add_executable(analyze_v5 analyze_v5.C)
+add_executable(analyze_v8 analyze_v8.C)
+add_executable(analyze_vSean smg/analyze_vSean.C)
 
 
 
@@ -108,5 +113,6 @@ add_executable(analyze_v5 analyze_v5.C)
 
 #target_link_libraries(runsamples  PRIVATE ${PROJEC_NAME} )
 target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
-target_link_libraries(analyze_v5  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(analyze_vSean  PRIVATE ${PROJECT_NAME} )
 
