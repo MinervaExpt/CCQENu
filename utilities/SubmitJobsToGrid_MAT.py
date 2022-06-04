@@ -8,69 +8,74 @@ import datetime
 ###########################################################
 
 # HMS - modify to use dropbox and do cleaner tar
+# June 2022
 
-#tmpdir = "/minerva/app/users/$USER/"
-
+# make a time stamp in local time for jobs
 def timeform():
   now = datetime.datetime.now()
   timeFormat = "%Y%m%d%H%M%S"
   nowtime = now.strftime(timeFormat)
   return nowtime
   
+# write a line to the wrapper, make certain it is properly terminated
+def writewrap(mywrapper,text):
+  mywrapper.write("#cmd: \t%s\n"%(text))
+  mywrapper.write("%s\n"%(text))
+  
 # Write the command you used to run your analysis
 
-# tutorial
+# this is for the tutorial, not recently tested
 def writeEventLoop(mywrapper,outdir):
-    mywrapper.write("echo Rint.Logon: ./rootlogon_grid.C > ./.rootrc\n")
-    mywrapper.write("root -l -b load.C+ runEventLoop.C+\n")
-    mywrapper.write("ifdh cp -D ./*.root "+outdir)
+    writewrap(mywrapper,"echo Rint.Logon: ./rootlogon_grid.C > ./.rootrc\n")
+    writewrap(mywrapper,"root -l -b load.C+ runEventLoop.C+\n")
+    writewrap(mywrapper,"ifdh cp -D ./*.root "+outdir)
 
-# CCQEMAT
-def writeCCQEMAT(mywrapper,opts,theoutdir):
-    mywrapper.write("echo \"go to scratch dir and run it\"\n")
+# this is for CCQEMAT
+def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
 
-    mywrapper.write("cd $_CONDOR_SCRATCH_DIR\n")
-    mywrapper.write("export CCQEMAT=$RUNDIR\n")
-    mywrapper.write("pwd;ls -lrt \n")
-    mywrapper.write("echo \"check on weights\" $MPARAMFILESROOT;ls $MPARAMFILESROOT/data\n")
-    #mywrapper.write("pwd;ls -lrt \n")
-    mywrapper.write("export MYPLAYLIST="+opts.playlist+"\n")
-    mywrapper.write("$CCQEMAT/sidebands_v2 $CCQEMAT/"+opts.config+" "+opts.prescale+" >& sidebands.log\n")
-    mywrapper.write("echo \"run returned \" $?\n")
-    mywrapper.write("ls -lrt\n")
+    writewrap(mywrapper,"echo \"go to scratch dir and run it\"\n")
+    writewrap(mywrapper,"cd $_CONDOR_SCRATCH_DIR\n")
+    # tell it where to find the code to run
+    writewrap(mywrapper,"export CCQEMAT=$RUNDIR\n")
+    writewrap(mywrapper,"echo \"check on weights\" $MPARAMFILESROOT;ls $MPARAMFILESROOT/data\n")
+    writewrap(mywrapper,"export MYPLAYLIST="+opts.playlist+"\n")
+    theexe = opts.theexe
+    writewrap(mywrapper,theexe+" "+opts.config+" "+opts.prescale+" >& sidebands_%s.log\n"%(tag))
+    writewrap(mywrapper,"echo \"run returned \" $?\n")
+    writewrap(mywrapper,"ls -lrt\n")
     if not opts.debug:
-        mywrapper.write("echo \"ifdh cp -D ./*.root "+theoutdir+"\"\n")
-        mywrapper.write("ifdh cp -D ./*.root "+theoutdir+"\n")
-        mywrapper.write("echo \"ifdh returned \" $?\n")
-        mywrapper.write("echo \"ifdh cp -D sidebands.log "+theoutdir+"\"\n")
-        mywrapper.write("ifdh cp -D sidebands.log "+theoutdir+"\n")
-        mywrapper.write("echo \"ifdh returned \" $?\n")
-    #mywrapper.write("env | grep -v ups\n")
+        writewrap(mywrapper,"echo \"ifdh cp -D ./*.root "+theoutdir+"\"\n")
+        writewrap(mywrapper,"ifdh cp -D ./*.root "+theoutdir+"\n")
+        writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
+        writewrap(mywrapper,"echo \"ifdh cp -D sidebands_"+tag+".log "+theoutdir+"\"\n")
+        writewrap(mywrapper,"ifdh cp -D sidebands.log "+theoutdir+"\n")
+        writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
+    #writewrap(mywrapper,"env | grep -v ups\n")
     
 # do generic setup of code
 
 def writeSetups(mywrapper,basedirname,setup):
     
-    mywrapper.write("cd $INPUT_TAR_DIR_LOCAL\n")
-    mywrapper.write("echo \"in code directory\"\n")
-    mywrapper.write("pwd\n")
-    mywrapper.write("ls -lt \n")
+    writewrap(mywrapper,"cd $INPUT_TAR_DIR_LOCAL\n")
+    writewrap(mywrapper,"echo \"in code directory\"\n")
+    writewrap(mywrapper,"pwd\n")
+    writewrap(mywrapper,"ls -lt \n")
     topdir = "$INPUT_TAR_DIR_LOCAL/" + basedirname
-    mywrapper.write("cd "+topdir+"\n")
-    mywrapper.write("export BASEDIR=$PWD\n")
-    mywrapper.write("export RUNDIR=$BASEDIR/"+opts.rundir+"\n")
-    mywrapper.write("ls\n")
-    mywrapper.write("echo \"set codelocation $BASEDIR\";pwd\n")
-    mywrapper.write("ls -lt \n")
+    writewrap(mywrapper,"cd "+topdir+"\n")
+    writewrap(mywrapper,"export BASEDIR=$PWD\n")
+    writewrap(mywrapper,"export RUNDIR=$BASEDIR/"+opts.rundir+"\n")
+    writewrap(mywrapper,"ls\n")
+    writewrap(mywrapper,"echo \"set codelocation $BASEDIR\";pwd\n")
+    writewrap(mywrapper,"ls -lt \n")
     # on the remote node the path is shorter.
     setuppath =  os.path.join("$INPUT_TAR_DIR_LOCAL",basedirname,opts.setup)
     if not os.path.exists(os.path.join(opts.basedirpath,opts.setup)):
         print ("setup path ",setuppath," does not exist")
         sys.exit(1)
-    mywrapper.write("echo \"setup\"; cat "+setuppath+"\n")
-    mywrapper.write("source "+setuppath+" \n")
-    mywrapper.write("setup ifdhc\n")
-    mywrapper.write("echo \"after setup\";pwd\n")
+    writewrap(mywrapper,"echo \"setup\"; cat "+setuppath+"\n")
+    writewrap(mywrapper,"source "+setuppath+" \n")
+    writewrap(mywrapper,"setup ifdhc\n")
+    writewrap(mywrapper,"echo \"after setup\";pwd\n")
     
 
 # Define function to create tarball
@@ -94,14 +99,14 @@ def createTarball(tmpdir,tardir,tag,basedirname):
 def writeTarballProceedure(mywrapper,tag,basedir):
     print ("I will be making the tarball upacking with this version")
     print ("Path is",basedir)
-    mywrapper.write("cd $INPUT_TAR_DIR_LOCAL\n")
-    mywrapper.write("ls\n")
+    writewrap(mywrapper,"cd $INPUT_TAR_DIR_LOCAL\n")
+    writewrap(mywrapper,"ls\n")
     
 
 def writeOptions(parser):
     print ("Now write options to the parser")
     # Directory to write output
-    parser.add_option('--outdir', dest='outdir', help='Directory to write output to', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
+    parser.add_option('--outdir', dest='outdir', help='Directory to write tagged output directory to', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
     parser.add_option('--tardir', dest='tardir', help='Tarball location', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
     parser.add_option('--basedir', dest='basedirpath', help='Base directory for making tarball (full path)', default = "NONE")
     parser.add_option('--rundir', dest='rundir', help='relative path in basedir for the directory you run from, if different', default = ".")
@@ -123,6 +128,7 @@ def writeOptions(parser):
     parser.add_option('--notimestamp',dest='notimestamp',help='Flag to TURN OFF time stamp in the tag',default=False,action="store_true")
     parser.add_option('--debug',dest='debug',help='debug script locally so no ifdh',default=False,action="store_true")
     parser.add_option('--tmpdir',dest='tmpdir',help='temporary local directory to store tarfile during this script',default=".")
+    parser.add_option('--exe',dest='theexe',help='relative path for the executable (CCQEMAT)',default='$CCQEMAT/sidebands_v2')
 
 # Valid stages for the neutrinos (you can add more for your own analysis)
 valid_stages=["eventLoop","CCQEMAT"]
@@ -160,8 +166,8 @@ print ("Tag for this version is ",tag_name)
 print ("******************************************************")
 
 # This is the output directory after the job is finished
-output_dir = "$CONDOR_DIR_HISTS/" 
-print ("--outdir=",opts.outdir,os.getenv("SCRATCH"))
+#output_dir = "$CONDOR_DIR_HISTS/"  (this doesn't work right now)
+
 theoutdir = os.path.join(opts.outdir,tag_name)
 print ("output dir",theoutdir)
 # Make outdir if not exist
@@ -183,7 +189,7 @@ if opts.stage not in valid_stages:
 wrapper_name = "%s_%s_wrapper_%s.sh"%(opts.stage,opts.playlist,tag_name)
 
 mywrapper = open(wrapper_name,"w")
-mywrapper.write("#!/bin/sh\n")
+mywrapper.write("#!/bin/sh\n") # don't wrap this one
 # Now create tarball
 print ("basedirpath",opts.basedirpath)
 basedirpath=os.path.dirname(opts.basedirpath)
@@ -223,7 +229,7 @@ writeSetups(mywrapper,basedirname,opts.setup)
 if(opts.stage=="eventLoop"):
     writeEventLoop(mywrapper,theoutdir)
 if(opts.stage=="CCQEMAT"):
-    writeCCQEMAT(mywrapper,opts,theoutdir)
+    writeCCQEMAT(mywrapper,opts,theoutdir,tag_name)
 
 
 mywrapper.close()

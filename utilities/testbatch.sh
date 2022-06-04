@@ -7,4 +7,4 @@
 # type python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py to see the option descriptions
 # here my release is in $APP/NEWMAT - your mileage may differ
 
-python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test --basedir=$APP/NEWMAT --rundir=CCQENu/make_hists --playlist=minervame5A --tag=test --mail --prescale=1000 --config=testme --setup=CCQENu/utilities/setup_batch_mat.sh --tmpdir=$BLUE/tmp #--debug --notimestamp
+python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test --basedir=$APP/NEWMAT --rundir=CCQENu/make_hists --playlist=minervame5A --tag=test --mail --prescale=1000 --config=$CCQEMAT/testme --setup=CCQENu/utilities/setup_batch_mat.sh --tmpdir=$BLUE/tmp #--debug --notimestamp
