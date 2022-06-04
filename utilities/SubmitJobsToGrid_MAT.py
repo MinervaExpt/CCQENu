@@ -32,15 +32,16 @@ def writeEventLoop(mywrapper,outdir):
 
 # this is for CCQEMAT
 def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
-
+     
     writewrap(mywrapper,"echo \"go to scratch dir and run it\"\n")
     writewrap(mywrapper,"cd $_CONDOR_SCRATCH_DIR\n")
     # tell it where to find the code to run
     writewrap(mywrapper,"export CCQEMAT=$RUNDIR\n")
-    writewrap(mywrapper,"echo \"check on weights\" $MPARAMFILESROOT;ls $MPARAMFILESROOT/data\n")
+    writewrap(mywrapper,"echo \"check on weights\" $MPARAMFILESROOT\n")
+    writewrap(mywrapper,"echo \" check on CCQEMAT\" $CCQEMAT")
     writewrap(mywrapper,"export MYPLAYLIST="+opts.playlist+"\n")
     theexe = opts.theexe
-    writewrap(mywrapper,theexe+" "+opts.config+" "+opts.prescale+" >& sidebands_%s.log\n"%(tag))
+    writewrap(mywrapper,os.path.join("$CCQEMAT",opts.theexe)+" "+os.path.join("$CCQEMAT",opts.config)+" "+opts.prescale+" >& sidebands_%s.log\n"%(tag))
     writewrap(mywrapper,"echo \"run returned \" $?\n")
     writewrap(mywrapper,"ls -lrt\n")
     if not opts.debug:
@@ -48,7 +49,7 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
         writewrap(mywrapper,"ifdh cp -D ./*.root "+theoutdir+"\n")
         writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
         writewrap(mywrapper,"echo \"ifdh cp -D sidebands_"+tag+".log "+theoutdir+"\"\n")
-        writewrap(mywrapper,"ifdh cp -D sidebands.log "+theoutdir+"\n")
+        writewrap(mywrapper,"ifdh cp -D sidebands_"+tag+".log "+theoutdir+" \n")
         writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
     #writewrap(mywrapper,"env | grep -v ups\n")
     
@@ -124,11 +125,12 @@ def writeOptions(parser):
     parser.add_option('--mail',dest='mail',help="Want mail after job completion or failure",default=False,action="store_true")
     parser.add_option('--sametar',dest='sametar',help="Recycle the same tar file for jobsubmission",default=False,action="store_true")
     parser.add_option('--tarfilename',dest='tarfilename',help='Name of the tarfile you want to use',default="NA")
-    parser.add_option('--M',dest='memory',help='memory request in MB',default="2000")
+    parser.add_option('--memory',dest='memory',help='memory request in MB',default="2000")
     parser.add_option('--notimestamp',dest='notimestamp',help='Flag to TURN OFF time stamp in the tag',default=False,action="store_true")
     parser.add_option('--debug',dest='debug',help='debug script locally so no ifdh',default=False,action="store_true")
     parser.add_option('--tmpdir',dest='tmpdir',help='temporary local directory to store tarfile during this script',default=".")
     parser.add_option('--exe',dest='theexe',help='relative path for the executable (CCQEMAT)',default='$CCQEMAT/sidebands_v2')
+    parser.add_option('--expected-lifetime',dest='lifetime',help='job lifetime in format like 12h, 1d, 60m',default='12h')
 
 # Valid stages for the neutrinos (you can add more for your own analysis)
 valid_stages=["eventLoop","CCQEMAT"]
@@ -194,6 +196,16 @@ mywrapper.write("#!/bin/sh\n") # don't wrap this one
 print ("basedirpath",opts.basedirpath)
 basedirpath=os.path.dirname(opts.basedirpath)
 basedirname=os.path.basename(opts.basedirpath)
+
+pathtoexe=os.path.join(opts.basedirpath,opts.rundir,opts.theexe)
+print (" check the executable path structure",pathtoexe,os.path.exists(pathtoexe))
+pathtoconfig=os.path.join(opts.basedirpath,opts.rundir,opts.config)+".json"
+print (" check the configfile structure",pathtoconfig,os.path.exists(pathtoconfig))
+if not (os.path.exists(pathtoconfig) and os.path.exists(pathtoexe)):
+  print ("config or exe not where it should be in BASEDIR>RUNDIR>localpath")
+  sys.exit(1)
+else:
+  print ("config and exe seem to be in the right place relative to tarball")
 if (not opts.debug):
     if (opts.sametar==False):
     # some tar voodoo to get a tarball that has the name of the directory the code is in but not the rest of the path.  Go into the directory above, tar up just that name.
@@ -248,15 +260,15 @@ cmd += "jobsub_submit --group minerva " #Group of experiment
 cmd += "--OS sl7 " #Operating system #Not needed in SL7
 
 if opts.mail:
-    cmd += "-M " #this option to make decide if you want the mail or not
+    cmd += " -M " #this option to make decide if you want the mail or not
 #cmd += "--subgroup=Nightly " #This is only for high priority jobs
-cmd += "--resource-provides=usage_model=DEDICATED,OPPORTUNISTIC " 
-cmd += "--role=Analysis " 
-cmd += "--expected-lifetime 12h " 
-cmd += "--memory "+str(memory)+"MB " 
+cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC "
+cmd += " --role=Analysis "
+cmd += " --expected-lifetime  " + opts.lifetime
+cmd += " --memory "+str(memory)+"MB "
 cmd += configstring+" " #the environments for the tunes to bee applied
 #cmd += "-f "+opts.outdir+"/myareatar_"+tag_name+".tar.gz "
-cmd += "--tar_file_name dropbox://"+opts.tardir+"myareatar_"+tag_name+".tar.gz  --use-cvmfs-dropbox "
+cmd += " --tar_file_name dropbox://"+opts.tardir+"myareatar_"+tag_name+".tar.gz  --use-cvmfs-dropbox "
 #cmd += "-i /cvmfs/minerva.opensciencegrid.org/minerva/software_releases/v22r1p1"+" "
 cmd += "file://"+os.environ["PWD"]+"/"+wrapper_name
 print (cmd)
@@ -269,6 +281,7 @@ if not opts.debug:
     os.system("rm  "+localtar)
 localscript = os.path.join(opts.tmpdir,wrapper_name)
 os.system("cp "+wrapper_name+" "+ localscript)
+
     
 print ("Sleeping" )
 
