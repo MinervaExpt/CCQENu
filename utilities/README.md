@@ -1,17 +1,18 @@
 New script that submits a job to the grid.   
 
-I run this from the directory above my code distribution. 
 
 Here is an example how it works - you can find this in file testbatch.sh
 My whole MAT setup is in $APP/NEWMAT so that needs to go into the tarball
 The directory I run from is $APP/NEWMAT/CCQENu/make_hists so I set RUNDIR to that
 
-python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test --basedir=$APP/NEWMAT -
--rundir=CCQENu/make_hists --playlist=minervame5A --tag=test --mail --prescale=1000 --config=$CCQEMAT/testme --setup=CCQENu
-/utilities/setup_batch_mat.sh --tmpdir=/minerva/data/users/$USER/tmp 
+export APP=/minerva/app/users/$USER
+export SCRATCH=/pnfs/minerva/scratch/users/$USER
+export BLUE=/minerva/data/users/$USER     
+
+python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test --basedir=$APP/NEWMAT --rundir=CCQENu/make_hists --playlist=minervame5A --tag=test --mail --prescale=1000 --config=testme --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat.sh --tmpdir=$BLUE/tmp --expected-lifetime=12h --memory=2000  #--debug --notimestamp 
 
 python SubmitJobsToGrid_MAT.py --help
-Now write options to the parser
+
 Usage: SubmitJobsToGrid_MAT.py[opts]
 
 Options:
@@ -33,11 +34,11 @@ Options:
   --sametar             Recycle the same tar file for jobsubmission
   --tarfilename=TARFILENAME
                         Name of the tarfile you want to use
-  --M=MEMORY            memory request in MB
+  --memory=MEMORY       memory request in MB
   --notimestamp         Flag to TURN OFF time stamp in the tag
   --debug               debug script locally so no ifdh
   --tmpdir=TMPDIR       temporary local directory to store tarfile during this
                         script
-  --exe=THEEXE          relative path for the executable (CCQEMAT)
-
-# should add a sample argument so you can run single samples and single playlists and then submit a whole bunch
+  --exe=THEEXE          relative path from $CCQEMAT for the executable (CCQEMAT)
+  --expected-lifetime=LIFETIME
+                        job lifetime in format like 12h, 1d, 60m
