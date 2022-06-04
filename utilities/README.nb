@@ -2,9 +2,42 @@ New script that submits a job to the grid.
 
 I run this from the directory above my code distribution. 
 
-Here is how it works:
+Here is an example how it works - you can find this in file testbatch.sh
+My whole MAT setup is in $APP/NEWMAT so that needs to go into the tarball
+The directory I run from is $APP/NEWMAT/CCQENu/make_hists so I set RUNDIR to that
 
-python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT_CCQE.py --stage=eventLoop --outdir=/pnfs/minerva/scratch/users/$USER/ccqe/ --ba
-sedir=NEWMAT --rundir=CCQENu/make_hists --playlist=minervame6J --tag=test --mail --prescale=999 --config=./test_v9
+python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test --basedir=$APP/NEWMAT -
+-rundir=CCQENu/make_hists --playlist=minervame5A --tag=test --mail --prescale=1000 --config=$CCQEMAT/testme --setup=CCQENu
+/utilities/setup_batch_mat.sh --tmpdir=/minerva/data/users/$USER/tmp 
+
+python SubmitJobsToGrid_MAT.py --help
+Now write options to the parser
+Usage: SubmitJobsToGrid_MAT.py[opts]
+
+Options:
+  -h, --help            show this help message and exit
+  --outdir=OUTDIR       Directory to write tagged output directory to
+  --tardir=TARDIR       Tarball location
+  --basedir=BASEDIRPATH
+                        Base directory for making tarball (full path)
+  --rundir=RUNDIR       relative path in basedir for the directory you run
+                        from, if different
+  --setup=SETUP         relative path in basedir to the setup script
+  --config=CONFIG       relative path in rundir for json config file (CCQEMAT)
+  --stage=STAGE         Process type
+  --sample=SAMPLE       Sample type
+  --playlist=PLAYLIST   Playlist type
+  --prescale=PRESCALE   Prescale MC by this factor (CCQEMAT)
+  --tag=TAG             Tag your release
+  --mail                Want mail after job completion or failure
+  --sametar             Recycle the same tar file for jobsubmission
+  --tarfilename=TARFILENAME
+                        Name of the tarfile you want to use
+  --M=MEMORY            memory request in MB
+  --notimestamp         Flag to TURN OFF time stamp in the tag
+  --debug               debug script locally so no ifdh
+  --tmpdir=TMPDIR       temporary local directory to store tarfile during this
+                        script
+  --exe=THEEXE          relative path for the executable (CCQEMAT)
 
 # should add a sample argument so you can run single samples and single playlists and then submit a whole bunch
