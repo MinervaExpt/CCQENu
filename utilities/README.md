@@ -1,19 +1,29 @@
 New script that submits a job to the grid.   
 
+This is intended for CCQEMAT, which has an executable a config file and a prescale
 
-Here is an example how it works - you can find this in file testbatch.sh
-My whole MAT setup is in $APP/NEWMAT so that needs to go into the tarball
+Your MAT distribution should be in the base directory and the whole thing gets tarred up and sent.
+
+Your executable should be in the run directory
+
+you then invoke `SubmitJobsToGrid_MAT.py` with your config and playlists and the results come back in a tagged subdirectory of `--outdir`
+
+Here is an example how it works.  You can find this in file testbatch.sh
+
+My whole MAT setup is in $APP/NEWMAT so that needs to go into the tarball.
 The directory I run from is $APP/NEWMAT/CCQENu/make_hists so I set RUNDIR to that
 
+```
 export APP=/minerva/app/users/$USER
 export SCRATCH=/pnfs/minerva/scratch/users/$USER
 export BLUE=/minerva/data/users/$USER     
+```
+```python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test --basedir=$APP/NEWMAT --rundir=CCQENu/make_hists --playlist=minervame5A --tag=test --mail --prescale=1000 --config=testme --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat.sh --tmpdir=$BLUE/tmp --expected-lifetime=12h --memory=2000  #--debug --notimestamp 
+```
 
-python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test --basedir=$APP/NEWMAT --rundir=CCQENu/make_hists --playlist=minervame5A --tag=test --mail --prescale=1000 --config=testme --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat.sh --tmpdir=$BLUE/tmp --expected-lifetime=12h --memory=2000  #--debug --notimestamp 
+`python SubmitJobsToGrid_MAT.py --help`
 
-python SubmitJobsToGrid_MAT.py --help
-
-Usage: SubmitJobsToGrid_MAT.py[opts]
+```Usage: SubmitJobsToGrid_MAT.py[opts]
 
 Options:
   -h, --help            show this help message and exit
@@ -42,3 +52,4 @@ Options:
   --exe=THEEXE          relative path from $CCQEMAT for the executable (CCQEMAT)
   --expected-lifetime=LIFETIME
                         job lifetime in format like 12h, 1d, 60m
+```
