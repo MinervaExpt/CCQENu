@@ -262,7 +262,7 @@ cmd += "--OS sl7 " #Operating system #Not needed in SL7
 if opts.mail:
     cmd += " -M " #this option to make decide if you want the mail or not
 #cmd += "--subgroup=Nightly " #This is only for high priority jobs
-cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC "
+cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC,OFFSITE "
 cmd += " --role=Analysis "
 cmd += " --expected-lifetime  " + opts.lifetime
 cmd += " --memory "+str(memory)+"MB "
