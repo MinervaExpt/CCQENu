@@ -9,6 +9,8 @@ setup root v6_16_00 -q e17:prof -z /cvmfs/larsoft.opensciencegrid.org/products
 setup boost v1_70_0 -q e19:prof -z /cvmfs/larsoft.opensciencegrid.org/products  # do we still need this? 
 setup python v3_7_2 -z /cvmfs/larsoft.opensciencegrid.org/products
 setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
+setup ifdhc -z /cvmfs/larsoft.opensciencegrid.org/products
+export IFDH_CP_MAXRETRIES=0\0\0\0\0  # no retries
 # set up the MAT
 #use to be source $BASEDIR/opt/build/setup.sh
 OLD_PATH=${PATH}

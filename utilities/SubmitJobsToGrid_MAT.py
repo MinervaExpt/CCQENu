@@ -75,7 +75,7 @@ def writeSetups(mywrapper,basedirname,setup):
         sys.exit(1)
     writewrap(mywrapper,"echo \"setup\"; cat "+setuppath+"\n")
     writewrap(mywrapper,"source "+setuppath+" \n")
-    writewrap(mywrapper,"setup ifdhc\n")
+    #writewrap(mywrapper,"setup ifdhc\n")
     writewrap(mywrapper,"echo \"after setup\";pwd\n")
     
 
