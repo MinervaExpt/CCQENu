@@ -161,6 +161,7 @@ if tag_name=="tag_":
 print ("Is everything fine till here*********")
 # Add the time stamp to tag
 if not opts.notimestamp:
+    tag_name += "_"
     tag_name += timeform()
 #    tag_name += str(time_stamp)
 
@@ -170,7 +171,7 @@ print ("******************************************************")
 # This is the output directory after the job is finished
 #output_dir = "$CONDOR_DIR_HISTS/"  (this doesn't work right now)
 
-theoutdir = os.path.join(opts.outdir,tag_name)
+theoutdir = os.path.join(opts.outdir,opts.playlist+"_"+tag_name)
 print ("output dir",theoutdir)
 # Make outdir if not exist
 if(not os.path.isdir(theoutdir) and not opts.debug):
