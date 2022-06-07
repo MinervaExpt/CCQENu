@@ -60,7 +60,7 @@ std::vector<std::string> split (std::string s, std::string delimiter) {
 
 // Returns a map of bools for { 'fluxnorm', 'xfluxnorm', 'yfluxnorm'} based off "fluxnorm" set in variable config
 // Used to tell the code when and how to use an integrated flux normalization vs an energy dependent flux normalization
-std::map< std::string, bool > CheckFluxNorm(NuConfig config, std::string variable){
+std::map< std::string, bool > CheckFluxNorm( NuConfig configvar, std::string variable){
   // what it will spit out
   std::map< std::string, bool > fluxnormBoolMap;
   // Default to false. 1D uses fluxnorm only, 2D uses xfluxnorm and yfluxnorm
@@ -68,15 +68,15 @@ std::map< std::string, bool > CheckFluxNorm(NuConfig config, std::string variabl
   fluxnormBoolMap["xfluxnorm"] = false;
   fluxnormBoolMap["yfluxnorm"] = false;
 
-  std::string varsFile = config.GetString("varsFile");
-  NuConfig configvar;
-  if (varsFile != "" ){
-    configvar.Read(varsFile);
-  }
-  else{
-    std::cout << " no varsFile" << std::endl;
-    exit(1);
-  }
+//  std::string varsFile = config.GetString("varsFile");
+//NuConfig configvar;
+//  if (varsFile != "" ){
+//    configvar.Read(varsFile);
+//  }
+//  else{
+//    std::cout << " no varsFile" << std::endl;
+//    exit(1);
+//  }
 
   NuConfig varconfig = configvar.GetConfigVariable(variable);
   if(varconfig.IsMember("fluxnorm")){
@@ -373,8 +373,8 @@ template std::vector<MnvH2D*> DoEfficiencyCorrection<MnvH2D>(std::string basenam
 // Does number of target normalization (passed in from analyze code) and flux normalization.
 // Returns a vector of size to of < (Data xsec), (MC xsec) >
 template<class MnvHistoType>
-  std::vector<MnvHistoType*> DoNormalization( NuConfig config, std::string basename, std::map< std::string, bool> FluxNorm, double norm, MnvHistoType* effcorr, MnvHistoType* ialltruhist, const MnvH1D* h_flux_dewidthed){
-
+  std::vector<MnvHistoType*> DoNormalization( std::map<const std::string, NuConfig> configs, std::string basename, std::map< std::string, bool> FluxNorm, double norm, MnvHistoType* effcorr, MnvHistoType* ialltruhist, const MnvH1D* h_flux_dewidthed){
+      NuConfig config = configs["main"];
     std::string sigmaname = std::string(effcorr->GetName())+"_sigma";
     MnvHistoType* sigma = (MnvHistoType*)effcorr->Clone(sigmaname.c_str());
     sigma->SetDirectory(0);
@@ -434,8 +434,8 @@ template<class MnvHistoType>
   }
 
 
-template std::vector<MnvH1D*> DoNormalization<MnvH1D>( NuConfig config, std::string basename, std::map< std::string, bool> FluxNorm, double norm, MnvH1D* effcorr, MnvH1D* ialltruhist, const MnvH1D* h_flux_dewidthed);
-template std::vector<MnvH2D*> DoNormalization<MnvH2D>( NuConfig config, std::string basename, std::map< std::string, bool> FluxNorm, double norm, MnvH2D* effcorr, MnvH2D* ialltruhist, const MnvH1D* h_flux_dewidthed);
+template std::vector<MnvH1D*> DoNormalization<MnvH1D>( std::map<const std::string,NuConfig> configs, std::string basename, std::map< std::string, bool> FluxNorm, double norm, MnvH1D* effcorr, MnvH1D* ialltruhist, const MnvH1D* h_flux_dewidthed);
+template std::vector<MnvH2D*> DoNormalization<MnvH2D>( std::map<const std::string,NuConfig> configs, std::string basename, std::map< std::string, bool> FluxNorm, double norm, MnvH2D* effcorr, MnvH2D* ialltruhist, const MnvH1D* h_flux_dewidthed);
 
 
 
@@ -445,7 +445,7 @@ template<class MnvHistoType>
   int GetCrossSection(std::string sample, std::string variable, std::string basename,
                       std::map< std::string, std::map <std::string, MnvHistoType*> > histsND,
                       std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
-                      NuConfig config, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
+                      std::map< const std::string, NuConfig> configs, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
                       MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub) {
     bool binwid = true;
     int logscale = 0; // 0 for none, 1 for x, 2 for y, 3 for both
@@ -455,8 +455,8 @@ template<class MnvHistoType>
     
     std::cout << " at the top of GetXsec" << sample <<  std::endl;
     // this can come out of the sample information:
-    config.Print();
-    NuConfig sigkey = config.GetConfig("signal");
+    configs["main"].Print();
+    NuConfig sigkey = configs["main"].GetConfig("signal");
     sigkey.Print();
     std::string sig = sigkey.GetString(sample);
     std::cout << " got sig " << sig << std::endl;
@@ -464,13 +464,13 @@ template<class MnvHistoType>
     std::string bkg;
     if (!hasbkgsub){
       // this likely needs to be fixed
-      bkgkey = config.GetConfig("background");
+      bkgkey = configs["main"].GetConfig("background");
       bkgkey.Print();
       std::cout << bkgkey.CheckMember(sample) << std::endl;
       bkg = bkgkey.GetString(sample);
       std::cout << " got bkg " << bkg << std::endl;
     }
-    NuConfig datkey = config.GetConfig("data");
+    NuConfig datkey = configs["main"].GetConfig("data");
     std::string dat = datkey.GetString(sample);
     std::cout << " got dat " << dat << std::endl;
     
@@ -695,7 +695,7 @@ template<class MnvHistoType>
     // }
     // binwid = energydep;
 
-    std::map< std::string, bool> fluxnorm = CheckFluxNorm(config,variable);
+    std::map< std::string, bool> fluxnorm = CheckFluxNorm(configs["varsFile"],variable);
     if(DEBUG) std::cout << " fluxnorm: " << fluxnorm["fluxnorm"] << ", xfluxnorm: " << fluxnorm["xfluxnorm"] << ", yfluxnorm: " << fluxnorm["yfluxnorm"] << std::endl;
     
     // HMS dec-1-2021 - flip these? 
@@ -708,7 +708,7 @@ template<class MnvHistoType>
     
    
 
-    std::vector<MnvHistoType*> sigmaVec = DoNormalization(config,basename,fluxnorm,norm,effcorr,ialltruhist,h_flux_dewidthed);
+    std::vector<MnvHistoType*> sigmaVec = DoNormalization(configs,basename,fluxnorm,norm,effcorr,ialltruhist,h_flux_dewidthed);
     MnvHistoType* sigma = sigmaVec[0];
     sigma->Write();
     sigma->Print();
@@ -735,11 +735,11 @@ template<class MnvHistoType>
 template int GetCrossSection<MnvH1D>(std::string sample, std::string variable, std::string basename,
                                      std::map< std::string, std::map <std::string, MnvH1D*> > histsND,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
-                                     NuConfig config, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
+                                     std::map< const std::string, NuConfig> configs, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
                                      MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false, bool hasbksub=false);
 
 template int GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > histsND,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
-                                     NuConfig config, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
+                                     std::map< const std::string, NuConfig> configs, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
                                      MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false,bool hasbksub=false);
