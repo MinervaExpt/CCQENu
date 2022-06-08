@@ -9,6 +9,10 @@
 #include <memory>
 #include "utils/expandEnv.h"
 
+class NuConfig;
+
+typedef std::map<const std::string, NuConfig*> CONFIGMAP;
+
 class NuConfig{
 
 public:
@@ -26,6 +30,9 @@ public:
     f_filename = "fromConfig";
     f_config = f.f_config;
   }
+    NuConfig(const std::string inputstringlong){
+        ReadFromString(inputstringlong);
+    }
 
   bool Read(const std::string filename){
     f_filename  = expandEnv(filename);
@@ -39,6 +46,8 @@ public:
       // report to the user the failure and their locations in the document.
       std::cout  << "Failed to parse configuration\n"
       << errs;
+      std::cout <<  "bad file was " << filename << std::endl;
+          exit(120);
       return false;
       }
 

@@ -79,7 +79,10 @@ int main(const int argc, const char *argv[] ) {
   bool singlesample;
   std::string asample="";
   bool hasbkgsub;
-  std::map<const std::string,NuConfig> allconfigs;
+    
+//------------get and store the configs from root or disk
+    
+  std::map<const std::string,NuConfig*> allconfigs;
 
   if(std::string(argv[1]).find(".root")!=std::string::npos){
     configloc = "root";
@@ -88,10 +91,10 @@ int main(const int argc, const char *argv[] ) {
     f = TFile::Open(inputname.c_str(),"READONLY");
     //f->ls();
     
-    allconfigs["main"] = NuConfig(std::string(f->Get("main")->GetTitle()));
-    allconfigs["varsFile"] = NuConfig(std::string(f->Get("varsFile")->GetTitle()));
-    allconfigs["cutsFile"] = NuConfig(std::string(f->Get("cutsFile")->GetTitle()));
-    allconfigs["samplesFile"] = NuConfig(std::string(f->Get("samplesFile")->GetTitle()));
+    allconfigs["main"] = new NuConfig(std::string(f->Get("main")->GetTitle()));
+    allconfigs["varsFile"] = new NuConfig(std::string(f->Get("varsFile")->GetTitle()));
+    allconfigs["cutsFile"] = new NuConfig(std::string(f->Get("cutsFile")->GetTitle()));
+    allconfigs["samplesFile"] = new NuConfig(std::string(f->Get("samplesFile")->GetTitle()));
     
       singlesample  = 0;
     // see if the root file has already had fits done - these will be used in the cross section fit.
@@ -114,34 +117,36 @@ int main(const int argc, const char *argv[] ) {
     else{
         singlesample = 0;
     }
-      NuConfig theconfig;
-    theconfig.Read(std::string(argv[1])+".json");
+      NuConfig* theconfig;
+    theconfig->Read(std::string(argv[1])+".json");
       allconfigs["main"]=theconfig;
-    inputname = theconfig.GetString("outRoot")+"_"+inputtag+".root";
+    inputname = theconfig->GetString("outRoot")+"_"+inputtag+".root";
     f =  TFile::Open(inputname.c_str(),"READONLY");
     f->ls();
   }
     
   
-  allconfigs["main"].Print();
-  std::vector<std::string> AnalyzeVariables = allconfigs["main"].GetStringVector("AnalyzeVariables");
-  std::vector<std::string> AnalyzeVariables2D = allconfigs["main"].GetStringVector("Analyze2DVariables");
+  allconfigs["main"]->Print();
+    
+    // code used to use config now use allconfigs["main"]
+  std::vector<std::string> AnalyzeVariables = allconfigs["main"]->GetStringVector("AnalyzeVariables");
+  std::vector<std::string> AnalyzeVariables2D = allconfigs["main"]->GetStringVector("Analyze2DVariables");
   std::vector<std::string> SampleRequest;
     
   // either get sample from command line or from the list in the config
   if (!singlesample){
-      SampleRequest = allconfigs["main"].GetStringVector("runsamples");
+      SampleRequest = allconfigs["main"]->GetStringVector("runsamples");
   }
   else{
       SampleRequest.push_back(asample);
   }
-  std::string playlist = allconfigs["main"].GetString("playlist");
+  std::string playlist = allconfigs["main"]->GetString("playlist");
   
-  int m_fluxUniverses = allconfigs["main"].GetInt("fluxUniverses");
+  int m_fluxUniverses = allconfigs["main"]->GetInt("fluxUniverses");
 
   //========================================= Now do some analysis
 
-  MnvH1D* h_flux_dewidthed = GetFlux(allconfigs["main"]);
+  MnvH1D* h_flux_dewidthed = GetFlux(allconfigs);
   double flux = h_flux_dewidthed->Integral() ;
   // make containers for different analysis levels
   std::map<std::string, MnvH1D*> h_flux_ebins;
@@ -184,6 +189,7 @@ int main(const int argc, const char *argv[] ) {
 
   // this is the old read in the POT.  They are also in a vector which Amit like having
   TH1D* h_pot = (TH1D*)f->Get("POT_summary");
+    h_pot->Print("ALL");
 
   double dataPOT = h_pot->GetBinContent(1);
   double mcPOTprescaled = h_pot->GetBinContent(3);
@@ -202,7 +208,7 @@ int main(const int argc, const char *argv[] ) {
     std::cout << " key " << k->GetName() << std::endl;
     std::vector<std::string> parsekey;
     parsekey = split(k->GetName(),"___");
-    if (parsekey.size()< 4){
+    if (parsekey.size()< 4 ){
       std::cout << " not parseable " << k->GetName() << std::endl;
       continue;
     }
