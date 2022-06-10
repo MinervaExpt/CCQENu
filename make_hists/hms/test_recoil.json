@@ -1,0 +1,29 @@
+{
+  "version":9,  // Feb 22 large scale tests
+//  "mcIn":"${CCQEMAT}/playlists/remote/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
+// "dataIn":"${CCQEMAT}/playlists/remote/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
+  "mcIn":"${CCQEMAT}/playlists/local/${MYPLAYLIST}_MC.txt",
+  "dataIn":"${CCQEMAT}/playlists/local/${MYPLAYLIST}_DATA.txt",
+  "prescale":999,
+  "playlist":"${MYPLAYLIST}",
+  "recoName":"CCQENu",
+  "pdg":-14,
+  "runsamples":["QElike","QElikeNot","Background"],
+  "cutsFile":"${CCQEMAT}/hms/AntiNuCuts_v9.json",
+  "varsFile":"${CCQEMAT}/hms/Variables_v9.json",
+  "samplesFile":"${CCQEMAT}/hms/AntiNuSamples_v9.json",
+  "outRoot":"recoil_${MYPLAYLIST}",
+  "AnalyzeVariables":["Q2QE","Log10recoil"],
+  "Analyze2DVariables":["Q2QE_Log10recoil"],
+  "signal":{"QElike":"qelike","QElikeNot":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"},
+  "background":{"QElike":"qelikenot","QElikeNot":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
+  "data":{"QElike":"data","QElikeNot":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}

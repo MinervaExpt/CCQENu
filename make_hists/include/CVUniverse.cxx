@@ -244,6 +244,19 @@ namespace {
     return CVUniverse::GetTrueQ0GeV();
   }
 
+double CVUniverse::GetLog10RecoilEnergyGeV() const {
+  // return CVUniverse::GetCalRecoilEnergy();
+ // std::cout << GetRecoilEnergy()*MeVGeV <<  " " << std::log10(GetRecoilEnergy()) << std::log10(GetRecoilEnergy())  - 3. << std::endl;
+  return std::log10(GetRecoilEnergy())-3.;
+}
+
+double CVUniverse::GetTrueLog10RecoilEnergyGeV() const {
+  // don't know if this needs to exist
+  // return 0;
+
+  return std::log10(CVUniverse::GetTrueQ0GeV());
+}
+
   double CVUniverse::GetTrueQ0GeV() const {
     static std::vector<double> mc_incomingPartVec;
     static std::vector<double> mc_primFSLepton;
