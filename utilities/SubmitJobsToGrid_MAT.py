@@ -115,7 +115,7 @@ def writeOptions(parser):
     parser.add_option('--setup', dest='setup', help='relative path in basedir to the setup script', default = ".")
     parser.add_option('--config', dest='config', help='relative path in rundir for json config file (CCQEMAT)', default = "./test_v9")
     parser.add_option('--stage', dest='stage', help='Process type', default="NONE")
-    parser.add_option('--sample', dest='sample', help='Sample type', default="NONE")
+    parser.add_option('--sample', dest='sample', help='Sample type', default="QElike")
     parser.add_option('--playlist', dest='playlist', help='Playlist type', default="NONE")
 
     parser.add_option('--prescale', dest='prescale', help='Prescale MC by this factor (CCQEMAT)', default="1")
@@ -172,7 +172,7 @@ print ("******************************************************")
 # This is the output directory after the job is finished
 #output_dir = "$CONDOR_DIR_HISTS/"  (this doesn't work right now)
 
-theoutdir = os.path.join(opts.outdir,opts.playlist+"_"+tag_name)
+theoutdir = os.path.join(opts.outdir,opts.playlist+"_"+opts.sample+"_"+tag_name)
 print ("output dir",theoutdir)
 # Make outdir if not exist
 if(not os.path.isdir(theoutdir) and not opts.debug):
