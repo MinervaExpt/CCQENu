@@ -79,21 +79,24 @@ int main(const int argc, const char *argv[] ) {
   bool singlesample;
   std::string asample="";
   bool hasbkgsub;
+    
+//------------get and store the configs from root or disk
+    
+  std::map<const std::string,NuConfig*> allconfigs;
+
   if(std::string(argv[1]).find(".root")!=std::string::npos){
     configloc = "root";
     std::cout << "getting config from root input " << argv[1] << std::endl;
     inputname=std::string(argv[1]);
     f = TFile::Open(inputname.c_str(),"READONLY");
-    f->ls();
-     
-    std::string main = std::string(f->Get("main")->GetTitle());
-    std::cout << " main is " << main << std::endl;
-    config.ReadFromString(main);
-    singlesample = 1;
-    asample = "QElike";
-    if (argc > 2){
-      asample = argv[2];
-    }
+    //f->ls();
+    
+    allconfigs["main"] = new NuConfig(std::string(f->Get("main")->GetTitle()));
+    allconfigs["varsFile"] = new NuConfig(std::string(f->Get("varsFile")->GetTitle()));
+    allconfigs["cutsFile"] = new NuConfig(std::string(f->Get("cutsFile")->GetTitle()));
+    allconfigs["samplesFile"] = new NuConfig(std::string(f->Get("samplesFile")->GetTitle()));
+    
+      singlesample  = 0;
     // see if the root file has already had fits done - these will be used in the cross section fit.
     hasbkgsub = f->Get("fitconfig")!=0;
   }
@@ -114,32 +117,36 @@ int main(const int argc, const char *argv[] ) {
     else{
         singlesample = 0;
     }
-    config.Read(std::string(argv[1])+".json");
-    inputname = config.GetString("outRoot")+"_"+inputtag+".root";
+      NuConfig* theconfig;
+    theconfig->Read(std::string(argv[1])+".json");
+      allconfigs["main"]=theconfig;
+    inputname = theconfig->GetString("outRoot")+"_"+inputtag+".root";
     f =  TFile::Open(inputname.c_str(),"READONLY");
     f->ls();
   }
     
   
-  config.Print();
-  std::vector<std::string> AnalyzeVariables = config.GetStringVector("AnalyzeVariables");
-  std::vector<std::string> AnalyzeVariables2D = config.GetStringVector("Analyze2DVariables");
+  allconfigs["main"]->Print();
+    
+    // code used to use config now use allconfigs["main"]
+  std::vector<std::string> AnalyzeVariables = allconfigs["main"]->GetStringVector("AnalyzeVariables");
+  std::vector<std::string> AnalyzeVariables2D = allconfigs["main"]->GetStringVector("Analyze2DVariables");
   std::vector<std::string> SampleRequest;
     
   // either get sample from command line or from the list in the config
   if (!singlesample){
-      SampleRequest = config.GetStringVector("runsamples");
+      SampleRequest = allconfigs["main"]->GetStringVector("runsamples");
   }
   else{
       SampleRequest.push_back(asample);
   }
-  std::string playlist = config.GetString("playlist");
+  std::string playlist = allconfigs["main"]->GetString("playlist");
   
-  int m_fluxUniverses = config.GetInt("fluxUniverses");
+  int m_fluxUniverses = allconfigs["main"]->GetInt("fluxUniverses");
 
   //========================================= Now do some analysis
 
-  MnvH1D* h_flux_dewidthed = GetFlux(config);
+  MnvH1D* h_flux_dewidthed = GetFlux(allconfigs);
   double flux = h_flux_dewidthed->Integral() ;
   // make containers for different analysis levels
   std::map<std::string, MnvH1D*> h_flux_ebins;
@@ -182,6 +189,7 @@ int main(const int argc, const char *argv[] ) {
 
   // this is the old read in the POT.  They are also in a vector which Amit like having
   TH1D* h_pot = (TH1D*)f->Get("POT_summary");
+    h_pot->Print("ALL");
 
   double dataPOT = h_pot->GetBinContent(1);
   double mcPOTprescaled = h_pot->GetBinContent(3);
@@ -200,7 +208,7 @@ int main(const int argc, const char *argv[] ) {
     std::cout << " key " << k->GetName() << std::endl;
     std::vector<std::string> parsekey;
     parsekey = split(k->GetName(),"___");
-    if (parsekey.size()< 4){
+    if (parsekey.size()< 4 ){
       std::cout << " not parseable " << k->GetName() << std::endl;
       continue;
     }
@@ -357,7 +365,7 @@ int main(const int argc, const char *argv[] ) {
             basename = "h_"+variable;
         }
         std::cout << "basename is " << basename << std::endl;
-      int exit = GetCrossSection(sample,variable,basename,hists1D[sample][variable],response1D[sample][variable],config,canvas1D,norm,POTScale,h_flux_dewidthed,unfold,num_iter, DEBUG, hasbkgsub);
+      int exit = GetCrossSection(sample,variable,basename,hists1D[sample][variable],response1D[sample][variable],allconfigs,canvas1D,norm,POTScale,h_flux_dewidthed,unfold,num_iter, DEBUG, hasbkgsub);
       if (DEBUG) std::cout << exit << std::endl;
     }
   }
@@ -387,7 +395,7 @@ int main(const int argc, const char *argv[] ) {
         if (singlesample){
             basename = "h_"+variable;
         }
-      int exit = GetCrossSection(sample,variable,basename,hists2D[sample][variable],response2D[sample][variable],config,canvas2D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG,hasbkgsub);
+      int exit = GetCrossSection(sample,variable,basename,hists2D[sample][variable],response2D[sample][variable],allconfigs,canvas2D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG,hasbkgsub);
       if (DEBUG) std::cout << exit << std::endl;
     }
   }

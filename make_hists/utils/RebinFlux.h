@@ -11,8 +11,10 @@
 
 // - return a flux histogram for the playlist in config with bin width correction removed - integral is total flux
 
+// HMS change to use map of configs instead of config.  Put in calls with just a config to allow backwards compatibility.  Get rid of in future as they are nasty in terms of potential memory leaks.
 
 MnvH1D* GetFlux(const NuConfig config);
+MnvH1D* GetFlux(const CONFIGMAP);
 
 // - get the flux histogram derived above back rebinned according to histogram ehist
 
@@ -85,11 +87,21 @@ void TruncateNumberOfFluxUniverses( MnvH2D* h, int nUniverses)
   //CheckAndFixFluxErrorBand(h);
 }
 // implementation of GetFlux
+
+// make a version that takes a pointer to the config
 MnvH1D* GetFlux(const NuConfig config){
-  std::string playlist = config.GetString("playlist");
-  int m_fluxUniverses = config.GetInt("fluxUniverses");
-  bool m_nue_constraint = config.GetInt("NuEConstraint");
-  int pdg = config.GetInt("pdg");
+    CONFIGMAP allconfigs;
+    allconfigs["main"]=new NuConfig(config);
+    return GetFlux(allconfigs);
+    
+}
+
+MnvH1D* GetFlux(const CONFIGMAP configmap){
+    
+  std::string playlist = configmap.at("main")->GetString("playlist");
+  int m_fluxUniverses = configmap.at("main")->GetInt("fluxUniverses");
+  bool m_nue_constraint = configmap.at("main")->GetInt("NuEConstraint");
+  int pdg = configmap.at("main")->GetInt("pdg");
 
   //++++++++++++++++++=  Initialization +++++++++++++++++++++++++
 
@@ -148,8 +160,10 @@ MnvH1D* GetFlux(const NuConfig config){
   return h_flux_dewidthed;
 }
 
+
+
 // given energy histogram, rebin flux to match
-MnvH1D* GetFluxEbins(const MnvH1D* h_flux_dewidthed, const MnvH1D* ihist, NuConfig config, std::map<std::string, bool> FluxEnormBool){
+MnvH1D* GetFluxEbins(const MnvH1D* h_flux_dewidthed, const MnvH1D* ihist, CONFIGMAP configs , std::map<std::string, bool> FluxEnormBool){
   TString newname = ihist->GetName()+TString("_Flux");
   MnvH1D* h_flux_ebins = RebinDeWidthedFluxHist(h_flux_dewidthed,ihist);
   h_flux_ebins->SetName(newname);
@@ -159,9 +173,19 @@ MnvH1D* GetFluxEbins(const MnvH1D* h_flux_dewidthed, const MnvH1D* ihist, NuConf
   return h_flux_ebins;
 }
 
+MnvH1D* GetFluxEbins(const MnvH1D* h_flux_dewidthed, const MnvH1D* ihist, NuConfig config, std::map<std::string, bool> FluxEnormBool){
+    CONFIGMAP allconfigs;
+    allconfigs["main"]=new NuConfig(config);
+    return GetFluxEbins( h_flux_dewidthed, ihist , allconfigs,  FluxEnormBool);
+}
 
-MnvH2D* GetFluxEbins(const MnvH1D* h_flux, const MnvH2D* ihist , NuConfig config, std::map<std::string, bool> FluxEnormBool){  //std::vector<std::string> varparse){
+//MnvH2D* GetFluxEbins(const MnvH1D* h_flux, const MnvH2D* ihist , NuConfig* pconfig, std::map<std::string, bool> FluxEnormBool){
+//    return GetFluxEbins(h_flux, ihist , *pconfig, FluxEnormBool);
+//}
+
+MnvH2D* GetFluxEbins(const MnvH1D* h_flux, const MnvH2D* ihist , CONFIGMAP configmap, std::map<std::string, bool> FluxEnormBool){  //std::vector<std::string> varparse){
   // hist that will come out with flux hist in bins you want
+    
   MnvH2D* h2D_flux_ebins = (MnvH2D*)ihist->Clone();
   // changed ehist to h2D_flux_ebins
   // MnvH2D* ehist = (MnvH2D*)enu_hist->Clone();
@@ -223,7 +247,7 @@ MnvH2D* GetFluxEbins(const MnvH1D* h_flux, const MnvH2D* ihist , NuConfig config
 
 
   std::cout << "Now for verts" << endl;
-  int nfluxUniverses = config.GetInt("fluxUniverses");
+  int nfluxUniverses = configmap.at("main")->GetInt("fluxUniverses");
   //Do the same with the vertical error bands
   std::vector<std::string> vertNames = h_flux_dewidthed->GetVertErrorBandNames();
   for(unsigned int k=0; k<vertNames.size(); ++k ){
@@ -255,15 +279,30 @@ MnvH2D* GetFluxEbins(const MnvH1D* h_flux, const MnvH2D* ihist , NuConfig config
   return h2D_flux_ebins;
 }
 
+MnvH2D* GetFluxEbins(const MnvH1D* h_flux, const MnvH2D* ihist , NuConfig config, std::map<std::string, bool> FluxEnormBool){
+    std::map<const std::string, NuConfig*> allconfigs;
+    allconfigs["main" ]=new NuConfig(config);
+    return GetFluxEbins( h_flux, ihist , allconfigs,  FluxEnormBool);
+}
+
 
 // implementation of GetFlux for a special histogram
+
+// backwards compatibility
 template<class MnvHistoType>
   MnvHistoType* GetFluxFlat(const NuConfig config,  MnvHistoType* h){
+      CONFIGMAP allconfigs;
+      allconfigs["main"] = new NuConfig(config);
+      return GetFluxFlat(allconfigs,h);
+  }
 
-    std::string playlist = config.GetString("playlist");
-    int m_fluxUniverses = config.GetInt("fluxUniverses");
-    bool m_nue_constraint = config.GetInt("NuEConstraint");
-    int pdg = config.GetInt("pdg");
+template<class MnvHistoType>
+  MnvHistoType* GetFluxFlat(const CONFIGMAP configs,  MnvHistoType* h){
+
+    std::string playlist = configs.at("main")->GetString("playlist");
+    int m_fluxUniverses = configs.at("main")->GetInt("fluxUniverses");
+    bool m_nue_constraint = configs.at("main")->GetInt("NuEConstraint");
+    int pdg = configs.at("main")->GetInt("pdg");
 
     //++++++++++++++++++=  Initialization +++++++++++++++++++++++++
 
@@ -324,6 +363,11 @@ template<class MnvHistoType>
 
 template MnvH1D* GetFluxFlat<MnvH1D>(const NuConfig config, MnvH1D* h);
 template MnvH2D* GetFluxFlat<MnvH2D>(const NuConfig config, MnvH2D* h);
+template MnvH1D* GetFluxFlat<MnvH1D>(const CONFIGMAP configs, MnvH1D* h);
+template MnvH2D* GetFluxFlat<MnvH2D>(const CONFIGMAP configs, MnvH2D* h);
+//template MnvH1D* GetFluxFlat<MnvH1D>(const NuConfig* pconfig, MnvH1D* h);
+//template MnvH2D* GetFluxFlat<MnvH2D>(const NuConfig* pconfig, MnvH2D* h);
+
 
 
 #endif

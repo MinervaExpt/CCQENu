@@ -33,3 +33,4 @@ export MPARAMFILES=$MPARAMFILESROOT/data
 export JSONCPP_DIR=$BASEDIR/jsoncpp-build # need to change this probably
 export LD_LIBRARY_PATH=$RUNDIR:$JSONCPP_DIR/lib:$LD_LIBRARY_PATH
 export PYTHONPATH=$RUNDIR/python:$BASEDIR/MAT-MINERvA/python:$BASEDIR/MAT-MINERvA/python/PlotUtils:$PYTHONPATH
+export DATALOC=remote
