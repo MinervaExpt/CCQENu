@@ -208,7 +208,7 @@ pathtoconfig=os.path.join(opts.basedirpath,opts.rundir,opts.config)+".json"
 print (" check the configfile structure",pathtoconfig,os.path.exists(pathtoconfig))
 if not (os.path.exists(pathtoconfig) and os.path.exists(pathtoexe)):
   print ("config or exe not where it should be in BASEDIR>RUNDIR>localpath")
-  print ("BASEDIR=",optsbasedirpath)
+  print ("BASEDIR=",opts.basedirpath)
   print ("RUNDIR=",os.path.join(opts.basedirpath,opts.rundir))
   sys.exit(1)
 else:
