@@ -17,3 +17,4 @@ export THEDATA=/pnfs/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKlud
 sed s+GIT_COMMIT_HASH+`git rev-parse --verify HEAD`+ utils/gitVersion.h.in > utils/gitVersion.h
 export MYPLAYLIST=minervame5A
 export PRESCALE=100
+export DATALOC=local

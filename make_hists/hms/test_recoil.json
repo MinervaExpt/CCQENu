@@ -1,14 +1,14 @@
 {
   "version":9,  // Feb 22 large scale tests
-//  "mcIn":"${CCQEMAT}/playlists/remote/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
-// "dataIn":"${CCQEMAT}/playlists/remote/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
+//  "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
+// "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
   "mcIn":"${CCQEMAT}/playlists/local/${MYPLAYLIST}_MC.txt",
   "dataIn":"${CCQEMAT}/playlists/local/${MYPLAYLIST}_DATA.txt",
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
   "recoName":"CCQENu",
   "pdg":-14,
-  "runsamples":["QElike","QElikeNot","Background"],
+  "runsamples":["${MYSAMPLE}"],
   "cutsFile":"${CCQEMAT}/hms/AntiNuCuts_v9.json",
   "varsFile":"${CCQEMAT}/hms/Variables_v9.json",
   "samplesFile":"${CCQEMAT}/hms/AntiNuSamples_v9.json",

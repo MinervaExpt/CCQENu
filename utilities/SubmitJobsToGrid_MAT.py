@@ -40,6 +40,7 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
     writewrap(mywrapper,"echo \"check on weights\" $MPARAMFILESROOT\n")
     writewrap(mywrapper,"echo \" check on CCQEMAT\" $CCQEMAT")
     writewrap(mywrapper,"export MYPLAYLIST="+opts.playlist+"\n")
+    writewrap(mywrapper,"export MYSAMPLE="+opts.sample+"\n")
     theexe = opts.theexe
     writewrap(mywrapper,os.path.join("$CCQEMAT",opts.theexe)+" "+os.path.join("$CCQEMAT",opts.config)+" "+opts.prescale+" >& sidebands_%s.log\n"%(tag))
     writewrap(mywrapper,"echo \"run returned \" $?\n")
