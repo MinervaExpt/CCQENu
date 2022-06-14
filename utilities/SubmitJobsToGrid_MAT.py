@@ -114,8 +114,8 @@ def writeOptions(parser):
     parser.add_option('--rundir', dest='rundir', help='relative path in basedir for the directory you run from, if different', default = ".")
     parser.add_option('--setup', dest='setup', help='relative path in basedir to the setup script', default = ".")
     parser.add_option('--config', dest='config', help='relative path in rundir for json config file (CCQEMAT)', default = "./test_v9")
-    parser.add_option('--stage', dest='stage', help='Process type', default="NONE")
-    parser.add_option('--sample', dest='sample', help='Sample type', default="QElike")
+    parser.add_option('--stage', dest='stage', help='Processing type [CCQEMAT or (future) EventLoop]', default="NONE")
+    parser.add_option('--sample', dest='sample', help='[OPTIONAL] Sample type to set $MYSAMPLE when doing 1 sample/job otherwise you can still use a hardcoded list of samples ', default="QElike")
     parser.add_option('--playlist', dest='playlist', help='Playlist type', default="NONE")
 
     parser.add_option('--prescale', dest='prescale', help='Prescale MC by this factor (CCQEMAT)', default="1")
@@ -196,6 +196,9 @@ mywrapper = open(wrapper_name,"w")
 mywrapper.write("#!/bin/sh\n") # don't wrap this one
 # Now create tarball
 print ("basedirpath",opts.basedirpath)
+if not os.path.exists(opts.basedirpath):
+    print ("--basedir seems not to exist", opts.basedirpath)
+    sys.exit(1)
 basedirpath=os.path.dirname(opts.basedirpath)
 basedirname=os.path.basename(opts.basedirpath)
 
@@ -205,6 +208,8 @@ pathtoconfig=os.path.join(opts.basedirpath,opts.rundir,opts.config)+".json"
 print (" check the configfile structure",pathtoconfig,os.path.exists(pathtoconfig))
 if not (os.path.exists(pathtoconfig) and os.path.exists(pathtoexe)):
   print ("config or exe not where it should be in BASEDIR>RUNDIR>localpath")
+  print ("BASEDIR=",optsbasedirpath)
+  print ("RUNDIR=",os.path.join(opts.basedirpath,opts.rundir))
   sys.exit(1)
 else:
   print ("config and exe seem to be in the right place relative to tarball")
