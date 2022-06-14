@@ -84,13 +84,16 @@ def writeSetups(mywrapper,basedirname,setup):
 def createTarball(tmpdir,tardir,tag,basedirname):
     
     found = os.path.isfile("%s/myareatar_%s.tar.gz"%(tardir,tag))
+
     if(not found):
         #cmd = "tar -czf /minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
         print (" in directory",os.getcwd())
-        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif} -zcf  %s/myareatar_%s.tar.gz ./%s"%(tmpdir,tag,basedirname)
+        tarpath = os.path.join(tmpdir,"myareatar_%s.tar.gz"%(tag))
+        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif} -zcf  %s ./%s"%(tarpath,basedirname)
         print ("Making tar",cmd)
         os.system(cmd)
-        cmd2 = "cp %s/myareatar_%s.tar.gz %s/"%(tmpdir,tag,tardir)
+       
+        cmd2 = "cp %s %s/"%(tarpath,tardir)
         print ("Copying tar",cmd2)
         
         os.system(cmd2)
@@ -220,6 +223,9 @@ if (not opts.debug):
         
         os.chdir(basedirpath)
         print (" move to directory",basedirpath,os.getcwd())
+        if (not os.path.exists(opts.tmpdir)):
+            print ("--tmpdir=",opts.tmpdir," seems not to exist, making it")
+            os.makedirs(opts.tmpdir)
         tarname = createTarball(opts.tmpdir,opts.tardir,tag_name,basedirname)
         # and then go back to where we were.
         os.chdir(here)
