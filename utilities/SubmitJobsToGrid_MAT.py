@@ -290,9 +290,20 @@ cmd += " --tar_file_name dropbox://"+opts.tardir+"myareatar_"+tag_name+".tar.gz 
 cmd += "file://"+os.environ["PWD"]+"/"+wrapper_name
 print (cmd)
 
-if not opts.debug:
-    os.system(cmd)
 
+if not opts.debug:
+    sf = open(wrapper_name.replace(".sh",".log"),'w')
+    sf.write(cmd)
+    #os.system(cmd)
+    answer="failed"
+    try:
+        answer = os.popen(cmd).read()
+        
+    except:
+        print ("could not submit")
+    print ("answer was",answer)
+    sf.write(answer)
+    sf.close()
     print ("Deleting the app area tar..... ")
     localtar = os.path.join(opts.tmpdir,"myareatar_"+tag_name+".tar.gz")
     os.system("rm  "+localtar)
