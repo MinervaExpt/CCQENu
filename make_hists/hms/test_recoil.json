@@ -1,9 +1,9 @@
 {
   "version":9,  // Feb 22 large scale tests
-//  "mcIn":"${CCQEMAT}/playlists/remote/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
-// "dataIn":"${CCQEMAT}/playlists/remote/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
-  "mcIn":"${CCQEMAT}/playlists/local/${MYPLAYLIST}_MC.txt",
-  "dataIn":"${CCQEMAT}/playlists/local/${MYPLAYLIST}_DATA.txt",
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
+ // "mcIn":"${CCQEMAT}/playlists/local/${MYPLAYLIST}_MC.txt",
+ // "dataIn":"${CCQEMAT}/playlists/local/${MYPLAYLIST}_DATA.txt",
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
   "recoName":"CCQENu",
