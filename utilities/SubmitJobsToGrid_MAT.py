@@ -40,6 +40,7 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
     writewrap(mywrapper,"echo \"check on weights\" $MPARAMFILESROOT\n")
     writewrap(mywrapper,"echo \" check on CCQEMAT\" $CCQEMAT")
     writewrap(mywrapper,"export MYPLAYLIST="+opts.playlist+"\n")
+    writewrap(mywrapper,"export MYSAMPLE="+opts.sample+"\n")
     theexe = opts.theexe
     writewrap(mywrapper,os.path.join("$CCQEMAT",opts.theexe)+" "+os.path.join("$CCQEMAT",opts.config)+" "+opts.prescale+" >& sidebands_%s.log\n"%(tag))
     writewrap(mywrapper,"echo \"run returned \" $?\n")
@@ -83,13 +84,16 @@ def writeSetups(mywrapper,basedirname,setup):
 def createTarball(tmpdir,tardir,tag,basedirname):
     
     found = os.path.isfile("%s/myareatar_%s.tar.gz"%(tardir,tag))
+
     if(not found):
         #cmd = "tar -czf /minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
         print (" in directory",os.getcwd())
-        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif} -zcf  %s/myareatar_%s.tar.gz ./%s"%(tmpdir,tag,basedirname)
+        tarpath = os.path.join(tmpdir,"myareatar_%s.tar.gz"%(tag))
+        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif} -zcf  %s ./%s"%(tarpath,basedirname)
         print ("Making tar",cmd)
         os.system(cmd)
-        cmd2 = "cp %s/myareatar_%s.tar.gz %s/"%(tmpdir,tag,tardir)
+       
+        cmd2 = "cp %s %s/"%(tarpath,tardir)
         print ("Copying tar",cmd2)
         
         os.system(cmd2)
@@ -113,8 +117,8 @@ def writeOptions(parser):
     parser.add_option('--rundir', dest='rundir', help='relative path in basedir for the directory you run from, if different', default = ".")
     parser.add_option('--setup', dest='setup', help='relative path in basedir to the setup script', default = ".")
     parser.add_option('--config', dest='config', help='relative path in rundir for json config file (CCQEMAT)', default = "./test_v9")
-    parser.add_option('--stage', dest='stage', help='Process type', default="NONE")
-    parser.add_option('--sample', dest='sample', help='Sample type', default="NONE")
+    parser.add_option('--stage', dest='stage', help='Processing type [CCQEMAT or (future) EventLoop]', default="NONE")
+    parser.add_option('--sample', dest='sample', help='[OPTIONAL] Sample type to set $MYSAMPLE when doing 1 sample/job otherwise you can still use a hardcoded list of samples ', default="QElike")
     parser.add_option('--playlist', dest='playlist', help='Playlist type', default="NONE")
 
     parser.add_option('--prescale', dest='prescale', help='Prescale MC by this factor (CCQEMAT)', default="1")
@@ -170,8 +174,10 @@ print ("******************************************************")
 
 # This is the output directory after the job is finished
 #output_dir = "$CONDOR_DIR_HISTS/"  (this doesn't work right now)
-
-theoutdir = os.path.join(opts.outdir,opts.playlist+"_"+tag_name)
+if(not os.path.exists(opts.outdir)):
+    print ("Looks like opts.outdir doesn't exist",opts.outdir)
+    sys.exit(1)
+theoutdir = os.path.join(opts.outdir,opts.playlist+"_"+opts.sample+"_"+tag_name)
 print ("output dir",theoutdir)
 # Make outdir if not exist
 if(not os.path.isdir(theoutdir) and not opts.debug):
@@ -195,6 +201,9 @@ mywrapper = open(wrapper_name,"w")
 mywrapper.write("#!/bin/sh\n") # don't wrap this one
 # Now create tarball
 print ("basedirpath",opts.basedirpath)
+if not os.path.exists(opts.basedirpath):
+    print ("--basedir seems not to exist", opts.basedirpath)
+    sys.exit(1)
 basedirpath=os.path.dirname(opts.basedirpath)
 basedirname=os.path.basename(opts.basedirpath)
 
@@ -204,6 +213,8 @@ pathtoconfig=os.path.join(opts.basedirpath,opts.rundir,opts.config)+".json"
 print (" check the configfile structure",pathtoconfig,os.path.exists(pathtoconfig))
 if not (os.path.exists(pathtoconfig) and os.path.exists(pathtoexe)):
   print ("config or exe not where it should be in BASEDIR>RUNDIR>localpath")
+  print ("BASEDIR=",opts.basedirpath)
+  print ("RUNDIR=",os.path.join(opts.basedirpath,opts.rundir))
   sys.exit(1)
 else:
   print ("config and exe seem to be in the right place relative to tarball")
@@ -214,6 +225,9 @@ if (not opts.debug):
         
         os.chdir(basedirpath)
         print (" move to directory",basedirpath,os.getcwd())
+        if (not os.path.exists(opts.tmpdir)):
+            print ("--tmpdir=",opts.tmpdir," seems not to exist, making it")
+            os.makedirs(opts.tmpdir)
         tarname = createTarball(opts.tmpdir,opts.tardir,tag_name,basedirname)
         # and then go back to where we were.
         os.chdir(here)
@@ -258,12 +272,14 @@ gccstring = "x86_64-slc7-gcc49-opt"
 cmd = "" 
 cmd += "jobsub_submit --group minerva " #Group of experiment
 #cmd += "--cmtconfig "+gccstring+" " #Setup minerva soft release built with minerva configuration
-cmd += "--OS sl7 " #Operating system #Not needed in SL7
+#cmd += "--OS sl7 " #Operating system #Not needed in SL7
 
 if opts.mail:
     cmd += " -M " #this option to make decide if you want the mail or not
 #cmd += "--subgroup=Nightly " #This is only for high priority jobs
 cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC,OFFSITE "
+# make a very complicated thing to tell it to use a singularity image
+cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
 cmd += " --role=Analysis "
 cmd += " --expected-lifetime  " + opts.lifetime
 cmd += " --memory "+str(memory)+"MB "
