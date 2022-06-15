@@ -174,7 +174,9 @@ print ("******************************************************")
 
 # This is the output directory after the job is finished
 #output_dir = "$CONDOR_DIR_HISTS/"  (this doesn't work right now)
-
+if(not os.path.exists(opts.outdir)):
+    print ("Looks like opts.outdir doesn't exist",opts.outdir)
+    sys.exit(1)
 theoutdir = os.path.join(opts.outdir,opts.playlist+"_"+opts.sample+"_"+tag_name)
 print ("output dir",theoutdir)
 # Make outdir if not exist
@@ -270,12 +272,14 @@ gccstring = "x86_64-slc7-gcc49-opt"
 cmd = "" 
 cmd += "jobsub_submit --group minerva " #Group of experiment
 #cmd += "--cmtconfig "+gccstring+" " #Setup minerva soft release built with minerva configuration
-cmd += "--OS sl7 " #Operating system #Not needed in SL7
+#cmd += "--OS sl7 " #Operating system #Not needed in SL7
 
 if opts.mail:
     cmd += " -M " #this option to make decide if you want the mail or not
 #cmd += "--subgroup=Nightly " #This is only for high priority jobs
 cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC,OFFSITE "
+# make a very complicated thing to tell it to use a singularity image
+cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
 cmd += " --role=Analysis "
 cmd += " --expected-lifetime  " + opts.lifetime
 cmd += " --memory "+str(memory)+"MB "

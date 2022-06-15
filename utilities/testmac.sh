@@ -9,4 +9,4 @@ export SCRATCH=$HOME/tmp/
 # type python $APP/TOPMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py to see the option descriptions
 # here my release is in $APP/TOPMAT - your mileage may differ
 
-python $APP/TOPMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test --basedir=$APP/TOPMAT --rundir=CCQENu/make_hists --playlist=minervame5A --tag=test --mail --prescale=100 --exe=sidebands_v2 --config=./hms/testmac --setup=CCQENu/utilities/setup_batch_osx.sh --tardir=$HOME/tmp/test --tmpdir=$HOME/tmp/ #--debug --notimestamp
+python $APP/BIGMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test --basedir=$APP/BIGMAT --rundir=CCQENu/make_hists --playlist=minervame5A --tag=test --mail --prescale=100 --exe=sidebands_v2 --config=./hms/testmac --setup=CCQENu/utilities/setup_batch_osx.sh --tardir=$HOME/tmp/test --tmpdir=$HOME/tmpme/ #--debug --notimestamp
