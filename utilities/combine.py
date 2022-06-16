@@ -2,9 +2,9 @@ import sys,os,time
 from ROOT import *
 from PlotUtils import *
 
-playlists = ["6B","6C","6D","6E","6F","6G","6H","6I","6J"]
+playlists = ["5A","6A","6B","6C","6D","6E","6F","6G","6H","6I","6J"]
 list = '_'.join(playlists)
-template = "SB_AntiNu_XX_YY.root"
+template = sys.argv[1]
 prescale = "1000"
 #ofile = TFile.Open(list+".root",'RECREATE')
 potdata ={}
@@ -15,8 +15,11 @@ count = 0
 
 for play in playlists:
   count += 1
-  filename = template.replace("XX",play).replace("YY",prescale)
-  newfilename = "scaled_"+filename
+  filename = template.replace("5A",play)
+  filepath  = os.path.dirname(filename)
+  
+  newfilename = os.path.join(filepath,"scaled_"+os.path.basename(filename))
+  print ("newfilename",newfilename)
   f_out = TFile.Open(newfilename,"RECREATE")
   f_root = TFile.Open(filename,'READONLY')
   h_POT = f_root.Get("POT_summary")
