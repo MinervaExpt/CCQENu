@@ -944,5 +944,21 @@ double CVUniverse::GetTrueLog10RecoilEnergyGeV() const {
     }
     return genie_n_strange_baryon; 
   }
+
+ int CVUniverse::GetMCTargetA() const{
+     return GetInt("mc_targetA");
+ }
+
+ int CVUniverse::GetMCTargetZ() const{
+     return GetInt("mc_targetZ");
+ }
+
+ int CVUniverse::GetMCTargetNucleon() const{
+     return GetInt("mc_targetNucleon");
+ }
+
+ int CVUniverse::Dummy() const {
+     return 0.;
+ }
     
 #endif
