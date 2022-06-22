@@ -26,11 +26,14 @@ void FillData(std::string tag, CVUniverse* univ,
 
 void FillMC(std::string tag, CVUniverse* univ, double weight,
             std::vector<CCQENu::VariableFromConfig*> variables,
-            std::vector<CCQENu::Variable2DFromConfig*> variables2D) {
+            std::vector<CCQENu::Variable2DFromConfig*> variables2D,
+            double scaleweight == 1) {
   for (auto v : variables) {
     if (v->hasMC[tag]){
       double fill_val = v->GetRecoValue(*univ, 0);
       v->m_selected_mc_reco.Fill(tag, univ, fill_val, weight);
+      std::string rs_tag = tag+"_rescaled";
+      v->m_tuned_mc_reco.Fill(tag, univ, fill_val, scaleweight)
     }
     if (v->hasSelectedTruth[tag]){
       double true_val = v->GetTrueValue(*univ, 0);
@@ -42,6 +45,8 @@ void FillMC(std::string tag, CVUniverse* univ, double weight,
       double fill_val_x = v2->GetRecoValueX(*univ, 0);
       double fill_val_y = v2->GetRecoValueY(*univ, 0);
       v2->m_selected_mc_reco.Fill2D(tag, univ, fill_val_x, fill_val_y, weight);
+      std::string rs_tag = tag+"_rescaled";
+      v2->m_tuned_mc_reco.Fill2D(tag, univ, fill_val_x, fill_val_y, scaleweight)
     }
     if (v2->hasSelectedTruth[tag]){
       double true_val_x = v2->GetTrueValueX(*univ, 0);

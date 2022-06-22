@@ -94,6 +94,7 @@ public:
   // Histwrappers -- selected mc, selected data
 
   HM2D m_selected_mc_reco;
+  HM2D m_tuned_mc_reco; // HM for tuned MC hists used for background subtraction -NHV
   HM2D m_selected_mc_truth;
   HM2D m_signal_mc_truth;
   HM2D m_selected_data;
@@ -149,6 +150,9 @@ public:
 
     m_selected_mc_reco = HM2D(Form("%s",GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
     m_selected_mc_reco.AppendName("reconstructed",tags);
+
+    m_tuned_mc_reco = HM2D(Form("%s",GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
+    m_tuned_mc_reco.AppendName("reconstructed_rescale",tags);
   }
 
   template <typename T>
@@ -252,6 +256,8 @@ public:
       if(hasMC[tag]) {
         m_selected_mc_reco.Write(tag);
         std::cout << " write out mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+        m_tuned_mc_reco.Write((tag+"_rescale").c_str());
+        std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist((tag+"_rescale").c_str())->GetName() << std::endl;
         // m_selected_mc_by_channel.WriteToFile(f);
         m_selected_mc_truth.Write(tag);
       }
@@ -276,6 +282,7 @@ public:
     for (auto tag:m_tags){
       if(hasMC[tag]){
         m_selected_mc_reco.SyncCVHistos();
+        m_tuned_mc_reco.SyncCVHistos();
         m_selected_mc_truth.SyncCVHistos();
       }
       if(hasData[tag]){

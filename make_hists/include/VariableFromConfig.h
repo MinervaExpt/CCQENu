@@ -147,14 +147,15 @@ public:
       PlotUtils::VariableBase<CVUniverse>::m_binning =  MakeUniformBinning(nbins,xmin,xmax);
     }
   }
-  
+
   typedef std::map<std::string, std::vector<CVUniverse*>> UniverseMap;
   //=======================================================================================
   // DECLARE NEW HISTOGRAMS
   //=======================================================================================
   // Histwrappers -- selected mc, selected data
-  
+
   HM m_selected_mc_reco;
+  HM m_tuned_mc_reco; // HM for tuned MC hists used for background subtraction -NHV
   HM m_selected_mc_truth;
   HM m_signal_mc_truth;
   HM m_selected_data;
@@ -169,30 +170,30 @@ public:
   std::vector<std::string> m_for;
   //RESPONSE* m_response;
   // helpers for response
-  
+
   // std::map< CVUniverse* , int> m_map; // map to get name and index from Universe;
   // Histofolio to categorize MC by interaction channel
   //FOLIO m_selected_mc_by_channel;
   //FOLIO m_selected_mc_truth_by_channel;
   inline virtual std::string GetUnits(){return m_units;};
-  
+
   inline virtual void SetUnits(std::string units){m_units=units;};
-  
+
   //=======================================================================================
   // INITIALIZE ALL HISTOGRAMS
   //=======================================================================================
-  
-  
+
+
   void AddTags(const std::vector<std::string> tags){
     for(auto t:tags){
       m_tags.push_back(t);
     }
   };
-  
+
   template <typename T>
-  
+
   // all of the following could probably be the same code, sigh...
-  
+
   void InitializeMCHistograms(T univs, const std::vector< std::string> tags) {
     if (std::count(m_for.begin(), m_for.end(),"selected_reco")< 1) {
       std::cout << "VariableFromConfig Warning: selected_reco is disabled for this variable " << GetName() << std::endl;
@@ -205,13 +206,16 @@ public:
       hasMC[tag] = true;
     }
     std::vector<double> bins = GetBinVec();
-    
-    
+
+
 //     m_selected_mc_reco = HM(Form("selected_mc_reco_%s", name), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
-     m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
-     m_selected_mc_reco.AppendName("reconstructed",tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+    m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
+    m_selected_mc_reco.AppendName("reconstructed",tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+
+    m_tuned_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
+    m_tuned_mc_reco.AppendName("reconstructed_rescale",tags);
   }
-  
+
   template <typename T>
   void InitializeSelectedTruthHistograms(T univs, const std::vector<std::string> tags) {
      if (std::count(m_for.begin(), m_for.end(),"selected_truth")< 1) {
@@ -295,40 +299,43 @@ public:
       hasData[tag] = true;
     }
     std::vector<double> bins = GetBinVec();
-    
+
     m_selected_data = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs,tags);
     m_selected_data.AppendName("reconstructed",tags);
   }
-  
-  
-  
+
+
+
   //=======================================================================================
   // WRITE ALL HISTOGRAMS
   //=======================================================================================
   void WriteAllHistogramsToFile(TFile& f)  {
     std::cout << "should only be called once " << std::endl;
     f.cd();
-    
-    
+
+
     // selected mc reco
-    
+
     for (auto tag:m_tags){
       std::cout << " write out flags " << hasMC[tag] << hasSelectedTruth[tag] << hasTruth[tag] << hasData[tag] <<  std::endl;
       if(hasMC[tag]) {
         m_selected_mc_reco.Write(tag);
         std::cout << " write out mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+
+        m_tuned_mc_reco.Write((tag+"_rescale").c_str());
+        std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist((tag+"_rescale").c_str())->GetName() << std::endl;
       }
       if(hasSelectedTruth[tag]){
         // m_selected_mc_by_channel.WriteToFile(f);
         std::cout << " write out selected truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
         m_selected_mc_truth.Write(tag);
       }
-      
+
       if(hasTruth[tag]){
         std::cout << " write out truth histogram " << m_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
         m_signal_mc_truth.Write(tag);
       }
-      
+
       if(hasData[tag]){
         std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
         // m_selected_data.hist->Print();
@@ -344,6 +351,7 @@ public:
     for (auto tag:m_tags){
       if(hasMC[tag]){
         m_selected_mc_reco.SyncCVHistos();
+        m_tuned_mc_reco.SyncCVHistos();
       }
       if(hasSelectedTruth[tag]){
         m_selected_mc_truth.SyncCVHistos();
