@@ -711,7 +711,7 @@ template<class MnvHistoType>
     //   energydep = true;
     // }
     // binwid = energydep;
-      // hack in a varsFile if it does not exist 
+      // hack in a varsFile if it does not exist
       if (!(configs.count("varsFile")>0)){
   
           // backwards compatibility change a file read into a configmap

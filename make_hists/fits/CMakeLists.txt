@@ -50,6 +50,8 @@ include/CVUniverse.cxx
 fits/ScaleFactors.cpp
 fits/MultiScaleFactors.cpp
 fits/DoTheFit.cpp
+fits/DoTheFitBinByBin.cpp
+utils/SyncBands.cxx
 )
 
 # tell it about the header files
@@ -72,6 +74,8 @@ include/plotting_pdf.h
 fits/ScaleFactors.h
 fits/MultiScaleFactors.h
 fits/DoTheFit.h
+fits/DoTheFitBinByBin.h
+utils/SyncBands.h
 )
 
 include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils)
@@ -89,7 +93,7 @@ MESSAGE("ROOT_LIBRARIES:${ROOT_LIBRARIES} ")
 
 MESSAGE("PROJECT:${PROJECT_NAME}")
 
-target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT}  -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) #-L$ENV{JSONCPP_DIR}/lib
+target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT}  -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) 
 #target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT} -lplotutils -L$ENV{UNFOLDUTILSROOT} -lunfoldutils -l$ENV{UNFOLDUTILSROOT} -lG__UnfoldUtilsDict.so)
 
 
@@ -110,7 +114,9 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{P
 #add_executable(runsamples runsamples.C)
 add_executable(sidebands_v2 sidebands_v2.C)
 add_executable(analyze_v8 analyze_v8.C)
+add_executable(analyze_v9 analyze_v9.C)
 add_executable(MnvFitDriver MnvFitDriver.cxx)
+add_executable(MnvMateusDriver MnvMateusDriver.cxx)
 add_executable(analyze_vSean smg/analyze_vSean.C)
 
 
@@ -121,6 +127,8 @@ add_executable(analyze_vSean smg/analyze_vSean.C)
 #target_link_libraries(runsamples  PRIVATE ${PROJEC_NAME} )
 target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(MnvFitDriver PRIVATE ${PROJECT_NAME} )
+target_link_libraries(MnvMateusDriver PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_vSean  PRIVATE ${PROJECT_NAME} )
 

@@ -9,11 +9,12 @@ import array as array
 gStyle.SetEndErrorSize(10)
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
 ratio = False
-reference="CV"
+ratio = True
+reference="NA"
 sratio = ""
 if ratio:
   sratio = "ratio_"
-version = "nue_v27"
+version = "v27b"
 scale = 1.0
 var = "q2"
 if len(sys.argv)>1:
@@ -74,6 +75,8 @@ if version == "nue_v27":
   path = "/Users/schellma/Dropbox/ccqe/v27/"
 if version == "nue_v14":
   path = ""
+if version == "v27b":
+  path = "/Users/schellma/Dropbox/ccqe/v27b/"
 validmodels = []
 for m in models:
   if var == "q2":

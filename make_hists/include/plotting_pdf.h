@@ -285,6 +285,10 @@ void PlotCVAndError(TCanvas & cE, PlotUtils::MnvH1D* idatahist,PlotUtils::MnvH1D
   mnvPlotter.SetROOT6Palette(57); // kBird
 
   mnvPlotter.DrawDataMCWithErrorBand(datahist, hist, mcScale, "TL", useHistTitles, NULL, NULL,cov_area, statPlusSys);
+    TH1D  stat = datahist->GetCVHistoWithStatError();
+    stat.SetLineColor(kBlack);
+    stat.SetMarkerColor(kBlack);
+    stat.Draw("E1 same");
   //mnvPlotter.DrawMCWithErrorBand(hist); //I think that this call only shows stat errors.
   std::string plotname = Form("Title: %s_CV_w_err_%s",datahist->GetName() ,label.c_str());
   t->Draw();

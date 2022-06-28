@@ -6,6 +6,12 @@
 #include <iostream>
 #include <cassert>
 #include <vector>
+#include <memory>
+#include "utils/expandEnv.h"
+
+class NuConfig;
+
+typedef std::map<const std::string, NuConfig*> CONFIGMAP;
 
 class NuConfig{
 
@@ -17,15 +23,19 @@ public:
 
 public:
 
+    
   NuConfig(){};
   // copy constructor
   NuConfig(const NuConfig& f){
     f_filename = "fromConfig";
     f_config = f.f_config;
   }
+    NuConfig(const std::string inputstringlong){
+        ReadFromString(inputstringlong);
+    }
 
   bool Read(const std::string filename){
-    f_filename  = filename;
+    f_filename  = expandEnv(filename);
     Json::CharReaderBuilder rbuilder;
     // Configure the Builder, then ...
     std::ifstream f_buffer(f_filename, std::ifstream::binary);
@@ -36,10 +46,35 @@ public:
       // report to the user the failure and their locations in the document.
       std::cout  << "Failed to parse configuration\n"
       << errs;
+      std::cout <<  "bad file was " << filename << std::endl;
+          exit(120);
       return false;
       }
 
     std::cout << "read in configuration file " << f_filename << std::endl;
+    return true;
+  };
+  
+  bool ReadFromString(const std::string inputstringlong){
+    JSONCPP_STRING err;
+      std::string inputstring=expandEnv(inputstringlong);
+    //Json::CharReader reader;
+    
+//    f_filename  = filename;
+//    Json::CharReaderBuilder rbuilder;
+//    // Configure the Builder, then ...
+//    std::ifstream f_buffer(f_filename, std::ifstream::binary);
+//    std::string errs;
+    //https://github.com/open-source-parsers/jsoncpp/blob/master/example/readFromString/readFromString.cpp  says to use this somewhat cumbersome method instead the old one
+    Json::CharReaderBuilder builder;
+    const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
+        if (!reader->parse(inputstring.c_str(), inputstring.c_str()+ inputstring.length(), &f_config,
+                           &err)) {
+          std::cout << "error" << err << std::endl;
+        
+          return EXIT_FAILURE;
+        }
+
     return true;
   };
 
@@ -71,7 +106,7 @@ public:
   };
 
   std::string ToString() const{
-    return f_config.toStyledString();
+    return expandEnv(f_config.toStyledString());
   }
 
   double GetDouble(const std::string key)const{
@@ -88,7 +123,7 @@ public:
   };
   std::string GetString(const std::string key)const{
     assert(CheckMember(key));
-    return f_config.get(key,"None").asString();
+    return expandEnv(f_config.get(key,"None").asString());
   };
 
   std::vector <std::string> GetStringVector(const std::string key)const{
@@ -97,7 +132,7 @@ public:
     Json::Value array = f_config.get(key,0);
     for (const auto &el  : array){
       if (el.isString()){
-        a.push_back(el.asString());
+        a.push_back(expandEnv(el.asString()));
       }
     }
     return a;
@@ -178,7 +213,7 @@ public:
     return typeid(var_t) == typeid(double)?GetDouble(key):GetInt(key);
   }
 
-  NuConfig GetConfigVariable(std::string variable){
+  NuConfig GetConfigVariable(std::string variable){  /// this is specific to particular code and should go elsewher
     NuConfig varsconfig;
     NuConfig config1D;
     NuConfig config2D;

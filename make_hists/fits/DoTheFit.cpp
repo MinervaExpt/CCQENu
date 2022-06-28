@@ -3,11 +3,12 @@
 #include "Minuit2/Minuit2Minimizer.h"
 #include "TMinuitMinimizer.h"
 #include "MnvH2D.h"
+#include "utils/SyncBands.h"
 
 
 namespace fit{
 
-int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHists, const std::map<const std::string, std::vector< PlotUtils::MnvH1D*> > unfitHists, const std::map<const std::string, PlotUtils::MnvH1D*>  dataHist, const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type, const int lowBin, const int hiBin ){
+int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHists, const std::map<const std::string, std::vector< PlotUtils::MnvH1D*> > unfitHists, const std::map<const std::string, PlotUtils::MnvH1D*>  dataHist, const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type, const int lowBin, const int hiBin, const bool binbybin ){
     
     // takes the histograms in unfitHists[sample][category], fits to dataHist by combining all the samples by changing the normalization of the category templates and then makes fitHists[sample][category] which contains the best template fit for each universe.
     // writes the chi2 value, parameters and covariance of the parameters into the output root file but does not return them.
@@ -19,14 +20,16 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
     
     // the fit code wants TH1D so make a copy of the data for that purpose
     std::map<const std::string, TH1D* > dataHistCV;
+  TString aname;
+  int count = 0;
     for (auto sample:dataHist){
+      if (count == 0){
+        aname = dataHist.at(sample.first)->GetName();
+        count++;
+      }
         dataHistCV[sample.first] = (TH1D*) dataHist.at(sample.first)->Clone();
     }
     
-    // make object to contain the fit information
-    PlotUtils::MnvH1D parameters("parameters","fit parameters",ncat,0.0,double(ncat));
-    PlotUtils::MnvH2D covariance("covariance","fit parameters",ncat,0.0,double(ncat),ncat,0.0,double(ncat));
-    PlotUtils::MnvH1D fcn("fcn","fcn",1,0.,1.);
     
     // long winded way to pull out the universes list
     // could make this in to a consistency check later.
@@ -34,13 +37,20 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
     
     std::vector<std::string> universes;
     PlotUtils::MnvH1D* ahist;
-    int count = 0;
+    int acount = 0;
+    
     for (auto sample:unfitHists){
-        count++;
-        if (count>1)continue;
+        acount++;
+        if (acount>1)continue;
         ahist = sample.second.at(0);
         universes = ahist->GetVertErrorBandNames();
     }
+  
+    
+  // make objects to contain the fit information
+  PlotUtils::MnvH1D parameters(TString("parameters_"+aname),"fit parameters",ncat,0.0,double(ncat));
+  PlotUtils::MnvH2D covariance(TString("covariance_"+aname),"fit parameters",ncat,0.0,double(ncat),ncat,0.0,double(ncat));
+  PlotUtils::MnvH1D fcn(TString("fcn"+aname),"fcn",1,0.,1.);
     
     // add in the CV so you do a loop over universes
     
@@ -87,7 +97,8 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
                 }
             }
             std::cout << " have made the local samples for this universe"<< std::endl;
-              
+            
+          for (int thebin = lowBin; thebin <= hiBin; thebin++){
             fit::MultiScaleFactors func2(unfitHistsCV,dataHistCV,includeInFit,type,lowBin,hiBin);
  
             // set parameters with lower limit of 0
@@ -205,6 +216,7 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
                           // HMS change to only do the bin range
                           hist->SetBinContent(j,hist->GetBinContent(j)*combScaleResults[i]);
                           hist->SetBinError(j,hist->GetBinError(j)*ScaleResults[i]);
+                        }
                       }
                         //hist->Scale(ScaleResults[i]);
                     }
@@ -212,6 +224,17 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
             }
         } // end of nuniv loop
     }// end of universes loop
+    
+    for (auto sample:fitHists){
+        for (int i = 0; i < ncat; i++){
+            SyncBands(fitHists[sample.first][i]);
+        }
+    }
+   
+        SyncBands(&fcn);
+        SyncBands(&parameters);
+        SyncBands(&covariance);
+        
     fcn.MnvH1DToCSV("fcn","./csv/");
     fcn.Write();
     parameters.MnvH1DToCSV("parameters","./csv/");

@@ -217,11 +217,11 @@ thefile = "XS_pzmu_proj_%s.root"%("CV")
 #if var in ["pzmu","pzmu_ptmu","ptmu"]:
   
 if var in ["q2","enu"]:
-  thefile =  thefile.replace("pzmu",var)
+  thefile =  thefile.replace("pzmu","enu")
 if var in ["enu"]:
   thefile =  thefile.replace("pzmu","enu")
-if var not in ["q2"]:
-  thefile = thefile.replace("_proj_","_")
+#if var not in ["q2"]:
+thefile = thefile.replace("_proj_","_")
 datafile = thefile
 print ("Datafile is ",datafile)
 #

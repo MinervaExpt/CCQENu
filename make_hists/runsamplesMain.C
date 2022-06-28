@@ -343,7 +343,10 @@ int main(const int argc, const char *argv[] ) {
   //=========================================
   std::cout << "Done filling. Begin plotting.\n";
   
-  std::string outname = Form("%s_%s_%d.root",config.GetString("outRoot").c_str(),pl.c_str(),prescale);
+  std::string path(pl);
+   
+  std::string base = path.substr(path.find_last_of("/\\") + 1);
+  std::string outname = Form("%s_%s_%d.root",config.GetString("outRoot").c_str(),base.c_str(),prescale);
   std::cout << " outname is " << outname << " prescale was " << prescale << std::endl;
   // std::string outname = config.GetString("outRoot")+"_"+pl+"_"+prescale+".root";
   TFile* out=TFile::Open((dir.append(outname)).c_str(),"RECREATE");

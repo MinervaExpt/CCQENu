@@ -63,7 +63,12 @@ void LoopAndFillEventSelection(std::string tag,
     // Loop bands and universes
     for (auto band : error_bands) {
       std::vector<CVUniverse*> error_band_universes = band.second;
-      for (auto universe : error_band_universes) {
+      //  HMS replace with iuniv to access weights more easily
+      //  HMS for (auto universe : error_band_universes) {
+      
+       for (int iuniv=0; iuniv < error_band_universes.size(); iuniv++){
+         
+         auto universe = error_band_universes[iuniv];
 
         universe->SetEntry(i);
 

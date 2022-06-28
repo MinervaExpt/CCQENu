@@ -1,0 +1,10 @@
+scp minervagpvm04.fnal.gov:/pnfs/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/minervame1Npass1/CCQENu_mc_AnaTuple_run00113270.root $HOME/data/playlists/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/minervame1Npass1/CCQENu_mc_AnaTuple_run00113270.root
+
+
+scp minervagpvm04.fnal.gov:/pnfs/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/minervame1Npass1/CCQENu_mc_AnaTuple_run00113271.root $HOME/data/playlists/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/minervame1Npass1/CCQENu_mc_AnaTuple_run00113271.root
+
+
+scp minervagpvm04.fnal.gov:/pnfs/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/minervame1Npass1/CCQENu_mc_AnaTuple_run00113272.root $HOME/data/playlists/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/minervame1Npass1/CCQENu_mc_AnaTuple_run00113272.root
+
+
+scp minervagpvm04.fnal.gov:/pnfs/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/minervame1Npass1/CCQENu_mc_AnaTuple_run00113273.root $HOME/data/playlists/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/minervame1Npass1/CCQENu_mc_AnaTuple_run00113273.root
