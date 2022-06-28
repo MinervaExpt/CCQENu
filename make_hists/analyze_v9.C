@@ -126,7 +126,7 @@ int main(const int argc, const char *argv[] ) {
   }
     
   
-  allconfigs["main"]->Print();
+ // allconfigs["main"]->Print();
     
     // code used to use config now use allconfigs["main"]
   std::vector<std::string> AnalyzeVariables = allconfigs["main"]->GetStringVector("AnalyzeVariables");
@@ -253,7 +253,7 @@ int main(const int argc, const char *argv[] ) {
         MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
         if (hist != 0){
           response1D[sample][variable][type][category] = hist->Clone();
-          response1D[sample][variable][type][category]->Print();
+         // response1D[sample][variable][type][category]->Print();
           response1D[sample][variable][type][category]->SetDirectory(0);
           std::cout << " response " << sample << " " << variable << " " << type << " " << category << std::endl;
           delete hist;
@@ -316,17 +316,21 @@ int main(const int argc, const char *argv[] ) {
   // define the output file
     std::string pdfname;
     std::string outroot;
+    
     if (singlesample){
-        outroot = "analyze9_"+asample+"_"+inputname;
+        std::string outname=inputname.replace(inputname.end()-5,inputname.end(),"")+"_"+asample+"_analyze9";
+        outroot = outname +".root";
         
         // set up the outputs
-        pdfname = "analyze9_"+asample+"_"+inputname.replace(inputname.end()-5,inputname.end(),"");
+        pdfname = outname;
     }
     else{
-        outroot = "analyze9_"+inputname;
+        std::string outname=inputname.replace(inputname.end()-5,inputname.end(),"")+"_analyze9";
+        outroot = outname +".root";
+        
     
         // set up the outputs
-        pdfname = "analyze9_"+inputname.replace(inputname.end()-5,inputname.end(),"");
+        pdfname = outname;
     }
     TFile* o = TFile::Open(outroot.c_str(),"RECREATE");
   std::string pdffilename1D = pdfname + "_1D.pdf";

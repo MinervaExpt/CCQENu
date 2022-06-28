@@ -277,7 +277,7 @@ cmd += "jobsub_submit --group minerva " #Group of experiment
 if opts.mail:
     cmd += " -M " #this option to make decide if you want the mail or not
 #cmd += "--subgroup=Nightly " #This is only for high priority jobs
-cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC,OFFSITE "
+cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC " # remove OFFSITE
 # make a very complicated thing to tell it to use a singularity image
 cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
 cmd += " --role=Analysis "
