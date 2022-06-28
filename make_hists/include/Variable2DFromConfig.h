@@ -37,7 +37,7 @@ public:
                        const VariableBase<CVUniverse>& x,
                        const VariableBase<CVUniverse>& y) :
   PlotUtils::Variable2DBase<CVUniverse>(name, x, y ){
-    std::vector<std::string> def = {"data","selected_reco","selected_truth","response","truth"};
+    std::vector<std::string> def = {"data","selected_reco","tuned_reco","selected_truth","response","truth"};
    for (auto s:def){
      m_for.push_back(s);
    }
@@ -46,7 +46,7 @@ public:
   Variable2DFromConfig(const VariableBase<CVUniverse>& x,
                        const VariableBase<CVUniverse>& y) :
   PlotUtils::Variable2DBase<CVUniverse>(x, y ){
-    std::vector<std::string> def = {"data","selected_reco","selected_truth","response","truth"};
+    std::vector<std::string> def = {"data","selected_reco","tuned_reco","selected_truth","response","truth"};
    for (auto s:def){
      m_for.push_back(s);
    }
@@ -61,7 +61,7 @@ public:
       m_for = config.GetStringVector("for");
     }
     else{
-      std::vector<std::string> def = {"data","selected_reco","selected_truth","response","truth"};
+      std::vector<std::string> def = {"data","selected_reco","tuned_reco","selected_truth","response","truth"};
       for (auto s:def){
         m_for.push_back(s);
       }
@@ -79,7 +79,7 @@ public:
       }
     }
     else{
-      std::vector<std::string> def = {"data","selected_reco","selected_truth","response","truth"};
+      std::vector<std::string> def = {"data","selected_reco","tuned_reco","selected_truth","response","truth"};
       for (auto s:def){
         m_for.push_back(s);
       }
@@ -102,6 +102,7 @@ public:
   std::string m_units;
   std::map<const std::string, bool> hasData;
   std::map<const std::string, bool> hasMC;
+  std::map<const std::string, bool> hasTunedMC;
   std::map<const std::string, bool> hasTruth;
   std::map<const std::string, bool> hasSelectedTruth;
   std::map<const std::string, bool> hasResponse;
@@ -145,14 +146,21 @@ public:
     std::vector<double> xbins = GetBinVecX();
     std::vector<double> ybins = GetBinVecY();
 
-
-    //    m_selected_mc_reco = HM2D(Form("selected_mc_reco_%s", name), (GetName()+";"+m_xaxis_label+"_"+m_yaxis_label).c_str(), xbins, ybins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
-
     m_selected_mc_reco = HM2D(Form("%s",GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
     m_selected_mc_reco.AppendName("reconstructed",tags);
 
+    if (std::count(m_for.begin(), m_for.end(),"tuned_reco")< 1) {
+      std::cout << "Variable2DFromConfig Warning: tuned_reco is disabled for this 2D variable " << GetName() << std::endl;
+      for (auto tag:tags){
+        hasTunedMC[tag] = false;
+      }
+      return;
+    }
+    for (auto tag:tags){
+      hasTunedMC[tag] = true;
+    }
     m_tuned_mc_reco = HM2D(Form("%s",GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
-    m_tuned_mc_reco.AppendName("reconstructed_rescale",tags);
+    m_tuned_mc_reco.AppendName("reconstructed_tuned",tags);
   }
 
   template <typename T>
@@ -199,7 +207,6 @@ public:
   //  void AddTruthWrapper(std::string tag){
   //     m_signal_mc_truth.AddResponse(tag);
   //  }
-
 
   template <typename T>
   void InitializeDataHistograms2D(T univs, const std::vector<std::string> tags) {
@@ -252,24 +259,21 @@ public:
     // selected mc reco
 
     for (auto tag:m_tags){
-      std::cout << " write out flags " << hasMC[tag] << hasTruth[tag] << hasData[tag] <<  std::endl;
+      std::cout << " write out flags " << hasMC[tag] << hasTunedMC[tag] << hasTruth[tag] << hasData[tag] <<  std::endl;
       if(hasMC[tag]) {
         m_selected_mc_reco.Write(tag);
         std::cout << " write out mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
-        m_tuned_mc_reco.Write((tag+"_rescale").c_str());
-        std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist((tag+"_rescale").c_str())->GetName() << std::endl;
-        // m_selected_mc_by_channel.WriteToFile(f);
-        m_selected_mc_truth.Write(tag);
       }
-
+      if(hasTunedMC[tag]){
+        m_tuned_mc_reco.Write(tag);
+        std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist(tag)->GetName() << std::endl;
+      }
       if(hasTruth[tag]){
         std::cout << " write out truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
         m_signal_mc_truth.Write(tag);
       }
-
       if(hasData[tag]){
         std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
-        // m_selected_data.hist->Print();
         m_selected_data.Write(tag);
       }
     }

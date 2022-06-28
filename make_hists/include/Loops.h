@@ -19,9 +19,9 @@ void LoopAndFillEventSelection(std::string tag,
   // Prepare loop
   MinervaUniverse::SetTruth(false);
   int nentries = -1;
-  
+
   // get ready for weights by finding cv universe pointer
-  
+
   assert(!error_bands["cv"].empty() && "\"cv\" error band is empty!  Can't set Model weight.");
   auto& cvUniv = error_bands["cv"].front();
   // make a dummy event - may need to make fancier
@@ -65,9 +65,9 @@ void LoopAndFillEventSelection(std::string tag,
       std::vector<CVUniverse*> error_band_universes = band.second;
       //  HMS replace with iuniv to access weights more easily
       //  HMS for (auto universe : error_band_universes) {
-      
+
        for (int iuniv=0; iuniv < error_band_universes.size(); iuniv++){
-         
+
          auto universe = error_band_universes[iuniv];
 
         universe->SetEntry(i);
@@ -79,9 +79,7 @@ void LoopAndFillEventSelection(std::string tag,
         // probably want to move this later on inside the loop
         const double weight = (data_mc_truth == kData) ? 1. : model.GetWeight(*universe, event); //Only calculate the per-universe weight for events that will actually use it.
         //PlotUtils::detail::empty event;
-        // How to get q2qe in there?
 
-        const double scaled_weight = scale*weight;
         //=========================================
         // Fill
         //=========================================
@@ -90,16 +88,10 @@ void LoopAndFillEventSelection(std::string tag,
           if(selection.isMCSelected(*universe, event, weight).all()
              && selection.isSignal(*universe)) {
             //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
-            FillMC(tag, universe, weight, variables, variables2D);
-            FillResponse(tag, universe,weight,variables,variables2D);
             double q2qe = event->GetQ2QEGeV();
             double scale = mcRescale.getScale(q2qe, uni_name, uni_index); //Only calculate the per-universe weight for events that will actually use it.
-            if(scale!=1.0){
-              double scaleweight = scale*weight;
-              FillMC(tag, universe, weight, variables, variables2D, scaleweight);
-              // FillResponse(tag, universe,weight,scaleweight,variables,variables2D); // Do I need to do response for this? Response method doesn't have scale_weight implimented
-            }
-
+            FillMC(tag, universe, weight, variables, variables2D, scale);
+            FillResponse(tag,universe,weight,variables,variables2D);
           }
 
         }
