@@ -316,17 +316,21 @@ int main(const int argc, const char *argv[] ) {
   // define the output file
     std::string pdfname;
     std::string outroot;
+    
     if (singlesample){
-        outroot = "analyze9_"+asample+"_"+inputname;
+        std::string outname=inputname.replace(inputname.end()-5,inputname.end(),"")+"_"+asample+"_analyze9";
+        outroot = outname +".root";
         
         // set up the outputs
-        pdfname = "analyze9_"+asample+"_"+inputname.replace(inputname.end()-5,inputname.end(),"");
+        pdfname = outname;
     }
     else{
-        outroot = "analyze9_"+inputname;
+        std::string outname=inputname.replace(inputname.end()-5,inputname.end(),"")+"_analyze9";
+        outroot = outname +".root";
+        
     
         // set up the outputs
-        pdfname = "analyze9_"+inputname.replace(inputname.end()-5,inputname.end(),"");
+        pdfname = outname;
     }
     TFile* o = TFile::Open(outroot.c_str(),"RECREATE");
   std::string pdffilename1D = pdfname + "_1D.pdf";

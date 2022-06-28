@@ -1,6 +1,7 @@
 # make a big submission script
 
-cat $1 > big$1
+#touch big$1
+sed s/minervame5A/minervame5A/ $1 > big$1
 sed s/minervame5A/minervame6A/ $1 >> big$1
 sed s/minervame5A/minervame6B/ $1 >> big$1
 sed s/minervame5A/minervame6C/ $1 >> big$1
