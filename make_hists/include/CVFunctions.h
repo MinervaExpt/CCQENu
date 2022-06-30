@@ -72,6 +72,24 @@ public:
     
     recofunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
     recointfunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+      
+      // truth only variables for studies
+      
+      truefunctions["MCTargetA"] = &CVUNIVERSE::GetMCTargetA;
+      
+      truefunctions["MCTargetZ"] = &CVUNIVERSE::GetMCTargetZ;
+      
+      truefunctions["MCTargetNucleon"] = &CVUNIVERSE::GetMCTargetNucleon;
+      
+      recofunctions["MCTargetA"] = &CVUNIVERSE::GetMCTargetA;
+      
+      recofunctions["MCTargetZ"] = &CVUNIVERSE::GetMCTargetZ;
+      
+      recofunctions["MCTargetNucleon"] = &CVUNIVERSE::GetMCTargetNucleon;
+      
+      recofunctions["Dummy"]= &CVUNIVERSE::Dummy;
+      
+      truefunctions["Dummy"]= &CVUNIVERSE::Dummy;
     
     // integer functions for equals
     
@@ -89,6 +107,23 @@ public:
     trueintfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
     
     trueintfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
+      
+      trueintfunctions["MCTargetA"] = &CVUNIVERSE::GetMCTargetA;
+      
+      trueintfunctions["MCTargetZ"] = &CVUNIVERSE::GetMCTargetZ;
+      
+      trueintfunctions["MCTargetNucleon"] = &CVUNIVERSE::GetMCTargetNucleon;
+      
+      recointfunctions["MCTargetA"] = &CVUNIVERSE::GetMCTargetA;
+      
+      recointfunctions["MCTargetZ"] = &CVUNIVERSE::GetMCTargetZ;
+      
+      recointfunctions["MCTargetNucleon"] = &CVUNIVERSE::GetMCTargetNucleon;
+      
+      recointfunctions["Dummy"]= &CVUNIVERSE::Dummy;
+      trueintfunctions["Dummy"]= &CVUNIVERSE::Dummy;
+      
+      
     
     // ----------------------- Sean Neutrino Functions ------------------------------------------
   
