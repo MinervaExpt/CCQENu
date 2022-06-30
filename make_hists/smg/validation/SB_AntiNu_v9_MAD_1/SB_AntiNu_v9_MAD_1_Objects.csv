@@ -1,0 +1,1277 @@
+Key;Class;Title
+main;TNamed;{
+	"Analyze2DVariables" : 
+	[
+		"Q2QE_recoil"
+	],
+	"AnalyzeVariables" : 
+	[
+		"recoil",
+		"Q2QE",
+		"pzmu",
+		"ptmu",
+		"EnuCCQE"
+	],
+	"DeuteriumGeniePiTune" : 1, // set to true?
+	"Geant4Elastics" : 1, // set to true by default
+	"Geant4NeutronCV" : 1, // set true by default docdb 28556
+	"NonResPiReweight" : 1, // set to true?
+	"NuEConstraint" : 1,
+	"background" : 
+	{
+		"QElike" : "qelikenot",
+		"QElikeNot" : "qelikenot"
+	},
+	"cutsFile" : "./config/AntiNuCuts_v9.json",
+	"data" : 
+	{
+		"QElike" : "data",
+		"QElikeALL" : "data"
+	},
+	"dataIn" : "./playlists/MAD_minervame6A_DATA_validation.txt",
+	"fluxUniverses" : 100,
+	"mcIn" : "./playlists/MAD_minervame6A_MC_validation.txt",
+	"outRoot" : "SB",
+	"pdg" : -14,
+	"playlist" : "minervame6A",
+	"prescale" : 100,
+	"recoName" : "MasterAnaDev",
+	"runsamples" : 
+	[
+		"QElike",
+		"QElikeNot"
+	],
+	"samplesFile" : "./config/AntiNuSamples_v9.json",
+	"signal" : 
+	{
+		"QElike" : "qelike",
+		"QElikeNot" : "qelike"
+	},
+	"systematics" : 
+	[
+		"GENIE",
+		"Flux",
+		"GenieRvx1pi",
+		"RPA",
+		"2p2h",
+		"MuonMinerva",
+		"MuonMINOS",
+		"MuonResolution",
+		"MINOSEfficiency",
+		"Angle",
+		"geant4"
+	],
+	"varsFile" : "./config/Variables_v9.json",
+	"version" : 7 // October 25, 2021  get ready for github
+}
+
+varsFile;TNamed;{
+	"1D" : 
+	{
+		"Enu" : 
+		{
+			"bins" : 
+			[
+				2.0,
+				2.5,
+				3.0,
+				3.5,
+				4.0,
+				4.5,
+				5.0,
+				6.0,
+				7.0,
+				8.0,
+				9.0,
+				10.0,
+				15.0
+			],
+			"fluxnorm" : 1,
+			"name" : "Enu",
+			"reco" : "EnuCCQEGeV",
+			"title" : "E_{#nu} (GeV)",
+			"true" : "TrueEnuGeV"
+		},
+		"EnuCCQE" : 
+		{
+			"bins" : 
+			[
+				2.0,
+				2.5,
+				3.0,
+				3.5,
+				4.0,
+				4.5,
+				5.0,
+				6.0,
+				7.0,
+				8.0,
+				9.0,
+				10.0,
+				15.0
+			],
+			"fluxnorm" : 1,
+			"name" : "EnuCCQE",
+			"reco" : "EnuCCQEGeV",
+			"title" : "E_{#nu}_{QE} (GeV)",
+			"true" : "TrueEnuCCQEGeV"
+		},
+		"EnuHad" : 
+		{
+			"bins" : 
+			[
+				2.0,
+				2.5,
+				3.0,
+				3.5,
+				4.0,
+				4.5,
+				5.0,
+				6.0,
+				7.0,
+				8.0,
+				9.0,
+				10.0,
+				15.0
+			],
+			"fluxnorm" : 1,
+			"name" : "EnuHad",
+			"reco" : "EnuHadGeV",
+			"title" : "E_{#nu}_{hadronic} (GeV)",
+			"true" : "TrueEnuGeV"
+		},
+		"Log10recoil" : 
+		{
+			"fluxnorm" : false,
+			"for" : 
+			[
+				"data",
+				"selected_reco"
+			],
+			"max" : 0.0,
+			"min" : -3,
+			"name" : "Log10recoil",
+			"nbins" : 24,
+			"reco" : "Log10RecoilEnergyGeV",
+			"title" : "Log10Recoil in GeV",
+			"true" : "TrueLog10RecoilEnergyGeV"
+		},
+		"Q2QE" : 
+		{
+			"bins" : 
+			[
+				0.001,
+				0.0062500000000000003,
+				0.012500000000000001,
+				0.025000000000000001,
+				0.037499999999999999,
+				0.050000000000000003,
+				0.10000000000000001,
+				0.20000000000000001,
+				0.29999999999999999,
+				0.40000000000000002,
+				0.59999999999999998,
+				0.80000000000000004,
+				1.0,
+				1.2,
+				2.0
+			],
+			"fluxnorm" : false,
+			"name" : "Q2QE",
+			"reco" : "Q2QEGeV",
+			"title" : "Q^{2} (QE) (GeV^{2})",
+			"true" : "TrueQ2QEGeV"
+		},
+		"ThetamuDegrees" : 
+		{
+			"fluxnorm" : false,
+			"max" : 40.0,
+			"min" : 0.0,
+			"name" : "ThetamuDegrees",
+			"nbins" : 20,
+			"reco" : "ThetamuDegrees",
+			"title" : "theta_mu (degrees)",
+			"true" : "TrueThetamuDegrees"
+		},
+		"curv" : 
+		{
+			"fluxnorm" : false,
+			"for" : 
+			[
+				"data",
+				"selected_reco"
+			],
+			"max" : 2.0,
+			"min" : -2.0,
+			"name" : "curv",
+			"nbins" : 100,
+			"reco" : "Curvature",
+			"title" : "curvature in MINOS, m-1",
+			"true" : "TrueCurvature"
+		},
+		"pmu" : 
+		{
+			"bins" : 
+			[
+				0.0,
+				0.5,
+				1.0,
+				1.5,
+				2.0,
+				3.0,
+				4.0,
+				5.0,
+				6.0,
+				7.0,
+				8.0,
+				9.0,
+				10.0,
+				15.0
+			],
+			"fluxnorm" : false,
+			"name" : "pmu",
+			"reco" : "PmuGeV",
+			"title" : "muon p (GeV/c)",
+			"true" : "TruePmuGeV"
+		},
+		"ptmu" : 
+		{
+			"bins" : 
+			[
+				0.0,
+				0.074999999999999997,
+				0.14999999999999999,
+				0.25,
+				0.32500000000000001,
+				0.40000000000000002,
+				0.47499999999999998,
+				0.55000000000000004,
+				0.69999999999999996,
+				0.84999999999999998,
+				1,
+				1.25,
+				1.5,
+				2.5
+			],
+			"fluxnorm" : false,
+			"name" : "ptmu",
+			"reco" : "PperpMuGeV",
+			"title" : "muon p_{T} (GeV/c)",
+			"true" : "TruePperpMuGeV"
+		},
+		"pzmu" : 
+		{
+			"bins" : 
+			[
+				0.0,
+				1.0,
+				2.0,
+				3.0,
+				4.0,
+				5.0,
+				6.0,
+				7.0,
+				8.0,
+				9.0,
+				10.0,
+				15.0
+			],
+			"fluxnorm" : false,
+			"name" : "pzmu",
+			"reco" : "PparMuGeV",
+			"title" : "muon p_{||} (GeV/c)",
+			"true" : "TruePparMuGeV"
+		},
+		"recoil" : 
+		{
+			"fluxnorm" : false,
+			"for" : 
+			[
+				"data",
+				"selected_reco"
+			],
+			"max" : 0.5,
+			"min" : 0.0,
+			"name" : "recoil",
+			"nbins" : 25,
+			"reco" : "RecoilEnergyGeV",
+			"title" : "Recoil in GeV",
+			"true" : "TrueRecoilEnergyGeV"
+		},
+		"total" : 
+		{
+			"bins" : 
+			[
+				2.0,
+				15.0
+			],
+			"fluxnorm" : 0,
+			"name" : "total",
+			"reco" : "EnuCCQEGeV",
+			"title" : "total for Enu from 2 to 15 GeV",
+			"true" : "TrueEnuCCQEGeV"
+		},
+		"zmax" : 
+		{
+			"fluxnorm" : false,
+			"max" : 8500.0,
+			"min" : 8300.0,
+			"name" : "zmax",
+			"nbins" : 100,
+			"reco" : "ZVertex",
+			"title" : "z near end",
+			"true" : "TrueZVertex"
+		},
+		"zmin" : 
+		{
+			"fluxnorm" : false,
+			"max" : 6100.0,
+			"min" : 5900.0,
+			"name" : "zmin",
+			"nbins" : 100,
+			"reco" : "ZVertex",
+			"title" : "z near start",
+			"true" : "TrueZVertex"
+		}
+	},
+	"2D" : 
+	{
+		"EnuCCQE_Enu" : 
+		{
+			"name" : "EnuCCQE_Enu",
+			"xvar" : "EnuCCQE",
+			"yvar" : "Enu"
+		},
+		"EnuCCQE_Q2QE" : 
+		{
+			"name" : "EnuCCQE_Q2QE",
+			"xvar" : "EnuCCQE",
+			"yvar" : "Q2QE"
+		},
+		"EnuCCQE_ThetamuDegrees" : 
+		{
+			"name" : "EnuCCQE_ThetamuDegrees",
+			"xvar" : "EnuCCQE",
+			"yvar" : "ThetamuDegrees"
+		},
+		"Q2QE_Log10recoil" : 
+		{
+			"name" : "Q2QE_Log10recoil",
+			"xvar" : "Q2QE",
+			"yvar" : "Log10recoil"
+		},
+		"Q2QE_recoil" : 
+		{
+			"name" : "Q2QE_recoil",
+			"xvar" : "Q2QE",
+			"yvar" : "recoil"
+		},
+		"pmu_ThetamuDegrees" : 
+		{
+			"name" : "pmu_ThetamuDegrees",
+			"xvar" : "pmu",
+			"yvar" : "ThetamuDegrees"
+		},
+		"pzmu_ptmu" : 
+		{
+			"name" : "pzmu_ptmu",
+			"xvar" : "pzmu",
+			"yvar" : "ptmu"
+		}
+	},
+	"Comments" : 
+	[
+		"6-5-2022 change the zstart cut to include the start",
+		"add log10recoil"
+	]
+}
+
+cutsFile;TNamed;{
+	// reconstruction level definitions
+	"Comments" : 
+	[
+		"v9 - May 28, 2022, remove the FULL cuts and stick with all angles",
+		"also add QElikeNot which is complement to QElike with recoil cut reversed"
+	],
+	"NoRecoil" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		}
+	],
+	"QElike" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 1,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"QElikeNot" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 0,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"data" : [], // data doesn't cut anything at truth level
+	// phase space definitions
+	"phase_space" : 
+	[
+		{
+			"max" : 850,
+			"name" : "TrueApothemX",
+			"variable" : "TrueApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "TrueApothemY",
+			"variable" : "TrueApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "TrueZVertex"
+		},
+		{
+			"min" : 1.5,
+			"name" : "TrueMuonMomentumMin",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "TrueMuonMomentumMax",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "TrueThetamuDegrees"
+		}
+	],
+	"phase_space_all_angles" : 
+	[
+		{
+			"max" : 850,
+			"name" : "TrueApothemX",
+			"variable" : "TrueApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "TrueApothemY",
+			"variable" : "TrueApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "TrueZVertex"
+		},
+		{
+			"min" : 1.5,
+			"name" : "TrueMuonMomentumMin",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "TrueMuonMomentumMax",
+			"variable" : "TruePmuGeV"
+		}
+	],
+	// signal definitions
+	"qelike" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "TruthIsCCQELike"
+		}
+	],
+	"qelike1p" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "TruthIsCCQELike"
+		},
+		{
+			"max" : 7,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike1p_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELikeAll",
+			"variable" : "TruthIsCCQELikeAll"
+		},
+		{
+			"max" : 7,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike2p2h" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "TruthIsCCQELike"
+		},
+		{
+			"equals" : 8,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike2p2h_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELikeAll",
+			"variable" : "TruthIsCCQELikeAll"
+		},
+		{
+			"equals" : 8,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELikeAll",
+			"variable" : "TruthIsCCQELikeAll"
+		}
+	],
+	"qelikenot" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 0,
+			"name" : "TruthIsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "TruthIsCCQELike"
+		}
+	],
+	"qelikenot_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 0,
+			"name" : "TruthIsCCQELikeAll",
+			"variable" : "TruthIsCCQELikeAll"
+		}
+	]
+}
+
+samplesFile;TNamed;{
+	// reconstruction level definitions
+	"Comments" : 
+	[
+		"v9 - May 28, 2022, remove the FULL cuts and stick with all angles",
+		"also add QElikeNot which is complement to QElike with recoil cut reversed"
+	],
+	"NoRecoil" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		}
+	],
+	"QElike" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 1,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"QElikeNot" : 
+	[
+		{
+			"max" : 1,
+			"name" : "NoDeadTime",
+			"variable" : "DeadTime"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemX",
+			"variable" : "ApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "ApothemY",
+			"variable" : "ApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "ZVertex"
+		},
+		{
+			"equals" : -1,
+			"name" : "Has MINOS Match",
+			"variable" : "IsMinosMatchTrack"
+		}, // -1 for some reason
+		{
+			"equals" : 2,
+			"name" : "NuHelicity",
+			"variable" : "NuHelicity"
+		}, // 2 for anti-neutrino
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "ThetamuDegrees"
+		},
+		{
+			"min" : 1.5,
+			"name" : "Min MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max MuonMomentum",
+			"variable" : "PmuGeV"
+		},
+		{
+			"max" : 1,
+			"name" : "Max Multiplicity",
+			"variable" : "Multiplicity"
+		},
+		{
+			"equals" : 0,
+			"name" : "GoodRecoil",
+			"variable" : "GoodRecoil"
+		}
+	],
+	"data" : [], // data doesn't cut anything at truth level
+	// phase space definitions
+	"phase_space" : 
+	[
+		{
+			"max" : 850,
+			"name" : "TrueApothemX",
+			"variable" : "TrueApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "TrueApothemY",
+			"variable" : "TrueApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "TrueZVertex"
+		},
+		{
+			"min" : 1.5,
+			"name" : "TrueMuonMomentumMin",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "TrueMuonMomentumMax",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "Max Muon Angle in Degrees",
+			"variable" : "TrueThetamuDegrees"
+		}
+	],
+	"phase_space_all_angles" : 
+	[
+		{
+			"max" : 850,
+			"name" : "TrueApothemX",
+			"variable" : "TrueApothemX"
+		},
+		{
+			"max" : 850,
+			"name" : "TrueApothemY",
+			"variable" : "TrueApothemY"
+		},
+		{
+			"max" : 8422,
+			"min" : 5980,
+			"name" : "Z Vertex",
+			"variable" : "TrueZVertex"
+		},
+		{
+			"min" : 1.5,
+			"name" : "TrueMuonMomentumMin",
+			"variable" : "TruePmuGeV"
+		},
+		{
+			"max" : 20.0,
+			"name" : "TrueMuonMomentumMax",
+			"variable" : "TruePmuGeV"
+		}
+	],
+	// signal definitions
+	"qelike" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "TruthIsCCQELike"
+		}
+	],
+	"qelike1p" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "TruthIsCCQELike"
+		},
+		{
+			"max" : 7,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike1p_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELikeAll",
+			"variable" : "TruthIsCCQELikeAll"
+		},
+		{
+			"max" : 7,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike2p2h" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "TruthIsCCQELike"
+		},
+		{
+			"equals" : 8,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike2p2h_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELikeAll",
+			"variable" : "TruthIsCCQELikeAll"
+		},
+		{
+			"equals" : 8,
+			"name" : "MCIntType",
+			"variable" : "MCIntType"
+		}
+	],
+	"qelike_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCCQELikeAll",
+			"variable" : "TruthIsCCQELikeAll"
+		}
+	],
+	"qelikenot" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 0,
+			"name" : "TruthIsCCQELike",
+			"protonKECutMeV" : 120.0,
+			"variable" : "TruthIsCCQELike"
+		}
+	],
+	"qelikenot_np" : 
+	[
+		{
+			"equals" : -14,
+			"name" : "PDG",
+			"variable" : "TruthNuPDG"
+		},
+		{
+			"equals" : 1,
+			"name" : "TruthIsCC",
+			"variable" : "TruthIsCC"
+		},
+		{
+			"equals" : 0,
+			"name" : "TruthIsCCQELikeAll",
+			"variable" : "TruthIsCCQELikeAll"
+		}
+	]
+}
+
+gitVersion;TNamed;https://github.com/MinervaExpt/CCQENu/commit/f354976c670e5d39edde41bb2edc640adf881fee
+h___QElike___data___EnuCCQE___reconstructed;PlotUtils::MnvH1D;EnuCCQE
+h___QElike___qelike___EnuCCQE___reconstructed;PlotUtils::MnvH1D;EnuCCQE
+h___QElike___qelike___EnuCCQE___response_migration;PlotUtils::MnvH2D;h___QElike___qelike___EnuCCQE___response Migration
+h___QElike___qelike___EnuCCQE___response_reco;PlotUtils::MnvH1D;h___QElike___qelike___EnuCCQE___response Reco
+h___QElike___qelike___EnuCCQE___response_truth;PlotUtils::MnvH1D;h___QElike___qelike___EnuCCQE___response Truth
+h___QElike___qelike___EnuCCQE___selected_truth;PlotUtils::MnvH1D;EnuCCQE
+h___QElike___qelike___EnuCCQE___all_truth;PlotUtils::MnvH1D;EnuCCQE
+h___QElike___qelikenot___EnuCCQE___reconstructed;PlotUtils::MnvH1D;EnuCCQE
+h___QElikeNot___data___EnuCCQE___reconstructed;PlotUtils::MnvH1D;EnuCCQE
+h___QElikeNot___qelike___EnuCCQE___reconstructed;PlotUtils::MnvH1D;EnuCCQE
+h___QElikeNot___qelikenot___EnuCCQE___reconstructed;PlotUtils::MnvH1D;EnuCCQE
+h___QElike___data___Q2QE___reconstructed;PlotUtils::MnvH1D;Q2QE
+h___QElike___qelike___Q2QE___reconstructed;PlotUtils::MnvH1D;Q2QE
+h___QElike___qelike___Q2QE___response_migration;PlotUtils::MnvH2D;h___QElike___qelike___Q2QE___response Migration
+h___QElike___qelike___Q2QE___response_reco;PlotUtils::MnvH1D;h___QElike___qelike___Q2QE___response Reco
+h___QElike___qelike___Q2QE___response_truth;PlotUtils::MnvH1D;h___QElike___qelike___Q2QE___response Truth
+h___QElike___qelike___Q2QE___selected_truth;PlotUtils::MnvH1D;Q2QE
+h___QElike___qelike___Q2QE___all_truth;PlotUtils::MnvH1D;Q2QE
+h___QElike___qelikenot___Q2QE___reconstructed;PlotUtils::MnvH1D;Q2QE
+h___QElikeNot___data___Q2QE___reconstructed;PlotUtils::MnvH1D;Q2QE
+h___QElikeNot___qelike___Q2QE___reconstructed;PlotUtils::MnvH1D;Q2QE
+h___QElikeNot___qelikenot___Q2QE___reconstructed;PlotUtils::MnvH1D;Q2QE
+h___QElike___data___ptmu___reconstructed;PlotUtils::MnvH1D;ptmu
+h___QElike___qelike___ptmu___reconstructed;PlotUtils::MnvH1D;ptmu
+h___QElike___qelike___ptmu___response_migration;PlotUtils::MnvH2D;h___QElike___qelike___ptmu___response Migration
+h___QElike___qelike___ptmu___response_reco;PlotUtils::MnvH1D;h___QElike___qelike___ptmu___response Reco
+h___QElike___qelike___ptmu___response_truth;PlotUtils::MnvH1D;h___QElike___qelike___ptmu___response Truth
+h___QElike___qelike___ptmu___selected_truth;PlotUtils::MnvH1D;ptmu
+h___QElike___qelike___ptmu___all_truth;PlotUtils::MnvH1D;ptmu
+h___QElike___qelikenot___ptmu___reconstructed;PlotUtils::MnvH1D;ptmu
+h___QElikeNot___data___ptmu___reconstructed;PlotUtils::MnvH1D;ptmu
+h___QElikeNot___qelike___ptmu___reconstructed;PlotUtils::MnvH1D;ptmu
+h___QElikeNot___qelikenot___ptmu___reconstructed;PlotUtils::MnvH1D;ptmu
+h___QElike___data___pzmu___reconstructed;PlotUtils::MnvH1D;pzmu
+h___QElike___qelike___pzmu___reconstructed;PlotUtils::MnvH1D;pzmu
+h___QElike___qelike___pzmu___response_migration;PlotUtils::MnvH2D;h___QElike___qelike___pzmu___response Migration
+h___QElike___qelike___pzmu___response_reco;PlotUtils::MnvH1D;h___QElike___qelike___pzmu___response Reco
+h___QElike___qelike___pzmu___response_truth;PlotUtils::MnvH1D;h___QElike___qelike___pzmu___response Truth
+h___QElike___qelike___pzmu___selected_truth;PlotUtils::MnvH1D;pzmu
+h___QElike___qelike___pzmu___all_truth;PlotUtils::MnvH1D;pzmu
+h___QElike___qelikenot___pzmu___reconstructed;PlotUtils::MnvH1D;pzmu
+h___QElikeNot___data___pzmu___reconstructed;PlotUtils::MnvH1D;pzmu
+h___QElikeNot___qelike___pzmu___reconstructed;PlotUtils::MnvH1D;pzmu
+h___QElikeNot___qelikenot___pzmu___reconstructed;PlotUtils::MnvH1D;pzmu
+h___QElike___data___recoil___reconstructed;PlotUtils::MnvH1D;recoil
+h___QElike___qelike___recoil___reconstructed;PlotUtils::MnvH1D;recoil
+h___QElike___qelikenot___recoil___reconstructed;PlotUtils::MnvH1D;recoil
+h___QElikeNot___data___recoil___reconstructed;PlotUtils::MnvH1D;recoil
+h___QElikeNot___qelike___recoil___reconstructed;PlotUtils::MnvH1D;recoil
+h___QElikeNot___qelikenot___recoil___reconstructed;PlotUtils::MnvH1D;recoil
+h2D___QElike___data___Q2QE_recoil___reconstructed;PlotUtils::MnvH2D;Q2QE_recoil
+h2D___QElike___qelike___Q2QE_recoil___reconstructed;PlotUtils::MnvH2D;Q2QE_recoil
+h2D___QElike___qelikenot___Q2QE_recoil___reconstructed;PlotUtils::MnvH2D;Q2QE_recoil
+h2D___QElikeNot___data___Q2QE_recoil___reconstructed;PlotUtils::MnvH2D;Q2QE_recoil
+h2D___QElikeNot___qelike___Q2QE_recoil___reconstructed;PlotUtils::MnvH2D;Q2QE_recoil
+h2D___QElikeNot___qelikenot___Q2QE_recoil___reconstructed;PlotUtils::MnvH2D;Q2QE_recoil
+POT_summary;PlotUtils::MnvH1D;data, mc, Prescaled mc
+pot;TVector2;A 2D physics vector

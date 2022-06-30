@@ -137,11 +137,13 @@ int main(const int argc, const char *argv[] ) {
   std::vector<string> samplesToDo=config.GetStringVector("runsamples"); // get the master list.
   samplesConfig.Read(samplesfilename);
   //samplesConfig.Print();
-  
+
   std::vector<CCQENu::Sample> samples;
   
   for (auto s:samplesToDo){
     if (samplesConfig.IsMember(s)){
+      std::cout << "IsMember(" << s << "): TRUE" << std::endl;
+      if(samplesConfig.CheckMember(s)) std::cout << "CheckMember(" << s << "): TRUE" << std::endl;
       NuConfig tmp = samplesConfig.GetConfig(s);
       samples.push_back(CCQENu::Sample(tmp));
     }
