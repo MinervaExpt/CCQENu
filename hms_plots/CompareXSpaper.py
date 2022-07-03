@@ -45,7 +45,31 @@ if var == "ptmu":
 if var == "pzmu":
     from pzmu_chi2list import *
 #MnvKellycolors
-colors = CCQEColors()
+#colors = CCQEColors()
+colors = {
+    # ROOT.TColor.GetColor("#f2f3f4"), # white,
+    0:ROOT.TColor.GetColor("#222222"),  # black,
+    1:ROOT.TColor.GetColor("#f3c300"),  # yellow,
+    2:ROOT.TColor.GetColor("#875692"),  # purple,
+    3: ROOT.TColor.GetColor("#f38400"),  # orange,
+    4:ROOT.TColor.GetColor("#a1caf1"),  # lightblue,
+    5:ROOT.TColor.GetColor("#be0032"),  # red,
+    6:ROOT.TColor.GetColor("#c2b280"),  # buff,
+    7:ROOT.TColor.GetColor("#848482"),  # gray,
+    8:ROOT.TColor.GetColor("#008856"),  # green,
+    9:ROOT.TColor.GetColor("#e68fac"),  # purplishpink,
+    10:ROOT.TColor.GetColor("#0067a5"),  # blue,
+    11:ROOT.TColor.GetColor("#f99379"),  # yellowishpink,
+    12:ROOT.TColor.GetColor("#604e97"),  # violet,
+    13:ROOT.TColor.GetColor("#f6a600"),  # orangeyellow,
+    14:ROOT.TColor.GetColor("#b3446c"),  # purplishred,
+    15:ROOT.TColor.GetColor("#dcd300"),  # greenishyellow,
+    16:ROOT.TColor.GetColor("#882d17"),  # reddishbrown,
+    17:ROOT.TColor.GetColor("#8db600"),  # yellowgreen,
+    18:ROOT.TColor.GetColor("#654522"),  # yellowishbrown,
+    19:ROOT.TColor.GetColor("#e25822"),  # reddishorange,
+    20:ROOT.TColor.GetColor("#2b3d26")   # olivegreen
+}
 
 print ("Chi2",chi2vals)
 dhist= "h_%s_dataCrossSection"%hvar
@@ -78,6 +102,13 @@ colorcode = {"NA":0, "2p2hrpa":3, "rpapiontune":4, "2p2hpiontune":5,"2p2h":6, "C
 linecode = {"NA":1, "2p2hrpa":10, "rpapiontune":10, "2p2hpiontune":10,"2p2h":1, "CV":1, "CV2":1,"piontune":10,"rpa":1,"GENIE_no2p2h":10}
 
 linewidth = {"NA":6, "2p2hrpa":4, "rpapiontune":4, "2p2hpiontune":4,"2p2h":6, "CV":6, "CV2":6,"piontune":4,"rpa":6,"GENIE_no2p2h":4}
+
+# copied from Amit
+colorcode = {"NA":colors[0], "2p2hrpa":colors[3], "rpapiontune":colors[4], "2p2hpiontune":colors[5],"2p2h":colors[6], "CV":colors[10], "CV2":colors[5],"piontune":colors[1],"rpa":colors[9],"gen2p2h":colors[6],"GENIE_no2p2h":colors[6]}
+linecode = {"NA":1, "2p2hrpa":10, "rpapiontune":10, "2p2hpiontune":10,"2p2h":1, "CV":1, "CV2":1,"piontune":10,"rpa":1,"gen2p2h":1,"GENIE_no2p2h":1}
+linewidth = {"NA":3, "2p2hrpa":3, "rpapiontune":3, "2p2hpiontune":3,"2p2h":3, "CV":4, "CV2":4,"piontune":3,"rpa":3,"gen2p2h":3,"GENIE_no2p2h":3}
+
+
 
 file = {}
 mc = {}
@@ -259,9 +290,9 @@ if var == "q2":
 for m in models:
   xn[m].SetLineWidth(linewidth[m])
   yn[m].SetLineWidth(linewidth[m])
-  xn[m].SetLineColor(colors[colorcode[m]])
+  xn[m].SetLineColor(colorcode[m])
   xn[m].SetLineStyle(linecode[m])
-  yn[m].SetLineColor(colors[colorcode[m]])
+  yn[m].SetLineColor(colorcode[m])
   yn[m].SetLineStyle(linecode[m])
   
 normx = xn[reference].Clone()
