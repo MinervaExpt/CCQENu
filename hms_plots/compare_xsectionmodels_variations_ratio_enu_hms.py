@@ -5,7 +5,7 @@ from PlotUtils import MnvH1D,MnvH2D,MnvPlotter
 DRAWRATIO=False
 
 # if this is False you plot the full cross section
-Fiducial = True
+Fiducial = False
 
 mnv = MnvPlotter()
 #ROOT.gROOT.SetBatch(ROOT.kTRUE)
