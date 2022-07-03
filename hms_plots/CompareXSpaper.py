@@ -54,10 +54,11 @@ mchist = "h_%s_qelike_recoCrossSection"%hvar
 #now do the comparison of data and different MC's....
 
 #models = ["2p2hrpa","2p2h","CV","piontune","rpapiontune","CV2","rpa"] # "CV goes last because it should be the last plotted
-modelnames = {"CV":"MINERvA Tune v1","2p2h":"GENIE+Low Recoil Tune ","2p2hpiontune":"GENIE+Low Recoil Tune+#pi tune","2p2hrpa":"GENIE+Low Recoil Tune+RPA","rpa":"GENIE+RPA","CV2":"MINERvA Tune v2","2p2hrpa":"GENIE+Low Recoil Tune+RPA","piontune":"GENIE+#pi tune","rpapiontune":"GENIE+#pi tune+RPA","NA":"GENIE default","Default":"GENIE w/o 2p2h"}
+modelnames = {"CV":"MINERvA Tune v1","2p2h":"GENIE+Low Recoil Tune ","2p2hpiontune":"GENIE+Low Recoil Tune+#pi tune","2p2hrpa":"GENIE+Low Recoil Tune+RPA","rpa":"GENIE+RPA","CV2":"MINERvA Tune v2","2p2hrpa":"GENIE+Low Recoil Tune+RPA","piontune":"GENIE+#pi tune","rpapiontune":"GENIE+#pi tune+RPA","NA":"GENIE 2.12.6","GENIE_no2p2h":"GENIE w/o 2p2h"}
+modelnames = {"CV":"MINERvA Tune v1","2p2h":"GENIE+Low Recoil Tune ","2p2hrpa":"GENIE+Low Recoil Tune+RPA","rpa":"GENIE+RPA","CV2":"MINERvA Tune v2","2p2hrpa":"GENIE+Low Recoil Tune+RPA","NA":"GENIE 2.12.6","GENIE_no2p2h":"GENIE w/o 2p2h"}
 models = list(modelnames.keys())
-models = ["CV", "CV2","Default", "NA", "piontune", "rpa","rpapiontune", "2p2h", "2p2hrpa",  \
-"2p2hpiontune"]
+models = ["CV", "CV2", "NA",  "rpa", "2p2h", "2p2hrpa",  \
+"GENIE_no2p2h"]
 print ("models",models)
 #xmcdefault.SetLineColor(colors[2])
 #compare_xsectionmodels_variations_ratio.py:xmc2p2hrpa.SetLineColor(colors[3])
@@ -67,11 +68,11 @@ print ("models",models)
 #compare_xsectionmodels_variations_ratio.py:ymc2p2hrpa.SetLineColor(colors[3])
 #compare_xsectionmodels_variations_ratio.py:ymcptunerpa.SetLineColor(colors[4])
 #compare_xsectionmodels_variations_ratio.py:ymcptune2p2h.SetLineColor(colors[5])
-colorcode = {"NA":0, "2p2hrpa":3, "rpapiontune":4, "2p2hpiontune":5,"2p2h":6, "CV":10, "CV2":5,"piontune":1,"rpa":9}
+colorcode = {"NA":0, "2p2hrpa":3, "rpapiontune":4, "2p2hpiontune":5,"2p2h":6, "CV":10, "CV2":5,"piontune":1,"rpa":9,"GENIE_no2p2h":6}
 
-linecode = {"NA":1, "2p2hrpa":10, "rpapiontune":10, "2p2hpiontune":10,"2p2h":1, "CV":1, "CV2":1,"piontune":10,"rpa":1}
+linecode = {"NA":1, "2p2hrpa":10, "rpapiontune":10, "2p2hpiontune":10,"2p2h":1, "CV":1, "CV2":1,"piontune":10,"rpa":1,"GENIE_no2p2h":10}
 
-linewidth = {"NA":6, "2p2hrpa":4, "rpapiontune":4, "2p2hpiontune":4,"2p2h":6, "CV":6, "CV2":6,"piontune":4,"rpa":6}
+linewidth = {"NA":6, "2p2hrpa":4, "rpapiontune":4, "2p2hpiontune":4,"2p2h":6, "CV":6, "CV2":6,"piontune":4,"rpa":6,"GENIE_no2p2h":4}
 
 file = {}
 mc = {}
@@ -82,12 +83,16 @@ if version == "nue_v14":
   path = ""
 if version == "v27b":
   path = "/Users/schellma/Dropbox/ccqe/v27b/"
+if version == "v27":
+  path = "/Users/schellma/Dropbox/ccqe/v27/CrossSection/"
+if version == "ver3":
+  path = "/Users/schellma/Dropbox/ccqe/v27/ver3/"
 validmodels = []
 for m in models:
   if var == "q2":
     filename = "%sXS_%s_proj_%s_rebinned.root"%(path,var,m)
-  if var == "enu":
-    filename = "%sXS_%s_%s.root"%(path,var,m)
+  if var == "enu" :
+    filename = "%sXS_%s_%s.root"%(path,"enu",m)
   if var == "pzmu":
     filename = "%sXS_%s_%s.root"%(path,var,m)
   if var == "ptmu":
@@ -100,20 +105,35 @@ for m in models:
   file[m] = ROOT.TFile.Open(filename,"READ")
   mc[m] = MnvH2D()
   mc[m] = file[m].Get(mchist)
+  
   validmodels.append(m)
+  if m == "NA":
+    #xgen2p2h = mc["NA"].Clone("genie_2p2hx")
+    xcv_2p2h = MnvH2D()
+    file["NA"].ls()
+    xcv_2p2h = file["NA"].Get("h_enu_q2_qelike_2p2h_crossSection")
+    xcv_2p2h.Print()
+    mc["GENIE_no2p2h"] = mc["NA"].Clone()
+    mc["GENIE_no2p2h"].Add(xcv_2p2h,-1)
+    validmodels.append("GENIE_no2p2h")
+  mc[m].SetName(m+"_"+mc[m].GetName())
+   
+  
 print ("models",models,validmodels)
+
 models=validmodels
 data = MnvH2D()
 data = file["CV"].Get(dhist)
 
-print ("data from ",file["CV"].GetName())
+print ("check data from ",file["CV"].GetName())
 
-
+ 
 
 # make projections of data
 
 xme = data.ProjectionX()
 yme = data.ProjectionY()
+#yme.Print("ALL")
 
 xd = TH1D()
 xd = (data.ProjectionX()).GetCVHistoWithError()
@@ -126,7 +146,7 @@ xbins = GetXbinList(xd)
 yd = TH1D()
 yd = (data.ProjectionY()).GetCVHistoWithError()
 yds = (data.ProjectionY()).GetCVHistoWithStatError()
-yd.Print()
+yd.Print("ALL")
 yd.Scale(1.,"width")
 yds.Scale(1.,"width")
 
@@ -142,10 +162,15 @@ for m in models:
   x[m].Scale(1.0,"width")
   
   y[m] = mc[m].ProjectionY().GetCVHistoWithError()
-  y[m].Print()
+  print(" check model ",m)
+  y[m].Print("ALL")
+  
   y[m].Scale(1.0,"width")
   
 
+if var=="q2":
+  y["NA"].Print("ALL")
+  yd.Print("ALL")
 #if ratio:
 #  normx  = x["CV"].Clone()
 #  normy  = y["CV"].Clone()
@@ -212,7 +237,7 @@ for m in models:
   yn[m] = TransferBins(y[m],yt)
   xn[m] = SetZeroError(xn[m])
   yn[m] = SetZeroError(yn[m])
-  #xn[m].Print("ALL")
+  xn[m].Print()
   
 
 
@@ -222,7 +247,9 @@ canvas.cd()
 
 #canvas.SetLogx()
 #canvas.SetLogy()
-
+if var == "q2":
+  yme.Print("ALL")
+  yn["NA"].Print("ALL")
 
 for m in models:
   xn[m].SetLineWidth(linewidth[m])
@@ -236,6 +263,9 @@ normx = xn[reference].Clone()
 normy = yn[reference].Clone()
 
 if ratio:
+  if var == "q2":
+    ydn.Print("ALL")
+    yn["NA"].Print("ALL")
   xdn.Divide(xdn,normx)
   ydn.Divide(ydn,normy)
   xdsn.Divide(xdsn,normx)
@@ -260,7 +290,8 @@ leg.AddEntry(xdn,"MINERvA #bar{#nu}_{#mu} data","pe")
 
 #leg.AddEntry(xmcdefault,"GENIE 2.12.6","l")
 for m in models:
-  leg.AddEntry(xn[m],"%s  #chi^{2}/dof.=%4.1f/%d"%(modelnames[m],chi2vals[m][0],chi2vals[m][1]),"l")
+  #leg.AddEntry(xn[m],"%s  #chi^{2}/dof.=%4.1f/%d"%(modelnames[m],chi2vals[m][0],chi2vals[m][1]),"l")
+  leg.AddEntry(xn[m],"%s"%(modelnames[m]),"l")
 #leg.AddEntry(xn["2p2h"],"GENIE+RPA","l")
 #leg.AddEntry(xn["CV"],"MINERvA Tune v1","l")
 #leg.AddEntry(xmcptune2p2h,"GENIE+#pi tune+2p2h","l")
