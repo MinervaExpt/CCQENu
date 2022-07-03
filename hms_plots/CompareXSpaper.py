@@ -10,6 +10,7 @@ gStyle.SetEndErrorSize(10)
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
 ratio = False
 ratio = True
+corrected = False
 reference="NA"
 sratio = ""
 if ratio:
@@ -22,7 +23,11 @@ if len(sys.argv)>1:
 else:
   print ("arg 1 needs to be enu, q2 or pzmu")
   sys.exit(1)
-  
+ 
+if var == "enu":
+    ratio = False
+    corrected = True
+    version = "ver3"
 if var != "q2" and var != "pzmu" and var != "enu" and var != "ptmu":
   print ("arg 1 needs to be enu, q2 or pzmu")
   sys.exit(1)
@@ -209,7 +214,7 @@ if not ratio:
     ydn.SetMaximum(10.E-37/scale)
   if (var == "enu"):
     xdn.SetMinimum(0.0/scale)
-    xdn.SetMaximum(2.E-38/scale)
+    xdn.SetMaximum(1.E-38/scale)
    # ydn.SetMinimum(1.E-41/scale)
    # ydn.SetMaximum(2.E-38/scale)
   if (var == "pzmu" or var == "ptmu"):
@@ -221,8 +226,8 @@ if not ratio:
 else:
   xdn.SetMinimum(0.6)
   xdn.SetMaximum(2.5)
-  ydn.SetMinimum(0.6)
-  ydn.SetMaximum(2.5)
+  ydn.SetMinimum(0.4)
+  ydn.SetMaximum(2.0)
 
 
 #xdn.Print("ALL")
@@ -280,9 +285,12 @@ if (not ratio):
     leg = CCQELegend(0.25,0.25,0.4,0.55)
   else:
     leg = CCQELegend(0.6,0.6,0.8,0.9)
+  if var == "enu":
+    leg = CCQELegend(0.35,0.175,0.9,0.375)
+    leg.SetNColumns(2)
 else:
   print ()
-leg = CCQELegend(0.20,0.6,0.9,0.9)
+  leg = CCQELegend(0.20,0.6,0.9,0.9)
 
 leg.SetHeader("MINERvA Preliminary","")
 #leg.SetNColumns(2)
@@ -325,14 +333,14 @@ else:
 
 if (ratio):
   if var == "q2" or var == "enu":
-    xdn.GetYaxis().SetTitle("#sigma(E_{#nu}^{QE})/%s"%modelnames[reference])
+    xdn.GetYaxis().SetTitle("Ratio of #sigma(E_{#nu}^{QE}) to %s"%modelnames[reference])
     
-    ydn.GetYaxis().SetTitle("d#sigma/dQ^{2}/%s"%modelnames[reference]);
+    ydn.GetYaxis().SetTitle("Ratio of d#sigma/dQ^{2}_{QE} to %s"%modelnames[reference]);
    
   else:
-    ydn.GetYaxis().SetTitle("d#sigma/dp_{#perp}/%s"%modelnames[reference])
+    ydn.GetYaxis().SetTitle("Ratio of d#sigma/dp_{#perp} to %s"%modelnames[reference])
     
-    xdn.GetYaxis().SetTitle("d#sigma/dp_{||}/%s"%modelnames[reference])
+    xdn.GetYaxis().SetTitle("Ratio of d#sigma/dp_{||} to %s"%modelnames[reference])
     
 
 #yd.Print("ALL")
@@ -341,14 +349,14 @@ if (ratio):
 #ydsn.Print("ALL")
 
 if ratio:
-  xdn.SetMaximum(2.5)
-  ydn.SetMaximum(2.5)
-  xdn.SetMinimum(0.65)
-  ydn.SetMinimum(0.65)
+  xdn.SetMaximum(2.0)
+  ydn.SetMaximum(2.0)
+  xdn.SetMinimum(0.6)
+  ydn.SetMinimum(0.6)
 xdn.Draw("P E1")
 xdsn.Draw("P E1 SAME")
 for m in models:
-  xn[m].Draw("hist Same")
+  xn[m].Draw("hist ][ Same")
 
 leg.Draw("")
 #raw_input()
@@ -371,7 +379,7 @@ if not ratio:
 ydn.Draw("PE1")
 ydsn.Draw("E1 SAME")
 for m in models:
-  yn[m].Draw("hist Same")
+  yn[m].Draw("hist ][ Same")
 
 
 leg.Draw("")
@@ -383,7 +391,7 @@ if var !="enu":
   c2.Print("XS_%s_variations_%s%s_ProjectionY.C"%(var,sratio,version))
 
 if var == "enu":
-  hfile = ROOT.TFile.Open("ratio.root","READONLY")
+  hfile = ROOT.TFile.Open("enu_ratios.root","READONLY")
   hfile.ls()
   ratioraw = (hfile.Get("ratio"))
   #ration=TransferBins(ratioraw,xt,1)
