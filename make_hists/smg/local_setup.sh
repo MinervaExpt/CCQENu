@@ -3,11 +3,11 @@
 
 export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
-export WHEREIPUTMYCODE=/home/gilligas/gitMinerva   # change this here if you want a different location
+export WHEREIPUTMYCODE=/home/sean/Minerva   # change this here if you want a different location
 source $WHEREIPUTMYCODE/opt/build/setup.sh     # you have to have this
 
-export JSONCPP_DIR=/home/gilligas/JSON/jsoncpp-build
+export JSONCPP_DIR=/usr/
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${JSONCPP_DIR}/lib
 
 export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
-export THEDATA=/home/gilligas/gitMinerva/data/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron
+export THEDATA=/home/sean/Minerva/data/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron

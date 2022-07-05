@@ -119,6 +119,7 @@ add_executable(MnvFitDriver MnvFitDriver.cxx)
 add_executable(MnvMateusDriver MnvMateusDriver.cxx)
 add_executable(analyze_vSean smg/analyze_vSean.C)
 add_executable(getCSVs ../utilities/getCSVs.C)
+add_executable(getRatio ../utilities/getRatio.C)
 
 
 
@@ -133,3 +134,4 @@ target_link_libraries(MnvFitDriver PRIVATE ${PROJECT_NAME} )
 target_link_libraries(MnvMateusDriver PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_vSean  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(getCSVs PRIVATE ${PROJECT_NAME} )
+target_link_libraries(getRatio PRIVATE ${PROJECT_NAME} )
