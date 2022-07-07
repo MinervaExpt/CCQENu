@@ -17,34 +17,40 @@
 
 
 namespace PlotUtils{
-
-  class scale_bkgtune
-  {
+// template <typename T>
+  class weight_MCreScale{
     public:
-      // Default constructor
+      // Constructor that reads in hists from file
+      weight_MCreScale(const TString f);
 
-      scale_bkgtune(const TString f){ read(f); } // Read in all relevant MnvH1Ds
+      // Constructor that reads in hists from file and sets the tag
+      // weight_MCreScale(std::string tag, TString filename);
+      // std::string m_tag;
+
+      // Boolean set based off tag
+      bool isSignal;
 
       // Member file with scale/fraction MnvH1Ds
-      Tfile* f_Q2QEScaleFrac
+      TFile* f_Q2QEScaleFrac;
 
-      // Member histograms for each scale/frac from file
-      MnvH1D* h_SigScale
-      // MnvH1D* h_SigFrac
-      MnvH1D* h_BkgScale
-      // MnvH1D* h_BkgFrac
-      // TODO: Add in fraction funcionality
+      // Member MnvH1D's for each scale from the file (set at initialization)
+      // TODO: turn these into a map to allow for more bkg channels for Sean's analysis
+      MnvH1D* mnvh_SigScale;
+      MnvH1D* mnvh_BkgScale;
 
-      double getScale(/*std::string sigbkg, */const double q2qe, std::string uni_name, std::int uni_index); // q2qe in GeV2
+      // Member scale set to be sig or bkg (set at GetWeight)
+      MnvH1D* mnvh_Scale;
+      TH1D* h_scale;
 
+      double getScale(std::string tag, const double q2qe, std::string uni_name, int iuniv); // q2qe in GeV2
       // double getFrac(std::string sigbkg, const double q2qe); // q2qe in GeV2
-
       void read(TString filename);
+      void SetTag(std::string tag);
 
-  private:
-      double getScaleInternal(/*std::string sigbkg, */const double q2qe, const MnvH1D* hist, std::string uni_name, std::int uni_index);
+      TH1D* GetCVPointer(MnvH1D* h);
 
-
+    private:
+      double getScaleInternal(const double q2qe, std::string uni_name, int iuniv);
   };
 
 }

@@ -16,7 +16,7 @@ void LoopAndFillEventSelection(std::string tag,
                                std::vector<CCQENu::Variable2DFromConfig*>& variables2D,
                                EDataMCTruth data_mc_truth,
                                PlotUtils::Cutter<CVUniverse>& selection, PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model,
-                               weight_MCreScale mcRescale) {
+                               PlotUtils::weight_MCreScale mcRescale) {
   // Prepare loop
   MinervaUniverse::SetTruth(false);
   int nentries = -1;
@@ -90,7 +90,7 @@ void LoopAndFillEventSelection(std::string tag,
              && selection.isSignal(*universe)) {
             //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
             const double q2qe = universe->GetQ2QEGeV();
-            double scale = mcRescale.getScale(q2qe, uni_name, iuniv, sig_bkg); //Only calculate the per-universe weight for events that will actually use it.
+            double scale = mcRescale.getScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
             FillMC(tag, universe, weight, variables, variables2D, scale);
             FillResponse(tag,universe,weight,variables,variables2D);
           }
