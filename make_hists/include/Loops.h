@@ -15,7 +15,8 @@ void LoopAndFillEventSelection(std::string tag,
                                std::vector<CCQENu::VariableFromConfig*>& variables,
                                std::vector<CCQENu::Variable2DFromConfig*>& variables2D,
                                EDataMCTruth data_mc_truth,
-                               PlotUtils::Cutter<CVUniverse>& selection, PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model) {
+                               PlotUtils::Cutter<CVUniverse>& selection, PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model,
+                               weight_MCreScale mcRescale) {
   // Prepare loop
   MinervaUniverse::SetTruth(false);
   int nentries = -1;
@@ -65,10 +66,10 @@ void LoopAndFillEventSelection(std::string tag,
       std::vector<CVUniverse*> error_band_universes = band.second;
       //  HMS replace with iuniv to access weights more easily
       //  HMS for (auto universe : error_band_universes) {
-
+      std::string uni_name = band.first;
        for (int iuniv=0; iuniv < error_band_universes.size(); iuniv++){
 
-         auto universe = error_band_universes[iuniv];
+        auto universe = error_band_universes[iuniv];
 
         universe->SetEntry(i);
 
@@ -88,8 +89,8 @@ void LoopAndFillEventSelection(std::string tag,
           if(selection.isMCSelected(*universe, event, weight).all()
              && selection.isSignal(*universe)) {
             //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
-            double q2qe = event->GetQ2QEGeV();
-            double scale = mcRescale.getScale(q2qe, uni_name, uni_index); //Only calculate the per-universe weight for events that will actually use it.
+            const double q2qe = universe->GetQ2QEGeV();
+            double scale = mcRescale.getScale(q2qe, uni_name, iuniv, sig_bkg); //Only calculate the per-universe weight for events that will actually use it.
             FillMC(tag, universe, weight, variables, variables2D, scale);
             FillResponse(tag,universe,weight,variables,variables2D);
           }

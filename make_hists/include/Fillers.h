@@ -27,7 +27,7 @@ void FillData(std::string tag, CVUniverse* univ,
 void FillMC(std::string tag, CVUniverse* univ, double weight,
             std::vector<CCQENu::VariableFromConfig*> variables,
             std::vector<CCQENu::Variable2DFromConfig*> variables2D,
-            double scale == 1) {
+            double scale == 1.) {
   for (auto v : variables) {
     if (v->hasMC[tag]){
       double fill_val = v->GetRecoValue(*univ, 0);
@@ -82,8 +82,6 @@ void FillResponse(std::string tag,CVUniverse* univ, double weight,
     }
   }
 }
-
-
 
 void FillSignalTruth(std::string tag, CVUniverse* univ, double weight,
                std::vector<CCQENu::VariableFromConfig*> variables,

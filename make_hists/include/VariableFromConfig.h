@@ -130,7 +130,7 @@ public:
     if (config.IsMember("for")){
       m_for = config.GetStringVector("for");
     }
-    else{ // turn thhem all on for now
+    else{ // turn them all on for now
        std::vector<std::string> def = {"data","selected_reco","tuned_reco","selected_truth","response","truth"};
       for (auto s:def){
         m_for.push_back(s);
@@ -358,7 +358,13 @@ public:
   }
 
   inline void FillResponse(std::string tag, CVUniverse* univ, const double value, const double truth, const double weight=1.0){
-    m_selected_mc_reco.FillResponse(tag, univ, value, truth, weight);
+    if(hasMC[tag]){
+      m_selected_mc_reco.FillResponse(tag, univ, value, truth, weight);
+    }
+    if(hasTunedMC[tag]){
+      m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight);
+
+    }
   }
 
   // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.

@@ -254,8 +254,6 @@ public:
   void WriteAllHistogramsToFile2D(TFile& f)  {
     std::cout << "should only be called once " << std::endl;
     f.cd();
-
-
     // selected mc reco
 
     for (auto tag:m_tags){
@@ -264,17 +262,21 @@ public:
         m_selected_mc_reco.Write(tag);
         std::cout << " write out mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
       }
+      if(hasSelectedTruth[tag]){
+        m_selected_mc_truth.Write(tag);
+        std::cout << " write out truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
+      }
       if(hasTunedMC[tag]){
         m_tuned_mc_reco.Write(tag);
         std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist(tag)->GetName() << std::endl;
       }
       if(hasTruth[tag]){
-        std::cout << " write out truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
         m_signal_mc_truth.Write(tag);
+        std::cout << " write out truth histogram " << m_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
       }
       if(hasData[tag]){
-        std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
         m_selected_data.Write(tag);
+        std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
       }
     }
   }
@@ -286,8 +288,12 @@ public:
     for (auto tag:m_tags){
       if(hasMC[tag]){
         m_selected_mc_reco.SyncCVHistos();
-        m_tuned_mc_reco.SyncCVHistos();
+      }
+      if(hasSelectedTruth[tag]){
         m_selected_mc_truth.SyncCVHistos();
+      }
+      if(hasTunedMC[tag]){
+        m_tuned_mc_reco.SyncCVHistos();
       }
       if(hasData[tag]){
         m_selected_data.SyncCVHistos();
@@ -301,7 +307,12 @@ public:
 
 
   inline void FillResponse2D(const std::string tag, CVUniverse* univ, const double x_value, const double y_value, const double x_truth, const double y_truth, const double weight=1.0){ //From Hist2DWrapperMap
-    m_selected_mc_reco.FillResponse2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
+    if(hasMC[tag]){
+      m_selected_mc_reco.FillResponse2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
+    }
+    if(hasTunedMC[tag]){
+      m_tuned_mc_reco.FillResponse2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
+    }
   }
 
   // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.
