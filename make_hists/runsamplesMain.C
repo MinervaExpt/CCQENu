@@ -147,6 +147,8 @@ int main(const int argc, const char *argv[] ) {
 
   for (auto s:samplesToDo){
     if (samplesConfig.IsMember(s)){
+      std::cout << "IsMember(" << s << "): TRUE" << std::endl;
+      if(samplesConfig.CheckMember(s)) std::cout << "CheckMember(" << s << "): TRUE" << std::endl;
       NuConfig tmp = samplesConfig.GetConfig(s);
       samples.push_back(CCQENu::Sample(tmp));
     }

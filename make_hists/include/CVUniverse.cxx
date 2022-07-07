@@ -214,8 +214,9 @@ namespace {
     bool neutrinoMode = GetAnalysisNuPDG() > 0;
     if(neutrinoMode) return (GetDouble("nonvtx_iso_blobs_energy")+GetDouble("dis_id_energy")); // several definitions of this, be careful
     else {
-      if (GetVecDouble("recoil_summed_energy").size()==0) return -999.; // protect against bad input,
-      return (GetVecDouble("recoil_summed_energy")[0] - GetDouble("recoil_energy_nonmuon_vtx100mm"));
+      //if (GetVecDouble("recoil_summed_energy").size()==0) return -999.; // protect against bad input,
+      //return (GetVecDouble("recoil_summed_energy")[0] - GetDouble("recoil_energy_nonmuon_vtx100mm"));
+      return GetDouble("recoil_energy_nonmuon_nonvtx100mm");
     }
   }
 
@@ -944,5 +945,21 @@ double CVUniverse::GetTrueLog10RecoilEnergyGeV() const {
     }
     return genie_n_strange_baryon; 
   }
+
+ int CVUniverse::GetMCTargetA() const{
+     return GetInt("mc_targetA");
+ }
+
+ int CVUniverse::GetMCTargetZ() const{
+     return GetInt("mc_targetZ");
+ }
+
+ int CVUniverse::GetMCTargetNucleon() const{
+     return GetInt("mc_targetNucleon");
+ }
+
+ int CVUniverse::Dummy() const {
+     return 0.;
+ }
     
 #endif

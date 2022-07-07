@@ -1,5 +1,6 @@
 #ifndef plotting_functions_H
 #define plotting_functions_H
+#define FULLDUMP 1
 #include "TCanvas.h"
 #include "PlotUtils/MnvVertErrorBand.h"
 #include "PlotUtils/MnvPlotter.h"
@@ -164,6 +165,7 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
 
 
   mnvPlotter.DrawErrorSummary(hist,"TR",include_stat_error,false,0.0, do_cov_area_norm, "",do_fractional_uncertainty);
+   
   std::string plotname = Form("Title: ErrorSummary_%s_%s_%s", hist->GetName(),do_cov_area_norm_str.c_str(),label.c_str());
   TText *t = new TText(.3,.95,label.c_str());
   t->SetNDC(1);
@@ -179,6 +181,27 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
   t->Draw();
   cE.Print(cE.GetName(),plotname.c_str());
   resetLogScale();
+#ifdef FULLDUMP
+    for( auto group:mnvPlotter.error_summary_group_map){
+        //std::cout << " error summary for " << group.first << std::endl;
+        mnvPlotter.DrawErrorSummary(hist,"TR",include_stat_error,false,0.0, do_cov_area_norm, group.first,do_fractional_uncertainty);
+        plotname = Form("Title: ErrorSummary_%s_%s_%s_%s", hist->GetName(),group.first.c_str(),do_cov_area_norm_str.c_str(),label.c_str());
+        TText *t = new TText(.3,.95,label.c_str());
+        t->SetNDC(1);
+        t->SetTextSize(.03);
+        setLogScale(logscale);
+      //  gPad->SetLogy(false);
+      //  gPad->SetLogx(false);
+      //  if (logscale== 2 || logscale ==3){
+      //    gPad->SetLogy();
+      //    hist->SetMinimum(0.001);
+      //  }
+      //  if (logscale== 1 || logscale ==3) gPad->SetLogx();
+        t->Draw();
+        cE.Print(cE.GetName(),plotname.c_str());
+        resetLogScale();
+    }
+#endif
   //mnvPlotter.MultiPrint(&cE, plotname, "pdf");
   //  mnvPlotter.DrawErrorSummary(hist,"TR",include_stat_error,true,0.0, do_cov_area_norm, "Angle",false);
   //  plotname = Form("ResponseErrorSummary_%s_%s_%s", hist->GetName(),do_cov_area_norm_str.c_str(),label.c_str());

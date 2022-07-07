@@ -1,0 +1,156 @@
+read in configuration file AntiNu_v7_CCQENu.json
+	adding file: root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron/Data_Merged/minervame6Apass1/CCQENu_data_AnaTuple_run00022246.root
+Added 1 files from playlist ./playlists/CCQENu_minervame6A_DATA_validation.txt
+	adding file: root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/minervame6Apass1/CCQENu_mc_AnaTuple_run00122005.root
+Added 1 files from playlist ./playlists/CCQENu_minervame6A_MC_validation.txt
+	adding file: root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/minervame6Apass1/CCQENu_mc_AnaTuple_run00122005.root
+Added 1 files from playlist ./playlists/CCQENu_minervame6A_MC_validation.txt
+	adding file: root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron/Data_Merged/minervame6Apass1/CCQENu_data_AnaTuple_run00022246.root
+	adding file: root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron/MC_Merged/minervame6Apass1/CCQENu_mc_AnaTuple_run00122005.root
+
+MacroUtil configuration of this macro runEventLoop
+** Number of data files is 1
+** Number of MC reco files is 1
+** Number of Truth files is 1
+** Data POT extracted from anatuples is 2.66283e+17
+** MC POT extracted from anatuples is 1.00229e+19
+** Playlist string is minervame6A
+
+WARNING: YOU ATTEMPTED SETTING NONRESPI REWEIGHT A SECOND TIME. THIS IS NOT ALLOWED FOR CONSISTENCY.
+WARNING: YOU ATTEMPTED SETTING DEUTERIUM GENIE PI TUNE A SECOND TIME. THIS IS NOT ALLOWED FOR CONSISTENCY.
+ do standard Flux systematics 
+ do standard GENIE systematcs 
+ do GenieRvx1pi systematics 
+ do RPA systematics 
+ do 2p2h systematics 
+ do geant4 systematics 
+Trying to load filename: /data/hadronReweight/cross_section_neutron_carbon.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_iron.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_lead.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_carbon.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_iron.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_lead.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_carbon.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_iron.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_lead.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_carbon.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_iron.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_lead.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_carbon.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_iron.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_lead.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_carbon.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_iron.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_lead.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_carbon.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_iron.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_lead.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_carbon.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_iron.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_lead.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_carbon.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_iron.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_lead.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/new_geant4_xsec.root, graphname: elastic_xsec
+Trying to load filename: /data/hadronReweight/new_geant4_xsec.root, graphname: inelastic_xsec
+Trying to load filename: /data/hadronReweight/new_geant4_xsec.root, graphname: total_xsec
+Using the HD XSec
+Trying to load filename: /data/hadronReweight/cross_section_neutron_carbon_hd.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_iron_hd.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_lead_hd.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_hydrogen_hd.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_carbon.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_iron.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_lead.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_carbon.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_iron.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_lead.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_carbon_hd.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_iron_hd.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_lead_hd.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_hydrogen_hd.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_carbon.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_iron.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_lead.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_carbon.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_iron.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_lead.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_carbon_hd.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_iron_hd.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_lead_hd.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_hydrogen_hd.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_carbon.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_iron.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_lead.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_carbon.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_iron.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_lead.root, graphname: totalXS
+MnvHadronReweight object initialized 
+  Project name Renorm_Kine_Truth
+ Playlist minervame6A
+ Using Elastics 1
+ Using NeutronCV 1
+ Fiducial vol 5991.29 < z < 8408.91, apothem, 850
+  Default particles (p, n, pi) being considered.
+Setting readout volume for Tracker: minZ 5991.29 maxZ 8408.91 850
+Using the HD XSec
+Trying to load filename: /data/hadronReweight/cross_section_neutron_carbon_hd.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_iron_hd.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_lead_hd.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_hydrogen_hd.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_carbon.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_iron.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_lead.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_carbon.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_iron.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_lead.root, graphname: inelXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_carbon_hd.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_iron_hd.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_lead_hd.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_hydrogen_hd.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_carbon.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_iron.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_lead.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_carbon.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_iron.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_lead.root, graphname: elXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_carbon_hd.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_iron_hd.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_lead_hd.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_neutron_hydrogen_hd.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_carbon.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_iron.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_proton_lead.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_carbon.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_iron.root, graphname: totalXS
+Trying to load filename: /data/hadronReweight/cross_section_pion_lead.root, graphname: totalXS
+Loading file /minerva/app/users/gilligan/minerva/opt/lib/data/mhrwKineRenorm/Renorm_Kine_Truth_MinervaME6A_v10_HD_withElastics_RwgtNeutronCV_z5991-8408_a850.root
+    ***Loaded renorm factors from file:*** 
+ do muon MINERvA energy systematics
+ do muon MINOS energy systematics
+ do muon resolution systematics
+Muon Resolution Systematics created with fractional uncertainty 0.004
+ do MINOS efficiency systematics
+ do make angle systematics
+Angle Systematics created with thetaX err 0.001 and thetaY err 0.0009
+ do make geant4 systematics
+ do standard Flux systematics 
+ do standard GENIE systematcs 
+ do GenieRvx1pi systematics 
+ do RPA systematics 
+ do 2p2h systematics 
+ do geant4 systematics 
+ do muon MINERvA energy systematics
+ do muon MINOS energy systematics
+ do muon resolution systematics
+Muon Resolution Systematics created with fractional uncertainty 0.004
+ do MINOS efficiency systematics
+ do make angle systematics
+Angle Systematics created with thetaX err 0.001 and thetaY err 0.0009
+ do make geant4 systematics
+ mc error bands is 44
+ truth error bands is 44
+read in configuration file ../../config/AntiNuCuts_v6.json
+read in configuration file ../../config/AntiNuSamples_v6.json
+NuConfig: name is not a valid member of fromConfig maybe you have a default? 
+sidebands_v2: /minerva/app/users/gilligan/minerva/CCQENu/make_hists/utils/NuConfig.h:125: std::__cxx11::string NuConfig::GetString(std::__cxx11::string) const: Assertion `CheckMember(key)' failed.
