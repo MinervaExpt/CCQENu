@@ -66,7 +66,9 @@ void LoopAndFillEventSelection(std::string tag,
       std::vector<CVUniverse*> error_band_universes = band.second;
       //  HMS replace with iuniv to access weights more easily
       //  HMS for (auto universe : error_band_universes) {
-      std::string uni_name = band.first;
+      // std::string uni_name = band.first;
+      std::string uni_name = (band.second)[0]->ShortName();
+
        for (int iuniv=0; iuniv < error_band_universes.size(); iuniv++){
 
         auto universe = error_band_universes[iuniv];

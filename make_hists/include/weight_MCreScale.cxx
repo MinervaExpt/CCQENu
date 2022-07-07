@@ -82,11 +82,13 @@ double weight_MCreScale::getScaleInternal(const double q2qe, std::string uni_nam
   }
   else{
     h_scale = (TH1D*)mnvh_Scale->GetVertErrorBand(uni_name)->GetHist(iuniv);
+    // std::cout << "weight_MCreScale: pulling out error band " << uni_name << std::endl;
   }
 
   xbin = h_scale->GetXaxis()->FindBin(checkval);
 
   retval = h_scale->GetBinContent(xbin);
+  // std::cout << "weight_MCreScale: Finished error band " << uni_name << std::endl;
   return retval;
 }
 

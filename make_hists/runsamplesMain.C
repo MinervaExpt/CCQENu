@@ -237,7 +237,7 @@ int main(const int argc, const char *argv[] ) {
   // for (auto v : variables) {
 
   std::vector<std::string> selected_reco_tags ;  //bkg only needed for recontructed MC
-  // std::vector<std::string> tuned_reco_tags ;
+  std::vector<std::string> tuned_reco_tags ;
   std::vector<std::string> selected_truth_tags ;
   std::vector<std::string> datatags;
   std::vector<std::string> truthtags;
@@ -266,10 +266,10 @@ int main(const int argc, const char *argv[] ) {
         selected_reco_tags.push_back(tag);
 
       }
-      // if (IsInVector<std::string>("tuned_reco",forlist)){
-      //   tuned_reco_tags.push_back(tag);
-      //
-      // }
+      if (IsInVector<std::string>("tuned_reco",forlist)){
+        tuned_reco_tags.push_back(tag);
+
+      }
       if (IsInVector<std::string>("selected_truth",forlist)){
         selected_truth_tags.push_back(tag);
 

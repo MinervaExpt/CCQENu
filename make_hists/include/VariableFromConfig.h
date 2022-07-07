@@ -316,8 +316,8 @@ public:
         std::cout << " write out mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
       }
       if(hasTunedMC[tag]){
-        m_tuned_mc_reco.Write((tag+"_rescale").c_str());
-        std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist((tag+"_rescale").c_str())->GetName() << std::endl;
+        m_tuned_mc_reco.Write(tag);
+        std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist(tag)->GetName() << std::endl;
       }
       if(hasSelectedTruth[tag]){
         std::cout << " write out selected truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
@@ -361,10 +361,10 @@ public:
     if(hasMC[tag]){
       m_selected_mc_reco.FillResponse(tag, univ, value, truth, weight);
     }
-    if(hasTunedMC[tag]){
-      m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight);
-
-    }
+    // if(hasTunedMC[tag]){
+    //   m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight);
+    //
+    // }
   }
 
   // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.
