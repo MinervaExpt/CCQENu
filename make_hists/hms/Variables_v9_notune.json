@@ -22,7 +22,7 @@
         "zmin":{"reco":"ZVertex","true":"TrueZVertex","name":"zmin","title":"z near start","nbins":100,"min":5900.,"max":6100.,"fluxnorm":false},
         "curv":{"reco":"Curvature","true":"TrueCurvature","name":"curv","title":"curvature in MINOS, m-1","nbins":100,"min":-2.,"max":2.,"for":["data","selected_reco"],"fluxnorm":false},
         "recoil":{"reco":"RecoilEnergyGeV","true":"TrueRecoilEnergyGeV","name":"recoil","title":"Recoil in GeV","nbins":25,"min":0.0,"max":0.5,"for":["data","selected_reco"],"fluxnorm":false},
-        "Log10recoil":{"reco":"Log10RecoilEnergyGeV","true":"TrueLog10RecoilEnergyGeV","name":"Log10recoil","title":"Log10Recoil in GeV","nbins":24,"min":-3,"max":0.0,"for":["data","selected_reco","tuned_reco"],"fluxnorm":false},
+        "Log10recoil":{"reco":"Log10RecoilEnergyGeV","true":"TrueLog10RecoilEnergyGeV","name":"Log10recoil","title":"Log10Recoil in GeV","nbins":24,"min":-3,"max":0.0,"for":["data","selected_reco","reconstructed_tuned"],"fluxnorm":false},
         "ThetamuDegrees":{"reco":"ThetamuDegrees","true":"TrueThetamuDegrees","name":"ThetamuDegrees","title":"theta_mu (degrees)","nbins":20,"min":0.,"max":40.,"fluxnorm":false},
         "MCTargetA": {"reco":"Dummy","true":"MCTargetA","name":"MCTargetA","title":"mc_targetA",
             "nbins":40,"min":0,"max":40,"fluxnorm":false,"for":["data","selected_reco","selected_truth","truth"]},
