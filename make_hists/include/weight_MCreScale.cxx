@@ -1,20 +1,18 @@
-// #ifndef weight_mcrescale_h
-// #define weight_mcrescale_h
-
 #include <fstream>  //ifstream
 #include <iostream> //cout
 
 #include <TString.h>
 // #include <TH3D.h>
-#include <TH2D.h>
+// #include <TH2D.h>
 #include <TH1D.h>
 #include <TFile.h>
 #include <cmath>
 #include <cassert>
-#include <TF1.h>
+// #include <TF1.h>
 #include "PlotUtils/MnvH1D.h"
 #include "PlotUtils/MnvVertErrorBand.h"
 #include "weight_MCreScale.h"
+// #include "TRandom.h"
 
 using namespace PlotUtils;
 
@@ -35,7 +33,7 @@ void weight_MCreScale::read(TString filename){
     mnvh_BkgScale = (MnvH1D*)f_Q2QEScaleFrac->Get("h___QELike___qelikenot___Q2QE___scale");
   }
   else{
-    std::cout << "weight_MCreScale: Bad file input for weight_MCreScale. Try again" << std::endl;
+    std::cout << "weight_MCreScale: Bad file input for weight_MCreScale. Try again." << std::endl;
     exit(1);
 
   }
@@ -75,17 +73,20 @@ double weight_MCreScale::getScaleInternal(const double q2qe, std::string uni_nam
     return 1.0;
   }
 
+  xbin = mnvh_Scale->GetXaxis()->FindBin(checkval);
+
   if (uni_name=="cv" || uni_name=="CV") {
     // h_scale = (TH1D*)mnvh_Scale->GetCVHistoWithStatError();
     TH1D *hcv = (TH1D*)mnvh_Scale;
     h_scale = hcv;
+    // double s = hcv->GetBinError(xbin);
+    // double x = TRandom::Gaus(0.0,1.0);
   }
   else{
     h_scale = (TH1D*)mnvh_Scale->GetVertErrorBand(uni_name)->GetHist(iuniv);
     // std::cout << "weight_MCreScale: pulling out error band " << uni_name << std::endl;
   }
 
-  xbin = h_scale->GetXaxis()->FindBin(checkval);
 
   retval = h_scale->GetBinContent(xbin);
   // std::cout << "weight_MCreScale: Finished error band " << uni_name << std::endl;
@@ -96,4 +97,3 @@ double weight_MCreScale::getScale(std::string tag, const double q2qe, std::strin
   SetTag(tag);
   return getScaleInternal(q2qe, uni_name, iuniv);
 }
-// #endif

@@ -6,12 +6,12 @@
 
 #include <TString.h>
 // #include <TH3D.h>
-#include <TH2D.h>
+// #include <TH2D.h>
 #include <TH1D.h>
 #include <TFile.h>
 #include <cmath>
 #include <cassert>
-#include <TF1.h>
+// #include <TF1.h>
 #include "PlotUtils/MnvH1D.h"
 #include "PlotUtils/MnvVertErrorBand.h"
 
@@ -46,8 +46,6 @@ namespace PlotUtils{
       // double getFrac(std::string sigbkg, const double q2qe); // q2qe in GeV2
       void read(TString filename);
       void SetTag(std::string tag);
-
-      TH1D* GetCVPointer(MnvH1D* h);
 
     private:
       double getScaleInternal(const double q2qe, std::string uni_name, int iuniv);

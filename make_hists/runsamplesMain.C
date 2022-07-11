@@ -44,7 +44,6 @@ int main(const int argc, const char *argv[] ) {
   const std::string mc_file_list(config.GetString("mcIn"));
   const std::string data_file_list(config.GetString("dataIn"));
 
-
   const std::string plist_string(config.GetString("playlist"));
   const std::string reco_tree_name(config.GetString("recoName"));
 
@@ -104,7 +103,7 @@ int main(const int argc, const char *argv[] ) {
   //====================MC Reco tuning for bkg subtraction======================
   // Initialize the rescale for tuning MC reco for background subtraction later
   // TODO
-  PlotUtils::weight_MCreScale mcRescale = weight_MCreScale("./nhv/bkgfitting/BkgStudy6A_BkgStudy_1_OutVals_fix.root");
+  PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(config.GetString("scalefileIn"));
 
   //=========================================
   // Systematics
