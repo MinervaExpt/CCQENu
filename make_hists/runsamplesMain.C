@@ -381,6 +381,7 @@ int main(const int argc, const char *argv[] ) {
   gitobj.Write();
 
   for (auto v : variables1D){
+    std::cout << "Writing 1D hist to file" << std::endl;
     v->WriteAllHistogramsToFile(*out);
   }
   for (auto v : variables2D){

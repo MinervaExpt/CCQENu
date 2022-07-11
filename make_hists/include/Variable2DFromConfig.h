@@ -96,7 +96,9 @@ public:
   HM2D m_selected_mc_reco;
   HM2D m_tuned_mc_reco; // HM for tuned MC hists used for background subtraction -NHV
   HM2D m_selected_mc_truth;
+  HM2D m_tuned_selected_mc_truth;
   HM2D m_signal_mc_truth;
+  HM2D m_tuned_signal_mc_truth;
   HM2D m_selected_data;
   UniverseMap m_universes; //need to change this?
   std::string m_units;
@@ -181,6 +183,19 @@ public:
     //    m_selected_mc_truth = HM2D(Form("selected_mc_truth_%s", name), (GetName()+";"+m_xaxis_label+"_"+m_yaxis_label).c_str(), xbins, ybins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
     m_selected_mc_truth = HM2D(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
     m_selected_mc_truth.AppendName("selected_truth",tags); // patch to conform to CCQENU standardm_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+
+    if (std::count(m_for.begin(), m_for.end(),"tuned_reco")< 1) {
+      std::cout << "Variable2DFromConfig Warning: tuned_reco is disabled for this 2D variable " << GetName() << std::endl;
+      for (auto tag:tags){
+        hasTunedMC[tag] = false;
+      }
+      return;
+    }
+    for (auto tag:tags){
+      hasTunedMC[tag] = true;
+    }
+    m_tuned_selected_mc_truth = HM2D(Form("%s",GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
+    m_tuned_selected_mc_truth.AppendName("selected_truth_tuned",tags);
   }
 
 
@@ -202,6 +217,19 @@ public:
 
     m_signal_mc_truth = HM2D(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, univs, tags);
     m_signal_mc_truth.AppendName("all_truth",tags);
+
+    if (std::count(m_for.begin(), m_for.end(),"tuned_reco")< 1) {
+      std::cout << "Variable2DFromConfig Warning: tuned_reco is disabled for this 2D variable " << GetName() << std::endl;
+      for (auto tag:tags){
+        hasTunedMC[tag] = false;
+      }
+      return;
+    }
+    for (auto tag:tags){
+      hasTunedMC[tag] = true;
+    }
+    m_tuned_signal_mc_truth = HM2D(Form("%s",GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
+    m_tuned_signal_mc_truth.AppendName("all_truth_tuned",tags);
   }
 
   //  void AddTruthWrapper(std::string tag){
@@ -245,6 +273,17 @@ public:
     for (auto tag:tags){
       hasResponse[tag] = true;
     }
+
+    if (std::count(m_for.begin(), m_for.end(),"tuned_reco")< 1) {
+      std::cout << "Variable2DFromConfig Warning: tuned_reco is disabled. No tuned response added for this variable" << GetName() << std::endl;
+      return;
+    }
+    for (auto tag:tags){
+      assert(hasTunedMC[tag]);
+      assert(hasSelectedTruth[tag]);
+    }
+
+    m_tuned_mc_reco.AddResponse2D(tags,"_tuned");
   }
 
   //=======================================================================================
@@ -261,19 +300,35 @@ public:
       if(hasMC[tag]) {
         m_selected_mc_reco.Write(tag);
         std::cout << " write out mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+        if(hasTunedMC[tag]){
+          m_tuned_mc_reco.Write(tag);
+          std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist(tag)->GetName() << std::endl;
+        }
       }
       if(hasSelectedTruth[tag]){
         m_selected_mc_truth.Write(tag);
         std::cout << " write out truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
-      }
-      if(hasTunedMC[tag]){
-        m_tuned_mc_reco.Write(tag);
-        std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist(tag)->GetName() << std::endl;
+        if(hasTunedMC[tag]){
+          m_tuned_selected_mc_truth.Write(tag);
+          std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
+        }
       }
       if(hasTruth[tag]){
         m_signal_mc_truth.Write(tag);
         std::cout << " write out truth histogram " << m_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
+        if(hasTunedMC[tag]){
+          m_tuned_signal_mc_truth.Write(tag);
+          std::cout << " write out tuned mc histogram " << m_tuned_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
+        }
       }
+      // if(hasTunedMC[tag]){
+      //   m_tuned_mc_reco.Write(tag);
+      //   std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist(tag)->GetName() << std::endl;
+      //   m_tuned_selected_mc_truth.Write(tag);
+      //   std::cout << " write out tuned selected truth histogram " << m_tuned_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
+      //   m_tuned_signal_mc_truth.Write(tag);
+      //   std::cout << " write out tuned truth histogram " << m_tuned_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
+      // }
       if(hasData[tag]){
         m_selected_data.Write(tag);
         std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
@@ -288,18 +343,24 @@ public:
     for (auto tag:m_tags){
       if(hasMC[tag]){
         m_selected_mc_reco.SyncCVHistos();
+        if(hasTunedMC[tag]){
+          m_tuned_mc_reco.SyncCVHistos();
+        }
       }
       if(hasSelectedTruth[tag]){
         m_selected_mc_truth.SyncCVHistos();
-      }
-      if(hasTunedMC[tag]){
-        m_tuned_mc_reco.SyncCVHistos();
+        if(hasTunedMC[tag]){
+          m_tuned_selected_mc_truth.SyncCVHistos();
+        }
       }
       if(hasData[tag]){
         m_selected_data.SyncCVHistos();
       }
       if(hasTruth[tag]){
         m_signal_mc_truth.SyncCVHistos();
+        if(hasTunedMC[tag]){
+          m_tuned_signal_mc_truth.SyncCVHistos();
+        }
       }
     }
   }
@@ -310,9 +371,9 @@ public:
     if(hasMC[tag]){
       m_selected_mc_reco.FillResponse2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
     }
-    // if(hasTunedMC[tag]){
-    //   m_tuned_mc_reco.FillResponse2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
-    // }
+    if(hasTunedMC[tag]){
+      m_tuned_mc_reco.FillResponse2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
+    }
   }
 
   // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.

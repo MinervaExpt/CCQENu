@@ -72,6 +72,10 @@ double weight_MCreScale::getScaleInternal(const double q2qe, std::string uni_nam
     std::cout << "weight_MCreScale: You have a q2qe passed to weight_minervaq2qe less than 0. Non-physical. Returning 1.0"<< std::endl;
     return 1.0;
   }
+  else if(q2qe>=2.0){
+    // Q2 is fit up to 2.0 GeV^2 (as of 7/11/22), but some events have higher values. -NHV
+    checkval = 1.99;
+  }
 
   xbin = mnvh_Scale->GetXaxis()->FindBin(checkval);
 

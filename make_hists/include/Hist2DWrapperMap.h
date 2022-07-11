@@ -122,8 +122,8 @@ public:
         m_hists[tag].hist->SetName(Form("%s___%s",(m_hists[tag].hist->GetName()),n.c_str()));
       }
   }
-  
-  inline void AddResponse2D(std::vector<std::string> tags){ //TODO: This name okay?
+
+  inline void AddResponse2D(std::vector<std::string> tags, std::string tail=""){ //TODO: This name okay?
 
     // make a temp universe map to make Response happy
     std::map<std::string, int> response_bands; // necessary?
@@ -136,7 +136,7 @@ public:
     }
     for (auto tag:tags){
       //std::string resp_name = tag+"_response_"+m_name;
-      std::string resp_name = "h2D___"+ tag + "___"+m_name+"___response";
+      std::string resp_name = "h2D___"+ tag + "___"+m_name+"___response"+tail;
 
       if (m_fixedbins){
         TH2D tmp = TH2D("tmp", m_title.c_str(), m_nxbins, m_xmin, m_xmax, m_nybins, m_ymin, m_ymax);

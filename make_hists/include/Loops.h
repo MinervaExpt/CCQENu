@@ -94,15 +94,16 @@ void LoopAndFillEventSelection(std::string tag,
             const double q2qe = universe->GetQ2QEGeV();
             double scale = mcRescale.getScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
             FillMC(tag, universe, weight, variables, variables2D, scale);
-            FillResponse(tag,universe,weight,variables,variables2D);
+            FillResponse(tag,universe,weight,variables,variables2D, scale);
           }
 
         }
         else if (data_mc_truth == kTruth){
 
           if(selection.isEfficiencyDenom(*universe, weight)){
-
-            FillSignalTruth(tag, universe, weight, variables, variables2D);
+            const double q2qe = universe->GetTrueQ2QEGeV();
+            double scale = mcRescale.getScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+            FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
           }
         }
         else{ //kData
