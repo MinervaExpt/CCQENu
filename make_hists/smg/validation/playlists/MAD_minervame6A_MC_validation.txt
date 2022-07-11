@@ -1,0 +1,1 @@
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/MAD_ntuples/production_p1/MuonKuldged/Antineutrinos/FullDetector/Merged_mc_ana_me6A_FirstProductionAnatuples_DualVertex/MasterAnaDev_mc_AnaTuple_run00122005_Playlist.root

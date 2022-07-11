@@ -1,0 +1,27 @@
+{
+  "version":7,  // October 25, 2021  get ready for github
+  "mcIn":"./playlists/MAD_minervame6A_MC_validation.txt",
+  "dataIn":"./playlists/MAD_minervame6A_DATA_validation.txt",
+  "prescale":100,
+  "playlist":"minervame6A",
+  "recoName":"MasterAnaDev",
+  "pdg":-14,
+  "runsamples":["QElike","QElikeNot"],
+  "cutsFile":"./config/AntiNuCuts_v9.json",
+  "varsFile":"./config/Variables_v9.json",
+  "samplesFile":"./config/AntiNuSamples_v9.json",
+  "outRoot":"SB",
+  "AnalyzeVariables":["recoil","Q2QE","pzmu","ptmu","EnuCCQE"],
+  "Analyze2DVariables":["Q2QE_recoil"],
+  "signal":{"QElike":"qelike","QElikeNot":"qelike"},
+  "background":{"QElike":"qelikenot","QElikeNot":"qelikenot"},
+  "data":{"QElike":"data","QElikeALL":"data"},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+  "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}

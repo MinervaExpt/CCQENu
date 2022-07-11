@@ -34,6 +34,7 @@
 #include "include/GetVariablesFromConfig.h"
 #include "include/Get2DVariablesFromConfig.h"
 #include "include/Variable2DFromConfig.h"
+#include "include/weight_MCreScale.h"
 //#include "include/plotting_pdf.h"
 #include "TROOT.h"
 #include "TStyle.h"
