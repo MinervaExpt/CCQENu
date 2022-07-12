@@ -106,7 +106,6 @@ int main(const int argc, const char *argv[] ) {
 
   //====================MC Reco tuning for bkg subtraction======================
   // Initialize the rescale for tuning MC reco for background subtraction later
-  // TODO
   // std::string scaleLoc = "./data/BkgStudy6A_BkgStudy_1_OutVals_fix.root";
   // if config.IsMember(“MCRescale”){
   //   scaleLoc=config.GetString("scalefileIn");

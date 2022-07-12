@@ -111,10 +111,10 @@ double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_nam
 }
 
 double weight_MCreScale::GetScale(std::string tag, const double q2qe, std::string uni_name, int iuniv){
-  SetTag(tag);
   // Default value, not physical. Checked so you can switch scaling on and off easier.
   double retval = -1.;
   if(useTuned){
+    SetTag(tag);
     retval = GetScaleInternal(q2qe, uni_name, iuniv);
   }
 

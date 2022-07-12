@@ -1,7 +1,7 @@
 {
   "version":9,  // June 22 - grid version
-  "mcIn":"${CCQEMAT}/playlists/local/MC_5A_local.txt",
-  "dataIn":"${CCQEMAT}/playlists/local/DATA_5A_local.txt",
+  "mcIn":"${CCQEMAT}/nhv/playlists/MC_5A_local.txt",
+  "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
   "scalefileIn":"${CCQEMAT}/data/BkgStudy6A_BkgStudy_1_OutVals_fix.root",
   "prescale":1,
   "playlist":"minervame5A",
