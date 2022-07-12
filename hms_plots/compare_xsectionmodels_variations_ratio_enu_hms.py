@@ -358,7 +358,7 @@ else:
 
     if not DRAWRATIO:
         leg.AddEntry(_xmctot,"MINERvA Tune v1 (Full Fiducial)","l")
-        leg.AddEntry(_xmcmnv2tot,"MINERvA Tune v2 (Full Fiducial)","l")
+        leg.AddEntry(_xmcmnv2tot,"MINERva Tune v2 (Full Fiducial)","l")
         leg.AddEntry(_xdtot,"Data (Full Fiducial)","lpe")
     
 #leg.AddEntry(xmcgibu,"GENIE+GIBUU","l")
