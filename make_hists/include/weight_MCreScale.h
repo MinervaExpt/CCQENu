@@ -22,7 +22,7 @@ namespace PlotUtils{
   class weight_MCreScale{
     public:
       // Boolean set to switch on and off if want to use tuned hists
-      bool useTuned;
+      bool useTuned=false;
       // Boolean set based off tag
       bool isSignal;
       // Member file with scale/fraction MnvH1Ds

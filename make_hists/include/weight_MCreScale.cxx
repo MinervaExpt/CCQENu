@@ -28,25 +28,24 @@ weight_MCreScale::weight_MCreScale(const NuConfig config){
   if(config.IsMember("scalefileIn")){
     filename=config.GetString("scalefileIn");
   }
-  useTuned=false;
   if(config.IsMember("useTuned")){
     useTuned=config.GetBool("useTuned");
   }
-
-  read(filename);
+  if(useTuned){
+    read(filename);
+  }
 }
 
 
 void weight_MCreScale::read(TString filename){
 
-  f_Q2QEScaleFrac = TFile::Open(filename,"READONLY");
+  f_Q2QEScaleFrac = TFile::Open(filename,"READ");
   if(f_Q2QEScaleFrac){
     mnvh_SigScale = (MnvH1D*)f_Q2QEScaleFrac->Get("h___QELike___qelike___Q2QE___scale");
     mnvh_BkgScale = (MnvH1D*)f_Q2QEScaleFrac->Get("h___QELike___qelikenot___Q2QE___scale");
   }
   else{
-    std::cout << "weight_MCreScale: Bad file input for weight_MCreScale. Try again." << std::endl;
-    exit(1);
+    std::cout << "weight_MCreScale: Bad file input for weight_MCreScale." << std::endl;
   }
   if (!mnvh_SigScale || !mnvh_BkgScale){
     std::cout << "weight_MCreScale: failed to find signal or background scale fractions " << mnvh_SigScale << mnvh_BkgScale << " in " << filename << std::endl;
