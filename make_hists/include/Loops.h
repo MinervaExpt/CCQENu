@@ -58,7 +58,7 @@ void LoopAndFillEventSelection(std::string tag,
 
     const double cvWeight = (data_mc_truth == kData) ? 1. : model.GetWeight(*cvUniv,event);  // detail may be used for more complex things
     // TODO: Is this scaled cvWeight necessary?
-    // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.getScale(q2qe, "cv");
+    // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
 
 
     // Loop bands and universes
@@ -92,7 +92,7 @@ void LoopAndFillEventSelection(std::string tag,
              && selection.isSignal(*universe)) {
             //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
             const double q2qe = universe->GetQ2QEGeV();
-            double scale = mcRescale.getScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+            double scale = mcRescale.GetScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
             FillMC(tag, universe, weight, variables, variables2D, scale);
             FillResponse(tag,universe,weight,variables,variables2D, scale);
           }
@@ -102,7 +102,7 @@ void LoopAndFillEventSelection(std::string tag,
 
           if(selection.isEfficiencyDenom(*universe, weight)){
             const double q2qe = universe->GetTrueQ2QEGeV();
-            double scale = mcRescale.getScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+            double scale = mcRescale.GetScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
             FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
           }
         }

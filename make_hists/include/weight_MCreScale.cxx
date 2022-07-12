@@ -12,18 +12,30 @@
 #include "PlotUtils/MnvH1D.h"
 #include "PlotUtils/MnvVertErrorBand.h"
 #include "weight_MCreScale.h"
+#include "utils/NuConfig.h"
 // #include "TRandom.h"
 
 using namespace PlotUtils;
 
 weight_MCreScale::weight_MCreScale(TString filename){
   read(filename);
+  useTuned=true;
 }
 
-// weight_MCreScale::weight_MCreScale(std::string tag, TString filename){
-//   read(filename);
-//   SetTag(tag);
-// }
+weight_MCreScale::weight_MCreScale(const NuConfig config){
+  std::string filename = "./data/BkgStudy6A_BkgStudy_1_OutVals_fix.root";
+
+  if(config.IsMember("scalefileIn")){
+    filename=config.GetString("scalefileIn");
+  }
+  useTuned=false;
+  if(config.IsMember("useTuned")){
+    useTuned=config.GetBool("useTuned");
+  }
+
+  read(filename);
+}
+
 
 void weight_MCreScale::read(TString filename){
 
@@ -35,7 +47,10 @@ void weight_MCreScale::read(TString filename){
   else{
     std::cout << "weight_MCreScale: Bad file input for weight_MCreScale. Try again." << std::endl;
     exit(1);
-
+  }
+  if (!mnvh_SigScale || !mnvh_BkgScale){
+    std::cout << "weight_MCreScale: failed to find signal or background scale fractions " << mnvh_SigScale << mnvh_BkgScale << " in " << filename << std::endl;
+    exit(1);
   }
 }
 
@@ -51,7 +66,7 @@ void weight_MCreScale::SetTag(std::string tag){
 }
 
 
-double weight_MCreScale::getScaleInternal(const double q2qe, std::string uni_name, int iuniv){
+double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_name, int iuniv){
   double retval = 1.;
   double checkval = q2qe;
   int xbin = -1;
@@ -90,14 +105,18 @@ double weight_MCreScale::getScaleInternal(const double q2qe, std::string uni_nam
     h_scale = (TH1D*)mnvh_Scale->GetVertErrorBand(uni_name)->GetHist(iuniv);
     // std::cout << "weight_MCreScale: pulling out error band " << uni_name << std::endl;
   }
-
-
   retval = h_scale->GetBinContent(xbin);
   // std::cout << "weight_MCreScale: Finished error band " << uni_name << std::endl;
   return retval;
 }
 
-double weight_MCreScale::getScale(std::string tag, const double q2qe, std::string uni_name, int iuniv){
+double weight_MCreScale::GetScale(std::string tag, const double q2qe, std::string uni_name, int iuniv){
   SetTag(tag);
-  return getScaleInternal(q2qe, uni_name, iuniv);
+  // Default value, not physical. Checked so you can switch scaling on and off easier.
+  double retval = -1.;
+  if(useTuned){
+    retval = GetScaleInternal(q2qe, uni_name, iuniv);
+  }
+
+  return retval;
 }
