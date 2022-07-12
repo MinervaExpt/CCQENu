@@ -20,7 +20,7 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}  $ENV{JSONCPP_DIR})
 #list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS} )
 
 set(CMAKE_CXX_FLAGS "-Wformat=0 -Wno-unused-variable")
- 
+
 
 #---Locate the ROOT package and defines a number of variables (e.g. ROOT_INCLUDE_DIRS)
 find_package(ROOT REQUIRED COMPONENTS RIO Net)
@@ -47,6 +47,7 @@ set(SRC_FILES
 include/Get2DVariablesFromConfig.cxx
 include/GetVariablesFromConfig.cxx
 include/CVUniverse.cxx
+include/weight_MCreScale.cxx
 )
 
 # tell it about the header files
@@ -65,6 +66,7 @@ include/HistWrapperMap.h
 include/Systematics.h
 include/Variable2DFromConfig.h
 include/VariableFromConfig.h
+include/weight_MCreScale.h
 include/plotting_pdf.h
 )
 
@@ -103,8 +105,8 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{P
 
 #add_executable(runsamples runsamples.C)
 add_executable(sidebands_v2 sidebands_v2.C)
-add_executable(analyze_v8 analyze_v8.C)
-add_executable(analyze_vSean smg/analyze_vSean.C)
+# add_executable(analyze_v8 analyze_v8.C)
+# add_executable(analyze_vSean smg/analyze_vSean.C)
 
 
 
@@ -113,6 +115,5 @@ add_executable(analyze_vSean smg/analyze_vSean.C)
 
 #target_link_libraries(runsamples  PRIVATE ${PROJEC_NAME} )
 target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
-target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
-target_link_libraries(analyze_vSean  PRIVATE ${PROJECT_NAME} )
-
+# target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
+# target_link_libraries(analyze_vSean  PRIVATE ${PROJECT_NAME} )

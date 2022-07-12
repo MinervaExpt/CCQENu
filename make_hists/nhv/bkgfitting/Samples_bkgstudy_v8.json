@@ -1,0 +1,45 @@
+{"QElike":  // this one reproduces the older format
+   {"name":"QElike",
+    "reco":"QElike",
+    "phase_space":"phase_space",
+    "signal":["qelike"],
+    "background":["qelikenot"],
+    "components":{
+      "qelike":{
+        "for":["selected_reco"] // Only need selected reco for bkgstudies (no need for truth, etc.)
+        },
+      "qelikenot":{"for":["selected_reco"]
+        }
+      }
+   },
+  "QElike_loE":{
+     "name":"QElike_loE",
+     "reco":"QElike",
+     "phase_space":"phase_space",
+     "signal":["qelike"],
+     "background":["qelikenot"],
+     "components":{
+       "qelike":{
+         "for":["selected_reco"]
+        },
+       "qelikenot":{
+         "for":["selected_reco"]
+       }
+     }
+  },
+  "QElike_hiE":{
+     "name":"QElike_hiE",
+     "reco":"QElike",
+     "phase_space":"phase_space",
+     "signal":["qelike"],
+     "background":["qelikenot"],
+     "components":{
+       "qelike":{
+         "for":["selected_reco"]
+        },
+       "qelikenot":{
+         "for":["selected_reco"]
+       }
+     }
+  }
+}

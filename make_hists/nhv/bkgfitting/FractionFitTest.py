@@ -100,17 +100,19 @@ def GetDummyHistCV(rfile):
     histkeys_list = rfile.GetListOfKeys()
     for histkey in histkeys_list:
         hist_name = histkey.GetName()
-        if hist_name.find("___Q2QE___") == -1:
+        if hist_name.find("___Q2QE___") == -1: #TODO: This is hardcoded, should change it
             continue
         else:
-            dummyhist_cv = rfile.Get(
-                hist_name).GetCVHistoWithStatError().Clone()
+            # This *should* be a TH1D
+            dummyhist_cv = rfile.Get(hist_name).GetCVHistoWithStatError().Clone()
+            # Clears hist, leaves only binning
+            dummyhist_cv.Reset("ICES")
             return dummyhist_cv
     print("No suitable hist to make a dummy with. Exiting...")
     sys.exit()
 
-
-def InitializeOutHists(infile):
+# def InitializeOutHists(infile):
+def InitializeChi2Hists(infile):
     # Set up hists (chi2 and scale factor) that are plotted in Q2QE
     dummyhist_q2 = GetDummyHistCV(infile)
 
@@ -119,13 +121,17 @@ def InitializeOutHists(infile):
     before_chi2_hist.Reset("ICES")
     after_chi2_hist = dummyhist_q2.Clone()
     after_chi2_hist.Reset("ICES")
-    scale_hist = dummyhist_q2.Clone()
-    scale_hist.Reset("ICES")
+    # sig_scale_hist = dummyhist_q2.Clone()
+    # sig_scale_hist.Reset("ICES")
+    # bkg_scale_hist = dummyhist_q2.Clone()
+    # bkg_scale_hist.Reset("ICES")
 
     # Clean up dummy hist
     del dummyhist_q2
 
-    return before_chi2_hist, after_chi2_hist, scale_hist
+    return before_chi2_hist, after_chi2_hist, sig_scale_hist, bkg_scale_hist
+
+
 
 
 def InitializeCanvas(canvas_name):
@@ -278,7 +284,7 @@ def RunFractionFitter(i_mctot_hist, i_qelike_hist, i_qelikenot_hist, i_data_hist
     virtual_fitter.Config().ParSettings(1).Set(
         'qelikenot', frac_dict['qelikenot'], binwid, 0.0, 1.0)
     # Constrain the fit to between [0,1], since they are fracs and area-normed
-    fit.Constrain(0, 0.0, 1.0)
+    # fit.Constrain(0, 0.0, 1.0)
     fit.Constrain(1, 0.0, 1.0)
     fit.SetRangeX(min_bin, max_bin)
     # Do the fit
@@ -754,90 +760,6 @@ def MakeScaleCompPlot(canvas, i_h1_dict,h1_name,i_h2_dict,h2_name,h1_color=ROOT.
     ROOT.gPad.SetLogx(0)
 
 
-# def MakeScaleCompPlot(canvas, i_loE_scale, i_hiE_scale):
-#     loEscale_hist = i_loE_scale['hist'].Clone()
-#     hiEscale_hist = i_hiE_scale['hist'].Clone()
-#
-#     loE_fit = i_loE_scale['fit']
-#     hiE_fit = i_hiE_scale['fit']
-#
-#     legend = ROOT.TLegend(0.45, 0.9, 0.15, 0.65)
-#     legend.SetBorderSize(1)
-#
-#     # xmin = 0.02 #0.02
-#     xmax = 2.0  # 1.4
-#     ROOT.gPad.SetLogx(1)
-#
-#     loEscale_hist.SetTitle(
-#         "Scale Factor vs. Q^{2}_{QE}: Low E_{#nu}, High E_{#nu}")
-#     loEscale_hist.GetXaxis().SetTitle("Q^{2}_{QE} (GeV^{2})")
-#     loEscale_hist.GetXaxis().CenterTitle()
-#     loEscale_hist.GetYaxis().SetTitle("Scale Factor")
-#     loEscale_hist.GetYaxis().CenterTitle()
-#
-#     loEscale_hist.SetMarkerStyle(20)
-#     loEscale_hist.SetMarkerColor(ROOT.kBlue)
-#     loEscale_hist.SetLineColor(ROOT.kBlue)
-#
-#     loE_fit.SetLineColor(ROOT.kBlue)
-#
-#
-#     loEscale_hist.SetMaximum(1.2)
-#     loEscale_hist.SetMinimum(0.3)
-#
-#     hiEscale_hist.GetXaxis().SetTitle("Q^{2}_{QE} (GeV^{2})")
-#     hiEscale_hist.GetXaxis().CenterTitle()
-#     hiEscale_hist.GetYaxis().SetTitle("Scale Factor")
-#     hiEscale_hist.GetYaxis().CenterTitle()
-#
-#     hiEscale_hist.SetMarkerStyle(20)
-#     hiEscale_hist.SetMarkerColor(ROOT.kRed)
-#     hiEscale_hist.SetLineColor(ROOT.kRed)
-#
-#     hiE_fit.SetLineColor(ROOT.kRed)
-#
-#
-#     line = ROOT.TLine(0, 1., xmax, 1.)
-#     line.SetLineStyle(2)
-#     line.SetLineWidth(3)
-#     line.SetLineColor(36)
-#
-#     if CONFINT:
-#         loEconfint_hist = i_loE_scale['confint_hist'].Clone()
-#         hiEconfint_hist = i_hiE_scale['confint_hist'].Clone()
-#         loEconfint_hist.SetFillColorAlpha(ROOT.kBlue, 0.2)
-#         hiEconfint_hist.SetFillColorAlpha(ROOT.kRed, 0.2)
-#
-#
-#     ks = loEscale_hist.KolmogorovTest(hiEscale_hist)
-#     ks_label = 'K-S GoF = ' + str("{:.4f}".format(ks))
-#
-#     chi2 = loEscale_hist.Chi2Test(hiEscale_hist,"CHI2")
-#     loEscale_hist.Chi2Test(hiEscale_hist,"P")
-#
-#     print("===============================chi2: ",chi2,"===============================")
-#     legend.AddEntry(loEscale_hist, "E_{#nu} < 6 GeV")
-#     legend.AddEntry(hiEscale_hist, "E_{#nu} > 6 GeV")
-#     legend.AddEntry("ks", ks_label, "")
-#
-#
-#     loEscale_hist.Draw("E1")
-#     if CONFINT:
-#         loEconfint_hist.Draw("e3,same")
-#     loE_fit.Draw("same")
-#     hiEscale_hist.Draw("E1,same")
-#     if CONFINT:
-#         hiEconfint_hist.Draw("e3,same")
-#     hiE_fit.Draw("same")
-#     line.Draw("same")
-#     legend.Draw("same")
-#
-#     canvas.Print(canvas.GetName(), str("Title: ScaleComp"))
-#     ROOT.gPad.SetLogx(0)
-#
-#     del loEscale_hist, hiEscale_hist
-
-
 class logcheb:
     # Class for making a user defined Chebyshev polynomial to fit to.
     # Initialize some inputs
@@ -975,8 +897,12 @@ def main():
         i_fitbin = 0
 
         # Initialize two of the final hists.
-        before_chi2_hist, after_chi2_hist, scale_hist = InitializeOutHists(
-            infile)
+        # before_chi2_hist, after_chi2_hist, sig_scale_hist, bkg_scale_hist = InitializeOutHists(infile)
+
+        before_chi2_hist = GetDummyHistCV(infile).Clone()
+        after_chi2_hist = GetDummyHistCV(infile).Clone()
+        sig_scale_hist = GetDummyHistCV(infile).Clone()
+        bkg_scale_hist = GetDummyHistCV(infile).Clone()
 
         plotfilename = plotfilename_base + '_' + sample
         if sample == 'QElike':
@@ -1019,8 +945,7 @@ def main():
 
             # Get the TH1D for each systematic universe in the MnvH1D
             print("Pulling out universe hists...")
-            mcuniverse_names = hist_dict[fitbin]['mc']['MnvH1D'].GetVertErrorBandNames(
-            )
+            mcuniverse_names = hist_dict[fitbin]['mc']['MnvH1D'].GetVertErrorBandNames()
             hist_dict[fitbin] = GetUniverseHists(
                 hist_dict[fitbin], mcuniverse_names, DO_SYSTEMATICS)
 
@@ -1039,12 +964,9 @@ def main():
 
                     # Make a copy of all the hists you need...
                     data_hist = data_cv_hist.Clone()
-                    mctot_hist = hist_dict[fitbin]['mc']['hists'][mcuni_name][mc_uni].Clone(
-                    )
-                    qelike_hist = hist_dict[fitbin]['qelike']['hists'][mcuni_name][mc_uni].Clone(
-                    )
-                    qelikenot_hist = hist_dict[fitbin]['qelikenot']['hists'][mcuni_name][mc_uni].Clone(
-                    )
+                    mctot_hist = hist_dict[fitbin]['mc']['hists'][mcuni_name][mc_uni].Clone()
+                    qelike_hist = hist_dict[fitbin]['qelike']['hists'][mcuni_name][mc_uni].Clone()
+                    qelikenot_hist = hist_dict[fitbin]['qelikenot']['hists'][mcuni_name][mc_uni].Clone()
 
                     # Calculate Chi2 between data & MC before the fit.
                     before_chi2 = data_hist.Chi2Test(mctot_hist,"CHI2")
@@ -1061,27 +983,27 @@ def main():
                     qelikenot_scale, qelikenot_scale_err = CalculateScaleFactor(fit, frac_dict, 'qelikenot')
 
                     # Make a scaled qelike hist using the fit
-                    scale_qelike_hist = qelike_hist.Clone()
-                    recoil_nbins = scale_qelike_hist.GetNbinsX()
+                    scale_qelike_rechist = qelike_hist.Clone()
+                    recoil_nbins = scale_qelike_rechist.GetNbinsX()
                     # This includes underflow (0) and overflow (n_bins+1) bins,
                     # however the fit excludes these bins.
                     for bin in range(0, recoil_nbins + 2):
-                        scale_qelike_hist.SetBinContent(bin, qelike_scale)
-                        scale_qelike_hist.SetBinError(bin, qelike_scale_err)
-                    corr_qelike_hist = qelike_hist.Clone()
-                    corr_qelike_hist.Multiply(scale_qelike_hist)
+                        scale_qelike_rechist.SetBinContent(bin, qelike_scale)
+                        scale_qelike_rechist.SetBinError(bin, qelike_scale_err)
+                    corr_qelike_rechist = qelike_hist.Clone()
+                    corr_qelike_rechist.Multiply(scale_qelike_rechist)
 
                     # Make a scaled qelikenot hist using the fit
                     scale_qelikenot_hist = qelikenot_hist.Clone()
                     for bin in range(0, recoil_nbins + 2):
                         scale_qelikenot_hist.SetBinContent(bin, qelikenot_scale)
                         scale_qelikenot_hist.SetBinError(bin, qelikenot_scale_err)
-                    corr_qelikenot_hist = qelikenot_hist.Clone()
-                    corr_qelikenot_hist.Multiply(scale_qelikenot_hist)
+                    corr_qelikenot_rechist = qelikenot_hist.Clone()
+                    corr_qelikenot_rechist.Multiply(scale_qelikenot_hist)
 
                     # Make a total MC hist from scaled qelike, qelikenot hists
-                    corr_mctot_hist = corr_qelike_hist.Clone()
-                    corr_mctot_hist.Add(corr_qelikenot_hist, 1.0)
+                    corr_mctot_hist = corr_qelike_rechist.Clone()
+                    corr_mctot_hist.Add(corr_qelikenot_rechist, 1.0)
 
                     # This is the normal chi2 for two TH1D's to measure goodness
                     # of fit of the scaled MC to data
@@ -1089,7 +1011,7 @@ def main():
                     corr_ndf = data_hist.GetNbinsX()-1
 
                     # These are the predictions from the fit of each sample. They
-                    # are not totally correct, since TFF changes the shape.
+                    # are not totally correct, since TFracFit changes the shape.
                     pred_qelike_hist = fit.GetMCPrediction(0)
                     pred_qelikenot_hist = fit.GetMCPrediction(1)
 
@@ -1121,8 +1043,8 @@ def main():
                             MakeDataMCPlot(canvas, title, data_hist, qelike_hist,
                                            qelikenot_hist, before_chi2, before_ndf, logx, logy)
                             # Plot Data & post-fit MC
-                            MakeDataMCPlot(canvas, title, data_hist, corr_qelike_hist,
-                                           corr_qelikenot_hist, corr_chi2, corr_ndf, logx, logy, fit_chi2)
+                            MakeDataMCPlot(canvas, title, data_hist, corr_qelike_rechist,
+                                           corr_qelikenot_rechist, corr_chi2, corr_ndf, logx, logy, fit_chi2)
                             # Plot the MCPrediction hists output by the fitter
                             MakeDataMCPlot(canvas, title, data_hist, pred_qelike_hist,
                                            pred_qelikenot_hist, pred_chi2, pred_ndf, logx, logy, fit_chi2, True)
@@ -1136,10 +1058,10 @@ def main():
                         after_chi2_hist.SetBinContent(
                             i_fitbin + 1, corr_chi2 / corr_ndf)
 
-                        scale_hist.SetBinContent(
-                            i_fitbin + 1, qelikenot_scale)
-                        scale_hist.SetBinError(
-                            i_fitbin + 1, qelikenot_scale_err)
+                        bkg_scale_hist.SetBinContent(i_fitbin + 1, qelikenot_scale)
+                        bkg_scale_hist.SetBinError(i_fitbin + 1, qelikenot_scale_err)
+                        sig_scale_hist.SetBinContent(i_fitbin + 1, qelike_scale)
+                        sig_scale_hist.SetBinError(i_fitbin + 1, qelike_scale_err)
 
                     # del mctot_hist, data_hist, qelike_hist, qelikenot_hist, pred_qelike_hist, pred_qelikenot_hist, pred_mctot_hist
 
@@ -1218,7 +1140,7 @@ def main():
 
     MakeScaleFactorPlot(scale_canvas, scale_qelike,'Full Sample',ROOT.kGreen+4)
     MakeScaleFactorPlot(scale_canvas, scale_loE,'E_{#nu} < 6 GeV',ROOT.kBlue)
-    MakeScaleFactorPlot(scale_canvas, scale_hiE,'E_{#nu} > 6 GeV',ROOT.kRed)
+    MakeScaleFactorsPlot(scale_canvas, scale_hiE,'E_{#nu} > 6 GeV',ROOT.kRed)
 
     MakeScaleCompPlot(scale_canvas, scale_loE,'E_{#nu} < 6 GeV', scale_hiE,'E_{#nu} > 6 GeV')
     MakeScaleCompPlot(scale_canvas,scale_qelike,'Full Sample',scale_loE,'E_{#nu} < 6 GeV',ROOT.kGreen+4,ROOT.kBlue)

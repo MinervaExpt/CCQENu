@@ -1,0 +1,29 @@
+{
+  "version":9,  // June 22 - grid version
+  "mcIn":"${CCQEMAT}/nhv/playlists/MC_5A_local.txt",
+  "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
+  "scalefileIn":"${CCQEMAT}/data/BkgStudy6A_BkgStudy_1_OutVals_fix.root",
+  "prescale":1,
+  "playlist":"minervame5A",
+  "recoName":"CCQENu",
+  "pdg":-14,
+  "useTuned":false, // Set true if you want to tune mc for bkg subtraction
+  "runsamples":["QElike"],
+  "cutsFile":"${CCQEMAT}/hms/AntiNuCuts_v9.json",
+  "varsFile":"${CCQEMAT}/hms/Variables_v9.json",
+  "samplesFile":"${CCQEMAT}/nhv/config/AntiNuSamples_v9_bkgsub.json",
+  "outRoot":"Enu",
+  "AnalyzeVariables":["Q2QE","recoil"],
+  "Analyze2DVariables":["Q2QE_recoil"],
+  "signal":{"QElike":"qelike"},
+  "background":{"QElike":"qelikenot"},
+  "data":{"QElike":"data"},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}
