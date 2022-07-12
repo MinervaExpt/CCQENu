@@ -8,7 +8,7 @@ On Unix, you need to
 
 ```cp -r /minerva/app/users/schellma/NEWMAT/jsoncpp-build $WHEREIPUTMYCODE # where WHEREIPUTMYCODE is where MAT and MAT-MINERvA and CCQENu live```
 
-Your executable should be in the run directory which is RELATIVE to $WHEREIPUTMYCODE - ie CCQENu/make_hists or something similar. 
+Your executable should be in the run directory
 
 you then invoke `SubmitJobsToGrid_MAT.py` with your config and playlists and the results come back in a tagged subdirectory of `--outdir`
 
@@ -22,7 +22,7 @@ export APP=/minerva/app/users/$USER
 export SCRATCH=/pnfs/minerva/scratch/users/$USER
 export BLUE=/minerva/data/users/$USER     
 
-python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test \
+python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test\
 --basedir=$APP/NEWMAT --rundir=CCQENu/make_hists --playlist=minervame5A --tag=test --mail \
 --prescale=1 --config=testme --sample=QElike --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat.sh \
 --tmpdir=$BLUE/tmp --expected-lifetime=12h --memory=2000  #--debug --notimestamp 
