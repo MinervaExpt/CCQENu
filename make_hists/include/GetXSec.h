@@ -407,10 +407,12 @@ template<class MnvHistoType>
       std::cout << " Using energy dependent flux normalization. " << std::endl;
       // Returns flux hist in bins of energy variable of input hist (for 2D the bins on the non-energy axis are integrated)
       MnvHistoType* h_flux_ebins = GetFluxEbins(h_flux_dewidthed,ialltruhist,*config,FluxNorm);
-
+       
 
       // TODO: Flipped the order of the Divide and Scale steps. Does this matter?
       h_flux_ebins->AddMissingErrorBandsAndFillWithCV(*sigma);
+        h_flux_ebins->SetName(std::string("h_flux_ebins_"+basename).c_str());
+      h_flux_ebins->Write();
       sigma->AddMissingErrorBandsAndFillWithCV(*h_flux_ebins);
       sigma->Divide(sigma,h_flux_ebins);
       // target normalization
