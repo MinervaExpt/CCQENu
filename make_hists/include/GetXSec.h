@@ -449,7 +449,7 @@ template<class MnvHistoType>
                       std::map< std::string, std::map <std::string, MnvHistoType*> > histsND,
                       std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
                       NuConfig oneconfig, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
-                      MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub) {
+                      MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub, bool usetune) {
       std::map<const std::string, NuConfig*> configmap;
       configmap["main"]= &oneconfig;
       std::cout << " pass single config into map" << std::endl;
@@ -457,7 +457,7 @@ template<class MnvHistoType>
                              histsND,
                              responseND,
                              configmap,  canvas, norm, POTScale,  h_flux_dewidthed,
-                             unfold,  num_iter, DEBUG, hasbkgsub);
+                             unfold,  num_iter, DEBUG, hasbkgsub,usetune);
   }
 
 template<class MnvHistoType>
@@ -465,7 +465,7 @@ template<class MnvHistoType>
                       std::map< std::string, std::map <std::string, MnvHistoType*> > histsND,
                       std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
                       std::map< const std::string, NuConfig *> configs, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
-                      MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub) {
+                      MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub, bool usetune) {
     bool binwid = true;
     int logscale = 0; // 0 for none, 1 for x, 2 for y, 3 for both
 
@@ -536,12 +536,20 @@ template<class MnvHistoType>
     // MnvHistoType can be MnvH1D or MnvH2D so far. Response is always MnvH2D.
     MnvHistoType* idatahist = histsND["reconstructed"][dat];
     MnvHistoType* imcsighist = histsND["reconstructed"][sig];
+    if (histsND.count("reconstructed_tuned") && usetune){
+      
+      imcsighist = histsND["reconstructed_tuned"][sig];
+    }
+    std::cout << "using signal " << imcsighist->GetName() << std::endl;
     MnvHistoType* imcbkghist;
     MnvHistoType* ibkgsubhist;
     if (!hasbkgsub){
       imcbkghist = histsND["reconstructed"][bkg];
+      if (histsND.count("reconstructed_tuned")&& usetune){
+        imcbkghist = histsND["reconstructed_tuned"][bkg];
+      }
     }
-  
+    std::cout << "using background " << imcbkghist->GetName() << std::endl;
     if (hasbkgsub) ibkgsubhist = histsND["fitted"]["bkgsub"];
     MnvHistoType* iseltruhist = histsND["selected_truth"][sig];
     MnvHistoType* ialltruhist = histsND["all_truth"][sig];
@@ -763,24 +771,24 @@ template int GetCrossSection<MnvH1D>(std::string sample, std::string variable, s
                                      std::map< std::string, std::map <std::string, MnvH1D*> > histsND,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
                                      std::map< const std::string, NuConfig *> configs, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false, bool hasbksub=false);
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false, bool hasbksub=false, bool usetune=false);
 
 template int GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > histsND,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
                                      std::map< const std::string, NuConfig *> configs, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false,bool hasbksub=false);
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false,bool hasbksub=false, bool usetune = false);
 
 template int GetCrossSection<MnvH1D>(std::string sample, std::string variable, std::string basename,
                                      std::map< std::string, std::map <std::string, MnvH1D*> > histsND,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
                                      NuConfig mainconfig, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false, bool hasbksub=false);
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false, bool hasbksub=false, bool usetune=false);
 
 template int GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > histsND,
                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
                                      NuConfig mainconfig, TCanvas & canvas, double norm, double POTScale, const MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false,bool hasbksub=false);
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false,bool hasbksub=false, bool usetune = false);
 
 

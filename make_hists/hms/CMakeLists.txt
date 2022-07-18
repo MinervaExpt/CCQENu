@@ -71,8 +71,11 @@ include/HistWrapperMap.h
 include/Systematics.h
 include/Variable2DFromConfig.h
 include/VariableFromConfig.h
-include/plotting_pdf.h
 include/weight_MCreScale.h
+include/plotting_pdf.h
+
+include/weight_MCreScale.h
+
 fits/ScaleFactors.h
 fits/MultiScaleFactors.h
 fits/DoTheFit.h
@@ -115,9 +118,11 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{P
 
 #add_executable(runsamples runsamples.C)
 add_executable(sidebands_v2 sidebands_v2.C)
-add_executable(analyze_v8 analyze_v8.C)
+
+#add_executable(analyze_v8 analyze_v8.C)
 add_executable(analyze_v9 analyze_v9.C)
-add_executable(MnvFitDriver MnvFitDriver.cxx)
+#add_executable(MnvFitDriver MnvFitDriver.cxx)
+
 add_executable(MnvMateusDriver MnvMateusDriver.cxx)
 #add_executable(analyze_vSean smg/analyze_vSean.C)
 #add_executable(getCSVs ../utilities/getCSVs.C)
@@ -130,9 +135,11 @@ add_executable(MnvMateusDriver MnvMateusDriver.cxx)
 
 #target_link_libraries(runsamples  PRIVATE ${PROJEC_NAME} )
 target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
-target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
+
+#target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )
-target_link_libraries(MnvFitDriver PRIVATE ${PROJECT_NAME} )
+#target_link_libraries(MnvFitDriver PRIVATE ${PROJECT_NAME} )
+
 target_link_libraries(MnvMateusDriver PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(analyze_vSean  PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(getCSVs PRIVATE ${PROJECT_NAME} )
