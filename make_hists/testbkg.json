@@ -10,7 +10,7 @@
   "cutsFile":"${CCQEMAT}/hms/AntiNuCuts_v9.json",
   "varsFile":"${CCQEMAT}/hms/Variables_v9.json",
   "samplesFile":"${CCQEMAT}/hms/AntiNuSamples_v9.json",
-  "outRoot":"Enu",
+  "outRoot":"Bkg",
     "AnalyzeVariables":["Q2QE","Log10recoil","pzmu","ptmu","EnuCCQE","Enu","ThetamuDegrees","recoil"],
   "Analyze2DVariables":["Q2QE_Log10recoil"],
   "signal":{"QElike":"qelike","Background":"qelike"},
