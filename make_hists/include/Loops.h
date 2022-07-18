@@ -58,7 +58,7 @@ void LoopAndFillEventSelection(std::string tag,
 
     const double cvWeight = (data_mc_truth == kData) ? 1. : model.GetWeight(*cvUniv,event);  // detail may be used for more complex things
     // TODO: Is this scaled cvWeight necessary?
-    // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.getScale(q2qe, "cv");
+    // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
 
 
     // Loop bands and universes
@@ -66,12 +66,11 @@ void LoopAndFillEventSelection(std::string tag,
       std::vector<CVUniverse*> error_band_universes = band.second;
       //  HMS replace with iuniv to access weights more easily
       //  HMS for (auto universe : error_band_universes) {
-      // std::string uni_name = band.first;
       std::string uni_name = (band.second)[0]->ShortName();
-
-       for (int iuniv=0; iuniv < error_band_universes.size(); iuniv++){
+      for (int iuniv=0; iuniv < error_band_universes.size(); iuniv++){
 
         auto universe = error_band_universes[iuniv];
+
 
         universe->SetEntry(i);
 
@@ -92,17 +91,18 @@ void LoopAndFillEventSelection(std::string tag,
              && selection.isSignal(*universe)) {
             //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
             const double q2qe = universe->GetQ2QEGeV();
-            double scale = mcRescale.getScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+            double scale = mcRescale.GetScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
             FillMC(tag, universe, weight, variables, variables2D, scale);
-            FillResponse(tag,universe,weight,variables,variables2D);
+            FillResponse(tag,universe,weight,variables,variables2D, scale);
           }
 
         }
         else if (data_mc_truth == kTruth){
 
           if(selection.isEfficiencyDenom(*universe, weight)){
-
-            FillSignalTruth(tag, universe, weight, variables, variables2D);
+            const double q2qe = universe->GetTrueQ2QEGeV();
+            double scale = mcRescale.GetScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+            FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
           }
         }
         else{ //kData

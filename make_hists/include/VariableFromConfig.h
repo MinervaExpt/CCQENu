@@ -131,7 +131,7 @@ public:
       m_for = config.GetStringVector("for");
     }
     else{ // turn them all on for now
-       std::vector<std::string> def = {"data","selected_reco","tuned_reco","selected_truth","response","truth"};
+       std::vector<std::string> def = {"data","selected_reco","tuned_mc","selected_truth","response","truth"};
       for (auto s:def){
         m_for.push_back(s);
       }
@@ -157,16 +157,18 @@ public:
   HM m_selected_mc_reco;
   HM m_tuned_mc_reco; // HM for tuned MC hists used for background subtraction -NHV
   HM m_selected_mc_truth;
+  HM m_tuned_selected_mc_truth;
   HM m_signal_mc_truth;
+  HM m_tuned_signal_mc_truth;
   HM m_selected_data;
   UniverseMap m_universes;
   std::string m_units;
   std::map<const std::string, bool> hasData;
   std::map<const std::string, bool> hasMC;
-  std::map<const std::string, bool> hasTunedMC;
   std::map<const std::string, bool> hasSelectedTruth;
   std::map<const std::string, bool> hasTruth;
   std::map<const std::string, bool> hasResponse;
+  std::map<const std::string, bool> hasTunedMC;
   std::vector<std::string> m_tags;
   std::vector<std::string> m_for;
   //RESPONSE* m_response;
@@ -208,31 +210,31 @@ public:
 //     m_selected_mc_reco = HM(Form("selected_mc_reco_%s", name), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
     m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
     m_selected_mc_reco.AppendName("reconstructed",tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
-
-    // TODO: Should tuned mc reco get its own InitializeHist function? -NHV 6-28-22
-    if (std::count(m_for.begin(), m_for.end(),"tuned_reco")< 1) {
-      std::cout << "VariableFromConfig Warning: tuned_reco is disabled for this variable " << GetName() << std::endl;
-      for (auto tag:tags){
-        hasTunedMC[tag] = false;
-      }
-      return;
-    }
-    for (auto tag:tags){
-      hasTunedMC[tag] = true;
-    }
-    m_tuned_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
-    m_tuned_mc_reco.AppendName("reconstructed_tuned",tags);
+    //
+    // // TODO: Should tuned mc reco get its own InitializeHist function? -NHV 6-28-22
+    // if (std::count(m_for.begin(), m_for.end(),"tuned_mc")< 1) {
+    //   std::cout << "VariableFromConfig Warning: tuned_mc is disabled for this variable " << GetName() << std::endl;
+    //   for (auto tag:tags){
+    //     hasTunedMC[tag] = false;
+    //   }
+    //   return;
+    // }
+    // for (auto tag:tags){
+    //   hasTunedMC[tag] = true;
+    // }
+    // m_tuned_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
+    // m_tuned_mc_reco.AppendName("reconstructed_tuned",tags);
   }
 
   template <typename T>
   void InitializeSelectedTruthHistograms(T univs, const std::vector<std::string> tags) {
-     if (std::count(m_for.begin(), m_for.end(),"selected_truth")< 1) {
-       std::cout << "VariableFromConfig Warning: selected_truth is disabled for this variable " << GetName() << std::endl;
-       for (auto tag:tags){
-         hasSelectedTruth[tag] = false;
-       }
-       return;
-     }
+    if (std::count(m_for.begin(), m_for.end(),"selected_truth")< 1) {
+      std::cout << "VariableFromConfig Warning: selected_truth is disabled for this variable " << GetName() << std::endl;
+      for (auto tag:tags){
+        hasSelectedTruth[tag] = false;
+      }
+      return;
+    }
     for (auto tag:tags){
       hasSelectedTruth[tag] = true;
     }
@@ -240,6 +242,20 @@ public:
 
     m_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
     m_selected_mc_truth.AppendName("selected_truth",tags);
+    //
+    // if (std::count(m_for.begin(), m_for.end(),"tuned_mc")< 1) {
+    //   std::cout << "VariableFromConfig Warning: tuned_mc is disabled for this variable " << GetName() << std::endl;
+    //   for (auto tag:tags){
+    //     hasTunedMC[tag] = false;
+    //   }
+    //   return;
+    // }
+    // for (auto tag:tags){
+    //   hasTunedMC[tag] = true;
+    // }
+    // m_tuned_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
+    // m_tuned_selected_mc_truth.AppendName("selected_truth_tuned",tags);
+    //
   }
 
   template <typename T>
@@ -258,6 +274,19 @@ public:
 
     m_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
     m_signal_mc_truth.AppendName("all_truth",tags);
+    //
+    // if (std::count(m_for.begin(), m_for.end(),"tuned_mc")< 1) {
+    //   std::cout << "VariableFromConfig Warning: tuned_mc is disabled for this variable " << GetName() << std::endl;
+    //   for (auto tag:tags){
+    //     hasTunedMC[tag] = false;
+    //   }
+    //   return;
+    // }
+    // for (auto tag:tags){
+    //   hasTunedMC[tag] = true;
+    // }
+    // m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
+    // m_tuned_signal_mc_truth.AppendName("all_truth_tuned",tags);
   }
 
   template <typename T>
@@ -276,6 +305,49 @@ public:
 
     m_selected_data = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs,tags);
     m_selected_data.AppendName("reconstructed",tags);
+  }
+
+  template <typename T>
+  void InitializeTunedMCHistograms(T reco_univs, T truth_univs, const std::vector< std::string> tuned_tags, const std::vector< std::string> response_tags) {
+    if (std::count(m_for.begin(), m_for.end(),"tuned_mc")< 1) {
+      std::cout << "VariableFromConfig Warning: tuned_mc is disabled for this variable " << GetName() << std::endl;
+      for (auto tag:tuned_tags){
+        hasTunedMC[tag] = false;
+      }
+      return;
+    }
+    for (auto tag:tuned_tags){
+      hasTunedMC[tag] = true;
+    }
+    std::vector<double> bins = GetBinVec();
+
+    // Check which categories are configured and add a tuned version
+    if (std::count(m_for.begin(), m_for.end(),"selected_reco")>=1){
+      m_tuned_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, reco_univs, tuned_tags);
+      m_tuned_mc_reco.AppendName("reconstructed_tuned",tuned_tags);
+    }
+    if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) {
+      m_tuned_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, reco_univs, tuned_tags);
+      m_tuned_selected_mc_truth.AppendName("selected_truth_tuned",tuned_tags);
+    }
+    if (std::count(m_for.begin(), m_for.end(),"truth")>=1) {
+      m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, truth_univs, tuned_tags);
+      m_tuned_signal_mc_truth.AppendName("all_truth_tuned",tuned_tags);
+    }
+
+    // Now do response
+    if (std::count(m_for.begin(), m_for.end(),"response")< 1) {
+      std::cout << "VariableFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
+      for (auto tag:response_tags){
+        hasResponse[tag] = false;
+      }
+      return;
+    }
+    for (auto tag:response_tags){
+      assert(hasTunedMC[tag]);
+      assert(hasSelectedTruth[tag]);
+    }
+    m_tuned_mc_reco.AddResponse(response_tags,"_tuned");
   }
 
 
@@ -298,7 +370,23 @@ public:
     for (auto tag:tags){
       hasResponse[tag] = true;
     }
-
+    //
+    // if (std::count(m_for.begin(), m_for.end(),"tuned_mc")< 1) {
+    //   std::cout << "VariableFromConfig Warning: tuned_mc is disabled. No tuned response added for this variable" << GetName() << std::endl;
+    //   return;
+    // }
+    // for (auto tag:tags){
+    //   if(!hasTunedMC[tag]){
+    //     std::cout << "VariableFromConfig Warning: useTuned is disabled. No tuned response added for this variable" << GetName() << std::endl;
+    //     return;
+    //   }
+    // }
+    // // for (auto tag:tags){
+    // //   assert(hasTunedMC[tag]);
+    // //   assert(hasSelectedTruth[tag]);
+    // // }
+    //
+    // m_tuned_mc_reco.AddResponse(tags,"_tuned");
   }
 
 
@@ -314,18 +402,26 @@ public:
       if(hasMC[tag]){
         m_selected_mc_reco.Write(tag);
         std::cout << " write out mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
-      }
-      if(hasTunedMC[tag]){
-        m_tuned_mc_reco.Write(tag);
-        std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist(tag)->GetName() << std::endl;
+        if(hasTunedMC[tag]){
+          m_tuned_mc_reco.Write(tag);
+          std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist(tag)->GetName() << std::endl;
+        }
       }
       if(hasSelectedTruth[tag]){
         std::cout << " write out selected truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
         m_selected_mc_truth.Write(tag);
+        if(hasTunedMC[tag]){
+          m_tuned_selected_mc_truth.Write(tag);
+          std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
+        }
       }
       if(hasTruth[tag]){
         std::cout << " write out truth histogram " << m_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
         m_signal_mc_truth.Write(tag);
+        if(hasTunedMC[tag]){
+          m_tuned_signal_mc_truth.Write(tag);
+          std::cout << " write out tuned mc histogram " << m_tuned_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
+        }
       }
       if(hasData[tag]){
         std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
@@ -341,30 +437,40 @@ public:
     for (auto tag:m_tags){
       if(hasMC[tag]){
         m_selected_mc_reco.SyncCVHistos();
-      }
-      if(hasTunedMC[tag]){
-        m_tuned_mc_reco.SyncCVHistos();
+        if(hasTunedMC[tag]){
+          m_tuned_mc_reco.SyncCVHistos();
+        }
       }
       if(hasSelectedTruth[tag]){
         m_selected_mc_truth.SyncCVHistos();
+        if(hasTunedMC[tag]){
+          m_tuned_selected_mc_truth.SyncCVHistos();
+        }
       }
       if(hasData[tag]){
         m_selected_data.SyncCVHistos();
       }
       if(hasTruth[tag]){
         m_signal_mc_truth.SyncCVHistos();
+        if(hasTunedMC[tag]){
+          m_tuned_signal_mc_truth.SyncCVHistos();
+        }
       }
+      // if(hasTunedMC[tag]){
+      //   m_tuned_mc_reco.SyncCVHistos();
+      //   m_tuned_selected_mc_truth.SyncCVHistos();
+      //   m_tuned_signal_mc_truth.SyncCVHistos();
+      // }
     }
   }
 
-  inline void FillResponse(std::string tag, CVUniverse* univ, const double value, const double truth, const double weight=1.0){
+  inline void FillResponse(std::string tag, CVUniverse* univ, const double value, const double truth, const double weight=1.0, const double scale=1.0){
     if(hasMC[tag]){
       m_selected_mc_reco.FillResponse(tag, univ, value, truth, weight);
     }
-    // if(hasTunedMC[tag]){
-    //   m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight);
-    //
-    // }
+    if(hasTunedMC[tag]){
+      m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight);
+    }
   }
 
   // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.

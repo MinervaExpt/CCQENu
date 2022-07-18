@@ -35,7 +35,10 @@ int main(const int argc, const char *argv[] ) {
   if (config.IsMember("version")){
     version = config.GetInt("version");
   }
-
+  bool useTuned = 0;
+  if(config.IsMember("useTuned")){
+    useTuned = config.GetBool("useTuned");
+  }
 
   //=========================================S
   // MacroUtil (makes your anatuple chains)
@@ -43,7 +46,6 @@ int main(const int argc, const char *argv[] ) {
 
   const std::string mc_file_list(config.GetString("mcIn"));
   const std::string data_file_list(config.GetString("dataIn"));
-
 
   const std::string plist_string(config.GetString("playlist"));
   const std::string reco_tree_name(config.GetString("recoName"));
@@ -99,12 +101,18 @@ int main(const int argc, const char *argv[] ) {
   MnvTunev1.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
   MnvTunev1.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
 
+
   PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTunev1));
 
   //====================MC Reco tuning for bkg subtraction======================
   // Initialize the rescale for tuning MC reco for background subtraction later
-  // TODO
-  PlotUtils::weight_MCreScale mcRescale = weight_MCreScale("./nhv/bkgfitting/BkgStudy6A_BkgStudy_1_OutVals_fix.root");
+  // std::string scaleLoc = "./data/BkgStudy6A_BkgStudy_1_OutVals_fix.root";
+  // if config.IsMember(“MCRescale”){
+  //   scaleLoc=config.GetString("scalefileIn");
+  // }
+  //
+  // PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(scaleLoc);
+  PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(config);
 
   //=========================================
   // Systematics
@@ -237,10 +245,10 @@ int main(const int argc, const char *argv[] ) {
   // for (auto v : variables) {
 
   std::vector<std::string> selected_reco_tags ;  //bkg only needed for recontructed MC
-  std::vector<std::string> tuned_reco_tags ;
   std::vector<std::string> selected_truth_tags ;
   std::vector<std::string> datatags;
   std::vector<std::string> truthtags;
+  std::vector<std::string> tuned_mc_tags ;
   std::vector<std::string> responsetags;
   std::vector<std::string> types;
 
@@ -264,23 +272,18 @@ int main(const int argc, const char *argv[] ) {
 
       if (IsInVector<std::string>("selected_reco",forlist)){
         selected_reco_tags.push_back(tag);
-
-      }
-      if (IsInVector<std::string>("tuned_reco",forlist)){
-        tuned_reco_tags.push_back(tag);
-
       }
       if (IsInVector<std::string>("selected_truth",forlist)){
         selected_truth_tags.push_back(tag);
-
       }
       if(IsInVector<std::string>("truth",forlist )){
         truthtags.push_back(tag);
-
+      }
+      if (IsInVector<std::string>("tuned_mc",forlist)){
+        tuned_mc_tags.push_back(tag);
       }
       if(IsInVector<std::string>("response",forlist)){
         responsetags.push_back(tag);
-
       }
     }
   }
@@ -297,6 +300,9 @@ int main(const int argc, const char *argv[] ) {
     v->InitializeDataHistograms(data_error_bands,datatags);
     v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands,truthtags);
+    if(useTuned){
+      v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,tuned_mc_tags,responsetags);
+    }
     variables1D.push_back(v);
   }
 
@@ -308,6 +314,9 @@ int main(const int argc, const char *argv[] ) {
     v->InitializeDataHistograms2D(data_error_bands,datatags);
     v->AddMCResponse2D(responsetags);
     v->InitializeTruthHistograms2D(truth_error_bands,truthtags);
+    if(useTuned){
+      v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,tuned_mc_tags,responsetags);
+    }
     variables2D.push_back(v);
   }
 
@@ -382,6 +391,7 @@ int main(const int argc, const char *argv[] ) {
   gitobj.Write();
 
   for (auto v : variables1D){
+    std::cout << "Writing 1D hist to file" << std::endl;
     v->WriteAllHistogramsToFile(*out);
   }
   for (auto v : variables2D){

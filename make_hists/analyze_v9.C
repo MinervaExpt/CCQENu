@@ -152,6 +152,7 @@ int main(const int argc, const char *argv[] ) {
   //========================================= Now do some analysis
 
   MnvH1D* h_flux_dewidthed = GetFlux(allconfigs);
+   
   double flux = h_flux_dewidthed->Integral() ;
   // make containers for different analysis levels
   std::map<std::string, MnvH1D*> h_flux_ebins;
@@ -201,6 +202,8 @@ int main(const int argc, const char *argv[] ) {
   double POTScale = dataPOT/mcPOTprescaled;
   delete h_pot;
   double norm = 1./dataPOT/targets;
+  TNamed targetobj("targets",Form("%6e",targets));
+    
   std::cout << " integrated luminosity is " << 1/norm/1.E24 << "barns^-1" <<  std::endl;
 
   std::cout <<  " POT MC " <<  mcPOTprescaled  <<std::endl;
@@ -339,6 +342,8 @@ int main(const int argc, const char *argv[] ) {
         pdfname = outname;
     }
     TFile* o = TFile::Open(outroot.c_str(),"RECREATE");
+    targetobj.Write();
+    h_flux_dewidthed->Write();
   std::string pdffilename1D = pdfname + "_1D.pdf";
   std::string pdfstart1D = pdfname + "_1D.pdf(";
   std::string pdfend1D = pdfname + "_1D.pdf)";

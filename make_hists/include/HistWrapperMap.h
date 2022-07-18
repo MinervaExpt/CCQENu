@@ -1,6 +1,6 @@
 //
 //  HistWrapperMap.h
-//  
+//
 //
 //  Created by Heidi Schellman (research) on 11/4/16.
 //
@@ -26,9 +26,9 @@ namespace PlotUtils{
 template <typename T>
 
 class HistWrapperMap:public T {
-  
+
 private:
-  
+
   std::map<const std::string, HistWrapper<T> > m_hists;
   std::map< std::string, std::vector<T*> > m_univs;
   std::string m_name = "NULL";
@@ -46,14 +46,14 @@ private:
   std::vector<std::string> m_tags;
   std::map<std::string,int> m_response_bands; // map that tells you how many
   std::map<const T*,int> m_decoder;
-  
+
 public:
-  
+
   HistWrapperMap(){};
   // constructor
-  
- 
-   
+
+
+
   inline  HistWrapperMap( const std::string name, const std::string title, const Int_t nbins, const double xmin,const double xmax,  std::map< std::string,std::vector<T*>> univs, const std::vector<std::string> tags){
     // just store the config
     m_name = name;
@@ -71,12 +71,12 @@ public:
       m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), nbins, xmin, xmax, univs);
     }
     m_decoder = UniverseDecoder(univs);
-    
+
   }
-  
+
   // map that helps you find the index of a universe.
-  
-  
+
+
   std::map<const T*,int> UniverseDecoder(const std::map< std::string, std::vector<T*> > univs)const{
     std::map<const T*, int> decoder;
     for(auto univ:univs){
@@ -88,9 +88,9 @@ public:
     }
     return decoder;
   }
-  
-  
-  
+
+
+
   // constructor
   inline  HistWrapperMap( const std::string name, const std::string title, const Int_t nbins, const std::vector<double> bins,  std::map< std::string, std::vector<T*> > univs, std::vector<std::string> tags){
     // just store the config
@@ -110,10 +110,10 @@ public:
     }
     m_decoder = UniverseDecoder(univs);
   }
-  
-  
+
+
   // inline std::string GetName(){return m_name;}
-  
+
   //  inline void AddHistWrapper(const std::string tag){
   //    PlotUtils::HistWrapper<T> hist;
   //    std::string hist_name = tag +"_"+ m_name;
@@ -126,22 +126,47 @@ public:
   //    m_hists[tag]=hist;
   //    m_hashist=true;
   //  };
-  
-  inline void AddResponse(std::vector<std::string> tags){
-    
+
+  // inline void AddResponse(std::vector<std::string> tags){
+  //   // make a temp universe map to make Response happy
+  //   std::map<std::string, int> response_bands;
+  //   for (auto band : m_univs){
+  //     std::string name = band.first;
+  //     std::string realname = (band.second)[0]->ShortName();
+  //     int nuniv = band.second.size();
+  //     m_response_bands[realname] = nuniv;
+  //   }
+  //   for (auto tag:tags){
+  //     //std::string resp_name = tag+"_response_"+m_name;
+  //     std::string resp_name = "h___" + tag + "___"+m_name+"___response";
+  //
+  //     if (m_fixedbins){
+  //       TH1D tmp = TH1D("tmp", m_title.c_str(), m_nbins, m_xmin, m_xmax);
+  //       std::vector<double> edges;
+  //       for (int i = 1; i <= m_nbins+1; i++){
+  //         edges.push_back(tmp.GetXaxis()->GetBinLowEdge(i));
+  //       }
+  //       m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nbins, &edges[0],m_nbins,&edges[0], m_response_bands);
+  //     }
+  //     else{
+  //       m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nbins, &m_bins[0], m_nbins,&m_bins[0], m_response_bands);
+  //     }
+  //     m_hasresponse[tag] = true;
+  //   }
+
+  inline void AddResponse(std::vector<std::string> tags, std::string tail=""){
     // make a temp universe map to make Response happy
     std::map<std::string, int> response_bands;
     for (auto band : m_univs){
       std::string name = band.first;
       std::string realname = (band.second)[0]->ShortName();
       int nuniv = band.second.size();
-      
       m_response_bands[realname] = nuniv;
     }
     for (auto tag:tags){
       //std::string resp_name = tag+"_response_"+m_name;
-      std::string resp_name = "h___" + tag + "___"+m_name+"___response";
-    
+      std::string resp_name = "h___" + tag + "___"+m_name+"___response" + tail;
+
       if (m_fixedbins){
         TH1D tmp = TH1D("tmp", m_title.c_str(), m_nbins, m_xmin, m_xmax);
         std::vector<double> edges;
@@ -151,24 +176,22 @@ public:
         m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nbins, &edges[0],m_nbins,&edges[0], m_response_bands);
       }
       else{
-        
         m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nbins, &m_bins[0], m_nbins,&m_bins[0], m_response_bands);
       }
       m_hasresponse[tag] = true;
     }
-    
-    
-    
-    
+
+
+
   };
-  
+
   inline void AppendName(const std::string n, const std::vector<std::string> tags){
      for (auto tag : tags){
        m_hists[tag].hist->SetName(Form("%s___%s",(m_hists[tag].hist->GetName()),n.c_str()));
      }
    }
-     
-  
+
+
   //  inline  std::vector<std::string> GetHistKeys(){
   //    std::vector<std::string> retval;
   //    for (auto  const& element : m_hists) {
@@ -176,36 +199,36 @@ public:
   //    }
   //    return retval;
   //  };
-  
+
   //  can we make this smarter?
   inline void Fill(const std::string tag, const T* universe, const Double_t value, const Double_t weight=1.0){
     m_hists[tag].FillUniverse(universe, value, weight);
   }
-  
+
   inline void FillResponse(const std::string tag, const T* univ, const double value, const double truth, const double weight=1.0){
     std::string name = univ->ShortName();
     int iuniv = m_decoder[univ];
     //std::cout << " fillresponse " << name << " " << iuniv << std::endl;
     m_response[tag]->Fill(value, truth, name, iuniv, weight);
   }
-  
+
   inline int GetNhists(){return m_hists.size();}
-  
+
   inline MnvH1D* GetHist(const std::string tag){
     if (m_hists.count(tag)>0) return m_hists[tag].hist;
     return 0;
   }
-  
+
   inline MinervaUnfold::MnvResponse* GetResponse(const std::string tag){
     if (m_response.count(tag)>0) return m_response[tag];
     return 0;
   }
-  
+
   inline MnvH2D* GetMigrationMatrix(const std::string tag){
     MnvH2D* matrix;
     MnvH1D* dummy;
     MnvH1D* dummy2;
-    
+
     if (m_response.count(tag)>0){
 #ifdef HSTDBG
       std::cout << " HistWrapperMap::Migration matrix has size " << m_response[tag]->GetMigrationMatrix()->GetErrorBandNames().size() << std::endl;
@@ -216,24 +239,24 @@ public:
     }
     return 0;
   }
-  
-  
-  
-  
+
+
+
+
   inline void Scale(const std::string tag, double scale){
     m_hists[tag].hist->Scale(scale);
   }
-  
+
   inline void Write(const std::string tag, Int_t option = 0){
-  
+
       std::cout << " look at all tags " << tag << std::endl;
       if (m_hashist[tag]){
         std::cout << " try to write hist " << tag << " " << m_hists[tag].hist->GetName() <<  std::endl;
         m_hists[tag].hist->Write();
-        
+
       }
-    
-    
+
+
       if(m_hasresponse[tag]){
         std::cout << " try to write response " << tag << " " << m_hists[tag].hist->GetName()  << std::endl;
         PlotUtils::MnvH2D* h_migration;
@@ -250,27 +273,27 @@ public:
           h_reco->Write();
           h_truth->Write();
         }
-        
+
       }
-    
+
   };
-  
-  
+
+
   inline void DeleteResponse(){
     for (auto resp: m_response){
       std::cout << "delete migration matrix" << resp.second->GetMigrationMatrix()->GetName() ;
       delete resp.second;
     }
   }
-  
+
   // voodoo you sometimes need
   inline void SyncCVHistos(){
     for (auto tag:m_tags){
       m_hists[tag].SyncCVHistos();
     }
   };
-  
-  
+
+
 };
 };
 #endif /* HistWrapperMap_h */
