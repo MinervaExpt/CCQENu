@@ -47,6 +47,7 @@ set(SRC_FILES
 include/Get2DVariablesFromConfig.cxx
 include/GetVariablesFromConfig.cxx
 include/CVUniverse.cxx
+include/weight_MCreScale.cxx
 fits/ScaleFactors.cpp
 fits/MultiScaleFactors.cpp
 fits/DoTheFit.cpp
@@ -71,6 +72,7 @@ include/Systematics.h
 include/Variable2DFromConfig.h
 include/VariableFromConfig.h
 include/plotting_pdf.h
+include/weight_MCreScale.h
 fits/ScaleFactors.h
 fits/MultiScaleFactors.h
 fits/DoTheFit.h
