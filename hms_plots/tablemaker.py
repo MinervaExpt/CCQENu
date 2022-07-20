@@ -2,7 +2,13 @@ import sys,os,string
 from ROOT import *
 from  PlotUtils import *
 
-scale = 1.E42
+scale = 1.E40
+binwidth=True
+fullprecision = False
+syserrors = False
+fractionalErrors = True
+
+    
 
 def texheader():
     stex = "\\documentclass[10pt]{article}\n"
@@ -77,12 +83,11 @@ def read1d(fname):
     print ("reading 1d",fname)
     cvs = f.read()
     #print (cvs)
-    cvs = cvs.split("\n")
+    cvs = cvs.split(",")
     # (cvs[0],cvs[2])
     cv = []
-    for i in range(0,len(cvs)-1):
-        cvs[i]=cvs[i].strip()
-        cv.append(atof(cvs[i].split(",")))
+    for i in range(0,len(cvs)):
+        cv.append(atof(cvs[i]))
         
     #print (cv)
     f.close()
@@ -124,6 +129,45 @@ def table2d(xbins,xname,ybins,yname,table,caption):
     stex += "\\end{sidewaystable}\n"
     #print (stex)
     return stex
+
+def table1d(xbins,xname,type,table,caption):
+    stex = ""
+    nxbins = len(xbins)-1
+    if type == "End":
+        stex += "\\end{tabular}\n"
+        stex += "\\end{sidewaystable}\n"
+        return stex
+    if type == "Start":
+        stex += "\\begin{sidewaystable}\n"
+        stex += "\\caption{"+caption+"}\n"
+        stex += "\\begin{tabular}{r|"
+        for i in range(0,nxbins):
+            stex += "r "
+        stex += "}\n"
+        stex += "\\hline\\hline\n"
+        stex += xname.replace("\"","$")
+    #print (xbins)
+    
+        for j in range(0,nxbins):
+            stex += "&$%6.3f-$"%(xbins[j])
+        stex+="\\\\\n"
+        for j in range(0,nxbins):
+            stex += "&$%6.3f$"%(xbins[j+1])
+        stex+="\\\\\n"
+        return stex
+    
+    stex+="\\hline\n"
+
+    #for i in range(0,nxbins):
+    #    stex+= "$%6.2f-%6.2f$"%(xbins[i],xbins[i+1])
+    stex += type
+    for j in range(0,nxbins):
+        #print (len(cv), nxbins,i,len(cv[0]),nybins,j)
+        stex += "& %10.2f"%(table[j])
+    stex+="\\\\\n"
+    
+    #print (stex)
+    return stex
     
 if len(sys.argv) < 3:
     print ("arguments are: filename 2Dhistname [significant digits]")
@@ -148,52 +192,92 @@ h.SetTitle(h.GetTitle().replace("\nu","\\nu"))
 
 h.GetXaxis().SetTitle(h.GetXaxis().GetTitle().replace("\nu","\\nu"))
 h.GetYaxis().SetTitle(h.GetYaxis().GetTitle().replace("\nu","\\nu"))
-h.GetXaxis().Print()
-binwidth=True
-fullprecision = False
-syserrors = False
-percentage = False
-
 h.Scale(scale)
-h.MnvH2DToCSV(hname,outdir,1.0,fullprecision,syserrors,percentage,binwidth)
 
-stex = ""
-stex += texheader()
-oname =  os.path.join(outdir,hname+"_values_2d.csv")
- 
-cv = read2d(oname)
+if h.InheritsFrom("TH2"):
+    
+
+    h.MnvH2DToCSV(hname,outdir,1.0,fullprecision,syserrors,fractionalErrors,binwidth)
+
+    stex = ""
+    stex += texheader()
+    oname =  os.path.join(outdir,hname+"_values_2d.csv")
+     
+    cv = read2d(oname)
 
 
-bins = readbins(oname.replace("_values","_bins"))
-#print (bins)
-xname = bins[0]["name"]
-yname = bins[1]["name"]
-xbins = bins[0]["values"]
-ybins = bins[1]["values"]
-# (xbins)
-#print (ybins)
-stex += table2d(xbins,xname,ybins,yname,cv,"Central values $\\times%.2e$"%scale)
-# (stex)
-covariance = read2d(oname.replace("_values","_covariance"))
-#correlation = read2d(oname.replace("values.csv","_correlation.csv"))
-#vertdump = read2d(oname.replace(".csv","_vertdump.csv"))
-#cv = read2d(oname)
-sname = oname.replace("_values","_staterrors")
-stat = read2d(sname)
-print (stat)
-stex += table2d(xbins,xname,ybins,yname,stat,"Statistical uncertainties $\\times%.2e$"%scale)
-syst = read2d(oname.replace("_values","_syserrors"))
-stex += table2d(xbins,xname,ybins,yname,syst,"Systematic uncertainties $\\times%.2e$"%scale)
-err = read2d(oname.replace("_values","_errors"))
-stex += table2d(xbins,xname,ybins,yname,err,"Combined systematic and statistical uncertainties $\\times%.2e$"%scale)
-#print (covariance[0][0],error[0][0]*error[0][0])
-stex += texender()
-s = open(hname+".tex",'w')
-if "pzmu" in hname:
-    stex = stex.replace("Muon","")
-    stex = stex.replace("p_{Z}","p_{||}")
-    stex = stex.replace("p_{T}","p_{\\perp}")
-    stex = stex.replace("(GeV)$","$(GeV/c)")
-s.write(stex)
-s.close()
+    bins = readbins(oname.replace("_values","_bins"))
+    #print (bins)
+    xname = bins[0]["name"]
+    yname = bins[1]["name"]
+    xbins = bins[0]["values"]
+    ybins = bins[1]["values"]
+    # (xbins)
+    #print (ybins)
+    stex += table2d(xbins,xname,ybins,yname,cv,"Central values $\\times%.2e$"%scale)
+    # (stex)
+    covariance = read2d(oname.replace("_values","_covariance"))
+    #correlation = read2d(oname.replace("values.csv","_correlation.csv"))
+    #vertdump = read2d(oname.replace(".csv","_vertdump.csv"))
+    #cv = read2d(oname)
+    sname = oname.replace("_values","_staterrors")
+    stat = read2d(sname)
+    print (stat)
+    stex += table2d(xbins,xname,ybins,yname,stat,"Statistical uncertainties $\\times%.2e$"%scale)
+    syst = read2d(oname.replace("_values","_syserrors"))
+    stex += table2d(xbins,xname,ybins,yname,syst,"Systematic uncertainties $\\times%.2e$"%scale)
+    err = read2d(oname.replace("_values","_errors"))
+    stex += table2d(xbins,xname,ybins,yname,err,"Combined systematic and statistical uncertainties $\\times%.2e$"%scale)
+    #print (covariance[0][0],error[0][0]*error[0][0])
+    stex += texender()
+    s = open(hname+".tex",'w')
+    if "pzmu" in hname:
+        stex = stex.replace("Muon","")
+        stex = stex.replace("p_{Z}","p_{||}")
+        stex = stex.replace("p_{T}","p_{\\perp}")
+        stex = stex.replace("(GeV)$","$(GeV/c)")
+    s.write(stex)
+    s.close()
+else:
+    h.MnvH1DToCSV(hname,outdir,1.0,fullprecision,syserrors,fractionalErrors,binwidth)
+
+    stex = ""
+    stex += texheader()
+    oname =  os.path.join(outdir,hname+"_values_1d.csv")
+     
+    cv = read1d(oname)
+    bins = readbins(oname.replace("_values","_bins"))
+    #print (bins)
+    xname = bins[0]["name"]
+    
+    xbins = bins[0]["values"]
+    
+    # (xbins)
+    #print (ybins)
+    stex += table1d(xbins,xname,"Start", cv,"Rates $\\times%.2e$"%scale)
+    stex += table1d(xbins,xname,"Rate",cv,"Central values $\\times%.2e$"%scale)
+    # (stex)
+    covariance = read2d(oname.replace("_values","_covariance"))
+    #correlation = read2d(oname.replace("values.csv","_correlation.csv"))
+    #vertdump = read2d(oname.replace(".csv","_vertdump.csv"))
+    #cv = read2d(oname)
+    sname = oname.replace("_values","_staterrors")
+    stat = read1d(sname)
+  
+    stex += table1d(xbins,xname,"Stat.",stat,"Statistical uncertainties $\\times%.2e$"%scale)
+    syst = read1d(oname.replace("_values","_syserrors"))
+    stex += table1d(xbins,xname,"Syst.",syst,"Systematic uncertainties $\\times%.2e$"%scale)
+    err = read1d(oname.replace("_values","_errors"))
+    stex += table1d(xbins,xname,"Comb.", err,"Combined systematic and statistical uncertainties $\\times%.2e$"%scale)
+    stex += table1d(xbins,xname,"End", err,"Combined systematic and statistical uncertainties $\\times%.2e$"%scale)
+    #print (covariance[0][0],error[0][0]*error[0][0])
+    stex += texender()
+    s = open(hname+".tex",'w')
+    if "pzmu" in hname or "ptmu" in hname:
+        stex = stex.replace("Muon","")
+        stex = stex.replace("p_{Z}","p_{||}")
+        stex = stex.replace("p_{T}","p_{\\perp}")
+        stex = stex.replace("(GeV)$","$(GeV/c)")
+    s.write(stex)
+    s.close()
 
