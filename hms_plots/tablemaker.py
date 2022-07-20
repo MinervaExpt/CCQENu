@@ -4,7 +4,7 @@ from  PlotUtils import *
 
 scale = 1.E40
 binwidth=True
-fullprecision = False
+fullprecision = True
 syserrors = False
 fractionalErrors = True
 
@@ -168,7 +168,35 @@ def table1d(xbins,xname,type,table,caption):
     
     #print (stex)
     return stex
+
+def table1dr(xbins,xname,cv,stat,syst,err,caption):
+    stex = ""
+    nxbins = len(xbins)-1
     
+        
+    
+    stex += "\\begin{table}\n"
+    stex += "\\caption{"+caption+"}\n"
+    stex += "\\begin{tabular}{c|r r r r}\n"
+    
+    stex += "\\hline\n"
+    stex += xname.replace("\"","$")
+    stex += "&Value&Stat.(\\%)&Syst.(\\%)&Error(\\%)\\\\\n"
+    stex += "\\hline\n"
+    stex += "\\hline\n"
+    for j in range(0,nxbins):
+        stex += "$%7.5f-%7.5f$"%(xbins[j],xbins[j+1])
+        stex += "&%6.2f"%cv[j]
+        stex += "&%6.1f"%(stat[j]*100)
+        stex += "&%6.1f"%(syst[j]*100)
+        stex += "&%6.1f"%(err[j]*100)
+        stex+="\\\\\n"
+    stex += "\\hline\n"
+    
+    stex += "\\end{tabular}\n"
+    stex += "\\end{table}\n"
+    return stex
+
 if len(sys.argv) < 3:
     print ("arguments are: filename 2Dhistname [significant digits]")
     sys.exit(1)
@@ -271,6 +299,8 @@ else:
     stex += table1d(xbins,xname,"Comb.", err,"Combined systematic and statistical uncertainties $\\times%.2e$"%scale)
     stex += table1d(xbins,xname,"End", err,"Combined systematic and statistical uncertainties $\\times%.2e$"%scale)
     #print (covariance[0][0],error[0][0]*error[0][0])
+    
+    stex += table1dr(xbins,xname,cv,stat,syst,err,"Cross section $\\times%.2e$"%scale)
     stex += texender()
     s = open(hname+".tex",'w')
     if "pzmu" in hname or "ptmu" in hname:
