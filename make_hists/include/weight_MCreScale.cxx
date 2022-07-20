@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cassert>
 // #include <TF1.h>
+#include "include/CVUniverse.h"
 #include "PlotUtils/MnvH1D.h"
 #include "PlotUtils/MnvVertErrorBand.h"
 #include "weight_MCreScale.h"
@@ -41,6 +42,7 @@ void weight_MCreScale::read(TString filename){
 
   f_Q2QEScaleFrac = TFile::Open(filename,"READ");
   if(f_Q2QEScaleFrac){
+    std::cout << "weight_MCreScale: this is the scale file I'm using: " << filename << std::endl;
     mnvh_SigScale = (MnvH1D*)f_Q2QEScaleFrac->Get("h___QELike___qelike___Q2QE___scale");
     mnvh_BkgScale = (MnvH1D*)f_Q2QEScaleFrac->Get("h___QELike___qelikenot___Q2QE___scale");
   }
@@ -58,9 +60,11 @@ void weight_MCreScale::SetTag(std::string tag){
 
   if(tag.find("qelikenot")!=std::string::npos){
     isSignal = 0;
+    mnvh_Scale = mnvh_SigScale;
   }
   else if(tag.find("qelike")!=std::string::npos){
     isSignal = 1;
+    mnvh_Scale = mnvh_BkgScale;
   }
 }
 
@@ -71,18 +75,19 @@ double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_nam
   int xbin = -1;
 
   // See if signal or bkg, then set mnvh to be
-  if(isSignal>0){
-    mnvh_Scale = mnvh_SigScale;
-  }
-  else if (isSignal==0){
-    mnvh_Scale = mnvh_BkgScale;
-  }
-  else{
+  // if(isSignal>0){
+  //   mnvh_Scale = mnvh_SigScale;
+  // }
+  // else if (isSignal==0){
+  //   mnvh_Scale = mnvh_BkgScale;
+  // }
+  // else{
+  if(isSignal<0){
     std::cout << "weight_MCreScale: This variable is not recognized as qelike or qelikenot. Returning 1.0."<< std::endl;
     return 1.0;
   }
 
-  if(q2qe<0){
+  if(q2qe<0.){
     std::cout << "weight_MCreScale: You have a q2qe passed to weight_minervaq2qe less than 0. Non-physical. Returning 1.0"<< std::endl;
     return 1.0;
   }
@@ -109,10 +114,25 @@ double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_nam
   return retval;
 }
 
+// Returns a scale factor. If it's not set up, it returns -1 (which isn't possible).
 double weight_MCreScale::GetScale(std::string tag, const double q2qe, std::string uni_name, int iuniv){
   // Default value, not physical. Checked so you can switch scaling on and off easier.
   double retval = -1.;
   if(useTuned){
+    SetTag(tag);
+    retval = GetScaleInternal(q2qe, uni_name, iuniv);
+  }
+
+  return retval;
+}
+
+// This one takes a universe and gets the q2qe value internally. This can save
+// some time maybe? Especially for events where this isn't necessary.
+double weight_MCreScale::GetScale(std::string tag, const CVUniverse* univ, std::string uni_name, int iuniv){
+  // Default value, not physical. Checked so you can switch scaling on and off easier.
+  double retval = -1.;
+  if(useTuned){
+    const double q2qe = univ->GetQ2QEGeV();
     SetTag(tag);
     retval = GetScaleInternal(q2qe, uni_name, iuniv);
   }

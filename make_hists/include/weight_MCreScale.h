@@ -7,6 +7,7 @@
 #include <TString.h>
 // #include <TH3D.h>
 // #include <TH2D.h>
+#include "include/CVUniverse.h"
 #include <TH1D.h>
 #include <TFile.h>
 #include <cmath>
@@ -24,7 +25,9 @@ namespace PlotUtils{
       // Boolean set to switch on and off if want to use tuned hists
       bool useTuned=false;
       // Boolean set based off tag
-      bool isSignal;
+      int isSignal;
+
+      // std::map<
       // Member file with scale/fraction MnvH1Ds
       TFile* f_Q2QEScaleFrac;
       // Member MnvH1D's for each scale from the file (set at initialization)
@@ -42,6 +45,8 @@ namespace PlotUtils{
       weight_MCreScale(const NuConfig config);
 
       double GetScale(std::string tag, const double q2qe, std::string uni_name, int iuniv); // q2qe in GeV2
+      double GetScale(std::string tag, const CVUniverse* univ, std::string uni_name, int iuniv);
+
       void read(TString filename);
       void SetTag(std::string tag);
 
