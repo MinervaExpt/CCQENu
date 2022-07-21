@@ -35,9 +35,11 @@ int main(const int argc, const char *argv[] ) {
   if (config.IsMember("version")){
     version = config.GetInt("version");
   }
-  bool useTuned = 0;
+  bool useTuned=false;
+  // bool useTuned = 0;
   if(config.IsMember("useTuned")){
     useTuned = config.GetBool("useTuned");
+    std::cout << "runsamplesMain: useTuned configured in main config and set to " << useTuned << std::endl;
   }
 
   //=========================================S
@@ -106,12 +108,6 @@ int main(const int argc, const char *argv[] ) {
 
   //====================MC Reco tuning for bkg subtraction======================
   // Initialize the rescale for tuning MC reco for background subtraction later
-  // std::string scaleLoc = "./data/BkgStudy6A_BkgStudy_1_OutVals_fix.root";
-  // if config.IsMember(“MCRescale”){
-  //   scaleLoc=config.GetString("scalefileIn");
-  // }
-  //
-  // PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(scaleLoc);
   PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(config);
 
   //=========================================
@@ -248,7 +244,7 @@ int main(const int argc, const char *argv[] ) {
   std::vector<std::string> selected_truth_tags ;
   std::vector<std::string> datatags;
   std::vector<std::string> truthtags;
-  std::vector<std::string> tuned_mc_tags ;
+  // std::vector<std::string> tuned_mc_tags ;
   std::vector<std::string> responsetags;
   std::vector<std::string> types;
 
@@ -279,9 +275,9 @@ int main(const int argc, const char *argv[] ) {
       if(IsInVector<std::string>("truth",forlist )){
         truthtags.push_back(tag);
       }
-      if (IsInVector<std::string>("tuned_mc",forlist)){
-        tuned_mc_tags.push_back(tag);
-      }
+      // if (IsInVector<std::string>("tuned_mc",forlist)){
+      //   tuned_mc_tags.push_back(tag);
+      // }
       if(IsInVector<std::string>("response",forlist)){
         responsetags.push_back(tag);
       }
@@ -301,7 +297,7 @@ int main(const int argc, const char *argv[] ) {
     v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands,truthtags);
     if(useTuned){
-      v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,tuned_mc_tags,responsetags);
+      v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
     variables1D.push_back(v);
   }
@@ -315,7 +311,7 @@ int main(const int argc, const char *argv[] ) {
     v->AddMCResponse2D(responsetags);
     v->InitializeTruthHistograms2D(truth_error_bands,truthtags);
     if(useTuned){
-      v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,tuned_mc_tags,responsetags);
+      v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
     variables2D.push_back(v);
   }

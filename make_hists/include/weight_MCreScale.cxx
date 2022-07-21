@@ -29,8 +29,15 @@ weight_MCreScale::weight_MCreScale(const NuConfig config){
   if(config.IsMember("scalefileIn")){
     filename=config.GetString("scalefileIn");
   }
+  else{
+    std::cout << "weight_MCreScale: 'scalefileIn' not configured in main. Setting to default (may cause issues if running outside of CCQENu/make_hists) " << std::endl;
+  }
   if(config.IsMember("useTuned")){
     useTuned=config.GetBool("useTuned");
+  }
+  else{
+    std::cout << "weight_MCreScale: 'useTuned' not configured in main. Setting to false." << std::endl;
+    useTuned = false;
   }
   if(useTuned){
     read(filename);
@@ -42,7 +49,7 @@ void weight_MCreScale::read(TString filename){
 
   f_Q2QEScaleFrac = TFile::Open(filename,"READ");
   if(f_Q2QEScaleFrac){
-    std::cout << "weight_MCreScale: this is the scale file I'm using: " << filename << std::endl;
+    std::cout << "weight_MCreScale: I'm using this scale file " << filename << std::endl;
     mnvh_SigScale = (MnvH1D*)f_Q2QEScaleFrac->Get("h___QELike___qelike___Q2QE___scale");
     mnvh_BkgScale = (MnvH1D*)f_Q2QEScaleFrac->Get("h___QELike___qelikenot___Q2QE___scale");
   }
