@@ -14,6 +14,7 @@
 #include "PlotUtils/MnvVertErrorBand.h"
 #include "weight_MCreScale.h"
 #include "utils/NuConfig.h"
+#include "utils/expandEnv.h"
 // #include "TRandom.h"
 
 using namespace PlotUtils;
@@ -24,7 +25,7 @@ weight_MCreScale::weight_MCreScale(TString filename){
 }
 
 weight_MCreScale::weight_MCreScale(const NuConfig config){
-  std::string filename = "./data/BkgStudy6A_BkgStudy_1_OutVals_fix.root";
+  std::string filename = "${CCQEMAT}/data/BkgStudy6A_BkgStudy_1_OutVals_fix.root";
 
   if(config.IsMember("scalefileIn")){
     filename=config.GetString("scalefileIn");
@@ -39,6 +40,7 @@ weight_MCreScale::weight_MCreScale(const NuConfig config){
     std::cout << "weight_MCreScale: 'useTuned' not configured in main. Setting to false." << std::endl;
     useTuned = false;
   }
+
   if(useTuned){
     read(filename);
   }

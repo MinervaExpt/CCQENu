@@ -16,6 +16,7 @@
 #include "PlotUtils/MnvH1D.h"
 #include "PlotUtils/MnvVertErrorBand.h"
 #include "utils/NuConfig.h"
+#include "utils/expandEnv.h"
 
 
 namespace PlotUtils{
