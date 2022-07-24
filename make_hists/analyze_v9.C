@@ -79,6 +79,7 @@ int main(const int argc, const char *argv[] ) {
   bool singlesample;
   std::string asample="";
   bool hasbkgsub;
+  bool usetune;
     
 //------------get and store the configs from root or disk
     
@@ -99,6 +100,10 @@ int main(const int argc, const char *argv[] ) {
       singlesample  = 0;
     // see if the root file has already had fits done - these will be used in the cross section fit.
     hasbkgsub = f->Get("fitconfig")!=0;
+    
+    if (argc > 2){
+      usetune = atoi(argv[2]);
+    }
   }
   else{
     // this is the old way
@@ -319,16 +324,17 @@ int main(const int argc, const char *argv[] ) {
   // define the output file
     std::string pdfname;
     std::string outroot;
-    
+  std::string stune = "_untuned";
+  if (usetune) stune = "_tuned";
     if (singlesample){
-        std::string outname=inputname.replace(inputname.end()-5,inputname.end(),"")+"_"+asample+"_analyze9";
+        std::string outname=inputname.replace(inputname.end()-5,inputname.end(),"")+"_"+asample+stune+"_analyze9";
         outroot = outname +".root";
         
         // set up the outputs
         pdfname = outname;
     }
     else{
-        std::string outname=inputname.replace(inputname.end()-5,inputname.end(),"")+"_analyze9";
+        std::string outname=inputname.replace(inputname.end()-5,inputname.end(),"")+stune+"_analyze9";
         outroot = outname +".root";
         
     
@@ -374,7 +380,7 @@ int main(const int argc, const char *argv[] ) {
             basename = "h_"+variable;
         }
         std::cout << "basename is " << basename << std::endl;
-      int exit = GetCrossSection(sample,variable,basename,hists1D[sample][variable],response1D[sample][variable],allconfigs,canvas1D,norm,POTScale,h_flux_dewidthed,unfold,num_iter, DEBUG, hasbkgsub);
+      int exit = GetCrossSection(sample,variable,basename,hists1D[sample][variable],response1D[sample][variable],allconfigs,canvas1D,norm,POTScale,h_flux_dewidthed,unfold,num_iter, DEBUG, hasbkgsub, usetune);
       if (DEBUG) std::cout << exit << std::endl;
     }
   }
@@ -404,7 +410,7 @@ int main(const int argc, const char *argv[] ) {
         if (singlesample){
             basename = "h_"+variable;
         }
-      int exit = GetCrossSection(sample,variable,basename,hists2D[sample][variable],response2D[sample][variable],allconfigs,canvas2D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG,hasbkgsub);
+      int exit = GetCrossSection(sample,variable,basename,hists2D[sample][variable],response2D[sample][variable],allconfigs,canvas2D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG,hasbkgsub, usetune);
       if (DEBUG) std::cout << exit << std::endl;
     }
   }
