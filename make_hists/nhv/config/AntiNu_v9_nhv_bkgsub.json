@@ -9,10 +9,10 @@
   "pdg":-14,
   "useTuned":true, // Set true if you want to tune mc for bkg subtraction
   "runsamples":["QElike"],
-  "cutsFile":"${CCQEMAT}/hms/AntiNuCuts_v9.json",
+  "cutsFile":"${CCQEMAT}/nhv/config/AntiNuCuts_v9_bkgsub.json",
   "varsFile":"${CCQEMAT}/nhv/config/Variables_v9_bkgsub.json",
   "samplesFile":"${CCQEMAT}/nhv/config/AntiNuSamples_v9_bkgsub.json",
-  "outRoot":"BkgSubTest",
+  "outRoot":"MCTune5A",
   "AnalyzeVariables":["Q2QE" ,"recoil","Log10recoil"],
   "Analyze2DVariables":["Q2QE_recoil","Q2QE_Log10recoil"],
   "signal":{"QElike":"qelike"},

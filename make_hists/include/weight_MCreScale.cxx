@@ -68,11 +68,11 @@ void weight_MCreScale::SetTag(std::string tag){
   isSignal = -1;
 
   if(tag.find("qelikenot")!=std::string::npos){
-    isSignal = 0;
+    isSignal = 1;
     mnvh_Scale = mnvh_SigScale;
   }
   else if(tag.find("qelike")!=std::string::npos){
-    isSignal = 1;
+    isSignal = 0;
     mnvh_Scale = mnvh_BkgScale;
   }
 }

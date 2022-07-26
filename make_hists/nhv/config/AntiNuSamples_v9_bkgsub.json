@@ -7,7 +7,7 @@
     "background":["qelikenot"],
     "categories":{
       "qelike":{
-        "for":["selected_reco","selected_truth","truth","response"]
+        "for":["selected_reco"]//,"selected_truth","truth","response"]
         },
       "qelikenot":{"for":["selected_reco"]
         }
