@@ -169,7 +169,7 @@ int main(const int argc, const char *argv[]){
     std::vector<std::string> hists2_1d_keys;
     std::vector<std::string> hists2_2d_keys;
     
-    std::map<std::string, PlotUtils::MnvH1D> hists_1d_ratio;
+    std::map<std::string, PlotUtils::MnvH1D*> hists_1d_ratio;
 
     // Looping over keys to fill histogram containers
     std::cout << "Extracting histograms from " << std::string(argv[1]);
@@ -179,13 +179,13 @@ int main(const int argc, const char *argv[]){
         if(classes1[name] == "PlotUtils::MnvH1D")
         {
             hists1_1d_keys.push_back(name);
-            hists1_1d[name] = (PlotUtils::MnvH1D*)file->Get(name.c_str());
+            hists1_1d[name] = (PlotUtils::MnvH1D*)file1->Get(name.c_str());
             hists1_1d[name]->SetDirectory(0);
         }
         else if(classes1[name] == "PlotUtils::MnvH2D")
         {
             hists1_2d_keys.push_back(name);
-            hists1_2d[name] = (PlotUtils::MnvH2D*)file->Get(name.c_str());
+            hists1_2d[name] = (PlotUtils::MnvH2D*)file1->Get(name.c_str());
             hists1_2d[name]->SetDirectory(0);
         }
     }
@@ -196,13 +196,13 @@ int main(const int argc, const char *argv[]){
         if(classes2[name] == "PlotUtils::MnvH1D")
         {
             hists2_1d_keys.push_back(name);
-            hists2_1d[name] = (PlotUtils::MnvH1D*)file->Get(name.c_str());
+            hists2_1d[name] = (PlotUtils::MnvH1D*)file2->Get(name.c_str());
             hists2_1d[name]->SetDirectory(0);
         }
         else if(classes2[name] == "PlotUtils::MnvH2D")
         {
             hists2_2d_keys.push_back(name);
-            hists2_2d[name] = (PlotUtils::MnvH2D*)file->Get(name.c_str());
+            hists2_2d[name] = (PlotUtils::MnvH2D*)file2->Get(name.c_str());
             hists2_2d[name]->SetDirectory(0);
         }
     }
