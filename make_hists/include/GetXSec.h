@@ -536,26 +536,50 @@ template<class MnvHistoType>
     // MnvHistoType can be MnvH1D or MnvH2D so far. Response is always MnvH2D.
     MnvHistoType* idatahist = histsND["reconstructed"][dat];
     MnvHistoType* imcsighist = histsND["reconstructed"][sig];
+    std::string stuned = "";
     if (histsND.count("reconstructed_tuned") && usetune){
-      
-      imcsighist = histsND["reconstructed_tuned"][sig];
+        stuned = "Tuned ";
+        imcsighist = histsND["reconstructed_tuned"][sig];
+        std::cout << " using " << imcsighist->GetName() << std::endl;
     }
-    std::cout << "using signal " << imcsighist->GetName() << std::endl;
+    //std::cout << "using signal " << imcsighist->GetName() << std::endl;
     MnvHistoType* imcbkghist;
     MnvHistoType* ibkgsubhist;
     if (!hasbkgsub){
       imcbkghist = histsND["reconstructed"][bkg];
       if (histsND.count("reconstructed_tuned")&& usetune){
         imcbkghist = histsND["reconstructed_tuned"][bkg];
+        std::cout << " using " << imcbkghist->GetName() << std::endl;
       }
     }
     std::cout << "using background " << imcbkghist->GetName() << std::endl;
     if (hasbkgsub) ibkgsubhist = histsND["fitted"]["bkgsub"];
-    MnvHistoType* iseltruhist = histsND["selected_truth"][sig];
-    MnvHistoType* ialltruhist = histsND["all_truth"][sig];
+      MnvHistoType* iseltruhist;
+    if (histsND.count("selected_truth_tuned") && usetune){
+        iseltruhist = histsND["selected_truth_tuned"][sig];
+        std::cout << " using " << iseltruhist->GetName() << std::endl;
+    }
+    else{
+        iseltruhist = histsND["selected_truth"][sig];
+    }
+    MnvHistoType* ialltruhist;
+      
+    if (histsND.count("all_truth_tuned") && usetune){
+        ialltruhist = histsND["all_truth_tuned"][sig];
+        std::cout << " using " << ialltruhist->GetName() << std::endl;
+    }
+    else{
+        ialltruhist = histsND["all_truth"][sig];
+    }
     
-    
-    MnvH2D* iresponse = responseND["response_migration"][sig];
+    MnvH2D* iresponse;
+    if (responseND.count("response_migration_tuned") && usetune){
+        iresponse = responseND["response_migration_tuned"][sig];
+        std::cout << " using " << iresponse->GetName() << std::endl;
+    }
+    else{
+        iresponse = responseND["response_migration"][sig];
+    }
     // TODO: POTScale by if (not data) --> POTScale
 
 
@@ -597,32 +621,38 @@ template<class MnvHistoType>
     //==================================Make MC=====================================
     MnvHistoType* mc;
     MnvHistoType* signalFraction;
-    if (!hasbkgsub){
-    if (DEBUG) std::cout << " Start MakeMC... " << std::endl;
-    // std::string mcname = basename+"_mc_tot";
-    mc = MakeMC(basename,imcsighist,imcbkghist);
-    if(DEBUG)mc->Print();
-    mc->Write();
-    PlotCVAndError(canvas,idatahist,mc,sample + "_"+ "DATA_vs_MC" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,mc,sample + "_"+"Raw MC Systematics" ,logscale );
-
-    //================================Signal Fraction===========================
-
-    if (DEBUG) std::cout << " Start signal fraction... " << std::endl;
-    // std::string fracname = basename+"_signalfraction";
-    signalFraction = GetSignalFraction(basename,imcsighist,mc);
-    MnvHistoType* bkgFraction = GetBkgFraction(basename,imcbkghist,mc);
-    if(DEBUG) signalFraction->Print();
-    signalFraction->Write();
-    bkgFraction->Write();
-    Plot2DFraction(canvas, signalFraction,bkgFraction, sample + "_fractions",logscale);
-      
-    PlotCVAndError(canvas,signalFraction,signalFraction, sample + "_"+"Signal Fraction" ,true,logscale,false);
-    PlotErrorSummary(canvas,signalFraction,"Signal Fraction Systematics" ,0);
-    }
-    else{
-      mc = (MnvHistoType*)imcsighist->Clone();
-    }
+    
+      if (!hasbkgsub){
+          if (DEBUG) std::cout << " Start MakeMC... " << std::endl;
+          // std::string mcname = basename+"_mc_tot";
+          mc = MakeMC(basename,imcsighist,imcbkghist);
+          if(DEBUG)mc->Print();
+          mc->Write();
+          
+         
+          PlotCVAndError(canvas,idatahist,mc,stuned+sample + "_"+ "DATA_vs_MC" ,true,logscale,binwid);
+          PlotErrorSummary(canvas,mc,sample + "_"+"Raw MC Systematics" ,logscale );
+          
+          //================================Signal Fraction===========================
+          
+          if (DEBUG) std::cout << " Start signal fraction... " << std::endl;
+          // std::string fracname = basename+"_signalfraction";
+          signalFraction = GetSignalFraction(basename,imcsighist,mc);
+          MnvHistoType* bkgFraction = GetBkgFraction(basename,imcbkghist,mc);
+          if(DEBUG) signalFraction->Print();
+          signalFraction->Write();
+          bkgFraction->Write();
+          Plot2DFraction(canvas, signalFraction,bkgFraction, stuned+sample + "_fractions",logscale);
+          
+          PlotCVAndError(canvas,signalFraction,signalFraction, stuned+sample + "_"+"Signal Fraction" ,true,logscale,false);
+          PlotErrorSummary(canvas,signalFraction,stuned+sample+" Signal Fraction Systematics" ,0);
+      }
+      else{
+          mc = (MnvHistoType*)imcsighist->Clone();
+          
+          
+      }
+    
 
     //============================Background Subtraction========================
 
@@ -645,8 +675,8 @@ template<class MnvHistoType>
       bkgsub->Write();
  
     
-    PlotCVAndError(canvas,bkgsub,imcsighist, sample + "_"+"BKGsub vs. MC signal" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,bkgsub,sample + "_"+"BKGsub Systematics" ,0);
+    PlotCVAndError(canvas,bkgsub,imcsighist, stuned+sample + "_"+"BKGsub vs. MC signal" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,bkgsub,stuned+sample + "_"+"BKGsub Systematics" ,0);
 
     //==================================Unfolding===============================
 
@@ -666,7 +696,7 @@ template<class MnvHistoType>
       unsmeared = unsmearedVec[0];
       if (DEBUG) unsmeared->Print();
       unsmeared->Write();
-      PlotCVAndError(canvas,bkgsub,unsmeared,sample + "_"+"Data Before and After Unsmearing", true,logscale,binwid);
+      PlotCVAndError(canvas,bkgsub,unsmeared,stuned+sample + "_"+"Data Before and After Unsmearing", true,logscale,binwid);
       
     }
     if(unsmearedVec.size()==2){
@@ -677,8 +707,8 @@ template<class MnvHistoType>
       // PlotCVAndError(canvas,imcsighist,iseltruhist,"Fractional Unfolding" ,true,logscale,binwid);
     }
 
-    PlotCVAndError(canvas,unsmeared,iseltruhist,sample + "_"+ "Unsmeared Data Compared to Selected MC" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,unsmeared,sample + "_"+"Unsmeared Data Systematics" ,0);
+    PlotCVAndError(canvas,unsmeared,iseltruhist,stuned+sample + "_"+ "Unsmeared Data Compared to Selected MC" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,unsmeared,stuned+sample + "_"+"Unsmeared Data Systematics" ,0);
 
     //==================================Efficiency==============================
 
@@ -698,10 +728,10 @@ template<class MnvHistoType>
     MnvHistoType* efficiency = vecEffCorr[1];
     if (DEBUG) efficiency->Print();
     efficiency->Write();
-    PlotCVAndError(canvas,iseltruhist,ialltruhist, sample + "_"+"efficiency: selected and true" ,true,logscale,binwid);
-    PlotCVAndError(canvas,effcorr,ialltruhist, sample + "_"+"effcorr data vs truth" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,efficiency,sample + "_"+"Efficiency Factor Systematics" ,0);
-    PlotErrorSummary(canvas,effcorr,sample + "_"+"Efficiency Corrected Data Systematics" ,0);
+    PlotCVAndError(canvas,iseltruhist,ialltruhist, stuned+sample + "_"+"efficiency: selected and true" ,true,logscale,binwid);
+    PlotCVAndError(canvas,effcorr,ialltruhist,stuned+ sample + "_"+"effcorr data vs truth" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,efficiency,stuned+sample + "_"+"Efficiency Factor Systematics" ,0);
+    PlotErrorSummary(canvas,effcorr,stuned+sample + "_"+"Efficiency Corrected Data Systematics" ,0);
     
     //============================POT/Flux Normalization========================
     // bool energydep = false;
@@ -753,8 +783,8 @@ template<class MnvHistoType>
     sigmaMC->Write();
     sigmaMC->Print();
 
-    PlotCVAndError(canvas,sigma,sigmaMC, sample + "_"+"sigma" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,sigma,sample + "_"+"Cross Section Systematics" ,0);
+    PlotCVAndError(canvas,sigma,sigmaMC, stuned+sample + "_"+"sigma" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,sigma,stuned+sample + "_"+"Cross Section Systematics" ,0);
 
     //============================Binwidth Normalization============================
     // Just a check on bin width corrections...

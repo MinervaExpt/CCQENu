@@ -140,8 +140,8 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
   mnvPlotter.error_summary_group_map["Tune"].push_back("Low_Recoil_2p2h_Tune");
 
 
-  mnvPlotter.error_summary_group_map["Angle"].push_back("BeamAngleX");
-  mnvPlotter.error_summary_group_map["Angle"].push_back("BeamAngleY");
+//mnvPlotter.error_summary_group_map["Angle"].push_back("BeamAngleX");
+//  mnvPlotter.error_summary_group_map["Angle"].push_back("BeamAngleY");
 
   mnvPlotter.error_summary_group_map["Response"].push_back("response_em");
   mnvPlotter.error_summary_group_map["Response"].push_back("response_proton");
@@ -160,7 +160,8 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
  mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_MINERvA");
   mnvPlotter.error_summary_group_map["Muon Energy"].push_back("MINOS_Reconstruction_Efficiency");
    mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_Resolution");
-
+    mnvPlotter.error_summary_group_map["Muon Energy"].push_back("BeamAngleX");
+    mnvPlotter.error_summary_group_map["Muon Energy"].push_back("BeamAngleY");
 //  mnvPlotter.error_summary_group_map["Unfolding"].push_back("Unfolding");
 
 
