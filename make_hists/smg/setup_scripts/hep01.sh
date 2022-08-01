@@ -11,12 +11,13 @@ setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
 
 source /home/physics/gilligas/conda.sh
 
-export WHEREIPUTMYCODE=/home/physics/$USER/gitMinerva
+export WHEREIPUTMYCODE=/home/physics/$USER/MinervaExpt
 source $WHEREIPUTMYCODE/opt/build/setup.sh
 
 export JSONCPP_DIR=/home/physics/gilligas/LocalApps/jsoncpp-build
 
 export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
+export PLAYLISTDIR=$CCQEMAT/playlists/hep01
 
 #export DYLD_LIBRARY_PATH=${PLOTUTILSROOT}
 

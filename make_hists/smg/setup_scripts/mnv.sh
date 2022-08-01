@@ -17,6 +17,7 @@ kx509
 voms-proxy-init -rfc --voms=fermilab:/fermilab/minerva/Role=Analysis --noregen -valid 24:00
 source $WHEREIPUTMYCODE/opt/build/setup.sh
 source $WHEREIPUTMYCODE/TupleComparison/setup.sh
+export PLAYLISTDIR=$CCQEMAT/playlists/remote
 
 setup jobsub_client
 alias jq="jobsub_q --user=$USER"
