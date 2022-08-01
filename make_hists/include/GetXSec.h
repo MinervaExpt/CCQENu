@@ -538,24 +538,47 @@ template<class MnvHistoType>
     MnvHistoType* imcsighist = histsND["reconstructed"][sig];
     if (histsND.count("reconstructed_tuned") && usetune){
       
-      imcsighist = histsND["reconstructed_tuned"][sig];
+        imcsighist = histsND["reconstructed_tuned"][sig];
+        std::cout << " using " << imcsighist->GetName() << std::endl;
     }
-    std::cout << "using signal " << imcsighist->GetName() << std::endl;
+    //std::cout << "using signal " << imcsighist->GetName() << std::endl;
     MnvHistoType* imcbkghist;
     MnvHistoType* ibkgsubhist;
     if (!hasbkgsub){
       imcbkghist = histsND["reconstructed"][bkg];
       if (histsND.count("reconstructed_tuned")&& usetune){
         imcbkghist = histsND["reconstructed_tuned"][bkg];
+        std::cout << " using " << imcbkghist->GetName() << std::endl;
       }
     }
     std::cout << "using background " << imcbkghist->GetName() << std::endl;
     if (hasbkgsub) ibkgsubhist = histsND["fitted"]["bkgsub"];
-    MnvHistoType* iseltruhist = histsND["selected_truth"][sig];
-    MnvHistoType* ialltruhist = histsND["all_truth"][sig];
+      MnvHistoType* iseltruhist;
+    if (histsND.count("selected_truth_tuned") && usetune){
+        iseltruhist = histsND["selected_truth_tuned"][sig];
+        std::cout << " using " << iseltruhist->GetName() << std::endl;
+    }
+    else{
+        iseltruhist = histsND["selected_truth"][sig];
+    }
+    MnvHistoType* ialltruhist;
+      
+    if (histsND.count("all_truth_tuned") && usetune){
+        ialltruhist = histsND["all_truth_tuned"][sig];
+        std::cout << " using " << ialltruhist->GetName() << std::endl;
+    }
+    else{
+        ialltruhist = histsND["all_truth"][sig];
+    }
     
-    
-    MnvH2D* iresponse = responseND["response_migration"][sig];
+    MnvH2D* iresponse;
+    if (responseND.count("response_migration_tuned") && usetune){
+        iresponse = responseND["response_migration_tuned"][sig];
+        std::cout << " using " << iresponse->GetName() << std::endl;
+    }
+    else{
+        iresponse = responseND["response_migration"][sig];
+    }
     // TODO: POTScale by if (not data) --> POTScale
 
 
