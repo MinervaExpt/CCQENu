@@ -2,58 +2,58 @@
 "QElike":[
 	{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
-    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
     {"name":"MichelCount","equals":0,"variable":"MichelElectronCandidates"},
+    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"},
+    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
-    {"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"},
-    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
-    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
-    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"}
+    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
+    {"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"}
   ],
   "MichelSideBand":[
 	{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
-    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
     {"name":"MichelCount","min":1,"variable":"MichelElectronCandidates"},
+    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"},
+    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
-    {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
-    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
-    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
-    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"}
+    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
+    {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"}
   ],
   "BlobSideBand":[
 	{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
-    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
     {"name":"MichelCount","equals":0,"variable":"MichelElectronCandidates"},
+    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"},
+    {"name":"HasMINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
-    {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
-    {"name":"HasMINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
-    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
-    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"}
+    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
+    {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"}
   ],
   "MicBlobSideBand":[
 	{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
-    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
     {"name":"MichelCount","min":1,"variable":"MichelElectronCandidates"},
+    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"},
+    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
-    {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
-    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
-    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
-    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"}
+    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
+    {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"}
   ],
   "phase_space":[
     {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},

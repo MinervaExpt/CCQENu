@@ -218,9 +218,11 @@ public:
     
     // Michel Electrons and Neutral Pions
     
-    virtual int GetMichelElectronCandidates() const;
+    virtual int GetNMichel() const;
+    virtual int GetImprovedNMichel() const;
     virtual int GetHasMichelElectron() const;
     virtual int GetTruthHasMichel() const;
+    virtual int GetTruthHasImprovedMichel() const;
     virtual int GetTruthHasSingleNeutralPion() const;
     
     // Michel+Blobs and MultiPion

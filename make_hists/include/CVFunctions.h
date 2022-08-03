@@ -138,10 +138,14 @@ public:
     recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
     
     recointfunctions["HasMichelElectron"] = &CVUNIVERSE::GetHasMichelElectron;
-    recointfunctions["MichelElectronCandidates"] = &CVUNIVERSE::GetMichelElectronCandidates;
-    recofunctions["MichelElectronCandidates"] = &CVUNIVERSE::GetMichelElectronCandidates;
+    recointfunctions["NMichel"] = &CVUNIVERSE::GetNMichel;
+    recofunctions["NMichel"] = &CVUNIVERSE::GetNMichel;
+    recointfunctions["ImprovedNMichel"] = &CVUNIVERSE::GetImprovedNMichel;
+    recofunctions["ImprovedNMichel"] = &CVUNIVERSE::GetImprovedNMichel;
     trueintfunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
     truefunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
+    trueintfunctions["TruthHasImprovedMichel"] = &CVUNIVERSE::GetTruthHasImprovedMichel;
+    truefunctions["TruthHasImprovedMichel"] = &CVUNIVERSE::GetTruthHasImprovedMichel;
 
     recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
     recointfunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;

@@ -4,16 +4,16 @@ PLACE3='hep01'        # hep01.physics.oregonstate.edu
 
 # Set WHEREIPUTMYCODE based on machine 
 if [[ "$HOSTNAME" == *"$PLACE1"* ]]; then
-	source $HOME/MinervaExpt/CCQENu/make_hists/smg/setup_scripts/local.sh
-	cd $CCQEMAT/smg
+	cd $HOME/MinervaExpt/CCQENu/make_hists/smg
+	source setup_scripts/local.sh
 	
 elif [[ "$HOSTNAME" == *"$PLACE2"* ]]; then
-	source /minerva/app/users/$USER/minerva/CCQENu/make_hists/smg/setup_scripts/mnv.sh
-	cd $CCQEMAT/smg
+	cd /minerva/app/users/$USER/minerva/CCQENu/make_hists/smg
+	source setup_scripts/mnv.sh
 	
 elif [[ "$HOSTNAME" == *"$PLACE3"* ]]; then
-	source $HOME/MinervaExpt/CCQENu/make_hists/smg/setup_scripts/hep01.sh
-	cd $CCQEMAT/smg
+	cd $HOME/MinervaExpt/CCQENu/make_hists/smg
+	source setup_scripts/hep01.sh
 	
 else
 	echo -e "\n \$HOSTNAME does not contain any assigned \$PLACE#."
@@ -21,5 +21,7 @@ else
 		
 fi
 
-ln -s $PLAYLISTDIR playlist
-echo -e "\n'playlist' points to "$PLAYLISTDIR"\n"
+if [[ -d "playlist" ]]; then
+	rm playlist
+fi
+ln -s $PLAYLISTDIR playlists

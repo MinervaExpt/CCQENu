@@ -1,0 +1,43 @@
+{
+  "version":8,  // Dec 2021 large scale tests
+  "mcIn":"playlists/CCQENu_minervame1N_MC_Inextinguishable_merged.txt",
+  "dataIn":"playlists/CCQENu_minervame1N_DATA_Inextinguishable_merged.txt",
+  "prescale":1,
+  "playlist":"minervame1N",
+  "recoName":"CCQENu",
+  "pdg":14,
+  "useTuned":false,
+  "runsamples":["MichelStudy_1track","MichelStudy_multitrack"],
+  "cutsFile":"config/cuts/NuCuts_v8_studies.json",
+  "varsFile":"config/variables/NuVariables_v8.json",
+  "samplesFile":"config/samples/NuSamples_v8_studies.json",
+  "outRoot":"SB",
+  "AnalyzeVariables":["MichelCount","ImprovedMichelCount"],
+  "Analyze2DVariables":["nMichel_nImprovedMichel"],
+  "signal":{"MichelStudy_1track":"qelike",
+            "MichelStudy_multitrack":"qelike",
+            "BlobStudy_1track":"qelike",
+            "BlobStudy_multitrack":"qelike",
+            "MicBlobStudy_1track":"qelike",
+            "MicBlobStudy_multitrack":"qelike"},
+  "background":{"MichelStudy_1track":["1chargedpion","1neutralpion","multipion","other"],
+                "MichelStudy_multitrack":["1chargedpion","1neutralpion","multipion","other"],
+                "BlobStudy_1track":["1chargedpion","1neutralpion","multipion","other"],
+                "BlobStudy_multitrack":["1chargedpion","1neutralpion","multipion","other"],
+                "MicBlobStudy_1track":["1chargedpion","1neutralpion","multipion","other"],
+                "MicBlobStudy_multitrack":["1chargedpion","1neutralpion","multipion","other"]},
+  "data":{"MichelStudy_1track":"data",
+          "MichelStudy_multitrack":"data",
+          "BlobStudy_1track":"data",
+          "BlobStudy_multitrack":"data",
+          "MicBlobStudy_1track":"data",
+          "MicBlobStudy_multitrack":"data"},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+                 "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":0,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}

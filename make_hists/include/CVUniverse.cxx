@@ -630,17 +630,25 @@ double CVUniverse::GetTrueLog10RecoilEnergyGeV() const {
   
   // Michel Electrons and Neutral Pions
 
-  int CVUniverse::GetMichelElectronCandidates() const {
-    return GetInt("improved_michel_vertex_type_sz");
+  int CVUniverse::GetNMichel() const {
+    return GetInt("has_michel_vertex_type_sz");
+  }
+  
+  int CVUniverse::GetImprovedNMichel() const {
+  	return GetInt("improved_michel_match_vec_sz");
   }
   
   int CVUniverse::GetHasMichelElectron() const {
-    if(GetMichelElectronCandidates() > 0) return 1;
+    if(GetNMichel() > 0) return 1;
     return 0;
   }
 
   int CVUniverse::GetTruthHasMichel() const {
     return GetInt("truth_reco_has_michel_electron");
+  }
+  
+  int CVUniverse::GetTruthHasImprovedMichel() const {
+  	return GetInt("truth_improved_michel_electron");
   }
   
   int CVUniverse::GetTruthHasSingleNeutralPion() const {
@@ -820,6 +828,7 @@ double CVUniverse::GetTrueLog10RecoilEnergyGeV() const {
   }
 
   int CVUniverse::GetIsSingleProton() const {
+  	if(GetMultiplicity() == 1) return 1; // NA when multiplicity is 1
     // define and get applicable variables
     double tree_Q2 = GetQ2QEGeV();
     double proton_score1 = GetSingleProtonScore();
@@ -840,6 +849,7 @@ double CVUniverse::GetTrueLog10RecoilEnergyGeV() const {
   }
   
   int CVUniverse::GetAllExtraTracksProtons() const {
+  	if(GetMultiplicity() == 1) return 1; // NA when multiplicity is 1
     // get secondary proton candidates
     int n_sec_proton_scores1 = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
     // if 0, return true (vacuously)

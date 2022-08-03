@@ -20,7 +20,7 @@ bool DEBUG=1;
 #include "TCanvas.h"
 #include "utils/NuConfig.h"
 #include "PlotUtils/FluxReweighter.h"
-#include "GetStacked.h"
+#include "include/GetStacked.h"
 //#include "utils/POTCounter.h"
 //#define LOCAL  // this is for local  data samples
 
@@ -66,7 +66,9 @@ int main(const int argc, const char *argv[] ) {
 
   std::string inputtag = "";
   if (argc > 1){
-    inputtag  = std::string(argv[1]);
+    std::string fullpath = std::string(argv[1]);
+    int beginIdx = fullpath.rfind('/');
+    inputtag = fullpath.substr(beginIdx + 1);
   }
   else{
     std::cout << " arguments are:\n analyze <config>_<prescale> " << std::endl;
@@ -86,9 +88,9 @@ int main(const int argc, const char *argv[] ) {
       singlesample = 0;
   }
   if (DEBUG) std::cout << " test NuConfig" << std::endl;
+  
   NuConfig config;
   config.Read(std::string(argv[1])+".json");
-  config.Print();
   std::vector<std::string> AnalyzeVariables = config.GetStringVector("AnalyzeVariables");
   std::vector<std::string> AnalyzeVariables2D = config.GetStringVector("Analyze2DVariables");
   std::vector<std::string> SampleRequest;
@@ -108,6 +110,8 @@ int main(const int argc, const char *argv[] ) {
   }
   std::string playlist = config.GetString("playlist");
   std::string inputname = config.GetString("outRoot")+"_"+inputtag+".root";
+  
+  std::cout << std::endl << std::endl << " inputname = " << inputname << std::endl << std::endl;
 
   //========================================= Now do some analysis
 
@@ -181,7 +185,6 @@ int main(const int argc, const char *argv[] ) {
     }
     // get the histogram
     TNamed* me = f->GetKey(key.c_str());
-    std::cout << " Done with parsing" << std::endl;
 
     // 1D hists
     if(key.find("h2D")==std::string::npos){
@@ -189,7 +192,7 @@ int main(const int argc, const char *argv[] ) {
         MnvH1D* temp = (MnvH1D*)(f->Get(key.c_str()));
         if (temp != 0){
           hists1D[sample][variable][type][category] = temp->Clone();
-          hists1D[sample][variable][type][category]->Print();
+          //hists1D[sample][variable][type][category]->Print();
           hists1D[sample][variable][type][category]->SetDirectory(0);
           std::cout << " hist 1D " << sample << " " << variable << " " << type << " " << category << std::endl;
           delete temp;
@@ -229,22 +232,27 @@ int main(const int argc, const char *argv[] ) {
   bool binwid = true;  // flag you need if MnvPlotter does not do binwid correction.  If it does not, you need to set this to true
 
   std::cout << std::endl << " just before 1D loop" << std::endl;
+  std::cout << std::endl << "AnalyzeVariables:";
+  for (std::string variable:AnalyzeVariables){
+  	std::cout << std::endl << "  " << variable;
+  }
+  std::cout << std::endl << std::endl;
   for (auto samples:hists1D){
     std::string sample=samples.first;
     std::cout << "  Sample: " << sample << std::endl;
     for (auto variables:hists1D[sample]){  // only do this for a subset to save output time.
       
       std::string variable = variables.first;
-        if(!checktag(AnalyzeVariables,variable)){
-            std::cout << "  don't do this variable for now" << variable << std::endl;
-            continue;
-        }
+      if(!checktag(AnalyzeVariables,variable)){
+      	std::cout << "  don't do this variable for now: " << variable << std::endl;
+      	continue;
+      }
       std::cout << "   Variable: " << variable << std::endl;
       std::string basename = "h_"+sample+"_"+variable;
-        if (singlesample){
-            basename = "h_"+variable;
-        }
-        std::cout << "    basename is " << basename << std::endl;
+      if (singlesample){
+      	basename = "h_"+variable;
+      }
+      std::cout << "    basename is " << basename << std::endl;
       int exit = drawStacked(sample,variable,basename,
                              hists1D[sample][variable]["reconstructed"],
                              config,variables1DConfig,samplesConfig,
