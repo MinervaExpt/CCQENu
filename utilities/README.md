@@ -4,11 +4,15 @@ This is intended for CCQEMAT, which has an executable a config file and a presca
 
 Your MAT distribution should be in the base directory ($BASEDIR) and the whole thing gets tarred up and sent.
 
-On Unix, you need to 
+On Unix, you need to (ONCE)
 
 ```cp -r /minerva/app/users/schellma/NEWMAT/jsoncpp-build $BASEDIR # where BASEDIR is where MAT and MAT-MINERvA and CCQENu live```
 
-Your executable should be in the run directory which is RELATIVE to $BASEDIR - ie CCQENu/make_hists or something similar. 
+And at each session you need to 
+
+```setup jobsub_client```  # and whatever you need to get root. 
+
+Your executable should be in a subdirectory which is RELATIVE to $BASEDIR - ie CCQENu/make_hists or something similar. 
 
 you then invoke `SubmitJobsToGrid_MAT.py` with your config and playlists and the results come back in a tagged subdirectory of `--outdir`
 
