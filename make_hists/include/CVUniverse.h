@@ -11,6 +11,7 @@
 #define CVUNIVERSE_H
 
 #include <iostream>
+#include "utils/NuConfig.h"
 
 #include "PlotUtils/ChainWrapper.h"
 #include "PlotUtils/MinervaUniverse.h"
@@ -18,8 +19,22 @@
 #include "TVector3.h"
 #include "PlotUtils/GeantHadronSystematics.h"
 
-
 class CVUniverse : public PlotUtils::MinervaUniverse {
+protected:
+	// default values
+	static double m_proton_kecut;
+	static NuConfig m_proton_score_config;
+    static std::vector<double> m_proton_score_mins;
+    static std::vector<double> m_proton_score_Q2QEs;
+    static double m_min_blob_zvtx;
+    static double m_photon_energy_cut;
+    
+    // initially set to false
+    static bool _is_proton_KECut_set;
+    static bool _is_protonScore_set;
+    static bool _is_minBlobZVtx_set;
+    static bool _is_photonEnergyCut_set;
+
 public:
 #ifndef HAZMAT
 #include "PlotUtils/SystCalcs/WeightFunctions.h"
@@ -42,7 +57,7 @@ public:
     CVUniverse(){PlotUtils::MinervaUniverse();};
     
     CVUniverse(PlotUtils::ChainWrapper* chw, double nsigma = 0)
-    : PlotUtils::MinervaUniverse(chw, nsigma) {}
+    	: PlotUtils::MinervaUniverse(chw, nsigma) {}
     
     virtual ~CVUniverse() {}
     
@@ -70,6 +85,20 @@ public:
     virtual int GetMultiplicity() const;
     
     virtual int GetDeadTime() const;
+    
+    // ----------------------- Cut-configuring Variables -------------------------
+    
+    static double GetProtonKECut();
+    static bool SetProtonKECut(double proton_KECut, bool print);
+    
+    static NuConfig GetProtonScoreConfig(bool print);
+    static bool SetProtonScoreConfig(NuConfig protonScoreConfig, bool print);
+    
+    static double GetMinBlobZVtx();
+    static bool SetMinBlobZVtx(double min_zvtx, bool print);
+    
+    static double GetPhotonEnergyCut();
+    static bool SetPhotonEnergyCut(double energy, bool print);
     
     // ----------------------- Analysis-related Variables ------------------------
     
@@ -112,7 +141,7 @@ public:
     virtual double GetTrueThetamuDegrees() const;
     
     
-    // ----------------------------- Proton Variables ----------------------------
+    // ----------------------------- Hadron Variables ----------------------------
     
     virtual double GetHadronEGeV() const;
     
@@ -211,27 +240,32 @@ public:
     
     virtual int GetHasInteractionVertex() const;
     
-    // Isolated Blobs and Charged Pions
+    // Isolated Blobs
     
     virtual int GetNBlobs() const;
-    virtual int GetTruthHasSingleChargedPion() const;
     
-    // Michel Electrons and Neutral Pions
+    // Michel Electrons
     
     virtual int GetNMichel() const;
     virtual int GetImprovedNMichel() const;
     virtual int GetHasMichelElectron() const;
     virtual int GetTruthHasMichel() const;
     virtual int GetTruthHasImprovedMichel() const;
+    
+    // Charged and Neutral Pions
+    
+    virtual int GetTruthHasSingleChargedPion() const;
     virtual int GetTruthHasSingleNeutralPion() const;
-    
-    // Michel+Blobs and MultiPion
-    
     virtual int GetTruthHasMultiPion() const;
-    virtual double GetSingleProtonScore() const;
-    virtual int GetIsSingleProton() const;
-    virtual int GetTruthHasSingleProton() const;
+    
+    // Proton Score, Primary and Secondary Proton Tracks
+    
+    virtual double GetPrimaryProtonScore() const;
+    virtual int PassProtonScoreCut(double score, double tree_Q2) const;
+    virtual int PassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const;
+    virtual int GetIsPrimaryProton() const;
     virtual int GetAllExtraTracksProtons() const;
+    virtual int GetTruthHasSingleProton() const;
     
     // GENIE Particle Counts
     
