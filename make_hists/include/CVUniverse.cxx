@@ -844,7 +844,7 @@ double CVUniverse::GetTrueLog10RecoilEnergyGeV() const {
     else return 1; // if false not returned by now must be true
   }
   
-  int CVUniverse::GetTruthIsPrimaryProton() const {
+  int CVUniverse::GetTruthHasSingleProton() const {
     return GetInt("truth_reco_has_single_proton");
   }
   

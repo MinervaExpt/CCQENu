@@ -230,7 +230,7 @@ public:
     virtual int GetTruthHasMultiPion() const;
     virtual double GetPrimaryProtonScore() const;
     virtual int GetIsPrimaryProton() const;
-    virtual int GetTruthIsPrimaryProton() const;
+    virtual int GetTruthHasSingleProton() const;
     virtual int GetAllExtraTracksProtons() const;
     
     // GENIE Particle Counts
