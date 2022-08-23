@@ -823,15 +823,15 @@ double CVUniverse::GetTrueLog10RecoilEnergyGeV() const {
   
   // Protons
 
-  double CVUniverse::GetSingleProtonScore() const {
+  double CVUniverse::GetPrimaryProtonScore() const {
     return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
   }
 
-  int CVUniverse::GetIsSingleProton() const {
+  int CVUniverse::GetIsPrimaryProton() const {
   	if(GetMultiplicity() == 1) return 1; // NA when multiplicity is 1
     // define and get applicable variables
     double tree_Q2 = GetQ2QEGeV();
-    double proton_score1 = GetSingleProtonScore();
+    double proton_score1 = GetPrimaryProtonScore();
     
     // How to define Q2 and proton score limits in config?
     if(      tree_Q2        < 0.2 &&
@@ -844,7 +844,7 @@ double CVUniverse::GetTrueLog10RecoilEnergyGeV() const {
     else return 1; // if false not returned by now must be true
   }
   
-  int CVUniverse::GetTruthHasSingleProton() const {
+  int CVUniverse::GetTruthIsPrimaryProton() const {
     return GetInt("truth_reco_has_single_proton");
   }
   

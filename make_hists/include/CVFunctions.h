@@ -148,8 +148,8 @@ public:
     truefunctions["TruthHasImprovedMichel"] = &CVUNIVERSE::GetTruthHasImprovedMichel;
 
     recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
-    recointfunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
-    trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
+    recointfunctions["IsPrimaryProton"] = &CVUNIVERSE::GetIsPrimaryProton;
+    trueintfunctions["TruthIsPrimaryProton"] = &CVUNIVERSE::GetTruthIsPrimaryProton;
     
     // genie particle counts
     trueintfunctions["TrueChargedPionCount"] = &CVUNIVERSE::GetTrueChargedPionCount;

@@ -228,9 +228,9 @@ public:
     // Michel+Blobs and MultiPion
     
     virtual int GetTruthHasMultiPion() const;
-    virtual double GetSingleProtonScore() const;
-    virtual int GetIsSingleProton() const;
-    virtual int GetTruthHasSingleProton() const;
+    virtual double GetPrimaryProtonScore() const;
+    virtual int GetIsPrimaryProton() const;
+    virtual int GetTruthIsPrimaryProton() const;
     virtual int GetAllExtraTracksProtons() const;
     
     // GENIE Particle Counts
