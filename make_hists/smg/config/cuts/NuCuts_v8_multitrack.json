@@ -3,7 +3,7 @@
 	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
     {"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
-    {"name":"IsSingleProton","equals":1,"variable":"IsSingleProton"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
     {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
@@ -19,7 +19,7 @@
 	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
     {"name":"MichelCount","min":1,"variable":"ImprovedNMichel"},
-    {"name":"IsSingleProton","equals":1,"variable":"IsSingleProton"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
     {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
@@ -35,7 +35,7 @@
 	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
     {"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
-    {"name":"IsSingleProton","equals":1,"variable":"IsSingleProton"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
     {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
@@ -51,7 +51,7 @@
 	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
     {"name":"MichelCount","min":1,"variable":"ImprovedNMichel"},
-    {"name":"IsSingleProton","equals":1,"variable":"IsSingleProton"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
     {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},

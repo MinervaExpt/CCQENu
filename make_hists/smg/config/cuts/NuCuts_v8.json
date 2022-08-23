@@ -12,7 +12,6 @@
     {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
-    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"}
   ],
   "MichelSideBand":[
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
@@ -27,7 +26,6 @@
     {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
-    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"}
   ],
   "BlobSideBand":[
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
@@ -42,7 +40,6 @@
     {"name":"HasMINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
-    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"}
   ],
   "MicBlobSideBand":[
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
@@ -57,7 +54,6 @@
     {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
-    {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"}
   ],
   "phase_space":[
     {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},

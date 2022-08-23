@@ -2,7 +2,9 @@
 "QElike":[
 	{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
-    {"name":"MichelCount","equals":0,"variable":"MichelElectronCandidates"},
+    {"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
     {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"},
@@ -16,7 +18,9 @@
   "MichelSideBand":[
 	{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
-    {"name":"MichelCount","min":1,"variable":"MichelElectronCandidates"},
+    {"name":"MichelCount","min":1,"variable":"ImprovedNMichel"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
     {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"},
@@ -30,7 +34,9 @@
   "BlobSideBand":[
 	{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
-    {"name":"MichelCount","equals":0,"variable":"MichelElectronCandidates"},
+    {"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
     {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"},
@@ -44,7 +50,9 @@
   "MicBlobSideBand":[
 	{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
-    {"name":"MichelCount","min":1,"variable":"MichelElectronCandidates"},
+    {"name":"MichelCount","min":1,"variable":"ImprovedNMichel"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
     {"name":"GoodRecoil","max":0.5,"variable":"RecoilEnergyGeV"},

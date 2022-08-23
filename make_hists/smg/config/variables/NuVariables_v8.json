@@ -144,7 +144,7 @@
                    "min":0.,
                    "max":10.,
                    "fluxnorm":false},
-    "primaryProtonScore":{"reco":"SingleProtonScore",
+    "primaryProtonScore":{"reco":"PrimaryProtonScore",
                           "true":"TruthHasSingleProton",
                           "name":"primaryProtonScore",
                           "title":"Proton Score of Primary non-Muon Track",
