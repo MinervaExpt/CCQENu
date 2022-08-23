@@ -22,6 +22,6 @@ else
 fi
 
 if [[ -d "playlist" ]]; then
-	rm playlist
+	unlink playlist
 fi
 ln -s $PLAYLISTDIR playlists
