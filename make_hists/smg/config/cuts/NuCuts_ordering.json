@@ -155,8 +155,45 @@
 		{"name":"PDG","equals":14,"variable":"TruthNuPDG"},
 		{"name":"TruthHasMultiplePions","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.}
 	],
-	"other":[
-		{"name":"TruthIsOther","equals":1,"variable":"TruthIsOther"}
+	"other1":[
+		{"name":"TruthHasMultiplePions","equals":0,"variable":"TruthHasMultiPion"},
+		{"name":"TruthHasSingleChargedPion","equals":0,"variable":"TruthHasSingleChargedPion"},
+		{"name":"TruthHasSingleNeutralPion","equals":0,"variable":"TruthHasSingleNeutralPion"},
+		{"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike"},
+		{"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+		{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+	],
+	"other2":[
+		{"name":"TruthHasSingleChargedPion","equals":0,"variable":"TruthHasSingleChargedPion"},
+		{"name":"TruthHasMultiplePions","equals":0,"variable":"TruthHasMultiPion"},
+		{"name":"TruthHasSingleNeutralPion","equals":0,"variable":"TruthHasSingleNeutralPion"},
+		{"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike"},
+		{"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+		{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+	],
+	"other3":[
+		{"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike"},
+		{"name":"TruthHasSingleChargedPion","equals":0,"variable":"TruthHasSingleChargedPion"},
+		{"name":"TruthHasSingleNeutralPion","equals":0,"variable":"TruthHasSingleNeutralPion"},
+		{"name":"TruthHasMultiplePions","equals":0,"variable":"TruthHasMultiPion"},
+		{"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+		{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+	],
+	"other4":[
+		{"name":"TruthHasSingleNeutralPion","equals":0,"variable":"TruthHasSingleNeutralPion"},
+		{"name":"TruthHasSingleChargedPion","equals":0,"variable":"TruthHasSingleChargedPion"},
+		{"name":"TruthHasMultiplePions","equals":0,"variable":"TruthHasMultiPion"},
+		{"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike"},
+		{"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+		{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+	],
+	"other5":[
+		{"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+		{"name":"TruthHasMultiplePions","equals":0,"variable":"TruthHasMultiPion"},
+		{"name":"TruthHasSingleNeutralPion","equals":0,"variable":"TruthHasSingleNeutralPion"},
+		{"name":"TruthHasSingleChargedPion","equals":0,"variable":"TruthHasSingleChargedPion"},
+		{"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike"},
+		{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
 	],
 	"data":[]
 }

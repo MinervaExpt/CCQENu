@@ -95,7 +95,12 @@
     {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
   ],
   "other":[
-    {"name":"TruthIsOther","equals":1,"variable":"TruthIsOther"}
+    {"name":"TruthHasMultiplePions","equals":0,"variable":"TruthHasMultiPion"},
+    {"name":"TruthHasSingleChargedPion","equals":0,"variable":"TruthHasSingleChargedPion"},
+    {"name":"TruthHasSingleNeutralPion","equals":0,"variable":"TruthHasSingleNeutralPion"},
+    {"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike"},
+    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
   ],
   "data":[] // data doesn't cut anything at truth level
 }

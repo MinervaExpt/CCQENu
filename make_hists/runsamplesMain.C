@@ -136,16 +136,37 @@ int main(const int argc, const char *argv[] ) {
 
   data_error_bands["cv"] = data_band;
 
-  //Selection Criteria
+  //Selection Criteria           
+	if (config.IsMember("universeFile")) {	
+	
+		std::cout << " setting universe configurables" << std::endl;
+		std::string universefilename = config.GetString("universeFile");
+		NuConfig universeConfig;
+		universeConfig.Read(universefilename);
+		// Print applicable configurables?
+		bool printConfigs = 0;
+		if (universeConfig.IsMember("printConfigs")) bool printConfigs = universeConfig.GetBool("printConfigs");
+		// Set applicable configurables
+		if (universeConfig.IsMember("ProtonScoreConfig")) {	
+			CVUniverse::SetProtonScoreConfig(universeConfig.GetConfig("ProtonScoreConfig"),printConfigs);
+		}
+		if (universeConfig.IsMember("ProtonKECut")) {
+			CVUniverse::SetProtonKECut(universeConfig.GetConfig("ProtonKECut").GetDouble("energy"),printConfigs);
+		}
+		if (universeConfig.IsMember("MinimumBlobZVtx")) {
+			CVUniverse::SetMinBlobZVtx(universeConfig.GetConfig("MinimumBlobZVtx").GetDouble("min"),printConfigs);
+		}
+		if (universeConfig.IsMember("PhotonEnergyCut")) {
+			CVUniverse::SetPhotonEnergyCut(universeConfig.GetConfig("PhotonEnergyCut").GetDouble("energy"),printConfigs);
+		}
+	}
 
   std::string cutsfilename = config.GetString("cutsFile");
   NuConfig cutsConfig;
   cutsConfig.Read(cutsfilename);
 
   std::string samplesfilename = config.GetString("samplesFile");
-
   NuConfig samplesConfig;
-
   //cutsConfig.Print();
   std::vector<string> samplesToDo=config.GetStringVector("runsamples"); // get the master list.
   samplesConfig.Read(samplesfilename);
@@ -158,7 +179,7 @@ int main(const int argc, const char *argv[] ) {
       std::cout << "IsMember(" << s << "): TRUE" << std::endl;
       if(samplesConfig.CheckMember(s)) std::cout << "CheckMember(" << s << "): TRUE" << std::endl;
       NuConfig tmp = samplesConfig.GetConfig(s);
-      samples.push_back(CCQENu::Sample(tmp));
+      samples.push_back(CCQENu::Sample(tmp));		
     }
     else{
       std::cout << "requested sample " << s << " which is not in " << samplesfilename << std::endl;
@@ -171,11 +192,11 @@ int main(const int argc, const char *argv[] ) {
 
   std::vector<std::string> tags;
   std::string tag;
-  for (auto sample:samples){
-    std::string name = sample.GetName();
+  for (auto sample:samples){ 
+  	std::string name = sample.GetName();
     std::string tag = name+"___data";
     tags.push_back(tag);
-    std::cout << " load in cuts for samples" << name << std::endl;
+    std::cout << " load in cuts for sample " << name << std::endl;
     NuConfig recocuts = cutsConfig.GetValue(sample.GetReco());
     NuConfig phasespace = cutsConfig.GetValue(sample.GetPhaseSpace());
     NuConfig truecuts = cutsConfig.GetValue("data");
