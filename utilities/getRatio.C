@@ -4,247 +4,143 @@
 #include <sys/stat.h>
 #include <algorithm>
 #include "PlotUtils/MnvH1D.h"
-#include "PlotUtils/MnvH2D.h"
-#include "PlotUtils/MnvH1DToCSV.h"
 #include "TFile.h"
 #include "TROOT.h"
 #include "TStyle.h"
 #include "TTree.h"
 #include "TKey.h"
+#include "TLine.h"
+#include "TLegend.h"
 #include "TCanvas.h"
 #include "utils/NuConfig.h"
 
-// To use this type "./getCSVs [filename]" without ".root" for any root file with MnvH1Ds.
-
-std::vector<std::string> split (std::string s, std::string delimiter) {
-  size_t pos_start = 0, pos_end, delim_len = delimiter.length();
-  std::string token;
-  std::vector<std::string> res;
-  
-  while ((pos_end = s.find (delimiter, pos_start)) != std::string::npos) {
-    token = s.substr (pos_start, pos_end - pos_start);
-    pos_start = pos_end + delim_len;
-    res.push_back (token);
-  }
-  
-  res.push_back (s.substr (pos_start));
-  return res;
-}
-
 int main(const int argc, const char *argv[]){
-
-	std::string configfilename = std::string(argv[1])+".root";
+	
+	// Read in config file
+    std::cout << std::endl;
+	std::string configfilename = std::string(argv[1]);
 	NuConfig config;
 	config.Read(configfilename);
 	
-	std::string recoName1 = config.GetString("recoName1");
-	std::string recoName2 = config.GetString("recoName2");
-	std::string playlist = config.GetString("playlist");
-
-    // Read in root files
+	// Get stuff from config file
+	std::string pdfname = config.GetString("outputpdf");
     std::string rootFile1 = config.GetString("rootFile1");
     std::string rootFile2 = config.GetString("rootFile2");
+    std::string legendTitle = config.GetString("legendTitle");
+    std::string legendLabel1 = config.GetString("legendLabel1");
+    std::string legendLabel2 = config.GetString("legendLabel2");
+    std::string ratioLabel = config.GetString("ratioLabel");
+    
+    // Read in root files
     std::cout << std::endl;
-    std::cout << "Reading in\n\n\t\033[1;34m./\033[1;33m" << rootFile1 << "\033[0m\n";
+    std::cout << "Reading in \033[1;33m" << rootFile1 << "\033[0m";
     std::cout << std::endl;
     TFile *file1 = new TFile(rootFile1.c_str(),"READONLY");
-    std::cout << "Reading in\n\n\t\033[1;34m./\033[1;33m" << rootFile2 << "\033[0m\n";
-    std::cout << std::endl;
+    std::cout << "Reading in \033[1;33m" << rootFile2 << "\033[0m";
+    std::cout << std::endl << std::endl;
     TFile *file2 = new TFile(rootFile2.c_str(),"READONLY");
+			
+	// Making canvas for plotting
+	TCanvas canvas("canvas","canvas",800,600);
+	canvas.cd();
+	
+	// Open output pdf
+	canvas.Print(Form("%s[",pdfname.c_str()));
+	std::cout << std::endl;
 
-    /////////////////////////////////////////////////////////////////////////////////////////
-    //////////////// Extracting information on every object in the root file ////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////
-
-    // Declare empty containers for objects and their information
-    std::vector<std::string> keys1;
-    std::map<std::string, std::string> classes1;
-    std::map<std::string, std::string> titles1;
-    std::map<std::string, std::string> cycles1;
-    std::map<std::string, std::vector<std::string>> parsekey1;
-    
-    std::vector<std::string> keys2;
-    std::map<std::string, std::string> classes2;
-    std::map<std::string, std::string> titles2;
-    std::map<std::string, std::string> cycles2;
-    std::map<std::string, std::vector<std::string>> parsekey2;
-
-    // Cycle through objects in root file
-    std::cout << "Extracting object information..." << std::endl;
-    for(TObject* keyAsObj : *file1->GetListOfKeys())
-    { 
-        // Get object key
-        auto key = dynamic_cast<TKey*>(keyAsObj);
+    // Looping over keys to take ratio of histrograms and plot
+    for(TObject* keyAsObj : *file1->GetListOfKeys()) {
+    	auto key = dynamic_cast<TKey*>(keyAsObj);
         std::string name = key->GetName();
-
-        // Fill information containers
-        keys1.push_back(name);
-        classes1[name] = key->GetClassName();
-        titles1[name] = key->GetTitle(); 
-        cycles1[name] = key->GetCycle();
-    }
-    for(TObject* keyAsObj : *file2->GetListOfKeys())
-    { 
-        // Get object key
-        auto key = dynamic_cast<TKey*>(keyAsObj);
-        std::string name = key->GetName();
-
-        // Fill information containers
-        keys2.push_back(name);
-        classes2[name] = key->GetClassName();
-        titles2[name] = key->GetTitle(); 
-        cycles2[name] = key->GetCycle();
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////// Creating csv file to store parsekey stuff ///////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////
-
-    // Initiate  output file
-    std::string parseFile1 = playlist+"_"+recoName1+"_ParseKey1.csv";
-    std::cout << "Parsing keys for " << recoName1 << "." << std::endl;
-    std::cout << "Putting parsed keys in" << std::endl;
-    std::cout << "\n\t\033[1;34m./\033[1;33m" << parseFile1 << "\033[0m\n";
-    std::cout << std::endl;
-    std::ofstream parsefile1;
-    parsefile1.open((parseFile1).c_str());
-    parsefile1 << "key,parsekey size,[0],[1],[2]";
-    parsefile1 << ",[3],[4]" << std::endl; // Column headers
-
-    // Loop over keys to add info to file
-    for(auto name : keys1)
-    {
-        // Split Key
-        parsekey1[name] = split(name,"___");
-        parsefile1 << name << "," << parsekey1[name].size() << ",";
-        // print splitted key
-        for(int i = 0; i < parsekey1[name].size(); i++){
-            parsefile1 << parsekey1[name][i] << ",";
-        }
-        parsefile1 << std::endl;
-    }
-
-    // Close object list output file
-    parsefile1.close();
-    
-    // Initiate  output file
-    std::string parseFile2 = playlist+"_"+recoName2+"_ParseKey2.csv";
-    std::cout << "Parsing keys for " << recoName2 << "." << std::endl;
-    std::cout << "Putting parsed keys in" << std::endl;
-    std::cout << "\n\t\033[1;34m./\033[1;33m" << parseFile2 << "\033[0m\n";
-    std::cout << std::endl;
-    std::ofstream parsefile2;
-    parsefile2.open((parseFile2).c_str());
-    parsefile2 << "key,parsekey size,[0],[1],[2]";
-    parsefile2 << ",[3],[4]" << std::endl; // Column headers
-
-    // Loop over keys to add info to file
-    for(auto name : keys2)
-    {
-        // Split Key
-        parsekey2[name] = split(name,"___");
-        parsefile2 << name << "," << parsekey2[name].size() << ",";
-        // print splitted key
-        for(int i = 0; i < parsekey2[name].size(); i++){
-            parsefile2 << parsekey2[name][i] << ",";
-        }
-        parsefile2 << std::endl;
-    }
-
-    // Close object list output file
-    parsefile2.close();
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////// Retrieving histogram objects from root file //////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////
-
-    // Create empty containers for histograms
-    std::map<std::string, PlotUtils::MnvH1D*> hists1_1d;
-    std::map<std::string, PlotUtils::MnvH2D*> hists1_2d;
-    std::vector<std::string> hists1_1d_keys;
-    std::vector<std::string> hists1_2d_keys;
-    
-    std::map<std::string, PlotUtils::MnvH1D*> hists2_1d;
-    std::map<std::string, PlotUtils::MnvH2D*> hists2_2d;
-    std::vector<std::string> hists2_1d_keys;
-    std::vector<std::string> hists2_2d_keys;
-    
-    std::map<std::string, PlotUtils::MnvH1D*> hists_1d_ratio;
-
-    // Looping over keys to fill histogram containers
-    std::cout << "Extracting histograms from " << std::string(argv[1]);
-    std::cout << ".root" << std::endl;
-    for(auto name : keys1)
-    {
-        if(classes1[name] == "PlotUtils::MnvH1D")
-        {
-            hists1_1d_keys.push_back(name);
-            hists1_1d[name] = (PlotUtils::MnvH1D*)file1->Get(name.c_str());
-            hists1_1d[name]->SetDirectory(0);
-        }
-        else if(classes1[name] == "PlotUtils::MnvH2D")
-        {
-            hists1_2d_keys.push_back(name);
-            hists1_2d[name] = (PlotUtils::MnvH2D*)file1->Get(name.c_str());
-            hists1_2d[name]->SetDirectory(0);
-        }
-    }
-    std::cout << "Extracting histograms from " << std::string(argv[2]);
-    std::cout << ".root" << std::endl;
-    for(auto name : keys2)
-    {
-        if(classes2[name] == "PlotUtils::MnvH1D")
-        {
-            hists2_1d_keys.push_back(name);
-            hists2_1d[name] = (PlotUtils::MnvH1D*)file2->Get(name.c_str());
-            hists2_1d[name]->SetDirectory(0);
-        }
-        else if(classes2[name] == "PlotUtils::MnvH2D")
-        {
-            hists2_2d_keys.push_back(name);
-            hists2_2d[name] = (PlotUtils::MnvH2D*)file2->Get(name.c_str());
-            hists2_2d[name]->SetDirectory(0);
-        }
-    }
-    for(auto name1 : keys1)
-    {
-    	for(auto name2 : keys2)
-    	{
-    		if(classes1[name1] == classes2[name2]){
-    			hists_1d_ratio[name1] = Divide(hists1_1d[name1],hists1_1d[name2]);
-    		}
+        std::string classname = key->GetClassName();
+        if(classname == "PlotUtils::MnvH1D") {
+            
+            // Making hist1 and hist2
+            PlotUtils::MnvH1D* hist1 = (PlotUtils::MnvH1D*)file1->Get(name.c_str());
+            hist1->SetDirectory(0);     
+            PlotUtils::MnvH1D* hist2 = (PlotUtils::MnvH1D*)file2->Get(name.c_str());
+            hist2->SetDirectory(0);
+            
+            // Making ratio hist, hist3
+			PlotUtils::MnvH1D* hist3 = (PlotUtils::MnvH1D*)hist1->Clone();
+			hist3->Divide(hist3,hist2,1.,1.);
+			hist3->SetDirectory(0);
+    	
+    		// Create pad 1 for overlay plot of hist1 and hist2
+			TPad pad1("pad1","pad1",0,0.3,1,1);
+			pad1.SetBottomMargin(0);
+			pad1.Draw();
+			pad1.cd();
+			
+			// Customize and draw hist1 and hist2
+			hist1->SetLineColor(kRed);
+			hist1->SetStats(0);
+			hist1->SetTitle(name.c_str());
+			hist1->GetXaxis()->SetLabelSize(0);
+			hist1->GetXaxis()->SetTitleSize(0);
+			hist1->GetYaxis()->SetTitle("Number of events");
+			hist1->GetYaxis()->SetTitleSize(0.05);
+			hist2->SetLineColor(kBlack);
+			hist2->SetStats(0);
+			hist1->Draw("h");
+			hist2->Draw("pe,same");
+			
+			// Create pad2 for plot of ratio hist, hist3
+			canvas.cd();
+			TPad pad2("pad2","pad2",0,0,1,0.3);
+			pad2.SetTopMargin(0);
+			pad2.SetBottomMargin(0.27);
+			pad2.Draw();
+			pad2.cd();
+		    
+		    // Customize and draw hist3
+		    hist3->SetLineColor(kRed);
+		    hist3->SetStats(0);
+			hist3->SetTitle("");
+			hist3->GetXaxis()->SetLabelSize(0.12);
+			hist3->GetXaxis()->SetTitleSize(0.12);
+			hist3->GetYaxis()->SetLabelSize(0.1);
+			hist3->GetYaxis()->SetTitleSize(0.13);
+			hist3->GetYaxis()->SetTitle(ratioLabel.c_str());
+			hist3->GetYaxis()->SetTitleOffset(0.35);
+			hist3->Draw("pe");
+		    
+		    // Add zero line in ratio plot
+		    TLine line(0,1,2.5,1);
+		    line.SetLineColor(kBlack);
+		    line.Draw("same");
+		    
+		    // Add legend to plot of hist1 and hist2
+		    pad1.cd();
+			TLegend legend(0.7,0.6,0.85,0.75);
+		    legend.AddEntry(hist1,legendLabel1.c_str());
+		    legend.AddEntry(hist2,legendLabel2.c_str());
+		    legend.SetTextSize(0.04);
+		    legend.SetLineWidth(0);
+		    legend.SetHeader(legendTitle.c_str(),"L");
+		    legend.Draw("same");
+		    canvas.cd();
+		    
+		    // Print canvas to pdf file
+		    canvas.Print(pdfname.c_str());
+		    
+		    // Delete pointers to prevent memory complaints
+		    delete hist1;
+		    delete hist2;
+		    delete hist3;
     	}
     }
-
-    // Closing root files
+    
+    // Close output pdf file
+    std::cout << std::endl;
+    canvas.Print(Form("%s]",pdfname.c_str()));
+    std::cout << std::endl;
+    
+    // Closing root files, deleting pointers
     file1->Close();
     file2->Close();
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////// Creating pdf to print each histogram object //////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////
-    
-    // Initializing pdf file and TCanvas
-    std::string pdfFileName = "hists_"+playlist+"_ratio_";
-    std::string pdfFileName = pdfFileName+recoName1+"_"+recoName2+".pdf";
-    std::cout << "Drawing histograms to\n\n\t\033[1;34m./";
-    std::cout << "\033[1;33m" << pdfFileName << "\033[0m\n" << std::endl;
-    TCanvas canvas(pdfFileName.c_str());
-    canvas.SetLeftMargin(0.15);
-    canvas.SetBottomMargin(0.15);
-    canvas.cd();
-    //canvas.Print(Form("%s(",pdfFileName.c_str()));
-    canvas.Print(Form("%s(",("./"+std::string(argv[1])+"/"+pdfFileName).c_str()));
-
-    // Looping over keys to draw histograms
-    for(auto name : hists1_1d_keys){
-        hists_1d_ratio[name]->Draw("pe");
-        canvas.Print((pdfFileName).c_str());
-    }
-
-    //canvas.Print(Form("%s)",pdfFileName.c_str()));
-    canvas.Print(Form("%s)",(pdfFileName).c_str()));
-    std::cout << std::endl;
+    delete file1;
+    delete file2;
 
     return 0;
 }
@@ -252,10 +148,8 @@ int main(const int argc, const char *argv[]){
 
 /*
 
-
 hist->GetEntries()
 hist->GetEffectiveEntries()????????????
-
 
 hist->GetNbinsX()
 hist->GetXaxis()->GetBinLowEdge(i)
@@ -263,12 +157,5 @@ hist->GetXaxis()->GetBinUpEdge(i)
 hist->GetBinContent(i)
 
 hist->GetBinContent(i,j)
-
-
-
-
-
-
-
 
 */
