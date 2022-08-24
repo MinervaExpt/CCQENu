@@ -608,56 +608,10 @@ namespace {
 	// ----------------- Added by Sean for Neutrino ---------------------------------
 	// ------------------------------------------------------------------------------
 
-	int CVUniverse::GetTruthIsOther() const{ // As opposed to CCQE, SingleChargedPion, SingleNeutralPion, or MultiPion
-	
-		int genie_n_muons = 0;
-		std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
-		std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
-		bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
-		int mc_nFSPart = GetInt("mc_nFSPart");
-		
-		for(int i = 0; i < mc_nFSPart; i++){
-			int pdg =  mc_FSPartPDG[i];
-			double energy = mc_FSPartE[i];
-			double KEp = energy - MinervaUnits::M_p;
-
-			// implement 120 MeV KE cut, if needed
-			// The photon energy cut is hard-coded at 10 MeV at present. We're happy to make it general, if the need arises !
-
-			if(      pdg       ==   22 && 
-				     energy     >   10   ) return 1; // Photons > Energy Cut (10 MeV default)
-			else if( pdg       == 3112 || 
-				     pdg       == 3122 || 
-				     pdg       == 3212 || 
-				     pdg       == 3222   ) return 1; // Strange Baryons
-			else if( pdg       == 4112 || 
-				     pdg       == 4122 || 
-				     pdg       == 4212 || 
-				     pdg       == 4222   ) return 1; // Charmed Baryons
-			else if( pdg       ==  130 ||
-				     pdg       ==  310 ||
-				     pdg       ==  311 ||
-				     pdg       ==  313 ||
-				     abs(pdg)  ==  321 ||
-				     abs(pdg)  ==  323   ) return 1; // Strange Mesons
-			else if( pdg       ==  411 ||
-				     pdg       ==  421   ) return 1; // Charmed Mesons
-			else if( !neutrinoMode     &&
-				     pdg       == 2212 && 
-				     KEp > m_proton_kecut) return 1; // In antineutrino mode, no protons
-			else if( abs(pdg)  ==   13   ) genie_n_muons++;
-			// Intermediate muon counts check
-			if( genie_n_muons > 1 ) return 1;
-		}
-		if ( genie_n_muons == 0 ) return 1;
-		// Either passes CCQE, SingleChargedPion, SingleNeutralPion, or MultiPion
-		return 0;
-	}
-
 	// Interaction Vertex
 
 	int CVUniverse::GetHasInteractionVertex() const {
-	return GetInt("has_interaction_vertex");
+		return GetInt("has_interaction_vertex");
 	}
 
 	// Isolated Blobs and Charged Pions
@@ -675,7 +629,8 @@ namespace {
 		return n_blobs;
 	}
 
-	// One charged pion and
+	// One charged pion and charged pion count
+	
 	int CVUniverse::GetTruthHasSingleChargedPion() const {
 		int genie_n_charged_pion = 0;
 		std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
@@ -686,24 +641,6 @@ namespace {
 			int pdg =  mc_FSPartPDG[i];
 
 			if(      pdg             ==  111   ) return 0; // Neutral pions
-			else if( pdg             ==   22 && 
-					 mc_FSPartE[i]    >   10   ) return 0; // Photons > 10 MeV
-			else if( pdg             == 3112 || 
-					 pdg             == 3122 || 
-					 pdg             == 3212 || 
-					 pdg             == 3222   ) return 0; // Strange baryons
-			else if( pdg             == 4112 || 
-				     pdg             == 4122 || 
-				     pdg             == 4212 || 
-				     pdg             == 4222   ) return 0; // Charmed baryons
-			else if( pdg             ==  130 ||
-				     pdg             ==  310 ||
-				     pdg             ==  311 ||
-				     pdg             ==  313 ||
-				     abs(pdg)        ==  321 ||
-				     abs(pdg)        ==  323   ) return 0; // Strange Mesons
-			else if( pdg             ==  411 ||
-				     pdg             ==  421   ) return 0; // Charmed Mesons
 			else if( abs(pdg)        ==  211   ) genie_n_charged_pion++;
 			// Intermediate check of charged pion count
 			if ( genie_n_charged_pion >    1   ) return 0;
@@ -751,31 +688,12 @@ namespace {
 	int CVUniverse::GetTruthHasSingleNeutralPion() const {
 		int genie_n_neutral_pion = 0;
 		std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
-		std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
 		int mc_nFSPart = GetInt("mc_nFSPart");
 
 		for(int i = 0; i < mc_nFSPart; i++){
 			int pdg =  mc_FSPartPDG[i];
 
 			if(      abs(pdg)        ==  211   ) return 0; // Charged pions
-			else if( pdg             ==   22 && 
-					 mc_FSPartE[i]   >    10   ) return 0; // Photons > 10 MeV
-			else if( pdg             == 3112 || 
-					 pdg             == 3122 || 
-					 pdg             == 3212 || 
-					 pdg             == 3222   ) return 0; // Strange baryons
-			else if( pdg             == 4112 || 
-					 pdg             == 4122 || 
-					 pdg             == 4212 || 
-					 pdg             == 4222   ) return 0; // Charmed baryons
-			else if( pdg             ==  130 ||
-					 pdg             ==  310 ||
-					 pdg             ==  311 ||
-					 pdg             ==  313 ||
-					 abs(pdg)        ==  321 ||
-					 abs(pdg)        ==  323   ) return 0; // Strange mesons
-			else if( pdg             ==  411 ||
-					 pdg             ==  421   ) return 0; // Charmed mesons
 			else if( pdg             ==  111   ) genie_n_neutral_pion++;
 			// Intermediate check of neutral pion count
 			if( genie_n_neutral_pion >     1   ) return 0;
@@ -801,58 +719,32 @@ namespace {
 	// Michel+Blobs and MultiPion
 
 	int CVUniverse::GetTruthHasMultiPion() const {
-		int genie_n_charged_pion = 0;
-		int genie_n_neutral_pion = 0;
+		int genie_n_pion = 0;
 		int genie_er_n_eta = 0;
 
 		std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
-		std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartPDG");
 		int mc_nFSPart = GetInt("mc_nFSPart");
 
 		for(int i = 0; i < mc_nFSPart; i++){
 			int pdg =  mc_FSPartPDG[i];
 
-			if(      pdg           ==   22 && 
-					 mc_FSPartE[i] >    10   ) return 0; // Photons > 10 MeV
-			else if( pdg           == 3112 || 
-					 pdg           == 3122 || 
-					 pdg           == 3212 || 
-					 pdg           == 3222   ) return 0; // Strange baryons
-			else if( pdg           == 4112 || 
-					 pdg           == 4122 || 
-					 pdg           == 4212 || 
-					 pdg           == 4222   ) return 0; // Charmed baryons
-			else if( pdg           ==  130 ||
-					 pdg           ==  310 ||
-					 pdg           ==  311 ||
-					 pdg           ==  313 ||
-					 abs(pdg)      ==  321 ||
-					 abs(pdg)      ==  323   ) return 0; // Strange mesons
-			else if( pdg           ==  411 ||
-					 pdg           ==  421   ) return 0; // Charmed mesons
-			else if( abs(pdg)      ==  211   ) genie_n_charged_pion++;
-			else if( pdg           ==  111   ) genie_n_neutral_pion++;
+			if( abs(pdg)      ==  211 ||
+			    pdg           ==  111   ) genie_n_pion++;
+			if( genie_n_pion > 1 ) return 1; // End early if conditions met
 		}
-
-		int genie_n_pion = genie_n_charged_pion + genie_n_neutral_pion;
-		if( genie_n_pion > 1 ) return 1; // Simple pion sum
 		
-		// Look for presence of Eta in mc_er_*... Not sure why exactly...
+		// Look for presence of Eta in mc_er_*... They typically decay into 2+ pions
 		int nerpart = GetInt("mc_er_nPart");
 		std::vector<int> erpartID = GetVecInt("mc_er_ID");
 		std::vector<int> erpartstatus = GetVecInt("mc_er_status");
 		for(int i = 0; i < nerpart; i++){
-			bool neutrinoMode = GetAnalysisNuPDG() > 0;
 			int status = erpartstatus[i];
 			int id = erpartID[i];
 
-			if(abs(status) == 14 && id == 221){
-				genie_er_n_eta = 1;
-				break;
-			}
+			if(abs(status) == 14 && id == 221) return 1; // If there is an Eta passes
 		}
-		if( genie_er_n_eta == 1 ) return 1; // If there is an Eta passes
 		
+		// If no eta and genie_n_pion < 2 then fails
 		return 0;
 	}
 
@@ -893,17 +785,6 @@ namespace {
 	// Protons
 	
 	int CVUniverse::PassProtonScoreCut(double score, double tree_Q2) const {
-		// How to define Q2 and proton score limits in config?
-		/*
-		if(      tree_Q2  < 0.2 &&
-				 score    < 0.2   ) return 0;
-		else if( tree_Q2 >= 0.2 &&
-				 tree_Q2  < 0.6 &&
-				 score    < 0.1   ) return 0;
-		else if( tree_Q2 >= 0.6 &&
-				 score    < 0.0   ) return 0;
-		else return 1; // if false not returned by now must be true
-		*/
 		int index = 0;
 		for (int i = 0 ; i < m_proton_score_Q2QEs.size() ; i++ ) {
 			if ( tree_Q2 >= m_proton_score_Q2QEs[i] ) index++;

@@ -127,8 +127,6 @@ public:
     
     // ----------------------- Sean Neutrino Functions ------------------------------------------
   
-    trueintfunctions["TruthIsOther"] = &CVUNIVERSE::GetTruthIsOther;
-  
     // Interaction Vertex
 
     recointfunctions["HasInteractionVertex"] = &CVUNIVERSE::GetHasInteractionVertex;

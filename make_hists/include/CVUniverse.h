@@ -234,7 +234,6 @@ public:
     
     // ----------------------- Sean Neutrino Functions ------------------------------------------
     
-    virtual int GetTruthIsOther() const;
     
     // Interaction Vertex
     
