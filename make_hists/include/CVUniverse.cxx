@@ -26,34 +26,73 @@ namespace {
 	// Configurables
 	// ==========================================
 
-	// Proton KE Cut setting
-	double CVUniverse::m_proton_kecut = NSFDefaults::TrueProtonKECutCentral; // Default value
-	bool CVUniverse::_is_proton_KECut_set = false;
+	///////////////// Defaults and Declarations /////////////////
+	double CVUniverse::m_min_blob_zvtx = 4750.0;
+	double CVUniverse::m_photon_energy_cut = 10.0; // in MeV
+	double CVUniverse::m_proton_ke_cut = NSFDefaults::TrueProtonKECutCentral; // Default value
+	std::vector<double> CVUniverse::m_proton_score_mins = { 0.2, 0.1, 0.0 };
+	std::vector<double> CVUniverse::m_proton_score_Q2QEs = { 0.2, 0.6 };
+	NuConfig CVUniverse::m_proton_score_config = Json::Value::null;
 	
-	double CVUniverse::GetProtonKECut() {
-		return m_proton_kecut;
+	bool CVUniverse::_is_min_blob_zvtx_set = false;
+	bool CVUniverse::_is_photon_energy_cut_set = false;
+	bool CVUniverse::_is_proton_ke_cut_set = false;
+	bool CVUniverse::_is_proton_score_config_set = false;
+	
+	///////////////// Blob minimum Z vertex in order to be counted /////////////////
+	double CVUniverse::GetMinBlobZVtx() {
+		return m_min_blob_zvtx;
 	}
-	bool CVUniverse::SetProtonKECut( double proton_KECut, bool print ) {
-		if( _is_proton_KECut_set ) {  
-			std::cout << "WARNING: YOU ATTEMPTED TO SET PROTON KE CUT A SECOND TIME. "
+	bool CVUniverse::SetMinBlobZVtx( double min_zvtx, bool print ) {
+		if( _is_min_blob_zvtx_set ) {  
+			std::cout << "WARNING: YOU ATTEMPTED TO SET MIN BLOB ZVTX A SECOND TIME. "
 			          << "THIS IS NOT ALLOWED FOR CONSISTENCY." << std::endl;
 			return 0; 
 		} else {
-			m_proton_kecut = proton_KECut;
-			_is_proton_KECut_set = true;
-			if ( print ) std::cout << "ProtonKECut set to " << m_proton_kecut << " MeV" << std::endl;
+			m_min_blob_zvtx = min_zvtx;
+			_is_min_blob_zvtx_set = true;
+			if ( print ) std::cout << "Minimum blob Z vertex cutoff set to " << m_min_blob_zvtx << std::endl;
 			return 1;
 		}
 	}
 	
-	// Proton Score configuration
-	std::vector<double> CVUniverse::m_proton_score_mins = { 0.2, 0.1, 0.0 };
-	std::vector<double> CVUniverse::m_proton_score_Q2QEs = { 0.2, 0.6 };
-	NuConfig CVUniverse::m_proton_score_config = Json::Value::null;
-	bool CVUniverse::_is_protonScore_set = false;
+	///////////////// Photon Energy Cut /////////////////
+	double CVUniverse::GetPhotonEnergyCut() {
+		return m_photon_energy_cut;
+	}
+	bool CVUniverse::SetPhotonEnergyCut( double energy, bool print ) {
+		if( _is_photon_energy_cut_set ) {  
+			std::cout << "WARNING: YOU ATTEMPTED TO SET PHOTON ENERGY CUT A SECOND TIME. "
+			          << "THIS IS NOT ALLOWED FOR CONSISTENCY." << std::endl;
+			return 0; 
+		} else {
+			m_photon_energy_cut = energy;
+			_is_photon_energy_cut_set = true;
+			if ( print ) std::cout << "Photon low energy cutoff set to " << m_photon_energy_cut << " MeV" << std::endl;
+			return 1;
+		}
+	}
+
+	///////////////// Proton KE Cut setting /////////////////
+	double CVUniverse::GetProtonKECut() {
+		return m_proton_ke_cut;
+	}
+	bool CVUniverse::SetProtonKECut( double proton_KECut, bool print ) {
+		if( _is_proton_ke_cut_set ) {  
+			std::cout << "WARNING: YOU ATTEMPTED TO SET PROTON KE CUT A SECOND TIME. "
+			          << "THIS IS NOT ALLOWED FOR CONSISTENCY." << std::endl;
+			return 0; 
+		} else {
+			m_proton_ke_cut = proton_KECut;
+			_is_proton_ke_cut_set = true;
+			if ( print ) std::cout << "ProtonKECut set to " << m_proton_ke_cut << " MeV" << std::endl;
+			return 1;
+		}
+	}
 	
+	///////////////// Proton Score configuration /////////////////
 	NuConfig CVUniverse::GetProtonScoreConfig(bool print = false) {
-		if (!_is_protonScore_set) { // Uses default configuration, which produces default m_proton_score_* values
+		if (!_is_proton_score_config_set) { // Uses default configuration, which produces default m_proton_score_* values
 			std::cout << "\nUSING DEFAULT PROTON SCORE CONFIGURATION.\n\n";
 			m_proton_score_config.ReadFromString(R"({"band1":{"Q2QE_max":0.2,"pass_proton_score_min":0.2},"band2":{"Q2QE_range":[0.2,0.6],"pass_proton_score_min":0.1},"band3":{"Q2QE_min":0.6,"pass_proton_score_min":0.0}})");
 			if ( print ) m_proton_score_config.Print();
@@ -65,7 +104,7 @@ namespace {
 		return m_proton_score_config;
 	}
 	bool CVUniverse::SetProtonScoreConfig(NuConfig protonScoreConfig, bool print ) {
-		if( _is_protonScore_set ) {  
+		if( _is_proton_score_config_set ) {  
 			std::cout << "WARNING: YOU ATTEMPTED TO SET PROTON SCORE CONFIGURATION A SECOND TIME. "
 			          << "THIS IS NOT ALLOWED FOR CONSISTENCY." << std::endl;
 			return 0; 
@@ -90,51 +129,10 @@ namespace {
 					}
 				}
 			}
-			_is_protonScore_set = true;
+			_is_proton_score_config_set = true;
 			return 1;
 		}
 	}
-	
-	// Blob minimum Z vertex to be counted
-	double CVUniverse::m_min_blob_zvtx = 4750.0;
-	bool CVUniverse::_is_minBlobZVtx_set = false;
-	
-	double CVUniverse::GetMinBlobZVtx() {
-		return m_min_blob_zvtx;
-	}
-	bool CVUniverse::SetMinBlobZVtx( double min_zvtx, bool print ) {
-		if( _is_minBlobZVtx_set ) {  
-			std::cout << "WARNING: YOU ATTEMPTED TO SET MIN BLOB ZVTX A SECOND TIME. "
-			          << "THIS IS NOT ALLOWED FOR CONSISTENCY." << std::endl;
-			return 0; 
-		} else {
-			m_min_blob_zvtx = min_zvtx;
-			_is_minBlobZVtx_set = true;
-			if ( print ) std::cout << "Minimum blob Z vertex cutoff set to " << m_min_blob_zvtx << std::endl;
-			return 1;
-		}
-	}
-	
-	// Photon Energy Cut
-	double CVUniverse::m_photon_energy_cut = 10.0; // in MeV
-	bool CVUniverse::_is_photonEnergyCut_set = false;
-	
-	double CVUniverse::GetPhotonEnergyCut() {
-		return m_photon_energy_cut;
-	}
-	bool CVUniverse::SetPhotonEnergyCut( double energy, bool print ) {
-		if( _is_photonEnergyCut_set ) {  
-			std::cout << "WARNING: YOU ATTEMPTED TO SET PHOTON ENERGY CUT A SECOND TIME. "
-			          << "THIS IS NOT ALLOWED FOR CONSISTENCY." << std::endl;
-			return 0; 
-		} else {
-			m_photon_energy_cut = energy;
-			_is_photonEnergyCut_set = true;
-			if ( print ) std::cout << "Photon low energy cutoff set to " << m_photon_energy_cut << " MeV" << std::endl;
-			return 1;
-		}
-	}
-	
 
 	// ========================================================================
 	// Get Weight
@@ -585,7 +583,7 @@ namespace {
 		int mc_nFSPart = GetInt("mc_nFSPart");
 		//int mc_incoming = GetInt("mc_incoming");
 		//int mc_current = GetInt("mc_current");
-		bool passes = ( CVUniverse::passTrueCCQELike(neutrinoMode,  mc_FSPartPDG, mc_FSPartE, mc_nFSPart, m_proton_kecut));
+		bool passes = ( CVUniverse::passTrueCCQELike(neutrinoMode,  mc_FSPartPDG, mc_FSPartE, mc_nFSPart, m_proton_ke_cut));
 
 		return passes;
 	}
@@ -846,7 +844,7 @@ namespace {
 			double energy = mc_FSPartE[i];
 			double KEp = energy - MinervaUnits::M_p;
 			if( pdg == 2212         && 
-				KEp  > m_proton_kecut   ) genie_n_protons++;
+				KEp  > m_proton_ke_cut   ) genie_n_protons++;
 		}
 
 		return genie_n_protons;

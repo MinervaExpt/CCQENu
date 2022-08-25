@@ -145,19 +145,19 @@ int main(const int argc, const char *argv[] ) {
 		universeConfig.Read(universefilename);
 		// Print applicable configurables?
 		bool printConfigs = 0;
-		if (universeConfig.IsMember("printConfigs")) bool printConfigs = universeConfig.GetBool("printConfigs");
+		if (universeConfig.IsMember("printConfigs")) printConfigs = universeConfig.GetBool("printConfigs");
 		// Set applicable configurables
-		if (universeConfig.IsMember("ProtonScoreConfig")) {	
-			CVUniverse::SetProtonScoreConfig(universeConfig.GetConfig("ProtonScoreConfig"),printConfigs);
-		}
-		if (universeConfig.IsMember("ProtonKECut")) {
-			CVUniverse::SetProtonKECut(universeConfig.GetConfig("ProtonKECut").GetDouble("energy"),printConfigs);
-		}
 		if (universeConfig.IsMember("MinimumBlobZVtx")) {
 			CVUniverse::SetMinBlobZVtx(universeConfig.GetConfig("MinimumBlobZVtx").GetDouble("min"),printConfigs);
 		}
 		if (universeConfig.IsMember("PhotonEnergyCut")) {
 			CVUniverse::SetPhotonEnergyCut(universeConfig.GetConfig("PhotonEnergyCut").GetDouble("energy"),printConfigs);
+		}
+		if (universeConfig.IsMember("ProtonScoreConfig")) {	
+			CVUniverse::SetProtonScoreConfig(universeConfig.GetConfig("ProtonScoreConfig"),printConfigs);
+		}
+		if (universeConfig.IsMember("ProtonKECut")) {
+			CVUniverse::SetProtonKECut(universeConfig.GetConfig("ProtonKECut").GetDouble("energy"),printConfigs);
 		}
 	}
 

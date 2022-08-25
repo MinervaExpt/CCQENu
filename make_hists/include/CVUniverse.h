@@ -22,7 +22,7 @@
 class CVUniverse : public PlotUtils::MinervaUniverse {
 protected:
 	// default values
-	static double m_proton_kecut;
+	static double m_proton_ke_cut;
 	static NuConfig m_proton_score_config;
     static std::vector<double> m_proton_score_mins;
     static std::vector<double> m_proton_score_Q2QEs;
@@ -30,10 +30,10 @@ protected:
     static double m_photon_energy_cut;
     
     // initially set to false
-    static bool _is_proton_KECut_set;
-    static bool _is_protonScore_set;
-    static bool _is_minBlobZVtx_set;
-    static bool _is_photonEnergyCut_set;
+    static bool _is_proton_ke_cut_set;
+    static bool _is_proton_score_config_set;
+    static bool _is_min_blob_zvtx_set;
+    static bool _is_photon_energy_cut_set;
 
 public:
 #ifndef HAZMAT
