@@ -130,6 +130,7 @@ int main(const int argc, const char *argv[] ) {
   MnvTunev1.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
   MnvTunev1.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
 
+  // MnvTunev1.emplace_back(new PlotUtils::LowQ2PiReweighter<CVUniverse, PlotUtils::detail::empty>("NUBARPI0"));
 
   PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTunev1));
 

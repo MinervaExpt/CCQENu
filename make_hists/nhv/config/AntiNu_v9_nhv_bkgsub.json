@@ -7,19 +7,19 @@
   "playlist":"minervame5A",
   "recoName":"CCQENu",
   "pdg":-14,
-  "useTuned":true, // Set true if you want to tune mc for bkg subtraction
+  "useTuned":false, // Set true if you want to tune mc for bkg subtraction
   "runsamples":["QElike"],
   "cutsFile":"${CCQEMAT}/nhv/config/AntiNuCuts_v9_bkgsub.json",
   "varsFile":"${CCQEMAT}/nhv/config/Variables_v9_bkgsub.json",
   "samplesFile":"${CCQEMAT}/nhv/config/AntiNuSamples_v9_bkgsub.json",
-  "outRoot":"MCTune5A",
+  "outRoot":"MnvTunev2_TunedMC5A",
   "AnalyzeVariables":["Q2QE" ,"recoil","Log10recoil"],
   "Analyze2DVariables":["Q2QE_recoil","Q2QE_Log10recoil"],
   "signal":{"QElike":"qelike"},
   "background":{"QElike":"qelikenot"},
   "data":{"QElike":"data"},
   "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
-    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4","LowQ2Pi"],
   "fluxUniverses":100,
   "NuEConstraint":1,
   "DeuteriumGeniePiTune":1, // set to true?
