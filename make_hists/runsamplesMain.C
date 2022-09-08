@@ -35,10 +35,39 @@ int main(const int argc, const char *argv[] ) {
   if (config.IsMember("version")){
     version = config.GetInt("version");
   }
-  bool useTuned = 0;
+  bool useTuned=false;
   if(config.IsMember("useTuned")){
     useTuned = config.GetBool("useTuned");
+    std::cout << "runsamplesMain: useTuned configured in main config and set to " << useTuned << std::endl;
   }
+  // int useTuned = 0;
+  // if(config.IsMember("useTuned")){
+  //   checkval = config.GetString("useTuned");
+  //
+  //   if(checkval=="both" || checkval=="2"){
+  //     std::cout << "useTuned set to allow both tuned and untuned MC." << std::endl;
+  //     useTuned = 2;
+  //   }
+  //   // "only" or 1 runs only tuned mc (not untuned)
+  //   else if(checkval=="only" || checkval=="1"){
+  //     std::cout << "useTuned set to allow only tuned MC." << std::endl;
+  //     useTuned = 1;
+  //   }
+  //   // "none" or 0 runs only untunedmc
+  //   else if(checkval=="none" || checkval=="0"){
+  //     std::cout << "useTuned set to allow only untuned MC." << std::endl;
+  //     useTuned = 0;
+  //   }
+  //   else{
+  //     std::cout << "Warning: invalid 'useTuned' configured. Defaulting to allow both tuned and untuned MC. " << std::endl;
+  //     useTuned = 2;
+  //   }
+  // }
+  // else{
+  //   // Default to running both tuned and untuned
+  //   std::cout << "Warning: 'useTuned' not configured in main config. Defaulting to allow only untuned MC. " << std::endl;
+  //   useTuned = 0;
+  // }
 
   //=========================================S
   // MacroUtil (makes your anatuple chains)
@@ -68,9 +97,9 @@ int main(const int argc, const char *argv[] ) {
   // Setup systematics-related constants
   // TODO These should be handled by PU::MacroUtil
 
-  PlotUtils::MinervaUniverse::SetNonResPiReweight(config.GetInt("NonResPiReweight"));
+  //PlotUtils::MinervaUniverse::SetNonResPiReweight(config.GetInt("NonResPiReweight"));
 
-  PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune (config.GetInt("DeuteriumGeniePiTune"));
+  //PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune (config.GetInt("DeuteriumGeniePiTune"));
 
   PlotUtils::MinervaUniverse::SetNuEConstraint(config.GetInt("NuEConstraint")); //Needs to be on to match Dan's ME 2D inclusive analysis
 
@@ -96,7 +125,9 @@ int main(const int argc, const char *argv[] ) {
 
   std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse,PlotUtils::detail::empty>>> MnvTunev1;
   MnvTunev1.emplace_back(new PlotUtils::FluxAndCVReweighter<CVUniverse, PlotUtils::detail::empty>());
-  MnvTunev1.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse,PlotUtils::detail::empty>(true, false));
+    bool NonResPiReweight = true;
+    bool DeuteriumGeniePiTune = false; // Deut should be 0? for v1?
+  MnvTunev1.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse,PlotUtils::detail::empty>(NonResPiReweight,DeuteriumGeniePiTune));  // Deut should be 0? for v1?
   MnvTunev1.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
   MnvTunev1.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
   MnvTunev1.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
@@ -106,12 +137,6 @@ int main(const int argc, const char *argv[] ) {
 
   //====================MC Reco tuning for bkg subtraction======================
   // Initialize the rescale for tuning MC reco for background subtraction later
-  // std::string scaleLoc = "./data/BkgStudy6A_BkgStudy_1_OutVals_fix.root";
-  // if config.IsMember(“MCRescale”){
-  //   scaleLoc=config.GetString("scalefileIn");
-  // }
-  //
-  // PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(scaleLoc);
   PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(config);
 
   //=========================================
@@ -269,7 +294,7 @@ int main(const int argc, const char *argv[] ) {
   std::vector<std::string> selected_truth_tags ;
   std::vector<std::string> datatags;
   std::vector<std::string> truthtags;
-  std::vector<std::string> tuned_mc_tags ;
+  // std::vector<std::string> tuned_mc_tags ;
   std::vector<std::string> responsetags;
   std::vector<std::string> types;
 
@@ -300,9 +325,9 @@ int main(const int argc, const char *argv[] ) {
       if(IsInVector<std::string>("truth",forlist )){
         truthtags.push_back(tag);
       }
-      if (IsInVector<std::string>("tuned_mc",forlist)){
-        tuned_mc_tags.push_back(tag);
-      }
+      // if (IsInVector<std::string>("tuned_mc",forlist)){
+      //   tuned_mc_tags.push_back(tag);
+      // }
       if(IsInVector<std::string>("response",forlist)){
         responsetags.push_back(tag);
       }
@@ -322,10 +347,11 @@ int main(const int argc, const char *argv[] ) {
     v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands,truthtags);
     if(useTuned){
-      v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,tuned_mc_tags,responsetags);
+      v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
     variables1D.push_back(v);
   }
+  
 
   for (auto var2D : variablesmap2D ) {
     std::string varname = var2D.first;
@@ -336,11 +362,13 @@ int main(const int argc, const char *argv[] ) {
     v->AddMCResponse2D(responsetags);
     v->InitializeTruthHistograms2D(truth_error_bands,truthtags);
     if(useTuned){
-      v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,tuned_mc_tags,responsetags);
+      v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
     variables2D.push_back(v);
   }
 
+    std::cout << " just before event loop" << std::endl;
+    util.PrintMacroConfiguration("runEventLoop");
   // here we fill them
 
   for (auto tag:datatags){

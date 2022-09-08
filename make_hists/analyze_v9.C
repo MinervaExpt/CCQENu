@@ -127,7 +127,7 @@ int main(const int argc, const char *argv[] ) {
       allconfigs["main"]=theconfig;
     inputname = theconfig->GetString("outRoot")+"_"+inputtag+".root";
     f =  TFile::Open(inputname.c_str(),"READONLY");
-    f->ls();
+    //f->ls();
   }
     
   
@@ -181,7 +181,7 @@ int main(const int argc, const char *argv[] ) {
 
 
 
-  f->ls();
+  //f->ls();
 
   std::vector<std::string> keys;
 

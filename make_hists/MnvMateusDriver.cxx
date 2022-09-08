@@ -7,7 +7,7 @@
 //
 //Author: David Last dlast@sas.upenn.edu/lastd44@gmail.com
 // reconfigured to use json configuration - Schellman
-
+//#define WIDTH
 //C++ includes
 #include <iostream>
 #include <iomanip>
@@ -105,7 +105,7 @@ void printCorrMatrix(const ROOT::Math::Minimizer& minim, const int nPars)
 // direct from Rene Brun and the tutorials
 void CopyDir(TDirectory *source, TDirectory *adir) {
    //copy all objects and subdirs of directory source as a subdir of the current directory
-   source->ls();
+   //source->ls();
    adir->cd();
    //loop on all entries of this directory
    TKey *key;
@@ -257,13 +257,20 @@ int main(int argc, char* argv[]) {
     std::cout << " Try to write it out " << std::endl;
     
     outputfile->cd();
-  bool binbybin=true;
-    int ret = fit::DoTheFitBinByBin(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin);
+    int span;
+    std::string pixdir=".";
+    if (config.IsMember("Span")) span=config.GetInt("Span");
+    if (config.IsMember("PixDir")) pixdir = config.GetString("PixDir");
+    std::cout << " writing pictures to directory " << pixdir << std::endl;
+
+    int ret = fit::DoTheFitBinByBin(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin, span);
     
     // set up for plots
     
     PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
+
     mnvPlotter.draw_normalized_to_bin_width = false;
+
     TCanvas cF("fit","fit");
     if (logPlot) gPad->SetLogy(1);
     std::map<const std::string, MnvH1D*> tot;
@@ -273,7 +280,7 @@ int main(int argc, char* argv[]) {
     std::map<const std::string, MnvH1D*> bkgsub;
     
     for (auto side:sidebands){
-        dataHist[side]->Print();
+        //dataHist[side]->Print();
         
 
         //dataHist[side]->Write();
@@ -291,7 +298,7 @@ int main(int argc, char* argv[]) {
             }
         }
         tot[side]->MnvH1DToCSV(tot[side]->GetName(),"./csv/",1.,false);
-        tot[side]->Print();
+        //tot[side]->Print();
         tot[side]->Write();
         
     }
@@ -307,7 +314,7 @@ int main(int argc, char* argv[]) {
                 pre[side]->Add(unfitHists[side][i]);
             }
         }
-        pre[side]->Print();
+        //pre[side]->Print();
         pre[side]->Write();
         pre[side]->MnvH1DToCSV(pre[side]->GetName(),"./csv/",1.,false);
     }
@@ -348,10 +355,14 @@ int main(int argc, char* argv[]) {
     }
     std::cout << "wrote the inputs and outputs " << std::endl;
     
+// close output before plotting to avoid width errors.
+    
+
     for (auto side:sidebands){
-        //dataHist[side]->Print("ALL");
+        std::cout << "check width" << std::endl;
+        dataHist[side]->Print("ALL");
         dataHist[side]->Scale(1.,"width");
-        //dataHist[side]->Print("ALL");
+        dataHist[side]->Print("ALL");
         tot[side]->Scale(1.,"width");
         pre[side]->Scale(1.,"width");
         bkg[side]->Scale(1.,"width");
@@ -361,18 +372,19 @@ int main(int argc, char* argv[]) {
             fitHists[side][i]->Scale(1.,"width");
         }
     }
+
     
     for (auto side:sidebands){
         
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot[side], 1., "TR");
-        cF.Print(TString(side+"_postfit_compare.png").Data());
+        cF.Print(TString(pixdir+"/"+side+"_postfit_compare.png").Data());
         
   
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre[side], 1., "TR");
-        cF.Print(TString(side+"_prefit_compare.png").Data());
+        cF.Print(TString(pixdir+"/"+side+"_prefit_compare.png").Data());
         
         mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side], fitHists[side][0], 1., "TR");
-        cF.Print(TString(side+"_bkgsub_compare.png").Data());
+        cF.Print(TString(pixdir+"/"+side+"_bkgsub_compare.png").Data());
     }
     
     TObjArray* combmcin;
@@ -395,7 +407,7 @@ int main(int argc, char* argv[]) {
         
         mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
         t.Draw("same");
-        cF.Print(TString(side+"_prefit_combined.png").Data());
+        cF.Print(TString(pixdir+"/"+side+"_prefit_combined.png").Data());
         label = side+" "+varName + " After fit";
         TText t2(.3,.95,label.c_str());
         t2.SetTitle(label.c_str());
@@ -403,7 +415,7 @@ int main(int argc, char* argv[]) {
         t2.SetTextSize(.03);
         t2.SetTitle(label.c_str());
         mnvPlotter.DrawDataStackedMC(data,combmcout,1.0,"TR");
-        cF.Print(TString(side+"_"+fitType+"_postfit_combined.png").Data());
+        cF.Print(TString(pixdir+"/"+side+"_"+fitType+"_postfit_combined.png").Data());
         label = side+" "+varName + "Background Subtracted";
         
         t2.SetTitle(label.c_str());
@@ -412,12 +424,12 @@ int main(int argc, char* argv[]) {
         t2.SetTitle(label.c_str());
         bkgsub[side]->SetTitle("bkgsub");
         mnvPlotter.DrawDataStackedMC(bkgsub[side],combmcout,1.0,"TR");
-        cF.Print(TString(side+"_"+fitType+"_bkgsub_combined.png").Data());
+        cF.Print(TString(pixdir+"/"+side+"_"+fitType+"_bkgsub_combined.png").Data());
     }
-    
     
     inputFile->Close();
     outputfile->Close();
+
     cout << "Closing Output File... Does this solve the issue of seg fault." << endl;
    
     

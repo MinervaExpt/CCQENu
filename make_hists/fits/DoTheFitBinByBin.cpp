@@ -9,7 +9,7 @@ namespace fit{
 
 
 
-int DoTheFitBinByBin(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHists, const std::map<const std::string, std::vector< PlotUtils::MnvH1D*> > unfitHists, const std::map<const std::string, PlotUtils::MnvH1D*>  dataHist, const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type, const int lowBin, const int hiBin ){
+int DoTheFitBinByBin(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHists, const std::map<const std::string, std::vector< PlotUtils::MnvH1D*> > unfitHists, const std::map<const std::string, PlotUtils::MnvH1D*>  dataHist, const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type, const int lowBin, const int hiBin, const int span){
   
   // takes the histograms in unfitHists[sample][category], fits to dataHist by combining all the samples by changing the normalization of the category templates and then makes fitHists[sample][category] which contains the best template fit for each universe.
   // writes the chi2 value, parameters and covariance of the parameters into the output root file but does not return them.
@@ -117,7 +117,11 @@ int DoTheFitBinByBin(std::map<const std::string, std::vector< PlotUtils::MnvH1D*
       
       
       for (int theBin = lowBin; theBin <= hiBin; theBin++){
-        fit::MultiScaleFactors func2(unfitHistsCV,dataHistCV,includeInFit,type,theBin,theBin);
+          int bin1 = theBin-span/2;
+          int bin2 = theBin+span/2;
+          if (bin1<lowBin) bin1=lowBin;
+          if (bin2>hiBin) bin2 = hiBin;
+        fit::MultiScaleFactors func2(unfitHistsCV,dataHistCV,includeInFit,type,bin1,bin2);
         
         // set parameters with lower limit of 0
         int nextPar = 0;

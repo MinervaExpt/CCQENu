@@ -1,5 +1,5 @@
 {
-  "version":9,  // Run lots of variables in batch
+  "version":11,  // Run lots of variables in batch
   "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
   "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
   "prescale":999,
@@ -9,11 +9,11 @@
     "pdg":-14,
     "runsamples":["${MYSAMPLE}"],
   "cutsFile":"${CCQEMAT}/hms/AntiNuCuts_v9.json",
-  "varsFile":"${CCQEMAT}/hms/Variables_v10.json", // more bins
+  "varsFile":"${CCQEMAT}/hms/Variables_v11.json", // more bins
   "samplesFile":"${CCQEMAT}/hms/AntiNuSamples_v9.json",
   "outRoot":"Enu_${MYPLAYLIST}_${MYSAMPLE}",
-    "AnalyzeVariables":["Q2QE","Log10recoil","pzmu","ptmu","recoil","Enu","EnuCCQE","EnuHad","ThetamuDegrees"],
-    "Analyze2DVariables":["pzmu_ptmu","EnuCCQE_Q2QE","EnuCCQE_Enu"],
+    "AnalyzeVariables":["Q2QE","Enu","EnuNormal1","EnuNormal2","EnuCCQE","zmax"],
+    "Analyze2DVariables":[],
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"},
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
   "data":{"QElike":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
