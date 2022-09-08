@@ -35,55 +35,7 @@ public:
 
   // HMS 2-13-202 replace the templated constructor with explicit ones so we can make a config version without introducing a dependency in the Base class.
 
-  //  // variable binning
-//  VariableFromConfig(const std::string name, const std::string xaxis_label,
-//                  const std::vector<double> binning,
-//                  PointerToCVUniverseFunction reco_func = &CVUniverse::GetDummyVar,
-//                  PointerToCVUniverseFunction true_func = &CVUniverse::GetDummyVar) :
-//  PlotUtils::VariableBase<CVUniverse>(name,  xaxis_label, binning,reco_func, true_func ){
-//    m_for = {"data","selected_reco","selected_truth","response","truth"};
-//  };
-//
-//  // uniform binning
-//  VariableFromConfig(const std::string name, const std::string xaxis_label,
-//                  const int nbins, const double xmin, const double xmax,
-//                  PointerToCVUniverseFunction reco_func = &CVUniverse::GetDummyVar,
-//                  PointerToCVUniverseFunction true_func = &CVUniverse::GetDummyVar) :
-//  PlotUtils::VariableBase<CVUniverse>(name,  xaxis_label, nbins,xmin,xmax,reco_func, true_func ){
-//    m_for = {"data","selected_reco","selected_truth","response","truth"};
-//  };
-  //template <class... ARGS>
 
-  //  VariableFromConfig(const NuConfig config,
-  //                  PointerToCVUniverseFunction recofun  = &CVUniverse::GetDummyVar ,
-  //                  PointerToCVUniverseFunction truefun  = &CVUniverse::GetDummyVar):
-  //  PlotUtils::VariableBase<CVUniverse>(config.GetString("name"),config.GetString("title"),config.GetDoubleVector("bins"),recofun,truefun){};
-
-//  VariableFromConfig(const NuConfig config,
-//                  PointerToCVUniverseFunction recofun   ,
-//                  PointerToCVUniverseFunction truefun  = &CVUniverse::GetDummyVar){
-//   // config.Print();
-//    //      m_name(),
-//    //      m_xaxis_label(),
-//    //      m_binning(),
-//    PlotUtils::VariableBase<CVUniverse>::m_pointer_to_GetRecoValue = recofun;
-//    PlotUtils::VariableBase<CVUniverse>::m_pointer_to_GetTrueValue = truefun;
-//
-//    PlotUtils::VariableBase<CVUniverse>::m_name = config.GetString("name");
-//    PlotUtils::VariableBase<CVUniverse>::m_xaxis_label = config.GetString("title");
-//    m_for = {"data","selected_reco","selected_truth","response","truth"};
-//    if (config.IsMember("bins")){
-//      PlotUtils::VariableBase<CVUniverse>::m_binning =  config.GetDoubleVector("bins");
-//    }
-//    else{
-//      int nbins = config.GetInt("nbins");
-//      double xmin = config.GetDouble("min");
-//      double xmax = config.GetDouble("max");
-//      PlotUtils::VariableBase<CVUniverse>::m_binning =  MakeUniformBinning(nbins,xmin,xmax);
-//    }
-//  }
-//
-  // new 3-5-2021  Only needs the config
 
   VariableFromConfig(const NuConfig config){
     //config.Print();
@@ -168,13 +120,32 @@ public:
 
     if (config.IsMember("bins")){
       PlotUtils::VariableBase<CVUniverse>::m_binning =  config.GetDoubleVector("bins");
+      if (config.IsMember("recobins")){
+          PlotUtils::VariableBase<CVUniverse>::m_reco_binning = config.GetDoubleVector("recobins");
+          PlotUtils::VariableBase<CVUniverse>::m_has_reco_binning = true;
+      }
+      else{
+          PlotUtils::VariableBase<CVUniverse>::m_has_reco_binning = false;
+      }
     }
     else{
       int nbins = config.GetInt("nbins");
       double xmin = config.GetDouble("min");
       double xmax = config.GetDouble("max");
       PlotUtils::VariableBase<CVUniverse>::m_binning =  MakeUniformBinning(nbins,xmin,xmax);
+      if (config.IsMember("nrecobins")){
+          int nrecobins = config.GetInt("nrecobins");
+          double xrecomin = config.GetDouble("recomin");
+          double xrecomax = config.GetDouble("recomax");
+          PlotUtils::VariableBase<CVUniverse>::m_reco_binning =  MakeUniformBinning(nrecobins,xrecomin,xrecomax);
+      }
+      else{
+          PlotUtils::VariableBase<CVUniverse>::m_has_reco_binning = false;
+      }
     }
+      std::cout << " Check Binning For" << config.GetString("name") << std::endl;
+      PrintBinning();
+      PrintRecoBinning();
   }
 
   typedef std::map<std::string, std::vector<CVUniverse*>> UniverseMap;
@@ -183,8 +154,8 @@ public:
   //=======================================================================================
   // Histwrappers -- selected mc, selected data
 
-  HM m_selected_mc_reco;
-  HM m_tuned_mc_reco; // HM for tuned MC hists used for background subtraction -NHV
+  HM m_selected_mc_reco; // HM for normal MC hists - has special constructor to make response
+  HM m_tuned_mc_reco; // HM for tuned MC hists used for background subtraction -NHV - has special constructor to make response
   HM m_selected_mc_truth;
   HM m_tuned_selected_mc_truth;
   HM m_signal_mc_truth;
@@ -244,8 +215,9 @@ public:
     }
 
     std::vector<double> bins = GetBinVec();
-
-    m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
+    std::vector<double> recobins = GetRecoBinVec();
+// this one is special as we need to take into account a non-square response
+    m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, GetNRecoBins(), recobins,  univs, tags);
     m_selected_mc_reco.AppendName("reconstructed",tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
   }
 
@@ -309,9 +281,9 @@ public:
     for (auto tag:tags){
       hasData[tag] = true;
     }
-    std::vector<double> bins = GetBinVec();
+    std::vector<double> recobins = GetRecoBinVec();
 
-    m_selected_data = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs,tags);
+    m_selected_data = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNRecoBins(), recobins, univs,tags);
     m_selected_data.AppendName("reconstructed",tags);
   }
 
@@ -330,10 +302,11 @@ public:
     }
 
     std::vector<double> bins = GetBinVec();
+    std::vector<double> recobins = GetRecoBinVec();
 
     // Check which categories are configured and add a tuned version
-    if (std::count(m_for.begin(), m_for.end(),"selected_reco")>=1){
-      m_tuned_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, reco_univs, tuned_tags);
+    if (std::count(m_for.begin(), m_for.end(),"selected_reco")>=1){ // need special constructor to deal with reco bins
+      m_tuned_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(),GetNBins(),bins, GetNRecoBins(), recobins, reco_univs, tuned_tags);
       m_tuned_mc_reco.AppendName("reconstructed_tuned",tuned_tags);
     }
     if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) {

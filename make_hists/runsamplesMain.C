@@ -97,9 +97,9 @@ int main(const int argc, const char *argv[] ) {
   // Setup systematics-related constants
   // TODO These should be handled by PU::MacroUtil
 
-  PlotUtils::MinervaUniverse::SetNonResPiReweight(config.GetInt("NonResPiReweight"));
+  //PlotUtils::MinervaUniverse::SetNonResPiReweight(config.GetInt("NonResPiReweight"));
 
-  PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune (config.GetInt("DeuteriumGeniePiTune"));
+  //PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune (config.GetInt("DeuteriumGeniePiTune"));
 
   PlotUtils::MinervaUniverse::SetNuEConstraint(config.GetInt("NuEConstraint")); //Needs to be on to match Dan's ME 2D inclusive analysis
 
@@ -125,7 +125,9 @@ int main(const int argc, const char *argv[] ) {
 
   std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse,PlotUtils::detail::empty>>> MnvTunev1;
   MnvTunev1.emplace_back(new PlotUtils::FluxAndCVReweighter<CVUniverse, PlotUtils::detail::empty>());
-  MnvTunev1.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse,PlotUtils::detail::empty>(true, false));
+    bool NonResPiReweight = true;
+    bool DeuteriumGeniePiTune = false; // Deut should be 0? for v1?
+  MnvTunev1.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse,PlotUtils::detail::empty>(NonResPiReweight,DeuteriumGeniePiTune));  // Deut should be 0? for v1?
   MnvTunev1.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
   MnvTunev1.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
   MnvTunev1.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
@@ -328,6 +330,7 @@ int main(const int argc, const char *argv[] ) {
     }
     variables1D.push_back(v);
   }
+  
 
   for (auto var2D : variablesmap2D ) {
     std::string varname = var2D.first;
@@ -343,6 +346,8 @@ int main(const int argc, const char *argv[] ) {
     variables2D.push_back(v);
   }
 
+    std::cout << " just before event loop" << std::endl;
+    util.PrintMacroConfiguration("runEventLoop");
   // here we fill them
 
   for (auto tag:datatags){

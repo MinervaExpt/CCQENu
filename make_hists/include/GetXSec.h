@@ -16,6 +16,7 @@
 #include "include/plotting_pdf.h"
 #endif
 
+
 /*
 ================================= GetXSec.h ====================================
 
@@ -190,6 +191,7 @@ template <class MnvHistoType>
     std::vector<MnvHistoType*> outUnsmearingVec;
     std::string unsmearedname = std::string(bkgsub->GetName()) + "_unfolded";
     MnvHistoType* unsmeared = (MnvHistoType*)idatahist->Clone(unsmearedname.c_str());
+    
     unsmeared->SetDirectory(0);
 
     std::string unsmearingname = basename + "_ratiounsmearing";
@@ -239,22 +241,38 @@ template<> MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* ire
   migration->PopVertErrorBand("cv");
 
   std::string unsmearedname = std::string(bkgsub->GetName()) + "_unfolded";
-  MnvH1D* unsmeared = (MnvH1D*)idatahist->Clone(unsmearedname.c_str());
+    MnvH1D* unsmeared;// = (MnvH1D*)iseltruhist->Clone(unsmearedname.c_str());
+    // make an unsmeared without error bands so that the unfolding can add them
+  unsmeared = new MnvH1D( *dynamic_cast<const TH1D*>((iseltruhist)->Clone(unsmearedname.c_str())) );
+  //  unsmeared->SetName(unsmearedname.c_str());
+  //unsmeared->AddMissingErrorBandsAndFillWithCV(*iseltruhist);
   unsmeared->SetDirectory(0);
   std::cout << " Migration matrix has size " << migration->GetErrorBandNames().size() << std::endl;
   std::cout << " Data has  size " << bkgsub->GetErrorBandNames().size() << std::endl;
-
+  //MnvH1D* empty = (MnvH1D*)bkgsub->Clone((std::string(bkgsub->GetName())+"_empty").c_str());
+  //empty->Reset();
   // make an empty covariance matrix for the unfolding to give back to you
   TMatrixD covmatrix;
-  bool data_unfolded = unfold.UnfoldHisto(unsmeared,covmatrix,migration,bkgsub,RooUnfold::kBayes,num_iter,true,true);
+
+
+  // OLD version for square matrices
+    bool data_unfolded = unfold.UnfoldHisto(unsmeared,covmatrix,migration,bkgsub,RooUnfold::kBayes,num_iter,true,true);
+   // bool MnvUnfold::UnfoldHistoWithFakes(PlotUtils::MnvH1D* &h_unfold, TMatrixD &covmx, const PlotUtils::MnvH2D* const h_migration, const PlotUtils::MnvH1D* const h_data, const PlotUtils::MnvH1D* const  h_model_reco, const PlotUtils::MnvH1D* const h_model_truth, const PlotUtils::MnvH1D* const h_model_background, double regparam,bool addSystematics,bool useSysVariatedMigrations) const
+    // this defaults to Bayesian
+   // bool data_unfolded = unfold.UnfoldHistoWithFakes(unsmeared,covmatrix,migration,bkgsub,imcsighist,iseltruhist,empty,4.,true, true);
+    bkgsub->Print("ALL");
 
   for (int i = 0; i < covmatrix.GetNrows(); i++){
     covmatrix[i][i] = 0.0;
   }
+    
 
   unsmeared->FillSysErrorMatrix("Unfolding",covmatrix);
+    
   // Commenting out since may not be necessary.
   SyncBands(unsmeared);
+  unsmeared->MnvH1DToCSV(unsmeared->GetName(),"./csv",1.0,false,true,true,false);
+  //  unsmeared->Print("ALL");
   return unsmeared;
 };
 
@@ -275,7 +293,8 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
   // std::cout << " Data has  size " << bkgsub->GetErrorBandNames().size() << std::endl;
 
   std::string unsmearedname = std::string(bkgsub->GetName()) + "_unfolded";
-  MnvH2D* unsmeared = (MnvH2D*)idatahist->Clone(unsmearedname.c_str());
+  // HMS MnvH2D* unsmeared = (MnvH2D*)idatahist->Clone(unsmearedname.c_str());
+  MnvH2D* unsmeared = (MnvH2D*)iseltruhist->Clone(unsmearedname.c_str());
   unsmeared->SetDirectory(0);
   bkgsub->Print();
   iseltruhist->Print();
@@ -476,7 +495,7 @@ template<class MnvHistoType>
     // this can come out of the sample information:
     // configs["main"]->Print();
     NuConfig sigkey = configs["main"]->GetConfig("signal");
-    sigkey.Print();
+    //sigkey.Print();
     std::string sig = sigkey.GetString(sample);
     std::cout << " got sig " << sig << std::endl;
     NuConfig bkgkey;
@@ -484,7 +503,7 @@ template<class MnvHistoType>
     if (!hasbkgsub){
       // this likely needs to be fixed
       bkgkey = configs["main"]->GetConfig("background");
-      bkgkey.Print();
+      //bkgkey.Print();
       std::cout << bkgkey.CheckMember(sample) << std::endl;
       bkg = bkgkey.GetString(sample);
       std::cout << " got bkg " << bkg << std::endl;
@@ -494,7 +513,7 @@ template<class MnvHistoType>
     std::cout << " got dat " << dat << std::endl;
     
     
-    datkey.Print();
+    //datkey.Print();
     //std::string bkg = config.GetString("background");
     // std::string dat = config.GetString("data");
 
@@ -696,7 +715,7 @@ template<class MnvHistoType>
       unsmeared = unsmearedVec[0];
       if (DEBUG) unsmeared->Print();
       unsmeared->Write();
-      PlotCVAndError(canvas,bkgsub,unsmeared,stuned+sample + "_"+"Data Before and After Unsmearing", true,logscale,binwid);
+      PlotCVAndError(canvas,bkgsub,unsmeared,stuned+sample + "_"+"Data Before and After Unsmearing", true,logscale,binwid); 
       
     }
     if(unsmearedVec.size()==2){
