@@ -90,7 +90,7 @@ std::map<std::string, CCQENu::VariableFromConfig*> GetVariablesFromConfig(const 
   for (auto var:vars){
     bool found = false;
     for (auto variable:allvariables){
-      //std::cout << var << " check " << variable.first<< std::endl;
+     // std::cout << var << " check " << variable.first<< std::endl;
       if(var == variable.first){
         std::cout << "GetVariables: study 1D variable " << var << std::endl;
         // this is the point where you add the tags.  Saves space this way.
