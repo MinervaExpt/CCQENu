@@ -279,7 +279,7 @@ datahist = MnvH2D()
 datahist = datafile.Get(basehist).Clone()
 datahist.SetDirectory(0)
 datahist.Scale(SCALE*norm)
-datahist.SetName("Minerva_AntiNeutrino_CCQElike_data_"+var)
+datahist.SetName("Minerva_AntiNeutrino_CCQElike_Data_Meas_"+var)
 #datahist.Scale(norm)
 if BIN and var != "enu":
     datahist.Scale(1.,"width")
@@ -324,7 +324,7 @@ if proj == "_py":
   datadraw=oneDhist.GetCVHistoWithError()
   oneDhist.Write()
   oneDhist.MnvH1DToCSV( (oneDhist.GetName()),"./full",1.,True,True,True,False)
-  oneDhist.MnvH1DToCSV( (oneDhist.GetName()),"./full",1.,True,True,True,False)
+  oneDhist.MnvH1DToCSV( (oneDhist.GetName()),"./extra",1.E40,False,True,True,False)
   
   oneDhist.Delete()
 if proj == "":
@@ -439,7 +439,7 @@ for model in models:
         
         mchist["GENIE_no2p2h"].Add(xcv_2p2h,-1)
     #mchist[model].SetName(model+"_"+mchist[model].GetTitle())
-    mchist[model].SetName("Minerva_AntiNeutrino_CCQElike_MC"+model+"_"+var)
+    mchist[model].SetName("Minerva_AntiNeutrino_CCQElike_MC_"+model+"_"+var)
     print (" read in model ", model)
     mchist[model].Scale(SCALE)
     if BIN and widthcorr and var != "enu":
@@ -450,8 +450,8 @@ for model in models:
       print ("should I shrink it ", proj)
       mchist[model] = Debinwidth2(mchist[model])
     if "_" in var:
-        mchist[model].MnvH2DToCSV(model+"_"+(mchist[model].GetName()[2:]),"./full",1.,True,True,True,False)
-        mchist[model].MnvH2DToCSV(model+"_"+(mchist[model].GetName()[2:]),"./extra",1.E40,False,True,True,False)
+        mchist[model].MnvH2DToCSV((mchist[model].GetName()),"./full",1.,True,True,True,False)
+        mchist[model].MnvH2DToCSV((mchist[model].GetName()),"./extra",1.E40,False,True,True,False)
     mchist[model].Print()
     mchist[model].SetDirectory(0)
     
