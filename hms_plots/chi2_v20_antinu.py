@@ -279,7 +279,7 @@ datahist = MnvH2D()
 datahist = datafile.Get(basehist).Clone()
 datahist.SetDirectory(0)
 datahist.Scale(SCALE*norm)
-datahist.SetName("Minerva_AntiNeutrino_CCQElike_Data_Meas_"+var)
+datahist.SetName("Minerva_AntiNeutrino_CCQElike_"+var+"_Data_Meas")
 #datahist.Scale(norm)
 if BIN and var != "enu":
     datahist.Scale(1.,"width")
@@ -287,7 +287,7 @@ if BIN and var != "enu":
 # void MnvH2DToCSV(std::string name, std::string directory="", double scale=1.0, bool fullprecision=true, bool syserrors=true, bool percentage = true, bool binwidth =true);
 if ("_" in var):
     datahist.MnvH2DToCSV( (datahist.GetName()),"./full",1.,True,True,True,True)
-    datahist.MnvH2DToCSV( (datahist.GetName()),"./extra",1.,False,True,True,True)
+    datahist.MnvH2DToCSV( (datahist.GetName()),"./extra",1.E39,False,True,True,True)
 print ("var is ", var)
 #datadraw=datahist.GetCVHistoWithError()
 #datadraw.Scale(1.,"width")
@@ -304,8 +304,16 @@ if proj == "_px":
   matrix.Print()
   #oneDhist.SetName("data"+oneDhist.GetName())
   oneDhist.Write()
-  oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./full",1.,True,True,True,False)
-  oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./extra",1.E40,False,True,True,False)
+  print ("check binning")
+  dobinwidth = (var != "enu?")
+  oneDhist.Print("ALL")
+  test = MnvH1D()
+  test = oneDhist.Clone("test")
+  test.Scale(1.,"width")
+  test.Print("ALL")
+  print ("checked binning")
+  oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./full",1.,True,True,True,dobinwidth)
+  oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./extra",1.E39,False,True,True,dobinwidth)
   datadraw=oneDhist.GetCVHistoWithError()
   
   datadraw.Print("ALL")
@@ -323,9 +331,9 @@ if proj == "_py":
   #oneDhist.SetName("data"+oneDhist.GetName())
   datadraw=oneDhist.GetCVHistoWithError()
   oneDhist.Write()
-  oneDhist.MnvH1DToCSV( (oneDhist.GetName()),"./full",1.,True,True,True,False)
-  oneDhist.MnvH1DToCSV( (oneDhist.GetName()),"./extra",1.E40,False,True,True,False)
-  
+  dobinwidth = (var != "enu?")
+  oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./full",1.,True,True,True,dobinwidth)
+  oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./extra",1.E39,False,True,True,dobinwidth)
   oneDhist.Delete()
 if proj == "":
   datavals = readData(datahist)
@@ -439,7 +447,9 @@ for model in models:
         
         mchist["GENIE_no2p2h"].Add(xcv_2p2h,-1)
     #mchist[model].SetName(model+"_"+mchist[model].GetTitle())
-    mchist[model].SetName("Minerva_AntiNeutrino_CCQElike_MC_"+model+"_"+var)
+    mcfilename = ("Minerva_AntiNeutrino_CCQElike_"+var+"_MC_"+model).replace("_NA_","_GENIE2.12.6_").replace("_CV_","_Minerva_v1").replace("_CV2_","_Minerva_v2")
+    mchist[model].SetName(mcfilename)
+    
     print (" read in model ", model)
     mchist[model].Scale(SCALE)
     if BIN and widthcorr and var != "enu":
@@ -450,8 +460,9 @@ for model in models:
       print ("should I shrink it ", proj)
       mchist[model] = Debinwidth2(mchist[model])
     if "_" in var:
-        mchist[model].MnvH2DToCSV((mchist[model].GetName()),"./full",1.,True,True,True,False)
-        mchist[model].MnvH2DToCSV((mchist[model].GetName()),"./extra",1.E40,False,True,True,False)
+        dobinwidth=True
+        mchist[model].MnvH2DToCSV((mchist[model].GetName()),"./full",1.,True,True,True,dobinwidth)
+        mchist[model].MnvH2DToCSV((mchist[model].GetName()),"./extra",1.E39,False,True,True,dobinwidth)
     mchist[model].Print()
     mchist[model].SetDirectory(0)
     
@@ -491,14 +502,14 @@ for model in models:
 #mcdraw[model].Print("ALL")
       mcvals = readData1D(oneDhist)
       mcerrs = readErrors1D(oneDhist)
-      oneDhist.SetName(model+"_"+(oneDhist.GetName()[2:]))
+      oneDhist.SetName((oneDhist.GetName()))
 
       
       for bin in range(0,datadraw.GetNbinsX()+1):
         mcdraw[model].SetBinError(bin,0.0)
-      binwidth = var != "enu"
-      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./full",1.,True,True,True,binwidth)
-      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./extra",1.E40,False,True,True,binwidth)
+      dobinwidth = var != "enu?"
+      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./full",1.,True,True,True,dobinwidth)
+      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./extra",1.E39,False,True,True,dobinwidth)
   
       oneDhist.Write()
       oneDhist.Delete()
@@ -519,7 +530,7 @@ for model in models:
       mcdraw[model].SetDirectory(0)
       oneDhist.SetBinContent(0,0)
       oneDhist.SetDirectory(0)
-      oneDhist.SetName(model+"_"+(oneDhist.GetName()[2:]))
+      oneDhist.SetName((oneDhist.GetName()))
       mcvals = readData1D(oneDhist)
       oneDhist.Print("ALL")
       mcerrs = readErrors1D(oneDhist)
@@ -530,9 +541,9 @@ for model in models:
 
       for bin in range(0,datadraw.GetNbinsY()+1):
         mcdraw[model].SetBinError(bin,0.0)
-      binwidth = var != "enu"
-      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./full",1.,True,True,True,binwidth)
-      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./extra",1.E40,False,True,True,binwidth)
+      dobinwidth = var != "enu?"
+      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./full",1.,True,True,True,dobinwidth)
+      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./extra",1.E39,False,True,True,dobinwidth)
       oneDhist.Write()
       oneDhist.Delete()
     if proj == "":

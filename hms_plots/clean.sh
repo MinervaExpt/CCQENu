@@ -8,6 +8,7 @@ rm extra/*MC_*_meta*.txt
 #rm extra/*MC_*_staterrors_*.csv
 rm extra/*MC_*_syserrors_*.csv
 rm extra/*MC_*_vertdump_*.csv
+rm extra/*covdum*
 rm full/*MC_*_bins_*.csv
 rm full/*MC_*_correlation_*.csv
 rm full/*MC_*_covariance_*.csv
@@ -18,4 +19,4 @@ rm full/*MC_*_meta*.txt
 #rm full/*MC_*_staterrors_*.csv
 rm full/*MC_*_syserrors_*.csv
 rm full/*MC_*_vertdump_*.csv
-
+rm full/*covdum*
