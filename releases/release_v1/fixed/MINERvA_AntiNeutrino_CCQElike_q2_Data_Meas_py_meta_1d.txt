@@ -1,0 +1,11 @@
+Name: MINERvA_AntiNeutrino_CCQElike_q2_Data_Meas_py
+GetName: "MINERvA_AntiNeutrino_CCQElike_q2_Data_Meas_py"
+GetTitle: "#E_{
+u QE} (GeV) vs #Q^{2}"
+Fractional Errors: "1"
+Binwidth: "1"
+SysErrors: "1"
+Scale: "1.0000e+39"
+Precision: "0"
+xAxis: " Q^{2} (GeV^{2})"
+yAxis: ""

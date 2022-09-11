@@ -1,0 +1,4 @@
+Fixed is fixed format cross section scaled by 1E39
+Full is full double precision
+
+data and model files are stored.

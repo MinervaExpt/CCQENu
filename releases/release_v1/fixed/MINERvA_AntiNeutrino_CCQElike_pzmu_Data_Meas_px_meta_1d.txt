@@ -1,0 +1,10 @@
+Name: MINERvA_AntiNeutrino_CCQElike_pzmu_Data_Meas_px
+GetName: "MINERvA_AntiNeutrino_CCQElike_pzmu_Data_Meas_px"
+GetTitle: "#mu_{p_Z} (GeV) vs #mu_{p_T}"
+Fractional Errors: "1"
+Binwidth: "1"
+SysErrors: "1"
+Scale: "1.0000e+39"
+Precision: "0"
+xAxis: " Muon p_{Z} (GeV)"
+yAxis: ""
