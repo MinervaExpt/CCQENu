@@ -36,7 +36,7 @@ MINERvA_AntiNeutrino_CCQElike_VAR_TYPE_MODEL_CONTENT_DIM.csv
 - correlation, the full correlation matrix
 - vertdump, a dump of all the separate fractional uncertainties due to individual sources
 
-**DIM** what it says can be:
+**DIM** can be:
 
 - px_1d  the px and py are there because these are projections of 2-d histograms
 - py_1d
