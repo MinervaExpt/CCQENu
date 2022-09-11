@@ -5,7 +5,7 @@ data and model files are stored.
 
 filenames are:
 
-MINERvA_AntiNeutrino_CCQElike_*VAR*_*TYPE*_*MODEL*_*CONTENT*_*DIM*.csv
+MINERvA_AntiNeutrino_CCQElike_VAR_TYPE_MODEL_CONTENT_DIM.csv
 
 *VAR* can be Enu, EnuQE, q2, pzmu, ptmu or pzmu_ptmu
 
