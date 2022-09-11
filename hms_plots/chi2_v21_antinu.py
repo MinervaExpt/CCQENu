@@ -12,18 +12,18 @@ from chi2utils import *
 
 NOSYS = True  # I think this means don't look at systematic errors individually
 
-BIN = False
+BIN = False # do the chi2 without binwidth correcting things
 
 debin = True
 
-Ratio = True
+Ratio = True # this is just for plotting
 
-SCALE = 10^39
+FIXEDSCALE = 1.E39
 SCALE = 1.
 
-Mateus = False
+Mateus = False # no longer doing Mateus
 
-Diagonal = False
+Diagonal = False  # ignore offdiagonal terms in chi2
 
 minb = 0
 
@@ -75,11 +75,11 @@ dir = "/Users/schellma/Dropbox/ccqe/v27b"
 #We don't currently have text versions of the external results and they are not implemented in the scripts as they still look for the analysis name standards. i can try to add them to the scripts latter today.
 var = "pzmu_ptmu"
 norm = 1.0
+full = False  # this switches to the full acceptance
 if len(sys.argv)>= 2:
   var = sys.argv[1]
 if len(sys.argv)>=3:
-    norm = sys.argv[2]
-    norm = atof(norm)
+    full = sys.argv[2] == "Full"
 
 if var == "q2":
     dir += "/ver2"
@@ -95,7 +95,7 @@ models = ["CV", "2p2h", "2p2hRPA", "CV2", "PionTune", "RPAPionTune", \
 models = ["CV", "CV2","NA", "piontune", "rpa","rpapiontune", "2p2h", "2p2hrpa",  \
 "2p2hpiontune"]
 if "enu" not in var:
-    models += "GENIE_no2p2h"
+    models.append("GENIE_no2p2h")
 #models = ["CV","NA","GENIE_no2p2h"]
 n = len(models)
 bmodels = models
@@ -112,6 +112,11 @@ for model in bmodels:
 #  models = models + extramodels
 
 print (models)
+
+if "mu" in var:
+    models.append("G18_02a_02_11a")
+    models.append("G18_02b_02_11a")
+    models.append("G18_10a_02_11a")
 
 translate={
 "2p2hrpa":"GENIE+recoil fit+RPA",
@@ -172,18 +177,21 @@ translate={
 "CV_RPA_Res_MINOS":"\qquad+Low Recoil Tune+RPA+$\pi$tune+MINOS low $Q^2$ sup."
 }
 translate={
-"2p2hrpa":"GENIE+Low Recoil Tune+RPA",
-"rpapiontune":"GENIE+RPA+$\pi$tune",
+"2p2hrpa":"GENIE2+Low Recoil Tune+RPA",
+"rpapiontune":"GENIE2+RPA+$\pi$tune",
 "NA":"GENIE 2.12.6 (Default)",
 "GENIE_no2p2h":"GENIE 2.12.6 w/o 2p2h",
 "CV2":"MINERvA Tune v2",
-"piontune":"GENIE+$\pi$tune",
-"2p2h":"GENIE+Low Recoil Tune",
-"2p2hpiontune":"GENIE+Low Recoil Tune+$\pi$tune",
-"2p2hrpapiontune":"GENIE+Low Recoil Tune+RPA+$\pi$tune",
-"rpa":"GENIE+RPA",
+"piontune":"GENIE2+$\pi$tune",
+"2p2h":"GENIE2+Low Recoil Tune",
+"2p2hpiontune":"GENIE2+Low Recoil Tune+$\pi$tune",
+"2p2hrpapiontune":"GENIE2+Low Recoil Tune+RPA+$\pi$tune",
+"rpa":"GENIE2+RPA",
 "CV":"MINERvA Tune v1",
-"CV_RPA_Res_MINOS":"\qquad+Low Recoil Tune+RPA+$\pi$tune+MINOS low $Q^2$ sup."
+"CV_RPA_Res_MINOS":"\qquad+Low Recoil Tune+RPA+$\pi$tune+MINOS low $Q^2$ sup.",
+"G18_02a_02_11a":"GENIE3 G18\_02a\_02\_11a",
+"G18_02b_02_11a":"GENIE3 G18\_02b\_02\_11a",
+"G18_10a_02_11a":"GENIE3 G18\_10a\_02\_11a"
 }
 #models = ["default"]
 #models = ["$\pi$tune","pion_rpa","pion_2p2h"]
@@ -205,10 +213,15 @@ translate={
 
 basehist = "h_pzmu_ptmu_dataCrossSection"
 mcbasehist = "h_pzmu_ptmu_qelike_crossSection"
+geniehist = "ptpz_qelike"
 
 if "enu" == var:
     basehist = "True_Xsection_data_stat"
     mcbasehist = "True_Xsection_data_stat"
+    if full:
+       basehist = "Fid_Xsection_data_stat"
+       mcbasehist = "Fid_Xsection_data_stat"
+      
 
 if "enuQE" == var:
     basehist = "QE_Xsection_data_stat"
@@ -246,6 +259,7 @@ if var in ["ptmu","q2"]:
 
 #thefile = "CrossSection_CV_minervame5A6A6B6C6D6E6F6G_Nominal_ver33_pzmu.root"
 thefile = "XS_pzmu_proj_%s.root"%("CV")
+thegeniefile = "xsection_XXX_50Mcombined_RHC.root"
 #if var in ["pzmu","pzmu_ptmu","ptmu"]:
   
 if var in ["q2"]:
@@ -257,6 +271,8 @@ if var in ["enu","enuQE"]:
   thefile =  thefile.replace(".root","_corrected.root")
 if var not in ["q2"]:
     thefile = thefile.replace("_proj_","_")
+if full:
+    thefile.replace("_corrected","_corrected_ver31")
 datafile = thefile
 print ("Datafile is ",datafile)
 #
@@ -313,10 +329,10 @@ if BIN and var != "enu":
 # void MnvH2DToCSV(std::string name, std::string directory="", double scale=1.0, bool fullprecision=true, bool syserrors=true, bool percentage = true, bool binwidth =true);
 if ("_" in var):
     datahist.MnvH2DToCSV( (datahist.GetName()),"./full",1.,True,True,True,True)
-    datahist.MnvH2DToCSV( (datahist.GetName()),"./fixed",1.E39,False,True,True,True)
+    datahist.MnvH2DToCSV( (datahist.GetName()),"./fixed",FIXEDSCALE,False,True,True,True)
 if ("enu" in var):
     datahist.MnvH1DToCSV( (datahist.GetName()),"./full",1.,True,True,True,False)
-    datahist.MnvH1DToCSV( (datahist.GetName()),"./fixed",1.E39,False,True,True,False)
+    datahist.MnvH1DToCSV( (datahist.GetName()),"./fixed",FIXEDSCALE,False,True,True,False)
 print ("var is ", var)
 #datadraw=datahist.GetCVHistoWithError()
 #datadraw.Scale(1.,"width")
@@ -342,7 +358,7 @@ if proj == "_px":
   test.Print("ALL")
   print ("checked binning")
   oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./full",1.,True,True,True,dobinwidth)
-  oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./fixed",1.E39,False,True,True,dobinwidth)
+  oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./fixed",FIXEDSCALE,False,True,True,dobinwidth)
   datadraw=oneDhist.GetCVHistoWithError()
   
   datadraw.Print("ALL")
@@ -362,7 +378,7 @@ if proj == "_py":
   oneDhist.Write()
   
   oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./full",1.,True,True,True,dobinwidth)
-  oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./fixed",1.E39,False,True,True,dobinwidth)
+  oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./fixed",FIXEDSCALE,False,True,True,dobinwidth)
   oneDhist.Delete()
 if proj == "":
   datavals = readData(datahist)
@@ -419,9 +435,13 @@ for model in models:
     if model != "GENIE_no2p2h":
       mcname = mcname.replace("CV_",model+"_")
       mcname = mcname.replace("CV.",model+".")
-    else:
+    if model == "GENIE_no2p2h":
       mcname = mcname.replace("CV_","NA_")
       mcname = mcname.replace("CV.","NA.")
+    if "G18" in model:
+        mcname = os.path.join(mcdir,"GENIE",thegeniefile)
+        mcname = mcname.replace("XXX",model)
+        print ("GENIE2", model,mcname)
     if not os.path.exists(mcname):
       print (mcname,"does not exist")
     #print "opening", mcname
@@ -465,7 +485,11 @@ for model in models:
       continue
     mchist[model] = MnvH2D()
     print (" try to read in model ", model,mcbasehist)
-    mchist[model] = mcfile[model].Get(mcbasehist).Clone()
+    if "G18" not in model:
+        mchist[model] = mcfile[model].Get(mcbasehist).Clone()
+    else:
+
+        mchist[model] = MnvH2D(mcfile[model].Get(geniehist).Clone())
     if model == "GENIE_no2p2h":
         xcv_2p2h = MnvH2D()
         if "mu" not in var:
@@ -491,7 +515,7 @@ for model in models:
     if "_" in var:
         dobinwidth=True
         mchist[model].MnvH2DToCSV((mchist[model].GetName()),"./full",1.,True,True,True,dobinwidth)
-        mchist[model].MnvH2DToCSV((mchist[model].GetName()),"./fixed",1.E39,False,True,True,dobinwidth)
+        mchist[model].MnvH2DToCSV((mchist[model].GetName()),"./fixed",FIXEDSCALE,False,True,True,dobinwidth)
     mchist[model].Print()
     mchist[model].SetDirectory(0)
     
@@ -538,7 +562,7 @@ for model in models:
         mcdraw[model].SetBinError(bin,0.0)
       #dobinwidth = var != "enu?"
       oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./full",1.,True,True,True,dobinwidth)
-      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./fixed",1.E39,False,True,True,dobinwidth)
+      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./fixed",FIXEDSCALE,False,True,True,dobinwidth)
   
       oneDhist.Write()
       oneDhist.Delete()
@@ -572,7 +596,7 @@ for model in models:
         mcdraw[model].SetBinError(bin,0.0)
       #dobinwidth = var != "enu?"
       oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./full",1.,True,True,True,dobinwidth)
-      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./fixed",1.E39,False,True,True,dobinwidth)
+      oneDhist.MnvH1DToCSV(oneDhist.GetName(),"./fixed",FIXEDSCALE,False,True,True,dobinwidth)
       oneDhist.Write()
       oneDhist.Delete()
     if proj == "":
@@ -626,7 +650,7 @@ print ("got here after reading input")
 onames = {}
   #for model in models:
 #ofile[model] = open(basemodel+var+"_"+model+".tex",'w')
-oname =  "chi2-%s-%s-%f_v20.tex"%(basemodel,var,norm)
+oname =  "chi2-%s-%s-%f_v21.tex"%(basemodel,var,norm)
 ofile["ALL"] = open(oname,'w')
 out = ofile["ALL"]
 top = "\\documentclass[12pt,landscape]{article}\n \\begin{document} \n"
@@ -769,7 +793,7 @@ for model in models:
           chi2diag[i] = chi2cont[i][j]
     
     #print "chi2", model, syst, totchi2, dof, totlogchi2
-    outs =  "%s &\t %10.1f &\t %10.1f \t &(%s)\\\\\n"%(translate[model],totchi2, totlogchi2,model)
+    outs =  "%s &\t %10.1f &\t %10.1f \t \\\\%%(%s)\n"%(translate[model],totchi2, totlogchi2,model)
     bfile.write('\"%s\":[%5.1f,%d],'%(model,totchi2,dof))
     print ("dump of contributions", model)
     print (outs)
@@ -800,7 +824,7 @@ for model in models:
   
 
       mcdraw[model].Write()
-      pname =  basemodel+"%s-%s-v20.pdf" %(var,model)
+      pname =  basemodel+"%s-%s-v21.pdf" %(var,model)
     #  c1[model].SaveAs(pname,"pdf")
       print (" Try to save ",pname)
     #mchist[model].Delete()
