@@ -40,4 +40,7 @@ MINERvA_AntiNeutrino_CCQElike_VAR_TYPE_MODEL_CONTENT_DIM.csv
 
 - px_1d  the px and py are there because these are projections of 2-d histograms
 - py_1d
-- 2d
+- 2d  
+
+In the 2d files, the ordering is column is increasing x-view (pzmu), row is increasing y-view (ptmu).    
+In the covariance and correlation matrix the ordering is pzbin + ptbin*(Npzbin)
