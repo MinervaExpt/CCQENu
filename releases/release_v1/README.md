@@ -1,8 +1,8 @@
 This directory contains csv files for the MINERvA anti-neutrino CCQE-like measurements
 There are two subdirectories:
 
-- **Fixed** is fixed format cross section scaled by 1E39
-- **Full** is full double precision
+- **fixed** is fixed format cross section scaled by 1E39
+- **full** is full double precision
 
 data and model files are stored as follows
 
