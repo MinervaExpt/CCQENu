@@ -1,24 +1,38 @@
-Fixed is fixed format cross section scaled by 1E39
-Full is full double precision
+This directory contains csv files for the MINERvA anti-neutrino CCQE-like measurements
+There are two subdirectories:
 
-data and model files are stored.
+- **Fixed** is fixed format cross section scaled by 1E39
+- **Full** is full double precision
+
+data and model files are stored as follows
 
 filenames are:
 
 MINERvA_AntiNeutrino_CCQElike_VAR_TYPE_MODEL_CONTENT_DIM.csv
 
-*VAR* can be Enu, EnuQE, q2, pzmu, ptmu or pzmu_ptmu
+**VAR** can be Enu, EnuQE, q2, pzmu, ptmu or pzmu_ptmu
 
-*TYPE* can be Data or MC
+**TYPE** can be Data or MC
 
-*MODEL* refers to the GENIE2.12.6 variation:
+**MODEL** refers to the GENIE2.12.6 variation:
 
-GENIE2.12.6 = default GENIE
-2p2h = replaces the GENIE RPA with our tuned 2p2h
-rpa = adds RPA
-piontune = adds pion tune (negligible effect)
-MINERvA_v1 = MINERvA v1 tune (used for extraction)
-MINERvA_v2 = MINERvA v2 tune
-Meas is for data
+- GENIE2.12.6 = default GENIE
+- 2p2h = replaces the GENIE RPA with our tuned 2p2h
+- rpa = adds RPA
+- piontune = adds pion tune (negligible  effect)
+- MINERvA_v1 = MINERvA v1 tune (used for extraction)
+- MINERvA_v2 = MINERvA v2 tune
+- Meas is for data
 
-*CONTENT* can be:
+**CONTENT** can be:
+
+- meta, some description of the files, including scaling, binwidth corrections... 
+- values, the cross section values - in the Fixed directory these are scaled by 1E39.
+- bins, the bins, low edges are listed with the last # being the high end of the last bin 
+- staterrors, statistical errors
+- systerrors, systematic errors
+- errors, combined statistical and systematic
+- covariance, the full covariance matrix
+- correlation, the full correlation matrix
+- vertdump, a dump of all the separate fractional uncertainties due to individual sources
+
