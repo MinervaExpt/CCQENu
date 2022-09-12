@@ -79,7 +79,7 @@ full = False  # this switches to the full acceptance
 if len(sys.argv)>= 2:
   var = sys.argv[1]
 if len(sys.argv)>=3:
-    full = sys.argv[2] == "Full"
+    full = (sys.argv[2] == "Full")
 
 if var == "q2":
     dir += "/ver2"
@@ -96,6 +96,9 @@ models = ["CV", "CV2","NA", "piontune", "rpa","rpapiontune", "2p2h", "2p2hrpa", 
 "2p2hpiontune"]
 if "enu" not in var:
     models.append("GENIE_no2p2h")
+    
+if full:
+    models = ["CV","CV2"]
 #models = ["CV","NA","GENIE_no2p2h"]
 n = len(models)
 bmodels = models
@@ -272,7 +275,7 @@ if var in ["enu","enuQE"]:
 if var not in ["q2"]:
     thefile = thefile.replace("_proj_","_")
 if full:
-    thefile.replace("_corrected","_corrected_ver31")
+    thefile = thefile.replace("_corrected","_corrected_ver31")
 datafile = thefile
 print ("Datafile is ",datafile)
 #
@@ -320,7 +323,11 @@ else:
     
 datahist.SetDirectory(0)
 datahist.Scale(SCALE*norm)
-datahist.SetName("MINERvA_AntiNeutrino_CCQElike_"+var+"_Data_Meas")
+dataname = "MINERvA_AntiNeutrino_CCQElike_"+var+"_Data_Meas"
+if full:
+    dataname = dataname.replace("Meas","MeasFull")
+datahist.SetName(dataname)
+    
 dobinwidth = ("enu" not in var)
 #datahist.Scale(norm)
 if BIN and var != "enu":
@@ -501,6 +508,8 @@ for model in models:
         mchist["GENIE_no2p2h"].Add(xcv_2p2h,-1)
     #mchist[model].SetName(model+"_"+mchist[model].GetTitle())
     mcfilename = ("MINERvA_AntiNeutrino_CCQElike_"+var+"_MC_"+model).replace("_NA","_GENIE2.12.6").replace("_CV2","_MINERvA_v2").replace("_CV","_MINERvA_v1")
+    if full:
+        mcfilename=mcfilename.replace("_MC_","_MCFull_")
     mchist[model].SetName(mcfilename)
     
     print (" read in model ", model)
