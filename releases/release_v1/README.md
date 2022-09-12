@@ -12,7 +12,8 @@ MINERvA_AntiNeutrino_CCQElike_VAR_TYPE_MODEL_CONTENT_DIM.csv
 
 **VAR** can be Enu, EnuQE, q2, pzmu, ptmu or pzmu_ptmu
 
-**TYPE** can be Data or MC
+**TYPE** can be Data or MC    
+DataFull and MCFull refer to the special energy plots corrected to the full angle phase space without the final state proton energy cut. 
 
 **MODEL** refers to the GENIE2.12.6 variation:
 
