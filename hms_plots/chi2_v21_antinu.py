@@ -35,7 +35,7 @@ basemodel="CV"
 
 extramodels= ""
 
-varname = {"q2":"$Q^2$","ptmu":"$p_\perp$","pzmu":"p_\parallel","pzmu_ptmu":"$p_\parallel - p_\perp$","enu":"E_\nu"
+varname = {"q2":"$Q^2$","ptmu":"$p_\perp$","pzmu":"p_\parallel","pzmu_ptmu":"$p_\parallel - p_#perp$","enu":"E_\nu"
 }
 
 
@@ -121,6 +121,7 @@ if "mu" in var:
     models.append("G18_02b_02_11a")
     models.append("G18_10a_02_11a")
 
+titles = {"pzmu":"p_{||}, GeV/c","ptmu":"p_{#perp}, GeV/c","enu":"E_{#nu}, GeV","enuQE":"E_{#nu QE}, GeV","q2":"Q^2_{QE}, GeV^2"}
 translate={
 "2p2hrpa":"GENIE+recoil fit+RPA",
 "rpapiontune":"GENIE+RPA+$\pi$tune",
@@ -333,6 +334,10 @@ dobinwidth = ("enu" not in var)
 if BIN and var != "enu":
     datahist.Scale(1.,"width")
 
+thetitle = titles[var]
+print ("thetitle",thetitle)
+
+datahist.SetTitle(thetitle)
 # void MnvH2DToCSV(std::string name, std::string directory="", double scale=1.0, bool fullprecision=true, bool syserrors=true, bool percentage = true, bool binwidth =true);
 if ("_" in var):
     datahist.MnvH2DToCSV( (datahist.GetName()),"./full",1.,True,True,True,True)
@@ -492,10 +497,14 @@ for model in models:
       continue
     mchist[model] = MnvH2D()
     print (" try to read in model ", model,mcbasehist)
-    if "G18" not in model:
-        mchist[model] = mcfile[model].Get(mcbasehist).Clone()
+    if "G18" not in model:  # is it the special genie?
+        if "enu" not in var:
+            mchist[model] = MnvH2D(mcfile[model].Get(mcbasehist).Clone())
+        else:
+            mchist[model] = MnvH1D()
+            mchist[model] = MnvH1D(mcfile[model].Get(mcbasehist).Clone())
+        
     else:
-
         mchist[model] = MnvH2D(mcfile[model].Get(geniehist).Clone())
     if model == "GENIE_no2p2h":
         xcv_2p2h = MnvH2D()
@@ -511,7 +520,7 @@ for model in models:
     if full:
         mcfilename=mcfilename.replace("_MC_","_MCFull_")
     mchist[model].SetName(mcfilename)
-    
+    mchist[model].SetTitle(titles[var])
     print (" read in model ", model)
     mchist[model].Scale(SCALE)
     if BIN and widthcorr and var != "enu":
@@ -525,6 +534,11 @@ for model in models:
         dobinwidth=True
         mchist[model].MnvH2DToCSV((mchist[model].GetName()),"./full",1.,True,True,True,dobinwidth)
         mchist[model].MnvH2DToCSV((mchist[model].GetName()),"./fixed",FIXEDSCALE,False,True,True,dobinwidth)
+    else:
+        if "enu" in var:
+            dobinwidth = False
+            mchist[model].MnvH1DToCSV((mchist[model].GetName()),"./full",1.,True,True,True,dobinwidth)
+            mchist[model].MnvH1DToCSV((mchist[model].GetName()),"./fixed",FIXEDSCALE,False,True,True,dobinwidth)
     mchist[model].Print()
     mchist[model].SetDirectory(0)
     
