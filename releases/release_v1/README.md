@@ -30,10 +30,10 @@ DataFull and MCFull refer to the special energy plots corrected to the full angl
 - meta, some description of the files, including scaling, binwidth corrections... 
 - values, the cross section values - in the Fixed directory these are scaled by 1E39.
 - bins, the bins, low edges are listed with the last # being the high end of the last bin 
-- staterrors, statistical errors
-- systerrors, systematic errors
-- errors, combined statistical and systematic
-- covariance, the full covariance matrix
+- staterrors, fractional statistical errors
+- systerrors, fractional systematic errors
+- errors, fractional combined statistical and systematic
+- covariance, the full covariance matrix (not fractional)
 - correlation, the full correlation matrix
 - vertdump, a dump of all the separate fractional uncertainties due to individual sources
 
