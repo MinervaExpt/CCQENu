@@ -11,7 +11,7 @@
 #ifndef Hist2DWrapperMap_h
 #define Hist2DWrapperMap_h
 
-//#define HSTDBG
+#define HSTDBG
 
 #include "PlotUtils/Hist2DWrapper.h"
 //#include "PlotUtils/DefaultCVUniverse.h"
@@ -41,6 +41,14 @@ private:
   double m_ymin = 0.0;
   double m_ymax = 0.0;
   std::vector<Double_t> m_ybins;
+  int m_nxrecobins = 0;
+  double m_xrecomin = 0.0;
+  double m_xrecomax = 0.0;
+  std::vector<Double_t> m_xrecobins;
+  int m_nyrecobins = 0;
+  double m_yrecomin = 0.0;
+  double m_yrecomax = 0.0;
+  std::vector<Double_t> m_yrecobins;
   std::map< std::string, std::vector<T*> > m_universes;  // if you are using a vector need to add that
   std::map< std::string, MinervaUnfold::MnvResponse *> m_response; //Need to check how 2D response is done
   bool m_fixedbins;
@@ -58,6 +66,9 @@ public:
   //fixed bins
   inline Hist2DWrapperMap( const std::string name, const std::string title, const Int_t nxbins, const double xmin, const double xmax, const Int_t nybins, const double ymin, const double ymax, std::map< std::string,std::vector<T*>> univs, const std::vector<std::string> tags){
     // just store the config
+#ifdef HSTDBG
+      std::cout << " standard constructor" << std::endl;
+#endif
     m_name = name;
     m_title = title;
     m_nxbins = nxbins;
@@ -66,6 +77,13 @@ public:
     m_nybins = nxbins;
     m_ymin = ymin;
     m_ymax = ymax;
+      
+    m_nxrecobins = nxbins;
+    m_xrecomin = xmin;
+    m_xrecomax = xmax;
+    m_nyrecobins = nxbins;
+    m_yrecomin = ymin;
+    m_yrecomax = ymax;
     m_fixedbins = true;
     //    m_count = 0;
     m_univs = univs;
@@ -88,6 +106,8 @@ public:
     m_title = title;
     m_xbins  = xbins;
     m_ybins  = ybins;
+    m_xrecobins  = xbins;
+    m_yrecobins  = ybins;
     m_fixedbins = false;
     //    m_count = 0 ;
     m_univs = univs;
@@ -100,6 +120,65 @@ public:
     }
     m_decoder = UniverseDecoder(univs);
   }
+
+
+    // constructor
+    //fixed bins
+    // constructor  This one is special for reconstructed/tuned MC so you can build a response.
+    inline Hist2DWrapperMap( const std::string name, const std::string title, const Int_t nxbins, const double xmin, const double xmax, const Int_t nybins, const double ymin, const double ymax, const Int_t nxrecobins, const double xrecomin, const double xrecomax, const Int_t nyrecobins, const double yrecomin, const double yrecomax, std::map< std::string,std::vector<T*>> univs, const std::vector<std::string> tags){
+      // just store the config
+      m_name = name;
+      m_title = title;
+      m_nxbins = nxbins;
+      m_xmin = xmin;
+      m_xmax = xmax;
+      m_nybins = nxbins;
+      m_ymin = ymin;
+      m_ymax = ymax;
+        m_nxrecobins = nxrecobins;
+        m_xrecomin = xrecomin;
+        m_xrecomax = xrecomax;
+        m_nyrecobins = nxrecobins;
+        m_yrecomin = yrecomin;
+        m_yrecomax = yrecomax;
+      m_fixedbins = true;
+      //    m_count = 0;
+      m_univs = univs;
+      m_tags = tags;
+      for (auto tag : tags){
+       // std::string hist_name = tag +"_"+ name;
+        std::string hist_name =  "h2D___"+tag + "___"+ name;
+        m_hists[tag] = PlotUtils::Hist2DWrapper<T>(hist_name.c_str(), title.c_str(), nxbins, xmin, xmax, nybins, ymin, ymax, univs);
+      }
+      m_decoder = UniverseDecoder(univs);
+
+    }
+
+
+    // constructor
+    // variable bins
+    // constructor  This one is special for reconstructed/tuned MC so you can build a response.
+    inline Hist2DWrapperMap( const std::string name, const std::string title, const std::vector<double> xbins,  const std::vector<double> ybins, std::vector<double> xrecobins,  const std::vector<double> yrecobins, std::map< std::string, std::vector<T*> > univs, std::vector<std::string> tags){ //2DWrapper doesn't need number of bins for variable bin width
+      // just store the config
+      m_name = name;
+      m_title = title;
+      m_xbins  = xbins;
+      m_ybins  = ybins;
+      m_xrecobins  = xrecobins;
+      m_yrecobins  = yrecobins;
+
+      m_fixedbins = false;
+      //    m_count = 0 ;
+      m_univs = univs;
+      m_tags = tags;
+      for (auto tag : tags){
+        //std::string hist_name = name+"_"+ tag;
+        std::string hist_name = "h2D___"+tag + "___" + name;
+        m_hists[tag] = PlotUtils::Hist2DWrapper<T>(hist_name.c_str(), title.c_str(), xrecobins, yrecobins, univs);
+        m_hashist[tag] = true;
+      }
+      m_decoder = UniverseDecoder(univs);
+    }
 
 
   // map that helps you find the index of a universe.
@@ -140,21 +219,33 @@ public:
 
       if (m_fixedbins){
         TH2D tmp = TH2D("tmp", m_title.c_str(), m_nxbins, m_xmin, m_xmax, m_nybins, m_ymin, m_ymax);
-
+        TH2D recotmp = TH2D("recotmp", m_title.c_str(), m_nxrecobins, m_xrecomin, m_xrecomax, m_nyrecobins, m_yrecomin, m_yrecomax);
+          
         std::vector<Double_t> xedges;
         std::vector<Double_t> yedges;
+        std::vector<Double_t> xrecoedges;
+        std::vector<Double_t> yrecoedges;
         for (int i = 1; i <= m_nxbins+1; i++){
           xedges.push_back(tmp.GetXaxis()->GetBinLowEdge(i));
         }
         for (int i = 1; i <= m_nybins+1; i++){
           yedges.push_back(tmp.GetYaxis()->GetBinLowEdge(i));
         }
-        m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nxbins, &xedges[0], m_nybins, &yedges[0], m_nxbins, &xedges[0], m_nybins, &yedges[0], m_response_bands); //Reco is first set of bin params, truth is second set
+        for (int i = 1; i <= m_nxrecobins+1; i++){
+            xrecoedges.push_back(recotmp.GetXaxis()->GetBinLowEdge(i));
+        }
+        for (int i = 1; i <= m_nyrecobins+1; i++){
+            yrecoedges.push_back(recotmp.GetYaxis()->GetBinLowEdge(i));
+        }
+        m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nxrecobins, &xrecoedges[0], m_nyrecobins, &yrecoedges[0], m_nxbins, &xedges[0], m_nybins, &yedges[0], m_response_bands);
+        //Reco is first set of bin params, truth is second set
       }
       else{
         m_nxbins = m_xbins.size()-1;
         m_nybins = m_ybins.size()-1;
-        m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nxbins, &m_xbins[0], m_nybins, &m_ybins[0], m_nxbins, &m_xbins[0], m_nybins, &m_ybins[0], m_response_bands);
+        m_nxrecobins = m_xrecobins.size()-1;
+        m_nyrecobins = m_yrecobins.size()-1;
+        m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nxrecobins, &m_xrecobins[0], m_nyrecobins, &m_yrecobins[0], m_nxbins, &m_xbins[0], m_nybins, &m_ybins[0], m_response_bands);
       }
       m_hasresponse[tag] = true;
     }
@@ -164,21 +255,26 @@ public:
 
   };
 
-  //  inline  std::vector<std::string> GetHistKeys(){
-  //    std::vector<std::string> retval;
-  //    for (auto  const& element : m_hists) {
-  //      retval.push_back(element.first);
-  //    }
-  //    return retval;
-  //  };
+ 
 
   //  can we make this smarter?
   inline void Fill2D(const std::string tag, const T* universe, const Double_t x_value, const Double_t y_value, const Double_t weight=1.0){
+
     m_hists[tag].FillUniverse(universe, x_value, y_value, weight);
   }
 
   inline void FillResponse2D(const std::string tag, const T* univ, const double x_value, const double y_value, const double x_truth, const double y_truth, const double weight=1.0){ //TODO
     std::string name = univ->ShortName();
+    if (name == "cv" || name == "CV"){
+      MnvH2D * a;
+      MnvH2D * b;
+      MnvH2D * c;
+      bool t= m_response[tag]->GetMigrationObjects(a, b, c);
+      std::cout << "RESPONSE " << tag << " " <<  a->GetName() << std::endl;
+      a->Delete();
+      b->Delete();
+      c->Delete();
+    }
     int iuniv = m_decoder[univ];
     //std::cout << " fillresponse " << name << " " << iuniv << std::endl;
     m_response[tag]->Fill(x_value, y_value, x_truth, y_truth, name, iuniv, weight);

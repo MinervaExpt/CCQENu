@@ -59,6 +59,14 @@ std::vector<std::string> split (std::string s, std::string delimiter) {
   return res;
 }
 
+void ZeroDiagonal(TMatrixD &m){
+  std::cout << " TRACE: enter ZeroDiagonal  "   << std::endl;
+  int n = m.GetNrows();
+  for (int i = 0; i < n; i++){
+    m[i][i] = 0;
+  }
+}
+
 // Returns a map of bools for { 'fluxnorm', 'xfluxnorm', 'yfluxnorm'} based off "fluxnorm" set in variable config
 // Used to tell the code when and how to use an integrated flux normalization vs an energy dependent flux normalization
 std::map< std::string, bool > CheckFluxNorm( NuConfig* configvar, std::string variable){
@@ -299,12 +307,44 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
   bkgsub->Print();
   iseltruhist->Print();
   imcsighist->Print();
+  
+  // now to get the covariance matrix for the unfolding itself using only the central value  This is the method Amit used
   // make an empty covariance matrix for the unfolding to give back to you
   std::cout << " starting 2D unfolding " << std::endl;
   // bool data_unfolded = unfold.UnfoldHisto2D(unsmeared,migration,mc,iseltruhist,bkgsub,num_iter,true,true);
+  std::cout << "imcsighist " << imcsighist->Integral() << " " << imcsighist->Integral() << std::endl;
+  std::cout << "iseltruhist " << iseltruhist->Integral() << " " << iseltruhist->Integral() << std::endl;
+  std::cout << "bkgsub " << bkgsub->Integral() << " " << bkgsub->Integral() << std::endl;
+  std::cout << "migration x y" << migration->ProjectionX()->Integral() << " " << migration->ProjectionY()->Integral() << std::endl;
   bool data_unfolded = unfold.UnfoldHisto2D(unsmeared,migration,imcsighist,iseltruhist,bkgsub,num_iter,true,true);
   std::cout << " Done with 2D unfolding " << std::endl;
-
+  std::cout << "unsmeared " << unsmeared->Integral() << " " << unsmeared->Integral() << std::endl;
+  bkgsub->Print("ALL");
+  imcsighist->Print("ALL");
+  iseltruhist->Print("ALL");
+  // extra code just to get CV covmx
+  TH2D* hUnfoldedDummy=new TH2D(unsmeared->GetCVHistoWithStatError());
+  TH2D* hMigrationDummy=new TH2D(migration->GetCVHistoWithStatError());
+  TH2D* hRecoDummy=new TH2D(imcsighist->GetCVHistoWithStatError());
+  TH2D* hTruthDummy=new TH2D(iseltruhist->GetCVHistoWithStatError());
+  TH2D* hBGSubDataDummy=new TH2D(bkgsub->GetCVHistoWithStatError());
+  TMatrixD unfoldingCovMatrixOrig_hist_type;
+  std::cout << "HERE for COVARIANCE " << std::endl;
+  //unfoldingCovMatrixOrig_hist_type.Print("ALL");
+  unfold.UnfoldHisto2D(hUnfoldedDummy, unfoldingCovMatrixOrig_hist_type, hMigrationDummy, hRecoDummy, hTruthDummy, hBGSubDataDummy, num_iter);
+  int correctNbins = hUnfoldedDummy->fN;
+  int matrixRows = unfoldingCovMatrixOrig_hist_type.GetNrows();
+  
+  if(correctNbins!=matrixRows){
+  
+  cout << "****************************************************************************" << endl;
+ cout << "*  Fixing unfolding matrix size because of RooUnfold bug. From " << matrixRows << " to " << correctNbins << endl;
+ cout << "****************************************************************************" << endl;
+ // It looks like this DTRT, since the extra last two bins don't have any content
+ unfoldingCovMatrixOrig_hist_type.ResizeTo(correctNbins, correctNbins);
+  }
+ ZeroDiagonal(unfoldingCovMatrixOrig_hist_type);
+  unsmeared->PushCovMatrix("unfoldingCov",unfoldingCovMatrixOrig_hist_type);
   // Commenting out since may not be necessary.
   SyncBands(unsmeared);
   return unsmeared;
@@ -545,8 +585,12 @@ template<class MnvHistoType>
       for(auto categories : histsND[type]){
         std::string category = categories.first;
         if (category.find(dat)==std::string::npos){
-          if (histsND[type][category] != 0) histsND[type][category]->Scale(POTScale);
-          if (DEBUG) std::cout << " POTScaled " << category << std::endl;
+          
+          if (histsND[type][category] != 0) {
+            double t = histsND[type][category]->Integral();
+            histsND[type][category]->Scale(POTScale);
+            if (DEBUG) std::cout << " POTScaled " << histsND[type][category]->GetName() << " " << t << " " << histsND[type][category]->Integral() <<  std::endl;
+          }
         }
       }
     }
@@ -594,10 +638,11 @@ template<class MnvHistoType>
     MnvH2D* iresponse;
     if (responseND.count("response_migration_tuned") && usetune){
         iresponse = responseND["response_migration_tuned"][sig];
-        std::cout << " using " << iresponse->GetName() << std::endl;
+        std::cout << " using " << iresponse->GetName() <<  " " << iresponse->ProjectionX()->Integral()<< " " <<iresponse->ProjectionY()->Integral()<< std::endl;
     }
     else{
         iresponse = responseND["response_migration"][sig];
+        std::cout << " using " << iresponse->GetName() <<  " " << iresponse->ProjectionX()->Integral()<< " " <<iresponse->ProjectionY()->Integral()<< std::endl;
     }
     // TODO: POTScale by if (not data) --> POTScale
 
@@ -614,7 +659,7 @@ template<class MnvHistoType>
       std::cout << " no sig for " << variable << std::endl;
       return 1;
     }
-    // imcsighist->Scale(POTScale);
+    //imcsighist->Scale(POTScale);
     imcsighist->Print();
     imcsighist->Write();
     // if (DEBUG) std::cout << " MC sig scaled by POT for " << variable << std::endl;
@@ -630,11 +675,13 @@ template<class MnvHistoType>
     }
     
     // if (DEBUG) std::cout << " MC bkg scaled by POT for " << variable << std::endl;
-
+ 
     // Where response is scaled by POT.
     if(iresponse!=0){
-      iresponse->Scale(POTScale);
-      if (DEBUG) std::cout << " response scaled by POT for " << variable << std::endl;
+      // HACK as the response seems to have gotten the wrong normalization
+      double fix = imcsighist->Integral()/iresponse->ProjectionX()->Integral();
+      iresponse->Scale(fix);
+      if (DEBUG) std::cout << " HACK? response scaled by " << fix << " for " << iresponse->GetName() << "POTScale would be "<< POTScale<< std::endl;
     }
 
     //==================================Make MC=====================================
@@ -804,6 +851,7 @@ template<class MnvHistoType>
 
     PlotCVAndError(canvas,sigma,sigmaMC, stuned+sample + "_"+"sigma" ,true,logscale,binwid);
     PlotErrorSummary(canvas,sigma,stuned+sample + "_"+"Cross Section Systematics" ,0);
+    
 
     //============================Binwidth Normalization============================
     // Just a check on bin width corrections...
