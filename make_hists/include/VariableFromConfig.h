@@ -453,7 +453,7 @@ public:
       m_selected_mc_reco.FillResponse(tag, univ, value, truth, weight);
     }
     if(hasTunedMC[tag]){
-      m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight);
+      m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight*scale);
     }
   }
 

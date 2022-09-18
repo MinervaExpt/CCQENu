@@ -51,6 +51,8 @@ private:
   std::vector<Double_t> m_yrecobins;
   std::map< std::string, std::vector<T*> > m_universes;  // if you are using a vector need to add that
   std::map< std::string, MinervaUnfold::MnvResponse *> m_response; //Need to check how 2D response is done
+  std::map< std::string, MinervaUnfold::MnvResponse *> m_response_tuned; //Need to check how 2D response is done
+ 
   bool m_fixedbins;
   int m_count;
   std::map<const std::string, bool> m_hashist;
@@ -263,21 +265,14 @@ public:
     m_hists[tag].FillUniverse(universe, x_value, y_value, weight);
   }
 
-  inline void FillResponse2D(const std::string tag, const T* univ, const double x_value, const double y_value, const double x_truth, const double y_truth, const double weight=1.0){ //TODO
+  inline void FillResponse2D(const std::string tag, const T* univ, const double x_value, const double y_value, const double x_truth, const double y_truth, const double weight=1.0, const double scale = 1.0){ //TODO
     std::string name = univ->ShortName();
-    if (name == "cv" || name == "CV"){
-      MnvH2D * a;
-      MnvH2D * b;
-      MnvH2D * c;
-      bool t= m_response[tag]->GetMigrationObjects(a, b, c);
-      std::cout << "RESPONSE " << tag << " " <<  a->GetName() << std::endl;
-      a->Delete();
-      b->Delete();
-      c->Delete();
-    }
+
     int iuniv = m_decoder[univ];
     //std::cout << " fillresponse " << name << " " << iuniv << std::endl;
-    m_response[tag]->Fill(x_value, y_value, x_truth, y_truth, name, iuniv, weight);
+    
+    m_response[tag]->Fill(x_value, y_value, x_truth, y_truth, name, iuniv, weight*scale);
+    
   }
 
   inline int GetNhists(){return m_hists.size();}

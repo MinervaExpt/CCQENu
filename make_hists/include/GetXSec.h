@@ -315,7 +315,12 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
   std::cout << "imcsighist " << imcsighist->Integral() << " " << imcsighist->Integral() << std::endl;
   std::cout << "iseltruhist " << iseltruhist->Integral() << " " << iseltruhist->Integral() << std::endl;
   std::cout << "bkgsub " << bkgsub->Integral() << " " << bkgsub->Integral() << std::endl;
+  
   std::cout << "migration x y" << migration->ProjectionX()->Integral() << " " << migration->ProjectionY()->Integral() << std::endl;
+  if (imcsighist->Integral() != migration->ProjectionX()->Integral() ){
+    std::cout << " make migration matrix have same scale as imcsighist" << std::endl;
+    migration->Scale(imcsighist->Integral()/migration->ProjectionX()->Integral());
+  }
   bool data_unfolded = unfold.UnfoldHisto2D(unsmeared,migration,imcsighist,iseltruhist,bkgsub,num_iter,true,true);
   std::cout << " Done with 2D unfolding " << std::endl;
   std::cout << "unsmeared " << unsmeared->Integral() << " " << unsmeared->Integral() << std::endl;

@@ -81,10 +81,10 @@ void FillResponse(std::string tag,CVUniverse* univ, double weight,
       double reco_val = v->GetRecoValue(*univ, 0);
       double true_val = v->GetTrueValue(*univ, 0);
       if(v->m_tunedmc!=1){
-        v->FillResponse(tag,univ,reco_val,true_val,weight);
+        v->FillResponse(tag,univ,reco_val,true_val,weight,1.0);
       }
       if(v->hasTunedMC[tag] && scale>=0.){
-        v->FillResponse(tag,univ,reco_val,true_val,scale*weight);
+        v->FillResponse(tag,univ,reco_val,true_val,weight,scale);
       }
     }
   }
@@ -94,12 +94,9 @@ void FillResponse(std::string tag,CVUniverse* univ, double weight,
       double reco_val_y = v2->GetRecoValueY(*univ, 0);
       double true_val_x = v2->GetTrueValueX(*univ, 0);
       double true_val_y = v2->GetTrueValueY(*univ, 0);
-      if(v2->m_tunedmc!=1){
-        v2->FillResponse2D(tag,univ,reco_val_x,reco_val_y,true_val_x,true_val_y,weight);
-      }
-      if(v2->hasTunedMC[tag] && scale>=0.){
-        v2->FillResponse2D(tag,univ,reco_val_x,reco_val_y,true_val_x,true_val_y,scale*weight);
-      }
+// the tuned/notuned is filled in separately
+        v2->FillResponse2D(tag,univ,reco_val_x,reco_val_y,true_val_x,true_val_y,weight,scale);
+      
     }
   }
 }

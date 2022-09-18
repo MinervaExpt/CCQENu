@@ -407,12 +407,12 @@ public:
 
 
 
-  inline void FillResponse2D(const std::string tag, CVUniverse* univ, const double x_value, const double y_value, const double x_truth, const double y_truth, const double weight=1.0){ //From Hist2DWrapperMap
+  inline void FillResponse2D(const std::string tag, CVUniverse* univ, const double x_value, const double y_value, const double x_truth, const double y_truth, const double weight, const double scale=1.0){ //From Hist2DWrapperMap
     if(hasMC[tag] && m_tunedmc!=1){
-      m_selected_mc_reco.FillResponse2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
+      m_selected_mc_reco.FillResponse2D(tag, univ, x_value, y_value, x_truth, y_truth, weight, 1.0); //value here is reco
     }
     if(hasTunedMC[tag]){
-      m_tuned_mc_reco.FillResponse2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
+      m_tuned_mc_reco.FillResponse2D(tag, univ, x_value, y_value, x_truth, y_truth, weight, scale); //value here is reco
     }
   }
 
