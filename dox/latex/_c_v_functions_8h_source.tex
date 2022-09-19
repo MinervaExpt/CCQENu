@@ -1,0 +1,231 @@
+\hypertarget{_c_v_functions_8h_source}{}\doxysection{CVFunctions.\+h}
+\label{_c_v_functions_8h_source}\index{make\_hists/include/CVFunctions.h@{make\_hists/include/CVFunctions.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{2 \textcolor{comment}{// Place to put a map of CVUniverse functions}}
+\DoxyCodeLine{3 \textcolor{comment}{//}}
+\DoxyCodeLine{4 \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef CVFUNCTIONS\_H}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define CVFUNCTIONS\_H}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}include/CVUniverse.h"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <functional>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <cassert>}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{template} <\textcolor{keyword}{class} CVUNIVERSE>}
+\DoxyCodeLine{19 \textcolor{keyword}{class }\mbox{\hyperlink{class_c_v_functions}{CVFunctions}}\{}
+\DoxyCodeLine{20   }
+\DoxyCodeLine{21   \textcolor{keyword}{typedef} std::function<double(\textcolor{keyword}{const} CVUNIVERSE\&)> PointerToCVUniverseFunction;}
+\DoxyCodeLine{22   \textcolor{keyword}{typedef} std::function<int(\textcolor{keyword}{const} CVUNIVERSE\&)> PointerToCVUniverseIntFunction;}
+\DoxyCodeLine{23   std::map<const std::string, PointerToCVUniverseFunction> recofunctions;}
+\DoxyCodeLine{24   std::map<const std::string, PointerToCVUniverseFunction> truefunctions;}
+\DoxyCodeLine{25   std::map<const std::string, PointerToCVUniverseIntFunction> recointfunctions;}
+\DoxyCodeLine{26   std::map<const std::string, PointerToCVUniverseIntFunction> trueintfunctions;}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{keyword}{public}:}
+\DoxyCodeLine{29   \mbox{\hyperlink{class_c_v_functions}{CVFunctions}}()\{}
+\DoxyCodeLine{30     recofunctions[\textcolor{stringliteral}{"{}ZVertex"{}}] = \&CVUNIVERSE::GetZVertex;}
+\DoxyCodeLine{31     truefunctions[\textcolor{stringliteral}{"{}TrueZVertex"{}}] = \&CVUNIVERSE::GetTrueZVertex;}
+\DoxyCodeLine{32     }
+\DoxyCodeLine{33     recofunctions[\textcolor{stringliteral}{"{}ApothemX"{}}] = \&CVUNIVERSE::GetApothemX;}
+\DoxyCodeLine{34     truefunctions[\textcolor{stringliteral}{"{}TrueApothemX"{}}] = \&CVUNIVERSE::GetTrueApothemX;}
+\DoxyCodeLine{35        }
+\DoxyCodeLine{36     recofunctions[\textcolor{stringliteral}{"{}ApothemY"{}}] = \&CVUNIVERSE::GetApothemY;}
+\DoxyCodeLine{37     truefunctions[\textcolor{stringliteral}{"{}TrueApothemY"{}}] = \&CVUNIVERSE::GetTrueApothemY;}
+\DoxyCodeLine{38        }
+\DoxyCodeLine{39     recofunctions[\textcolor{stringliteral}{"{}EnuCCQEGeV"{}}] = \&CVUNIVERSE::GetEnuCCQEGeV;}
+\DoxyCodeLine{40     truefunctions[\textcolor{stringliteral}{"{}TrueEnuCCQEGeV"{}}] = \&CVUNIVERSE::GetTrueEnuCCQEGeV;}
+\DoxyCodeLine{41     }
+\DoxyCodeLine{42     recofunctions[\textcolor{stringliteral}{"{}EnuHadGeV"{}}] = \&CVUNIVERSE::GetEnuHadGeV;}
+\DoxyCodeLine{43     truefunctions[\textcolor{stringliteral}{"{}TrueEnuGeV"{}}] = \&CVUNIVERSE::GetTrueEnuGeV;}
+\DoxyCodeLine{44     }
+\DoxyCodeLine{45     recofunctions[\textcolor{stringliteral}{"{}PmuGeV"{}}] = \&CVUNIVERSE::GetPmuGeV;}
+\DoxyCodeLine{46     truefunctions[\textcolor{stringliteral}{"{}TruePmuGeV"{}}] = \&CVUNIVERSE::GetTruePmuGeV;}
+\DoxyCodeLine{47     }
+\DoxyCodeLine{48     recofunctions[\textcolor{stringliteral}{"{}PparMuGeV"{}}] = \&CVUNIVERSE::GetPparMuGeV;}
+\DoxyCodeLine{49     truefunctions[\textcolor{stringliteral}{"{}TruePparMuGeV"{}}] = \&CVUNIVERSE::GetTruePparMuGeV;}
+\DoxyCodeLine{50     }
+\DoxyCodeLine{51     recofunctions[\textcolor{stringliteral}{"{}PperpMuGeV"{}}] = \&CVUNIVERSE::GetPperpMuGeV;}
+\DoxyCodeLine{52     truefunctions[\textcolor{stringliteral}{"{}TruePperpMuGeV"{}}] = \&CVUNIVERSE::GetTruePperpMuGeV;}
+\DoxyCodeLine{53     }
+\DoxyCodeLine{54     recofunctions[\textcolor{stringliteral}{"{}Q2QEGeV"{}}] = \&CVUNIVERSE::GetQ2QEGeV;}
+\DoxyCodeLine{55     truefunctions[\textcolor{stringliteral}{"{}TrueQ2QEGeV"{}}] = \&CVUNIVERSE::GetTrueQ2QEGeV;}
+\DoxyCodeLine{56     truefunctions[\textcolor{stringliteral}{"{}TrueQ2GeV"{}}] = \&CVUNIVERSE::GetTrueQ2GeV;}
+\DoxyCodeLine{57     }
+\DoxyCodeLine{58     recofunctions[\textcolor{stringliteral}{"{}Curvature"{}}] = \&CVUNIVERSE::GetCurvature;}
+\DoxyCodeLine{59     truefunctions[\textcolor{stringliteral}{"{}TrueCurvature"{}}] = \&CVUNIVERSE::GetTrueCurvature;}
+\DoxyCodeLine{60     }
+\DoxyCodeLine{61     recofunctions[\textcolor{stringliteral}{"{}RecoilEnergyGeV"{}}] = \&CVUNIVERSE::GetRecoilEnergyGeV;}
+\DoxyCodeLine{62     truefunctions[\textcolor{stringliteral}{"{}TrueRecoilEnergyGeV"{}}] = \&CVUNIVERSE::GetTrueRecoilEnergyGeV;}
+\DoxyCodeLine{63     }
+\DoxyCodeLine{64     recofunctions[\textcolor{stringliteral}{"{}Log10RecoilEnergyGeV"{}}] = \&CVUNIVERSE::GetLog10RecoilEnergyGeV;}
+\DoxyCodeLine{65     truefunctions[\textcolor{stringliteral}{"{}TrueLog10RecoilEnergyGeV"{}}] = \&CVUNIVERSE::GetTrueLog10RecoilEnergyGeV;}
+\DoxyCodeLine{66     \textcolor{comment}{// there is not true value}}
+\DoxyCodeLine{67     }
+\DoxyCodeLine{68     recofunctions[\textcolor{stringliteral}{"{}ThetamuDegrees"{}}] = \&CVUNIVERSE::GetThetamuDegrees;}
+\DoxyCodeLine{69     truefunctions[\textcolor{stringliteral}{"{}TrueThetamuDegrees"{}}] = \&CVUNIVERSE::GetTrueThetamuDegrees;}
+\DoxyCodeLine{70     }
+\DoxyCodeLine{71     recofunctions[\textcolor{stringliteral}{"{}DeadTime"{}}] = \&CVUNIVERSE::GetDeadTime;}
+\DoxyCodeLine{72     }
+\DoxyCodeLine{73     recofunctions[\textcolor{stringliteral}{"{}Multiplicity"{}}] = \&CVUNIVERSE::GetMultiplicity;}
+\DoxyCodeLine{74     recointfunctions[\textcolor{stringliteral}{"{}Multiplicity"{}}] = \&CVUNIVERSE::GetMultiplicity;}
+\DoxyCodeLine{75       }
+\DoxyCodeLine{76       \textcolor{comment}{// truth only variables for studies}}
+\DoxyCodeLine{77       }
+\DoxyCodeLine{78       truefunctions[\textcolor{stringliteral}{"{}MCTargetA"{}}] = \&CVUNIVERSE::GetMCTargetA;}
+\DoxyCodeLine{79       }
+\DoxyCodeLine{80       truefunctions[\textcolor{stringliteral}{"{}MCTargetZ"{}}] = \&CVUNIVERSE::GetMCTargetZ;}
+\DoxyCodeLine{81       }
+\DoxyCodeLine{82       truefunctions[\textcolor{stringliteral}{"{}MCTargetNucleon"{}}] = \&CVUNIVERSE::GetMCTargetNucleon;}
+\DoxyCodeLine{83       }
+\DoxyCodeLine{84       recofunctions[\textcolor{stringliteral}{"{}MCTargetA"{}}] = \&CVUNIVERSE::GetMCTargetA;}
+\DoxyCodeLine{85       }
+\DoxyCodeLine{86       recofunctions[\textcolor{stringliteral}{"{}MCTargetZ"{}}] = \&CVUNIVERSE::GetMCTargetZ;}
+\DoxyCodeLine{87       }
+\DoxyCodeLine{88       recofunctions[\textcolor{stringliteral}{"{}MCTargetNucleon"{}}] = \&CVUNIVERSE::GetMCTargetNucleon;}
+\DoxyCodeLine{89       }
+\DoxyCodeLine{90       recofunctions[\textcolor{stringliteral}{"{}Dummy"{}}]= \&CVUNIVERSE::Dummy;}
+\DoxyCodeLine{91       }
+\DoxyCodeLine{92       truefunctions[\textcolor{stringliteral}{"{}Dummy"{}}]= \&CVUNIVERSE::Dummy;}
+\DoxyCodeLine{93     }
+\DoxyCodeLine{94     \textcolor{comment}{// integer functions for equals}}
+\DoxyCodeLine{95     }
+\DoxyCodeLine{96     recointfunctions[\textcolor{stringliteral}{"{}IsMinosMatchTrack"{}}] = \&CVUNIVERSE::GetIsMinosMatchTrack;}
+\DoxyCodeLine{97   }
+\DoxyCodeLine{98     recointfunctions[\textcolor{stringliteral}{"{}NuHelicity"{}}] = \&CVUNIVERSE::GetNuHelicity;}
+\DoxyCodeLine{99     }
+\DoxyCodeLine{100     recointfunctions[\textcolor{stringliteral}{"{}GoodRecoil"{}}] = \&CVUNIVERSE::GetGoodRecoil;}
+\DoxyCodeLine{101     }
+\DoxyCodeLine{102     trueintfunctions[\textcolor{stringliteral}{"{}TruthIsCCQELike"{}}] = \&CVUNIVERSE::GetTruthIsCCQELike;}
+\DoxyCodeLine{103     trueintfunctions[\textcolor{stringliteral}{"{}TruthIsCCQELikeAll"{}}] = \&CVUNIVERSE::GetTruthIsCCQELikeAll;}
+\DoxyCodeLine{104     }
+\DoxyCodeLine{105     trueintfunctions[\textcolor{stringliteral}{"{}TruthIsCC"{}}] = \&CVUNIVERSE::GetTruthIsCC;}
+\DoxyCodeLine{106     }
+\DoxyCodeLine{107     trueintfunctions[\textcolor{stringliteral}{"{}TruthNuPDG"{}}] = \&CVUNIVERSE::GetTruthNuPDG;}
+\DoxyCodeLine{108     }
+\DoxyCodeLine{109     trueintfunctions[\textcolor{stringliteral}{"{}MCIntType"{}}] = \&CVUNIVERSE::GetMCIntType;}
+\DoxyCodeLine{110       }
+\DoxyCodeLine{111       trueintfunctions[\textcolor{stringliteral}{"{}MCTargetA"{}}] = \&CVUNIVERSE::GetMCTargetA;}
+\DoxyCodeLine{112       }
+\DoxyCodeLine{113       trueintfunctions[\textcolor{stringliteral}{"{}MCTargetZ"{}}] = \&CVUNIVERSE::GetMCTargetZ;}
+\DoxyCodeLine{114       }
+\DoxyCodeLine{115       trueintfunctions[\textcolor{stringliteral}{"{}MCTargetNucleon"{}}] = \&CVUNIVERSE::GetMCTargetNucleon;}
+\DoxyCodeLine{116       }
+\DoxyCodeLine{117       recointfunctions[\textcolor{stringliteral}{"{}MCTargetA"{}}] = \&CVUNIVERSE::GetMCTargetA;}
+\DoxyCodeLine{118       }
+\DoxyCodeLine{119       recointfunctions[\textcolor{stringliteral}{"{}MCTargetZ"{}}] = \&CVUNIVERSE::GetMCTargetZ;}
+\DoxyCodeLine{120       }
+\DoxyCodeLine{121       recointfunctions[\textcolor{stringliteral}{"{}MCTargetNucleon"{}}] = \&CVUNIVERSE::GetMCTargetNucleon;}
+\DoxyCodeLine{122       }
+\DoxyCodeLine{123       recointfunctions[\textcolor{stringliteral}{"{}Dummy"{}}]= \&CVUNIVERSE::Dummy;}
+\DoxyCodeLine{124       trueintfunctions[\textcolor{stringliteral}{"{}Dummy"{}}]= \&CVUNIVERSE::Dummy;}
+\DoxyCodeLine{125       }
+\DoxyCodeLine{126       }
+\DoxyCodeLine{127     }
+\DoxyCodeLine{128     \textcolor{comment}{// -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ Sean Neutrino Functions -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{129   }
+\DoxyCodeLine{130     \textcolor{comment}{// Interaction Vertex}}
+\DoxyCodeLine{131 }
+\DoxyCodeLine{132     recointfunctions[\textcolor{stringliteral}{"{}HasInteractionVertex"{}}] = \&CVUNIVERSE::GetHasInteractionVertex;}
+\DoxyCodeLine{133     }
+\DoxyCodeLine{134     \textcolor{comment}{// Isolated Blobs and Charged Pions}}
+\DoxyCodeLine{135     }
+\DoxyCodeLine{136     recofunctions[\textcolor{stringliteral}{"{}NBlobs"{}}] = \&CVUNIVERSE::GetNBlobs;}
+\DoxyCodeLine{137     }
+\DoxyCodeLine{138     recointfunctions[\textcolor{stringliteral}{"{}HasMichelElectron"{}}] = \&CVUNIVERSE::GetHasMichelElectron;}
+\DoxyCodeLine{139     recointfunctions[\textcolor{stringliteral}{"{}NMichel"{}}] = \&CVUNIVERSE::GetNMichel;}
+\DoxyCodeLine{140     recofunctions[\textcolor{stringliteral}{"{}NMichel"{}}] = \&CVUNIVERSE::GetNMichel;}
+\DoxyCodeLine{141     recointfunctions[\textcolor{stringliteral}{"{}ImprovedNMichel"{}}] = \&CVUNIVERSE::GetImprovedNMichel;}
+\DoxyCodeLine{142     recofunctions[\textcolor{stringliteral}{"{}ImprovedNMichel"{}}] = \&CVUNIVERSE::GetImprovedNMichel;}
+\DoxyCodeLine{143     trueintfunctions[\textcolor{stringliteral}{"{}TruthHasMichel"{}}] = \&CVUNIVERSE::GetTruthHasMichel;}
+\DoxyCodeLine{144     truefunctions[\textcolor{stringliteral}{"{}TruthHasMichel"{}}] = \&CVUNIVERSE::GetTruthHasMichel;}
+\DoxyCodeLine{145     trueintfunctions[\textcolor{stringliteral}{"{}TruthHasImprovedMichel"{}}] = \&CVUNIVERSE::GetTruthHasImprovedMichel;}
+\DoxyCodeLine{146     truefunctions[\textcolor{stringliteral}{"{}TruthHasImprovedMichel"{}}] = \&CVUNIVERSE::GetTruthHasImprovedMichel;}
+\DoxyCodeLine{147 }
+\DoxyCodeLine{148     recointfunctions[\textcolor{stringliteral}{"{}AllExtraTracksProtons"{}}] = \&CVUNIVERSE::GetAllExtraTracksProtons;}
+\DoxyCodeLine{149     recointfunctions[\textcolor{stringliteral}{"{}IsPrimaryProton"{}}] = \&CVUNIVERSE::GetIsPrimaryProton;}
+\DoxyCodeLine{150     recofunctions[\textcolor{stringliteral}{"{}PrimaryProtonScore"{}}] = \&CVUNIVERSE::GetPrimaryProtonScore;}
+\DoxyCodeLine{151     trueintfunctions[\textcolor{stringliteral}{"{}TruthHasSingleProton"{}}] = \&CVUNIVERSE::GetTruthHasSingleProton;}
+\DoxyCodeLine{152     }
+\DoxyCodeLine{153     \textcolor{comment}{// genie particle counts}}
+\DoxyCodeLine{154     trueintfunctions[\textcolor{stringliteral}{"{}TrueChargedPionCount"{}}] = \&CVUNIVERSE::GetTrueChargedPionCount;}
+\DoxyCodeLine{155     truefunctions[\textcolor{stringliteral}{"{}TrueChargedPionCount"{}}] = \&CVUNIVERSE::GetTrueChargedPionCount;}
+\DoxyCodeLine{156     trueintfunctions[\textcolor{stringliteral}{"{}TrueNeutralPionCount"{}}] = \&CVUNIVERSE::GetTrueNeutralPionCount;}
+\DoxyCodeLine{157     truefunctions[\textcolor{stringliteral}{"{}TrueNeutralPionCount"{}}] = \&CVUNIVERSE::GetTrueNeutralPionCount;}
+\DoxyCodeLine{158     trueintfunctions[\textcolor{stringliteral}{"{}TruePionCount"{}}] = \&CVUNIVERSE::GetTruePionCount;}
+\DoxyCodeLine{159     truefunctions[\textcolor{stringliteral}{"{}TruePionCount"{}}] = \&CVUNIVERSE::GetTruePionCount;}
+\DoxyCodeLine{160     }
+\DoxyCodeLine{161     trueintfunctions[\textcolor{stringliteral}{"{}TrueCharmedBaryonCount"{}}] = \&CVUNIVERSE::GetTrueCharmedBaryonCount;}
+\DoxyCodeLine{162     truefunctions[\textcolor{stringliteral}{"{}TrueCharmedBaryonCount"{}}] = \&CVUNIVERSE::GetTrueCharmedBaryonCount;}
+\DoxyCodeLine{163     trueintfunctions[\textcolor{stringliteral}{"{}TrueStrangeBaryonCount"{}}] = \&CVUNIVERSE::GetTrueStrangeBaryonCount;}
+\DoxyCodeLine{164     truefunctions[\textcolor{stringliteral}{"{}TrueStrangeBaryonCount"{}}] = \&CVUNIVERSE::GetTrueStrangeBaryonCount;}
+\DoxyCodeLine{165     }
+\DoxyCodeLine{166     trueintfunctions[\textcolor{stringliteral}{"{}TrueCharmedMesonCount"{}}] = \&CVUNIVERSE::GetTrueCharmedMesonCount;}
+\DoxyCodeLine{167     truefunctions[\textcolor{stringliteral}{"{}TrueCharmedMesonCount"{}}] = \&CVUNIVERSE::GetTrueCharmedMesonCount;}
+\DoxyCodeLine{168     trueintfunctions[\textcolor{stringliteral}{"{}TrueStrangeMesonCount"{}}] = \&CVUNIVERSE::GetTrueStrangeMesonCount;}
+\DoxyCodeLine{169     truefunctions[\textcolor{stringliteral}{"{}TrueStrangeMesonCount"{}}] = \&CVUNIVERSE::GetTrueStrangeMesonCount;}
+\DoxyCodeLine{170     }
+\DoxyCodeLine{171     trueintfunctions[\textcolor{stringliteral}{"{}TruthHasSingleChargedPion"{}}] = \&CVUNIVERSE::GetTruthHasSingleChargedPion;}
+\DoxyCodeLine{172     trueintfunctions[\textcolor{stringliteral}{"{}TruthHasSingleNeutralPion"{}}] = \&CVUNIVERSE::GetTruthHasSingleNeutralPion;}
+\DoxyCodeLine{173     trueintfunctions[\textcolor{stringliteral}{"{}TruthHasMultiPion"{}}] = \&CVUNIVERSE::GetTruthHasMultiPion;}
+\DoxyCodeLine{174     }
+\DoxyCodeLine{175     truefunctions[\textcolor{stringliteral}{"{}EventRecordTrueEtaCount"{}}] = \&CVUNIVERSE::GetEventRecordTrueEtaCount;}
+\DoxyCodeLine{176     trueintfunctions[\textcolor{stringliteral}{"{}EventRecordTrueEtaCount"{}}] = \&CVUNIVERSE::GetEventRecordTrueEtaCount;}
+\DoxyCodeLine{177     }
+\DoxyCodeLine{178   \};}
+\DoxyCodeLine{179   }
+\DoxyCodeLine{180   std::vector<std::string> GetRecoKeys()\textcolor{keyword}{const}\{}
+\DoxyCodeLine{181     std::vector<std::string> keys;}
+\DoxyCodeLine{182     \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} key:recofunctions) \{}
+\DoxyCodeLine{183       keys.push\_back(key.first);}
+\DoxyCodeLine{184     \}}
+\DoxyCodeLine{185     \textcolor{keywordflow}{return} keys;}
+\DoxyCodeLine{186   \}}
+\DoxyCodeLine{187   }
+\DoxyCodeLine{188   std::vector<std::string> GetTrueKeys()\textcolor{keyword}{const}\{}
+\DoxyCodeLine{189     std::vector< std::string> keys;}
+\DoxyCodeLine{190     \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} key:truefunctions) \{}
+\DoxyCodeLine{191       keys.push\_back(key.first);}
+\DoxyCodeLine{192     \}}
+\DoxyCodeLine{193     \textcolor{keywordflow}{return} keys;}
+\DoxyCodeLine{194   \}}
+\DoxyCodeLine{195     }
+\DoxyCodeLine{196   \textcolor{keyword}{const} PointerToCVUniverseFunction GetRecoFunction(\textcolor{keyword}{const} std::string name) \{}
+\DoxyCodeLine{197     assert (recofunctions.count(name));}
+\DoxyCodeLine{198     PointerToCVUniverseFunction  result = recofunctions[name];}
+\DoxyCodeLine{199     \textcolor{keywordflow}{return} result ;}
+\DoxyCodeLine{200   \};}
+\DoxyCodeLine{201   }
+\DoxyCodeLine{202   PointerToCVUniverseFunction GetTrueFunction(\textcolor{keyword}{const} std::string name) \{}
+\DoxyCodeLine{203     \textcolor{comment}{// try a real function first}}
+\DoxyCodeLine{204     \textcolor{keywordflow}{if} (truefunctions.count(name))\{}
+\DoxyCodeLine{205       \textcolor{keywordflow}{return} truefunctions[name];}
+\DoxyCodeLine{206     \}}
+\DoxyCodeLine{207     \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{208       assert(trueintfunctions.count(name));}
+\DoxyCodeLine{209       \textcolor{keywordflow}{return} trueintfunctions[name];}
+\DoxyCodeLine{210     \}}
+\DoxyCodeLine{211   \};}
+\DoxyCodeLine{212   }
+\DoxyCodeLine{213   \textcolor{keyword}{const} PointerToCVUniverseIntFunction GetRecoIntFunction(\textcolor{keyword}{const} std::string name) \{}
+\DoxyCodeLine{214     assert (recointfunctions.count(name));}
+\DoxyCodeLine{215     \textcolor{keywordflow}{return} recointfunctions[name];}
+\DoxyCodeLine{216   \};}
+\DoxyCodeLine{217   }
+\DoxyCodeLine{218   PointerToCVUniverseIntFunction GetTrueIntFunction(\textcolor{keyword}{const} std::string name) \{}
+\DoxyCodeLine{219     assert (trueintfunctions.count(name));}
+\DoxyCodeLine{220     \textcolor{keywordflow}{return} trueintfunctions[name];}
+\DoxyCodeLine{221   \};}
+\DoxyCodeLine{222 \};}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224 }
+\DoxyCodeLine{225 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

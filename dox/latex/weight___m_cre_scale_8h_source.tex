@@ -1,0 +1,66 @@
+\hypertarget{weight___m_cre_scale_8h_source}{}\doxysection{weight\+\_\+\+MCre\+Scale.\+h}
+\label{weight___m_cre_scale_8h_source}\index{make\_hists/include/weight\_MCreScale.h@{make\_hists/include/weight\_MCreScale.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef weight\_mcrescale\_h}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define weight\_mcrescale\_h}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <fstream>}  \textcolor{comment}{//ifstream}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <iostream>} \textcolor{comment}{//cout}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <TString.h>}}
+\DoxyCodeLine{8 \textcolor{comment}{// \#include <TH3D.h>}}
+\DoxyCodeLine{9 \textcolor{comment}{// \#include <TH2D.h>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}include/CVUniverse.h"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <TH1D.h>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <TFile.h>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <cmath>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <cassert>}}
+\DoxyCodeLine{15 \textcolor{comment}{// \#include <TF1.h>}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}PlotUtils/MnvH1D.h"{}}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include "{}PlotUtils/MnvVertErrorBand.h"{}}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include "{}utils/NuConfig.h"{}}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include "{}utils/expandEnv.h"{}}}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{keyword}{namespace }PlotUtils\{}
+\DoxyCodeLine{23 \textcolor{comment}{// template <typename T>}}
+\DoxyCodeLine{24   \textcolor{keyword}{class }\mbox{\hyperlink{class_plot_utils_1_1weight___m_cre_scale}{weight\_MCreScale}}\{}
+\DoxyCodeLine{25     \textcolor{keyword}{public}:}
+\DoxyCodeLine{26       \textcolor{comment}{// Boolean set to switch on and off if want to use tuned hists}}
+\DoxyCodeLine{27       \textcolor{keywordtype}{bool} useTuned=\textcolor{keyword}{false};}
+\DoxyCodeLine{28       \textcolor{comment}{// Boolean set based off tag}}
+\DoxyCodeLine{29       \textcolor{keywordtype}{int} isSignal;}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31       \textcolor{comment}{// std::map<}}
+\DoxyCodeLine{32       \textcolor{comment}{// Member file with scale/fraction MnvH1Ds}}
+\DoxyCodeLine{33       TFile* f\_Q2QEScaleFrac;}
+\DoxyCodeLine{34       \textcolor{comment}{// Member MnvH1D's for each scale from the file (set at initialization)}}
+\DoxyCodeLine{35       \textcolor{comment}{// TODO: turn these into a map to allow for more bkg channels for Sean's analysis}}
+\DoxyCodeLine{36       MnvH1D* mnvh\_SigScale;}
+\DoxyCodeLine{37       MnvH1D* mnvh\_BkgScale;}
+\DoxyCodeLine{38       \textcolor{comment}{// Member scale set to be sig or bkg (set at GetWeight)}}
+\DoxyCodeLine{39       MnvH1D* mnvh\_Scale;}
+\DoxyCodeLine{40       TH1D* h\_scale;}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42     \textcolor{keyword}{public}:}
+\DoxyCodeLine{43       \textcolor{comment}{// Constructor that reads in hists from file}}
+\DoxyCodeLine{44       \mbox{\hyperlink{class_plot_utils_1_1weight___m_cre_scale}{weight\_MCreScale}}(\textcolor{keyword}{const} TString f);}
+\DoxyCodeLine{45       \textcolor{comment}{// Constructor that reads in hists from file and sets the tag}}
+\DoxyCodeLine{46       \mbox{\hyperlink{class_plot_utils_1_1weight___m_cre_scale}{weight\_MCreScale}}(\textcolor{keyword}{const} NuConfig config);}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48       \textcolor{keywordtype}{double} GetScale(std::string tag, \textcolor{keyword}{const} \textcolor{keywordtype}{double} q2qe, std::string uni\_name, \textcolor{keywordtype}{int} iuniv); \textcolor{comment}{// q2qe in GeV2}}
+\DoxyCodeLine{49       \textcolor{keywordtype}{double} GetScale(std::string tag, \textcolor{keyword}{const} \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}* univ, std::string uni\_name, \textcolor{keywordtype}{int} iuniv);}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51       \textcolor{keywordtype}{void} read(TString filename);}
+\DoxyCodeLine{52       \textcolor{keywordtype}{void} SetTag(std::string tag);}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54     \textcolor{keyword}{private}:}
+\DoxyCodeLine{55       \textcolor{keywordtype}{double} GetScaleInternal(\textcolor{keyword}{const} \textcolor{keywordtype}{double} q2qe, std::string uni\_name, \textcolor{keywordtype}{int} iuniv);}
+\DoxyCodeLine{56   \};}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 \}}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

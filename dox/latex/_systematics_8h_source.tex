@@ -1,0 +1,208 @@
+\hypertarget{_systematics_8h_source}{}\doxysection{Systematics.\+h}
+\label{_systematics_8h_source}\index{make\_hists/include/Systematics.h@{make\_hists/include/Systematics.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef Systematics\_h}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define Systematics\_h}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{//\#define NOGENIE}}
+\DoxyCodeLine{5 \textcolor{comment}{//\#define NOFLUX}}
+\DoxyCodeLine{6 \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{7 \textcolor{comment}{// systematics namespace}}
+\DoxyCodeLine{8 \textcolor{comment}{// * GetStandardSystematics function which get ALL of the generally applicable}}
+\DoxyCodeLine{9 \textcolor{comment}{//   PU systematics}}
+\DoxyCodeLine{10 \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}CVUniverse.h"{}}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include "{}PlotUtils/ChainWrapper.h"{}}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}PlotUtils/FluxSystematics.h"{}}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include "{}PlotUtils/GenieSystematics.h"{}}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}PlotUtils/MinosEfficiencySystematics.h"{}}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include "{}PlotUtils/MnvTuneSystematics.h"{}}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include "{}PlotUtils/MuonSystematics.h"{}}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include "{}PlotUtils/AngleSystematics.h"{}}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include "{}PlotUtils/MuonResolutionSystematics.h"{}}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#include "{}PlotUtils/GeantHadronSystematics.h"{}}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#include "{}utils/NuConfig.h"{}}}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 \textcolor{keyword}{namespace }systematics \{}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26 \textcolor{keyword}{typedef} std::map<std::string, std::vector<CVUniverse*>> UniverseMap;}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 \textcolor{comment}{//============================================================================}}
+\DoxyCodeLine{31 \textcolor{comment}{// Get Standard PU MAT Systematics}}
+\DoxyCodeLine{32 \textcolor{comment}{//============================================================================}}
+\DoxyCodeLine{33 UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, \textcolor{keyword}{const} NuConfig config, \textcolor{keywordtype}{bool} is\_truth = \textcolor{keyword}{false}) \{}
+\DoxyCodeLine{34   \textcolor{comment}{// return map}}
+\DoxyCodeLine{35   UniverseMap error\_bands;}
+\DoxyCodeLine{36   \textcolor{comment}{//unsigned int kNFluxUniverses = config.GetInt("{}fluxUniverses"{});}}
+\DoxyCodeLine{37   \textcolor{comment}{// get a list of systematics to turn on from systematics}}
+\DoxyCodeLine{38   std::vector<std::string> flags = config.GetStringVector(\textcolor{stringliteral}{"{}systematics"{}});}
+\DoxyCodeLine{39   }
+\DoxyCodeLine{40   \textcolor{comment}{// CV}}
+\DoxyCodeLine{41   error\_bands[std::string(\textcolor{stringliteral}{"{}cv"{}})].push\_back(\textcolor{keyword}{new} \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}(chain));}
+\DoxyCodeLine{42   }
+\DoxyCodeLine{43   \textcolor{comment}{//\#ifndef NOFLUX}}
+\DoxyCodeLine{44   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(), \textcolor{stringliteral}{"{}Flux"{}})!=flags.end())\{}
+\DoxyCodeLine{45     \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{46     \textcolor{comment}{// FLUX}}
+\DoxyCodeLine{47     \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{48     std::cout << \textcolor{stringliteral}{"{} do standard Flux systematics "{}} << std::endl;}
+\DoxyCodeLine{49     \textcolor{keywordtype}{int} kNFluxUniverses = MinervaUniverse::GetNFluxUniverses();}
+\DoxyCodeLine{50     UniverseMap bands\_flux = PlotUtils::GetFluxSystematicsMap<CVUniverse>(chain,kNFluxUniverses);}
+\DoxyCodeLine{51     error\_bands.insert(bands\_flux.begin(), bands\_flux.end());}
+\DoxyCodeLine{52   \}}
+\DoxyCodeLine{53   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{54     std::cout << \textcolor{stringliteral}{"{}Warning:  Flux systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{55   \}}
+\DoxyCodeLine{56   \textcolor{comment}{//\#endif}}
+\DoxyCodeLine{57   }
+\DoxyCodeLine{58   \textcolor{comment}{//\#ifndef NOGENIE}}
+\DoxyCodeLine{59   \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{60   \textcolor{comment}{// GENIE}}
+\DoxyCodeLine{61   \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{62   \textcolor{comment}{// Standard}}
+\DoxyCodeLine{63   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(), \textcolor{stringliteral}{"{}GENIE"{}})!=flags.end())\{}
+\DoxyCodeLine{64     std::cout << \textcolor{stringliteral}{"{} do standard GENIE systematcs "{}} << std::endl;}
+\DoxyCodeLine{65     UniverseMap bands\_genie = PlotUtils::GetStandardGenieSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{66     error\_bands.insert(bands\_genie.begin(), bands\_genie.end());}
+\DoxyCodeLine{67   \}}
+\DoxyCodeLine{68   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{69     std::cout << \textcolor{stringliteral}{"{}Warning:  GENIE systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{70   \}}
+\DoxyCodeLine{71   }
+\DoxyCodeLine{72   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(), \textcolor{stringliteral}{"{}GenieRvx1pi"{}})!=flags.end())\{}
+\DoxyCodeLine{73     std::cout << \textcolor{stringliteral}{"{} do GenieRvx1pi systematics "{}} << std::endl;}
+\DoxyCodeLine{74     \textcolor{comment}{// Pion final state normalization}}
+\DoxyCodeLine{75     UniverseMap bands\_pi\_fs\_norm = PlotUtils::GetGenieRvx1piSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{76     error\_bands.insert(bands\_pi\_fs\_norm.begin(), bands\_pi\_fs\_norm.end());}
+\DoxyCodeLine{77   \}}
+\DoxyCodeLine{78   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{79     std::cout << \textcolor{stringliteral}{"{}Warning:  GenieRvx1pi systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{80   \}}
+\DoxyCodeLine{81   }
+\DoxyCodeLine{82   \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{83   \textcolor{comment}{// MnvTunes}}
+\DoxyCodeLine{84   \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{85   \textcolor{comment}{// RPA}}
+\DoxyCodeLine{86   }
+\DoxyCodeLine{87   }
+\DoxyCodeLine{88   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(), \textcolor{stringliteral}{"{}RPA"{}})!=flags.end())\{}
+\DoxyCodeLine{89     std::cout << \textcolor{stringliteral}{"{} do RPA systematics "{}} << std::endl;}
+\DoxyCodeLine{90     UniverseMap bands\_rpa = PlotUtils::GetRPASystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{91     error\_bands.insert(bands\_rpa.begin(), bands\_rpa.end());}
+\DoxyCodeLine{92   \}}
+\DoxyCodeLine{93   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{94     std::cout << \textcolor{stringliteral}{"{}Warning:  RPA systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{95   \}}
+\DoxyCodeLine{96   }
+\DoxyCodeLine{97   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(), \textcolor{stringliteral}{"{}2p2h"{}})!=flags.end())\{}
+\DoxyCodeLine{98     \textcolor{comment}{// 2P2H}}
+\DoxyCodeLine{99     std::cout << \textcolor{stringliteral}{"{} do 2p2h systematics "{}} << std::endl;}
+\DoxyCodeLine{100     UniverseMap bands\_2p2h = PlotUtils::Get2p2hSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{101     error\_bands.insert(bands\_2p2h.begin(), bands\_2p2h.end());}
+\DoxyCodeLine{102   \}}
+\DoxyCodeLine{103   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{104     std::cout << \textcolor{stringliteral}{"{}Warning:  2p2h systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{105   \}}
+\DoxyCodeLine{106   }
+\DoxyCodeLine{107   \textcolor{comment}{// Geant}}
+\DoxyCodeLine{108   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(), \textcolor{stringliteral}{"{}geant4"{}})!=flags.end())\{}
+\DoxyCodeLine{109     }
+\DoxyCodeLine{110     std::cout << \textcolor{stringliteral}{"{} do geant4 systematics "{}} << std::endl;}
+\DoxyCodeLine{111     UniverseMap bands\_geant = PlotUtils::GetGeantHadronSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{112     error\_bands.insert(bands\_geant.begin(), bands\_geant.end());}
+\DoxyCodeLine{113   \}}
+\DoxyCodeLine{114   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{115     std::cout << \textcolor{stringliteral}{"{}Warning:  geant4 systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{116   \}}
+\DoxyCodeLine{117   }
+\DoxyCodeLine{118   }
+\DoxyCodeLine{119   \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{120   \textcolor{comment}{// Muons}}
+\DoxyCodeLine{121   \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{122   \textcolor{comment}{// MUON -\/ MINERvA}}
+\DoxyCodeLine{123   }
+\DoxyCodeLine{124   }
+\DoxyCodeLine{125   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(), \textcolor{stringliteral}{"{}MuonMinerva"{}})!=flags.end())\{}
+\DoxyCodeLine{126     std::cout << \textcolor{stringliteral}{"{} do muon MINERvA energy systematics"{}} << std::endl;}
+\DoxyCodeLine{127     }
+\DoxyCodeLine{128     UniverseMap bands\_muon\_minerva = PlotUtils::GetMinervaMuonSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{129     error\_bands.insert(bands\_muon\_minerva.begin(), bands\_muon\_minerva.end());}
+\DoxyCodeLine{130     }
+\DoxyCodeLine{131   \}}
+\DoxyCodeLine{132   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{133     std::cout << \textcolor{stringliteral}{"{}Warning:  MuonMinerva systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{134   \}}
+\DoxyCodeLine{135   }
+\DoxyCodeLine{136   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(), \textcolor{stringliteral}{"{}MuonMINOS"{}})!=flags.end())\{}
+\DoxyCodeLine{137     std::cout << \textcolor{stringliteral}{"{} do muon MINOS energy systematics"{}} << std::endl;}
+\DoxyCodeLine{138     }
+\DoxyCodeLine{139     UniverseMap bands\_muon\_minos =}
+\DoxyCodeLine{140     PlotUtils::GetMinosMuonSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{141     error\_bands.insert(bands\_muon\_minos.begin(), bands\_muon\_minos.end());}
+\DoxyCodeLine{142   \}}
+\DoxyCodeLine{143   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{144     std::cout << \textcolor{stringliteral}{"{}Warning:  MuonMINOS systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{145   \}}
+\DoxyCodeLine{146   }
+\DoxyCodeLine{147   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(), \textcolor{stringliteral}{"{}MuonResolution"{}})!=flags.end())\{}
+\DoxyCodeLine{148     std::cout << \textcolor{stringliteral}{"{} do muon resolution systematics"{}} << std::endl;}
+\DoxyCodeLine{149     }
+\DoxyCodeLine{150     \textcolor{comment}{// Muon resolution}}
+\DoxyCodeLine{151     UniverseMap muonR\_systematics = PlotUtils::GetMuonResolutionSystematicsMap<CVUniverse>(chain,NSFDefaults::muonResolution\_Err);}
+\DoxyCodeLine{152     error\_bands.insert(muonR\_systematics.begin(), muonR\_systematics.end());}
+\DoxyCodeLine{153   \}}
+\DoxyCodeLine{154   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{155     std::cout << \textcolor{stringliteral}{"{}Warning:  MuonResolution systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{156   \}}
+\DoxyCodeLine{157   }
+\DoxyCodeLine{158   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(), \textcolor{stringliteral}{"{}MINOSEfficiency"{}})!=flags.end())\{}
+\DoxyCodeLine{159     std::cout << \textcolor{stringliteral}{"{} do MINOS efficiency systematics"{}} << std::endl;}
+\DoxyCodeLine{160     }
+\DoxyCodeLine{161     \textcolor{comment}{// MINOS EFFICIENCY}}
+\DoxyCodeLine{162     UniverseMap bands\_minoseff = PlotUtils::GetMinosEfficiencySystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{163     error\_bands.insert(bands\_minoseff.begin(), bands\_minoseff.end());}
+\DoxyCodeLine{164   \}}
+\DoxyCodeLine{165   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{166     std::cout << \textcolor{stringliteral}{"{}Warning:  MINOSEffiency systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{167   \}}
+\DoxyCodeLine{168   }
+\DoxyCodeLine{169   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(), \textcolor{stringliteral}{"{}Angle"{}})!=flags.end())\{}
+\DoxyCodeLine{170     \textcolor{comment}{// Angle}}
+\DoxyCodeLine{171     std::cout << \textcolor{stringliteral}{"{} do make angle systematics"{}} << std::endl;}
+\DoxyCodeLine{172     }
+\DoxyCodeLine{173     UniverseMap angle\_systematics = PlotUtils::GetAngleSystematicsMap<CVUniverse>(chain,NSFDefaults::beamThetaX\_Err,NSFDefaults::beamThetaY\_Err);}
+\DoxyCodeLine{174     error\_bands.insert(angle\_systematics.begin(), angle\_systematics.end());}
+\DoxyCodeLine{175   \}}
+\DoxyCodeLine{176   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{177     std::cout << \textcolor{stringliteral}{"{}Warning:  Angle systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{178   \}}
+\DoxyCodeLine{179   }
+\DoxyCodeLine{180   \textcolor{comment}{//GeantHadronUniverse constructor}}
+\DoxyCodeLine{181   \textcolor{comment}{//GeantHadronUniverse<T>::GeantHadronUniverse( typename T::config\_t chw, double nsigma, int pdg )}}
+\DoxyCodeLine{182   \textcolor{keywordflow}{if}(std::find(flags.begin(), flags.end(),\textcolor{stringliteral}{"{}geant4"{}})!=flags.end())\{}
+\DoxyCodeLine{183     UniverseMap geant4\_systematics = PlotUtils::GetGeantHadronSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{184     error\_bands.insert(geant4\_systematics.begin(), geant4\_systematics.end());}
+\DoxyCodeLine{185     std::cout << \textcolor{stringliteral}{"{} do make geant4 systematics"{}} << std::endl;}
+\DoxyCodeLine{186   \}}
+\DoxyCodeLine{187   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{188     std::cout << \textcolor{stringliteral}{"{}Warning:  geant4 systematics are turned off"{}} << std::endl;}
+\DoxyCodeLine{189   \}}
+\DoxyCodeLine{190   }
+\DoxyCodeLine{191   \textcolor{comment}{// at the end}}
+\DoxyCodeLine{192   \textcolor{keywordflow}{return} error\_bands;}
+\DoxyCodeLine{193   }
+\DoxyCodeLine{194   \textcolor{comment}{//  std::cout << "{}Warning: still need to implement response systematics "{} << std::endl;}}
+\DoxyCodeLine{195   }
+\DoxyCodeLine{196 \}}
+\DoxyCodeLine{197 }
+\DoxyCodeLine{198 }
+\DoxyCodeLine{199 }
+\DoxyCodeLine{200 \}  \textcolor{comment}{// namespace systematics}}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{// Systematics\_h}}
+
+\end{DoxyCode}

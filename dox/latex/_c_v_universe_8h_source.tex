@@ -1,0 +1,294 @@
+\hypertarget{_c_v_universe_8h_source}{}\doxysection{CVUniverse.\+h}
+\label{_c_v_universe_8h_source}\index{make\_hists/include/CVUniverse.h@{make\_hists/include/CVUniverse.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{2 \textcolor{comment}{// Base class for an un-\/systematically shifted (i.e. CV) universe.}}
+\DoxyCodeLine{3 \textcolor{comment}{// Implement "{}Get"{} functions for all the quantities that you need for your}}
+\DoxyCodeLine{4 \textcolor{comment}{// analysis.}}
+\DoxyCodeLine{5 \textcolor{comment}{//}}
+\DoxyCodeLine{6 \textcolor{comment}{// This class inherits from PU::sUniverse. PU::DCVU may already define}}
+\DoxyCodeLine{7 \textcolor{comment}{// your "{}Get"{} functions the way you want them. In that case, you  don't need to}}
+\DoxyCodeLine{8 \textcolor{comment}{// re-\/write them here.}}
+\DoxyCodeLine{9 \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#ifndef CVUNIVERSE\_H}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#define CVUNIVERSE\_H}}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}utils/NuConfig.h"{}}}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}PlotUtils/ChainWrapper.h"{}}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include "{}PlotUtils/MinervaUniverse.h"{}}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include "{}PlotUtils/PhysicsVariables.h"{}}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include "{}TVector3.h"{}}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include "{}PlotUtils/GeantHadronSystematics.h"{}}}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 \textcolor{keyword}{class }\mbox{\hyperlink{class_c_v_universe}{CVUniverse}} : \textcolor{keyword}{public} PlotUtils::MinervaUniverse \{}
+\DoxyCodeLine{23 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{24   \textcolor{comment}{// default values}}
+\DoxyCodeLine{25   \textcolor{keyword}{static} \textcolor{keywordtype}{double} m\_proton\_ke\_cut;}
+\DoxyCodeLine{26   \textcolor{keyword}{static} NuConfig m\_proton\_score\_config;}
+\DoxyCodeLine{27     \textcolor{keyword}{static} std::vector<double> m\_proton\_score\_mins;}
+\DoxyCodeLine{28     \textcolor{keyword}{static} std::vector<double> m\_proton\_score\_Q2QEs;}
+\DoxyCodeLine{29     \textcolor{keyword}{static} \textcolor{keywordtype}{double} m\_min\_blob\_zvtx;}
+\DoxyCodeLine{30     \textcolor{keyword}{static} \textcolor{keywordtype}{double} m\_photon\_energy\_cut;}
+\DoxyCodeLine{31     }
+\DoxyCodeLine{32     \textcolor{comment}{// initially set to false}}
+\DoxyCodeLine{33     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_is\_proton\_ke\_cut\_set;}
+\DoxyCodeLine{34     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_is\_proton\_score\_config\_set;}
+\DoxyCodeLine{35     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_is\_min\_blob\_zvtx\_set;}
+\DoxyCodeLine{36     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_is\_photon\_energy\_cut\_set;}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38 \textcolor{keyword}{public}:}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#ifndef HAZMAT}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#include "{}PlotUtils/SystCalcs/WeightFunctions.h"{}}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#include "{}PlotUtils/SystCalcs/MuonFunctions.h"{}}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#include "{}PlotUtils/SystCalcs/TruthFunctions.h"{}}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#include "{}PlotUtils/SystCalcs/RecoilEnergyFunctions.h"{}}}
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#include "{}PlotUtils/WeightFunctions.h"{}}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#include "{}PlotUtils/MuonFunctions.h"{}}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#include "{}PlotUtils/TruthFunctions.h"{}}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#include "{}PlotUtils/RecoilEnergyFunctions.h"{}}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{50     }
+\DoxyCodeLine{51     \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{52     \textcolor{comment}{// Constructor/Destructor}}
+\DoxyCodeLine{53     \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{54     }
+\DoxyCodeLine{55     \textcolor{comment}{// fake a default constructor}}
+\DoxyCodeLine{56     }
+\DoxyCodeLine{57     \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}()\{PlotUtils::MinervaUniverse();\};}
+\DoxyCodeLine{58     }
+\DoxyCodeLine{59     \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}(PlotUtils::ChainWrapper* chw, \textcolor{keywordtype}{double} nsigma = 0)}
+\DoxyCodeLine{60       : PlotUtils::MinervaUniverse(chw, nsigma) \{\}}
+\DoxyCodeLine{61     }
+\DoxyCodeLine{62     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_c_v_universe}{\string~CVUniverse}}() \{\}}
+\DoxyCodeLine{63     }
+\DoxyCodeLine{64     \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{65     \textcolor{comment}{// Get}}
+\DoxyCodeLine{66     \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{67     }
+\DoxyCodeLine{68     \textcolor{keyword}{static} std::map<std::string, int> GetEventParticleCounts();}
+\DoxyCodeLine{69     }
+\DoxyCodeLine{70     \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{71     \textcolor{comment}{// Get Weight}}
+\DoxyCodeLine{72     \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{73     }
+\DoxyCodeLine{74     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetWeight() \textcolor{keyword}{const};}
+\DoxyCodeLine{75     }
+\DoxyCodeLine{76     \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{77     \textcolor{comment}{// Write a "{}Get"{} function for all quantities access by your analysis.}}
+\DoxyCodeLine{78     \textcolor{comment}{// For composite quantities (e.g. Enu) use a calculator function.}}
+\DoxyCodeLine{79     \textcolor{comment}{//}}
+\DoxyCodeLine{80     \textcolor{comment}{// Currently PlotUtils::MinervaUniverse may already define some functions}}
+\DoxyCodeLine{81     \textcolor{comment}{// that you want. The future of these functions is uncertain. You might want}}
+\DoxyCodeLine{82     \textcolor{comment}{// to write all your own functions for now.}}
+\DoxyCodeLine{83     \textcolor{comment}{// ========================================================================}}
+\DoxyCodeLine{84     }
+\DoxyCodeLine{85     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetMultiplicity() \textcolor{keyword}{const};}
+\DoxyCodeLine{86     }
+\DoxyCodeLine{87     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetDeadTime() \textcolor{keyword}{const};}
+\DoxyCodeLine{88     }
+\DoxyCodeLine{89     \textcolor{comment}{// -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ Cut-\/configuring Variables -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{90     }
+\DoxyCodeLine{91     \textcolor{keyword}{static} \textcolor{keywordtype}{double} GetProtonKECut();}
+\DoxyCodeLine{92     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} SetProtonKECut(\textcolor{keywordtype}{double} proton\_KECut, \textcolor{keywordtype}{bool} print);}
+\DoxyCodeLine{93     }
+\DoxyCodeLine{94     \textcolor{keyword}{static} NuConfig GetProtonScoreConfig(\textcolor{keywordtype}{bool} print);}
+\DoxyCodeLine{95     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} SetProtonScoreConfig(NuConfig protonScoreConfig, \textcolor{keywordtype}{bool} print);}
+\DoxyCodeLine{96     }
+\DoxyCodeLine{97     \textcolor{keyword}{static} \textcolor{keywordtype}{double} GetMinBlobZVtx();}
+\DoxyCodeLine{98     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} SetMinBlobZVtx(\textcolor{keywordtype}{double} min\_zvtx, \textcolor{keywordtype}{bool} print);}
+\DoxyCodeLine{99     }
+\DoxyCodeLine{100     \textcolor{keyword}{static} \textcolor{keywordtype}{double} GetPhotonEnergyCut();}
+\DoxyCodeLine{101     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} SetPhotonEnergyCut(\textcolor{keywordtype}{double} energy, \textcolor{keywordtype}{bool} print);}
+\DoxyCodeLine{102     }
+\DoxyCodeLine{103     \textcolor{comment}{// -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ Analysis-\/related Variables -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{104     }
+\DoxyCodeLine{105     }
+\DoxyCodeLine{106     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetIsMinosMatchTrack()\textcolor{keyword}{const};}
+\DoxyCodeLine{107     }
+\DoxyCodeLine{108     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetEnuHadGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{109     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueEnuGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{110     }
+\DoxyCodeLine{111     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetEnuCCQEGeV() \textcolor{keyword}{const}; \textcolor{comment}{// both neutrino and antinu}}
+\DoxyCodeLine{112     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueEnuCCQEGeV() \textcolor{keyword}{const}; \textcolor{comment}{// may be a better way to implement this}}
+\DoxyCodeLine{113     }
+\DoxyCodeLine{114     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetQ2QEGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{115     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueQ2QEGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{116     }
+\DoxyCodeLine{117     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetLog10Q2QEGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{118     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueLog10Q2QEGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{119     }
+\DoxyCodeLine{120     }
+\DoxyCodeLine{121     \textcolor{comment}{// -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ Muon Variables -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{122     }
+\DoxyCodeLine{123     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetEmuGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{124     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueEmuGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{125     }
+\DoxyCodeLine{126     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetPmuGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{127     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTruePmuGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{128     }
+\DoxyCodeLine{129     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetPparMuGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{130     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTruePparMuGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{131     }
+\DoxyCodeLine{132     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetPperpMuGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{133     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTruePperpMuGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{134     }
+\DoxyCodeLine{135     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueThetaXmu() \textcolor{keyword}{const};}
+\DoxyCodeLine{136     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueThetaYmu() \textcolor{keyword}{const};}
+\DoxyCodeLine{137     }
+\DoxyCodeLine{138     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueThetamu() \textcolor{keyword}{const};}
+\DoxyCodeLine{139     }
+\DoxyCodeLine{140     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetThetamuDegrees() \textcolor{keyword}{const};}
+\DoxyCodeLine{141     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueThetamuDegrees() \textcolor{keyword}{const};}
+\DoxyCodeLine{142     }
+\DoxyCodeLine{143     }
+\DoxyCodeLine{144     \textcolor{comment}{// -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ Hadron Variables -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{145     }
+\DoxyCodeLine{146     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetHadronEGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{147     }
+\DoxyCodeLine{148     \textcolor{comment}{// -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ Recoil Variables -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{149     }
+\DoxyCodeLine{150     }
+\DoxyCodeLine{151     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetCalRecoilEnergy() \textcolor{keyword}{const};}
+\DoxyCodeLine{152     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetCalRecoilEnergyGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{153     }
+\DoxyCodeLine{154     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetNonCalRecoilEnergy() \textcolor{keyword}{const};}
+\DoxyCodeLine{155     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetNonCalRecoilEnergyGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{156     }
+\DoxyCodeLine{157     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetRecoilEnergyGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{158     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueRecoilEnergyGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{159     }
+\DoxyCodeLine{160     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetLog10RecoilEnergyGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{161     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueLog10RecoilEnergyGeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{162     }
+\DoxyCodeLine{163     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueQ0GeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{164     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueQ3GeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{165     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueQ2GeV() \textcolor{keyword}{const};}
+\DoxyCodeLine{166     }
+\DoxyCodeLine{167     }
+\DoxyCodeLine{168     \textcolor{comment}{// -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ Other Variables -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{169     }
+\DoxyCodeLine{170     \textcolor{comment}{//  virtual double GetWgenie() const \{ return GetDouble("{}mc\_w"{}); \}}}
+\DoxyCodeLine{171     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetMCIntType() \textcolor{keyword}{const};}
+\DoxyCodeLine{172     }
+\DoxyCodeLine{173     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTruthNuPDG() \textcolor{keyword}{const};}
+\DoxyCodeLine{174     }
+\DoxyCodeLine{175     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetCurrent() \textcolor{keyword}{const};}
+\DoxyCodeLine{176     }
+\DoxyCodeLine{177     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTpiGeV( \textcolor{keyword}{const} \textcolor{keywordtype}{int} hadron ) \textcolor{keyword}{const};}
+\DoxyCodeLine{178     }
+\DoxyCodeLine{179     }
+\DoxyCodeLine{180     \textcolor{comment}{// -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ Quantities only needed for cuts -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{181     \textcolor{comment}{// Although unlikely, in principle these quanties could be shifted by a}}
+\DoxyCodeLine{182     \textcolor{comment}{// systematic. And when they are, they'll only be shifted correctly if we}}
+\DoxyCodeLine{183     \textcolor{comment}{// write these accessor functions.}}
+\DoxyCodeLine{184     \textcolor{keyword}{virtual} \textcolor{keywordtype}{bool} IsMinosMatchMuon() \textcolor{keyword}{const}; \textcolor{comment}{// This isn't even used anymore, there's something else. This is left over from Amit's analysis}}
+\DoxyCodeLine{185     }
+\DoxyCodeLine{186     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetNuHelicity() \textcolor{keyword}{const};}
+\DoxyCodeLine{187     }
+\DoxyCodeLine{188     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetCurvature() \textcolor{keyword}{const};}
+\DoxyCodeLine{189     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetTrueCurvature() \textcolor{keyword}{const};}
+\DoxyCodeLine{190     }
+\DoxyCodeLine{191     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTDead() \textcolor{keyword}{const}; \textcolor{comment}{// Dead electronics, a rock muon removal technique. Amit's analysis doesn't}}
+\DoxyCodeLine{192     \textcolor{comment}{// have that cut most likely. Not even in that tuple, only reason it survives is bc it's not called anymore.}}
+\DoxyCodeLine{193     \textcolor{comment}{// Can't find it? Just a hard coded constant in CCQENuCutsNSF.h}}
+\DoxyCodeLine{194     }
+\DoxyCodeLine{195     \textcolor{comment}{// These cuts are already made in the CCQENu AnaTuple, may be unnecessary}}
+\DoxyCodeLine{196     ROOT::Math::XYZTVector GetVertex() \textcolor{keyword}{const};}
+\DoxyCodeLine{197     }
+\DoxyCodeLine{198     \textcolor{comment}{// 1-\/d apothems for cuts}}
+\DoxyCodeLine{199     }
+\DoxyCodeLine{200     \textcolor{keywordtype}{double} GetApothemY() \textcolor{keyword}{const};}
+\DoxyCodeLine{201     \textcolor{keywordtype}{double} GetApothemX() \textcolor{keyword}{const};}
+\DoxyCodeLine{202     }
+\DoxyCodeLine{203     \textcolor{keywordtype}{double} GetTrueApothemY() \textcolor{keyword}{const};}
+\DoxyCodeLine{204     \textcolor{keywordtype}{double} GetTrueApothemX() \textcolor{keyword}{const};}
+\DoxyCodeLine{205     }
+\DoxyCodeLine{206     \textcolor{keywordtype}{double} GetZVertex() \textcolor{keyword}{const};}
+\DoxyCodeLine{207     ROOT::Math::XYZTVector GetTrueVertex() \textcolor{keyword}{const};}
+\DoxyCodeLine{208     \textcolor{keywordtype}{double} GetTrueZVertex() \textcolor{keyword}{const};}
+\DoxyCodeLine{209     }
+\DoxyCodeLine{210     }
+\DoxyCodeLine{211     \textcolor{comment}{// Some stuff Heidi added to test out some issues with the NTuples}}
+\DoxyCodeLine{212     }
+\DoxyCodeLine{213     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetRun() \textcolor{keyword}{const};}
+\DoxyCodeLine{214     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetSubRun() \textcolor{keyword}{const};}
+\DoxyCodeLine{215     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetGate() \textcolor{keyword}{const};}
+\DoxyCodeLine{216     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTrueRun() \textcolor{keyword}{const};}
+\DoxyCodeLine{217     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTrueSubRun() \textcolor{keyword}{const};}
+\DoxyCodeLine{218     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTrueGate() \textcolor{keyword}{const};}
+\DoxyCodeLine{219     }
+\DoxyCodeLine{220     \textcolor{comment}{// -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ put cut functions here -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{221     }
+\DoxyCodeLine{222     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetGoodRecoil() \textcolor{keyword}{const}; \textcolor{comment}{// implement Cheryl's cut}}
+\DoxyCodeLine{223     }
+\DoxyCodeLine{224     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTruthIsCC() \textcolor{keyword}{const};}
+\DoxyCodeLine{225     }
+\DoxyCodeLine{226     \textcolor{comment}{// helper function}}
+\DoxyCodeLine{227     \textcolor{keywordtype}{bool} passTrueCCQELike(\textcolor{keywordtype}{bool} neutrinoMode, std::vector<int> mc\_FSPartPDG, std::vector<double> mc\_FSPartE, \textcolor{keywordtype}{int} mc\_nFSPart, \textcolor{keywordtype}{double} proton\_KECut) \textcolor{keyword}{const};}
+\DoxyCodeLine{228     }
+\DoxyCodeLine{229     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTruthIsCCQELike() \textcolor{keyword}{const};  \textcolor{comment}{// cut hardwired for now}}
+\DoxyCodeLine{230     }
+\DoxyCodeLine{231     \textcolor{comment}{// all CCQElike without proton cut enabled}}
+\DoxyCodeLine{232     }
+\DoxyCodeLine{233     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTruthIsCCQELikeAll() \textcolor{keyword}{const};  \textcolor{comment}{// cut hardwired for now}}
+\DoxyCodeLine{234     }
+\DoxyCodeLine{235     \textcolor{comment}{// -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ Sean Neutrino Functions -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{236     }
+\DoxyCodeLine{237     }
+\DoxyCodeLine{238     \textcolor{comment}{// Interaction Vertex}}
+\DoxyCodeLine{239     }
+\DoxyCodeLine{240     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetHasInteractionVertex() \textcolor{keyword}{const};}
+\DoxyCodeLine{241     }
+\DoxyCodeLine{242     \textcolor{comment}{// Isolated Blobs}}
+\DoxyCodeLine{243     }
+\DoxyCodeLine{244     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetNBlobs() \textcolor{keyword}{const};}
+\DoxyCodeLine{245     }
+\DoxyCodeLine{246     \textcolor{comment}{// Michel Electrons}}
+\DoxyCodeLine{247     }
+\DoxyCodeLine{248     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetNMichel() \textcolor{keyword}{const};}
+\DoxyCodeLine{249     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetImprovedNMichel() \textcolor{keyword}{const};}
+\DoxyCodeLine{250     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetHasMichelElectron() \textcolor{keyword}{const};}
+\DoxyCodeLine{251     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTruthHasMichel() \textcolor{keyword}{const};}
+\DoxyCodeLine{252     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTruthHasImprovedMichel() \textcolor{keyword}{const};}
+\DoxyCodeLine{253     }
+\DoxyCodeLine{254     \textcolor{comment}{// Charged and Neutral Pions}}
+\DoxyCodeLine{255     }
+\DoxyCodeLine{256     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTruthHasSingleChargedPion() \textcolor{keyword}{const};}
+\DoxyCodeLine{257     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTruthHasSingleNeutralPion() \textcolor{keyword}{const};}
+\DoxyCodeLine{258     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTruthHasMultiPion() \textcolor{keyword}{const};}
+\DoxyCodeLine{259     }
+\DoxyCodeLine{260     \textcolor{comment}{// Proton Score, Primary and Secondary Proton Tracks}}
+\DoxyCodeLine{261     }
+\DoxyCodeLine{262     \textcolor{keyword}{virtual} \textcolor{keywordtype}{double} GetPrimaryProtonScore() \textcolor{keyword}{const};}
+\DoxyCodeLine{263     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} PassProtonScoreCut(\textcolor{keywordtype}{double} score, \textcolor{keywordtype}{double} tree\_Q2) \textcolor{keyword}{const};}
+\DoxyCodeLine{264     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} PassAllProtonScoreCuts(std::vector<double> scores, \textcolor{keywordtype}{double} tree\_Q2) \textcolor{keyword}{const};}
+\DoxyCodeLine{265     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetIsPrimaryProton() \textcolor{keyword}{const};}
+\DoxyCodeLine{266     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetAllExtraTracksProtons() \textcolor{keyword}{const};}
+\DoxyCodeLine{267     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTruthHasSingleProton() \textcolor{keyword}{const};}
+\DoxyCodeLine{268     }
+\DoxyCodeLine{269     \textcolor{comment}{// GENIE Particle Counts}}
+\DoxyCodeLine{270     }
+\DoxyCodeLine{271     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTrueChargedPionCount() \textcolor{keyword}{const};}
+\DoxyCodeLine{272     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTrueNeutralPionCount() \textcolor{keyword}{const};}
+\DoxyCodeLine{273     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTruePionCount() \textcolor{keyword}{const};}
+\DoxyCodeLine{274     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTrueProtonCount() \textcolor{keyword}{const};}
+\DoxyCodeLine{275     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTrueLightMesonCount() \textcolor{keyword}{const};}
+\DoxyCodeLine{276     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTrueCharmedMesonCount() \textcolor{keyword}{const};}
+\DoxyCodeLine{277     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTrueStrangeMesonCount() \textcolor{keyword}{const};}
+\DoxyCodeLine{278     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTrueCharmedBaryonCount() \textcolor{keyword}{const};}
+\DoxyCodeLine{279     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetTrueStrangeBaryonCount() \textcolor{keyword}{const};}
+\DoxyCodeLine{280     }
+\DoxyCodeLine{281     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetEventRecordTrueEtaCount() \textcolor{keyword}{const};}
+\DoxyCodeLine{282     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetMCTargetA() \textcolor{keyword}{const}; }
+\DoxyCodeLine{283     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetMCTargetZ() \textcolor{keyword}{const};}
+\DoxyCodeLine{284     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} GetMCTargetNucleon() \textcolor{keyword}{const};}
+\DoxyCodeLine{285     \textcolor{keyword}{virtual} \textcolor{keywordtype}{int} Dummy() \textcolor{keyword}{const};}
+\DoxyCodeLine{286     }
+\DoxyCodeLine{287 \};}
+\DoxyCodeLine{288 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

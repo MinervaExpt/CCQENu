@@ -1,0 +1,56 @@
+This repository will contain the MAT hist creation and analysis codes
+
+utilities/ useful utililties for analysis
+
+here is how to build CCQEMAT using the new MAT
+
+setup root, CVSROOT and get the MAT code installed using the documentation in \href{https://github.com/MinervaExpt/MAT-MINERvA}{\texttt{ github.\+com/\+Minerva\+Expt/\+MAT-\/\+MINERvA}}
+
+pro tip -\/ if you are not on a machine with cvmfs, find a place to put flux and weight files and add
+
+{\ttfamily -\/DFLUX\+\_\+\+FILE\+\_\+\+DIR=\texorpdfstring{$<$}{<}location of flux files\texorpdfstring{$>$}{>}} to your cmake command
+
+that avoids duplicating 2GB of files locally
+
+then...
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export WHEREMIPUTMYCODE=<directory where MAT code is> }
+\DoxyCodeLine{source \$WHEREIPUTMYCODE/opt/build/setup.sh}
+\DoxyCodeLine{}
+\DoxyCodeLine{\# now get the CCQEMAT code}
+\DoxyCodeLine{cd \$WHEREMIPUTMYCODE}
+\DoxyCodeLine{git clone https://github.com/MinervaExpt/CCQENu}
+\DoxyCodeLine{}
+\DoxyCodeLine{export CCQEMAT=\$WHEREIPUTMYCODE/CCQENu/make\_hists}
+\DoxyCodeLine{}
+\DoxyCodeLine{\# on mac's you need to:}
+\DoxyCodeLine{}
+\DoxyCodeLine{export DYLD\_LIBRARY\_PATH=\$\{PLOTUTILSROOT\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{or }
+\DoxyCodeLine{}
+\DoxyCodeLine{source \$CCQEMAT/setup\_osx.sh \#on osx}
+\DoxyCodeLine{}
+\DoxyCodeLine{source \$CCQEMAT/setup\_unx.sh \#on unix}
+\DoxyCodeLine{}
+\DoxyCodeLine{If you get json related errors install jsoncpp on your machine or on fnal machines.  I think you can get this with conda or on fnal Machines by doing. }
+\DoxyCodeLine{}
+\DoxyCodeLine{export JSONCPP\_DIR=/minerva/app/users/schellma/LocalApps/jsoncpp-\/build}
+\DoxyCodeLine{}
+\DoxyCodeLine{cd \$CCQEMAT}
+\DoxyCodeLine{\# I haven't figured out how to do Andrew style builds yet so this builds on the source directory. But there is a MAT compatible cmake now.  }
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{cmake v\_08 \# for the new version 8 with multiple signal components for Sean}
+\DoxyCodeLine{}
+\DoxyCodeLine{cmake fits \# adds in independent code that can do fits for backgrounds across multiple sample}
+
+\end{DoxyCode}
+ then type make
+
+The code now supports using environmentals to set values in json files so you can have one file which then has \$\{MYPLAYLIST\} to switch among playlists
+
+And the utilities directory now has scripts that support running on the grid. 

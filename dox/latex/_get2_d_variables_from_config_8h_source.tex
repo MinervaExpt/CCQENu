@@ -1,0 +1,22 @@
+\hypertarget{_get2_d_variables_from_config_8h_source}{}\doxysection{Get2\+DVariables\+From\+Config.\+h}
+\label{_get2_d_variables_from_config_8h_source}\index{make\_hists/include/Get2DVariablesFromConfig.h@{make\_hists/include/Get2DVariablesFromConfig.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef GET2DVariablesFromConfig\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define GET2DVariablesFromConfig\_H}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}CVUniverse.h"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}PlotUtils/PhysicsVariables.h"{}}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{namespace }CCQENu}
+\DoxyCodeLine{8 \{}
+\DoxyCodeLine{9   \textcolor{keyword}{class }VariableFromConfig;}
+\DoxyCodeLine{10   \textcolor{keyword}{class }Variable2DFromConfig;}
+\DoxyCodeLine{11 \}}
+\DoxyCodeLine{12 std::vector<std::string> intersection(std::vector<std::string> \&v1, std::vector<std::string> \&v2); \textcolor{comment}{// tool used to find "{}for"{} for x and y}}
+\DoxyCodeLine{13 \textcolor{comment}{// std::map<std::string, CCQENu::Variable2DWithMap*> GetMapOfVariables2D( std::map<std::string,CCQENu::VariableWithMap*> variablesmap, const std::vector<std::string> tags, const NuConfig \& configfile); //"{}old way"{} 3/16/21}}
+\DoxyCodeLine{14 std::map<std::string, CCQENu::Variable2DFromConfig*> Get2DVariablesFromConfig( std::vector<std::string> vars2D, std::map<std::string,CCQENu::VariableFromConfig*> variablesmap, \textcolor{keyword}{const} std::vector<std::string> tags, NuConfig );}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

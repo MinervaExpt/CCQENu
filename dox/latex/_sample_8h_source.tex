@@ -1,0 +1,124 @@
+\hypertarget{_sample_8h_source}{}\doxysection{Sample.\+h}
+\label{_sample_8h_source}\index{make\_hists/include/Sample.h@{make\_hists/include/Sample.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef SAMPLE\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define SAMPLE\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}utils/NuConfig.h"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}TText.h"{}}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keywordtype}{bool} IsInVector(\textcolor{keyword}{const} std::string  what, \textcolor{keyword}{const} std::vector<std::string>  \&vec)}
+\DoxyCodeLine{12 \{}
+\DoxyCodeLine{13   \textcolor{keywordflow}{return} std::find(vec.begin(),vec.end(),what)!=vec.end();}
+\DoxyCodeLine{14 \};}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{namespace }CCQENu\{}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{class }\mbox{\hyperlink{class_c_c_q_e_nu_1_1_category}{Category}}\{}
+\DoxyCodeLine{19 \textcolor{keyword}{private}:}
+\DoxyCodeLine{20   std::string m\_name;}
+\DoxyCodeLine{21   std::vector<std::string> m\_for;}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23   NuConfig m\_config;}
+\DoxyCodeLine{24 \textcolor{keyword}{public}:}
+\DoxyCodeLine{25   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_category}{Category}}()\{\};}
+\DoxyCodeLine{26   \textcolor{comment}{// constructor;}}
+\DoxyCodeLine{27   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_category}{Category}}(\textcolor{keyword}{const} std::string key, \textcolor{keyword}{const} NuConfig config)\{}
+\DoxyCodeLine{28     }
+\DoxyCodeLine{29     m\_name = key;}
+\DoxyCodeLine{30     m\_for = config.GetStringVector(\textcolor{stringliteral}{"{}for"{}});}
+\DoxyCodeLine{31     }
+\DoxyCodeLine{32     m\_config = config;}
+\DoxyCodeLine{33   \}}
+\DoxyCodeLine{34   }
+\DoxyCodeLine{35   \textcolor{comment}{// return list of data types this is for}}
+\DoxyCodeLine{36   std::vector<std::string> GetFor()\textcolor{keyword}{const }\{}
+\DoxyCodeLine{37     \textcolor{keywordflow}{return} m\_for;}
+\DoxyCodeLine{38   \}}
+\DoxyCodeLine{39   \textcolor{comment}{// return if key s is in for}}
+\DoxyCodeLine{40   \textcolor{keywordtype}{bool} HasFor(\textcolor{keyword}{const} std::string s)\textcolor{keyword}{ const}\{}
+\DoxyCodeLine{41     \textcolor{keywordflow}{return} IsInVector(s,m\_for);}
+\DoxyCodeLine{42   \}}
+\DoxyCodeLine{43   \textcolor{comment}{// get various name back}}
+\DoxyCodeLine{44   std::string GetName()\textcolor{keyword}{const}}
+\DoxyCodeLine{45 \textcolor{keyword}{    }\{\textcolor{keywordflow}{return} m\_name;}
+\DoxyCodeLine{46     \};}
+\DoxyCodeLine{47 \};}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49 \textcolor{keyword}{class }\mbox{\hyperlink{class_c_c_q_e_nu_1_1_sample}{Sample}}\{}
+\DoxyCodeLine{50 \textcolor{keyword}{private}:}
+\DoxyCodeLine{51   std::string m\_name;}
+\DoxyCodeLine{52   std::string m\_reco;}
+\DoxyCodeLine{53   NuConfig m\_config;}
+\DoxyCodeLine{54   std::string m\_phase\_space;}
+\DoxyCodeLine{55   std::map<const std::string, Category> m\_categories;}
+\DoxyCodeLine{56   std::vector<std::string> m\_signals;}
+\DoxyCodeLine{57   std::vector<std::string> m\_backgrounds;}
+\DoxyCodeLine{58 \textcolor{keyword}{public}:}
+\DoxyCodeLine{59   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_sample}{Sample}}( \textcolor{keyword}{const} NuConfig config)\{}
+\DoxyCodeLine{60     m\_config = config;}
+\DoxyCodeLine{61     m\_name = config.GetString(\textcolor{stringliteral}{"{}name"{}});}
+\DoxyCodeLine{62     m\_reco = config.GetString(\textcolor{stringliteral}{"{}reco"{}});}
+\DoxyCodeLine{63     m\_signals = config.GetStringVector(\textcolor{stringliteral}{"{}signal"{}});}
+\DoxyCodeLine{64     m\_backgrounds = config.GetStringVector(\textcolor{stringliteral}{"{}background"{}});}
+\DoxyCodeLine{65     NuConfig categories = config.GetConfig(\textcolor{stringliteral}{"{}categories"{}});}
+\DoxyCodeLine{66     std::vector<std::string> Categorylist = categories.GetKeys();}
+\DoxyCodeLine{67     m\_phase\_space = config.GetString(\textcolor{stringliteral}{"{}phase\_space"{}});}
+\DoxyCodeLine{68     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} key:Categorylist)\{}
+\DoxyCodeLine{69       \mbox{\hyperlink{class_c_c_q_e_nu_1_1_category}{Category}} newcategory(key,categories.GetConfig(key));}
+\DoxyCodeLine{70       m\_categories[key] = newcategory;}
+\DoxyCodeLine{71     \}}
+\DoxyCodeLine{72   \}}
+\DoxyCodeLine{73   }
+\DoxyCodeLine{74   std::string GetName()\textcolor{keyword}{const}\{\textcolor{keywordflow}{return} m\_name;\};}
+\DoxyCodeLine{75   }
+\DoxyCodeLine{76   std::vector<std::string> GetTags()\textcolor{keyword}{const}\{}
+\DoxyCodeLine{77   std::vector<std::string> v;}
+\DoxyCodeLine{78     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} s:m\_categories)\{}
+\DoxyCodeLine{79       v.push\_back(s.second.GetName());}
+\DoxyCodeLine{80     \}}
+\DoxyCodeLine{81     \textcolor{keywordflow}{return} v;}
+\DoxyCodeLine{82   \}}
+\DoxyCodeLine{83   }
+\DoxyCodeLine{84   std::string GetPhaseSpace()\textcolor{keyword}{const}\{\textcolor{keywordflow}{return} m\_phase\_space;\};}
+\DoxyCodeLine{85   }
+\DoxyCodeLine{86   \textcolor{keywordtype}{bool} HasTag(\textcolor{keyword}{const} std::string k)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{87     \textcolor{keywordflow}{return} IsInVector(k,GetTags());}
+\DoxyCodeLine{88   \}}
+\DoxyCodeLine{89   }
+\DoxyCodeLine{90   std::string GetReco()\textcolor{keyword}{const}\{}
+\DoxyCodeLine{91     \textcolor{keywordflow}{return} m\_reco;}
+\DoxyCodeLine{92   \}}
+\DoxyCodeLine{93   }
+\DoxyCodeLine{94   std::vector<std::string> GetCategoryNames()\textcolor{keyword}{const}\{}
+\DoxyCodeLine{95     std::vector<std::string> keys;}
+\DoxyCodeLine{96     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} k:m\_categories)\{}
+\DoxyCodeLine{97       keys.push\_back(k.first);}
+\DoxyCodeLine{98     \}}
+\DoxyCodeLine{99     \textcolor{keywordflow}{return} keys;}
+\DoxyCodeLine{100   \}}
+\DoxyCodeLine{101   }
+\DoxyCodeLine{102   std::string GetName(\textcolor{keyword}{const} std::string sub)\{}
+\DoxyCodeLine{103     \textcolor{keyword}{const} std::string local = sub;}
+\DoxyCodeLine{104     \textcolor{keywordflow}{return} m\_categories[local].GetName();}
+\DoxyCodeLine{105   \}}
+\DoxyCodeLine{106   }
+\DoxyCodeLine{107   \textcolor{keyword}{const} \mbox{\hyperlink{class_c_c_q_e_nu_1_1_category}{Category}} GetCategory(\textcolor{keyword}{const} std::string sub)\{}
+\DoxyCodeLine{108     \textcolor{keyword}{const} std::string local = sub;}
+\DoxyCodeLine{109     \textcolor{keywordflow}{return} m\_categories[local];}
+\DoxyCodeLine{110   \}}
+\DoxyCodeLine{111   std::map<const std::string, Category> GetCategories()\{}
+\DoxyCodeLine{112     \textcolor{keywordflow}{return} m\_categories;}
+\DoxyCodeLine{113   \}}
+\DoxyCodeLine{114  }
+\DoxyCodeLine{115 \};}
+\DoxyCodeLine{116 \textcolor{comment}{// end of class}}
+\DoxyCodeLine{117 \} \textcolor{comment}{// end namespace}}
+\DoxyCodeLine{118 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,62 @@
+\hypertarget{sidebands__v2_8_c}{}\doxysection{make\+\_\+hists/sidebands\+\_\+v2.C File Reference}
+\label{sidebands__v2_8_c}\index{make\_hists/sidebands\_v2.C@{make\_hists/sidebands\_v2.C}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}utils/\+Nu\+Config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}utils/git\+Version.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Macro\+Util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}include/\+CVUniverse.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}include/\+Systematics.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Cut.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Cutter.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}include/\+Get\+CCQECuts\+From\+Config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}include/\+Get\+Variables\+From\+Config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}include/\+Get2\+DVariables\+From\+Config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}include/\+Variable2\+DFrom\+Config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}include/weight\+\_\+\+MCre\+Scale.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}TROOT.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}TStyle.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}TError.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}TNamed.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/reweighters/\+Model.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/reweighters/\+Flux\+And\+CVReweighter.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/reweighters/\+GENIEReweighter.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/reweighters/\+Low\+Recoil2p2h\+Reweighter.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/reweighters/\+RPAReweighter.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/reweighters/\+MINOSEfficiency\+Reweighter.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}include/\+Fillers.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}include/\+Sample.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}include/\+Loops.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}runsamples\+Main.\+C\char`\"{}}\newline
+Include dependency graph for sidebands\+\_\+v2.\+C\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sidebands__v2_8_c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{sidebands__v2_8_c_a036f23c36016d2cb275a1dc1ff70d899}\label{sidebands__v2_8_c_a036f23c36016d2cb275a1dc1ff70d899}} 
+{\footnotesize template$<$typename T $>$ }\\bool {\bfseries Is\+In\+Vector} (const T \&what, const std\+::vector$<$ T $>$ \&vec)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{sidebands__v2_8_c_a99c1ae7cf9a8f59cedd6797c657f2bf8}\label{sidebands__v2_8_c_a99c1ae7cf9a8f59cedd6797c657f2bf8}} 
+int {\bfseries prescale}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Heidi Schellman/\+Noah Vaughan/\+Sean\+Gilligan 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 $\ast$ 
+\end{DoxyVersion}
+\hypertarget{sidebands__v2_8_c_LICENSE}{}\doxysubsection{$\ast$}\label{sidebands__v2_8_c_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. $\ast$ \hypertarget{sidebands__v2_8_c_DESCRIPTION}{}\doxysubsection{$\ast$}\label{sidebands__v2_8_c_DESCRIPTION}
+Code to fill histograms 

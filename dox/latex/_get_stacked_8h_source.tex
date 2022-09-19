@@ -1,0 +1,166 @@
+\hypertarget{_get_stacked_8h_source}{}\doxysection{Get\+Stacked.\+h}
+\label{_get_stacked_8h_source}\index{make\_hists/include/GetStacked.h@{make\_hists/include/GetStacked.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}PlotUtils/MnvH1D.h"{}}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}PlotUtils/MnvH2D.h"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}MinervaUnfold/MnvResponse.h"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}MinervaUnfold/MnvUnfold.h"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}utils/RebinFlux.h"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}utils/SyncBands.h"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}TH2D.h"{}}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}TF2.h"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}TCanvas.h"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}utils/NuConfig.h"{}}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include "{}PlotUtils/FluxReweighter.h"{}}}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#ifndef \_\_CINT\_\_}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}include/plotting\_pdf.h"{}}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{keywordtype}{void} applyStyle(MnvH1D* myhist)\{}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21   myhist-\/>GetXaxis()-\/>CenterTitle(\textcolor{keyword}{true});}
+\DoxyCodeLine{22   myhist-\/>GetYaxis()-\/>CenterTitle(\textcolor{keyword}{true});}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24   myhist-\/>SetMarkerStyle(8);}
+\DoxyCodeLine{25   myhist-\/>SetLineWidth(2);}
+\DoxyCodeLine{26   myhist-\/>SetLabelFont(42);}
+\DoxyCodeLine{27   myhist-\/>SetTitleFont(42);}
+\DoxyCodeLine{28 }
+\DoxyCodeLine{29   myhist-\/>GetYaxis()-\/>SetTitleFont(42);}
+\DoxyCodeLine{30   myhist-\/>GetXaxis()-\/>SetTitleFont(42);}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32   myhist-\/>SetLabelSize(0.05,\textcolor{stringliteral}{"{}x"{}});}
+\DoxyCodeLine{33   myhist-\/>SetTitleSize(0.05,\textcolor{stringliteral}{"{}x"{}});}
+\DoxyCodeLine{34   myhist-\/>SetLabelSize(0.05,\textcolor{stringliteral}{"{}y"{}});}
+\DoxyCodeLine{35   myhist-\/>SetTitleSize(0.05,\textcolor{stringliteral}{"{}y"{}});}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37   myhist-\/>SetTickLength(0.01, \textcolor{stringliteral}{"{}Y"{}});}
+\DoxyCodeLine{38   myhist-\/>SetTickLength(0.02, \textcolor{stringliteral}{"{}X"{}});}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40   myhist-\/>SetNdivisions(510, \textcolor{stringliteral}{"{}XYZ"{}});}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{keyword}{template}<\textcolor{keyword}{class} MnvHistoType>}
+\DoxyCodeLine{46   \textcolor{keywordtype}{int} drawStacked(std::string sample, std::string variable, std::string basename,}
+\DoxyCodeLine{47                   std::map<std::string,MnvHistoType*> hists1D,}
+\DoxyCodeLine{48                   NuConfig config, NuConfig variables1DConfig, NuConfig samplesConfig,}
+\DoxyCodeLine{49                   std::string pdffilename1D, \textcolor{keywordtype}{double} POTScale, }
+\DoxyCodeLine{50                   \textcolor{keywordtype}{bool} DEBUG, \textcolor{keywordtype}{bool} binwid, TCanvas \& canvas) \{}
+\DoxyCodeLine{51                   }
+\DoxyCodeLine{52     \textcolor{keywordtype}{int} logscale = 0;}
+\DoxyCodeLine{53     }
+\DoxyCodeLine{54     \textcolor{comment}{// Read in signal, background, and data names and colors}}
+\DoxyCodeLine{55     NuConfig sigkey = config.GetConfig(\textcolor{stringliteral}{"{}signal"{}});}
+\DoxyCodeLine{56     std::cout << std::endl << \textcolor{stringliteral}{"{}    Loading signal key"{}} << std::endl;}
+\DoxyCodeLine{57     std::string sig = sigkey.GetString(sample);}
+\DoxyCodeLine{58     NuConfig bkgkey = config.GetConfig(\textcolor{stringliteral}{"{}background"{}});}
+\DoxyCodeLine{59     std::vector<std::string> bkg = bkgkey.GetStringVector(sample);}
+\DoxyCodeLine{60     std::cout << \textcolor{stringliteral}{"{}    Loading background key:"{}} << std::endl;}
+\DoxyCodeLine{61     NuConfig datkey = config.GetConfig(\textcolor{stringliteral}{"{}data"{}});}
+\DoxyCodeLine{62     std::string dat = datkey.GetString(sample);}
+\DoxyCodeLine{63     std::cout << \textcolor{stringliteral}{"{}    Loading data key:"{}} << std::endl;}
+\DoxyCodeLine{64     }
+\DoxyCodeLine{65     }
+\DoxyCodeLine{66     NuConfig sampleConfig = samplesConfig.GetConfig(sample);}
+\DoxyCodeLine{67     NuConfig colorFillConfig = sampleConfig.GetConfig(\textcolor{stringliteral}{"{}fill\_colors"{}});}
+\DoxyCodeLine{68     NuConfig colorLineConfig = sampleConfig.GetConfig(\textcolor{stringliteral}{"{}line\_colors"{}});}
+\DoxyCodeLine{69     NuConfig legendEntries = sampleConfig.GetConfig(\textcolor{stringliteral}{"{}legend\_entries"{}});}
+\DoxyCodeLine{70     }
+\DoxyCodeLine{71     }
+\DoxyCodeLine{72     \textcolor{comment}{// Set colors}}
+\DoxyCodeLine{73     hists1D[sig]-\/>SetFillColor(colorFillConfig.GetInt(sig));}
+\DoxyCodeLine{74     hists1D[sig]-\/>SetLineColor(colorFillConfig.GetInt(sig));}
+\DoxyCodeLine{75     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i <= bkg.size()-\/1; i++)\{}
+\DoxyCodeLine{76       hists1D[bkg[i]]-\/>SetFillColor(colorFillConfig.GetInt(bkg[i]));}
+\DoxyCodeLine{77       hists1D[bkg[i]]-\/>SetLineColor(colorFillConfig.GetInt(bkg[i]));}
+\DoxyCodeLine{78     \}}
+\DoxyCodeLine{79     }
+\DoxyCodeLine{80     \textcolor{comment}{// Bin width normalization}}
+\DoxyCodeLine{81     \textcolor{keywordflow}{if}(binwid)\{}
+\DoxyCodeLine{82       hists1D[dat]-\/>Scale(1.0,\textcolor{stringliteral}{"{}width"{}});}
+\DoxyCodeLine{83       hists1D[sig]-\/>Scale(1.0,\textcolor{stringliteral}{"{}width"{}});}
+\DoxyCodeLine{84       \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i <= bkg.size()-\/1; i++)\{}
+\DoxyCodeLine{85         hists1D[bkg[i]]-\/>Scale(1.0,\textcolor{stringliteral}{"{}width"{}});}
+\DoxyCodeLine{86       \}}
+\DoxyCodeLine{87     \}}
+\DoxyCodeLine{88     }
+\DoxyCodeLine{89     \textcolor{comment}{// POT normalize}}
+\DoxyCodeLine{90     hists1D[sig]-\/>Scale(POTScale);}
+\DoxyCodeLine{91     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i <= bkg.size()-\/1; i++)\{}
+\DoxyCodeLine{92       hists1D[bkg[i]]-\/>Scale(POTScale);}
+\DoxyCodeLine{93     \}}
+\DoxyCodeLine{94     }
+\DoxyCodeLine{95     \textcolor{comment}{// Stack hists}}
+\DoxyCodeLine{96     THStack *hs = \textcolor{keyword}{new} THStack();}
+\DoxyCodeLine{97     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = bkg.size()-\/1; i >= 0; i-\/-\/)\{}
+\DoxyCodeLine{98       hs-\/>Add(\textcolor{keyword}{new} TH1D(hists1D[bkg[i]]-\/>GetCVHistoWithError()));}
+\DoxyCodeLine{99     \}}
+\DoxyCodeLine{100     hs-\/>Add(\textcolor{keyword}{new} TH1D(hists1D[sig]-\/>GetCVHistoWithError()));}
+\DoxyCodeLine{101     }
+\DoxyCodeLine{102     \textcolor{comment}{// Make legend}}
+\DoxyCodeLine{103     \textcolor{keyword}{auto} *leg = \textcolor{keyword}{new} TLegend(0.62,0.6,0.89,0.89);}
+\DoxyCodeLine{104     leg-\/>SetFillColor(kWhite);}
+\DoxyCodeLine{105     \textcolor{comment}{//leg-\/>SetLineColor(0);}}
+\DoxyCodeLine{106     leg-\/>AddEntry(hists1D[dat],legendEntries.GetString(dat).c\_str(),\textcolor{stringliteral}{"{}p"{}});}
+\DoxyCodeLine{107     \textcolor{keywordtype}{double} maxEntryLength = legendEntries.GetString(dat).length();}
+\DoxyCodeLine{108     leg-\/>AddEntry(hists1D[sig],legendEntries.GetString(sig).c\_str(),\textcolor{stringliteral}{"{}F"{}});}
+\DoxyCodeLine{109     \textcolor{keywordflow}{if}(legendEntries.GetString(sig).length() > maxEntryLength)\{}
+\DoxyCodeLine{110       maxEntryLength =legendEntries.GetString(sig).length();}
+\DoxyCodeLine{111     \}}
+\DoxyCodeLine{112     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i <= bkg.size()-\/1; i++)\{}
+\DoxyCodeLine{113       leg-\/>AddEntry(hists1D[bkg[i]],legendEntries.GetString(bkg[i]).c\_str(),\textcolor{stringliteral}{"{}F"{}});}
+\DoxyCodeLine{114       \textcolor{keywordflow}{if}(legendEntries.GetString(bkg[i]).length() > maxEntryLength)\{}
+\DoxyCodeLine{115         maxEntryLength =legendEntries.GetString(bkg[i]).length();}
+\DoxyCodeLine{116       \}}
+\DoxyCodeLine{117     \}}
+\DoxyCodeLine{118     std::cout << std::endl << \textcolor{stringliteral}{"{}    Max Legend Entry Length = "{}} << maxEntryLength << std::endl;}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120   \textcolor{comment}{// Get variable titles}}
+\DoxyCodeLine{121   std::string title = sample + \textcolor{stringliteral}{"{}\_"{}} + variable;}
+\DoxyCodeLine{122   NuConfig variableConfig = variables1DConfig.GetConfig(variable);}
+\DoxyCodeLine{123   std::string xtitle = variableConfig.GetString(\textcolor{stringliteral}{"{}title"{}});}
+\DoxyCodeLine{124   std::string ytitle;}
+\DoxyCodeLine{125   \textcolor{keywordflow}{if}(binwid) ytitle = \textcolor{stringliteral}{"{}Events per "{}} + variableConfig.GetString(\textcolor{stringliteral}{"{}units"{}});}
+\DoxyCodeLine{126   \textcolor{keywordflow}{else} ytitle = \textcolor{stringliteral}{"{}Events"{}};}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128     hists1D[dat]-\/>GetXaxis()-\/>SetTitle(xtitle.c\_str());}
+\DoxyCodeLine{129     hists1D[dat]-\/>GetYaxis()-\/>SetTitle(ytitle.c\_str());}
+\DoxyCodeLine{130     hists1D[dat]-\/>GetXaxis()-\/>SetTitleOffset(1.2);}
+\DoxyCodeLine{131     hists1D[dat]-\/>GetYaxis()-\/>SetTitleOffset(1.3);}
+\DoxyCodeLine{132     hists1D[dat]-\/>SetTitle(title.c\_str());}
+\DoxyCodeLine{133     hists1D[dat]-\/>SetStats(0);}
+\DoxyCodeLine{134     applyStyle(hists1D[dat]);}
+\DoxyCodeLine{135     }
+\DoxyCodeLine{136     \textcolor{comment}{// Draw hists}}
+\DoxyCodeLine{137     hists1D[dat]-\/>Draw(\textcolor{stringliteral}{"{}PE1"{}});}
+\DoxyCodeLine{138     hs-\/>Draw(\textcolor{stringliteral}{"{}HISTSAME"{}});}
+\DoxyCodeLine{139     hists1D[dat]-\/>Draw(\textcolor{stringliteral}{"{}PE1SAME"{}});}
+\DoxyCodeLine{140     hists1D[dat]-\/>GetYaxis()-\/>SetRangeUser(0,1.2*hists1D[dat]-\/>GetBinContent(hists1D[dat]-\/>GetMaximumBin()));}
+\DoxyCodeLine{141     leg-\/>Draw(\textcolor{stringliteral}{"{}SAME"{}});}
+\DoxyCodeLine{142     gPad-\/>RedrawAxis();}
+\DoxyCodeLine{143     }
+\DoxyCodeLine{144     canvas.Print(pdffilename1D.c\_str());}
+\DoxyCodeLine{145     }
+\DoxyCodeLine{146     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{147     }
+\DoxyCodeLine{148   \}}
+\DoxyCodeLine{149     }
+\DoxyCodeLine{150     }
+\DoxyCodeLine{151     }
+\DoxyCodeLine{152     }
+\DoxyCodeLine{153     }
+\DoxyCodeLine{154     }
+\DoxyCodeLine{155     }
+\DoxyCodeLine{156     }
+\DoxyCodeLine{157     }
+\DoxyCodeLine{158     }
+\DoxyCodeLine{159     }
+\DoxyCodeLine{160     }
+
+\end{DoxyCode}
