@@ -1,3 +1,15 @@
+/**
+* @file
+* @author  Heidi Schellman/Noah Vaughan/SeanGilligan
+* @version 1.0 *
+* @section LICENSE *
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as
+* published by the Free Software Foundation; either version 2 of
+* the License, or (at your option) any later version. *
+* @section DESCRIPTION *
+* Code to do cross sections
+ */
 bool DEBUG=1;
 
 #include <iostream>
@@ -35,22 +47,7 @@ double targets = 3.23478E30; //nucleons - is this the same for MC or different
 
 #include <sstream>
 
-// code to split on any delimiter thanks to stackoverflow
-//
-// std::vector<std::string> split (std::string s, std::string delimiter) {
-//   size_t pos_start = 0, pos_end, delim_len = delimiter.length();
-//   std::string token;
-//   std::vector<std::string> res;
-//
-//   while ((pos_end = s.find (delimiter, pos_start)) != std::string::npos) {
-//     token = s.substr (pos_start, pos_end - pos_start);
-//     pos_start = pos_end + delim_len;
-//     res.push_back (token);
-//   }
-//
-//   res.push_back (s.substr (pos_start));
-//   return res;
-// }
+
 
 
 // Main  - this will do set up, loop over events and then make some plots
