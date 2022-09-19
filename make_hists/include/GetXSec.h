@@ -349,7 +349,7 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
  unfoldingCovMatrixOrig_hist_type.ResizeTo(correctNbins, correctNbins);
   }
  ZeroDiagonal(unfoldingCovMatrixOrig_hist_type);
-  unsmeared->PushCovMatrix("unfoldingCov",unfoldingCovMatrixOrig_hist_type);
+ // unsmeared->PushCovMatrix("unfoldingCov",unfoldingCovMatrixOrig_hist_type);
   // Commenting out since may not be necessary.
   SyncBands(unsmeared);
   return unsmeared;
