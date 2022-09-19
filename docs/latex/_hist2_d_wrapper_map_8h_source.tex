@@ -269,109 +269,100 @@
 \DoxyCodeLine{265     m\_hists[tag].FillUniverse(universe, x\_value, y\_value, weight);}
 \DoxyCodeLine{266   \}}
 \DoxyCodeLine{267 }
-\DoxyCodeLine{268   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} FillResponse2D(\textcolor{keyword}{const} std::string tag, \textcolor{keyword}{const} T* univ, \textcolor{keyword}{const} \textcolor{keywordtype}{double} x\_value, \textcolor{keyword}{const} \textcolor{keywordtype}{double} y\_value, \textcolor{keyword}{const} \textcolor{keywordtype}{double} x\_truth, \textcolor{keyword}{const} \textcolor{keywordtype}{double} y\_truth, \textcolor{keyword}{const} \textcolor{keywordtype}{double} weight=1.0, \textcolor{keyword}{const} \textcolor{keywordtype}{double} scale = -\/1.)\{ \textcolor{comment}{//TODO}}
+\DoxyCodeLine{268   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} FillResponse2D(\textcolor{keyword}{const} std::string tag, \textcolor{keyword}{const} T* univ, \textcolor{keyword}{const} \textcolor{keywordtype}{double} x\_value, \textcolor{keyword}{const} \textcolor{keywordtype}{double} y\_value, \textcolor{keyword}{const} \textcolor{keywordtype}{double} x\_truth, \textcolor{keyword}{const} \textcolor{keywordtype}{double} y\_truth, \textcolor{keyword}{const} \textcolor{keywordtype}{double} weight=1.0, \textcolor{keyword}{const} \textcolor{keywordtype}{double} scale = 1.0)\{ \textcolor{comment}{//TODO}}
 \DoxyCodeLine{269     std::string name = univ-\/>ShortName();}
-\DoxyCodeLine{270 \textcolor{comment}{//    if (name == "{}cv"{} || name == "{}CV"{})\{}}
-\DoxyCodeLine{271 \textcolor{comment}{//      MnvH2D * a;}}
-\DoxyCodeLine{272 \textcolor{comment}{//      MnvH2D * b;}}
-\DoxyCodeLine{273 \textcolor{comment}{//      MnvH2D * c;}}
-\DoxyCodeLine{274 \textcolor{comment}{//      bool t= m\_response[tag]-\/>GetMigrationObjects(a, b, c);}}
-\DoxyCodeLine{275 \textcolor{comment}{//      std::cout << "{}RESPONSE "{} << tag << "{} "{} <<  a-\/>GetName() << std::endl;}}
-\DoxyCodeLine{276 \textcolor{comment}{//      a-\/>Delete();}}
-\DoxyCodeLine{277 \textcolor{comment}{//      b-\/>Delete();}}
-\DoxyCodeLine{278 \textcolor{comment}{//      c-\/>Delete();}}
-\DoxyCodeLine{279 \textcolor{comment}{//    \}}}
-\DoxyCodeLine{280     \textcolor{keywordtype}{int} iuniv = m\_decoder[univ];}
-\DoxyCodeLine{281     \textcolor{comment}{//std::cout << "{} fillresponse "{} << name << "{} "{} << iuniv << std::endl;}}
-\DoxyCodeLine{282     }
-\DoxyCodeLine{283     m\_response[tag]-\/>Fill(x\_value, y\_value, x\_truth, y\_truth, name, iuniv, weight*scale);}
-\DoxyCodeLine{284     }
-\DoxyCodeLine{285   \}}
-\DoxyCodeLine{286 }
-\DoxyCodeLine{287   \textcolor{keyword}{inline} \textcolor{keywordtype}{int} GetNhists()\{\textcolor{keywordflow}{return} m\_hists.size();\}}
-\DoxyCodeLine{288 }
-\DoxyCodeLine{289   \textcolor{keyword}{inline} MnvH2D* GetHist(\textcolor{keyword}{const} std::string tag)\{}
-\DoxyCodeLine{290     \textcolor{keywordflow}{if} (m\_hists.count(tag)>0) \textcolor{keywordflow}{return} m\_hists[tag].hist;}
-\DoxyCodeLine{291     \textcolor{keywordflow}{return} 0;}
-\DoxyCodeLine{292   \}}
-\DoxyCodeLine{293 }
-\DoxyCodeLine{294   \textcolor{keyword}{inline} MinervaUnfold::MnvResponse* GetResponse(\textcolor{keyword}{const} std::string tag)\{}
-\DoxyCodeLine{295     \textcolor{keywordflow}{if} (m\_response.count(tag)>0) \textcolor{keywordflow}{return} m\_response[tag];}
-\DoxyCodeLine{296     \textcolor{keywordflow}{return} 0;}
-\DoxyCodeLine{297   \}}
-\DoxyCodeLine{298 }
-\DoxyCodeLine{299   \textcolor{keyword}{inline} MnvH2D* GetMigrationMatrix(\textcolor{keyword}{const} std::string tag)\{}
-\DoxyCodeLine{300     MnvH2D* matrix;}
-\DoxyCodeLine{301     MnvH1D* dummy; \textcolor{comment}{//why are these here?}}
-\DoxyCodeLine{302     MnvH1D* dummy2;}
-\DoxyCodeLine{303 }
-\DoxyCodeLine{304     \textcolor{keywordflow}{if} (m\_response.count(tag)>0)\{}
-\DoxyCodeLine{305 \textcolor{preprocessor}{\#ifdef HSTDBG}}
-\DoxyCodeLine{306       std::cout << \textcolor{stringliteral}{"{} HistWrapperMap::Migration matrix has size "{}} << m\_response[tag]-\/>GetMigrationMatrix()-\/>GetErrorBandNames().size() << std::endl;}
-\DoxyCodeLine{307       std::cout << \textcolor{stringliteral}{"{} HistWrapperMap::getting migration matrix "{}} << m\_response[tag]-\/>GetMigrationMatrix()-\/>GetName() << std::endl;}
-\DoxyCodeLine{308 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{309       matrix = m\_response[tag]-\/>GetMigrationMatrix();}
-\DoxyCodeLine{310       \textcolor{keywordflow}{return} matrix;}
-\DoxyCodeLine{311     \}}
-\DoxyCodeLine{312     \textcolor{keywordflow}{return} 0;}
-\DoxyCodeLine{313   \}}
+\DoxyCodeLine{270 }
+\DoxyCodeLine{271     \textcolor{keywordtype}{int} iuniv = m\_decoder[univ];}
+\DoxyCodeLine{272     \textcolor{comment}{//std::cout << "{} fillresponse "{} << name << "{} "{} << iuniv << std::endl;}}
+\DoxyCodeLine{273     }
+\DoxyCodeLine{274     m\_response[tag]-\/>Fill(x\_value, y\_value, x\_truth, y\_truth, name, iuniv, weight*scale);}
+\DoxyCodeLine{275     }
+\DoxyCodeLine{276   \}}
+\DoxyCodeLine{277 }
+\DoxyCodeLine{278   \textcolor{keyword}{inline} \textcolor{keywordtype}{int} GetNhists()\{\textcolor{keywordflow}{return} m\_hists.size();\}}
+\DoxyCodeLine{279 }
+\DoxyCodeLine{280   \textcolor{keyword}{inline} MnvH2D* GetHist(\textcolor{keyword}{const} std::string tag)\{}
+\DoxyCodeLine{281     \textcolor{keywordflow}{if} (m\_hists.count(tag)>0) \textcolor{keywordflow}{return} m\_hists[tag].hist;}
+\DoxyCodeLine{282     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{283   \}}
+\DoxyCodeLine{284 }
+\DoxyCodeLine{285   \textcolor{keyword}{inline} MinervaUnfold::MnvResponse* GetResponse(\textcolor{keyword}{const} std::string tag)\{}
+\DoxyCodeLine{286     \textcolor{keywordflow}{if} (m\_response.count(tag)>0) \textcolor{keywordflow}{return} m\_response[tag];}
+\DoxyCodeLine{287     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{288   \}}
+\DoxyCodeLine{289 }
+\DoxyCodeLine{290   \textcolor{keyword}{inline} MnvH2D* GetMigrationMatrix(\textcolor{keyword}{const} std::string tag)\{}
+\DoxyCodeLine{291     MnvH2D* matrix;}
+\DoxyCodeLine{292     MnvH1D* dummy; \textcolor{comment}{//why are these here?}}
+\DoxyCodeLine{293     MnvH1D* dummy2;}
+\DoxyCodeLine{294 }
+\DoxyCodeLine{295     \textcolor{keywordflow}{if} (m\_response.count(tag)>0)\{}
+\DoxyCodeLine{296 \textcolor{preprocessor}{\#ifdef HSTDBG}}
+\DoxyCodeLine{297       std::cout << \textcolor{stringliteral}{"{} HistWrapperMap::Migration matrix has size "{}} << m\_response[tag]-\/>GetMigrationMatrix()-\/>GetErrorBandNames().size() << std::endl;}
+\DoxyCodeLine{298       std::cout << \textcolor{stringliteral}{"{} HistWrapperMap::getting migration matrix "{}} << m\_response[tag]-\/>GetMigrationMatrix()-\/>GetName() << std::endl;}
+\DoxyCodeLine{299 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{300       matrix = m\_response[tag]-\/>GetMigrationMatrix();}
+\DoxyCodeLine{301       \textcolor{keywordflow}{return} matrix;}
+\DoxyCodeLine{302     \}}
+\DoxyCodeLine{303     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{304   \}}
+\DoxyCodeLine{305 }
+\DoxyCodeLine{306 }
+\DoxyCodeLine{307 }
+\DoxyCodeLine{308 }
+\DoxyCodeLine{309   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} Scale(\textcolor{keyword}{const} std::string tag, \textcolor{keywordtype}{double} scale)\{}
+\DoxyCodeLine{310     m\_hists[tag].hist-\/>Scale(scale);}
+\DoxyCodeLine{311   \}}
+\DoxyCodeLine{312 }
+\DoxyCodeLine{313   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} Write(\textcolor{keyword}{const} std::string tag, Int\_t option = 0)\{}
 \DoxyCodeLine{314 }
-\DoxyCodeLine{315 }
-\DoxyCodeLine{316 }
-\DoxyCodeLine{317 }
-\DoxyCodeLine{318   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} Scale(\textcolor{keyword}{const} std::string tag, \textcolor{keywordtype}{double} scale)\{}
-\DoxyCodeLine{319     m\_hists[tag].hist-\/>Scale(scale);}
-\DoxyCodeLine{320   \}}
+\DoxyCodeLine{315       std::cout << \textcolor{stringliteral}{"{} look at all tags "{}} << tag << std::endl;}
+\DoxyCodeLine{316       \textcolor{keywordflow}{if} (m\_hashist[tag])\{}
+\DoxyCodeLine{317         std::cout << \textcolor{stringliteral}{"{} try to write hist "{}} << tag << \textcolor{stringliteral}{"{} "{}} << m\_hists[tag].hist-\/>GetName() <<  std::endl;}
+\DoxyCodeLine{318         m\_hists[tag].hist-\/>Write();}
+\DoxyCodeLine{319 }
+\DoxyCodeLine{320       \}}
 \DoxyCodeLine{321 }
-\DoxyCodeLine{322   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} Write(\textcolor{keyword}{const} std::string tag, Int\_t option = 0)\{}
-\DoxyCodeLine{323 }
-\DoxyCodeLine{324       std::cout << \textcolor{stringliteral}{"{} look at all tags "{}} << tag << std::endl;}
-\DoxyCodeLine{325       \textcolor{keywordflow}{if} (m\_hashist[tag])\{}
-\DoxyCodeLine{326         std::cout << \textcolor{stringliteral}{"{} try to write hist "{}} << tag << \textcolor{stringliteral}{"{} "{}} << m\_hists[tag].hist-\/>GetName() <<  std::endl;}
-\DoxyCodeLine{327         m\_hists[tag].hist-\/>Write();}
-\DoxyCodeLine{328 }
-\DoxyCodeLine{329       \}}
-\DoxyCodeLine{330 }
-\DoxyCodeLine{331 }
-\DoxyCodeLine{332       \textcolor{keywordflow}{if}(m\_hasresponse[tag])\{}
-\DoxyCodeLine{333         std::cout << \textcolor{stringliteral}{"{} try to write response "{}} << tag << \textcolor{stringliteral}{"{} "{}} << m\_hists[tag].hist-\/>GetName()  << std::endl;}
-\DoxyCodeLine{334         PlotUtils::MnvH2D* h\_migration;}
-\DoxyCodeLine{335         PlotUtils::MnvH2D* h\_reco;}
-\DoxyCodeLine{336         PlotUtils::MnvH2D* h\_truth;}
-\DoxyCodeLine{337         \textcolor{comment}{//        h\_migration-\/>SetDirectory(0);}}
-\DoxyCodeLine{338         \textcolor{comment}{//        h\_reco-\/>SetDirectory(0);}}
-\DoxyCodeLine{339         \textcolor{comment}{//        h\_truth-\/>SetDirectory(0);}}
-\DoxyCodeLine{340         std::cout << \textcolor{stringliteral}{"{} GetMigrationObjects will now complain because I passed it pointers to uninitiated MnvH2D/1D to fill please ignore"{}} << std::endl;}
-\DoxyCodeLine{341         m\_response[tag]-\/>GetMigrationObjects( h\_migration, h\_reco, h\_truth);}
-\DoxyCodeLine{342         std::cout << h\_migration << std::endl;}
-\DoxyCodeLine{343         \textcolor{keywordflow}{if} (h\_reco-\/>GetEntries() > 0)\{}
-\DoxyCodeLine{344           h\_migration-\/>Write();}
-\DoxyCodeLine{345           h\_reco-\/>Write();}
-\DoxyCodeLine{346           h\_truth-\/>Write();}
-\DoxyCodeLine{347         \}}
-\DoxyCodeLine{348 }
-\DoxyCodeLine{349       \}}
-\DoxyCodeLine{350 }
-\DoxyCodeLine{351   \};}
-\DoxyCodeLine{352 }
-\DoxyCodeLine{353 }
-\DoxyCodeLine{354   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} DeleteResponse()\{}
-\DoxyCodeLine{355     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} resp: m\_response)\{}
-\DoxyCodeLine{356       std::cout << \textcolor{stringliteral}{"{}delete migration matrix"{}} << resp.second-\/>GetMigrationMatrix()-\/>GetName() ;}
-\DoxyCodeLine{357       \textcolor{keyword}{delete} resp.second;}
-\DoxyCodeLine{358     \}}
-\DoxyCodeLine{359   \}}
-\DoxyCodeLine{360 }
-\DoxyCodeLine{361   \textcolor{comment}{// voodoo you sometimes need}}
-\DoxyCodeLine{362   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} SyncCVHistos()\{}
-\DoxyCodeLine{363     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} tag:m\_tags)\{}
-\DoxyCodeLine{364       m\_hists[tag].SyncCVHistos();}
-\DoxyCodeLine{365     \}}
-\DoxyCodeLine{366   \};}
-\DoxyCodeLine{367 }
-\DoxyCodeLine{368 }
-\DoxyCodeLine{369 \};}
-\DoxyCodeLine{370 \};}
-\DoxyCodeLine{371 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* Hist2DWrapperMap\_h */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{322 }
+\DoxyCodeLine{323       \textcolor{keywordflow}{if}(m\_hasresponse[tag])\{}
+\DoxyCodeLine{324         std::cout << \textcolor{stringliteral}{"{} try to write response "{}} << tag << \textcolor{stringliteral}{"{} "{}} << m\_hists[tag].hist-\/>GetName()  << std::endl;}
+\DoxyCodeLine{325         PlotUtils::MnvH2D* h\_migration;}
+\DoxyCodeLine{326         PlotUtils::MnvH2D* h\_reco;}
+\DoxyCodeLine{327         PlotUtils::MnvH2D* h\_truth;}
+\DoxyCodeLine{328         \textcolor{comment}{//        h\_migration-\/>SetDirectory(0);}}
+\DoxyCodeLine{329         \textcolor{comment}{//        h\_reco-\/>SetDirectory(0);}}
+\DoxyCodeLine{330         \textcolor{comment}{//        h\_truth-\/>SetDirectory(0);}}
+\DoxyCodeLine{331         std::cout << \textcolor{stringliteral}{"{} GetMigrationObjects will now complain because I passed it pointers to uninitiated MnvH2D/1D to fill please ignore"{}} << std::endl;}
+\DoxyCodeLine{332         m\_response[tag]-\/>GetMigrationObjects( h\_migration, h\_reco, h\_truth);}
+\DoxyCodeLine{333         std::cout << h\_migration << std::endl;}
+\DoxyCodeLine{334         \textcolor{keywordflow}{if} (h\_reco-\/>GetEntries() > 0)\{}
+\DoxyCodeLine{335           h\_migration-\/>Write();}
+\DoxyCodeLine{336           h\_reco-\/>Write();}
+\DoxyCodeLine{337           h\_truth-\/>Write();}
+\DoxyCodeLine{338         \}}
+\DoxyCodeLine{339 }
+\DoxyCodeLine{340       \}}
+\DoxyCodeLine{341 }
+\DoxyCodeLine{342   \};}
+\DoxyCodeLine{343 }
+\DoxyCodeLine{344 }
+\DoxyCodeLine{345   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} DeleteResponse()\{}
+\DoxyCodeLine{346     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} resp: m\_response)\{}
+\DoxyCodeLine{347       std::cout << \textcolor{stringliteral}{"{}delete migration matrix"{}} << resp.second-\/>GetMigrationMatrix()-\/>GetName() ;}
+\DoxyCodeLine{348       \textcolor{keyword}{delete} resp.second;}
+\DoxyCodeLine{349     \}}
+\DoxyCodeLine{350   \}}
+\DoxyCodeLine{351 }
+\DoxyCodeLine{352   \textcolor{comment}{// voodoo you sometimes need}}
+\DoxyCodeLine{353   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} SyncCVHistos()\{}
+\DoxyCodeLine{354     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} tag:m\_tags)\{}
+\DoxyCodeLine{355       m\_hists[tag].SyncCVHistos();}
+\DoxyCodeLine{356     \}}
+\DoxyCodeLine{357   \};}
+\DoxyCodeLine{358 }
+\DoxyCodeLine{359 }
+\DoxyCodeLine{360 \};}
+\DoxyCodeLine{361 \};}
+\DoxyCodeLine{362 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* Hist2DWrapperMap\_h */}\textcolor{preprocessor}{}}
 
 \end{DoxyCode}

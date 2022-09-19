@@ -1,7 +1,7 @@
 #ifndef GET2DVariablesFromConfig_H
 #define GET2DVariablesFromConfig_H
 #include <vector>
-#include "CVUniverse.h"
+#include "include/CVUniverse.h"
 #include "PlotUtils/PhysicsVariables.h"
 
 namespace CCQENu

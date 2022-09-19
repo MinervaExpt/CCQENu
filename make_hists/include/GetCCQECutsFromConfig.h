@@ -1,8 +1,8 @@
 #ifndef GETCCQECUTSFromConfig_H
 #define GETCCQECUTSFromConfig_H
 #include "PlotUtils/Cut.h"
-#include "CVUniverse.h"
-#include "CutFromConfig.h"
+#include "include/CVUniverse.h"
+#include "include/CutFromConfig.h"
 #include "utils/NuConfig.h"
 
 

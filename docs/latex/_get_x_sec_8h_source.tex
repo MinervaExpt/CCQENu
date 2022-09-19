@@ -319,579 +319,584 @@
 \DoxyCodeLine{315   std::cout << \textcolor{stringliteral}{"{}imcsighist "{}} << imcsighist-\/>Integral() << \textcolor{stringliteral}{"{} "{}} << imcsighist-\/>Integral() << std::endl;}
 \DoxyCodeLine{316   std::cout << \textcolor{stringliteral}{"{}iseltruhist "{}} << iseltruhist-\/>Integral() << \textcolor{stringliteral}{"{} "{}} << iseltruhist-\/>Integral() << std::endl;}
 \DoxyCodeLine{317   std::cout << \textcolor{stringliteral}{"{}bkgsub "{}} << bkgsub-\/>Integral() << \textcolor{stringliteral}{"{} "{}} << bkgsub-\/>Integral() << std::endl;}
-\DoxyCodeLine{318   std::cout << \textcolor{stringliteral}{"{}migration x y"{}} << migration-\/>ProjectionX()-\/>Integral() << \textcolor{stringliteral}{"{} "{}} << migration-\/>ProjectionY()-\/>Integral() << std::endl;}
-\DoxyCodeLine{319   \textcolor{keywordtype}{bool} data\_unfolded = unfold.UnfoldHisto2D(unsmeared,migration,imcsighist,iseltruhist,bkgsub,num\_iter,\textcolor{keyword}{true},\textcolor{keyword}{true});}
-\DoxyCodeLine{320   std::cout << \textcolor{stringliteral}{"{} Done with 2D unfolding "{}} << std::endl;}
-\DoxyCodeLine{321   std::cout << \textcolor{stringliteral}{"{}unsmeared "{}} << unsmeared-\/>Integral() << \textcolor{stringliteral}{"{} "{}} << unsmeared-\/>Integral() << std::endl;}
-\DoxyCodeLine{322   bkgsub-\/>Print(\textcolor{stringliteral}{"{}ALL"{}});}
-\DoxyCodeLine{323   imcsighist-\/>Print(\textcolor{stringliteral}{"{}ALL"{}});}
-\DoxyCodeLine{324   iseltruhist-\/>Print(\textcolor{stringliteral}{"{}ALL"{}});}
-\DoxyCodeLine{325   \textcolor{comment}{// extra code just to get CV covmx}}
-\DoxyCodeLine{326   TH2D* hUnfoldedDummy=\textcolor{keyword}{new} TH2D(unsmeared-\/>GetCVHistoWithStatError());}
-\DoxyCodeLine{327   TH2D* hMigrationDummy=\textcolor{keyword}{new} TH2D(migration-\/>GetCVHistoWithStatError());}
-\DoxyCodeLine{328   TH2D* hRecoDummy=\textcolor{keyword}{new} TH2D(imcsighist-\/>GetCVHistoWithStatError());}
-\DoxyCodeLine{329   TH2D* hTruthDummy=\textcolor{keyword}{new} TH2D(iseltruhist-\/>GetCVHistoWithStatError());}
-\DoxyCodeLine{330   TH2D* hBGSubDataDummy=\textcolor{keyword}{new} TH2D(bkgsub-\/>GetCVHistoWithStatError());}
-\DoxyCodeLine{331   TMatrixD unfoldingCovMatrixOrig\_hist\_type;}
-\DoxyCodeLine{332   std::cout << \textcolor{stringliteral}{"{}HERE for COVARIANCE "{}} << std::endl;}
-\DoxyCodeLine{333   \textcolor{comment}{//unfoldingCovMatrixOrig\_hist\_type.Print("{}ALL"{});}}
-\DoxyCodeLine{334   unfold.UnfoldHisto2D(hUnfoldedDummy, unfoldingCovMatrixOrig\_hist\_type, hMigrationDummy, hRecoDummy, hTruthDummy, hBGSubDataDummy, num\_iter);}
-\DoxyCodeLine{335   \textcolor{keywordtype}{int} correctNbins = hUnfoldedDummy-\/>fN;}
-\DoxyCodeLine{336   \textcolor{keywordtype}{int} matrixRows = unfoldingCovMatrixOrig\_hist\_type.GetNrows();}
-\DoxyCodeLine{337   }
-\DoxyCodeLine{338   \textcolor{keywordflow}{if}(correctNbins!=matrixRows)\{}
-\DoxyCodeLine{339   }
-\DoxyCodeLine{340   cout << \textcolor{stringliteral}{"{}****************************************************************************"{}} << endl;}
-\DoxyCodeLine{341  cout << \textcolor{stringliteral}{"{}*  Fixing unfolding matrix size because of RooUnfold bug. From "{}} << matrixRows << \textcolor{stringliteral}{"{} to "{}} << correctNbins << endl;}
-\DoxyCodeLine{342  cout << \textcolor{stringliteral}{"{}****************************************************************************"{}} << endl;}
-\DoxyCodeLine{343  \textcolor{comment}{// It looks like this DTRT, since the extra last two bins don't have any content}}
-\DoxyCodeLine{344  unfoldingCovMatrixOrig\_hist\_type.ResizeTo(correctNbins, correctNbins);}
-\DoxyCodeLine{345   \}}
-\DoxyCodeLine{346  ZeroDiagonal(unfoldingCovMatrixOrig\_hist\_type);}
-\DoxyCodeLine{347   unsmeared-\/>PushCovMatrix(\textcolor{stringliteral}{"{}unfoldingCov"{}},unfoldingCovMatrixOrig\_hist\_type);}
-\DoxyCodeLine{348   \textcolor{comment}{// Commenting out since may not be necessary.}}
-\DoxyCodeLine{349   SyncBands(unsmeared);}
-\DoxyCodeLine{350   \textcolor{keywordflow}{return} unsmeared;}
-\DoxyCodeLine{351 \};}
-\DoxyCodeLine{352 }
-\DoxyCodeLine{353 \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ DoUnfolding -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{354 \textcolor{comment}{// Putting the unfolding all together.}}
-\DoxyCodeLine{355 \textcolor{keyword}{template}<\textcolor{keyword}{class} MnvHistoType>}
-\DoxyCodeLine{356   std::vector<MnvHistoType*> DoUnfolding(std::string basename, MnvH2D* iresponse,}
-\DoxyCodeLine{357                               MnvHistoType* imcsighist, MnvHistoType* iseltruhist, MnvHistoType* bkgsub,}
-\DoxyCodeLine{358                               MnvHistoType* idatahist, MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter)\{}
-\DoxyCodeLine{359     \textcolor{comment}{// If there's no response, do a rough ratio unfolding}}
-\DoxyCodeLine{360     \textcolor{keywordflow}{if}(iresponse == 0)\{}
-\DoxyCodeLine{361       std::cout << \textcolor{stringliteral}{"{} use ratio unfolding for "{}} << basename  << std::endl;}
-\DoxyCodeLine{362       \textcolor{comment}{// If there's no truth histogram you can't do unfolding.}}
-\DoxyCodeLine{363       \textcolor{keywordflow}{if} (iseltruhist == 0)\{}
-\DoxyCodeLine{364         std::cout << \textcolor{stringliteral}{"{} No truth info so no unsmearing possible for "{}} << basename << std::endl;}
-\DoxyCodeLine{365         \textcolor{comment}{// Returns an empty vector, which makes the loop continue to the next variable, useful for sidebands}}
-\DoxyCodeLine{366         \textcolor{keywordflow}{return} \{\};}
-\DoxyCodeLine{367       \}}
-\DoxyCodeLine{368       \textcolor{comment}{// Output is a vector of size two < (unsmeared variable hist), (rough unsmearing hist) >}}
-\DoxyCodeLine{369       std::vector<MnvHistoType*> unsmearedVec = DoRatioUnfolding(basename,bkgsub,imcsighist,idatahist,iseltruhist);}
-\DoxyCodeLine{370 }
-\DoxyCodeLine{371       \textcolor{keywordflow}{return} unsmearedVec;}
-\DoxyCodeLine{372     \}}
-\DoxyCodeLine{373     \textcolor{comment}{// If there is response, do real unfolding}}
-\DoxyCodeLine{374     \textcolor{keywordflow}{else}\{}
-\DoxyCodeLine{375       std::cout << \textcolor{stringliteral}{"{} use response unfolding for "{}} << basename  << std::endl;}
-\DoxyCodeLine{376       \textcolor{comment}{// Output is a vector of size one < (unsmeared variable hist) >}}
-\DoxyCodeLine{377       std::vector<MnvHistoType*> unsmearedVec;}
-\DoxyCodeLine{378       MnvHistoType* unsmeared = DoResponseUnfolding(basename,iresponse,imcsighist,iseltruhist,bkgsub,idatahist,unfold,num\_iter);}
-\DoxyCodeLine{379       SyncBands(unsmeared);}
-\DoxyCodeLine{380       unsmearedVec.push\_back(unsmeared);}
-\DoxyCodeLine{381 }
-\DoxyCodeLine{382       \textcolor{keywordflow}{return} unsmearedVec;}
-\DoxyCodeLine{383     \}}
-\DoxyCodeLine{384   \}}
-\DoxyCodeLine{385 \textcolor{keyword}{template} std::vector<MnvH1D*> DoUnfolding<MnvH1D>(std::string basename, MnvH2D* iresponse, MnvH1D* mc, MnvH1D* iseltruhist, MnvH1D* bkgsub, MnvH1D* idatahist, MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter);}
-\DoxyCodeLine{386 \textcolor{keyword}{template} std::vector<MnvH2D*> DoUnfolding<MnvH2D>(std::string basename, MnvH2D* iresponse, MnvH2D* mc, MnvH2D* iseltruhist, MnvH2D* bkgsub, MnvH2D* idatahist, MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter);}
-\DoxyCodeLine{387 }
-\DoxyCodeLine{388 }
-\DoxyCodeLine{389 }
-\DoxyCodeLine{390 \textcolor{comment}{//========================== Efficiency Correction =============================}}
-\DoxyCodeLine{391 \textcolor{comment}{// Divides unfolded hists by efficiency (calculated as (selected truth)/(all truth) )}}
-\DoxyCodeLine{392 \textcolor{keyword}{template} <\textcolor{keyword}{class} MnvHistoType>}
-\DoxyCodeLine{393   std::vector<MnvHistoType*> DoEfficiencyCorrection(std::string basename, MnvHistoType* unsmeared, MnvHistoType* iseltruhist, MnvHistoType* ialltruhist)\{}
+\DoxyCodeLine{318   }
+\DoxyCodeLine{319   std::cout << \textcolor{stringliteral}{"{}migration x y"{}} << migration-\/>ProjectionX()-\/>Integral() << \textcolor{stringliteral}{"{} "{}} << migration-\/>ProjectionY()-\/>Integral() << std::endl;}
+\DoxyCodeLine{320   \textcolor{keywordflow}{if} (imcsighist-\/>Integral() != migration-\/>ProjectionX()-\/>Integral() )\{}
+\DoxyCodeLine{321     std::cout << \textcolor{stringliteral}{"{} make migration matrix have same scale as imcsighist"{}} << std::endl;}
+\DoxyCodeLine{322     migration-\/>Scale(imcsighist-\/>Integral()/migration-\/>ProjectionX()-\/>Integral());}
+\DoxyCodeLine{323   \}}
+\DoxyCodeLine{324   \textcolor{keywordtype}{bool} data\_unfolded = unfold.UnfoldHisto2D(unsmeared,migration,imcsighist,iseltruhist,bkgsub,num\_iter,\textcolor{keyword}{true},\textcolor{keyword}{true});}
+\DoxyCodeLine{325   std::cout << \textcolor{stringliteral}{"{} Done with 2D unfolding "{}} << std::endl;}
+\DoxyCodeLine{326   std::cout << \textcolor{stringliteral}{"{}unsmeared "{}} << unsmeared-\/>Integral() << \textcolor{stringliteral}{"{} "{}} << unsmeared-\/>Integral() << std::endl;}
+\DoxyCodeLine{327   bkgsub-\/>Print(\textcolor{stringliteral}{"{}ALL"{}});}
+\DoxyCodeLine{328   imcsighist-\/>Print(\textcolor{stringliteral}{"{}ALL"{}});}
+\DoxyCodeLine{329   iseltruhist-\/>Print(\textcolor{stringliteral}{"{}ALL"{}});}
+\DoxyCodeLine{330   \textcolor{comment}{// extra code just to get CV covmx}}
+\DoxyCodeLine{331   TH2D* hUnfoldedDummy=\textcolor{keyword}{new} TH2D(unsmeared-\/>GetCVHistoWithStatError());}
+\DoxyCodeLine{332   TH2D* hMigrationDummy=\textcolor{keyword}{new} TH2D(migration-\/>GetCVHistoWithStatError());}
+\DoxyCodeLine{333   TH2D* hRecoDummy=\textcolor{keyword}{new} TH2D(imcsighist-\/>GetCVHistoWithStatError());}
+\DoxyCodeLine{334   TH2D* hTruthDummy=\textcolor{keyword}{new} TH2D(iseltruhist-\/>GetCVHistoWithStatError());}
+\DoxyCodeLine{335   TH2D* hBGSubDataDummy=\textcolor{keyword}{new} TH2D(bkgsub-\/>GetCVHistoWithStatError());}
+\DoxyCodeLine{336   TMatrixD unfoldingCovMatrixOrig\_hist\_type;}
+\DoxyCodeLine{337   std::cout << \textcolor{stringliteral}{"{}HERE for COVARIANCE "{}} << std::endl;}
+\DoxyCodeLine{338   \textcolor{comment}{//unfoldingCovMatrixOrig\_hist\_type.Print("{}ALL"{});}}
+\DoxyCodeLine{339   unfold.UnfoldHisto2D(hUnfoldedDummy, unfoldingCovMatrixOrig\_hist\_type, hMigrationDummy, hRecoDummy, hTruthDummy, hBGSubDataDummy, num\_iter);}
+\DoxyCodeLine{340   \textcolor{keywordtype}{int} correctNbins = hUnfoldedDummy-\/>fN;}
+\DoxyCodeLine{341   \textcolor{keywordtype}{int} matrixRows = unfoldingCovMatrixOrig\_hist\_type.GetNrows();}
+\DoxyCodeLine{342   }
+\DoxyCodeLine{343   \textcolor{keywordflow}{if}(correctNbins!=matrixRows)\{}
+\DoxyCodeLine{344   }
+\DoxyCodeLine{345   cout << \textcolor{stringliteral}{"{}****************************************************************************"{}} << endl;}
+\DoxyCodeLine{346  cout << \textcolor{stringliteral}{"{}*  Fixing unfolding matrix size because of RooUnfold bug. From "{}} << matrixRows << \textcolor{stringliteral}{"{} to "{}} << correctNbins << endl;}
+\DoxyCodeLine{347  cout << \textcolor{stringliteral}{"{}****************************************************************************"{}} << endl;}
+\DoxyCodeLine{348  \textcolor{comment}{// It looks like this DTRT, since the extra last two bins don't have any content}}
+\DoxyCodeLine{349  unfoldingCovMatrixOrig\_hist\_type.ResizeTo(correctNbins, correctNbins);}
+\DoxyCodeLine{350   \}}
+\DoxyCodeLine{351  ZeroDiagonal(unfoldingCovMatrixOrig\_hist\_type);}
+\DoxyCodeLine{352  \textcolor{comment}{// unsmeared-\/>PushCovMatrix("{}unfoldingCov"{},unfoldingCovMatrixOrig\_hist\_type);}}
+\DoxyCodeLine{353   \textcolor{comment}{// Commenting out since may not be necessary.}}
+\DoxyCodeLine{354   SyncBands(unsmeared);}
+\DoxyCodeLine{355   \textcolor{keywordflow}{return} unsmeared;}
+\DoxyCodeLine{356 \};}
+\DoxyCodeLine{357 }
+\DoxyCodeLine{358 \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ DoUnfolding -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{359 \textcolor{comment}{// Putting the unfolding all together.}}
+\DoxyCodeLine{360 \textcolor{keyword}{template}<\textcolor{keyword}{class} MnvHistoType>}
+\DoxyCodeLine{361   std::vector<MnvHistoType*> DoUnfolding(std::string basename, MnvH2D* iresponse,}
+\DoxyCodeLine{362                               MnvHistoType* imcsighist, MnvHistoType* iseltruhist, MnvHistoType* bkgsub,}
+\DoxyCodeLine{363                               MnvHistoType* idatahist, MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter)\{}
+\DoxyCodeLine{364     \textcolor{comment}{// If there's no response, do a rough ratio unfolding}}
+\DoxyCodeLine{365     \textcolor{keywordflow}{if}(iresponse == 0)\{}
+\DoxyCodeLine{366       std::cout << \textcolor{stringliteral}{"{} use ratio unfolding for "{}} << basename  << std::endl;}
+\DoxyCodeLine{367       \textcolor{comment}{// If there's no truth histogram you can't do unfolding.}}
+\DoxyCodeLine{368       \textcolor{keywordflow}{if} (iseltruhist == 0)\{}
+\DoxyCodeLine{369         std::cout << \textcolor{stringliteral}{"{} No truth info so no unsmearing possible for "{}} << basename << std::endl;}
+\DoxyCodeLine{370         \textcolor{comment}{// Returns an empty vector, which makes the loop continue to the next variable, useful for sidebands}}
+\DoxyCodeLine{371         \textcolor{keywordflow}{return} \{\};}
+\DoxyCodeLine{372       \}}
+\DoxyCodeLine{373       \textcolor{comment}{// Output is a vector of size two < (unsmeared variable hist), (rough unsmearing hist) >}}
+\DoxyCodeLine{374       std::vector<MnvHistoType*> unsmearedVec = DoRatioUnfolding(basename,bkgsub,imcsighist,idatahist,iseltruhist);}
+\DoxyCodeLine{375 }
+\DoxyCodeLine{376       \textcolor{keywordflow}{return} unsmearedVec;}
+\DoxyCodeLine{377     \}}
+\DoxyCodeLine{378     \textcolor{comment}{// If there is response, do real unfolding}}
+\DoxyCodeLine{379     \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{380       std::cout << \textcolor{stringliteral}{"{} use response unfolding for "{}} << basename  << std::endl;}
+\DoxyCodeLine{381       \textcolor{comment}{// Output is a vector of size one < (unsmeared variable hist) >}}
+\DoxyCodeLine{382       std::vector<MnvHistoType*> unsmearedVec;}
+\DoxyCodeLine{383       MnvHistoType* unsmeared = DoResponseUnfolding(basename,iresponse,imcsighist,iseltruhist,bkgsub,idatahist,unfold,num\_iter);}
+\DoxyCodeLine{384       SyncBands(unsmeared);}
+\DoxyCodeLine{385       unsmearedVec.push\_back(unsmeared);}
+\DoxyCodeLine{386 }
+\DoxyCodeLine{387       \textcolor{keywordflow}{return} unsmearedVec;}
+\DoxyCodeLine{388     \}}
+\DoxyCodeLine{389   \}}
+\DoxyCodeLine{390 \textcolor{keyword}{template} std::vector<MnvH1D*> DoUnfolding<MnvH1D>(std::string basename, MnvH2D* iresponse, MnvH1D* mc, MnvH1D* iseltruhist, MnvH1D* bkgsub, MnvH1D* idatahist, MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter);}
+\DoxyCodeLine{391 \textcolor{keyword}{template} std::vector<MnvH2D*> DoUnfolding<MnvH2D>(std::string basename, MnvH2D* iresponse, MnvH2D* mc, MnvH2D* iseltruhist, MnvH2D* bkgsub, MnvH2D* idatahist, MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter);}
+\DoxyCodeLine{392 }
+\DoxyCodeLine{393 }
 \DoxyCodeLine{394 }
-\DoxyCodeLine{395     \textcolor{comment}{// Vector passed out of < (efficiency corrected hist), (efficiency hist) >}}
-\DoxyCodeLine{396     std::vector<MnvHistoType*> outEffVec;}
-\DoxyCodeLine{397     std::cout << \textcolor{stringliteral}{"{}start DoEfficiencyCorrection"{}} << std::endl;}
-\DoxyCodeLine{398     std::string effcorrname = std::string(unsmeared-\/>GetName())+\textcolor{stringliteral}{"{}\_effcorr"{}};}
-\DoxyCodeLine{399     MnvHistoType* effcorr = (MnvHistoType*)unsmeared-\/>Clone(effcorrname.c\_str());}
-\DoxyCodeLine{400     std::cout << \textcolor{stringliteral}{"{}clone unsmeared"{}} << std::endl;}
-\DoxyCodeLine{401     effcorr-\/>SetDirectory(0);}
-\DoxyCodeLine{402 }
-\DoxyCodeLine{403     \textcolor{comment}{// make the efficiency}}
-\DoxyCodeLine{404     std::string efficiencyname = basename+\textcolor{stringliteral}{"{}\_efficiency"{}};}
-\DoxyCodeLine{405     std::cout << \textcolor{stringliteral}{"{}make efficiency"{}} << std::endl;}
-\DoxyCodeLine{406     MnvHistoType* efficiency = (MnvHistoType*)iseltruhist-\/>Clone(efficiencyname.c\_str());}
-\DoxyCodeLine{407     efficiency-\/>SetDirectory(0);}
-\DoxyCodeLine{408 }
-\DoxyCodeLine{409     \textcolor{comment}{// apply the efficiency}}
-\DoxyCodeLine{410     efficiency-\/>AddMissingErrorBandsAndFillWithCV(*ialltruhist); \textcolor{comment}{//should be seltruhists?}}
-\DoxyCodeLine{411     SyncBands(efficiency);}
-\DoxyCodeLine{412     \textcolor{comment}{// make certain efficiency has all error bands for thing it will be applied to}}
-\DoxyCodeLine{413     efficiency-\/>AddMissingErrorBandsAndFillWithCV(*unsmeared);}
-\DoxyCodeLine{414     SyncBands(efficiency);}
-\DoxyCodeLine{415     efficiency-\/>Divide(efficiency,ialltruhist,1.,1.,\textcolor{stringliteral}{"{}B"{}});}
-\DoxyCodeLine{416     \textcolor{comment}{//efficiency-\/>AddMissingErrorBandsAndFillWithCV(*unsmeared);}}
-\DoxyCodeLine{417     \textcolor{comment}{// Commenting out since may not be necessary.}}
-\DoxyCodeLine{418     SyncBands(efficiency);}
-\DoxyCodeLine{419     effcorr-\/>Divide(unsmeared,efficiency,1.,1.);}
-\DoxyCodeLine{420     \textcolor{comment}{// Commenting out since may not be necessary.}}
-\DoxyCodeLine{421     SyncBands(effcorr);}
-\DoxyCodeLine{422 }
-\DoxyCodeLine{423     outEffVec.push\_back(effcorr);}
-\DoxyCodeLine{424     outEffVec.push\_back(efficiency);}
-\DoxyCodeLine{425     \textcolor{keywordflow}{return} outEffVec;}
-\DoxyCodeLine{426   \}}
-\DoxyCodeLine{427 \textcolor{keyword}{template} std::vector<MnvH1D*> DoEfficiencyCorrection<MnvH1D>(std::string basename, MnvH1D* unsmeared, MnvH1D* iseltruhist, MnvH1D* ialltruhist);}
-\DoxyCodeLine{428 \textcolor{keyword}{template} std::vector<MnvH2D*> DoEfficiencyCorrection<MnvH2D>(std::string basename, MnvH2D* unsmeared, MnvH2D* iseltruhist, MnvH2D* ialltruhist);}
-\DoxyCodeLine{429 }
-\DoxyCodeLine{430 }
-\DoxyCodeLine{431 \textcolor{comment}{//============================== Normalization =================================}}
-\DoxyCodeLine{432 \textcolor{comment}{// Does number of target normalization (passed in from analyze code) and flux normalization.}}
-\DoxyCodeLine{433 \textcolor{comment}{// Returns a vector of size to of < (Data xsec), (MC xsec) >}}
-\DoxyCodeLine{434 \textcolor{keyword}{template}<\textcolor{keyword}{class} MnvHistoType>}
-\DoxyCodeLine{435   std::vector<MnvHistoType*> DoNormalization( std::map<const std::string, NuConfig *> configs, std::string basename, std::map< std::string, bool> FluxNorm, \textcolor{keywordtype}{double} norm, MnvHistoType* effcorr, MnvHistoType* ialltruhist, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed)\{}
-\DoxyCodeLine{436       NuConfig* config = configs[\textcolor{stringliteral}{"{}main"{}}];}
-\DoxyCodeLine{437     std::string sigmaname = std::string(effcorr-\/>GetName())+\textcolor{stringliteral}{"{}\_sigma"{}};}
-\DoxyCodeLine{438     MnvHistoType* sigma = (MnvHistoType*)effcorr-\/>Clone(sigmaname.c\_str());}
-\DoxyCodeLine{439     sigma-\/>SetDirectory(0);}
-\DoxyCodeLine{440     std::string sigmaMCname = basename+\textcolor{stringliteral}{"{}\_sigmaMC"{}};}
-\DoxyCodeLine{441     MnvHistoType* sigmaMC = (MnvHistoType*)ialltruhist-\/>Clone(sigmaMCname.c\_str());}
-\DoxyCodeLine{442     sigmaMC-\/>SetDirectory(0);}
-\DoxyCodeLine{443 }
-\DoxyCodeLine{444     \textcolor{comment}{// Integrated flux normalization for non-\/energy variables}}
-\DoxyCodeLine{445     \textcolor{comment}{// Set by 'fluxnorm':false on 1D variables in the variables config}}
-\DoxyCodeLine{446     \textcolor{keywordflow}{if}(!FluxNorm[\textcolor{stringliteral}{"{}fluxnorm"{}}])\{}
-\DoxyCodeLine{447       std::cout << \textcolor{stringliteral}{"{} Using flat flux normalization. "{}} << std::endl;}
-\DoxyCodeLine{448       \textcolor{comment}{// Returns integrated flux hist in bins input hist}}
-\DoxyCodeLine{449       MnvHistoType* theflux = GetFluxFlat(configs, sigma);}
-\DoxyCodeLine{450 }
-\DoxyCodeLine{451       theflux-\/>AddMissingErrorBandsAndFillWithCV(*sigma);}
-\DoxyCodeLine{452       sigma-\/>AddMissingErrorBandsAndFillWithCV(*theflux);}
-\DoxyCodeLine{453       sigma-\/>Divide(sigma,theflux);}
-\DoxyCodeLine{454       \textcolor{comment}{// target normalization}}
-\DoxyCodeLine{455       sigma-\/>Scale(norm);}
-\DoxyCodeLine{456 }
-\DoxyCodeLine{457       theflux-\/>AddMissingErrorBandsAndFillWithCV(*sigmaMC);}
-\DoxyCodeLine{458       sigmaMC-\/>AddMissingErrorBandsAndFillWithCV(*theflux);}
-\DoxyCodeLine{459       sigmaMC-\/>Divide(sigmaMC,theflux);}
-\DoxyCodeLine{460       \textcolor{comment}{// target normalization}}
-\DoxyCodeLine{461       sigmaMC-\/>Scale(norm);}
-\DoxyCodeLine{462     \}}
-\DoxyCodeLine{463     \textcolor{comment}{// Energy dependent flux normalization}}
-\DoxyCodeLine{464     \textcolor{comment}{// Set by 'fluxnorm':true on 1D variables in the variables config}}
-\DoxyCodeLine{465     \textcolor{keywordflow}{else}\{}
-\DoxyCodeLine{466       std::cout << \textcolor{stringliteral}{"{} Using energy dependent flux normalization. "{}} << std::endl;}
-\DoxyCodeLine{467       \textcolor{comment}{// Returns flux hist in bins of energy variable of input hist (for 2D the bins on the non-\/energy axis are integrated)}}
-\DoxyCodeLine{468       MnvHistoType* h\_flux\_ebins = GetFluxEbins(h\_flux\_dewidthed,ialltruhist,*config,FluxNorm);}
-\DoxyCodeLine{469        }
-\DoxyCodeLine{470 }
-\DoxyCodeLine{471       \textcolor{comment}{// TODO: Flipped the order of the Divide and Scale steps. Does this matter?}}
-\DoxyCodeLine{472       h\_flux\_ebins-\/>AddMissingErrorBandsAndFillWithCV(*sigma);}
-\DoxyCodeLine{473         h\_flux\_ebins-\/>SetName(std::string(\textcolor{stringliteral}{"{}h\_flux\_ebins\_"{}}+basename).c\_str());}
-\DoxyCodeLine{474       h\_flux\_ebins-\/>Write();}
-\DoxyCodeLine{475       sigma-\/>AddMissingErrorBandsAndFillWithCV(*h\_flux\_ebins);}
-\DoxyCodeLine{476       sigma-\/>Divide(sigma,h\_flux\_ebins);}
-\DoxyCodeLine{477       \textcolor{comment}{// target normalization}}
-\DoxyCodeLine{478       sigma-\/>Scale(norm);}
-\DoxyCodeLine{479       SyncBands(sigma);}
-\DoxyCodeLine{480       \textcolor{comment}{// if (DEBUG) sigma-\/>GetSysErrorMatrix("{}Unfolding"{}).Print();}}
-\DoxyCodeLine{481 }
-\DoxyCodeLine{482       h\_flux\_ebins-\/>AddMissingErrorBandsAndFillWithCV(*sigmaMC);}
-\DoxyCodeLine{483       sigmaMC-\/>AddMissingErrorBandsAndFillWithCV(*h\_flux\_ebins);}
-\DoxyCodeLine{484       sigmaMC-\/>Divide(sigmaMC,h\_flux\_ebins,1.0,1.0);}
-\DoxyCodeLine{485       \textcolor{comment}{// target normalization}}
-\DoxyCodeLine{486       sigmaMC-\/>Scale(norm);}
-\DoxyCodeLine{487       }
-\DoxyCodeLine{488     \}}
-\DoxyCodeLine{489     SyncBands(sigma);}
-\DoxyCodeLine{490     SyncBands(sigmaMC);}
-\DoxyCodeLine{491     std::vector<MnvHistoType*> sigmaVec;}
-\DoxyCodeLine{492     sigmaVec.push\_back(sigma);}
-\DoxyCodeLine{493     sigmaVec.push\_back(sigmaMC);}
-\DoxyCodeLine{494     \textcolor{keywordflow}{return} sigmaVec;}
-\DoxyCodeLine{495   \}}
-\DoxyCodeLine{496 }
-\DoxyCodeLine{497 }
-\DoxyCodeLine{498 \textcolor{keyword}{template} std::vector<MnvH1D*> DoNormalization<MnvH1D>( std::map<const std::string,NuConfig* > configs, std::string basename, std::map< std::string, bool> FluxNorm, \textcolor{keywordtype}{double} norm, MnvH1D* effcorr, MnvH1D* ialltruhist, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed);}
-\DoxyCodeLine{499 \textcolor{keyword}{template} std::vector<MnvH2D*> DoNormalization<MnvH2D>( std::map<const std::string,NuConfig* > configs, std::string basename, std::map< std::string, bool> FluxNorm, \textcolor{keywordtype}{double} norm, MnvH2D* effcorr, MnvH2D* ialltruhist, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed);}
-\DoxyCodeLine{500 }
+\DoxyCodeLine{395 \textcolor{comment}{//========================== Efficiency Correction =============================}}
+\DoxyCodeLine{396 \textcolor{comment}{// Divides unfolded hists by efficiency (calculated as (selected truth)/(all truth) )}}
+\DoxyCodeLine{397 \textcolor{keyword}{template} <\textcolor{keyword}{class} MnvHistoType>}
+\DoxyCodeLine{398   std::vector<MnvHistoType*> DoEfficiencyCorrection(std::string basename, MnvHistoType* unsmeared, MnvHistoType* iseltruhist, MnvHistoType* ialltruhist)\{}
+\DoxyCodeLine{399 }
+\DoxyCodeLine{400     \textcolor{comment}{// Vector passed out of < (efficiency corrected hist), (efficiency hist) >}}
+\DoxyCodeLine{401     std::vector<MnvHistoType*> outEffVec;}
+\DoxyCodeLine{402     std::cout << \textcolor{stringliteral}{"{}start DoEfficiencyCorrection"{}} << std::endl;}
+\DoxyCodeLine{403     std::string effcorrname = std::string(unsmeared-\/>GetName())+\textcolor{stringliteral}{"{}\_effcorr"{}};}
+\DoxyCodeLine{404     MnvHistoType* effcorr = (MnvHistoType*)unsmeared-\/>Clone(effcorrname.c\_str());}
+\DoxyCodeLine{405     std::cout << \textcolor{stringliteral}{"{}clone unsmeared"{}} << std::endl;}
+\DoxyCodeLine{406     effcorr-\/>SetDirectory(0);}
+\DoxyCodeLine{407 }
+\DoxyCodeLine{408     \textcolor{comment}{// make the efficiency}}
+\DoxyCodeLine{409     std::string efficiencyname = basename+\textcolor{stringliteral}{"{}\_efficiency"{}};}
+\DoxyCodeLine{410     std::cout << \textcolor{stringliteral}{"{}make efficiency"{}} << std::endl;}
+\DoxyCodeLine{411     MnvHistoType* efficiency = (MnvHistoType*)iseltruhist-\/>Clone(efficiencyname.c\_str());}
+\DoxyCodeLine{412     efficiency-\/>SetDirectory(0);}
+\DoxyCodeLine{413 }
+\DoxyCodeLine{414     \textcolor{comment}{// apply the efficiency}}
+\DoxyCodeLine{415     efficiency-\/>AddMissingErrorBandsAndFillWithCV(*ialltruhist); \textcolor{comment}{//should be seltruhists?}}
+\DoxyCodeLine{416     SyncBands(efficiency);}
+\DoxyCodeLine{417     \textcolor{comment}{// make certain efficiency has all error bands for thing it will be applied to}}
+\DoxyCodeLine{418     efficiency-\/>AddMissingErrorBandsAndFillWithCV(*unsmeared);}
+\DoxyCodeLine{419     SyncBands(efficiency);}
+\DoxyCodeLine{420     efficiency-\/>Divide(efficiency,ialltruhist,1.,1.,\textcolor{stringliteral}{"{}B"{}});}
+\DoxyCodeLine{421     \textcolor{comment}{//efficiency-\/>AddMissingErrorBandsAndFillWithCV(*unsmeared);}}
+\DoxyCodeLine{422     \textcolor{comment}{// Commenting out since may not be necessary.}}
+\DoxyCodeLine{423     SyncBands(efficiency);}
+\DoxyCodeLine{424     effcorr-\/>Divide(unsmeared,efficiency,1.,1.);}
+\DoxyCodeLine{425     \textcolor{comment}{// Commenting out since may not be necessary.}}
+\DoxyCodeLine{426     SyncBands(effcorr);}
+\DoxyCodeLine{427 }
+\DoxyCodeLine{428     outEffVec.push\_back(effcorr);}
+\DoxyCodeLine{429     outEffVec.push\_back(efficiency);}
+\DoxyCodeLine{430     \textcolor{keywordflow}{return} outEffVec;}
+\DoxyCodeLine{431   \}}
+\DoxyCodeLine{432 \textcolor{keyword}{template} std::vector<MnvH1D*> DoEfficiencyCorrection<MnvH1D>(std::string basename, MnvH1D* unsmeared, MnvH1D* iseltruhist, MnvH1D* ialltruhist);}
+\DoxyCodeLine{433 \textcolor{keyword}{template} std::vector<MnvH2D*> DoEfficiencyCorrection<MnvH2D>(std::string basename, MnvH2D* unsmeared, MnvH2D* iseltruhist, MnvH2D* ialltruhist);}
+\DoxyCodeLine{434 }
+\DoxyCodeLine{435 }
+\DoxyCodeLine{436 \textcolor{comment}{//============================== Normalization =================================}}
+\DoxyCodeLine{437 \textcolor{comment}{// Does number of target normalization (passed in from analyze code) and flux normalization.}}
+\DoxyCodeLine{438 \textcolor{comment}{// Returns a vector of size to of < (Data xsec), (MC xsec) >}}
+\DoxyCodeLine{439 \textcolor{keyword}{template}<\textcolor{keyword}{class} MnvHistoType>}
+\DoxyCodeLine{440   std::vector<MnvHistoType*> DoNormalization( std::map<const std::string, NuConfig *> configs, std::string basename, std::map< std::string, bool> FluxNorm, \textcolor{keywordtype}{double} norm, MnvHistoType* effcorr, MnvHistoType* ialltruhist, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed)\{}
+\DoxyCodeLine{441       NuConfig* config = configs[\textcolor{stringliteral}{"{}main"{}}];}
+\DoxyCodeLine{442     std::string sigmaname = std::string(effcorr-\/>GetName())+\textcolor{stringliteral}{"{}\_sigma"{}};}
+\DoxyCodeLine{443     MnvHistoType* sigma = (MnvHistoType*)effcorr-\/>Clone(sigmaname.c\_str());}
+\DoxyCodeLine{444     sigma-\/>SetDirectory(0);}
+\DoxyCodeLine{445     std::string sigmaMCname = basename+\textcolor{stringliteral}{"{}\_sigmaMC"{}};}
+\DoxyCodeLine{446     MnvHistoType* sigmaMC = (MnvHistoType*)ialltruhist-\/>Clone(sigmaMCname.c\_str());}
+\DoxyCodeLine{447     sigmaMC-\/>SetDirectory(0);}
+\DoxyCodeLine{448 }
+\DoxyCodeLine{449     \textcolor{comment}{// Integrated flux normalization for non-\/energy variables}}
+\DoxyCodeLine{450     \textcolor{comment}{// Set by 'fluxnorm':false on 1D variables in the variables config}}
+\DoxyCodeLine{451     \textcolor{keywordflow}{if}(!FluxNorm[\textcolor{stringliteral}{"{}fluxnorm"{}}])\{}
+\DoxyCodeLine{452       std::cout << \textcolor{stringliteral}{"{} Using flat flux normalization. "{}} << std::endl;}
+\DoxyCodeLine{453       \textcolor{comment}{// Returns integrated flux hist in bins input hist}}
+\DoxyCodeLine{454       MnvHistoType* theflux = GetFluxFlat(configs, sigma);}
+\DoxyCodeLine{455 }
+\DoxyCodeLine{456       theflux-\/>AddMissingErrorBandsAndFillWithCV(*sigma);}
+\DoxyCodeLine{457       sigma-\/>AddMissingErrorBandsAndFillWithCV(*theflux);}
+\DoxyCodeLine{458       sigma-\/>Divide(sigma,theflux);}
+\DoxyCodeLine{459       \textcolor{comment}{// target normalization}}
+\DoxyCodeLine{460       sigma-\/>Scale(norm);}
+\DoxyCodeLine{461 }
+\DoxyCodeLine{462       theflux-\/>AddMissingErrorBandsAndFillWithCV(*sigmaMC);}
+\DoxyCodeLine{463       sigmaMC-\/>AddMissingErrorBandsAndFillWithCV(*theflux);}
+\DoxyCodeLine{464       sigmaMC-\/>Divide(sigmaMC,theflux);}
+\DoxyCodeLine{465       \textcolor{comment}{// target normalization}}
+\DoxyCodeLine{466       sigmaMC-\/>Scale(norm);}
+\DoxyCodeLine{467     \}}
+\DoxyCodeLine{468     \textcolor{comment}{// Energy dependent flux normalization}}
+\DoxyCodeLine{469     \textcolor{comment}{// Set by 'fluxnorm':true on 1D variables in the variables config}}
+\DoxyCodeLine{470     \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{471       std::cout << \textcolor{stringliteral}{"{} Using energy dependent flux normalization. "{}} << std::endl;}
+\DoxyCodeLine{472       \textcolor{comment}{// Returns flux hist in bins of energy variable of input hist (for 2D the bins on the non-\/energy axis are integrated)}}
+\DoxyCodeLine{473       MnvHistoType* h\_flux\_ebins = GetFluxEbins(h\_flux\_dewidthed,ialltruhist,*config,FluxNorm);}
+\DoxyCodeLine{474        }
+\DoxyCodeLine{475 }
+\DoxyCodeLine{476       \textcolor{comment}{// TODO: Flipped the order of the Divide and Scale steps. Does this matter?}}
+\DoxyCodeLine{477       h\_flux\_ebins-\/>AddMissingErrorBandsAndFillWithCV(*sigma);}
+\DoxyCodeLine{478         h\_flux\_ebins-\/>SetName(std::string(\textcolor{stringliteral}{"{}h\_flux\_ebins\_"{}}+basename).c\_str());}
+\DoxyCodeLine{479       h\_flux\_ebins-\/>Write();}
+\DoxyCodeLine{480       sigma-\/>AddMissingErrorBandsAndFillWithCV(*h\_flux\_ebins);}
+\DoxyCodeLine{481       sigma-\/>Divide(sigma,h\_flux\_ebins);}
+\DoxyCodeLine{482       \textcolor{comment}{// target normalization}}
+\DoxyCodeLine{483       sigma-\/>Scale(norm);}
+\DoxyCodeLine{484       SyncBands(sigma);}
+\DoxyCodeLine{485       \textcolor{comment}{// if (DEBUG) sigma-\/>GetSysErrorMatrix("{}Unfolding"{}).Print();}}
+\DoxyCodeLine{486 }
+\DoxyCodeLine{487       h\_flux\_ebins-\/>AddMissingErrorBandsAndFillWithCV(*sigmaMC);}
+\DoxyCodeLine{488       sigmaMC-\/>AddMissingErrorBandsAndFillWithCV(*h\_flux\_ebins);}
+\DoxyCodeLine{489       sigmaMC-\/>Divide(sigmaMC,h\_flux\_ebins,1.0,1.0);}
+\DoxyCodeLine{490       \textcolor{comment}{// target normalization}}
+\DoxyCodeLine{491       sigmaMC-\/>Scale(norm);}
+\DoxyCodeLine{492       }
+\DoxyCodeLine{493     \}}
+\DoxyCodeLine{494     SyncBands(sigma);}
+\DoxyCodeLine{495     SyncBands(sigmaMC);}
+\DoxyCodeLine{496     std::vector<MnvHistoType*> sigmaVec;}
+\DoxyCodeLine{497     sigmaVec.push\_back(sigma);}
+\DoxyCodeLine{498     sigmaVec.push\_back(sigmaMC);}
+\DoxyCodeLine{499     \textcolor{keywordflow}{return} sigmaVec;}
+\DoxyCodeLine{500   \}}
 \DoxyCodeLine{501 }
 \DoxyCodeLine{502 }
-\DoxyCodeLine{503 \textcolor{comment}{//============================= GetCrossSection ================================}}
-\DoxyCodeLine{504 }
-\DoxyCodeLine{505 \textcolor{comment}{// dummy for backwards compatibility config > map of config*}}
-\DoxyCodeLine{506 \textcolor{keyword}{template}<\textcolor{keyword}{class} MnvHistoType>}
-\DoxyCodeLine{507   \textcolor{keywordtype}{int} GetCrossSection(std::string sample, std::string variable, std::string basename,}
-\DoxyCodeLine{508                       std::map< std::string, std::map <std::string, MnvHistoType*> > histsND,}
-\DoxyCodeLine{509                       std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
-\DoxyCodeLine{510                       NuConfig oneconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
-\DoxyCodeLine{511                       MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG, \textcolor{keywordtype}{bool} hasbkgsub, \textcolor{keywordtype}{bool} usetune) \{}
-\DoxyCodeLine{512       std::map<const std::string, NuConfig*> configmap;}
-\DoxyCodeLine{513       configmap[\textcolor{stringliteral}{"{}main"{}}]= \&oneconfig;}
-\DoxyCodeLine{514       std::cout << \textcolor{stringliteral}{"{} pass single config into map"{}} << std::endl;}
-\DoxyCodeLine{515       \textcolor{keywordflow}{return} GetCrossSection(sample,  variable,  basename,}
-\DoxyCodeLine{516                              histsND,}
-\DoxyCodeLine{517                              responseND,}
-\DoxyCodeLine{518                              configmap,  canvas, norm, POTScale,  h\_flux\_dewidthed,}
-\DoxyCodeLine{519                              unfold,  num\_iter, DEBUG, hasbkgsub,usetune);}
-\DoxyCodeLine{520   \}}
-\DoxyCodeLine{521 }
-\DoxyCodeLine{522 \textcolor{keyword}{template}<\textcolor{keyword}{class} MnvHistoType>}
-\DoxyCodeLine{523   \textcolor{keywordtype}{int} GetCrossSection(std::string sample, std::string variable, std::string basename,}
-\DoxyCodeLine{524                       std::map< std::string, std::map <std::string, MnvHistoType*> > histsND,}
-\DoxyCodeLine{525                       std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
-\DoxyCodeLine{526                       std::map< const std::string, NuConfig *> configs, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
-\DoxyCodeLine{527                       MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG, \textcolor{keywordtype}{bool} hasbkgsub, \textcolor{keywordtype}{bool} usetune) \{}
-\DoxyCodeLine{528     \textcolor{keywordtype}{bool} binwid = \textcolor{keyword}{true};}
-\DoxyCodeLine{529     \textcolor{keywordtype}{int} logscale = 0; \textcolor{comment}{// 0 for none, 1 for x, 2 for y, 3 for both}}
-\DoxyCodeLine{530 }
-\DoxyCodeLine{531     \textcolor{comment}{// Get "{}category"{} tags set in config. Needs to match ones used in the event loop.}}
-\DoxyCodeLine{532     \textcolor{comment}{//TODO: Make this a map in config.}}
-\DoxyCodeLine{533     }
-\DoxyCodeLine{534     std::cout << \textcolor{stringliteral}{"{} at the top of GetXsec"{}} << sample <<  std::endl;}
-\DoxyCodeLine{535     \textcolor{comment}{// this can come out of the sample information:}}
-\DoxyCodeLine{536     \textcolor{comment}{// configs["{}main"{}]-\/>Print();}}
-\DoxyCodeLine{537     NuConfig sigkey = configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetConfig(\textcolor{stringliteral}{"{}signal"{}});}
-\DoxyCodeLine{538     \textcolor{comment}{//sigkey.Print();}}
-\DoxyCodeLine{539     std::string sig = sigkey.GetString(sample);}
-\DoxyCodeLine{540     std::cout << \textcolor{stringliteral}{"{} got sig "{}} << sig << std::endl;}
-\DoxyCodeLine{541     NuConfig bkgkey;}
-\DoxyCodeLine{542     std::string bkg;}
-\DoxyCodeLine{543     \textcolor{keywordflow}{if} (!hasbkgsub)\{}
-\DoxyCodeLine{544       \textcolor{comment}{// this likely needs to be fixed}}
-\DoxyCodeLine{545       bkgkey = configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetConfig(\textcolor{stringliteral}{"{}background"{}});}
-\DoxyCodeLine{546       \textcolor{comment}{//bkgkey.Print();}}
-\DoxyCodeLine{547       std::cout << bkgkey.CheckMember(sample) << std::endl;}
-\DoxyCodeLine{548       bkg = bkgkey.GetString(sample);}
-\DoxyCodeLine{549       std::cout << \textcolor{stringliteral}{"{} got bkg "{}} << bkg << std::endl;}
-\DoxyCodeLine{550     \}}
-\DoxyCodeLine{551     NuConfig datkey = configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetConfig(\textcolor{stringliteral}{"{}data"{}});}
-\DoxyCodeLine{552     std::string dat = datkey.GetString(sample);}
-\DoxyCodeLine{553     std::cout << \textcolor{stringliteral}{"{} got dat "{}} << dat << std::endl;}
-\DoxyCodeLine{554     }
-\DoxyCodeLine{555     }
-\DoxyCodeLine{556     \textcolor{comment}{//datkey.Print();}}
-\DoxyCodeLine{557     \textcolor{comment}{//std::string bkg = config.GetString("{}background"{});}}
-\DoxyCodeLine{558     \textcolor{comment}{// std::string dat = config.GetString("{}data"{});}}
-\DoxyCodeLine{559 }
-\DoxyCodeLine{560     \textcolor{comment}{// parse out variable to get axes}}
-\DoxyCodeLine{561     std::vector<std::string> varparse;}
-\DoxyCodeLine{562 }
-\DoxyCodeLine{563     \textcolor{comment}{// "{}basename"{} input of the form "{}h\_<sample>\_<variable>"{} or "{}h2D\_<sample>\_<variable>"{}}}
-\DoxyCodeLine{564     \textcolor{comment}{// Check if not 2D then make logscale for plotting if looking at Q\string^2\_QE}}
-\DoxyCodeLine{565     \textcolor{keywordflow}{if}(basename.find(\textcolor{stringliteral}{"{}h2D\_"{}})==std::string::npos)\{}
-\DoxyCodeLine{566       \textcolor{keywordflow}{if}(variable.find(\textcolor{stringliteral}{"{}Q2QE"{}})!=std::string::npos) logscale = 1;}
-\DoxyCodeLine{567     \}}
-\DoxyCodeLine{568     \textcolor{comment}{// If 2D, then set log scale for each axis if needed}}
-\DoxyCodeLine{569     \textcolor{keywordflow}{else}\{}
-\DoxyCodeLine{570       varparse = split(variable,\textcolor{stringliteral}{"{}\_"{}});}
-\DoxyCodeLine{571       \textcolor{keywordflow}{if}(varparse[0].find(\textcolor{stringliteral}{"{}Q2QE"{}})!=std::string::npos) logscale+=1;}
-\DoxyCodeLine{572       \textcolor{keywordflow}{if}(varparse[1].find(\textcolor{stringliteral}{"{}Q2QE"{}})!=std::string::npos) logscale+=2;}
-\DoxyCodeLine{573     \}}
-\DoxyCodeLine{574 }
-\DoxyCodeLine{575     std::cout << \textcolor{stringliteral}{"{} analyze "{}} << variable << std::endl;}
-\DoxyCodeLine{576 }
-\DoxyCodeLine{577     \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{}logscale "{}} << variable << \textcolor{stringliteral}{"{} "{}} << logscale << std::endl;}
-\DoxyCodeLine{578 }
-\DoxyCodeLine{579     \textcolor{comment}{// Print out the "{}type"{} tag from analyze code (e.g. "{}reconstructed"{}, "{}selected\_truth"{}, etc.)}}
-\DoxyCodeLine{580     \textcolor{comment}{// Scale POT for all MC hists, except response (get segfault if done this way...) -\/NHV}}
-\DoxyCodeLine{581     std::cout << \textcolor{stringliteral}{"{} starting on variable "{}} << sample << \textcolor{stringliteral}{"{} "{}} << variable << std::endl;}
-\DoxyCodeLine{582     \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} types : histsND)\{}
-\DoxyCodeLine{583       std::string type = types.first;}
-\DoxyCodeLine{584       std::cout << \textcolor{stringliteral}{"{}hists key "{}} << type << std::endl;}
-\DoxyCodeLine{585       \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} categories : histsND[type])\{}
-\DoxyCodeLine{586         std::string category = categories.first;}
-\DoxyCodeLine{587         \textcolor{keywordflow}{if} (category.find(dat)==std::string::npos)\{}
-\DoxyCodeLine{588           }
-\DoxyCodeLine{589           \textcolor{keywordflow}{if} (histsND[type][category] != 0) \{}
-\DoxyCodeLine{590             \textcolor{keywordtype}{double} t = histsND[type][category]-\/>Integral();}
-\DoxyCodeLine{591             histsND[type][category]-\/>Scale(POTScale);}
-\DoxyCodeLine{592             \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} POTScaled "{}} << histsND[type][category]-\/>GetName() << \textcolor{stringliteral}{"{} "{}} << t << \textcolor{stringliteral}{"{} "{}} << histsND[type][category]-\/>Integral() <<  std::endl;}
-\DoxyCodeLine{593           \}}
-\DoxyCodeLine{594         \}}
-\DoxyCodeLine{595       \}}
-\DoxyCodeLine{596     \}}
-\DoxyCodeLine{597 }
-\DoxyCodeLine{598     \textcolor{comment}{// Assign each input histogram type used for doing the analysis.}}
-\DoxyCodeLine{599     \textcolor{comment}{// MnvHistoType can be MnvH1D or MnvH2D so far. Response is always MnvH2D.}}
-\DoxyCodeLine{600     MnvHistoType* idatahist = histsND[\textcolor{stringliteral}{"{}reconstructed"{}}][dat];}
-\DoxyCodeLine{601     MnvHistoType* imcsighist = histsND[\textcolor{stringliteral}{"{}reconstructed"{}}][sig];}
-\DoxyCodeLine{602     std::string stuned = \textcolor{stringliteral}{"{}"{}};}
-\DoxyCodeLine{603     \textcolor{keywordflow}{if} (histsND.count(\textcolor{stringliteral}{"{}reconstructed\_tuned"{}}) \&\& usetune)\{}
-\DoxyCodeLine{604         stuned = \textcolor{stringliteral}{"{}Tuned "{}};}
-\DoxyCodeLine{605         imcsighist = histsND[\textcolor{stringliteral}{"{}reconstructed\_tuned"{}}][sig];}
-\DoxyCodeLine{606         std::cout << \textcolor{stringliteral}{"{} using "{}} << imcsighist-\/>GetName() << std::endl;}
-\DoxyCodeLine{607     \}}
-\DoxyCodeLine{608     \textcolor{comment}{//std::cout << "{}using signal "{} << imcsighist-\/>GetName() << std::endl;}}
-\DoxyCodeLine{609     MnvHistoType* imcbkghist;}
-\DoxyCodeLine{610     MnvHistoType* ibkgsubhist;}
-\DoxyCodeLine{611     \textcolor{keywordflow}{if} (!hasbkgsub)\{}
-\DoxyCodeLine{612       imcbkghist = histsND[\textcolor{stringliteral}{"{}reconstructed"{}}][bkg];}
-\DoxyCodeLine{613       \textcolor{keywordflow}{if} (histsND.count(\textcolor{stringliteral}{"{}reconstructed\_tuned"{}})\&\& usetune)\{}
-\DoxyCodeLine{614         imcbkghist = histsND[\textcolor{stringliteral}{"{}reconstructed\_tuned"{}}][bkg];}
-\DoxyCodeLine{615         std::cout << \textcolor{stringliteral}{"{} using "{}} << imcbkghist-\/>GetName() << std::endl;}
-\DoxyCodeLine{616       \}}
-\DoxyCodeLine{617     \}}
-\DoxyCodeLine{618     std::cout << \textcolor{stringliteral}{"{}using background "{}} << imcbkghist-\/>GetName() << std::endl;}
-\DoxyCodeLine{619     \textcolor{keywordflow}{if} (hasbkgsub) ibkgsubhist = histsND[\textcolor{stringliteral}{"{}fitted"{}}][\textcolor{stringliteral}{"{}bkgsub"{}}];}
-\DoxyCodeLine{620       MnvHistoType* iseltruhist;}
-\DoxyCodeLine{621     \textcolor{keywordflow}{if} (histsND.count(\textcolor{stringliteral}{"{}selected\_truth\_tuned"{}}) \&\& usetune)\{}
-\DoxyCodeLine{622         iseltruhist = histsND[\textcolor{stringliteral}{"{}selected\_truth\_tuned"{}}][sig];}
-\DoxyCodeLine{623         std::cout << \textcolor{stringliteral}{"{} using "{}} << iseltruhist-\/>GetName() << std::endl;}
-\DoxyCodeLine{624     \}}
-\DoxyCodeLine{625     \textcolor{keywordflow}{else}\{}
-\DoxyCodeLine{626         iseltruhist = histsND[\textcolor{stringliteral}{"{}selected\_truth"{}}][sig];}
-\DoxyCodeLine{627     \}}
-\DoxyCodeLine{628     MnvHistoType* ialltruhist;}
-\DoxyCodeLine{629       }
-\DoxyCodeLine{630     \textcolor{keywordflow}{if} (histsND.count(\textcolor{stringliteral}{"{}all\_truth\_tuned"{}}) \&\& usetune)\{}
-\DoxyCodeLine{631         ialltruhist = histsND[\textcolor{stringliteral}{"{}all\_truth\_tuned"{}}][sig];}
-\DoxyCodeLine{632         std::cout << \textcolor{stringliteral}{"{} using "{}} << ialltruhist-\/>GetName() << std::endl;}
-\DoxyCodeLine{633     \}}
-\DoxyCodeLine{634     \textcolor{keywordflow}{else}\{}
-\DoxyCodeLine{635         ialltruhist = histsND[\textcolor{stringliteral}{"{}all\_truth"{}}][sig];}
-\DoxyCodeLine{636     \}}
-\DoxyCodeLine{637     }
-\DoxyCodeLine{638     MnvH2D* iresponse;}
-\DoxyCodeLine{639     \textcolor{keywordflow}{if} (responseND.count(\textcolor{stringliteral}{"{}response\_migration\_tuned"{}}) \&\& usetune)\{}
-\DoxyCodeLine{640         iresponse = responseND[\textcolor{stringliteral}{"{}response\_migration\_tuned"{}}][sig];}
-\DoxyCodeLine{641         std::cout << \textcolor{stringliteral}{"{} using "{}} << iresponse-\/>GetName() <<  \textcolor{stringliteral}{"{} "{}} << iresponse-\/>ProjectionX()-\/>Integral()<< \textcolor{stringliteral}{"{} "{}} <<iresponse-\/>ProjectionY()-\/>Integral()<< std::endl;}
-\DoxyCodeLine{642     \}}
-\DoxyCodeLine{643     \textcolor{keywordflow}{else}\{}
-\DoxyCodeLine{644         iresponse = responseND[\textcolor{stringliteral}{"{}response\_migration"{}}][sig];}
-\DoxyCodeLine{645         std::cout << \textcolor{stringliteral}{"{} using "{}} << iresponse-\/>GetName() <<  \textcolor{stringliteral}{"{} "{}} << iresponse-\/>ProjectionX()-\/>Integral()<< \textcolor{stringliteral}{"{} "{}} <<iresponse-\/>ProjectionY()-\/>Integral()<< std::endl;}
-\DoxyCodeLine{646     \}}
-\DoxyCodeLine{647     \textcolor{comment}{// TODO: POTScale by if (not data) -\/-\/> POTScale}}
-\DoxyCodeLine{648 }
-\DoxyCodeLine{649 }
-\DoxyCodeLine{650     \textcolor{comment}{// Check for each hist "{}category"{} for the variable you're analyzing.}}
-\DoxyCodeLine{651     \textcolor{keywordflow}{if} (idatahist == 0)\{}
-\DoxyCodeLine{652       std::cout << \textcolor{stringliteral}{"{} no data for "{}} << variable << std::endl;}
-\DoxyCodeLine{653       \textcolor{keywordflow}{return} 1; \textcolor{comment}{// Exits if cannot be found}}
-\DoxyCodeLine{654     \}}
-\DoxyCodeLine{655     idatahist-\/>Print();}
-\DoxyCodeLine{656     idatahist-\/>Write();}
-\DoxyCodeLine{657 }
-\DoxyCodeLine{658     \textcolor{keywordflow}{if} (imcsighist == 0)\{}
-\DoxyCodeLine{659       std::cout << \textcolor{stringliteral}{"{} no sig for "{}} << variable << std::endl;}
-\DoxyCodeLine{660       \textcolor{keywordflow}{return} 1;}
-\DoxyCodeLine{661     \}}
-\DoxyCodeLine{662     \textcolor{comment}{//imcsighist-\/>Scale(POTScale);}}
-\DoxyCodeLine{663     imcsighist-\/>Print();}
-\DoxyCodeLine{664     imcsighist-\/>Write();}
-\DoxyCodeLine{665     \textcolor{comment}{// if (DEBUG) std::cout << "{} MC sig scaled by POT for "{} << variable << std::endl;}}
-\DoxyCodeLine{666 }
-\DoxyCodeLine{667     \textcolor{keywordflow}{if} (imcbkghist == 0 \&\& !hasbkgsub)\{}
-\DoxyCodeLine{668       std::cout << \textcolor{stringliteral}{"{} no bkg for "{}} << variable << std::endl;}
-\DoxyCodeLine{669       \textcolor{keywordflow}{return} 1;}
-\DoxyCodeLine{670     \}}
-\DoxyCodeLine{671     \textcolor{comment}{// imcbkghist-\/>Scale(POTScale);}}
-\DoxyCodeLine{672     \textcolor{keywordflow}{if} (!hasbkgsub)\{}
-\DoxyCodeLine{673       imcbkghist-\/>Print();}
-\DoxyCodeLine{674       imcbkghist-\/>Write();}
+\DoxyCodeLine{503 \textcolor{keyword}{template} std::vector<MnvH1D*> DoNormalization<MnvH1D>( std::map<const std::string,NuConfig* > configs, std::string basename, std::map< std::string, bool> FluxNorm, \textcolor{keywordtype}{double} norm, MnvH1D* effcorr, MnvH1D* ialltruhist, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed);}
+\DoxyCodeLine{504 \textcolor{keyword}{template} std::vector<MnvH2D*> DoNormalization<MnvH2D>( std::map<const std::string,NuConfig* > configs, std::string basename, std::map< std::string, bool> FluxNorm, \textcolor{keywordtype}{double} norm, MnvH2D* effcorr, MnvH2D* ialltruhist, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed);}
+\DoxyCodeLine{505 }
+\DoxyCodeLine{506 }
+\DoxyCodeLine{507 }
+\DoxyCodeLine{508 \textcolor{comment}{//============================= GetCrossSection ================================}}
+\DoxyCodeLine{509 }
+\DoxyCodeLine{510 \textcolor{comment}{// dummy for backwards compatibility config > map of config*}}
+\DoxyCodeLine{511 \textcolor{keyword}{template}<\textcolor{keyword}{class} MnvHistoType>}
+\DoxyCodeLine{512   \textcolor{keywordtype}{int} GetCrossSection(std::string sample, std::string variable, std::string basename,}
+\DoxyCodeLine{513                       std::map< std::string, std::map <std::string, MnvHistoType*> > histsND,}
+\DoxyCodeLine{514                       std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
+\DoxyCodeLine{515                       NuConfig oneconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
+\DoxyCodeLine{516                       MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG, \textcolor{keywordtype}{bool} hasbkgsub, \textcolor{keywordtype}{bool} usetune) \{}
+\DoxyCodeLine{517       std::map<const std::string, NuConfig*> configmap;}
+\DoxyCodeLine{518       configmap[\textcolor{stringliteral}{"{}main"{}}]= \&oneconfig;}
+\DoxyCodeLine{519       std::cout << \textcolor{stringliteral}{"{} pass single config into map"{}} << std::endl;}
+\DoxyCodeLine{520       \textcolor{keywordflow}{return} GetCrossSection(sample,  variable,  basename,}
+\DoxyCodeLine{521                              histsND,}
+\DoxyCodeLine{522                              responseND,}
+\DoxyCodeLine{523                              configmap,  canvas, norm, POTScale,  h\_flux\_dewidthed,}
+\DoxyCodeLine{524                              unfold,  num\_iter, DEBUG, hasbkgsub,usetune);}
+\DoxyCodeLine{525   \}}
+\DoxyCodeLine{526 }
+\DoxyCodeLine{527 \textcolor{keyword}{template}<\textcolor{keyword}{class} MnvHistoType>}
+\DoxyCodeLine{528   \textcolor{keywordtype}{int} GetCrossSection(std::string sample, std::string variable, std::string basename,}
+\DoxyCodeLine{529                       std::map< std::string, std::map <std::string, MnvHistoType*> > histsND,}
+\DoxyCodeLine{530                       std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
+\DoxyCodeLine{531                       std::map< const std::string, NuConfig *> configs, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
+\DoxyCodeLine{532                       MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG, \textcolor{keywordtype}{bool} hasbkgsub, \textcolor{keywordtype}{bool} usetune) \{}
+\DoxyCodeLine{533     \textcolor{keywordtype}{bool} binwid = \textcolor{keyword}{true};}
+\DoxyCodeLine{534     \textcolor{keywordtype}{int} logscale = 0; \textcolor{comment}{// 0 for none, 1 for x, 2 for y, 3 for both}}
+\DoxyCodeLine{535 }
+\DoxyCodeLine{536     \textcolor{comment}{// Get "{}category"{} tags set in config. Needs to match ones used in the event loop.}}
+\DoxyCodeLine{537     \textcolor{comment}{//TODO: Make this a map in config.}}
+\DoxyCodeLine{538     }
+\DoxyCodeLine{539     std::cout << \textcolor{stringliteral}{"{} at the top of GetXsec"{}} << sample <<  std::endl;}
+\DoxyCodeLine{540     \textcolor{comment}{// this can come out of the sample information:}}
+\DoxyCodeLine{541     \textcolor{comment}{// configs["{}main"{}]-\/>Print();}}
+\DoxyCodeLine{542     NuConfig sigkey = configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetConfig(\textcolor{stringliteral}{"{}signal"{}});}
+\DoxyCodeLine{543     \textcolor{comment}{//sigkey.Print();}}
+\DoxyCodeLine{544     std::string sig = sigkey.GetString(sample);}
+\DoxyCodeLine{545     std::cout << \textcolor{stringliteral}{"{} got sig "{}} << sig << std::endl;}
+\DoxyCodeLine{546     NuConfig bkgkey;}
+\DoxyCodeLine{547     std::string bkg;}
+\DoxyCodeLine{548     \textcolor{keywordflow}{if} (!hasbkgsub)\{}
+\DoxyCodeLine{549       \textcolor{comment}{// this likely needs to be fixed}}
+\DoxyCodeLine{550       bkgkey = configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetConfig(\textcolor{stringliteral}{"{}background"{}});}
+\DoxyCodeLine{551       \textcolor{comment}{//bkgkey.Print();}}
+\DoxyCodeLine{552       std::cout << bkgkey.CheckMember(sample) << std::endl;}
+\DoxyCodeLine{553       bkg = bkgkey.GetString(sample);}
+\DoxyCodeLine{554       std::cout << \textcolor{stringliteral}{"{} got bkg "{}} << bkg << std::endl;}
+\DoxyCodeLine{555     \}}
+\DoxyCodeLine{556     NuConfig datkey = configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetConfig(\textcolor{stringliteral}{"{}data"{}});}
+\DoxyCodeLine{557     std::string dat = datkey.GetString(sample);}
+\DoxyCodeLine{558     std::cout << \textcolor{stringliteral}{"{} got dat "{}} << dat << std::endl;}
+\DoxyCodeLine{559     }
+\DoxyCodeLine{560     }
+\DoxyCodeLine{561     \textcolor{comment}{//datkey.Print();}}
+\DoxyCodeLine{562     \textcolor{comment}{//std::string bkg = config.GetString("{}background"{});}}
+\DoxyCodeLine{563     \textcolor{comment}{// std::string dat = config.GetString("{}data"{});}}
+\DoxyCodeLine{564 }
+\DoxyCodeLine{565     \textcolor{comment}{// parse out variable to get axes}}
+\DoxyCodeLine{566     std::vector<std::string> varparse;}
+\DoxyCodeLine{567 }
+\DoxyCodeLine{568     \textcolor{comment}{// "{}basename"{} input of the form "{}h\_<sample>\_<variable>"{} or "{}h2D\_<sample>\_<variable>"{}}}
+\DoxyCodeLine{569     \textcolor{comment}{// Check if not 2D then make logscale for plotting if looking at Q\string^2\_QE}}
+\DoxyCodeLine{570     \textcolor{keywordflow}{if}(basename.find(\textcolor{stringliteral}{"{}h2D\_"{}})==std::string::npos)\{}
+\DoxyCodeLine{571       \textcolor{keywordflow}{if}(variable.find(\textcolor{stringliteral}{"{}Q2QE"{}})!=std::string::npos) logscale = 1;}
+\DoxyCodeLine{572     \}}
+\DoxyCodeLine{573     \textcolor{comment}{// If 2D, then set log scale for each axis if needed}}
+\DoxyCodeLine{574     \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{575       varparse = split(variable,\textcolor{stringliteral}{"{}\_"{}});}
+\DoxyCodeLine{576       \textcolor{keywordflow}{if}(varparse[0].find(\textcolor{stringliteral}{"{}Q2QE"{}})!=std::string::npos) logscale+=1;}
+\DoxyCodeLine{577       \textcolor{keywordflow}{if}(varparse[1].find(\textcolor{stringliteral}{"{}Q2QE"{}})!=std::string::npos) logscale+=2;}
+\DoxyCodeLine{578     \}}
+\DoxyCodeLine{579 }
+\DoxyCodeLine{580     std::cout << \textcolor{stringliteral}{"{} analyze "{}} << variable << std::endl;}
+\DoxyCodeLine{581 }
+\DoxyCodeLine{582     \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{}logscale "{}} << variable << \textcolor{stringliteral}{"{} "{}} << logscale << std::endl;}
+\DoxyCodeLine{583 }
+\DoxyCodeLine{584     \textcolor{comment}{// Print out the "{}type"{} tag from analyze code (e.g. "{}reconstructed"{}, "{}selected\_truth"{}, etc.)}}
+\DoxyCodeLine{585     \textcolor{comment}{// Scale POT for all MC hists, except response (get segfault if done this way...) -\/NHV}}
+\DoxyCodeLine{586     std::cout << \textcolor{stringliteral}{"{} starting on variable "{}} << sample << \textcolor{stringliteral}{"{} "{}} << variable << std::endl;}
+\DoxyCodeLine{587     \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} types : histsND)\{}
+\DoxyCodeLine{588       std::string type = types.first;}
+\DoxyCodeLine{589       std::cout << \textcolor{stringliteral}{"{}hists key "{}} << type << std::endl;}
+\DoxyCodeLine{590       \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} categories : histsND[type])\{}
+\DoxyCodeLine{591         std::string category = categories.first;}
+\DoxyCodeLine{592         \textcolor{keywordflow}{if} (category.find(dat)==std::string::npos)\{}
+\DoxyCodeLine{593           }
+\DoxyCodeLine{594           \textcolor{keywordflow}{if} (histsND[type][category] != 0) \{}
+\DoxyCodeLine{595             \textcolor{keywordtype}{double} t = histsND[type][category]-\/>Integral();}
+\DoxyCodeLine{596             histsND[type][category]-\/>Scale(POTScale);}
+\DoxyCodeLine{597             \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} POTScaled "{}} << histsND[type][category]-\/>GetName() << \textcolor{stringliteral}{"{} "{}} << t << \textcolor{stringliteral}{"{} "{}} << histsND[type][category]-\/>Integral() <<  std::endl;}
+\DoxyCodeLine{598           \}}
+\DoxyCodeLine{599         \}}
+\DoxyCodeLine{600       \}}
+\DoxyCodeLine{601     \}}
+\DoxyCodeLine{602 }
+\DoxyCodeLine{603     \textcolor{comment}{// Assign each input histogram type used for doing the analysis.}}
+\DoxyCodeLine{604     \textcolor{comment}{// MnvHistoType can be MnvH1D or MnvH2D so far. Response is always MnvH2D.}}
+\DoxyCodeLine{605     MnvHistoType* idatahist = histsND[\textcolor{stringliteral}{"{}reconstructed"{}}][dat];}
+\DoxyCodeLine{606     MnvHistoType* imcsighist = histsND[\textcolor{stringliteral}{"{}reconstructed"{}}][sig];}
+\DoxyCodeLine{607     std::string stuned = \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{608     \textcolor{keywordflow}{if} (histsND.count(\textcolor{stringliteral}{"{}reconstructed\_tuned"{}}) \&\& usetune)\{}
+\DoxyCodeLine{609         stuned = \textcolor{stringliteral}{"{}Tuned "{}};}
+\DoxyCodeLine{610         imcsighist = histsND[\textcolor{stringliteral}{"{}reconstructed\_tuned"{}}][sig];}
+\DoxyCodeLine{611         std::cout << \textcolor{stringliteral}{"{} using "{}} << imcsighist-\/>GetName() << std::endl;}
+\DoxyCodeLine{612     \}}
+\DoxyCodeLine{613     \textcolor{comment}{//std::cout << "{}using signal "{} << imcsighist-\/>GetName() << std::endl;}}
+\DoxyCodeLine{614     MnvHistoType* imcbkghist;}
+\DoxyCodeLine{615     MnvHistoType* ibkgsubhist;}
+\DoxyCodeLine{616     \textcolor{keywordflow}{if} (!hasbkgsub)\{}
+\DoxyCodeLine{617       imcbkghist = histsND[\textcolor{stringliteral}{"{}reconstructed"{}}][bkg];}
+\DoxyCodeLine{618       \textcolor{keywordflow}{if} (histsND.count(\textcolor{stringliteral}{"{}reconstructed\_tuned"{}})\&\& usetune)\{}
+\DoxyCodeLine{619         imcbkghist = histsND[\textcolor{stringliteral}{"{}reconstructed\_tuned"{}}][bkg];}
+\DoxyCodeLine{620         std::cout << \textcolor{stringliteral}{"{} using "{}} << imcbkghist-\/>GetName() << std::endl;}
+\DoxyCodeLine{621       \}}
+\DoxyCodeLine{622     \}}
+\DoxyCodeLine{623     std::cout << \textcolor{stringliteral}{"{}using background "{}} << imcbkghist-\/>GetName() << std::endl;}
+\DoxyCodeLine{624     \textcolor{keywordflow}{if} (hasbkgsub) ibkgsubhist = histsND[\textcolor{stringliteral}{"{}fitted"{}}][\textcolor{stringliteral}{"{}bkgsub"{}}];}
+\DoxyCodeLine{625       MnvHistoType* iseltruhist;}
+\DoxyCodeLine{626     \textcolor{keywordflow}{if} (histsND.count(\textcolor{stringliteral}{"{}selected\_truth\_tuned"{}}) \&\& usetune)\{}
+\DoxyCodeLine{627         iseltruhist = histsND[\textcolor{stringliteral}{"{}selected\_truth\_tuned"{}}][sig];}
+\DoxyCodeLine{628         std::cout << \textcolor{stringliteral}{"{} using "{}} << iseltruhist-\/>GetName() << std::endl;}
+\DoxyCodeLine{629     \}}
+\DoxyCodeLine{630     \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{631         iseltruhist = histsND[\textcolor{stringliteral}{"{}selected\_truth"{}}][sig];}
+\DoxyCodeLine{632     \}}
+\DoxyCodeLine{633     MnvHistoType* ialltruhist;}
+\DoxyCodeLine{634       }
+\DoxyCodeLine{635     \textcolor{keywordflow}{if} (histsND.count(\textcolor{stringliteral}{"{}all\_truth\_tuned"{}}) \&\& usetune)\{}
+\DoxyCodeLine{636         ialltruhist = histsND[\textcolor{stringliteral}{"{}all\_truth\_tuned"{}}][sig];}
+\DoxyCodeLine{637         std::cout << \textcolor{stringliteral}{"{} using "{}} << ialltruhist-\/>GetName() << std::endl;}
+\DoxyCodeLine{638     \}}
+\DoxyCodeLine{639     \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{640         ialltruhist = histsND[\textcolor{stringliteral}{"{}all\_truth"{}}][sig];}
+\DoxyCodeLine{641     \}}
+\DoxyCodeLine{642     }
+\DoxyCodeLine{643     MnvH2D* iresponse;}
+\DoxyCodeLine{644     \textcolor{keywordflow}{if} (responseND.count(\textcolor{stringliteral}{"{}response\_migration\_tuned"{}}) \&\& usetune)\{}
+\DoxyCodeLine{645         iresponse = responseND[\textcolor{stringliteral}{"{}response\_migration\_tuned"{}}][sig];}
+\DoxyCodeLine{646         std::cout << \textcolor{stringliteral}{"{} using "{}} << iresponse-\/>GetName() <<  \textcolor{stringliteral}{"{} "{}} << iresponse-\/>ProjectionX()-\/>Integral()<< \textcolor{stringliteral}{"{} "{}} <<iresponse-\/>ProjectionY()-\/>Integral()<< std::endl;}
+\DoxyCodeLine{647     \}}
+\DoxyCodeLine{648     \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{649         iresponse = responseND[\textcolor{stringliteral}{"{}response\_migration"{}}][sig];}
+\DoxyCodeLine{650         std::cout << \textcolor{stringliteral}{"{} using "{}} << iresponse-\/>GetName() <<  \textcolor{stringliteral}{"{} "{}} << iresponse-\/>ProjectionX()-\/>Integral()<< \textcolor{stringliteral}{"{} "{}} <<iresponse-\/>ProjectionY()-\/>Integral()<< std::endl;}
+\DoxyCodeLine{651     \}}
+\DoxyCodeLine{652     \textcolor{comment}{// TODO: POTScale by if (not data) -\/-\/> POTScale}}
+\DoxyCodeLine{653 }
+\DoxyCodeLine{654 }
+\DoxyCodeLine{655     \textcolor{comment}{// Check for each hist "{}category"{} for the variable you're analyzing.}}
+\DoxyCodeLine{656     \textcolor{keywordflow}{if} (idatahist == 0)\{}
+\DoxyCodeLine{657       std::cout << \textcolor{stringliteral}{"{} no data for "{}} << variable << std::endl;}
+\DoxyCodeLine{658       \textcolor{keywordflow}{return} 1; \textcolor{comment}{// Exits if cannot be found}}
+\DoxyCodeLine{659     \}}
+\DoxyCodeLine{660     idatahist-\/>Print();}
+\DoxyCodeLine{661     idatahist-\/>Write();}
+\DoxyCodeLine{662 }
+\DoxyCodeLine{663     \textcolor{keywordflow}{if} (imcsighist == 0)\{}
+\DoxyCodeLine{664       std::cout << \textcolor{stringliteral}{"{} no sig for "{}} << variable << std::endl;}
+\DoxyCodeLine{665       \textcolor{keywordflow}{return} 1;}
+\DoxyCodeLine{666     \}}
+\DoxyCodeLine{667     \textcolor{comment}{//imcsighist-\/>Scale(POTScale);}}
+\DoxyCodeLine{668     imcsighist-\/>Print();}
+\DoxyCodeLine{669     imcsighist-\/>Write();}
+\DoxyCodeLine{670     \textcolor{comment}{// if (DEBUG) std::cout << "{} MC sig scaled by POT for "{} << variable << std::endl;}}
+\DoxyCodeLine{671 }
+\DoxyCodeLine{672     \textcolor{keywordflow}{if} (imcbkghist == 0 \&\& !hasbkgsub)\{}
+\DoxyCodeLine{673       std::cout << \textcolor{stringliteral}{"{} no bkg for "{}} << variable << std::endl;}
+\DoxyCodeLine{674       \textcolor{keywordflow}{return} 1;}
 \DoxyCodeLine{675     \}}
-\DoxyCodeLine{676     }
-\DoxyCodeLine{677     \textcolor{comment}{// if (DEBUG) std::cout << "{} MC bkg scaled by POT for "{} << variable << std::endl;}}
-\DoxyCodeLine{678  }
-\DoxyCodeLine{679     \textcolor{comment}{// Where response is scaled by POT.}}
-\DoxyCodeLine{680     \textcolor{keywordflow}{if}(iresponse!=0)\{}
-\DoxyCodeLine{681       \textcolor{comment}{// HACK as the response seems to have gotten the wrong normalization}}
-\DoxyCodeLine{682       \textcolor{keywordtype}{double} fix = imcsighist-\/>Integral()/iresponse-\/>ProjectionX()-\/>Integral();}
-\DoxyCodeLine{683       iresponse-\/>Scale(fix);}
-\DoxyCodeLine{684       \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} HACK? response scaled by "{}} << fix << \textcolor{stringliteral}{"{} for "{}} << iresponse-\/>GetName() << \textcolor{stringliteral}{"{}POTScale would be "{}}<< POTScale<< std::endl;}
-\DoxyCodeLine{685     \}}
-\DoxyCodeLine{686 }
-\DoxyCodeLine{687     \textcolor{comment}{//==================================Make MC=====================================}}
-\DoxyCodeLine{688     MnvHistoType* mc;}
-\DoxyCodeLine{689     MnvHistoType* signalFraction;}
-\DoxyCodeLine{690     }
-\DoxyCodeLine{691       \textcolor{keywordflow}{if} (!hasbkgsub)\{}
-\DoxyCodeLine{692           \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start MakeMC... "{}} << std::endl;}
-\DoxyCodeLine{693           \textcolor{comment}{// std::string mcname = basename+"{}\_mc\_tot"{};}}
-\DoxyCodeLine{694           mc = MakeMC(basename,imcsighist,imcbkghist);}
-\DoxyCodeLine{695           \textcolor{keywordflow}{if}(DEBUG)mc-\/>Print();}
-\DoxyCodeLine{696           mc-\/>Write();}
-\DoxyCodeLine{697           }
-\DoxyCodeLine{698          }
-\DoxyCodeLine{699           PlotCVAndError(canvas,idatahist,mc,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+ \textcolor{stringliteral}{"{}DATA\_vs\_MC"{}} ,\textcolor{keyword}{true},logscale,binwid);}
-\DoxyCodeLine{700           PlotErrorSummary(canvas,mc,sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Raw MC Systematics"{}} ,logscale );}
-\DoxyCodeLine{701           }
-\DoxyCodeLine{702           \textcolor{comment}{//================================Signal Fraction===========================}}
-\DoxyCodeLine{703           }
-\DoxyCodeLine{704           \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start signal fraction... "{}} << std::endl;}
-\DoxyCodeLine{705           \textcolor{comment}{// std::string fracname = basename+"{}\_signalfraction"{};}}
-\DoxyCodeLine{706           signalFraction = GetSignalFraction(basename,imcsighist,mc);}
-\DoxyCodeLine{707           MnvHistoType* bkgFraction = GetBkgFraction(basename,imcbkghist,mc);}
-\DoxyCodeLine{708           \textcolor{keywordflow}{if}(DEBUG) signalFraction-\/>Print();}
-\DoxyCodeLine{709           signalFraction-\/>Write();}
-\DoxyCodeLine{710           bkgFraction-\/>Write();}
-\DoxyCodeLine{711           Plot2DFraction(canvas, signalFraction,bkgFraction, stuned+sample + \textcolor{stringliteral}{"{}\_fractions"{}},logscale);}
-\DoxyCodeLine{712           }
-\DoxyCodeLine{713           PlotCVAndError(canvas,signalFraction,signalFraction, stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Signal Fraction"{}} ,\textcolor{keyword}{true},logscale,\textcolor{keyword}{false});}
-\DoxyCodeLine{714           PlotErrorSummary(canvas,signalFraction,stuned+sample+\textcolor{stringliteral}{"{} Signal Fraction Systematics"{}} ,0);}
-\DoxyCodeLine{715       \}}
-\DoxyCodeLine{716       \textcolor{keywordflow}{else}\{}
-\DoxyCodeLine{717           mc = (MnvHistoType*)imcsighist-\/>Clone();}
-\DoxyCodeLine{718           }
-\DoxyCodeLine{719           }
+\DoxyCodeLine{676     \textcolor{comment}{// imcbkghist-\/>Scale(POTScale);}}
+\DoxyCodeLine{677     \textcolor{keywordflow}{if} (!hasbkgsub)\{}
+\DoxyCodeLine{678       imcbkghist-\/>Print();}
+\DoxyCodeLine{679       imcbkghist-\/>Write();}
+\DoxyCodeLine{680     \}}
+\DoxyCodeLine{681     }
+\DoxyCodeLine{682     \textcolor{comment}{// if (DEBUG) std::cout << "{} MC bkg scaled by POT for "{} << variable << std::endl;}}
+\DoxyCodeLine{683  }
+\DoxyCodeLine{684     \textcolor{comment}{// Where response is scaled by POT.}}
+\DoxyCodeLine{685     \textcolor{keywordflow}{if}(iresponse!=0)\{}
+\DoxyCodeLine{686       \textcolor{comment}{// HACK as the response seems to have gotten the wrong normalization}}
+\DoxyCodeLine{687       \textcolor{keywordtype}{double} fix = imcsighist-\/>Integral()/iresponse-\/>ProjectionX()-\/>Integral();}
+\DoxyCodeLine{688       iresponse-\/>Scale(fix);}
+\DoxyCodeLine{689       \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} HACK? response scaled by "{}} << fix << \textcolor{stringliteral}{"{} for "{}} << iresponse-\/>GetName() << \textcolor{stringliteral}{"{}POTScale would be "{}}<< POTScale<< std::endl;}
+\DoxyCodeLine{690     \}}
+\DoxyCodeLine{691 }
+\DoxyCodeLine{692     \textcolor{comment}{//==================================Make MC=====================================}}
+\DoxyCodeLine{693     MnvHistoType* mc;}
+\DoxyCodeLine{694     MnvHistoType* signalFraction;}
+\DoxyCodeLine{695     }
+\DoxyCodeLine{696       \textcolor{keywordflow}{if} (!hasbkgsub)\{}
+\DoxyCodeLine{697           \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start MakeMC... "{}} << std::endl;}
+\DoxyCodeLine{698           \textcolor{comment}{// std::string mcname = basename+"{}\_mc\_tot"{};}}
+\DoxyCodeLine{699           mc = MakeMC(basename,imcsighist,imcbkghist);}
+\DoxyCodeLine{700           \textcolor{keywordflow}{if}(DEBUG)mc-\/>Print();}
+\DoxyCodeLine{701           mc-\/>Write();}
+\DoxyCodeLine{702           }
+\DoxyCodeLine{703          }
+\DoxyCodeLine{704           PlotCVAndError(canvas,idatahist,mc,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+ \textcolor{stringliteral}{"{}DATA\_vs\_MC"{}} ,\textcolor{keyword}{true},logscale,binwid);}
+\DoxyCodeLine{705           PlotErrorSummary(canvas,mc,sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Raw MC Systematics"{}} ,logscale );}
+\DoxyCodeLine{706           }
+\DoxyCodeLine{707           \textcolor{comment}{//================================Signal Fraction===========================}}
+\DoxyCodeLine{708           }
+\DoxyCodeLine{709           \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start signal fraction... "{}} << std::endl;}
+\DoxyCodeLine{710           \textcolor{comment}{// std::string fracname = basename+"{}\_signalfraction"{};}}
+\DoxyCodeLine{711           signalFraction = GetSignalFraction(basename,imcsighist,mc);}
+\DoxyCodeLine{712           MnvHistoType* bkgFraction = GetBkgFraction(basename,imcbkghist,mc);}
+\DoxyCodeLine{713           \textcolor{keywordflow}{if}(DEBUG) signalFraction-\/>Print();}
+\DoxyCodeLine{714           signalFraction-\/>Write();}
+\DoxyCodeLine{715           bkgFraction-\/>Write();}
+\DoxyCodeLine{716           Plot2DFraction(canvas, signalFraction,bkgFraction, stuned+sample + \textcolor{stringliteral}{"{}\_fractions"{}},logscale);}
+\DoxyCodeLine{717           }
+\DoxyCodeLine{718           PlotCVAndError(canvas,signalFraction,signalFraction, stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Signal Fraction"{}} ,\textcolor{keyword}{true},logscale,\textcolor{keyword}{false});}
+\DoxyCodeLine{719           PlotErrorSummary(canvas,signalFraction,stuned+sample+\textcolor{stringliteral}{"{} Signal Fraction Systematics"{}} ,0);}
 \DoxyCodeLine{720       \}}
-\DoxyCodeLine{721     }
-\DoxyCodeLine{722 }
-\DoxyCodeLine{723     \textcolor{comment}{//============================Background Subtraction========================}}
-\DoxyCodeLine{724 }
-\DoxyCodeLine{725     \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start background subtraction... "{}} << std::endl;}
-\DoxyCodeLine{726     \textcolor{comment}{// std::string bkgsubname = basename+"{}\_bkgsub"{};;}}
-\DoxyCodeLine{727     MnvHistoType* bkgsub;}
-\DoxyCodeLine{728     \textcolor{keywordflow}{if} (hasbkgsub)\{}
-\DoxyCodeLine{729       \textcolor{keywordflow}{if} (ibkgsubhist)\{}
-\DoxyCodeLine{730         bkgsub=(MnvHistoType*)ibkgsubhist-\/>Clone((basename+\textcolor{stringliteral}{"{}\_bkgsub"{}}).c\_str());}
-\DoxyCodeLine{731       \}}
-\DoxyCodeLine{732       \textcolor{keywordflow}{else}\{}
-\DoxyCodeLine{733         std::cout << \textcolor{stringliteral}{"{} failed to find background histogram"{}} << std::endl;}
-\DoxyCodeLine{734         exit(0);}
-\DoxyCodeLine{735       \}}
-\DoxyCodeLine{736     \}}
-\DoxyCodeLine{737     \textcolor{keywordflow}{else}\{}
-\DoxyCodeLine{738        bkgsub = DoBkgSubtraction(basename,idatahist,mc,signalFraction);}
-\DoxyCodeLine{739     \}}
-\DoxyCodeLine{740     \textcolor{keywordflow}{if}(DEBUG)bkgsub-\/>Print();}
-\DoxyCodeLine{741       bkgsub-\/>Write();}
-\DoxyCodeLine{742  }
-\DoxyCodeLine{743     }
-\DoxyCodeLine{744     PlotCVAndError(canvas,bkgsub,imcsighist, stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}BKGsub vs. MC signal"{}} ,\textcolor{keyword}{true},logscale,binwid);}
-\DoxyCodeLine{745     PlotErrorSummary(canvas,bkgsub,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}BKGsub Systematics"{}} ,0);}
-\DoxyCodeLine{746 }
-\DoxyCodeLine{747     \textcolor{comment}{//==================================Unfolding===============================}}
-\DoxyCodeLine{748 }
-\DoxyCodeLine{749     \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start unfolding... "{}} << std::endl;}
-\DoxyCodeLine{750     \textcolor{comment}{// std::string unsmearedname = bkgsubname+"{}\_unfolded"{};}}
-\DoxyCodeLine{751     \textcolor{comment}{// std::string unsmearingname = basename+"{}\_unsmearing"{};}}
-\DoxyCodeLine{752     MnvHistoType* unsmeared;}
-\DoxyCodeLine{753     std::vector<MnvHistoType*> unsmearedVec = DoUnfolding(basename,iresponse,imcsighist,iseltruhist,bkgsub,idatahist,unfold,num\_iter);}
-\DoxyCodeLine{754 }
-\DoxyCodeLine{755     std::cout << \textcolor{stringliteral}{"{}Unfolding Vector Size: "{}} << unsmearedVec.size() << std::endl;}
-\DoxyCodeLine{756     \textcolor{keywordflow}{if}(unsmearedVec.size()==0)\{}
-\DoxyCodeLine{757         std::cout << \textcolor{stringliteral}{"{} No unfolding. Exiting now. "{}} << std::endl;}
-\DoxyCodeLine{758         \textcolor{keywordflow}{return} 0;}
-\DoxyCodeLine{759     \}}
-\DoxyCodeLine{760     \textcolor{keywordflow}{if}(unsmearedVec.size()>0)\{}
-\DoxyCodeLine{761       \textcolor{comment}{// Output for Bayesian unfolding, does not include the "{}unsmearing"{}}}
-\DoxyCodeLine{762       unsmeared = unsmearedVec[0];}
-\DoxyCodeLine{763       \textcolor{keywordflow}{if} (DEBUG) unsmeared-\/>Print();}
-\DoxyCodeLine{764       unsmeared-\/>Write();}
-\DoxyCodeLine{765       PlotCVAndError(canvas,bkgsub,unsmeared,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Data Before and After Unsmearing"{}}, \textcolor{keyword}{true},logscale,binwid); }
-\DoxyCodeLine{766       }
-\DoxyCodeLine{767     \}}
-\DoxyCodeLine{768     \textcolor{keywordflow}{if}(unsmearedVec.size()==2)\{}
-\DoxyCodeLine{769       \textcolor{comment}{// Output for crude ratio unfolding, DOES include "{}unsmearing"{} hist, so this picks that up}}
-\DoxyCodeLine{770       MnvHistoType* unsmearing = unsmearedVec[1];}
-\DoxyCodeLine{771       \textcolor{keywordflow}{if} (DEBUG) unsmearing-\/>Print();}
-\DoxyCodeLine{772       unsmearing-\/>Write();}
-\DoxyCodeLine{773       \textcolor{comment}{// PlotCVAndError(canvas,imcsighist,iseltruhist,"{}Fractional Unfolding"{} ,true,logscale,binwid);}}
-\DoxyCodeLine{774     \}}
-\DoxyCodeLine{775 }
-\DoxyCodeLine{776     PlotCVAndError(canvas,unsmeared,iseltruhist,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+ \textcolor{stringliteral}{"{}Unsmeared Data Compared to Selected MC"{}} ,\textcolor{keyword}{true},logscale,binwid);}
-\DoxyCodeLine{777     PlotErrorSummary(canvas,unsmeared,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Unsmeared Data Systematics"{}} ,0);}
-\DoxyCodeLine{778 }
-\DoxyCodeLine{779     \textcolor{comment}{//==================================Efficiency==============================}}
+\DoxyCodeLine{721       \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{722           mc = (MnvHistoType*)imcsighist-\/>Clone();}
+\DoxyCodeLine{723           }
+\DoxyCodeLine{724           }
+\DoxyCodeLine{725       \}}
+\DoxyCodeLine{726     }
+\DoxyCodeLine{727 }
+\DoxyCodeLine{728     \textcolor{comment}{//============================Background Subtraction========================}}
+\DoxyCodeLine{729 }
+\DoxyCodeLine{730     \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start background subtraction... "{}} << std::endl;}
+\DoxyCodeLine{731     \textcolor{comment}{// std::string bkgsubname = basename+"{}\_bkgsub"{};;}}
+\DoxyCodeLine{732     MnvHistoType* bkgsub;}
+\DoxyCodeLine{733     \textcolor{keywordflow}{if} (hasbkgsub)\{}
+\DoxyCodeLine{734       \textcolor{keywordflow}{if} (ibkgsubhist)\{}
+\DoxyCodeLine{735         bkgsub=(MnvHistoType*)ibkgsubhist-\/>Clone((basename+\textcolor{stringliteral}{"{}\_bkgsub"{}}).c\_str());}
+\DoxyCodeLine{736       \}}
+\DoxyCodeLine{737       \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{738         std::cout << \textcolor{stringliteral}{"{} failed to find background histogram"{}} << std::endl;}
+\DoxyCodeLine{739         exit(0);}
+\DoxyCodeLine{740       \}}
+\DoxyCodeLine{741     \}}
+\DoxyCodeLine{742     \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{743        bkgsub = DoBkgSubtraction(basename,idatahist,mc,signalFraction);}
+\DoxyCodeLine{744     \}}
+\DoxyCodeLine{745     \textcolor{keywordflow}{if}(DEBUG)bkgsub-\/>Print();}
+\DoxyCodeLine{746       bkgsub-\/>Write();}
+\DoxyCodeLine{747  }
+\DoxyCodeLine{748     }
+\DoxyCodeLine{749     PlotCVAndError(canvas,bkgsub,imcsighist, stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}BKGsub vs. MC signal"{}} ,\textcolor{keyword}{true},logscale,binwid);}
+\DoxyCodeLine{750     PlotErrorSummary(canvas,bkgsub,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}BKGsub Systematics"{}} ,0);}
+\DoxyCodeLine{751 }
+\DoxyCodeLine{752     \textcolor{comment}{//==================================Unfolding===============================}}
+\DoxyCodeLine{753 }
+\DoxyCodeLine{754     \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start unfolding... "{}} << std::endl;}
+\DoxyCodeLine{755     \textcolor{comment}{// std::string unsmearedname = bkgsubname+"{}\_unfolded"{};}}
+\DoxyCodeLine{756     \textcolor{comment}{// std::string unsmearingname = basename+"{}\_unsmearing"{};}}
+\DoxyCodeLine{757     MnvHistoType* unsmeared;}
+\DoxyCodeLine{758     std::vector<MnvHistoType*> unsmearedVec = DoUnfolding(basename,iresponse,imcsighist,iseltruhist,bkgsub,idatahist,unfold,num\_iter);}
+\DoxyCodeLine{759 }
+\DoxyCodeLine{760     std::cout << \textcolor{stringliteral}{"{}Unfolding Vector Size: "{}} << unsmearedVec.size() << std::endl;}
+\DoxyCodeLine{761     \textcolor{keywordflow}{if}(unsmearedVec.size()==0)\{}
+\DoxyCodeLine{762         std::cout << \textcolor{stringliteral}{"{} No unfolding. Exiting now. "{}} << std::endl;}
+\DoxyCodeLine{763         \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{764     \}}
+\DoxyCodeLine{765     \textcolor{keywordflow}{if}(unsmearedVec.size()>0)\{}
+\DoxyCodeLine{766       \textcolor{comment}{// Output for Bayesian unfolding, does not include the "{}unsmearing"{}}}
+\DoxyCodeLine{767       unsmeared = unsmearedVec[0];}
+\DoxyCodeLine{768       \textcolor{keywordflow}{if} (DEBUG) unsmeared-\/>Print();}
+\DoxyCodeLine{769       unsmeared-\/>Write();}
+\DoxyCodeLine{770       PlotCVAndError(canvas,bkgsub,unsmeared,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Data Before and After Unsmearing"{}}, \textcolor{keyword}{true},logscale,binwid); }
+\DoxyCodeLine{771       }
+\DoxyCodeLine{772     \}}
+\DoxyCodeLine{773     \textcolor{keywordflow}{if}(unsmearedVec.size()==2)\{}
+\DoxyCodeLine{774       \textcolor{comment}{// Output for crude ratio unfolding, DOES include "{}unsmearing"{} hist, so this picks that up}}
+\DoxyCodeLine{775       MnvHistoType* unsmearing = unsmearedVec[1];}
+\DoxyCodeLine{776       \textcolor{keywordflow}{if} (DEBUG) unsmearing-\/>Print();}
+\DoxyCodeLine{777       unsmearing-\/>Write();}
+\DoxyCodeLine{778       \textcolor{comment}{// PlotCVAndError(canvas,imcsighist,iseltruhist,"{}Fractional Unfolding"{} ,true,logscale,binwid);}}
+\DoxyCodeLine{779     \}}
 \DoxyCodeLine{780 }
-\DoxyCodeLine{781     \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start efficiency correction... "{}} << std::endl;}
-\DoxyCodeLine{782     \textcolor{keywordflow}{if} (iseltruhist == 0)\{}
-\DoxyCodeLine{783       std::cout << \textcolor{stringliteral}{"{} No efficiency numerator. Stopping here."{}} << std::endl;}
-\DoxyCodeLine{784       \textcolor{keywordflow}{return} 2;}
-\DoxyCodeLine{785     \}}
-\DoxyCodeLine{786     \textcolor{keywordflow}{if} (ialltruhist == 0)\{}
-\DoxyCodeLine{787       std::cout << \textcolor{stringliteral}{"{} No efficiency denominator. Stopping here."{}} << std::endl;}
-\DoxyCodeLine{788       \textcolor{keywordflow}{return} 2;}
-\DoxyCodeLine{789     \}}
-\DoxyCodeLine{790     std::vector<MnvHistoType*> vecEffCorr = DoEfficiencyCorrection(basename, unsmeared, iseltruhist, ialltruhist);}
-\DoxyCodeLine{791     MnvHistoType* effcorr = vecEffCorr[0];}
-\DoxyCodeLine{792     \textcolor{keywordflow}{if} (DEBUG) effcorr-\/>Print();}
-\DoxyCodeLine{793     effcorr-\/>Write();}
-\DoxyCodeLine{794     MnvHistoType* efficiency = vecEffCorr[1];}
-\DoxyCodeLine{795     \textcolor{keywordflow}{if} (DEBUG) efficiency-\/>Print();}
-\DoxyCodeLine{796     efficiency-\/>Write();}
-\DoxyCodeLine{797     PlotCVAndError(canvas,iseltruhist,ialltruhist, stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}efficiency: selected and true"{}} ,\textcolor{keyword}{true},logscale,binwid);}
-\DoxyCodeLine{798     PlotCVAndError(canvas,effcorr,ialltruhist,stuned+ sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}effcorr data vs truth"{}} ,\textcolor{keyword}{true},logscale,binwid);}
-\DoxyCodeLine{799     PlotErrorSummary(canvas,efficiency,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Efficiency Factor Systematics"{}} ,0);}
-\DoxyCodeLine{800     PlotErrorSummary(canvas,effcorr,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Efficiency Corrected Data Systematics"{}} ,0);}
-\DoxyCodeLine{801     }
-\DoxyCodeLine{802     \textcolor{comment}{//============================POT/Flux Normalization========================}}
-\DoxyCodeLine{803     \textcolor{comment}{// bool energydep = false;}}
-\DoxyCodeLine{804     \textcolor{comment}{// bool energydepx = false;}}
-\DoxyCodeLine{805     \textcolor{comment}{// bool energydepy = false;}}
-\DoxyCodeLine{806     \textcolor{comment}{// //TODO: may need to check where this is originally defined.}}
-\DoxyCodeLine{807     \textcolor{comment}{//}}
-\DoxyCodeLine{808     \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start normalization... "{}} << std::endl;}
-\DoxyCodeLine{809     \textcolor{comment}{// // This checks if you need to use an energy dependent flux, and sets binwidth}}
-\DoxyCodeLine{810     \textcolor{comment}{// // corrections needed for plotting.}}
-\DoxyCodeLine{811     \textcolor{comment}{// if(variable.find("{}enuQE"{})==std::string::npos \&\& variable.find("{}EnuHad"{})==std::string::npos \&\& variable.find("{}EnuCCQE"{})==std::string::npos)\{}}
-\DoxyCodeLine{812     \textcolor{comment}{//   std::cout << "{} Using a flat flux. "{} << std::endl;}}
-\DoxyCodeLine{813     \textcolor{comment}{//   energydep = false;}}
-\DoxyCodeLine{814     \textcolor{comment}{// \}}}
-\DoxyCodeLine{815     \textcolor{comment}{// else\{}}
-\DoxyCodeLine{816     \textcolor{comment}{//   std::cout << "{} Using an energy dependent flux. "{};}}
-\DoxyCodeLine{817     \textcolor{comment}{//   energydep = true;}}
-\DoxyCodeLine{818     \textcolor{comment}{// \}}}
-\DoxyCodeLine{819     \textcolor{comment}{// binwid = energydep;}}
-\DoxyCodeLine{820       \textcolor{comment}{// hack in a varsFile if it does not exist }}
-\DoxyCodeLine{821       \textcolor{keywordflow}{if} (!(configs.count(\textcolor{stringliteral}{"{}varsFile"{}})>0))\{}
-\DoxyCodeLine{822   }
-\DoxyCodeLine{823           \textcolor{comment}{// backwards compatibility change a file read into a configmap}}
-\DoxyCodeLine{824           NuConfig* vars = \textcolor{keyword}{new} NuConfig();}
-\DoxyCodeLine{825           vars-\/>Read(configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetString(\textcolor{stringliteral}{"{}varsFile"{}}));}
-\DoxyCodeLine{826           configs[\textcolor{stringliteral}{"{}varsFile"{}}]=vars;}
-\DoxyCodeLine{827           }
-\DoxyCodeLine{828       \}}
-\DoxyCodeLine{829       std::map< std::string, bool> fluxnorm = CheckFluxNorm(configs[\textcolor{stringliteral}{"{}varsFile"{}}],variable);}
-\DoxyCodeLine{830     \textcolor{keywordflow}{if}(DEBUG) std::cout << \textcolor{stringliteral}{"{} fluxnorm: "{}} << fluxnorm[\textcolor{stringliteral}{"{}fluxnorm"{}}] << \textcolor{stringliteral}{"{}, xfluxnorm: "{}} << fluxnorm[\textcolor{stringliteral}{"{}xfluxnorm"{}}] << \textcolor{stringliteral}{"{}, yfluxnorm: "{}} << fluxnorm[\textcolor{stringliteral}{"{}yfluxnorm"{}}] << std::endl;}
-\DoxyCodeLine{831     }
-\DoxyCodeLine{832     \textcolor{comment}{// HMS dec-\/1-\/2021 -\/ flip these? }}
-\DoxyCodeLine{833     \textcolor{keywordflow}{if} (fluxnorm[\textcolor{stringliteral}{"{}fluxnorm"{}}]) \{}
-\DoxyCodeLine{834       binwid =  \textcolor{keyword}{true};}
-\DoxyCodeLine{835     \}}
-\DoxyCodeLine{836     \textcolor{keywordflow}{if} (!fluxnorm[\textcolor{stringliteral}{"{}fluxnorm"{}}]) \{}
-\DoxyCodeLine{837       binwid = \textcolor{keyword}{true};}
-\DoxyCodeLine{838     \}}
-\DoxyCodeLine{839     }
-\DoxyCodeLine{840    }
-\DoxyCodeLine{841 }
-\DoxyCodeLine{842     std::vector<MnvHistoType*> sigmaVec = DoNormalization(configs,basename,fluxnorm,norm,effcorr,ialltruhist,h\_flux\_dewidthed);}
-\DoxyCodeLine{843     MnvHistoType* sigma = sigmaVec[0];}
-\DoxyCodeLine{844     sigma-\/>Write();}
-\DoxyCodeLine{845     sigma-\/>Print();}
-\DoxyCodeLine{846     \textcolor{keywordflow}{if}(DEBUG) sigma-\/>Print(\textcolor{stringliteral}{"{}ALL"{}});}
-\DoxyCodeLine{847 }
-\DoxyCodeLine{848     MnvHistoType* sigmaMC = sigmaVec[1];}
-\DoxyCodeLine{849     sigmaMC-\/>Write();}
-\DoxyCodeLine{850     sigmaMC-\/>Print();}
-\DoxyCodeLine{851 }
-\DoxyCodeLine{852     PlotCVAndError(canvas,sigma,sigmaMC, stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}sigma"{}} ,\textcolor{keyword}{true},logscale,binwid);}
-\DoxyCodeLine{853     PlotErrorSummary(canvas,sigma,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Cross Section Systematics"{}} ,0);}
-\DoxyCodeLine{854     }
-\DoxyCodeLine{855 }
-\DoxyCodeLine{856     \textcolor{comment}{//============================Binwidth Normalization============================}}
-\DoxyCodeLine{857     \textcolor{comment}{// Just a check on bin width corrections...}}
-\DoxyCodeLine{858     \textcolor{keywordtype}{double} \textcolor{keywordtype}{id} = integrator(sigma,binwid);}
-\DoxyCodeLine{859     \textcolor{keywordtype}{double} im = integrator(sigmaMC,binwid);}
-\DoxyCodeLine{860     std::cout << \textcolor{stringliteral}{"{}sigma "{}} << variable << \textcolor{stringliteral}{"{} "{}} << \textcolor{keywordtype}{id} << \textcolor{stringliteral}{"{} "{}} << sigma-\/>Integral() << \textcolor{stringliteral}{"{} "{}} << im << \textcolor{stringliteral}{"{} "{}} << sigmaMC-\/>Integral() << std::endl;}
-\DoxyCodeLine{861     std::cout << \textcolor{stringliteral}{"{} end of loop over types "{}} << std::endl;}
-\DoxyCodeLine{862 }
-\DoxyCodeLine{863     \textcolor{comment}{//=====================================Exit======================================}}
-\DoxyCodeLine{864     \textcolor{keywordflow}{return} 0;}
-\DoxyCodeLine{865   \}}
-\DoxyCodeLine{866 }
-\DoxyCodeLine{867 \textcolor{keyword}{template} \textcolor{keywordtype}{int} GetCrossSection<MnvH1D>(std::string sample, std::string variable, std::string basename,}
-\DoxyCodeLine{868                                      std::map< std::string, std::map <std::string, MnvH1D*> > histsND,}
-\DoxyCodeLine{869                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
-\DoxyCodeLine{870                                      std::map< const std::string, NuConfig *> configs, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
-\DoxyCodeLine{871                                      MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} hasbksub=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} usetune=\textcolor{keyword}{false});}
-\DoxyCodeLine{872 }
-\DoxyCodeLine{873 \textcolor{keyword}{template} \textcolor{keywordtype}{int} GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,}
-\DoxyCodeLine{874                                      std::map< std::string, std::map <std::string, MnvH2D*> > histsND,}
-\DoxyCodeLine{875                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
-\DoxyCodeLine{876                                      std::map< const std::string, NuConfig *> configs, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
-\DoxyCodeLine{877                                      MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG=\textcolor{keyword}{false},\textcolor{keywordtype}{bool} hasbksub=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} usetune = \textcolor{keyword}{false});}
-\DoxyCodeLine{878 }
-\DoxyCodeLine{879 \textcolor{keyword}{template} \textcolor{keywordtype}{int} GetCrossSection<MnvH1D>(std::string sample, std::string variable, std::string basename,}
-\DoxyCodeLine{880                                      std::map< std::string, std::map <std::string, MnvH1D*> > histsND,}
-\DoxyCodeLine{881                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
-\DoxyCodeLine{882                                      NuConfig mainconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
-\DoxyCodeLine{883                                      MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} hasbksub=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} usetune=\textcolor{keyword}{false});}
-\DoxyCodeLine{884 }
-\DoxyCodeLine{885 \textcolor{keyword}{template} \textcolor{keywordtype}{int} GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,}
-\DoxyCodeLine{886                                      std::map< std::string, std::map <std::string, MnvH2D*> > histsND,}
-\DoxyCodeLine{887                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
-\DoxyCodeLine{888                                      NuConfig mainconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
-\DoxyCodeLine{889                                      MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG=\textcolor{keyword}{false},\textcolor{keywordtype}{bool} hasbksub=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} usetune = \textcolor{keyword}{false});}
-\DoxyCodeLine{890 }
-\DoxyCodeLine{891 }
+\DoxyCodeLine{781     PlotCVAndError(canvas,unsmeared,iseltruhist,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+ \textcolor{stringliteral}{"{}Unsmeared Data Compared to Selected MC"{}} ,\textcolor{keyword}{true},logscale,binwid);}
+\DoxyCodeLine{782     PlotErrorSummary(canvas,unsmeared,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Unsmeared Data Systematics"{}} ,0);}
+\DoxyCodeLine{783 }
+\DoxyCodeLine{784     \textcolor{comment}{//==================================Efficiency==============================}}
+\DoxyCodeLine{785 }
+\DoxyCodeLine{786     \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start efficiency correction... "{}} << std::endl;}
+\DoxyCodeLine{787     \textcolor{keywordflow}{if} (iseltruhist == 0)\{}
+\DoxyCodeLine{788       std::cout << \textcolor{stringliteral}{"{} No efficiency numerator. Stopping here."{}} << std::endl;}
+\DoxyCodeLine{789       \textcolor{keywordflow}{return} 2;}
+\DoxyCodeLine{790     \}}
+\DoxyCodeLine{791     \textcolor{keywordflow}{if} (ialltruhist == 0)\{}
+\DoxyCodeLine{792       std::cout << \textcolor{stringliteral}{"{} No efficiency denominator. Stopping here."{}} << std::endl;}
+\DoxyCodeLine{793       \textcolor{keywordflow}{return} 2;}
+\DoxyCodeLine{794     \}}
+\DoxyCodeLine{795     std::vector<MnvHistoType*> vecEffCorr = DoEfficiencyCorrection(basename, unsmeared, iseltruhist, ialltruhist);}
+\DoxyCodeLine{796     MnvHistoType* effcorr = vecEffCorr[0];}
+\DoxyCodeLine{797     \textcolor{keywordflow}{if} (DEBUG) effcorr-\/>Print();}
+\DoxyCodeLine{798     effcorr-\/>Write();}
+\DoxyCodeLine{799     MnvHistoType* efficiency = vecEffCorr[1];}
+\DoxyCodeLine{800     \textcolor{keywordflow}{if} (DEBUG) efficiency-\/>Print();}
+\DoxyCodeLine{801     efficiency-\/>Write();}
+\DoxyCodeLine{802     PlotCVAndError(canvas,iseltruhist,ialltruhist, stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}efficiency: selected and true"{}} ,\textcolor{keyword}{true},logscale,binwid);}
+\DoxyCodeLine{803     PlotCVAndError(canvas,effcorr,ialltruhist,stuned+ sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}effcorr data vs truth"{}} ,\textcolor{keyword}{true},logscale,binwid);}
+\DoxyCodeLine{804     PlotErrorSummary(canvas,efficiency,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Efficiency Factor Systematics"{}} ,0);}
+\DoxyCodeLine{805     PlotErrorSummary(canvas,effcorr,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Efficiency Corrected Data Systematics"{}} ,0);}
+\DoxyCodeLine{806     }
+\DoxyCodeLine{807     \textcolor{comment}{//============================POT/Flux Normalization========================}}
+\DoxyCodeLine{808     \textcolor{comment}{// bool energydep = false;}}
+\DoxyCodeLine{809     \textcolor{comment}{// bool energydepx = false;}}
+\DoxyCodeLine{810     \textcolor{comment}{// bool energydepy = false;}}
+\DoxyCodeLine{811     \textcolor{comment}{// //TODO: may need to check where this is originally defined.}}
+\DoxyCodeLine{812     \textcolor{comment}{//}}
+\DoxyCodeLine{813     \textcolor{keywordflow}{if} (DEBUG) std::cout << \textcolor{stringliteral}{"{} Start normalization... "{}} << std::endl;}
+\DoxyCodeLine{814     \textcolor{comment}{// // This checks if you need to use an energy dependent flux, and sets binwidth}}
+\DoxyCodeLine{815     \textcolor{comment}{// // corrections needed for plotting.}}
+\DoxyCodeLine{816     \textcolor{comment}{// if(variable.find("{}enuQE"{})==std::string::npos \&\& variable.find("{}EnuHad"{})==std::string::npos \&\& variable.find("{}EnuCCQE"{})==std::string::npos)\{}}
+\DoxyCodeLine{817     \textcolor{comment}{//   std::cout << "{} Using a flat flux. "{} << std::endl;}}
+\DoxyCodeLine{818     \textcolor{comment}{//   energydep = false;}}
+\DoxyCodeLine{819     \textcolor{comment}{// \}}}
+\DoxyCodeLine{820     \textcolor{comment}{// else\{}}
+\DoxyCodeLine{821     \textcolor{comment}{//   std::cout << "{} Using an energy dependent flux. "{};}}
+\DoxyCodeLine{822     \textcolor{comment}{//   energydep = true;}}
+\DoxyCodeLine{823     \textcolor{comment}{// \}}}
+\DoxyCodeLine{824     \textcolor{comment}{// binwid = energydep;}}
+\DoxyCodeLine{825       \textcolor{comment}{// hack in a varsFile if it does not exist }}
+\DoxyCodeLine{826       \textcolor{keywordflow}{if} (!(configs.count(\textcolor{stringliteral}{"{}varsFile"{}})>0))\{}
+\DoxyCodeLine{827   }
+\DoxyCodeLine{828           \textcolor{comment}{// backwards compatibility change a file read into a configmap}}
+\DoxyCodeLine{829           NuConfig* vars = \textcolor{keyword}{new} NuConfig();}
+\DoxyCodeLine{830           vars-\/>Read(configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetString(\textcolor{stringliteral}{"{}varsFile"{}}));}
+\DoxyCodeLine{831           configs[\textcolor{stringliteral}{"{}varsFile"{}}]=vars;}
+\DoxyCodeLine{832           }
+\DoxyCodeLine{833       \}}
+\DoxyCodeLine{834       std::map< std::string, bool> fluxnorm = CheckFluxNorm(configs[\textcolor{stringliteral}{"{}varsFile"{}}],variable);}
+\DoxyCodeLine{835     \textcolor{keywordflow}{if}(DEBUG) std::cout << \textcolor{stringliteral}{"{} fluxnorm: "{}} << fluxnorm[\textcolor{stringliteral}{"{}fluxnorm"{}}] << \textcolor{stringliteral}{"{}, xfluxnorm: "{}} << fluxnorm[\textcolor{stringliteral}{"{}xfluxnorm"{}}] << \textcolor{stringliteral}{"{}, yfluxnorm: "{}} << fluxnorm[\textcolor{stringliteral}{"{}yfluxnorm"{}}] << std::endl;}
+\DoxyCodeLine{836     }
+\DoxyCodeLine{837     \textcolor{comment}{// HMS dec-\/1-\/2021 -\/ flip these? }}
+\DoxyCodeLine{838     \textcolor{keywordflow}{if} (fluxnorm[\textcolor{stringliteral}{"{}fluxnorm"{}}]) \{}
+\DoxyCodeLine{839       binwid =  \textcolor{keyword}{true};}
+\DoxyCodeLine{840     \}}
+\DoxyCodeLine{841     \textcolor{keywordflow}{if} (!fluxnorm[\textcolor{stringliteral}{"{}fluxnorm"{}}]) \{}
+\DoxyCodeLine{842       binwid = \textcolor{keyword}{true};}
+\DoxyCodeLine{843     \}}
+\DoxyCodeLine{844     }
+\DoxyCodeLine{845    }
+\DoxyCodeLine{846 }
+\DoxyCodeLine{847     std::vector<MnvHistoType*> sigmaVec = DoNormalization(configs,basename,fluxnorm,norm,effcorr,ialltruhist,h\_flux\_dewidthed);}
+\DoxyCodeLine{848     MnvHistoType* sigma = sigmaVec[0];}
+\DoxyCodeLine{849     sigma-\/>Write();}
+\DoxyCodeLine{850     sigma-\/>Print();}
+\DoxyCodeLine{851     \textcolor{keywordflow}{if}(DEBUG) sigma-\/>Print(\textcolor{stringliteral}{"{}ALL"{}});}
+\DoxyCodeLine{852 }
+\DoxyCodeLine{853     MnvHistoType* sigmaMC = sigmaVec[1];}
+\DoxyCodeLine{854     sigmaMC-\/>Write();}
+\DoxyCodeLine{855     sigmaMC-\/>Print();}
+\DoxyCodeLine{856 }
+\DoxyCodeLine{857     PlotCVAndError(canvas,sigma,sigmaMC, stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}sigma"{}} ,\textcolor{keyword}{true},logscale,binwid);}
+\DoxyCodeLine{858     PlotErrorSummary(canvas,sigma,stuned+sample + \textcolor{stringliteral}{"{}\_"{}}+\textcolor{stringliteral}{"{}Cross Section Systematics"{}} ,0);}
+\DoxyCodeLine{859     }
+\DoxyCodeLine{860 }
+\DoxyCodeLine{861     \textcolor{comment}{//============================Binwidth Normalization============================}}
+\DoxyCodeLine{862     \textcolor{comment}{// Just a check on bin width corrections...}}
+\DoxyCodeLine{863     \textcolor{keywordtype}{double} \textcolor{keywordtype}{id} = integrator(sigma,binwid);}
+\DoxyCodeLine{864     \textcolor{keywordtype}{double} im = integrator(sigmaMC,binwid);}
+\DoxyCodeLine{865     std::cout << \textcolor{stringliteral}{"{}sigma "{}} << variable << \textcolor{stringliteral}{"{} "{}} << \textcolor{keywordtype}{id} << \textcolor{stringliteral}{"{} "{}} << sigma-\/>Integral() << \textcolor{stringliteral}{"{} "{}} << im << \textcolor{stringliteral}{"{} "{}} << sigmaMC-\/>Integral() << std::endl;}
+\DoxyCodeLine{866     std::cout << \textcolor{stringliteral}{"{} end of loop over types "{}} << std::endl;}
+\DoxyCodeLine{867 }
+\DoxyCodeLine{868     \textcolor{comment}{//=====================================Exit======================================}}
+\DoxyCodeLine{869     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{870   \}}
+\DoxyCodeLine{871 }
+\DoxyCodeLine{872 \textcolor{keyword}{template} \textcolor{keywordtype}{int} GetCrossSection<MnvH1D>(std::string sample, std::string variable, std::string basename,}
+\DoxyCodeLine{873                                      std::map< std::string, std::map <std::string, MnvH1D*> > histsND,}
+\DoxyCodeLine{874                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
+\DoxyCodeLine{875                                      std::map< const std::string, NuConfig *> configs, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
+\DoxyCodeLine{876                                      MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} hasbksub=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} usetune=\textcolor{keyword}{false});}
+\DoxyCodeLine{877 }
+\DoxyCodeLine{878 \textcolor{keyword}{template} \textcolor{keywordtype}{int} GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,}
+\DoxyCodeLine{879                                      std::map< std::string, std::map <std::string, MnvH2D*> > histsND,}
+\DoxyCodeLine{880                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
+\DoxyCodeLine{881                                      std::map< const std::string, NuConfig *> configs, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
+\DoxyCodeLine{882                                      MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG=\textcolor{keyword}{false},\textcolor{keywordtype}{bool} hasbksub=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} usetune = \textcolor{keyword}{false});}
+\DoxyCodeLine{883 }
+\DoxyCodeLine{884 \textcolor{keyword}{template} \textcolor{keywordtype}{int} GetCrossSection<MnvH1D>(std::string sample, std::string variable, std::string basename,}
+\DoxyCodeLine{885                                      std::map< std::string, std::map <std::string, MnvH1D*> > histsND,}
+\DoxyCodeLine{886                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
+\DoxyCodeLine{887                                      NuConfig mainconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
+\DoxyCodeLine{888                                      MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} hasbksub=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} usetune=\textcolor{keyword}{false});}
+\DoxyCodeLine{889 }
+\DoxyCodeLine{890 \textcolor{keyword}{template} \textcolor{keywordtype}{int} GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,}
+\DoxyCodeLine{891                                      std::map< std::string, std::map <std::string, MnvH2D*> > histsND,}
+\DoxyCodeLine{892                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
+\DoxyCodeLine{893                                      NuConfig mainconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
+\DoxyCodeLine{894                                      MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG=\textcolor{keyword}{false},\textcolor{keywordtype}{bool} hasbksub=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} usetune = \textcolor{keyword}{false});}
+\DoxyCodeLine{895 }
+\DoxyCodeLine{896 }
 
 \end{DoxyCode}

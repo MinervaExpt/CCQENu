@@ -9,7 +9,7 @@
 //   PU systematics
 //==============================================================================
 
-#include "CVUniverse.h"
+#include "include/CVUniverse.h"
 #include "PlotUtils/ChainWrapper.h"
 #include "PlotUtils/FluxSystematics.h"
 #include "PlotUtils/GenieSystematics.h"

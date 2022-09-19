@@ -1,9 +1,9 @@
 #ifndef VARIABLEFromConfig_H
 #define VARIABLEFromConfig_H
 
-#include "CVUniverse.h"
+#include "include/CVUniverse.h"
 //#include "PlotUtils/HistFolio.h"  - gives annoying error messages
-#include "HistWrapperMap.h"
+#include "include/HistWrapperMap.h"
 #include "MinervaUnfold/MnvResponse.h"
 #include "utils/NuConfig.h"
 

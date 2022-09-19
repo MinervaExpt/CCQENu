@@ -1,10 +1,10 @@
 #ifndef VARIABLE2DFromConfig_H
 #define VARIABLE2DFromConfig_H
 
-#include "CVUniverse.h"
+#include "include/CVUniverse.h"
 // #include "PlotUtils/HistFolio.h"
-#include "HistWrapperMap.h"
-#include "Hist2DWrapperMap.h" //TODO: Need to make this to play wit Hist2DWrapper
+#include "include/HistWrapperMap.h"
+#include "include/Hist2DWrapperMap.h" //TODO: Need to make this to play wit Hist2DWrapper
 #include "MinervaUnfold/MnvResponse.h"
 
 

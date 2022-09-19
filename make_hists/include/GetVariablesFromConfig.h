@@ -1,8 +1,8 @@
 #ifndef GetVariablesFromConfig_H
 #define GetVariablesFromConfig_H
 #include <vector>
-#include "CVUniverse.h"
-#include "VariableFromConfig.h"
+#include "include/CVUniverse.h"
+#include "include/VariableFromConfig.h"
 #include "PlotUtils/PhysicsVariables.h"
 
 //namespace CCQENu

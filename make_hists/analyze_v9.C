@@ -32,7 +32,7 @@ bool DEBUG=1;
 #include "TCanvas.h"
 #include "utils/NuConfig.h"
 #include "PlotUtils/FluxReweighter.h"
-#include "GetXSec.h"
+#include "include/GetXSec.h"
 //#include "utils/POTCounter.h"
 //#define LOCAL  // this is for local  data samples
 
