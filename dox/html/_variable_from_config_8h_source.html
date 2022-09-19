@@ -90,10 +90,10 @@ $(function() {
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_c_c_q_e_nu_1_1_variable_from_config.html">   21</a></span><span class="keyword">class </span><a class="code hl_class" href="class_c_c_q_e_nu_1_1_variable_from_config.html">VariableFromConfig</a> : <span class="keyword">public</span> PlotUtils::VariableBase&lt;CVUniverse&gt; {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">class </span>VariableFromConfig : <span class="keyword">public</span> PlotUtils::VariableBase&lt;CVUniverse&gt; {</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keyword">typedef</span> std::function&lt;double(<span class="keyword">const</span> <a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>&amp;)&gt; PointerToCVUniverseFunction;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keyword">typedef</span> <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">PlotUtils::HistWrapperMap&lt;CVUniverse&gt;</a> <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keyword">typedef</span> <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">PlotUtils::HistWrapperMap&lt;CVUniverse&gt;</a> HM;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keyword">typedef</span> PlotUtils::MnvH1D MH1D;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="comment">//  typedef PlotUtils::HistFolio&lt;PlotUtils::MnvH1D&gt; FOLIO;</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
@@ -109,7 +109,7 @@ $(function() {
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <a class="code hl_class" href="class_c_c_q_e_nu_1_1_variable_from_config.html">VariableFromConfig</a>(<span class="keyword">const</span> NuConfig config){</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  VariableFromConfig(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config){</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">//config.Print();</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <a class="code hl_class" href="class_c_v_functions.html">CVFunctions&lt;CVUniverse&gt;</a> fun;</div>
@@ -226,13 +226,13 @@ $(function() {
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  <span class="comment">//=======================================================================================</span></div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  <span class="comment">// Histwrappers -- selected mc, selected data</span></div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a> m_selected_mc_reco; <span class="comment">// HM for normal MC hists - has special constructor to make response</span></div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a> m_tuned_mc_reco; <span class="comment">// HM for tuned MC hists used for background subtraction -NHV - has special constructor to make response</span></div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a> m_selected_mc_truth;</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a> m_tuned_selected_mc_truth;</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a> m_signal_mc_truth;</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a> m_tuned_signal_mc_truth;</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a> m_selected_data;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  HM m_selected_mc_reco; <span class="comment">// HM for normal MC hists - has special constructor to make response</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  HM m_tuned_mc_reco; <span class="comment">// HM for tuned MC hists used for background subtraction -NHV - has special constructor to make response</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  HM m_selected_mc_truth;</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  HM m_tuned_selected_mc_truth;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  HM m_signal_mc_truth;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  HM m_tuned_signal_mc_truth;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  HM m_selected_data;</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  UniverseMap m_universes;</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  std::string m_units;</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  std::map&lt;const std::string, bool&gt; hasData;</div>
@@ -289,7 +289,7 @@ $(function() {
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    std::vector&lt;double&gt; bins = GetBinVec();</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    std::vector&lt;double&gt; recobins = GetRecoBinVec();</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span><span class="comment">// this one is special as we need to take into account a non-square response</span></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    m_selected_mc_reco = <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNBins(), bins, GetNRecoBins(), recobins,  univs, tags);</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    m_selected_mc_reco = HM(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNBins(), bins, GetNRecoBins(), recobins,  univs, tags);</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    m_selected_mc_reco.AppendName(<span class="stringliteral">&quot;reconstructed&quot;</span>,tags); <span class="comment">// patch to conform to CCQENU standard m_selected_mc_truth.AppendName(&quot;_truth&quot;,tags); // patch to conform to CCQENU standard</span></div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  }</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
@@ -313,7 +313,7 @@ $(function() {
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    std::vector&lt;double&gt; bins = GetBinVec();</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    m_selected_mc_truth = <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    m_selected_mc_truth = HM(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    m_selected_mc_truth.AppendName(<span class="stringliteral">&quot;selected_truth&quot;</span>,tags);</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  }</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
@@ -337,7 +337,7 @@ $(function() {
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    std::vector&lt;double&gt; bins = GetBinVec();</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    m_signal_mc_truth = <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    m_signal_mc_truth = HM(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    m_signal_mc_truth.AppendName(<span class="stringliteral">&quot;all_truth&quot;</span>,tags);</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>  }</div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
@@ -355,7 +355,7 @@ $(function() {
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    }</div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    std::vector&lt;double&gt; recobins = GetRecoBinVec();</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    m_selected_data = <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNRecoBins(), recobins, univs,tags);</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    m_selected_data = HM(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNRecoBins(), recobins, univs,tags);</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    m_selected_data.AppendName(<span class="stringliteral">&quot;reconstructed&quot;</span>,tags);</div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>  }</div>
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span> </div>
@@ -378,15 +378,15 @@ $(function() {
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>    <span class="comment">// Check which categories are configured and add a tuned version</span></div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    <span class="keywordflow">if</span> (std::count(m_for.begin(), m_for.end(),<span class="stringliteral">&quot;selected_reco&quot;</span>)&gt;=1){ <span class="comment">// need special constructor to deal with reco bins</span></div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>      m_tuned_mc_reco = <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(),GetNBins(),bins, GetNRecoBins(), recobins, reco_univs, tuned_tags);</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>      m_tuned_mc_reco = HM(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(),GetNBins(),bins, GetNRecoBins(), recobins, reco_univs, tuned_tags);</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>      m_tuned_mc_reco.AppendName(<span class="stringliteral">&quot;reconstructed_tuned&quot;</span>,tuned_tags);</div>
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    }</div>
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    <span class="keywordflow">if</span> (std::count(m_for.begin(), m_for.end(),<span class="stringliteral">&quot;selected_truth&quot;</span>)&gt;=1) {</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>      m_tuned_selected_mc_truth = <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNBins(), bins, reco_univs, tuned_tags);</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>      m_tuned_selected_mc_truth = HM(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNBins(), bins, reco_univs, tuned_tags);</div>
 <div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>      m_tuned_selected_mc_truth.AppendName(<span class="stringliteral">&quot;selected_truth_tuned&quot;</span>,tuned_tags);</div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    }</div>
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    <span class="keywordflow">if</span> (std::count(m_for.begin(), m_for.end(),<span class="stringliteral">&quot;truth&quot;</span>)&gt;=1) {</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>      m_tuned_signal_mc_truth = <a class="code hl_class" href="class_plot_utils_1_1_hist_wrapper_map.html">HM</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNBins(), bins, truth_univs, tuned_tags);</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>      m_tuned_signal_mc_truth = HM(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label).c_str(), GetNBins(), bins, truth_univs, tuned_tags);</div>
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>      m_tuned_signal_mc_truth.AppendName(<span class="stringliteral">&quot;all_truth_tuned&quot;</span>,tuned_tags);</div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    }</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span> </div>
@@ -543,9 +543,9 @@ $(function() {
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>}  <span class="comment">// namespace Ben</span></div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span> </div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span><span class="preprocessor">#endif  </span><span class="comment">// VARIABLE_H</span></div>
-<div class="ttc" id="aclass_c_c_q_e_nu_1_1_variable_from_config_html"><div class="ttname"><a href="class_c_c_q_e_nu_1_1_variable_from_config.html">CCQENu::VariableFromConfig</a></div><div class="ttdef"><b>Definition:</b> VariableFromConfig.h:21</div></div>
 <div class="ttc" id="aclass_c_v_functions_html"><div class="ttname"><a href="class_c_v_functions.html">CVFunctions</a></div><div class="ttdef"><b>Definition:</b> CVFunctions.h:19</div></div>
 <div class="ttc" id="aclass_c_v_universe_html"><div class="ttname"><a href="class_c_v_universe.html">CVUniverse</a></div><div class="ttdef"><b>Definition:</b> CVUniverse.h:22</div></div>
+<div class="ttc" id="aclass_nu_config_html"><div class="ttname"><a href="class_nu_config.html">NuConfig</a></div><div class="ttdef"><b>Definition:</b> NuConfig.h:16</div></div>
 <div class="ttc" id="aclass_plot_utils_1_1_hist_wrapper_map_html"><div class="ttname"><a href="class_plot_utils_1_1_hist_wrapper_map.html">PlotUtils::HistWrapperMap&lt; CVUniverse &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

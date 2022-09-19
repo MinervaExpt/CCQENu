@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['variable2dfromconfig_0',['Variable2DFromConfig',['../class_c_c_q_e_nu_1_1_variable2_d_from_config.html',1,'CCQENu']]],
-  ['variablefromconfig_1',['VariableFromConfig',['../class_c_c_q_e_nu_1_1_variable_from_config.html',1,'CCQENu']]]
+  ['printflogger_0',['printfLogger',['../class_fraction_fit_test_1_1printf_logger.html',1,'FractionFitTest.printfLogger'],['../class_fraction_fit_with_systematics_1_1printf_logger.html',1,'FractionFitWithSystematics.printfLogger']]]
 ];

@@ -1,0 +1,124 @@
+\hypertarget{_sep18_2_loops_8h_source}{}\doxysection{Loops.\+h}
+\label{_sep18_2_loops_8h_source}\index{make\_hists/include/Sep18/Loops.h@{make\_hists/include/Sep18/Loops.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{keyword}{enum} EDataMCTruth \{kData, kMC, kTruth, kNDataMCTruthTypes\};}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{9 \textcolor{comment}{// Loop and fill}}
+\DoxyCodeLine{10 \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#ifndef \_\_CINT\_\_ }\textcolor{comment}{//for PlotUtils::cuts\_t<>}}
+\DoxyCodeLine{12 \textcolor{keywordtype}{void} LoopAndFillEventSelection(std::string tag,}
+\DoxyCodeLine{13                                \textcolor{keyword}{const} PlotUtils::MacroUtil\& util,}
+\DoxyCodeLine{14                                std::map<std::string, std::vector<CVUniverse*> > error\_bands,}
+\DoxyCodeLine{15                                std::vector<CCQENu::VariableFromConfig*>\& variables,}
+\DoxyCodeLine{16                                std::vector<CCQENu::Variable2DFromConfig*>\& variables2D,}
+\DoxyCodeLine{17                                EDataMCTruth data\_mc\_truth,}
+\DoxyCodeLine{18                                PlotUtils::Cutter<CVUniverse>\& selection, PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>\& model,}
+\DoxyCodeLine{19                                \mbox{\hyperlink{class_plot_utils_1_1weight___m_cre_scale}{PlotUtils::weight\_MCreScale}} mcRescale) \{}
+\DoxyCodeLine{20   \textcolor{comment}{// Prepare loop}}
+\DoxyCodeLine{21   MinervaUniverse::SetTruth(\textcolor{keyword}{false});}
+\DoxyCodeLine{22   \textcolor{keywordtype}{int} nentries = -\/1;}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24   \textcolor{comment}{// get ready for weights by finding cv universe pointer}}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26   assert(!error\_bands[\textcolor{stringliteral}{"{}cv"{}}].empty() \&\& \textcolor{stringliteral}{"{}\(\backslash\)"{}cv\(\backslash\)"{} error band is empty!  Can't set Model weight."{}});}
+\DoxyCodeLine{27   \textcolor{keyword}{auto}\& cvUniv = error\_bands[\textcolor{stringliteral}{"{}cv"{}}].front();}
+\DoxyCodeLine{28   \textcolor{comment}{// make a dummy event -\/ may need to make fancier}}
+\DoxyCodeLine{29   PlotUtils::detail::empty event;}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31   \textcolor{keywordflow}{if} ( variables.size() < 1) \{}
+\DoxyCodeLine{32     std::cout << \textcolor{stringliteral}{"{} no variables to fill "{}} << std::endl;}
+\DoxyCodeLine{33     \textcolor{keywordflow}{return};  \textcolor{comment}{// don't bother if there are no variables.}}
+\DoxyCodeLine{34   \}}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36   \textcolor{keywordflow}{if} (data\_mc\_truth == kData )\{}
+\DoxyCodeLine{37     nentries = util.GetDataEntries();}
+\DoxyCodeLine{38   \}}
+\DoxyCodeLine{39   \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (data\_mc\_truth == kMC )\{}
+\DoxyCodeLine{40     nentries = util.GetMCEntries();}
+\DoxyCodeLine{41   \}}
+\DoxyCodeLine{42   \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44     nentries = util.GetTruthEntries() ;}
+\DoxyCodeLine{45     MinervaUniverse::SetTruth(\textcolor{keyword}{true});}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47   \}}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49   std::cout << \textcolor{stringliteral}{"{} starting loop "{}} << data\_mc\_truth << \textcolor{stringliteral}{"{} "{}} << nentries << std::endl;}
+\DoxyCodeLine{50   \textcolor{comment}{// Begin entries loop}}
+\DoxyCodeLine{51   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < nentries; i++) \{}
+\DoxyCodeLine{52     \textcolor{keywordflow}{if}(data\_mc\_truth != kData) i+= prescale-\/1;}
+\DoxyCodeLine{53     \textcolor{keywordflow}{if} (i+1 \% 1000 == 0) std::cout << (i / 1000) << \textcolor{stringliteral}{"{}k "{}} << std::endl;}
+\DoxyCodeLine{54     cvUniv-\/>SetEntry(i);}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56     \textcolor{keywordflow}{if} (data\_mc\_truth != kData) model.SetEntry(*cvUniv, event);}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59     \textcolor{keyword}{const} \textcolor{keywordtype}{double} cvWeight = (data\_mc\_truth == kData) ? 1. : model.GetWeight(*cvUniv,event);  \textcolor{comment}{// detail may be used for more complex things}}
+\DoxyCodeLine{60     \textcolor{comment}{// TODO: Is this scaled cvWeight necessary?}}
+\DoxyCodeLine{61     \textcolor{comment}{// const double cvWeightScaled = (data\_mc\_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "{}cv"{});}}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64     \textcolor{comment}{// Loop bands and universes}}
+\DoxyCodeLine{65     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} band : error\_bands) \{}
+\DoxyCodeLine{66       std::vector<CVUniverse*> error\_band\_universes = band.second;}
+\DoxyCodeLine{67       \textcolor{comment}{//  HMS replace with iuniv to access weights more easily}}
+\DoxyCodeLine{68       \textcolor{comment}{//  HMS for (auto universe : error\_band\_universes) \{}}
+\DoxyCodeLine{69       std::string uni\_name = (band.second)[0]-\/>ShortName();}
+\DoxyCodeLine{70       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} iuniv=0; iuniv < error\_band\_universes.size(); iuniv++)\{}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72         \textcolor{keyword}{auto} universe = error\_band\_universes[iuniv];}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75         universe-\/>SetEntry(i);}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{77         \textcolor{comment}{// Process this event/universe}}
+\DoxyCodeLine{78         \textcolor{comment}{//double weight = 1;}}
+\DoxyCodeLine{79         \textcolor{comment}{//if (universe-\/>ShortName() == "{}cv"{} ) weight = data\_mc\_truth == kData ? 1. : universe-\/>GetWeight();}}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81         \textcolor{comment}{// probably want to move this later on inside the loop}}
+\DoxyCodeLine{82         \textcolor{keyword}{const} \textcolor{keywordtype}{double} weight = (data\_mc\_truth == kData) ? 1. : model.GetWeight(*universe, event); \textcolor{comment}{//Only calculate the per-\/universe weight for events that will actually use it.}}
+\DoxyCodeLine{83         \textcolor{comment}{//PlotUtils::detail::empty event;}}
+\DoxyCodeLine{84 }
+\DoxyCodeLine{85         \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{86         \textcolor{comment}{// Fill}}
+\DoxyCodeLine{87         \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89         \textcolor{keywordflow}{if}(data\_mc\_truth == kMC)\{}
+\DoxyCodeLine{90           \textcolor{keywordflow}{if}(selection.isMCSelected(*universe, event, weight).all()}
+\DoxyCodeLine{91              \&\& selection.isSignal(*universe)) \{}
+\DoxyCodeLine{92             \textcolor{comment}{//double weight = data\_mc\_truth == kData ? 1. : universe-\/>GetWeight();}}
+\DoxyCodeLine{93             \textcolor{keyword}{const} \textcolor{keywordtype}{double} q2qe = universe-\/>GetQ2QEGeV();}
+\DoxyCodeLine{94             \textcolor{keywordtype}{double} scale = mcRescale.GetScale(tag, q2qe, uni\_name, iuniv); \textcolor{comment}{//Only calculate the per-\/universe weight for events that will actually use it.}}
+\DoxyCodeLine{95             FillMC(tag, universe, weight, variables, variables2D, scale);}
+\DoxyCodeLine{96             FillResponse(tag,universe,weight,variables,variables2D, scale);}
+\DoxyCodeLine{97           \}}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99         \}}
+\DoxyCodeLine{100         \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} (data\_mc\_truth == kTruth)\{}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{102           \textcolor{keywordflow}{if}(selection.isEfficiencyDenom(*universe, weight))\{}
+\DoxyCodeLine{103             \textcolor{keyword}{const} \textcolor{keywordtype}{double} q2qe = universe-\/>GetTrueQ2QEGeV();}
+\DoxyCodeLine{104             \textcolor{keywordtype}{double} scale = mcRescale.GetScale(tag, q2qe, uni\_name, iuniv); \textcolor{comment}{//Only calculate the per-\/universe weight for events that will actually use it.}}
+\DoxyCodeLine{105             FillSignalTruth(tag, universe, weight, variables, variables2D, scale);}
+\DoxyCodeLine{106           \}}
+\DoxyCodeLine{107         \}}
+\DoxyCodeLine{108         \textcolor{keywordflow}{else}\{ \textcolor{comment}{//kData}}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110           \textcolor{keywordflow}{if}(selection.isDataSelected(*universe, event).all()) FillData(tag, universe, variables, variables2D);}
+\DoxyCodeLine{111         \}}
+\DoxyCodeLine{112 }
+\DoxyCodeLine{113       \} \textcolor{comment}{// End universes}}
+\DoxyCodeLine{114     \} \textcolor{comment}{// End error bands}}
+\DoxyCodeLine{115   \} \textcolor{comment}{// End entries loop}}
+\DoxyCodeLine{116 \}}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118 \textcolor{preprocessor}{\#endif }\textcolor{comment}{//\_\_CINT\_\_}}
+
+\end{DoxyCode}

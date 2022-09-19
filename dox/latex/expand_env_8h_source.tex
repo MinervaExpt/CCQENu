@@ -1,0 +1,32 @@
+\hypertarget{expand_env_8h_source}{}\doxysection{expand\+Env.\+h}
+\label{expand_env_8h_source}\index{make\_hists/utils/expandEnv.h@{make\_hists/utils/expandEnv.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef EXPANDENV\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define EXPANDENV\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{//https://codereview.stackexchange.com/questions/172644/c-\/environment-\/variable-\/expansion}}
+\DoxyCodeLine{5 \textcolor{comment}{//https://codereview.stackexchange.com/users/75307/toby-\/speight}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <regex>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <cstdlib>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{keyword}{inline} std::string expandEnv(std::string text)}
+\DoxyCodeLine{13 \{}
+\DoxyCodeLine{14     \textcolor{comment}{//std::cout << "{} expand text? "{} << text << std::endl;}}
+\DoxyCodeLine{15     \textcolor{keyword}{static} \textcolor{keyword}{const} std::regex env\_re\{R\textcolor{stringliteral}{"{}-\/-\/(\(\backslash\)\$\(\backslash\)\{([\string^\}]+)\(\backslash\)\})-\/-\/"{}\};}}
+\DoxyCodeLine{16 \textcolor{stringliteral}{    std::smatch match;}}
+\DoxyCodeLine{17 \textcolor{stringliteral}{    }\textcolor{keywordflow}{while} (std::regex\_search(text, match, env\_re)) \{}
+\DoxyCodeLine{18         \textcolor{keyword}{auto} \textcolor{keyword}{const} from = match[0];}
+\DoxyCodeLine{19         \textcolor{keyword}{auto} \textcolor{keyword}{const} next = match[1].str();}
+\DoxyCodeLine{20         \textcolor{keyword}{auto} \textcolor{keyword}{const} var\_name = next.c\_str();}
+\DoxyCodeLine{21         std::cout << \textcolor{stringliteral}{"{} replace "{}} << var\_name << \textcolor{stringliteral}{"{} with "{}} << std::getenv(var\_name) << std::endl;}
+\DoxyCodeLine{22         text.replace(from.first, from.second, std::getenv(var\_name));}
+\DoxyCodeLine{23     \}}
+\DoxyCodeLine{24     \textcolor{keywordflow}{return} text;}
+\DoxyCodeLine{25 \}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

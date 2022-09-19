@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['sample_0',['Sample',['../class_c_c_q_e_nu_1_1_sample.html',1,'CCQENu']]],
-  ['sidebands_5fv2_2ec_1',['sidebands_v2.C',['../sidebands__v2_8_c.html',1,'']]]
+  ['maximumconstraintfromconfigfunc_0',['MaximumConstraintFromConfigFunc',['../class_plot_utils_1_1_maximum_constraint_from_config_func.html',1,'PlotUtils']]],
+  ['maximumfromconfigfunc_1',['MaximumFromConfigFunc',['../class_plot_utils_1_1_maximum_from_config_func.html',1,'PlotUtils']]],
+  ['minimumconstraintfromconfigfunc_2',['MinimumConstraintFromConfigFunc',['../class_plot_utils_1_1_minimum_constraint_from_config_func.html',1,'PlotUtils']]],
+  ['minimumfromconfigfunc_3',['MinimumFromConfigFunc',['../class_plot_utils_1_1_minimum_from_config_func.html',1,'PlotUtils']]],
+  ['multiscalefactors_4',['MultiScaleFactors',['../classfit_1_1_multi_scale_factors.html',1,'fit']]]
 ];

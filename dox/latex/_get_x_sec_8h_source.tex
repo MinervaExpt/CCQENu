@@ -73,7 +73,7 @@
 \DoxyCodeLine{69 }
 \DoxyCodeLine{70 \textcolor{comment}{// Returns a map of bools for \{ 'fluxnorm', 'xfluxnorm', 'yfluxnorm'\} based off "{}fluxnorm"{} set in variable config}}
 \DoxyCodeLine{71 \textcolor{comment}{// Used to tell the code when and how to use an integrated flux normalization vs an energy dependent flux normalization}}
-\DoxyCodeLine{72 std::map< std::string, bool > CheckFluxNorm( NuConfig* configvar, std::string variable)\{}
+\DoxyCodeLine{72 std::map< std::string, bool > CheckFluxNorm( \mbox{\hyperlink{class_nu_config}{NuConfig}}* configvar, std::string variable)\{}
 \DoxyCodeLine{73   \textcolor{comment}{// what it will spit out}}
 \DoxyCodeLine{74   std::map< std::string, bool > fluxnormBoolMap;}
 \DoxyCodeLine{75   \textcolor{comment}{// Default to false. 1D uses fluxnorm only, 2D uses xfluxnorm and yfluxnorm}}
@@ -91,19 +91,19 @@
 \DoxyCodeLine{87 \textcolor{comment}{//    exit(1);}}
 \DoxyCodeLine{88 \textcolor{comment}{//  \}}}
 \DoxyCodeLine{89 }
-\DoxyCodeLine{90   NuConfig varconfig = configvar-\/>GetConfigVariable(variable);}
+\DoxyCodeLine{90   \mbox{\hyperlink{class_nu_config}{NuConfig}} varconfig = configvar-\/>\mbox{\hyperlink{class_nu_config_a59a37a49061522244747f2e16e9ff49b}{GetConfigVariable}}(variable);}
 \DoxyCodeLine{91   \textcolor{keywordflow}{if}(varconfig.IsMember(\textcolor{stringliteral}{"{}fluxnorm"{}}))\{}
 \DoxyCodeLine{92     fluxnormBoolMap[\textcolor{stringliteral}{"{}fluxnorm"{}}] = varconfig.GetBool(\textcolor{stringliteral}{"{}fluxnorm"{}});}
 \DoxyCodeLine{93   \}}
 \DoxyCodeLine{94   \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(varconfig.IsMember(\textcolor{stringliteral}{"{}xvar"{}}) \&\& varconfig.IsMember(\textcolor{stringliteral}{"{}yvar"{}}))\{}
 \DoxyCodeLine{95     std::string xvar = varconfig.GetString(\textcolor{stringliteral}{"{}xvar"{}});}
-\DoxyCodeLine{96     NuConfig xconfig = configvar-\/>GetConfigVariable(xvar);}
+\DoxyCodeLine{96     \mbox{\hyperlink{class_nu_config}{NuConfig}} xconfig = configvar-\/>\mbox{\hyperlink{class_nu_config_a59a37a49061522244747f2e16e9ff49b}{GetConfigVariable}}(xvar);}
 \DoxyCodeLine{97     \textcolor{keywordflow}{if}(xconfig.IsMember(\textcolor{stringliteral}{"{}fluxnorm"{}}))\{}
 \DoxyCodeLine{98       fluxnormBoolMap[\textcolor{stringliteral}{"{}xfluxnorm"{}}] = xconfig.GetBool(\textcolor{stringliteral}{"{}fluxnorm"{}});}
 \DoxyCodeLine{99       \textcolor{keywordflow}{if}(fluxnormBoolMap[\textcolor{stringliteral}{"{}xfluxnorm"{}}]) fluxnormBoolMap[\textcolor{stringliteral}{"{}fluxnorm"{}}] = \textcolor{keyword}{true};}
 \DoxyCodeLine{100     \}}
 \DoxyCodeLine{101     std::string yvar = varconfig.GetString(\textcolor{stringliteral}{"{}yvar"{}});}
-\DoxyCodeLine{102     NuConfig yconfig = configvar-\/>GetConfigVariable(yvar);}
+\DoxyCodeLine{102     \mbox{\hyperlink{class_nu_config}{NuConfig}} yconfig = configvar-\/>\mbox{\hyperlink{class_nu_config_a59a37a49061522244747f2e16e9ff49b}{GetConfigVariable}}(yvar);}
 \DoxyCodeLine{103     \textcolor{keywordflow}{if}(yconfig.IsMember(\textcolor{stringliteral}{"{}fluxnorm"{}}))\{}
 \DoxyCodeLine{104       fluxnormBoolMap[\textcolor{stringliteral}{"{}yfluxnorm"{}}] = yconfig.GetBool(\textcolor{stringliteral}{"{}fluxnorm"{}});}
 \DoxyCodeLine{105       \textcolor{keywordflow}{if}(fluxnormBoolMap[\textcolor{stringliteral}{"{}yfluxnorm"{}}]) fluxnormBoolMap[\textcolor{stringliteral}{"{}fluxnorm"{}}] = \textcolor{keyword}{true};}
@@ -442,7 +442,7 @@
 \DoxyCodeLine{438 \textcolor{comment}{// Returns a vector of size to of < (Data xsec), (MC xsec) >}}
 \DoxyCodeLine{439 \textcolor{keyword}{template}<\textcolor{keyword}{class} MnvHistoType>}
 \DoxyCodeLine{440   std::vector<MnvHistoType*> DoNormalization( std::map<const std::string, NuConfig *> configs, std::string basename, std::map< std::string, bool> FluxNorm, \textcolor{keywordtype}{double} norm, MnvHistoType* effcorr, MnvHistoType* ialltruhist, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed)\{}
-\DoxyCodeLine{441       NuConfig* config = configs[\textcolor{stringliteral}{"{}main"{}}];}
+\DoxyCodeLine{441       \mbox{\hyperlink{class_nu_config}{NuConfig}}* config = configs[\textcolor{stringliteral}{"{}main"{}}];}
 \DoxyCodeLine{442     std::string sigmaname = std::string(effcorr-\/>GetName())+\textcolor{stringliteral}{"{}\_sigma"{}};}
 \DoxyCodeLine{443     MnvHistoType* sigma = (MnvHistoType*)effcorr-\/>Clone(sigmaname.c\_str());}
 \DoxyCodeLine{444     sigma-\/>SetDirectory(0);}
@@ -516,7 +516,7 @@
 \DoxyCodeLine{512   \textcolor{keywordtype}{int} GetCrossSection(std::string sample, std::string variable, std::string basename,}
 \DoxyCodeLine{513                       std::map< std::string, std::map <std::string, MnvHistoType*> > histsND,}
 \DoxyCodeLine{514                       std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
-\DoxyCodeLine{515                       NuConfig oneconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
+\DoxyCodeLine{515                       \mbox{\hyperlink{class_nu_config}{NuConfig}} oneconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
 \DoxyCodeLine{516                       MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG, \textcolor{keywordtype}{bool} hasbkgsub, \textcolor{keywordtype}{bool} usetune) \{}
 \DoxyCodeLine{517       std::map<const std::string, NuConfig*> configmap;}
 \DoxyCodeLine{518       configmap[\textcolor{stringliteral}{"{}main"{}}]= \&oneconfig;}
@@ -543,11 +543,11 @@
 \DoxyCodeLine{539     std::cout << \textcolor{stringliteral}{"{} at the top of GetXsec"{}} << sample <<  std::endl;}
 \DoxyCodeLine{540     \textcolor{comment}{// this can come out of the sample information:}}
 \DoxyCodeLine{541     \textcolor{comment}{// configs["{}main"{}]-\/>Print();}}
-\DoxyCodeLine{542     NuConfig sigkey = configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetConfig(\textcolor{stringliteral}{"{}signal"{}});}
+\DoxyCodeLine{542     \mbox{\hyperlink{class_nu_config}{NuConfig}} sigkey = configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetConfig(\textcolor{stringliteral}{"{}signal"{}});}
 \DoxyCodeLine{543     \textcolor{comment}{//sigkey.Print();}}
 \DoxyCodeLine{544     std::string sig = sigkey.GetString(sample);}
 \DoxyCodeLine{545     std::cout << \textcolor{stringliteral}{"{} got sig "{}} << sig << std::endl;}
-\DoxyCodeLine{546     NuConfig bkgkey;}
+\DoxyCodeLine{546     \mbox{\hyperlink{class_nu_config}{NuConfig}} bkgkey;}
 \DoxyCodeLine{547     std::string bkg;}
 \DoxyCodeLine{548     \textcolor{keywordflow}{if} (!hasbkgsub)\{}
 \DoxyCodeLine{549       \textcolor{comment}{// this likely needs to be fixed}}
@@ -557,7 +557,7 @@
 \DoxyCodeLine{553       bkg = bkgkey.GetString(sample);}
 \DoxyCodeLine{554       std::cout << \textcolor{stringliteral}{"{} got bkg "{}} << bkg << std::endl;}
 \DoxyCodeLine{555     \}}
-\DoxyCodeLine{556     NuConfig datkey = configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetConfig(\textcolor{stringliteral}{"{}data"{}});}
+\DoxyCodeLine{556     \mbox{\hyperlink{class_nu_config}{NuConfig}} datkey = configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetConfig(\textcolor{stringliteral}{"{}data"{}});}
 \DoxyCodeLine{557     std::string dat = datkey.GetString(sample);}
 \DoxyCodeLine{558     std::cout << \textcolor{stringliteral}{"{} got dat "{}} << dat << std::endl;}
 \DoxyCodeLine{559     }
@@ -830,7 +830,7 @@
 \DoxyCodeLine{826       \textcolor{keywordflow}{if} (!(configs.count(\textcolor{stringliteral}{"{}varsFile"{}})>0))\{}
 \DoxyCodeLine{827   }
 \DoxyCodeLine{828           \textcolor{comment}{// backwards compatibility change a file read into a configmap}}
-\DoxyCodeLine{829           NuConfig* vars = \textcolor{keyword}{new} NuConfig();}
+\DoxyCodeLine{829           \mbox{\hyperlink{class_nu_config}{NuConfig}}* vars = \textcolor{keyword}{new} \mbox{\hyperlink{class_nu_config}{NuConfig}}();}
 \DoxyCodeLine{830           vars-\/>Read(configs[\textcolor{stringliteral}{"{}main"{}}]-\/>GetString(\textcolor{stringliteral}{"{}varsFile"{}}));}
 \DoxyCodeLine{831           configs[\textcolor{stringliteral}{"{}varsFile"{}}]=vars;}
 \DoxyCodeLine{832           }
@@ -888,13 +888,13 @@
 \DoxyCodeLine{884 \textcolor{keyword}{template} \textcolor{keywordtype}{int} GetCrossSection<MnvH1D>(std::string sample, std::string variable, std::string basename,}
 \DoxyCodeLine{885                                      std::map< std::string, std::map <std::string, MnvH1D*> > histsND,}
 \DoxyCodeLine{886                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
-\DoxyCodeLine{887                                      NuConfig mainconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
+\DoxyCodeLine{887                                      \mbox{\hyperlink{class_nu_config}{NuConfig}} mainconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
 \DoxyCodeLine{888                                      MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} hasbksub=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} usetune=\textcolor{keyword}{false});}
 \DoxyCodeLine{889 }
 \DoxyCodeLine{890 \textcolor{keyword}{template} \textcolor{keywordtype}{int} GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,}
 \DoxyCodeLine{891                                      std::map< std::string, std::map <std::string, MnvH2D*> > histsND,}
 \DoxyCodeLine{892                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,}
-\DoxyCodeLine{893                                      NuConfig mainconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
+\DoxyCodeLine{893                                      \mbox{\hyperlink{class_nu_config}{NuConfig}} mainconfig, TCanvas \& canvas, \textcolor{keywordtype}{double} norm, \textcolor{keywordtype}{double} POTScale, \textcolor{keyword}{const} MnvH1D* h\_flux\_dewidthed,}
 \DoxyCodeLine{894                                      MinervaUnfold::MnvUnfold unfold, \textcolor{keywordtype}{double} num\_iter, \textcolor{keywordtype}{bool} DEBUG=\textcolor{keyword}{false},\textcolor{keywordtype}{bool} hasbksub=\textcolor{keyword}{false}, \textcolor{keywordtype}{bool} usetune = \textcolor{keyword}{false});}
 \DoxyCodeLine{895 }
 \DoxyCodeLine{896 }

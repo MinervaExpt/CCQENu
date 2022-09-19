@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['maximumconstraintfromconfigfunc_0',['MaximumConstraintFromConfigFunc',['../class_plot_utils_1_1_maximum_constraint_from_config_func.html',1,'PlotUtils']]],
-  ['maximumfromconfigfunc_1',['MaximumFromConfigFunc',['../class_plot_utils_1_1_maximum_from_config_func.html',1,'PlotUtils']]],
-  ['minimumconstraintfromconfigfunc_2',['MinimumConstraintFromConfigFunc',['../class_plot_utils_1_1_minimum_constraint_from_config_func.html',1,'PlotUtils']]],
-  ['minimumfromconfigfunc_3',['MinimumFromConfigFunc',['../class_plot_utils_1_1_minimum_from_config_func.html',1,'PlotUtils']]]
+  ['issameconstraintfromconfigfunc_0',['IsSameConstraintFromConfigFunc',['../class_plot_utils_1_1_is_same_constraint_from_config_func.html',1,'PlotUtils']]],
+  ['issamefromconfigfunc_1',['IsSameFromConfigFunc',['../class_plot_utils_1_1_is_same_from_config_func.html',1,'PlotUtils']]]
 ];

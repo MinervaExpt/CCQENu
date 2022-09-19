@@ -1,0 +1,66 @@
+\hypertarget{_multi_scale_factors_8h_source}{}\doxysection{Multi\+Scale\+Factors.\+h}
+\label{_multi_scale_factors_8h_source}\index{make\_hists/fits/MultiScaleFactors.h@{make\_hists/fits/MultiScaleFactors.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//File: MultiScaleFactor.h}}
+\DoxyCodeLine{2 \textcolor{comment}{//Info: Class for passing as a function to TMinuit for minimization.}}
+\DoxyCodeLine{3 \textcolor{comment}{//      Largely derived by example from Andrew Olivier's }}
+\DoxyCodeLine{4 \textcolor{comment}{//      github.com/MinervaExpt/NucCCNeutrons/tree/develop/fits/Universe.h }}
+\DoxyCodeLine{5 \textcolor{comment}{//      as of 03/16/2022.}}
+\DoxyCodeLine{6 \textcolor{comment}{//}}
+\DoxyCodeLine{7 \textcolor{comment}{//Author: David Last dlast@sas.upenn.edu/lastd44@gmail.com}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#ifndef MULTISCALEFACTORS\_H}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#define MULTISCALEFACTORS\_H}}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}TH1D.h"{}}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include "{}TVector3.h"{}}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}Math/IFunction.h"{}}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include "{}stdlib.h"{}}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include <unordered\_map>}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#include <bitset>}}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23 \textcolor{keyword}{namespace }fit\{}
+\DoxyCodeLine{24 \textcolor{keyword}{enum} fit\_type\{kFastChi2,kSlowChi2,kML\};}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26   \textcolor{keyword}{class }\mbox{\hyperlink{classfit_1_1_multi_scale_factors}{MultiScaleFactors}}: \textcolor{keyword}{public} ROOT::Math::IBaseFunctionMultiDimTempl<double>\{}
+\DoxyCodeLine{27   \textcolor{keyword}{private}:}
+\DoxyCodeLine{28     \textcolor{comment}{//Members to hold the histos -\/}}
+\DoxyCodeLine{29     \textcolor{comment}{// order is sample, category}}
+\DoxyCodeLine{30     \textcolor{comment}{// the category templates need to be in a vector to make the fitting indexing work well.}}
+\DoxyCodeLine{31     std::map<const std::string, std::vector< TH1D*> > fFitHists;}
+\DoxyCodeLine{32     std::map<const std::string, std::vector< TH1D*> > fUnfitHists;}
+\DoxyCodeLine{33     std::map<const std::string, TH1D*>  fDataHist;}
+\DoxyCodeLine{34     \textcolor{comment}{// this says which samples to include}}
+\DoxyCodeLine{35     std::map<const std::string, bool> fInclude;}
+\DoxyCodeLine{36       \textcolor{comment}{// in principle, each sample may be a different variable so need to make these into maps in future.}}
+\DoxyCodeLine{37     \textcolor{keywordtype}{int} fFirstBin;}
+\DoxyCodeLine{38     \textcolor{keywordtype}{int} fLastBin;}
+\DoxyCodeLine{39     \textcolor{keywordtype}{int} fNdim;}
+\DoxyCodeLine{40     fit\_type fType;}
+\DoxyCodeLine{41     \textcolor{keywordtype}{bool} fDoFit;}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43   \textcolor{keyword}{public}:}
+\DoxyCodeLine{44     \textcolor{comment}{//CTOR}}
+\DoxyCodeLine{45     \mbox{\hyperlink{classfit_1_1_multi_scale_factors}{MultiScaleFactors}}(\textcolor{keyword}{const} std::map<\textcolor{keyword}{const} std::string, std::vector< TH1D*> > unfitHists, \textcolor{keyword}{const} std::map<const std::string, TH1D*>  dataHist, \textcolor{keyword}{const} std::map<const std::string, bool> Include, \textcolor{keyword}{const} fit\_type type,  \textcolor{keyword}{const} \textcolor{keywordtype}{int} firstBin = 1, \textcolor{keyword}{const} \textcolor{keywordtype}{int} lastBin = -\/1);}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} NDim() \textcolor{keyword}{const override};}
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49     \textcolor{comment}{//Function which the ROOT fitter will minimize}}
+\DoxyCodeLine{50     \textcolor{keywordtype}{double} DoEval(\textcolor{keyword}{const} \textcolor{keywordtype}{double}* parameters) \textcolor{keyword}{const override};}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{comment}{//Required for ROOT fittable function base class :( (indeed this is sad, Andrew)}}
+\DoxyCodeLine{53     IBaseFunctionMultiDimTempl<double>* Clone() \textcolor{keyword}{const override};}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55     \textcolor{comment}{//DTOR}}
+\DoxyCodeLine{56     \textcolor{keyword}{virtual} \mbox{\hyperlink{classfit_1_1_multi_scale_factors}{\string~MultiScaleFactors}}() = \textcolor{keywordflow}{default};}
+\DoxyCodeLine{57   \};}
+\DoxyCodeLine{58 \}}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

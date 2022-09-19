@@ -89,16 +89,20 @@ Collaboration diagram for CCQENu::Variable2DFromConfig:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_c_c_q_e_nu_1_1_variable2_d_from_config__coll__graph.png" border="0" usemap="#a_c_c_q_e_nu_1_1_variable2_d_from_config_coll__map" alt="Collaboration graph"/></div>
 <map name="a_c_c_q_e_nu_1_1_variable2_d_from_config_coll__map" id="a_c_c_q_e_nu_1_1_variable2_d_from_config_coll__map">
-<area shape="rect" title=" " alt="" coords="5,379,225,405"/>
-<area shape="rect" title=" " alt="" coords="7,157,181,199"/>
-<area shape="rect" href="class_plot_utils_1_1_hist2_d_wrapper_map.html" title=" " alt="" coords="205,157,375,199"/>
-<area shape="rect" href="class_c_v_universe.html" title=" " alt="" coords="243,81,337,108"/>
-<area shape="rect" title=" " alt="" coords="201,5,379,32"/>
+<area shape="rect" title=" " alt="" coords="5,392,225,419"/>
+<area shape="rect" title=" " alt="" coords="29,171,202,212"/>
+<area shape="rect" href="class_plot_utils_1_1_hist2_d_wrapper_map.html" title=" " alt="" coords="227,171,396,212"/>
+<area shape="rect" href="class_c_v_universe.html" title=" " alt="" coords="265,95,358,121"/>
+<area shape="rect" title=" " alt="" coords="146,5,325,32"/>
+<area shape="rect" href="class_nu_config.html" title=" " alt="" coords="349,5,426,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:ae27b90bb57287574a25157d4f5a60f22"><td class="memItemLeft" align="right" valign="top"><a id="ae27b90bb57287574a25157d4f5a60f22" name="ae27b90bb57287574a25157d4f5a60f22"></a>
+typedef std::map&lt; std::string, std::vector&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>UniverseMap</b></td></tr>
+<tr class="separator:ae27b90bb57287574a25157d4f5a60f22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae27b90bb57287574a25157d4f5a60f22"><td class="memItemLeft" align="right" valign="top"><a id="ae27b90bb57287574a25157d4f5a60f22" name="ae27b90bb57287574a25157d4f5a60f22"></a>
 typedef std::map&lt; std::string, std::vector&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>UniverseMap</b></td></tr>
 <tr class="separator:ae27b90bb57287574a25157d4f5a60f22"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,7 +117,61 @@ template&lt;class... ARGS&gt; </td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Variable2DFromConfig</b> (const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;x, const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;y)</td></tr>
 <tr class="separator:a094bd9f042529beec7f5ebb1b9ca1a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab8bb386564906ad50f62d57baa37eb7"><td class="memItemLeft" align="right" valign="top"><a id="aab8bb386564906ad50f62d57baa37eb7" name="aab8bb386564906ad50f62d57baa37eb7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Variable2DFromConfig</b> (const std::string name, const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;x, const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;y, const NuConfig config)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Variable2DFromConfig</b> (const std::string name, const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;x, const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;y, const <a class="el" href="class_nu_config.html">NuConfig</a> config)</td></tr>
+<tr class="separator:aab8bb386564906ad50f62d57baa37eb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47b465aad83db92290c0b242336fa5ce"><td class="memItemLeft" align="right" valign="top"><a id="a47b465aad83db92290c0b242336fa5ce" name="a47b465aad83db92290c0b242336fa5ce"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Variable2DFromConfig</b> (const std::string name, const <a class="el" href="class_c_c_q_e_nu_1_1_variable_from_config.html">CCQENu::VariableFromConfig</a> &amp;x, const <a class="el" href="class_c_c_q_e_nu_1_1_variable_from_config.html">CCQENu::VariableFromConfig</a> &amp;y, const std::vector&lt; std::string &gt; fors)</td></tr>
+<tr class="separator:a47b465aad83db92290c0b242336fa5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4805c81d1d13b431679de9726e208f95"><td class="memItemLeft" align="right" valign="top"><a id="a4805c81d1d13b431679de9726e208f95" name="a4805c81d1d13b431679de9726e208f95"></a>
+virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><b>GetUnits</b> ()</td></tr>
+<tr class="separator:a4805c81d1d13b431679de9726e208f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc4458fb1f76b654e1c26c56dc46ffaf"><td class="memItemLeft" align="right" valign="top"><a id="acc4458fb1f76b654e1c26c56dc46ffaf" name="acc4458fb1f76b654e1c26c56dc46ffaf"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SetUnits</b> (std::string units)</td></tr>
+<tr class="separator:acc4458fb1f76b654e1c26c56dc46ffaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba7068f74f8de00b58044e43806fcec2"><td class="memItemLeft" align="right" valign="top"><a id="aba7068f74f8de00b58044e43806fcec2" name="aba7068f74f8de00b58044e43806fcec2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>AddTags</b> (const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:aba7068f74f8de00b58044e43806fcec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace2c2f7b14dbd6e332cd60f4d0e9269e"><td class="memTemplParams" colspan="2"><a id="ace2c2f7b14dbd6e332cd60f4d0e9269e" name="ace2c2f7b14dbd6e332cd60f4d0e9269e"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ace2c2f7b14dbd6e332cd60f4d0e9269e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>InitializeMCHistograms2D</b> (T univs, const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:ace2c2f7b14dbd6e332cd60f4d0e9269e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa5996ec5291a97f0fdd75160505afb2"><td class="memTemplParams" colspan="2"><a id="afa5996ec5291a97f0fdd75160505afb2" name="afa5996ec5291a97f0fdd75160505afb2"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:afa5996ec5291a97f0fdd75160505afb2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>InitializeSelectedTruthHistograms2D</b> (T univs, const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:afa5996ec5291a97f0fdd75160505afb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac45a0d8a8ca20c58310bbdd828c0729"><td class="memTemplParams" colspan="2"><a id="aac45a0d8a8ca20c58310bbdd828c0729" name="aac45a0d8a8ca20c58310bbdd828c0729"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aac45a0d8a8ca20c58310bbdd828c0729"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>InitializeTruthHistograms2D</b> (T univs, const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:aac45a0d8a8ca20c58310bbdd828c0729"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9f0ebd51220a8a1388364ee1f4001e8"><td class="memTemplParams" colspan="2"><a id="ac9f0ebd51220a8a1388364ee1f4001e8" name="ac9f0ebd51220a8a1388364ee1f4001e8"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ac9f0ebd51220a8a1388364ee1f4001e8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>InitializeDataHistograms2D</b> (T univs, const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:ac9f0ebd51220a8a1388364ee1f4001e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72d7cefe76e9c6b0d3323aaca036f2aa"><td class="memTemplParams" colspan="2"><a id="a72d7cefe76e9c6b0d3323aaca036f2aa" name="a72d7cefe76e9c6b0d3323aaca036f2aa"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a72d7cefe76e9c6b0d3323aaca036f2aa"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>InitializeTunedMCHistograms2D</b> (T reco_univs, T truth_univs, const std::vector&lt; std::string &gt; tuned_tags, const std::vector&lt; std::string &gt; response_tags)</td></tr>
+<tr class="separator:a72d7cefe76e9c6b0d3323aaca036f2aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d41cfc0a7388ad7ac07d6874aea1de1"><td class="memItemLeft" align="right" valign="top"><a id="a3d41cfc0a7388ad7ac07d6874aea1de1" name="a3d41cfc0a7388ad7ac07d6874aea1de1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>AddMCResponse2D</b> (const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:a3d41cfc0a7388ad7ac07d6874aea1de1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68db709abac16d0b3d5ff29d768e3952"><td class="memItemLeft" align="right" valign="top"><a id="a68db709abac16d0b3d5ff29d768e3952" name="a68db709abac16d0b3d5ff29d768e3952"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>WriteAllHistogramsToFile2D</b> (TFile &amp;f)</td></tr>
+<tr class="separator:a68db709abac16d0b3d5ff29d768e3952"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad57106ab0041e0b1e8f3a11689c85752"><td class="memItemLeft" align="right" valign="top"><a id="ad57106ab0041e0b1e8f3a11689c85752" name="ad57106ab0041e0b1e8f3a11689c85752"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SyncAllHists</b> ()</td></tr>
+<tr class="separator:ad57106ab0041e0b1e8f3a11689c85752"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53d40ac4127b6fd5a4970cc0fb1f5351"><td class="memItemLeft" align="right" valign="top"><a id="a53d40ac4127b6fd5a4970cc0fb1f5351" name="a53d40ac4127b6fd5a4970cc0fb1f5351"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>FillResponse2D</b> (const std::string tag, <a class="el" href="class_c_v_universe.html">CVUniverse</a> *univ, const double x_value, const double y_value, const double x_truth, const double y_truth, const double weight, const double scale=1.0)</td></tr>
+<tr class="separator:a53d40ac4127b6fd5a4970cc0fb1f5351"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82cb1d473213874e77c06dde8c812764"><td class="memTemplParams" colspan="2"><a id="a82cb1d473213874e77c06dde8c812764" name="a82cb1d473213874e77c06dde8c812764"></a>
+template&lt;class... ARGS&gt; </td></tr>
+<tr class="memitem:a82cb1d473213874e77c06dde8c812764"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>Variable2DFromConfig</b> (const std::string name, const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;x, const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;y)</td></tr>
+<tr class="separator:a82cb1d473213874e77c06dde8c812764"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a094bd9f042529beec7f5ebb1b9ca1a47"><td class="memItemLeft" align="right" valign="top"><a id="a094bd9f042529beec7f5ebb1b9ca1a47" name="a094bd9f042529beec7f5ebb1b9ca1a47"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Variable2DFromConfig</b> (const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;x, const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;y)</td></tr>
+<tr class="separator:a094bd9f042529beec7f5ebb1b9ca1a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab8bb386564906ad50f62d57baa37eb7"><td class="memItemLeft" align="right" valign="top"><a id="aab8bb386564906ad50f62d57baa37eb7" name="aab8bb386564906ad50f62d57baa37eb7"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Variable2DFromConfig</b> (const std::string name, const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;x, const VariableBase&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> &gt; &amp;y, const <a class="el" href="class_nu_config.html">NuConfig</a> config)</td></tr>
 <tr class="separator:aab8bb386564906ad50f62d57baa37eb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47b465aad83db92290c0b242336fa5ce"><td class="memItemLeft" align="right" valign="top"><a id="a47b465aad83db92290c0b242336fa5ce" name="a47b465aad83db92290c0b242336fa5ce"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Variable2DFromConfig</b> (const std::string name, const <a class="el" href="class_c_c_q_e_nu_1_1_variable_from_config.html">CCQENu::VariableFromConfig</a> &amp;x, const <a class="el" href="class_c_c_q_e_nu_1_1_variable_from_config.html">CCQENu::VariableFromConfig</a> &amp;y, const std::vector&lt; std::string &gt; fors)</td></tr>
@@ -189,35 +247,36 @@ UniverseMap&#160;</td><td class="memItemRight" valign="bottom"><b>m_universes</b
 <tr class="memitem:a89d707ef368598c654118a8d7a995aa5"><td class="memItemLeft" align="right" valign="top"><a id="a89d707ef368598c654118a8d7a995aa5" name="a89d707ef368598c654118a8d7a995aa5"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_units</b></td></tr>
 <tr class="separator:a89d707ef368598c654118a8d7a995aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed46c35fb802da6c1ef5f82017ba2583"><td class="memItemLeft" align="right" valign="top"><a id="aed46c35fb802da6c1ef5f82017ba2583" name="aed46c35fb802da6c1ef5f82017ba2583"></a>
+<tr class="memitem:a38db78620fa99a1d9345b51dc8051582"><td class="memItemLeft" align="right" valign="top"><a id="a38db78620fa99a1d9345b51dc8051582" name="a38db78620fa99a1d9345b51dc8051582"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasData</b></td></tr>
-<tr class="separator:aed46c35fb802da6c1ef5f82017ba2583"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3364655880a30448496ab285bb0d0688"><td class="memItemLeft" align="right" valign="top"><a id="a3364655880a30448496ab285bb0d0688" name="a3364655880a30448496ab285bb0d0688"></a>
+<tr class="separator:a38db78620fa99a1d9345b51dc8051582"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad740712e2dfe44aafc09e6288aea8beb"><td class="memItemLeft" align="right" valign="top"><a id="ad740712e2dfe44aafc09e6288aea8beb" name="ad740712e2dfe44aafc09e6288aea8beb"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasMC</b></td></tr>
-<tr class="separator:a3364655880a30448496ab285bb0d0688"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac02055cb41f37e2ab55d206201efc8a6"><td class="memItemLeft" align="right" valign="top"><a id="ac02055cb41f37e2ab55d206201efc8a6" name="ac02055cb41f37e2ab55d206201efc8a6"></a>
+<tr class="separator:ad740712e2dfe44aafc09e6288aea8beb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac20d6be95ee0ea34277282e004d74b1a"><td class="memItemLeft" align="right" valign="top"><a id="ac20d6be95ee0ea34277282e004d74b1a" name="ac20d6be95ee0ea34277282e004d74b1a"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasTunedMC</b></td></tr>
-<tr class="separator:ac02055cb41f37e2ab55d206201efc8a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a156909f609054483b2b74a7e5d7962f7"><td class="memItemLeft" align="right" valign="top"><a id="a156909f609054483b2b74a7e5d7962f7" name="a156909f609054483b2b74a7e5d7962f7"></a>
+<tr class="separator:ac20d6be95ee0ea34277282e004d74b1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96350dc0398f22af3164c6b622ebd5de"><td class="memItemLeft" align="right" valign="top"><a id="a96350dc0398f22af3164c6b622ebd5de" name="a96350dc0398f22af3164c6b622ebd5de"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasTruth</b></td></tr>
-<tr class="separator:a156909f609054483b2b74a7e5d7962f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6542da313019247dc6a5141b761c23e5"><td class="memItemLeft" align="right" valign="top"><a id="a6542da313019247dc6a5141b761c23e5" name="a6542da313019247dc6a5141b761c23e5"></a>
+<tr class="separator:a96350dc0398f22af3164c6b622ebd5de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add3f1a8d981d081e2678739ab4de39b3"><td class="memItemLeft" align="right" valign="top"><a id="add3f1a8d981d081e2678739ab4de39b3" name="add3f1a8d981d081e2678739ab4de39b3"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasSelectedTruth</b></td></tr>
-<tr class="separator:a6542da313019247dc6a5141b761c23e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a583f3d0a749536c51b91683204b42ca8"><td class="memItemLeft" align="right" valign="top"><a id="a583f3d0a749536c51b91683204b42ca8" name="a583f3d0a749536c51b91683204b42ca8"></a>
+<tr class="separator:add3f1a8d981d081e2678739ab4de39b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53901c014f7f8290c3dbd9812cd71449"><td class="memItemLeft" align="right" valign="top"><a id="a53901c014f7f8290c3dbd9812cd71449" name="a53901c014f7f8290c3dbd9812cd71449"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasResponse</b></td></tr>
-<tr class="separator:a583f3d0a749536c51b91683204b42ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90171302b70eb8326ecfb7a7d7973801"><td class="memItemLeft" align="right" valign="top"><a id="a90171302b70eb8326ecfb7a7d7973801" name="a90171302b70eb8326ecfb7a7d7973801"></a>
+<tr class="separator:a53901c014f7f8290c3dbd9812cd71449"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60af9b24a64614ed3569bd90c7524d53"><td class="memItemLeft" align="right" valign="top"><a id="a60af9b24a64614ed3569bd90c7524d53" name="a60af9b24a64614ed3569bd90c7524d53"></a>
 std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_tags</b></td></tr>
-<tr class="separator:a90171302b70eb8326ecfb7a7d7973801"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ce181978ca66609e094bd7fd5da037c"><td class="memItemLeft" align="right" valign="top"><a id="a8ce181978ca66609e094bd7fd5da037c" name="a8ce181978ca66609e094bd7fd5da037c"></a>
+<tr class="separator:a60af9b24a64614ed3569bd90c7524d53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89daf0c102583686a7fc9b66a5541f06"><td class="memItemLeft" align="right" valign="top"><a id="a89daf0c102583686a7fc9b66a5541f06" name="a89daf0c102583686a7fc9b66a5541f06"></a>
 std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_for</b></td></tr>
-<tr class="separator:a8ce181978ca66609e094bd7fd5da037c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a89daf0c102583686a7fc9b66a5541f06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09e32d0ac9af9263b2d4b01dba012c49"><td class="memItemLeft" align="right" valign="top"><a id="a09e32d0ac9af9263b2d4b01dba012c49" name="a09e32d0ac9af9263b2d4b01dba012c49"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>m_tunedmc</b></td></tr>
 <tr class="separator:a09e32d0ac9af9263b2d4b01dba012c49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>make_hists/include/Sep18/<a class="el" href="_sep18_2_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a></li>
 <li>make_hists/include/<a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a></li>
 </ul>
 </div><!-- contents -->

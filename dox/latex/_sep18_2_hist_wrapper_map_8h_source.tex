@@ -1,0 +1,326 @@
+\hypertarget{_sep18_2_hist_wrapper_map_8h_source}{}\doxysection{Hist\+Wrapper\+Map.\+h}
+\label{_sep18_2_hist_wrapper_map_8h_source}\index{make\_hists/include/Sep18/HistWrapperMap.h@{make\_hists/include/Sep18/HistWrapperMap.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//}}
+\DoxyCodeLine{2 \textcolor{comment}{//  HistWrapperMap.h}}
+\DoxyCodeLine{3 \textcolor{comment}{//}}
+\DoxyCodeLine{4 \textcolor{comment}{//}}
+\DoxyCodeLine{5 \textcolor{comment}{//  Created by Heidi Schellman (research) on 11/4/16.}}
+\DoxyCodeLine{6 \textcolor{comment}{//}}
+\DoxyCodeLine{7 \textcolor{comment}{//}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{comment}{// make a map of histwrappers with the same name title and binning.}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#ifndef HistWrapperMap\_h}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#define HistWrapperMap\_h}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{comment}{//\#define HSTDBG}}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}PlotUtils/HistWrapper.h"{}}}
+\DoxyCodeLine{17 \textcolor{comment}{//\#include "{}PlotUtils/DefaultCVUniverse.h"{}}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include "{}MinervaUnfold/MnvResponse.h"{}}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25 \textcolor{keyword}{namespace }PlotUtils\{}
+\DoxyCodeLine{26 \textcolor{keyword}{template} <\textcolor{keyword}{typename} T>}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{keyword}{class }HistWrapperMap:\textcolor{keyword}{public} T \{}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30 \textcolor{keyword}{private}:}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32   std::map<const std::string, HistWrapper<T> > m\_hists;}
+\DoxyCodeLine{33   std::map< std::string, std::vector<T*> > m\_univs;}
+\DoxyCodeLine{34   std::string m\_name = \textcolor{stringliteral}{"{}NULL"{}};}
+\DoxyCodeLine{35   std::string m\_title = \textcolor{stringliteral}{"{}NULL"{}};}
+\DoxyCodeLine{36   \textcolor{keywordtype}{int} m\_nbins = 0;}
+\DoxyCodeLine{37   \textcolor{keywordtype}{int} m\_nrecobins = 0;}
+\DoxyCodeLine{38   \textcolor{keywordtype}{double} m\_xmin = 0.0;}
+\DoxyCodeLine{39   \textcolor{keywordtype}{double} m\_xmax = 0.0;}
+\DoxyCodeLine{40   \textcolor{keywordtype}{double} m\_xrecomin = 0.0;}
+\DoxyCodeLine{41   \textcolor{keywordtype}{double} m\_xrecomax = 0.0;}
+\DoxyCodeLine{42   std::vector<double> m\_bins;}
+\DoxyCodeLine{43   std::vector<double> m\_recobins;}
+\DoxyCodeLine{44   std::map< std::string, std::vector<T*> > m\_universes;  \textcolor{comment}{// if you are using a vector need to add that}}
+\DoxyCodeLine{45   std::map< std::string, MinervaUnfold::MnvResponse *> m\_response;}
+\DoxyCodeLine{46   \textcolor{keywordtype}{bool} m\_fixedbins;}
+\DoxyCodeLine{47   \textcolor{keywordtype}{int} m\_count;}
+\DoxyCodeLine{48   std::map<const std::string, bool> m\_hashist;}
+\DoxyCodeLine{49   std::map<const std::string, bool> m\_hasresponse;}
+\DoxyCodeLine{50   std::vector<std::string> m\_tags;}
+\DoxyCodeLine{51   std::map<std::string,int> m\_response\_bands; \textcolor{comment}{// map that tells you how many}}
+\DoxyCodeLine{52   std::map<const T*,int> m\_decoder;}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54 \textcolor{keyword}{public}:}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56   HistWrapperMap()\{\};}
+\DoxyCodeLine{57   \textcolor{comment}{// constructor}}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61   \textcolor{keyword}{inline}  HistWrapperMap( \textcolor{keyword}{const} std::string name, \textcolor{keyword}{const} std::string title, \textcolor{keyword}{const} Int\_t nbins, \textcolor{keyword}{const} \textcolor{keywordtype}{double} xmin,\textcolor{keyword}{const} \textcolor{keywordtype}{double} xmax,  std::map< std::string,std::vector<T*>> univs, \textcolor{keyword}{const} std::vector<std::string> tags)\{}
+\DoxyCodeLine{62     \textcolor{comment}{// just store the config}}
+\DoxyCodeLine{63     m\_name = name;}
+\DoxyCodeLine{64     m\_title = title;}
+\DoxyCodeLine{65     m\_nbins = nbins;}
+\DoxyCodeLine{66     m\_xmin = xmin;}
+\DoxyCodeLine{67     m\_xmax = xmax;}
+\DoxyCodeLine{68     m\_nrecobins = nbins;}
+\DoxyCodeLine{69     m\_xrecomin = xmin;}
+\DoxyCodeLine{70     m\_xrecomax = xmax;}
+\DoxyCodeLine{71     m\_fixedbins = \textcolor{keyword}{true};}
+\DoxyCodeLine{72     \textcolor{comment}{//    m\_count = 0;}}
+\DoxyCodeLine{73     m\_univs = univs;}
+\DoxyCodeLine{74     m\_tags = tags;}
+\DoxyCodeLine{75     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} tag : tags)\{}
+\DoxyCodeLine{76      std::string hist\_name = \textcolor{stringliteral}{"{}h\_\_\_"{}}+tag +\textcolor{stringliteral}{"{}\_\_\_"{}}+ name;}
+\DoxyCodeLine{77      \textcolor{comment}{// std::string hist\_name = name + "{}\_"{} + tag;}}
+\DoxyCodeLine{78       m\_hists[tag] = PlotUtils::HistWrapper<T>(hist\_name.c\_str(), title.c\_str(), nbins, xmin, xmax, univs);}
+\DoxyCodeLine{79     \}}
+\DoxyCodeLine{80     m\_decoder = UniverseDecoder(univs);}
+\DoxyCodeLine{81 }
+\DoxyCodeLine{82   \}}
+\DoxyCodeLine{83 \textcolor{comment}{// special version for MC that can build a response}}
+\DoxyCodeLine{84   \textcolor{keyword}{inline}  HistWrapperMap( \textcolor{keyword}{const} std::string name, \textcolor{keyword}{const} std::string title, \textcolor{keyword}{const} Int\_t nbins, \textcolor{keyword}{const} \textcolor{keywordtype}{double} xmin,\textcolor{keyword}{const} \textcolor{keywordtype}{double} xmax, \textcolor{keyword}{const} Int\_t nrecobins, \textcolor{keyword}{const} \textcolor{keywordtype}{double} xrecomin, \textcolor{keyword}{const} \textcolor{keywordtype}{double} xrecomax,  std::map< std::string,std::vector<T*>> univs, \textcolor{keyword}{const} std::vector<std::string> tags)\{}
+\DoxyCodeLine{85       \textcolor{comment}{// just store the config}}
+\DoxyCodeLine{86       m\_name = name;}
+\DoxyCodeLine{87       m\_title = title;}
+\DoxyCodeLine{88       m\_nbins = nbins;}
+\DoxyCodeLine{89       m\_xmin = xmin;}
+\DoxyCodeLine{90       m\_xmax = xmax;}
+\DoxyCodeLine{91       m\_nrecobins = nrecobins;}
+\DoxyCodeLine{92       m\_xrecomin = xrecomin;}
+\DoxyCodeLine{93       m\_xrecomax = xrecomax;}
+\DoxyCodeLine{94       m\_fixedbins = \textcolor{keyword}{true};}
+\DoxyCodeLine{95       \textcolor{comment}{//    m\_count = 0;}}
+\DoxyCodeLine{96       m\_univs = univs;}
+\DoxyCodeLine{97       m\_tags = tags;}
+\DoxyCodeLine{98       \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} tag : tags)\{}
+\DoxyCodeLine{99        std::string hist\_name = \textcolor{stringliteral}{"{}h\_\_\_"{}}+tag +\textcolor{stringliteral}{"{}\_\_\_"{}}+ name;}
+\DoxyCodeLine{100        \textcolor{comment}{// std::string hist\_name = name + "{}\_"{} + tag;}}
+\DoxyCodeLine{101           \textcolor{comment}{// this is special case, only MC should have both true and reconstructed binning in the signature.}}
+\DoxyCodeLine{102         m\_hists[tag] = PlotUtils::HistWrapper<T>(hist\_name.c\_str(), title.c\_str(), nrecobins, xrecomin, xrecomax, univs);}
+\DoxyCodeLine{103       \}}
+\DoxyCodeLine{104       m\_decoder = UniverseDecoder(univs);}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106     \}}
+\DoxyCodeLine{107 }
+\DoxyCodeLine{108   \textcolor{comment}{// map that helps you find the index of a universe.}}
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111   std::map<const T*,int> UniverseDecoder(\textcolor{keyword}{const} std::map< std::string, std::vector<T*> > univs)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{112     std::map<const T*, int> decoder;}
+\DoxyCodeLine{113     \textcolor{keywordflow}{for}(\textcolor{keyword}{auto} univ:univs)\{}
+\DoxyCodeLine{114       std::string name = univ.first;}
+\DoxyCodeLine{115       std::vector<T*> pointers = univ.second;}
+\DoxyCodeLine{116       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < pointers.size(); i++)\{}
+\DoxyCodeLine{117         decoder[pointers[i]] = i;}
+\DoxyCodeLine{118       \}}
+\DoxyCodeLine{119     \}}
+\DoxyCodeLine{120     \textcolor{keywordflow}{return} decoder;}
+\DoxyCodeLine{121   \}}
+\DoxyCodeLine{122 }
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124 }
+\DoxyCodeLine{125   \textcolor{comment}{// constructor for case where you are not building a response.}}
+\DoxyCodeLine{126   \textcolor{keyword}{inline}  HistWrapperMap( \textcolor{keyword}{const} std::string name, \textcolor{keyword}{const} std::string title, \textcolor{keyword}{const} Int\_t nbins, \textcolor{keyword}{const} std::vector<double> bins,  std::map< std::string, std::vector<T*> > univs, std::vector<std::string> tags)\{}
+\DoxyCodeLine{127     \textcolor{comment}{// just store the config}}
+\DoxyCodeLine{128     m\_name = name;}
+\DoxyCodeLine{129     m\_title = title;}
+\DoxyCodeLine{130     m\_nbins = nbins;}
+\DoxyCodeLine{131     m\_bins  = bins;}
+\DoxyCodeLine{132     m\_nrecobins = nbins;}
+\DoxyCodeLine{133     m\_recobins = bins;}
+\DoxyCodeLine{134     m\_fixedbins = \textcolor{keyword}{false};}
+\DoxyCodeLine{135     \textcolor{comment}{//    m\_count = 0 ;}}
+\DoxyCodeLine{136     m\_univs = univs;}
+\DoxyCodeLine{137     m\_tags = tags;}
+\DoxyCodeLine{138     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} tag : tags)\{}
+\DoxyCodeLine{139       \textcolor{comment}{//std::string hist\_name = tag +"{}\_"{}+ name;}}
+\DoxyCodeLine{140       std::string hist\_name = \textcolor{stringliteral}{"{}h\_\_\_"{}}+tag+\textcolor{stringliteral}{"{}\_\_\_"{}}+name;}
+\DoxyCodeLine{141       m\_hists[tag] = PlotUtils::HistWrapper<T>(hist\_name.c\_str(), title.c\_str(), nbins, bins, univs);}
+\DoxyCodeLine{142       m\_hashist[tag] = \textcolor{keyword}{true};}
+\DoxyCodeLine{143     \}}
+\DoxyCodeLine{144     m\_decoder = UniverseDecoder(univs);}
+\DoxyCodeLine{145   \}}
+\DoxyCodeLine{146     }
+\DoxyCodeLine{147     \textcolor{comment}{// constructor  This one is special for reconstructed/tuned MC so you can build a response.}}
+\DoxyCodeLine{148     \textcolor{keyword}{inline}  HistWrapperMap( \textcolor{keyword}{const} std::string name, \textcolor{keyword}{const} std::string title, \textcolor{keyword}{const} Int\_t nbins, \textcolor{keyword}{const} std::vector<double> bins, \textcolor{keyword}{const} Int\_t nrecobins, \textcolor{keyword}{const} std::vector<double> recobins, std::map< std::string, std::vector<T*> > univs, std::vector<std::string> tags)\{}
+\DoxyCodeLine{149       \textcolor{comment}{// just store the config}}
+\DoxyCodeLine{150       m\_name = name;}
+\DoxyCodeLine{151       m\_title = title;}
+\DoxyCodeLine{152       m\_nbins = nbins;}
+\DoxyCodeLine{153       m\_bins  = bins;}
+\DoxyCodeLine{154       m\_nrecobins = nrecobins;}
+\DoxyCodeLine{155       m\_recobins = recobins;}
+\DoxyCodeLine{156         }
+\DoxyCodeLine{157       m\_fixedbins = \textcolor{keyword}{false};}
+\DoxyCodeLine{158       \textcolor{comment}{//    m\_count = 0 ;}}
+\DoxyCodeLine{159       m\_univs = univs;}
+\DoxyCodeLine{160       m\_tags = tags;}
+\DoxyCodeLine{161       \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} tag : tags)\{}
+\DoxyCodeLine{162         \textcolor{comment}{//std::string hist\_name = tag +"{}\_"{}+ name;}}
+\DoxyCodeLine{163         std::string hist\_name = \textcolor{stringliteral}{"{}h\_\_\_"{}}+tag+\textcolor{stringliteral}{"{}\_\_\_"{}}+name;}
+\DoxyCodeLine{164           \textcolor{comment}{// this one is special, you need to make the primary histogram in reco variables.}}
+\DoxyCodeLine{165         m\_hists[tag] = PlotUtils::HistWrapper<T>(hist\_name.c\_str(), title.c\_str(), nrecobins, recobins, univs);}
+\DoxyCodeLine{166         m\_hashist[tag] = \textcolor{keyword}{true};}
+\DoxyCodeLine{167       \}}
+\DoxyCodeLine{168       m\_decoder = UniverseDecoder(univs);}
+\DoxyCodeLine{169     \}}
+\DoxyCodeLine{170 }
+\DoxyCodeLine{171 }
+\DoxyCodeLine{172 }
+\DoxyCodeLine{173   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} AddResponse(std::vector<std::string> tags, std::string tail=\textcolor{stringliteral}{"{}"{}})\{}
+\DoxyCodeLine{174     \textcolor{comment}{// make a temp universe map to make Response happy}}
+\DoxyCodeLine{175     std::map<std::string, int> response\_bands;}
+\DoxyCodeLine{176     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} band : m\_univs)\{}
+\DoxyCodeLine{177       std::string name = band.first;}
+\DoxyCodeLine{178       std::string realname = (band.second)[0]-\/>ShortName();}
+\DoxyCodeLine{179       \textcolor{keywordtype}{int} nuniv = band.second.size();}
+\DoxyCodeLine{180       m\_response\_bands[realname] = nuniv;}
+\DoxyCodeLine{181     \}}
+\DoxyCodeLine{182     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} tag:tags)\{}
+\DoxyCodeLine{183       \textcolor{comment}{//std::string resp\_name = tag+"{}\_response\_"{}+m\_name;}}
+\DoxyCodeLine{184       std::string resp\_name = \textcolor{stringliteral}{"{}h\_\_\_"{}} + tag + \textcolor{stringliteral}{"{}\_\_\_"{}}+m\_name+\textcolor{stringliteral}{"{}\_\_\_response"{}} + tail;}
+\DoxyCodeLine{185 }
+\DoxyCodeLine{186       \textcolor{keywordflow}{if} (m\_fixedbins)\{}
+\DoxyCodeLine{187         TH1D tmp = TH1D(\textcolor{stringliteral}{"{}tmp"{}}, m\_title.c\_str(), m\_nbins, m\_xmin, m\_xmax);}
+\DoxyCodeLine{188         TH1D tmpreco = TH1D(\textcolor{stringliteral}{"{}tmp"{}}, m\_title.c\_str(), m\_nrecobins, m\_xrecomin, m\_xrecomax);}
+\DoxyCodeLine{189         std::vector<double> edges;}
+\DoxyCodeLine{190         std::vector<double> edgesreco;}
+\DoxyCodeLine{191         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 1; i <= m\_nbins+1; i++)\{}
+\DoxyCodeLine{192           edges.push\_back(tmp.GetXaxis()-\/>GetBinLowEdge(i));}
+\DoxyCodeLine{193         \}}
+\DoxyCodeLine{194         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 1; i <= m\_nrecobins+1; i++)\{}
+\DoxyCodeLine{195             edgesreco.push\_back(tmpreco.GetXaxis()-\/>GetBinLowEdge(i));}
+\DoxyCodeLine{196         \}}
+\DoxyCodeLine{197         m\_response[tag] = \textcolor{keyword}{new} MinervaUnfold::MnvResponse(resp\_name.c\_str(), resp\_name.c\_str(), m\_nrecobins, \&edgesreco[0],m\_nbins,\&edges[0], m\_response\_bands);}
+\DoxyCodeLine{198       \}}
+\DoxyCodeLine{199       \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{200         m\_response[tag] = \textcolor{keyword}{new} MinervaUnfold::MnvResponse(resp\_name.c\_str(), resp\_name.c\_str(), m\_nrecobins, \&m\_recobins[0], m\_nbins,\&m\_bins[0], m\_response\_bands);}
+\DoxyCodeLine{201       \}}
+\DoxyCodeLine{202       m\_hasresponse[tag] = \textcolor{keyword}{true};}
+\DoxyCodeLine{203     \}}
+\DoxyCodeLine{204 }
+\DoxyCodeLine{205 }
+\DoxyCodeLine{206 }
+\DoxyCodeLine{207   \};}
+\DoxyCodeLine{208 }
+\DoxyCodeLine{209   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} AppendName(\textcolor{keyword}{const} std::string n, \textcolor{keyword}{const} std::vector<std::string> tags)\{}
+\DoxyCodeLine{210      \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} tag : tags)\{}
+\DoxyCodeLine{211        m\_hists[tag].hist-\/>SetName(Form(\textcolor{stringliteral}{"{}\%s\_\_\_\%s"{}},(m\_hists[tag].hist-\/>GetName()),n.c\_str()));}
+\DoxyCodeLine{212      \}}
+\DoxyCodeLine{213    \}}
+\DoxyCodeLine{214 }
+\DoxyCodeLine{215 }
+\DoxyCodeLine{216   \textcolor{comment}{//  inline  std::vector<std::string> GetHistKeys()\{}}
+\DoxyCodeLine{217   \textcolor{comment}{//    std::vector<std::string> retval;}}
+\DoxyCodeLine{218   \textcolor{comment}{//    for (auto  const\& element : m\_hists) \{}}
+\DoxyCodeLine{219   \textcolor{comment}{//      retval.push\_back(element.first);}}
+\DoxyCodeLine{220   \textcolor{comment}{//    \}}}
+\DoxyCodeLine{221   \textcolor{comment}{//    return retval;}}
+\DoxyCodeLine{222   \textcolor{comment}{//  \};}}
+\DoxyCodeLine{223 }
+\DoxyCodeLine{224   \textcolor{comment}{//  can we make this smarter?}}
+\DoxyCodeLine{225   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} Fill(\textcolor{keyword}{const} std::string tag, \textcolor{keyword}{const} T* universe, \textcolor{keyword}{const} Double\_t value, \textcolor{keyword}{const} Double\_t weight=1.0, \textcolor{keyword}{const} Double\_t scale=1.0)\{}
+\DoxyCodeLine{226     m\_hists[tag].FillUniverse(universe, value, weight*scale);}
+\DoxyCodeLine{227   \}}
+\DoxyCodeLine{228 }
+\DoxyCodeLine{229   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} FillResponse(\textcolor{keyword}{const} std::string tag, \textcolor{keyword}{const} T* univ, \textcolor{keyword}{const} \textcolor{keywordtype}{double} value, \textcolor{keyword}{const} \textcolor{keywordtype}{double} truth, \textcolor{keyword}{const} \textcolor{keywordtype}{double} weight=1.0, \textcolor{keyword}{const} \textcolor{keywordtype}{double} scale =1.0)\{}
+\DoxyCodeLine{230     std::string name = univ-\/>ShortName();}
+\DoxyCodeLine{231     \textcolor{keywordtype}{int} iuniv = m\_decoder[univ];}
+\DoxyCodeLine{232     \textcolor{comment}{//std::cout << "{} fillresponse "{} << name << "{} "{} << iuniv << std::endl;}}
+\DoxyCodeLine{233     m\_response[tag]-\/>Fill(value, truth, name, iuniv, weight*scale);}
+\DoxyCodeLine{234   \}}
+\DoxyCodeLine{235 }
+\DoxyCodeLine{236   \textcolor{keyword}{inline} \textcolor{keywordtype}{int} GetNhists()\{\textcolor{keywordflow}{return} m\_hists.size();\}}
+\DoxyCodeLine{237 }
+\DoxyCodeLine{238   \textcolor{keyword}{inline} MnvH1D* GetHist(\textcolor{keyword}{const} std::string tag)\{}
+\DoxyCodeLine{239     \textcolor{keywordflow}{if} (m\_hists.count(tag)>0) \textcolor{keywordflow}{return} m\_hists[tag].hist;}
+\DoxyCodeLine{240     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{241   \}}
+\DoxyCodeLine{242 }
+\DoxyCodeLine{243   \textcolor{keyword}{inline} MinervaUnfold::MnvResponse* GetResponse(\textcolor{keyword}{const} std::string tag)\{}
+\DoxyCodeLine{244     \textcolor{keywordflow}{if} (m\_response.count(tag)>0) \textcolor{keywordflow}{return} m\_response[tag];}
+\DoxyCodeLine{245     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{246   \}}
+\DoxyCodeLine{247 }
+\DoxyCodeLine{248   \textcolor{keyword}{inline} MnvH2D* GetMigrationMatrix(\textcolor{keyword}{const} std::string tag)\{}
+\DoxyCodeLine{249     MnvH2D* matrix;}
+\DoxyCodeLine{250     MnvH1D* dummy;}
+\DoxyCodeLine{251     MnvH1D* dummy2;}
+\DoxyCodeLine{252 }
+\DoxyCodeLine{253     \textcolor{keywordflow}{if} (m\_response.count(tag)>0)\{}
+\DoxyCodeLine{254 \textcolor{preprocessor}{\#ifdef HSTDBG}}
+\DoxyCodeLine{255       std::cout << \textcolor{stringliteral}{"{} HistWrapperMap::Migration matrix has size "{}} << m\_response[tag]-\/>GetMigrationMatrix()-\/>GetErrorBandNames().size() << std::endl;}
+\DoxyCodeLine{256       std::cout << \textcolor{stringliteral}{"{} HistWrapperMap::getting migration matrix "{}} << m\_response[tag]-\/>GetMigrationMatrix()-\/>GetName() << std::endl;}
+\DoxyCodeLine{257 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{258       matrix = m\_response[tag]-\/>GetMigrationMatrix();}
+\DoxyCodeLine{259       \textcolor{keywordflow}{return} matrix;}
+\DoxyCodeLine{260     \}}
+\DoxyCodeLine{261     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{262   \}}
+\DoxyCodeLine{263 }
+\DoxyCodeLine{264 }
+\DoxyCodeLine{265 }
+\DoxyCodeLine{266 }
+\DoxyCodeLine{267   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} Scale(\textcolor{keyword}{const} std::string tag, \textcolor{keywordtype}{double} scale)\{}
+\DoxyCodeLine{268     m\_hists[tag].hist-\/>Scale(scale);}
+\DoxyCodeLine{269   \}}
+\DoxyCodeLine{270 }
+\DoxyCodeLine{271   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} Write(\textcolor{keyword}{const} std::string tag, Int\_t option = 0)\{}
+\DoxyCodeLine{272 }
+\DoxyCodeLine{273       std::cout << \textcolor{stringliteral}{"{} look at all tags "{}} << tag << std::endl;}
+\DoxyCodeLine{274       \textcolor{keywordflow}{if} (m\_hashist[tag])\{}
+\DoxyCodeLine{275         std::cout << \textcolor{stringliteral}{"{} try to write hist "{}} << tag << \textcolor{stringliteral}{"{} "{}} << m\_hists[tag].hist-\/>GetName() <<  std::endl;}
+\DoxyCodeLine{276         m\_hists[tag].hist-\/>Write();}
+\DoxyCodeLine{277 }
+\DoxyCodeLine{278       \}}
+\DoxyCodeLine{279 }
+\DoxyCodeLine{280 }
+\DoxyCodeLine{281       \textcolor{keywordflow}{if}(m\_hasresponse[tag])\{}
+\DoxyCodeLine{282         std::cout << \textcolor{stringliteral}{"{} try to write response "{}} << tag << \textcolor{stringliteral}{"{} "{}} << m\_hists[tag].hist-\/>GetName()  << std::endl;}
+\DoxyCodeLine{283         PlotUtils::MnvH2D* h\_migration;}
+\DoxyCodeLine{284         PlotUtils::MnvH1D* h\_reco;}
+\DoxyCodeLine{285         PlotUtils::MnvH1D* h\_truth;}
+\DoxyCodeLine{286         \textcolor{comment}{//        h\_migration-\/>SetDirectory(0);}}
+\DoxyCodeLine{287         \textcolor{comment}{//        h\_reco-\/>SetDirectory(0);}}
+\DoxyCodeLine{288         \textcolor{comment}{//        h\_truth-\/>SetDirectory(0);}}
+\DoxyCodeLine{289         std::cout << \textcolor{stringliteral}{"{} GetMigrationObjects will now complain because I passed it pointers to uninitiated MnvH2D/1D to fill please ignore"{}} << std::endl;}
+\DoxyCodeLine{290         m\_response[tag]-\/>GetMigrationObjects( h\_migration, h\_reco, h\_truth);}
+\DoxyCodeLine{291         std::cout << h\_migration << std::endl;}
+\DoxyCodeLine{292         \textcolor{keywordflow}{if} (h\_reco-\/>GetEntries() > 0)\{}
+\DoxyCodeLine{293           h\_migration-\/>Write();}
+\DoxyCodeLine{294           h\_reco-\/>Write();}
+\DoxyCodeLine{295           h\_truth-\/>Write();}
+\DoxyCodeLine{296         \}}
+\DoxyCodeLine{297 }
+\DoxyCodeLine{298       \}}
+\DoxyCodeLine{299 }
+\DoxyCodeLine{300   \};}
+\DoxyCodeLine{301 }
+\DoxyCodeLine{302 }
+\DoxyCodeLine{303   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} DeleteResponse()\{}
+\DoxyCodeLine{304     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} resp: m\_response)\{}
+\DoxyCodeLine{305       std::cout << \textcolor{stringliteral}{"{}delete migration matrix"{}} << resp.second-\/>GetMigrationMatrix()-\/>GetName() ;}
+\DoxyCodeLine{306       \textcolor{keyword}{delete} resp.second;}
+\DoxyCodeLine{307     \}}
+\DoxyCodeLine{308   \}}
+\DoxyCodeLine{309 }
+\DoxyCodeLine{310   \textcolor{comment}{// voodoo you sometimes need}}
+\DoxyCodeLine{311   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} SyncCVHistos()\{}
+\DoxyCodeLine{312     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} tag:m\_tags)\{}
+\DoxyCodeLine{313       m\_hists[tag].SyncCVHistos();}
+\DoxyCodeLine{314     \}}
+\DoxyCodeLine{315   \};}
+\DoxyCodeLine{316 }
+\DoxyCodeLine{317 }
+\DoxyCodeLine{318 \};}
+\DoxyCodeLine{319 \};}
+\DoxyCodeLine{320 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* HistWrapperMap\_h */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

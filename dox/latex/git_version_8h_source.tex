@@ -1,0 +1,25 @@
+\hypertarget{git_version_8h_source}{}\doxysection{git\+Version.\+h}
+\label{git_version_8h_source}\index{make\_hists/utils/gitVersion.h@{make\_hists/utils/gitVersion.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{//File: gitVersion.cpp.in}}
+\DoxyCodeLine{2 \textcolor{comment}{//Brief: Template for access to git version control information.  Filled in to create a .cpp file by CMake.}}
+\DoxyCodeLine{3 \textcolor{comment}{//Author: Andrew Olivier aolivier@ur.rochester.edu}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{comment}{//c++ includes}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#ifndef GIT\_GITVERSION\_H}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#define GIT\_GITVERSION\_H}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{namespace }git}
+\DoxyCodeLine{12 \{}
+\DoxyCodeLine{13   std::string commitHash()}
+\DoxyCodeLine{14   \{}
+\DoxyCodeLine{15     \textcolor{keywordflow}{return} \textcolor{stringliteral}{"{}https://github.com/MinervaExpt/CCQENu/commit/9b4c4c92c2a44156edf03d12ea29cef24e9fbf32"{}};}
+\DoxyCodeLine{16   \}}
+\DoxyCodeLine{17 \}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#endif }\textcolor{comment}{//GIT\_GITVERSION\_H}}
+
+\end{DoxyCode}

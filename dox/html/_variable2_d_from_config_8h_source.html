@@ -86,9 +86,9 @@ $(function() {
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span>CCQENu {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html">   17</a></span><span class="keyword">class </span><a class="code hl_class" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html">Variable2DFromConfig</a> : <span class="keyword">public</span> PlotUtils::Variable2DBase&lt;CVUniverse&gt; {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">class </span>Variable2DFromConfig : <span class="keyword">public</span> PlotUtils::Variable2DBase&lt;CVUniverse&gt; {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keyword">typedef</span> <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">PlotUtils::Hist2DWrapperMap&lt;CVUniverse&gt;</a> <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keyword">typedef</span> <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">PlotUtils::Hist2DWrapperMap&lt;CVUniverse&gt;</a> HM2D;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">typedef</span> PlotUtils::MnvH1D MH1D;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keyword">typedef</span> PlotUtils::MnvH2D MH2D;</div>
@@ -105,30 +105,30 @@ $(function() {
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="comment">// NHV 3/16/21 replace templated version with explicit ones so we can use a config without changing the base class.</span></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <a class="code hl_class" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html">Variable2DFromConfig</a>(<span class="keyword">const</span> std::string name,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  Variable2DFromConfig(<span class="keyword">const</span> std::string name,</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                       <span class="keyword">const</span> VariableBase&lt;CVUniverse&gt;&amp; x,</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                       <span class="keyword">const</span> VariableBase&lt;CVUniverse&gt;&amp; y) :</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  PlotUtils::Variable2DBase&lt;CVUniverse&gt;(name, x, y ){</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  PlotUtils::Variable2DBase&lt;<a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>&gt;(name, x, y ){</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    std::vector&lt;std::string&gt; def = {<span class="stringliteral">&quot;data&quot;</span>,<span class="stringliteral">&quot;selected_reco&quot;</span>,<span class="stringliteral">&quot;selected_truth&quot;</span>,<span class="stringliteral">&quot;response&quot;</span>,<span class="stringliteral">&quot;truth&quot;</span>};</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>   <span class="keywordflow">for</span> (<span class="keyword">auto</span> s:def){</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>     m_for.push_back(s);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>   }</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  };</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <a class="code hl_class" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html">Variable2DFromConfig</a>(<span class="keyword">const</span> VariableBase&lt;CVUniverse&gt;&amp; x,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  Variable2DFromConfig(<span class="keyword">const</span> VariableBase&lt;CVUniverse&gt;&amp; x,</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                       <span class="keyword">const</span> VariableBase&lt;CVUniverse&gt;&amp; y) :</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  PlotUtils::Variable2DBase&lt;CVUniverse&gt;(x, y ){</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  PlotUtils::Variable2DBase&lt;<a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>&gt;(x, y ){</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::vector&lt;std::string&gt; def = {<span class="stringliteral">&quot;data&quot;</span>,<span class="stringliteral">&quot;selected_reco&quot;</span>,<span class="stringliteral">&quot;selected_truth&quot;</span>,<span class="stringliteral">&quot;response&quot;</span>,<span class="stringliteral">&quot;truth&quot;</span>};</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>   <span class="keywordflow">for</span> (<span class="keyword">auto</span> s:def){</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>     m_for.push_back(s);</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>   }</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  };</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <a class="code hl_class" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html">Variable2DFromConfig</a>(<span class="keyword">const</span> std::string name,</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  Variable2DFromConfig(<span class="keyword">const</span> std::string name,</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                       <span class="keyword">const</span> VariableBase&lt;CVUniverse&gt;&amp; x,</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                       <span class="keyword">const</span> VariableBase&lt;CVUniverse&gt;&amp; y,</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                       <span class="keyword">const</span> NuConfig config) :</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  PlotUtils::Variable2DBase&lt;CVUniverse&gt;(name, x, y){</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                       <span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config) :</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  PlotUtils::Variable2DBase&lt;<a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>&gt;(name, x, y){</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">if</span> (config.IsMember(<span class="stringliteral">&quot;for&quot;</span>)){</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      m_for = config.GetStringVector(<span class="stringliteral">&quot;for&quot;</span>);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
@@ -140,11 +140,11 @@ $(function() {
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    }</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  };</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <a class="code hl_class" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html">Variable2DFromConfig</a>(<span class="keyword">const</span> std::string name,</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  Variable2DFromConfig(<span class="keyword">const</span> std::string name,</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                       <span class="keyword">const</span> <a class="code hl_class" href="class_c_c_q_e_nu_1_1_variable_from_config.html">CCQENu::VariableFromConfig</a>&amp; x,</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                       <span class="keyword">const</span> <a class="code hl_class" href="class_c_c_q_e_nu_1_1_variable_from_config.html">CCQENu::VariableFromConfig</a>&amp; y,</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                       <span class="keyword">const</span> std::vector&lt;std::string&gt; fors) :</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  PlotUtils::Variable2DBase&lt;CVUniverse&gt;(name, x, y){</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  PlotUtils::Variable2DBase&lt;<a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>&gt;(name, x, y){</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordflow">if</span> (fors.size()&gt;0){</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> s:fors){</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        m_for.push_back(s);</div>
@@ -184,13 +184,13 @@ $(function() {
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <span class="comment">//=======================================================================================</span></div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="comment">// Histwrappers -- selected mc, selected data</span></div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a> m_selected_mc_reco;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a> m_tuned_mc_reco; <span class="comment">// HM for tuned MC hists used for background subtraction -NHV</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a> m_selected_mc_truth;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a> m_tuned_selected_mc_truth;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a> m_signal_mc_truth;</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a> m_tuned_signal_mc_truth;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a> m_selected_data;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  HM2D m_selected_mc_reco;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  HM2D m_tuned_mc_reco; <span class="comment">// HM for tuned MC hists used for background subtraction -NHV</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  HM2D m_selected_mc_truth;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  HM2D m_tuned_selected_mc_truth;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  HM2D m_signal_mc_truth;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  HM2D m_tuned_signal_mc_truth;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  HM2D m_selected_data;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  UniverseMap m_universes; <span class="comment">//need to change this?</span></div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  std::string m_units;</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  std::map&lt;const std::string, bool&gt; hasData;</div>
@@ -245,7 +245,7 @@ $(function() {
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    std::vector&lt;double&gt; xbins = GetBinVecX();</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    std::vector&lt;double&gt; ybins = GetBinVecY();</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    m_selected_mc_reco = <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>,GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, univs, tags); <span class="comment">//Hist2DWrapper doesn&#39;t need nbins for variable binning</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    m_selected_mc_reco = HM2D(Form(<span class="stringliteral">&quot;%s&quot;</span>,GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, univs, tags); <span class="comment">//Hist2DWrapper doesn&#39;t need nbins for variable binning</span></div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    m_selected_mc_reco.AppendName(<span class="stringliteral">&quot;reconstructed&quot;</span>,tags);</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  }</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
@@ -270,7 +270,7 @@ $(function() {
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    std::vector&lt;double&gt; xbins = GetBinVecX();</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    std::vector&lt;double&gt; ybins = GetBinVecY();</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    m_selected_mc_truth = <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, univs, tags); <span class="comment">//Hist2DWrapper doesn&#39;t need nbins for variable binning</span></div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    m_selected_mc_truth = HM2D(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, univs, tags); <span class="comment">//Hist2DWrapper doesn&#39;t need nbins for variable binning</span></div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    m_selected_mc_truth.AppendName(<span class="stringliteral">&quot;selected_truth&quot;</span>,tags); <span class="comment">// patch to conform to CCQENU standardm_selected_mc_truth.AppendName(&quot;_truth&quot;,tags); // patch to conform to CCQENU standard</span></div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>  }</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
@@ -297,7 +297,7 @@ $(function() {
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    std::vector&lt;double&gt; ybins = GetBinVecY();</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    m_signal_mc_truth = <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, univs, tags);</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    m_signal_mc_truth = HM2D(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, univs, tags);</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    m_signal_mc_truth.AppendName(<span class="stringliteral">&quot;all_truth&quot;</span>,tags);</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>  }</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
@@ -320,7 +320,7 @@ $(function() {
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    std::vector&lt;double&gt; xbins = GetBinVecX();</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    std::vector&lt;double&gt; ybins = GetBinVecY();</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    m_selected_data = <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, univs, tags); <span class="comment">//Hist2DWrapper doesn&#39;t need nbins for variable binning</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    m_selected_data = HM2D(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, univs, tags); <span class="comment">//Hist2DWrapper doesn&#39;t need nbins for variable binning</span></div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    m_selected_data.AppendName(<span class="stringliteral">&quot;reconstructed&quot;</span>,tags);</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>  }</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
@@ -341,15 +341,15 @@ $(function() {
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span> </div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    <span class="comment">// Check which categories are configured and add a tuned version</span></div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="keywordflow">if</span> (std::count(m_for.begin(), m_for.end(),<span class="stringliteral">&quot;selected_reco&quot;</span>)&gt;=1){</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>      m_tuned_mc_reco = <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, reco_univs, tuned_tags);</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>      m_tuned_mc_reco = HM2D(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, reco_univs, tuned_tags);</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>      m_tuned_mc_reco.AppendName(<span class="stringliteral">&quot;reconstructed_tuned&quot;</span>,tuned_tags);</div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    }</div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="keywordflow">if</span> (std::count(m_for.begin(), m_for.end(),<span class="stringliteral">&quot;selected_truth&quot;</span>)&gt;=1) {</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>      m_tuned_selected_mc_truth = <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, reco_univs, tuned_tags);</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>      m_tuned_selected_mc_truth = HM2D(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, reco_univs, tuned_tags);</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>      m_tuned_selected_mc_truth.AppendName(<span class="stringliteral">&quot;selected_truth_tuned&quot;</span>,tuned_tags);</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    }</div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    <span class="keywordflow">if</span> (std::count(m_for.begin(), m_for.end(),<span class="stringliteral">&quot;truth&quot;</span>)&gt;=1) {</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>      m_tuned_signal_mc_truth = <a class="code hl_class" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a>(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, truth_univs, tuned_tags);</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>      m_tuned_signal_mc_truth = HM2D(Form(<span class="stringliteral">&quot;%s&quot;</span>, GetName().c_str()), (GetName()+<span class="stringliteral">&quot;;&quot;</span>+m_xaxis_label+<span class="stringliteral">&quot;;&quot;</span>+m_yaxis_label).c_str(), xbins, ybins, truth_univs, tuned_tags);</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>      m_tuned_signal_mc_truth.AppendName(<span class="stringliteral">&quot;all_truth_tuned&quot;</span>,tuned_tags);</div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    }</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
@@ -500,9 +500,9 @@ $(function() {
 <div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>}  <span class="comment">// namespace Ben</span></div>
 <div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span> </div>
 <div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span><span class="preprocessor">#endif  </span><span class="comment">// VARIABLE_H</span></div>
-<div class="ttc" id="aclass_c_c_q_e_nu_1_1_variable2_d_from_config_html"><div class="ttname"><a href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html">CCQENu::Variable2DFromConfig</a></div><div class="ttdef"><b>Definition:</b> Variable2DFromConfig.h:17</div></div>
 <div class="ttc" id="aclass_c_c_q_e_nu_1_1_variable_from_config_html"><div class="ttname"><a href="class_c_c_q_e_nu_1_1_variable_from_config.html">CCQENu::VariableFromConfig</a></div><div class="ttdef"><b>Definition:</b> VariableFromConfig.h:21</div></div>
 <div class="ttc" id="aclass_c_v_universe_html"><div class="ttname"><a href="class_c_v_universe.html">CVUniverse</a></div><div class="ttdef"><b>Definition:</b> CVUniverse.h:22</div></div>
+<div class="ttc" id="aclass_nu_config_html"><div class="ttname"><a href="class_nu_config.html">NuConfig</a></div><div class="ttdef"><b>Definition:</b> NuConfig.h:16</div></div>
 <div class="ttc" id="aclass_plot_utils_1_1_hist2_d_wrapper_map_html"><div class="ttname"><a href="class_plot_utils_1_1_hist2_d_wrapper_map.html">PlotUtils::Hist2DWrapperMap&lt; CVUniverse &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

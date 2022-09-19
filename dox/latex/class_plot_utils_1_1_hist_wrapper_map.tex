@@ -73,9 +73,61 @@ void {\bfseries Delete\+Response} ()
 \item 
 \mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_abb977158d77b972c4ea3ae60ced042cb}\label{class_plot_utils_1_1_hist_wrapper_map_abb977158d77b972c4ea3ae60ced042cb}} 
 void {\bfseries Sync\+CVHistos} ()
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_ae5563e9cd8686ac0a26bb6e7f1932094}\label{class_plot_utils_1_1_hist_wrapper_map_ae5563e9cd8686ac0a26bb6e7f1932094}} 
+{\bfseries Hist\+Wrapper\+Map} (const std\+::string name, const std\+::string title, const Int\+\_\+t nbins, const double xmin, const double xmax, std\+::map$<$ std\+::string, std\+::vector$<$ T $\ast$ $>$ $>$ univs, const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_a53c3c3ca6dd7138a940fda8dc6a6e338}\label{class_plot_utils_1_1_hist_wrapper_map_a53c3c3ca6dd7138a940fda8dc6a6e338}} 
+{\bfseries Hist\+Wrapper\+Map} (const std\+::string name, const std\+::string title, const Int\+\_\+t nbins, const double xmin, const double xmax, const Int\+\_\+t nrecobins, const double xrecomin, const double xrecomax, std\+::map$<$ std\+::string, std\+::vector$<$ T $\ast$ $>$ $>$ univs, const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_aed7211c36012f3a6b0275554097b96ac}\label{class_plot_utils_1_1_hist_wrapper_map_aed7211c36012f3a6b0275554097b96ac}} 
+std\+::map$<$ const T $\ast$, int $>$ {\bfseries Universe\+Decoder} (const std\+::map$<$ std\+::string, std\+::vector$<$ T $\ast$ $>$ $>$ univs) const
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_a1f9efbe2cebf4cedad601e663dc3f31d}\label{class_plot_utils_1_1_hist_wrapper_map_a1f9efbe2cebf4cedad601e663dc3f31d}} 
+{\bfseries Hist\+Wrapper\+Map} (const std\+::string name, const std\+::string title, const Int\+\_\+t nbins, const std\+::vector$<$ double $>$ bins, std\+::map$<$ std\+::string, std\+::vector$<$ T $\ast$ $>$ $>$ univs, std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_a8863aa7690a5a4490e395c34546ac984}\label{class_plot_utils_1_1_hist_wrapper_map_a8863aa7690a5a4490e395c34546ac984}} 
+{\bfseries Hist\+Wrapper\+Map} (const std\+::string name, const std\+::string title, const Int\+\_\+t nbins, const std\+::vector$<$ double $>$ bins, const Int\+\_\+t nrecobins, const std\+::vector$<$ double $>$ recobins, std\+::map$<$ std\+::string, std\+::vector$<$ T $\ast$ $>$ $>$ univs, std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_ae23ca2b3b18fd2d3c3af825f11e2efaf}\label{class_plot_utils_1_1_hist_wrapper_map_ae23ca2b3b18fd2d3c3af825f11e2efaf}} 
+void {\bfseries Add\+Response} (std\+::vector$<$ std\+::string $>$ tags, std\+::string tail=\char`\"{}\char`\"{})
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_a09834ae6dbf1f720ab8c809e0d5bb081}\label{class_plot_utils_1_1_hist_wrapper_map_a09834ae6dbf1f720ab8c809e0d5bb081}} 
+void {\bfseries Append\+Name} (const std\+::string n, const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_a213ff26a74ea043cdbb5607ee073012d}\label{class_plot_utils_1_1_hist_wrapper_map_a213ff26a74ea043cdbb5607ee073012d}} 
+void {\bfseries Fill} (const std\+::string tag, const T $\ast$universe, const Double\+\_\+t value, const Double\+\_\+t weight=1.\+0, const Double\+\_\+t scale=1.\+0)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_aab32270ad4afe2f94bc740955ef8923e}\label{class_plot_utils_1_1_hist_wrapper_map_aab32270ad4afe2f94bc740955ef8923e}} 
+void {\bfseries Fill\+Response} (const std\+::string tag, const T $\ast$univ, const double value, const double truth, const double weight=1.\+0, const double scale=1.\+0)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_a637b3c1b735d7cc9acd317d31ad0466b}\label{class_plot_utils_1_1_hist_wrapper_map_a637b3c1b735d7cc9acd317d31ad0466b}} 
+int {\bfseries Get\+Nhists} ()
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_afa0d324fcb0b47eb330b57834f5c0a19}\label{class_plot_utils_1_1_hist_wrapper_map_afa0d324fcb0b47eb330b57834f5c0a19}} 
+Mnv\+H1D $\ast$ {\bfseries Get\+Hist} (const std\+::string tag)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_ac0dc3674c65d9675d1f20d32ef61a8c2}\label{class_plot_utils_1_1_hist_wrapper_map_ac0dc3674c65d9675d1f20d32ef61a8c2}} 
+Minerva\+Unfold\+::\+Mnv\+Response $\ast$ {\bfseries Get\+Response} (const std\+::string tag)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_a150605bfd34778cf1b0a378406d4e08c}\label{class_plot_utils_1_1_hist_wrapper_map_a150605bfd34778cf1b0a378406d4e08c}} 
+Mnv\+H2D $\ast$ {\bfseries Get\+Migration\+Matrix} (const std\+::string tag)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_ae628b2cf21b6005478fc638ee40c5a9b}\label{class_plot_utils_1_1_hist_wrapper_map_ae628b2cf21b6005478fc638ee40c5a9b}} 
+void {\bfseries Scale} (const std\+::string tag, double scale)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_a75195d9531ca3cb2035d87c93e877811}\label{class_plot_utils_1_1_hist_wrapper_map_a75195d9531ca3cb2035d87c93e877811}} 
+void {\bfseries Write} (const std\+::string tag, Int\+\_\+t option=0)
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_aac730577f9b55759c061ff17d738d143}\label{class_plot_utils_1_1_hist_wrapper_map_aac730577f9b55759c061ff17d738d143}} 
+void {\bfseries Delete\+Response} ()
+\item 
+\mbox{\Hypertarget{class_plot_utils_1_1_hist_wrapper_map_abb977158d77b972c4ea3ae60ced042cb}\label{class_plot_utils_1_1_hist_wrapper_map_abb977158d77b972c4ea3ae60ced042cb}} 
+void {\bfseries Sync\+CVHistos} ()
 \end{DoxyCompactItemize}
 
 
-The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-make\+\_\+hists/include/Hist\+Wrapper\+Map.\+h\end{DoxyCompactItemize}
+make\+\_\+hists/include/Hist\+Wrapper\+Map.\+h\item 
+make\+\_\+hists/include/\+Sep18/Hist\+Wrapper\+Map.\+h\end{DoxyCompactItemize}

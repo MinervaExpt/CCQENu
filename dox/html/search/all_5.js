@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['rangeconstraintfromconfigfunc_0',['RangeConstraintFromConfigFunc',['../class_plot_utils_1_1_range_constraint_from_config_func.html',1,'PlotUtils']]],
-  ['rangefromconfigfunc_1',['RangeFromConfigFunc',['../class_plot_utils_1_1_range_from_config_func.html',1,'PlotUtils']]]
+  ['logcheb_0',['logcheb',['../class_fraction_fit_test_1_1logcheb.html',1,'FractionFitTest.logcheb'],['../class_fraction_fit_with_systematics_1_1logcheb.html',1,'FractionFitWithSystematics.logcheb']]],
+  ['logleg_1',['logleg',['../class_fraction_fit_test_1_1logleg.html',1,'FractionFitTest.logleg'],['../class_fraction_fit_with_systematics_1_1logleg.html',1,'FractionFitWithSystematics.logleg']]]
 ];

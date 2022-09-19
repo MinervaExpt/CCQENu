@@ -1,0 +1,18 @@
+\hypertarget{_do_the_fit_8h_source}{}\doxysection{Do\+The\+Fit.\+h}
+\label{_do_the_fit_8h_source}\index{make\_hists/fits/DoTheFit.h@{make\_hists/fits/DoTheFit.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef DOTHEFIT\_h}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define DOTHEFIT\_h}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}PlotUtils/MnvH1D.h"{}}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}fits/MultiScaleFactors.h"{}}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{namespace }fit\{}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{keywordtype}{int} DoTheFit(std::map<\textcolor{keyword}{const} std::string, std::vector< PlotUtils::MnvH1D*>> fitHists, \textcolor{keyword}{const} std::map<\textcolor{keyword}{const} std::string, std::vector< PlotUtils::MnvH1D*> > unfitHists, \textcolor{keyword}{const} std::map<const std::string, PlotUtils::MnvH1D*>  dataHist, \textcolor{keyword}{const} std::map<const std::string, bool> includeInFit, \textcolor{keyword}{const} std::vector<std::string> categories, \textcolor{keyword}{const} fit\_type type = kML, \textcolor{keyword}{const} \textcolor{keywordtype}{int} lowBin = 1, \textcolor{keyword}{const} \textcolor{keywordtype}{int} hiBin = -\/1, \textcolor{keyword}{const} \textcolor{keywordtype}{bool} binbybin=\textcolor{keyword}{false});}
+\DoxyCodeLine{11 \};}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

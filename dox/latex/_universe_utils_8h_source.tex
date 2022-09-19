@@ -1,0 +1,16 @@
+\hypertarget{_universe_utils_8h_source}{}\doxysection{Universe\+Utils.\+h}
+\label{_universe_utils_8h_source}\index{make\_hists/utils/UniverseUtils.h@{make\_hists/utils/UniverseUtils.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef UniverseUtils\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define UniverseUtils\_H}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}PlotUtils/MnvH1D.h"{}}}
+\DoxyCodeLine{4 \textcolor{keywordtype}{double} GetUnivVal(\textcolor{keyword}{const} PlotUtils::MnvH1D* m,\textcolor{keyword}{const} std::string band, \textcolor{keyword}{const} \textcolor{keywordtype}{int} univ, \textcolor{keyword}{const} \textcolor{keywordtype}{double} val)\{}
+\DoxyCodeLine{5     \textcolor{keyword}{const} TH1D*  hist = m-\/> GetVertErrorBand(band)-\/>GetHist(univ);}
+\DoxyCodeLine{6       \textcolor{keywordtype}{int} xbin = hist-\/>GetXaxis()-\/>FindBin(val);}
+\DoxyCodeLine{7       \textcolor{keywordflow}{return}  hist-\/>GetBinContent(xbin);}
+\DoxyCodeLine{8 \}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

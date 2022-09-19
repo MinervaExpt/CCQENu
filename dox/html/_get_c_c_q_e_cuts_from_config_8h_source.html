@@ -88,7 +88,7 @@ $(function() {
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">// shorthand for std::vector&lt;std::unique_ptr&lt;PlotUtils::Cut&lt;UNIVERSE, EVENT&gt;&gt;&gt;;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">//============================================================================</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> UNIVERSE, <span class="keyword">class</span> EVENT = PlotUtils::detail::empty&gt;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>PlotUtils::cuts_t&lt;UNIVERSE&gt; GetCCQECutsFromConfig(NuConfig &amp; config )</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>PlotUtils::cuts_t&lt;UNIVERSE&gt; GetCCQECutsFromConfig(<a class="code hl_class" href="class_nu_config.html">NuConfig</a> &amp; config )</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">typedef</span> std::function&lt;double(<span class="keyword">const</span> UNIVERSE&amp;)&gt; PointerToCVUniverseFunction;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  PlotUtils::cuts_t&lt;UNIVERSE, EVENT&gt; ccqe_cuts;</div>
@@ -179,7 +179,7 @@ $(function() {
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment">//-----------signal</span></div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> UNIVERSE&gt;</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>PlotUtils::constraints_t&lt;UNIVERSE&gt; GetCCQEPhaseSpaceFromConfig(NuConfig &amp; config)</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>PlotUtils::constraints_t&lt;UNIVERSE&gt; GetCCQEPhaseSpaceFromConfig(<a class="code hl_class" href="class_nu_config.html">NuConfig</a> &amp; config)</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>{</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
@@ -234,7 +234,7 @@ $(function() {
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="comment">// CCQELike ------------------------ // this is actually identical to the fiducial stuff</span></div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> UNIVERSE&gt;</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>PlotUtils::constraints_t&lt;UNIVERSE&gt; GetCCQESignalFromConfig(NuConfig &amp; config)</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>PlotUtils::constraints_t&lt;UNIVERSE&gt; GetCCQESignalFromConfig(<a class="code hl_class" href="class_nu_config.html">NuConfig</a> &amp; config)</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>{</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keyword">typedef</span> std::function&lt;double(<span class="keyword">const</span> UNIVERSE&amp;)&gt; PointerToCVUniverseFunction;</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    PlotUtils::constraints_t&lt;UNIVERSE&gt; signalDef;</div>
@@ -278,6 +278,7 @@ $(function() {
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>} <span class="comment">// end namespace</span></div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclass_c_v_functions_html"><div class="ttname"><a href="class_c_v_functions.html">CVFunctions</a></div><div class="ttdef"><b>Definition:</b> CVFunctions.h:19</div></div>
+<div class="ttc" id="aclass_nu_config_html"><div class="ttname"><a href="class_nu_config.html">NuConfig</a></div><div class="ttdef"><b>Definition:</b> NuConfig.h:16</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -49,28 +49,28 @@
 \DoxyCodeLine{45 \textcolor{keyword}{template}<\textcolor{keyword}{class} MnvHistoType>}
 \DoxyCodeLine{46   \textcolor{keywordtype}{int} drawStacked(std::string sample, std::string variable, std::string basename,}
 \DoxyCodeLine{47                   std::map<std::string,MnvHistoType*> hists1D,}
-\DoxyCodeLine{48                   NuConfig config, NuConfig variables1DConfig, NuConfig samplesConfig,}
+\DoxyCodeLine{48                   \mbox{\hyperlink{class_nu_config}{NuConfig}} config, \mbox{\hyperlink{class_nu_config}{NuConfig}} variables1DConfig, \mbox{\hyperlink{class_nu_config}{NuConfig}} samplesConfig,}
 \DoxyCodeLine{49                   std::string pdffilename1D, \textcolor{keywordtype}{double} POTScale, }
 \DoxyCodeLine{50                   \textcolor{keywordtype}{bool} DEBUG, \textcolor{keywordtype}{bool} binwid, TCanvas \& canvas) \{}
 \DoxyCodeLine{51                   }
 \DoxyCodeLine{52     \textcolor{keywordtype}{int} logscale = 0;}
 \DoxyCodeLine{53     }
 \DoxyCodeLine{54     \textcolor{comment}{// Read in signal, background, and data names and colors}}
-\DoxyCodeLine{55     NuConfig sigkey = config.GetConfig(\textcolor{stringliteral}{"{}signal"{}});}
+\DoxyCodeLine{55     \mbox{\hyperlink{class_nu_config}{NuConfig}} sigkey = config.GetConfig(\textcolor{stringliteral}{"{}signal"{}});}
 \DoxyCodeLine{56     std::cout << std::endl << \textcolor{stringliteral}{"{}    Loading signal key"{}} << std::endl;}
 \DoxyCodeLine{57     std::string sig = sigkey.GetString(sample);}
-\DoxyCodeLine{58     NuConfig bkgkey = config.GetConfig(\textcolor{stringliteral}{"{}background"{}});}
+\DoxyCodeLine{58     \mbox{\hyperlink{class_nu_config}{NuConfig}} bkgkey = config.GetConfig(\textcolor{stringliteral}{"{}background"{}});}
 \DoxyCodeLine{59     std::vector<std::string> bkg = bkgkey.GetStringVector(sample);}
 \DoxyCodeLine{60     std::cout << \textcolor{stringliteral}{"{}    Loading background key:"{}} << std::endl;}
-\DoxyCodeLine{61     NuConfig datkey = config.GetConfig(\textcolor{stringliteral}{"{}data"{}});}
+\DoxyCodeLine{61     \mbox{\hyperlink{class_nu_config}{NuConfig}} datkey = config.GetConfig(\textcolor{stringliteral}{"{}data"{}});}
 \DoxyCodeLine{62     std::string dat = datkey.GetString(sample);}
 \DoxyCodeLine{63     std::cout << \textcolor{stringliteral}{"{}    Loading data key:"{}} << std::endl;}
 \DoxyCodeLine{64     }
 \DoxyCodeLine{65     }
-\DoxyCodeLine{66     NuConfig sampleConfig = samplesConfig.GetConfig(sample);}
-\DoxyCodeLine{67     NuConfig colorFillConfig = sampleConfig.GetConfig(\textcolor{stringliteral}{"{}fill\_colors"{}});}
-\DoxyCodeLine{68     NuConfig colorLineConfig = sampleConfig.GetConfig(\textcolor{stringliteral}{"{}line\_colors"{}});}
-\DoxyCodeLine{69     NuConfig legendEntries = sampleConfig.GetConfig(\textcolor{stringliteral}{"{}legend\_entries"{}});}
+\DoxyCodeLine{66     \mbox{\hyperlink{class_nu_config}{NuConfig}} sampleConfig = samplesConfig.GetConfig(sample);}
+\DoxyCodeLine{67     \mbox{\hyperlink{class_nu_config}{NuConfig}} colorFillConfig = sampleConfig.GetConfig(\textcolor{stringliteral}{"{}fill\_colors"{}});}
+\DoxyCodeLine{68     \mbox{\hyperlink{class_nu_config}{NuConfig}} colorLineConfig = sampleConfig.GetConfig(\textcolor{stringliteral}{"{}line\_colors"{}});}
+\DoxyCodeLine{69     \mbox{\hyperlink{class_nu_config}{NuConfig}} legendEntries = sampleConfig.GetConfig(\textcolor{stringliteral}{"{}legend\_entries"{}});}
 \DoxyCodeLine{70     }
 \DoxyCodeLine{71     }
 \DoxyCodeLine{72     \textcolor{comment}{// Set colors}}
@@ -123,7 +123,7 @@
 \DoxyCodeLine{119 }
 \DoxyCodeLine{120   \textcolor{comment}{// Get variable titles}}
 \DoxyCodeLine{121   std::string title = sample + \textcolor{stringliteral}{"{}\_"{}} + variable;}
-\DoxyCodeLine{122   NuConfig variableConfig = variables1DConfig.GetConfig(variable);}
+\DoxyCodeLine{122   \mbox{\hyperlink{class_nu_config}{NuConfig}} variableConfig = variables1DConfig.GetConfig(variable);}
 \DoxyCodeLine{123   std::string xtitle = variableConfig.GetString(\textcolor{stringliteral}{"{}title"{}});}
 \DoxyCodeLine{124   std::string ytitle;}
 \DoxyCodeLine{125   \textcolor{keywordflow}{if}(binwid) ytitle = \textcolor{stringliteral}{"{}Events per "{}} + variableConfig.GetString(\textcolor{stringliteral}{"{}units"{}});}

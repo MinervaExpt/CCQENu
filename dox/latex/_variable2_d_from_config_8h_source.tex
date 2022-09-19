@@ -18,9 +18,9 @@
 \DoxyCodeLine{14 }
 \DoxyCodeLine{15 \textcolor{keyword}{namespace }CCQENu \{}
 \DoxyCodeLine{16 }
-\DoxyCodeLine{17 \textcolor{keyword}{class }\mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable2_d_from_config}{Variable2DFromConfig}} : \textcolor{keyword}{public} PlotUtils::Variable2DBase<CVUniverse> \{}
+\DoxyCodeLine{17 \textcolor{keyword}{class }Variable2DFromConfig : \textcolor{keyword}{public} PlotUtils::Variable2DBase<CVUniverse> \{}
 \DoxyCodeLine{18 \textcolor{keyword}{private}:}
-\DoxyCodeLine{19   \textcolor{keyword}{typedef} \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{PlotUtils::Hist2DWrapperMap<CVUniverse>}} \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}};}
+\DoxyCodeLine{19   \textcolor{keyword}{typedef} \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{PlotUtils::Hist2DWrapperMap<CVUniverse>}} HM2D;}
 \DoxyCodeLine{20 }
 \DoxyCodeLine{21   \textcolor{keyword}{typedef} PlotUtils::MnvH1D MH1D;}
 \DoxyCodeLine{22   \textcolor{keyword}{typedef} PlotUtils::MnvH2D MH2D;}
@@ -37,30 +37,30 @@
 \DoxyCodeLine{33 }
 \DoxyCodeLine{34   \textcolor{comment}{// NHV 3/16/21 replace templated version with explicit ones so we can use a config without changing the base class.}}
 \DoxyCodeLine{35 }
-\DoxyCodeLine{36   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable2_d_from_config}{Variable2DFromConfig}}(\textcolor{keyword}{const} std::string name,}
+\DoxyCodeLine{36   Variable2DFromConfig(\textcolor{keyword}{const} std::string name,}
 \DoxyCodeLine{37                        \textcolor{keyword}{const} VariableBase<CVUniverse>\& x,}
 \DoxyCodeLine{38                        \textcolor{keyword}{const} VariableBase<CVUniverse>\& y) :}
-\DoxyCodeLine{39   PlotUtils::Variable2DBase<CVUniverse>(name, x, y )\{}
+\DoxyCodeLine{39   PlotUtils::Variable2DBase<\mbox{\hyperlink{class_c_v_universe}{CVUniverse}}>(name, x, y )\{}
 \DoxyCodeLine{40     std::vector<std::string> def = \{\textcolor{stringliteral}{"{}data"{}},\textcolor{stringliteral}{"{}selected\_reco"{}},\textcolor{stringliteral}{"{}selected\_truth"{}},\textcolor{stringliteral}{"{}response"{}},\textcolor{stringliteral}{"{}truth"{}}\};}
 \DoxyCodeLine{41    \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} s:def)\{}
 \DoxyCodeLine{42      m\_for.push\_back(s);}
 \DoxyCodeLine{43    \}}
 \DoxyCodeLine{44   \};}
 \DoxyCodeLine{45 }
-\DoxyCodeLine{46   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable2_d_from_config}{Variable2DFromConfig}}(\textcolor{keyword}{const} VariableBase<CVUniverse>\& x,}
+\DoxyCodeLine{46   Variable2DFromConfig(\textcolor{keyword}{const} VariableBase<CVUniverse>\& x,}
 \DoxyCodeLine{47                        \textcolor{keyword}{const} VariableBase<CVUniverse>\& y) :}
-\DoxyCodeLine{48   PlotUtils::Variable2DBase<CVUniverse>(x, y )\{}
+\DoxyCodeLine{48   PlotUtils::Variable2DBase<\mbox{\hyperlink{class_c_v_universe}{CVUniverse}}>(x, y )\{}
 \DoxyCodeLine{49     std::vector<std::string> def = \{\textcolor{stringliteral}{"{}data"{}},\textcolor{stringliteral}{"{}selected\_reco"{}},\textcolor{stringliteral}{"{}selected\_truth"{}},\textcolor{stringliteral}{"{}response"{}},\textcolor{stringliteral}{"{}truth"{}}\};}
 \DoxyCodeLine{50    \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} s:def)\{}
 \DoxyCodeLine{51      m\_for.push\_back(s);}
 \DoxyCodeLine{52    \}}
 \DoxyCodeLine{53   \};}
 \DoxyCodeLine{54 }
-\DoxyCodeLine{55   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable2_d_from_config}{Variable2DFromConfig}}(\textcolor{keyword}{const} std::string name,}
+\DoxyCodeLine{55   Variable2DFromConfig(\textcolor{keyword}{const} std::string name,}
 \DoxyCodeLine{56                        \textcolor{keyword}{const} VariableBase<CVUniverse>\& x,}
 \DoxyCodeLine{57                        \textcolor{keyword}{const} VariableBase<CVUniverse>\& y,}
-\DoxyCodeLine{58                        \textcolor{keyword}{const} NuConfig config) :}
-\DoxyCodeLine{59   PlotUtils::Variable2DBase<CVUniverse>(name, x, y)\{}
+\DoxyCodeLine{58                        \textcolor{keyword}{const} \mbox{\hyperlink{class_nu_config}{NuConfig}} config) :}
+\DoxyCodeLine{59   PlotUtils::Variable2DBase<\mbox{\hyperlink{class_c_v_universe}{CVUniverse}}>(name, x, y)\{}
 \DoxyCodeLine{60     \textcolor{keywordflow}{if} (config.IsMember(\textcolor{stringliteral}{"{}for"{}}))\{}
 \DoxyCodeLine{61       m\_for = config.GetStringVector(\textcolor{stringliteral}{"{}for"{}});}
 \DoxyCodeLine{62     \}}
@@ -72,11 +72,11 @@
 \DoxyCodeLine{68     \}}
 \DoxyCodeLine{69   \};}
 \DoxyCodeLine{70 }
-\DoxyCodeLine{71   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable2_d_from_config}{Variable2DFromConfig}}(\textcolor{keyword}{const} std::string name,}
+\DoxyCodeLine{71   Variable2DFromConfig(\textcolor{keyword}{const} std::string name,}
 \DoxyCodeLine{72                        \textcolor{keyword}{const} \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable_from_config}{CCQENu::VariableFromConfig}}\& x,}
 \DoxyCodeLine{73                        \textcolor{keyword}{const} \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable_from_config}{CCQENu::VariableFromConfig}}\& y,}
 \DoxyCodeLine{74                        \textcolor{keyword}{const} std::vector<std::string> fors) :}
-\DoxyCodeLine{75   PlotUtils::Variable2DBase<CVUniverse>(name, x, y)\{}
+\DoxyCodeLine{75   PlotUtils::Variable2DBase<\mbox{\hyperlink{class_c_v_universe}{CVUniverse}}>(name, x, y)\{}
 \DoxyCodeLine{76     \textcolor{keywordflow}{if} (fors.size()>0)\{}
 \DoxyCodeLine{77       \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} s:fors)\{}
 \DoxyCodeLine{78         m\_for.push\_back(s);}
@@ -116,13 +116,13 @@
 \DoxyCodeLine{112   \textcolor{comment}{//=======================================================================================}}
 \DoxyCodeLine{113   \textcolor{comment}{// Histwrappers -\/-\/ selected mc, selected data}}
 \DoxyCodeLine{114 }
-\DoxyCodeLine{115   \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}} m\_selected\_mc\_reco;}
-\DoxyCodeLine{116   \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}} m\_tuned\_mc\_reco; \textcolor{comment}{// HM for tuned MC hists used for background subtraction -\/NHV}}
-\DoxyCodeLine{117   \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}} m\_selected\_mc\_truth;}
-\DoxyCodeLine{118   \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}} m\_tuned\_selected\_mc\_truth;}
-\DoxyCodeLine{119   \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}} m\_signal\_mc\_truth;}
-\DoxyCodeLine{120   \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}} m\_tuned\_signal\_mc\_truth;}
-\DoxyCodeLine{121   \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}} m\_selected\_data;}
+\DoxyCodeLine{115   HM2D m\_selected\_mc\_reco;}
+\DoxyCodeLine{116   HM2D m\_tuned\_mc\_reco; \textcolor{comment}{// HM for tuned MC hists used for background subtraction -\/NHV}}
+\DoxyCodeLine{117   HM2D m\_selected\_mc\_truth;}
+\DoxyCodeLine{118   HM2D m\_tuned\_selected\_mc\_truth;}
+\DoxyCodeLine{119   HM2D m\_signal\_mc\_truth;}
+\DoxyCodeLine{120   HM2D m\_tuned\_signal\_mc\_truth;}
+\DoxyCodeLine{121   HM2D m\_selected\_data;}
 \DoxyCodeLine{122   UniverseMap m\_universes; \textcolor{comment}{//need to change this?}}
 \DoxyCodeLine{123   std::string m\_units;}
 \DoxyCodeLine{124   std::map<const std::string, bool> hasData;}
@@ -177,7 +177,7 @@
 \DoxyCodeLine{173     std::vector<double> xbins = GetBinVecX();}
 \DoxyCodeLine{174     std::vector<double> ybins = GetBinVecY();}
 \DoxyCodeLine{175 }
-\DoxyCodeLine{176     m\_selected\_mc\_reco = \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}}(Form(\textcolor{stringliteral}{"{}\%s"{}},GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, univs, tags); \textcolor{comment}{//Hist2DWrapper doesn't need nbins for variable binning}}
+\DoxyCodeLine{176     m\_selected\_mc\_reco = HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}},GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, univs, tags); \textcolor{comment}{//Hist2DWrapper doesn't need nbins for variable binning}}
 \DoxyCodeLine{177     m\_selected\_mc\_reco.AppendName(\textcolor{stringliteral}{"{}reconstructed"{}},tags);}
 \DoxyCodeLine{178   \}}
 \DoxyCodeLine{179 }
@@ -202,7 +202,7 @@
 \DoxyCodeLine{198     std::vector<double> xbins = GetBinVecX();}
 \DoxyCodeLine{199     std::vector<double> ybins = GetBinVecY();}
 \DoxyCodeLine{200 }
-\DoxyCodeLine{201     m\_selected\_mc\_truth = \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, univs, tags); \textcolor{comment}{//Hist2DWrapper doesn't need nbins for variable binning}}
+\DoxyCodeLine{201     m\_selected\_mc\_truth = HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, univs, tags); \textcolor{comment}{//Hist2DWrapper doesn't need nbins for variable binning}}
 \DoxyCodeLine{202     m\_selected\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}selected\_truth"{}},tags); \textcolor{comment}{// patch to conform to CCQENU standardm\_selected\_mc\_truth.AppendName("{}\_truth"{},tags); // patch to conform to CCQENU standard}}
 \DoxyCodeLine{203   \}}
 \DoxyCodeLine{204 }
@@ -229,7 +229,7 @@
 \DoxyCodeLine{225     std::vector<double> ybins = GetBinVecY();}
 \DoxyCodeLine{226 }
 \DoxyCodeLine{227 }
-\DoxyCodeLine{228     m\_signal\_mc\_truth = \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, univs, tags);}
+\DoxyCodeLine{228     m\_signal\_mc\_truth = HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, univs, tags);}
 \DoxyCodeLine{229     m\_signal\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}all\_truth"{}},tags);}
 \DoxyCodeLine{230   \}}
 \DoxyCodeLine{231 }
@@ -252,7 +252,7 @@
 \DoxyCodeLine{248     std::vector<double> xbins = GetBinVecX();}
 \DoxyCodeLine{249     std::vector<double> ybins = GetBinVecY();}
 \DoxyCodeLine{250 }
-\DoxyCodeLine{251     m\_selected\_data = \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, univs, tags); \textcolor{comment}{//Hist2DWrapper doesn't need nbins for variable binning}}
+\DoxyCodeLine{251     m\_selected\_data = HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, univs, tags); \textcolor{comment}{//Hist2DWrapper doesn't need nbins for variable binning}}
 \DoxyCodeLine{252     m\_selected\_data.AppendName(\textcolor{stringliteral}{"{}reconstructed"{}},tags);}
 \DoxyCodeLine{253   \}}
 \DoxyCodeLine{254 }
@@ -273,15 +273,15 @@
 \DoxyCodeLine{269 }
 \DoxyCodeLine{270     \textcolor{comment}{// Check which categories are configured and add a tuned version}}
 \DoxyCodeLine{271     \textcolor{keywordflow}{if} (std::count(m\_for.begin(), m\_for.end(),\textcolor{stringliteral}{"{}selected\_reco"{}})>=1)\{}
-\DoxyCodeLine{272       m\_tuned\_mc\_reco = \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, reco\_univs, tuned\_tags);}
+\DoxyCodeLine{272       m\_tuned\_mc\_reco = HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, reco\_univs, tuned\_tags);}
 \DoxyCodeLine{273       m\_tuned\_mc\_reco.AppendName(\textcolor{stringliteral}{"{}reconstructed\_tuned"{}},tuned\_tags);}
 \DoxyCodeLine{274     \}}
 \DoxyCodeLine{275     \textcolor{keywordflow}{if} (std::count(m\_for.begin(), m\_for.end(),\textcolor{stringliteral}{"{}selected\_truth"{}})>=1) \{}
-\DoxyCodeLine{276       m\_tuned\_selected\_mc\_truth = \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, reco\_univs, tuned\_tags);}
+\DoxyCodeLine{276       m\_tuned\_selected\_mc\_truth = HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, reco\_univs, tuned\_tags);}
 \DoxyCodeLine{277       m\_tuned\_selected\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}selected\_truth\_tuned"{}},tuned\_tags);}
 \DoxyCodeLine{278     \}}
 \DoxyCodeLine{279     \textcolor{keywordflow}{if} (std::count(m\_for.begin(), m\_for.end(),\textcolor{stringliteral}{"{}truth"{}})>=1) \{}
-\DoxyCodeLine{280       m\_tuned\_signal\_mc\_truth = \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{HM2D}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, truth\_univs, tuned\_tags);}
+\DoxyCodeLine{280       m\_tuned\_signal\_mc\_truth = HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label+\textcolor{stringliteral}{"{};"{}}+m\_yaxis\_label).c\_str(), xbins, ybins, truth\_univs, tuned\_tags);}
 \DoxyCodeLine{281       m\_tuned\_signal\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}all\_truth\_tuned"{}},tuned\_tags);}
 \DoxyCodeLine{282     \}}
 \DoxyCodeLine{283 }

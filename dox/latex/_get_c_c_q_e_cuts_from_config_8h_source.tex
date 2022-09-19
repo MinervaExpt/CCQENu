@@ -20,7 +20,7 @@
 \DoxyCodeLine{16 \textcolor{comment}{// shorthand for std::vector<std::unique\_ptr<PlotUtils::Cut<UNIVERSE, EVENT>>>;}}
 \DoxyCodeLine{17 \textcolor{comment}{//============================================================================}}
 \DoxyCodeLine{18 \textcolor{keyword}{template} <\textcolor{keyword}{class} UNIVERSE, \textcolor{keyword}{class} EVENT = PlotUtils::detail::empty>}
-\DoxyCodeLine{19 PlotUtils::cuts\_t<UNIVERSE> GetCCQECutsFromConfig(NuConfig \& config )}
+\DoxyCodeLine{19 PlotUtils::cuts\_t<UNIVERSE> GetCCQECutsFromConfig(\mbox{\hyperlink{class_nu_config}{NuConfig}} \& config )}
 \DoxyCodeLine{20 \{}
 \DoxyCodeLine{21   \textcolor{keyword}{typedef} std::function<double(\textcolor{keyword}{const} UNIVERSE\&)> PointerToCVUniverseFunction;}
 \DoxyCodeLine{22   PlotUtils::cuts\_t<UNIVERSE, EVENT> ccqe\_cuts;}
@@ -111,7 +111,7 @@
 \DoxyCodeLine{107 \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/signal}}
 \DoxyCodeLine{108 }
 \DoxyCodeLine{109 \textcolor{keyword}{template} <\textcolor{keyword}{class} UNIVERSE>}
-\DoxyCodeLine{110 PlotUtils::constraints\_t<UNIVERSE> GetCCQEPhaseSpaceFromConfig(NuConfig \& config)}
+\DoxyCodeLine{110 PlotUtils::constraints\_t<UNIVERSE> GetCCQEPhaseSpaceFromConfig(\mbox{\hyperlink{class_nu_config}{NuConfig}} \& config)}
 \DoxyCodeLine{111 \{}
 \DoxyCodeLine{112  }
 \DoxyCodeLine{113 }
@@ -166,7 +166,7 @@
 \DoxyCodeLine{162 \textcolor{comment}{// CCQELike -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/ // this is actually identical to the fiducial stuff}}
 \DoxyCodeLine{163 }
 \DoxyCodeLine{164 \textcolor{keyword}{template} <\textcolor{keyword}{class} UNIVERSE>}
-\DoxyCodeLine{165 PlotUtils::constraints\_t<UNIVERSE> GetCCQESignalFromConfig(NuConfig \& config)}
+\DoxyCodeLine{165 PlotUtils::constraints\_t<UNIVERSE> GetCCQESignalFromConfig(\mbox{\hyperlink{class_nu_config}{NuConfig}} \& config)}
 \DoxyCodeLine{166 \{}
 \DoxyCodeLine{167     \textcolor{keyword}{typedef} std::function<double(\textcolor{keyword}{const} UNIVERSE\&)> PointerToCVUniverseFunction;}
 \DoxyCodeLine{168     PlotUtils::constraints\_t<UNIVERSE> signalDef;}

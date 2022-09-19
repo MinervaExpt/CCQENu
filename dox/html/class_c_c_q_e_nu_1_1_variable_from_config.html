@@ -89,11 +89,12 @@ Collaboration diagram for CCQENu::VariableFromConfig:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_c_c_q_e_nu_1_1_variable_from_config__coll__graph.png" border="0" usemap="#a_c_c_q_e_nu_1_1_variable_from_config_coll__map" alt="Collaboration graph"/></div>
 <map name="a_c_c_q_e_nu_1_1_variable_from_config_coll__map" id="a_c_c_q_e_nu_1_1_variable_from_config_coll__map">
-<area shape="rect" title=" " alt="" coords="5,379,208,405"/>
-<area shape="rect" title=" " alt="" coords="7,157,163,199"/>
-<area shape="rect" href="class_plot_utils_1_1_hist_wrapper_map.html" title=" " alt="" coords="188,157,367,199"/>
-<area shape="rect" href="class_c_v_universe.html" title=" " alt="" coords="231,81,324,108"/>
-<area shape="rect" title=" " alt="" coords="188,5,367,32"/>
+<area shape="rect" title=" " alt="" coords="5,392,208,419"/>
+<area shape="rect" title=" " alt="" coords="29,171,185,212"/>
+<area shape="rect" href="class_plot_utils_1_1_hist_wrapper_map.html" title=" " alt="" coords="209,171,388,212"/>
+<area shape="rect" href="class_c_v_universe.html" title=" " alt="" coords="252,95,345,121"/>
+<area shape="rect" title=" " alt="" coords="133,5,312,32"/>
+<area shape="rect" href="class_nu_config.html" title=" " alt="" coords="336,5,413,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -102,11 +103,61 @@ Public Types</h2></td></tr>
 <tr class="memitem:a9e941ffc190584927ed345fc73c200d2"><td class="memItemLeft" align="right" valign="top"><a id="a9e941ffc190584927ed345fc73c200d2" name="a9e941ffc190584927ed345fc73c200d2"></a>
 typedef std::map&lt; std::string, std::vector&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>UniverseMap</b></td></tr>
 <tr class="separator:a9e941ffc190584927ed345fc73c200d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e941ffc190584927ed345fc73c200d2"><td class="memItemLeft" align="right" valign="top"><a id="a9e941ffc190584927ed345fc73c200d2" name="a9e941ffc190584927ed345fc73c200d2"></a>
+typedef std::map&lt; std::string, std::vector&lt; <a class="el" href="class_c_v_universe.html">CVUniverse</a> * &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>UniverseMap</b></td></tr>
+<tr class="separator:a9e941ffc190584927ed345fc73c200d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aaab451b4e7e487068409be64b7c87a79"><td class="memItemLeft" align="right" valign="top"><a id="aaab451b4e7e487068409be64b7c87a79" name="aaab451b4e7e487068409be64b7c87a79"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>VariableFromConfig</b> (const NuConfig config)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>VariableFromConfig</b> (const <a class="el" href="class_nu_config.html">NuConfig</a> config)</td></tr>
+<tr class="separator:aaab451b4e7e487068409be64b7c87a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8aa4e42ec1044658be0d54240b884713"><td class="memItemLeft" align="right" valign="top"><a id="a8aa4e42ec1044658be0d54240b884713" name="a8aa4e42ec1044658be0d54240b884713"></a>
+virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><b>GetUnits</b> ()</td></tr>
+<tr class="separator:a8aa4e42ec1044658be0d54240b884713"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a713b3ec6f2a8c0ffb5d1c7075aee9ced"><td class="memItemLeft" align="right" valign="top"><a id="a713b3ec6f2a8c0ffb5d1c7075aee9ced" name="a713b3ec6f2a8c0ffb5d1c7075aee9ced"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>SetUnits</b> (std::string units)</td></tr>
+<tr class="separator:a713b3ec6f2a8c0ffb5d1c7075aee9ced"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90a3511c8c5a4bad6ae5cbfeae76e4c6"><td class="memItemLeft" align="right" valign="top"><a id="a90a3511c8c5a4bad6ae5cbfeae76e4c6" name="a90a3511c8c5a4bad6ae5cbfeae76e4c6"></a>
+virtual int&#160;</td><td class="memItemRight" valign="bottom"><b>GetTuned</b> ()</td></tr>
+<tr class="separator:a90a3511c8c5a4bad6ae5cbfeae76e4c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c76dbf76ad2fd3117e65e1adef09b4a"><td class="memItemLeft" align="right" valign="top"><a id="a0c76dbf76ad2fd3117e65e1adef09b4a" name="a0c76dbf76ad2fd3117e65e1adef09b4a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>AddTags</b> (const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:a0c76dbf76ad2fd3117e65e1adef09b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b41ae73e4fbfbdada9b0ae81e37f4df"><td class="memTemplParams" colspan="2"><a id="a8b41ae73e4fbfbdada9b0ae81e37f4df" name="a8b41ae73e4fbfbdada9b0ae81e37f4df"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a8b41ae73e4fbfbdada9b0ae81e37f4df"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>InitializeMCHistograms</b> (T univs, const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:a8b41ae73e4fbfbdada9b0ae81e37f4df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2aacf25fc3bf11b56c256244bdb2feb3"><td class="memTemplParams" colspan="2"><a id="a2aacf25fc3bf11b56c256244bdb2feb3" name="a2aacf25fc3bf11b56c256244bdb2feb3"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a2aacf25fc3bf11b56c256244bdb2feb3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>InitializeSelectedTruthHistograms</b> (T univs, const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:a2aacf25fc3bf11b56c256244bdb2feb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1321897bb7f60eeacb3a5b84faf4800"><td class="memTemplParams" colspan="2"><a id="aa1321897bb7f60eeacb3a5b84faf4800" name="aa1321897bb7f60eeacb3a5b84faf4800"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aa1321897bb7f60eeacb3a5b84faf4800"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>InitializeTruthHistograms</b> (T univs, const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:aa1321897bb7f60eeacb3a5b84faf4800"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa703713bb0b83bab1eaa948734a00001"><td class="memTemplParams" colspan="2"><a id="aa703713bb0b83bab1eaa948734a00001" name="aa703713bb0b83bab1eaa948734a00001"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aa703713bb0b83bab1eaa948734a00001"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>InitializeDataHistograms</b> (T univs, const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:aa703713bb0b83bab1eaa948734a00001"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c0be6c1e69b7e874bc814c1929c3323"><td class="memTemplParams" colspan="2"><a id="a1c0be6c1e69b7e874bc814c1929c3323" name="a1c0be6c1e69b7e874bc814c1929c3323"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a1c0be6c1e69b7e874bc814c1929c3323"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>InitializeTunedMCHistograms</b> (T reco_univs, T truth_univs, const std::vector&lt; std::string &gt; tuned_tags, const std::vector&lt; std::string &gt; response_tags)</td></tr>
+<tr class="separator:a1c0be6c1e69b7e874bc814c1929c3323"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec647b0110e010f1bf7a383c6c5a9c1c"><td class="memItemLeft" align="right" valign="top"><a id="aec647b0110e010f1bf7a383c6c5a9c1c" name="aec647b0110e010f1bf7a383c6c5a9c1c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>AddMCResponse</b> (const std::vector&lt; std::string &gt; tags)</td></tr>
+<tr class="separator:aec647b0110e010f1bf7a383c6c5a9c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01ee8d0369a5b011e92e09b060b321a5"><td class="memItemLeft" align="right" valign="top"><a id="a01ee8d0369a5b011e92e09b060b321a5" name="a01ee8d0369a5b011e92e09b060b321a5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>WriteAllHistogramsToFile</b> (TFile &amp;f)</td></tr>
+<tr class="separator:a01ee8d0369a5b011e92e09b060b321a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae146512cb7c9dd45fb3a82f034edf4e3"><td class="memItemLeft" align="right" valign="top"><a id="ae146512cb7c9dd45fb3a82f034edf4e3" name="ae146512cb7c9dd45fb3a82f034edf4e3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SyncAllHists</b> ()</td></tr>
+<tr class="separator:ae146512cb7c9dd45fb3a82f034edf4e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1fea9b4672e4e2566d2d0d9261edd17"><td class="memItemLeft" align="right" valign="top"><a id="ad1fea9b4672e4e2566d2d0d9261edd17" name="ad1fea9b4672e4e2566d2d0d9261edd17"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>FillResponse</b> (std::string tag, <a class="el" href="class_c_v_universe.html">CVUniverse</a> *univ, const double value, const double truth, const double weight, const double scale=1.0)</td></tr>
+<tr class="separator:ad1fea9b4672e4e2566d2d0d9261edd17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaab451b4e7e487068409be64b7c87a79"><td class="memItemLeft" align="right" valign="top"><a id="aaab451b4e7e487068409be64b7c87a79" name="aaab451b4e7e487068409be64b7c87a79"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>VariableFromConfig</b> (const <a class="el" href="class_nu_config.html">NuConfig</a> config)</td></tr>
 <tr class="separator:aaab451b4e7e487068409be64b7c87a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8aa4e42ec1044658be0d54240b884713"><td class="memItemLeft" align="right" valign="top"><a id="a8aa4e42ec1044658be0d54240b884713" name="a8aa4e42ec1044658be0d54240b884713"></a>
 virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><b>GetUnits</b> ()</td></tr>
@@ -182,35 +233,36 @@ UniverseMap&#160;</td><td class="memItemRight" valign="bottom"><b>m_universes</b
 <tr class="memitem:a0bc30300ff0bbcd10881304a0d3ad7e8"><td class="memItemLeft" align="right" valign="top"><a id="a0bc30300ff0bbcd10881304a0d3ad7e8" name="a0bc30300ff0bbcd10881304a0d3ad7e8"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_units</b></td></tr>
 <tr class="separator:a0bc30300ff0bbcd10881304a0d3ad7e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb553e43b24f5bb94ebfd67b0e14f266"><td class="memItemLeft" align="right" valign="top"><a id="adb553e43b24f5bb94ebfd67b0e14f266" name="adb553e43b24f5bb94ebfd67b0e14f266"></a>
+<tr class="memitem:a6c2f5af2dfd12381009d594a91709eef"><td class="memItemLeft" align="right" valign="top"><a id="a6c2f5af2dfd12381009d594a91709eef" name="a6c2f5af2dfd12381009d594a91709eef"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasData</b></td></tr>
-<tr class="separator:adb553e43b24f5bb94ebfd67b0e14f266"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeff9c2d01f58c28c2f91536f63305987"><td class="memItemLeft" align="right" valign="top"><a id="aeff9c2d01f58c28c2f91536f63305987" name="aeff9c2d01f58c28c2f91536f63305987"></a>
+<tr class="separator:a6c2f5af2dfd12381009d594a91709eef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5d724e9e203f298c246a837f2ee2d5e"><td class="memItemLeft" align="right" valign="top"><a id="ac5d724e9e203f298c246a837f2ee2d5e" name="ac5d724e9e203f298c246a837f2ee2d5e"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasMC</b></td></tr>
-<tr class="separator:aeff9c2d01f58c28c2f91536f63305987"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b2f72afc7f467d2575890d0b1ceb245"><td class="memItemLeft" align="right" valign="top"><a id="a4b2f72afc7f467d2575890d0b1ceb245" name="a4b2f72afc7f467d2575890d0b1ceb245"></a>
+<tr class="separator:ac5d724e9e203f298c246a837f2ee2d5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33a32b8598eaf6ffdea89890fdab9b8f"><td class="memItemLeft" align="right" valign="top"><a id="a33a32b8598eaf6ffdea89890fdab9b8f" name="a33a32b8598eaf6ffdea89890fdab9b8f"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasSelectedTruth</b></td></tr>
-<tr class="separator:a4b2f72afc7f467d2575890d0b1ceb245"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b71a3f37c733e7fde1fe8750943ba9a"><td class="memItemLeft" align="right" valign="top"><a id="a7b71a3f37c733e7fde1fe8750943ba9a" name="a7b71a3f37c733e7fde1fe8750943ba9a"></a>
+<tr class="separator:a33a32b8598eaf6ffdea89890fdab9b8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae06ad3a70abf6be13ff1d28c1199696"><td class="memItemLeft" align="right" valign="top"><a id="aae06ad3a70abf6be13ff1d28c1199696" name="aae06ad3a70abf6be13ff1d28c1199696"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasTruth</b></td></tr>
-<tr class="separator:a7b71a3f37c733e7fde1fe8750943ba9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac43a71caf08c99f34ab411e5b078e3cf"><td class="memItemLeft" align="right" valign="top"><a id="ac43a71caf08c99f34ab411e5b078e3cf" name="ac43a71caf08c99f34ab411e5b078e3cf"></a>
+<tr class="separator:aae06ad3a70abf6be13ff1d28c1199696"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96b37935f52e8138b971e5b47abbe348"><td class="memItemLeft" align="right" valign="top"><a id="a96b37935f52e8138b971e5b47abbe348" name="a96b37935f52e8138b971e5b47abbe348"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasResponse</b></td></tr>
-<tr class="separator:ac43a71caf08c99f34ab411e5b078e3cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b64944c84e9a65431c003d049e97dbc"><td class="memItemLeft" align="right" valign="top"><a id="a3b64944c84e9a65431c003d049e97dbc" name="a3b64944c84e9a65431c003d049e97dbc"></a>
+<tr class="separator:a96b37935f52e8138b971e5b47abbe348"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d25c9704bf6b6565d69a1655ddb47fe"><td class="memItemLeft" align="right" valign="top"><a id="a4d25c9704bf6b6565d69a1655ddb47fe" name="a4d25c9704bf6b6565d69a1655ddb47fe"></a>
 std::map&lt; const std::string, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hasTunedMC</b></td></tr>
-<tr class="separator:a3b64944c84e9a65431c003d049e97dbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5e30745973478bbf2fe742ed9cc38c5"><td class="memItemLeft" align="right" valign="top"><a id="aa5e30745973478bbf2fe742ed9cc38c5" name="aa5e30745973478bbf2fe742ed9cc38c5"></a>
+<tr class="separator:a4d25c9704bf6b6565d69a1655ddb47fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bfb47c50caf1449f293291e70b53377"><td class="memItemLeft" align="right" valign="top"><a id="a0bfb47c50caf1449f293291e70b53377" name="a0bfb47c50caf1449f293291e70b53377"></a>
 std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_tags</b></td></tr>
-<tr class="separator:aa5e30745973478bbf2fe742ed9cc38c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff88d28f0b333908c10ec697cd3c5416"><td class="memItemLeft" align="right" valign="top"><a id="aff88d28f0b333908c10ec697cd3c5416" name="aff88d28f0b333908c10ec697cd3c5416"></a>
+<tr class="separator:a0bfb47c50caf1449f293291e70b53377"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd373b6f90287be2bad4d961ca51e535"><td class="memItemLeft" align="right" valign="top"><a id="afd373b6f90287be2bad4d961ca51e535" name="afd373b6f90287be2bad4d961ca51e535"></a>
 std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_for</b></td></tr>
-<tr class="separator:aff88d28f0b333908c10ec697cd3c5416"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:afd373b6f90287be2bad4d961ca51e535"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec30814d527b93a20560e7d4c746d3c4"><td class="memItemLeft" align="right" valign="top"><a id="aec30814d527b93a20560e7d4c746d3c4" name="aec30814d527b93a20560e7d4c746d3c4"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>m_tunedmc</b></td></tr>
 <tr class="separator:aec30814d527b93a20560e7d4c746d3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>make_hists/include/Sep18/<a class="el" href="_sep18_2_variable_from_config_8h_source.html">VariableFromConfig.h</a></li>
 <li>make_hists/include/<a class="el" href="_variable_from_config_8h_source.html">VariableFromConfig.h</a></li>
 </ul>
 </div><!-- contents -->

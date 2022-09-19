@@ -24,11 +24,11 @@
 \DoxyCodeLine{20   std::string m\_name;}
 \DoxyCodeLine{21   std::vector<std::string> m\_for;}
 \DoxyCodeLine{22 }
-\DoxyCodeLine{23   NuConfig m\_config;}
+\DoxyCodeLine{23   \mbox{\hyperlink{class_nu_config}{NuConfig}} m\_config;}
 \DoxyCodeLine{24 \textcolor{keyword}{public}:}
 \DoxyCodeLine{25   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_category}{Category}}()\{\};}
 \DoxyCodeLine{26   \textcolor{comment}{// constructor;}}
-\DoxyCodeLine{27   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_category}{Category}}(\textcolor{keyword}{const} std::string key, \textcolor{keyword}{const} NuConfig config)\{}
+\DoxyCodeLine{27   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_category}{Category}}(\textcolor{keyword}{const} std::string key, \textcolor{keyword}{const} \mbox{\hyperlink{class_nu_config}{NuConfig}} config)\{}
 \DoxyCodeLine{28     }
 \DoxyCodeLine{29     m\_name = key;}
 \DoxyCodeLine{30     m\_for = config.GetStringVector(\textcolor{stringliteral}{"{}for"{}});}
@@ -54,19 +54,19 @@
 \DoxyCodeLine{50 \textcolor{keyword}{private}:}
 \DoxyCodeLine{51   std::string m\_name;}
 \DoxyCodeLine{52   std::string m\_reco;}
-\DoxyCodeLine{53   NuConfig m\_config;}
+\DoxyCodeLine{53   \mbox{\hyperlink{class_nu_config}{NuConfig}} m\_config;}
 \DoxyCodeLine{54   std::string m\_phase\_space;}
 \DoxyCodeLine{55   std::map<const std::string, Category> m\_categories;}
 \DoxyCodeLine{56   std::vector<std::string> m\_signals;}
 \DoxyCodeLine{57   std::vector<std::string> m\_backgrounds;}
 \DoxyCodeLine{58 \textcolor{keyword}{public}:}
-\DoxyCodeLine{59   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_sample}{Sample}}( \textcolor{keyword}{const} NuConfig config)\{}
+\DoxyCodeLine{59   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_sample}{Sample}}( \textcolor{keyword}{const} \mbox{\hyperlink{class_nu_config}{NuConfig}} config)\{}
 \DoxyCodeLine{60     m\_config = config;}
 \DoxyCodeLine{61     m\_name = config.GetString(\textcolor{stringliteral}{"{}name"{}});}
 \DoxyCodeLine{62     m\_reco = config.GetString(\textcolor{stringliteral}{"{}reco"{}});}
 \DoxyCodeLine{63     m\_signals = config.GetStringVector(\textcolor{stringliteral}{"{}signal"{}});}
 \DoxyCodeLine{64     m\_backgrounds = config.GetStringVector(\textcolor{stringliteral}{"{}background"{}});}
-\DoxyCodeLine{65     NuConfig categories = config.GetConfig(\textcolor{stringliteral}{"{}categories"{}});}
+\DoxyCodeLine{65     \mbox{\hyperlink{class_nu_config}{NuConfig}} categories = config.GetConfig(\textcolor{stringliteral}{"{}categories"{}});}
 \DoxyCodeLine{66     std::vector<std::string> Categorylist = categories.GetKeys();}
 \DoxyCodeLine{67     m\_phase\_space = config.GetString(\textcolor{stringliteral}{"{}phase\_space"{}});}
 \DoxyCodeLine{68     \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} key:Categorylist)\{}
