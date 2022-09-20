@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['h_5fscale_0',['h_scale',['../class_plot_utils_1_1weight___m_cre_scale.html#a8c73192150e78f42a7be6392b11cba58',1,'PlotUtils::weight_MCreScale']]],
-  ['hasdata_1',['hasData',['../class_c_c_q_e_nu_1_1_variable2_d_from_config.html#aed46c35fb802da6c1ef5f82017ba2583',1,'CCQENu::Variable2DFromConfig::hasData()'],['../class_c_c_q_e_nu_1_1_variable_from_config.html#adb553e43b24f5bb94ebfd67b0e14f266',1,'CCQENu::VariableFromConfig::hasData()']]],
-  ['hasmc_2',['hasMC',['../class_c_c_q_e_nu_1_1_variable2_d_from_config.html#a3364655880a30448496ab285bb0d0688',1,'CCQENu::Variable2DFromConfig::hasMC()'],['../class_c_c_q_e_nu_1_1_variable_from_config.html#aeff9c2d01f58c28c2f91536f63305987',1,'CCQENu::VariableFromConfig::hasMC()']]],
-  ['hasresponse_3',['hasResponse',['../class_c_c_q_e_nu_1_1_variable2_d_from_config.html#a583f3d0a749536c51b91683204b42ca8',1,'CCQENu::Variable2DFromConfig::hasResponse()'],['../class_c_c_q_e_nu_1_1_variable_from_config.html#ac43a71caf08c99f34ab411e5b078e3cf',1,'CCQENu::VariableFromConfig::hasResponse()']]],
-  ['hasselectedtruth_4',['hasSelectedTruth',['../class_c_c_q_e_nu_1_1_variable2_d_from_config.html#a6542da313019247dc6a5141b761c23e5',1,'CCQENu::Variable2DFromConfig::hasSelectedTruth()'],['../class_c_c_q_e_nu_1_1_variable_from_config.html#a4b2f72afc7f467d2575890d0b1ceb245',1,'CCQENu::VariableFromConfig::hasSelectedTruth()']]],
-  ['hastruth_5',['hasTruth',['../class_c_c_q_e_nu_1_1_variable2_d_from_config.html#a156909f609054483b2b74a7e5d7962f7',1,'CCQENu::Variable2DFromConfig::hasTruth()'],['../class_c_c_q_e_nu_1_1_variable_from_config.html#a7b71a3f37c733e7fde1fe8750943ba9a',1,'CCQENu::VariableFromConfig::hasTruth()']]],
-  ['hastunedmc_6',['hasTunedMC',['../class_c_c_q_e_nu_1_1_variable2_d_from_config.html#ac02055cb41f37e2ab55d206201efc8a6',1,'CCQENu::Variable2DFromConfig::hasTunedMC()'],['../class_c_c_q_e_nu_1_1_variable_from_config.html#a3b64944c84e9a65431c003d049e97dbc',1,'CCQENu::VariableFromConfig::hasTunedMC()']]]
+  ['data_0',['data',['../namespace_background_sub.html#a483c14a2550d10e5baf0b7ceda878d7c',1,'BackgroundSub']]],
+  ['debug_1',['DEBUG',['../analyze__v9_8_c.html#a117352cc494cc62c6b2f1882786a332c',1,'analyze_v9.C']]],
+  ['dir_2',['dir',['../namespace_mnv_h1_d__viewer.html#a7bcc2af2e24024736bbb0f126ceeb416',1,'MnvH1D_viewer']]],
+  ['do_5fcov_5farea_5fnorm_3',['do_cov_area_norm',['../plotting__pdf_8h.html#af653386aa5107f20144b1062c9dec4d4',1,'plotting_pdf.h']]],
+  ['do_5fcov_5farea_5fnorm_5fstr_4',['do_cov_area_norm_str',['../plotting__pdf_8h.html#ac52f1e52abfdb018e763cb55e1b24ff0',1,'plotting_pdf.h']]],
+  ['do_5ffractional_5funcertainty_5',['do_fractional_uncertainty',['../plotting__pdf_8h.html#a25f660d6cd5a56a793c36e12331ed73e',1,'plotting_pdf.h']]],
+  ['do_5ffractional_5funcertainty_5fstr_6',['do_fractional_uncertainty_str',['../plotting__pdf_8h.html#a84de71db48227175206e360bbcbad123',1,'plotting_pdf.h']]],
+  ['draw_5fnormalized_5fto_5fbin_5fwidth_7',['draw_normalized_to_bin_width',['../namespace_background_sub.html#a7bf5715e164cd52ce922be23acf40413',1,'BackgroundSub']]]
 ];

@@ -1,12 +1,11 @@
 <map id="make_hists/include/CVFunctions.h" name="make_hists/include/CVFunctions.h">
-<area shape="rect" id="node1" title=" " alt="" coords="189,5,325,47"/>
-<area shape="rect" id="node2" href="$_g_____c_c_q_e_m_a_t_8cxx.html" title=" " alt="" coords="5,281,212,307"/>
-<area shape="rect" id="node3" href="$_cut_from_config_8h.html" title=" " alt="" coords="189,95,325,136"/>
-<area shape="rect" id="node7" href="$_variable_from_config_8h.html" title=" " alt="" coords="457,95,611,136"/>
-<area shape="rect" id="node4" href="$_get_c_c_q_e_cuts_from_config_8h.html" title=" " alt="" coords="225,184,419,225"/>
-<area shape="rect" id="node5" href="$sidebands_8_c.html" title=" " alt="" coords="451,281,617,307"/>
-<area shape="rect" id="node6" href="$sidebands__v2_8_c.html" title=" " alt="" coords="237,281,426,307"/>
-<area shape="rect" id="node8" href="$_get2_d_variables_from_config_8cxx.html" title=" " alt="" coords="701,184,913,225"/>
-<area shape="rect" id="node9" href="$_get_variables_from_config_8cxx.html" title=" " alt="" coords="642,273,837,315"/>
-<area shape="rect" id="node10" href="$_get_variables_from_config_8h.html" title=" " alt="" coords="443,184,625,225"/>
+<area shape="rect" id="node1" title=" " alt="" coords="235,5,371,47"/>
+<area shape="rect" id="node2" href="$_cut_from_config_8h.html" title=" " alt="" coords="151,95,287,136"/>
+<area shape="rect" id="node6" href="$_variable_from_config_8h.html" title=" " alt="" coords="332,95,487,136"/>
+<area shape="rect" id="node3" href="$_get_c_c_q_e_cuts_from_config_8h.html" title=" " alt="" coords="37,184,230,225"/>
+<area shape="rect" id="node4" href="$sidebands_8_c.html" title=" " alt="" coords="219,281,386,307"/>
+<area shape="rect" id="node5" href="$sidebands__v2_8_c.html" title=" " alt="" coords="5,281,195,307"/>
+<area shape="rect" id="node7" href="$_get2_d_variables_from_config_8cxx.html" title=" " alt="" coords="513,184,725,225"/>
+<area shape="rect" id="node8" href="$_get_variables_from_config_8cxx.html" title=" " alt="" coords="411,273,605,315"/>
+<area shape="rect" id="node9" href="$_get_variables_from_config_8h.html" title=" " alt="" coords="254,184,437,225"/>
 </map>
