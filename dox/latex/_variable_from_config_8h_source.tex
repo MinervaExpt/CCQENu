@@ -22,10 +22,10 @@
 \DoxyCodeLine{18 }
 \DoxyCodeLine{19 }
 \DoxyCodeLine{20 }
-\DoxyCodeLine{21 \textcolor{keyword}{class }VariableFromConfig : \textcolor{keyword}{public} PlotUtils::VariableBase<CVUniverse> \{}
+\DoxyCodeLine{21 \textcolor{keyword}{class }\mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable_from_config}{VariableFromConfig}} : \textcolor{keyword}{public} PlotUtils::VariableBase<CVUniverse> \{}
 \DoxyCodeLine{22 \textcolor{keyword}{private}:}
 \DoxyCodeLine{23   \textcolor{keyword}{typedef} std::function<double(\textcolor{keyword}{const} \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}\&)> PointerToCVUniverseFunction;}
-\DoxyCodeLine{24   \textcolor{keyword}{typedef} \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{PlotUtils::HistWrapperMap<CVUniverse>}} HM;}
+\DoxyCodeLine{24   \textcolor{keyword}{typedef} \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{PlotUtils::HistWrapperMap<CVUniverse>}} \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}};}
 \DoxyCodeLine{25   \textcolor{keyword}{typedef} PlotUtils::MnvH1D MH1D;}
 \DoxyCodeLine{26   \textcolor{comment}{//  typedef PlotUtils::HistFolio<PlotUtils::MnvH1D> FOLIO;}}
 \DoxyCodeLine{27 }
@@ -41,7 +41,7 @@
 \DoxyCodeLine{37 }
 \DoxyCodeLine{38 }
 \DoxyCodeLine{39 }
-\DoxyCodeLine{40   VariableFromConfig(\textcolor{keyword}{const} \mbox{\hyperlink{class_nu_config}{NuConfig}} config)\{}
+\DoxyCodeLine{40   \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable_from_config}{VariableFromConfig}}(\textcolor{keyword}{const} \mbox{\hyperlink{class_nu_config}{NuConfig}} config)\{}
 \DoxyCodeLine{41     \textcolor{comment}{//config.Print();}}
 \DoxyCodeLine{42 }
 \DoxyCodeLine{43     \mbox{\hyperlink{class_c_v_functions}{CVFunctions<CVUniverse>}} fun;}
@@ -158,13 +158,13 @@
 \DoxyCodeLine{154   \textcolor{comment}{//=======================================================================================}}
 \DoxyCodeLine{155   \textcolor{comment}{// Histwrappers -\/-\/ selected mc, selected data}}
 \DoxyCodeLine{156 }
-\DoxyCodeLine{157   HM m\_selected\_mc\_reco; \textcolor{comment}{// HM for normal MC hists -\/ has special constructor to make response}}
-\DoxyCodeLine{158   HM m\_tuned\_mc\_reco; \textcolor{comment}{// HM for tuned MC hists used for background subtraction -\/NHV -\/ has special constructor to make response}}
-\DoxyCodeLine{159   HM m\_selected\_mc\_truth;}
-\DoxyCodeLine{160   HM m\_tuned\_selected\_mc\_truth;}
-\DoxyCodeLine{161   HM m\_signal\_mc\_truth;}
-\DoxyCodeLine{162   HM m\_tuned\_signal\_mc\_truth;}
-\DoxyCodeLine{163   HM m\_selected\_data;}
+\DoxyCodeLine{157   \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}} m\_selected\_mc\_reco; \textcolor{comment}{// HM for normal MC hists -\/ has special constructor to make response}}
+\DoxyCodeLine{158   \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}} m\_tuned\_mc\_reco; \textcolor{comment}{// HM for tuned MC hists used for background subtraction -\/NHV -\/ has special constructor to make response}}
+\DoxyCodeLine{159   \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}} m\_selected\_mc\_truth;}
+\DoxyCodeLine{160   \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}} m\_tuned\_selected\_mc\_truth;}
+\DoxyCodeLine{161   \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}} m\_signal\_mc\_truth;}
+\DoxyCodeLine{162   \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}} m\_tuned\_signal\_mc\_truth;}
+\DoxyCodeLine{163   \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}} m\_selected\_data;}
 \DoxyCodeLine{164   UniverseMap m\_universes;}
 \DoxyCodeLine{165   std::string m\_units;}
 \DoxyCodeLine{166   std::map<const std::string, bool> hasData;}
@@ -221,7 +221,7 @@
 \DoxyCodeLine{217     std::vector<double> bins = GetBinVec();}
 \DoxyCodeLine{218     std::vector<double> recobins = GetRecoBinVec();}
 \DoxyCodeLine{219 \textcolor{comment}{// this one is special as we need to take into account a non-\/square response}}
-\DoxyCodeLine{220     m\_selected\_mc\_reco = HM(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNBins(), bins, GetNRecoBins(), recobins,  univs, tags);}
+\DoxyCodeLine{220     m\_selected\_mc\_reco = \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNBins(), bins, GetNRecoBins(), recobins,  univs, tags);}
 \DoxyCodeLine{221     m\_selected\_mc\_reco.AppendName(\textcolor{stringliteral}{"{}reconstructed"{}},tags); \textcolor{comment}{// patch to conform to CCQENU standard m\_selected\_mc\_truth.AppendName("{}\_truth"{},tags); // patch to conform to CCQENU standard}}
 \DoxyCodeLine{222   \}}
 \DoxyCodeLine{223 }
@@ -245,7 +245,7 @@
 \DoxyCodeLine{241 }
 \DoxyCodeLine{242     std::vector<double> bins = GetBinVec();}
 \DoxyCodeLine{243 }
-\DoxyCodeLine{244     m\_selected\_mc\_truth = HM(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNBins(), bins, univs, tags);}
+\DoxyCodeLine{244     m\_selected\_mc\_truth = \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNBins(), bins, univs, tags);}
 \DoxyCodeLine{245     m\_selected\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}selected\_truth"{}},tags);}
 \DoxyCodeLine{246   \}}
 \DoxyCodeLine{247 }
@@ -269,7 +269,7 @@
 \DoxyCodeLine{265 }
 \DoxyCodeLine{266     std::vector<double> bins = GetBinVec();}
 \DoxyCodeLine{267 }
-\DoxyCodeLine{268     m\_signal\_mc\_truth = HM(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNBins(), bins, univs, tags);}
+\DoxyCodeLine{268     m\_signal\_mc\_truth = \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNBins(), bins, univs, tags);}
 \DoxyCodeLine{269     m\_signal\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}all\_truth"{}},tags);}
 \DoxyCodeLine{270   \}}
 \DoxyCodeLine{271 }
@@ -287,7 +287,7 @@
 \DoxyCodeLine{283     \}}
 \DoxyCodeLine{284     std::vector<double> recobins = GetRecoBinVec();}
 \DoxyCodeLine{285 }
-\DoxyCodeLine{286     m\_selected\_data = HM(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNRecoBins(), recobins, univs,tags);}
+\DoxyCodeLine{286     m\_selected\_data = \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNRecoBins(), recobins, univs,tags);}
 \DoxyCodeLine{287     m\_selected\_data.AppendName(\textcolor{stringliteral}{"{}reconstructed"{}},tags);}
 \DoxyCodeLine{288   \}}
 \DoxyCodeLine{289 }
@@ -310,15 +310,15 @@
 \DoxyCodeLine{306 }
 \DoxyCodeLine{307     \textcolor{comment}{// Check which categories are configured and add a tuned version}}
 \DoxyCodeLine{308     \textcolor{keywordflow}{if} (std::count(m\_for.begin(), m\_for.end(),\textcolor{stringliteral}{"{}selected\_reco"{}})>=1)\{ \textcolor{comment}{// need special constructor to deal with reco bins}}
-\DoxyCodeLine{309       m\_tuned\_mc\_reco = HM(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(),GetNBins(),bins, GetNRecoBins(), recobins, reco\_univs, tuned\_tags);}
+\DoxyCodeLine{309       m\_tuned\_mc\_reco = \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(),GetNBins(),bins, GetNRecoBins(), recobins, reco\_univs, tuned\_tags);}
 \DoxyCodeLine{310       m\_tuned\_mc\_reco.AppendName(\textcolor{stringliteral}{"{}reconstructed\_tuned"{}},tuned\_tags);}
 \DoxyCodeLine{311     \}}
 \DoxyCodeLine{312     \textcolor{keywordflow}{if} (std::count(m\_for.begin(), m\_for.end(),\textcolor{stringliteral}{"{}selected\_truth"{}})>=1) \{}
-\DoxyCodeLine{313       m\_tuned\_selected\_mc\_truth = HM(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNBins(), bins, reco\_univs, tuned\_tags);}
+\DoxyCodeLine{313       m\_tuned\_selected\_mc\_truth = \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNBins(), bins, reco\_univs, tuned\_tags);}
 \DoxyCodeLine{314       m\_tuned\_selected\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}selected\_truth\_tuned"{}},tuned\_tags);}
 \DoxyCodeLine{315     \}}
 \DoxyCodeLine{316     \textcolor{keywordflow}{if} (std::count(m\_for.begin(), m\_for.end(),\textcolor{stringliteral}{"{}truth"{}})>=1) \{}
-\DoxyCodeLine{317       m\_tuned\_signal\_mc\_truth = HM(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNBins(), bins, truth\_univs, tuned\_tags);}
+\DoxyCodeLine{317       m\_tuned\_signal\_mc\_truth = \mbox{\hyperlink{class_plot_utils_1_1_hist_wrapper_map}{HM}}(Form(\textcolor{stringliteral}{"{}\%s"{}}, GetName().c\_str()), (GetName()+\textcolor{stringliteral}{"{};"{}}+m\_xaxis\_label).c\_str(), GetNBins(), bins, truth\_univs, tuned\_tags);}
 \DoxyCodeLine{318       m\_tuned\_signal\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}all\_truth\_tuned"{}},tuned\_tags);}
 \DoxyCodeLine{319     \}}
 \DoxyCodeLine{320 }

@@ -145,61 +145,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>DeleteResponse</b> ()
 <tr class="memitem:abb977158d77b972c4ea3ae60ced042cb"><td class="memItemLeft" align="right" valign="top"><a id="abb977158d77b972c4ea3ae60ced042cb" name="abb977158d77b972c4ea3ae60ced042cb"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>SyncCVHistos</b> ()</td></tr>
 <tr class="separator:abb977158d77b972c4ea3ae60ced042cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5563e9cd8686ac0a26bb6e7f1932094"><td class="memItemLeft" align="right" valign="top"><a id="ae5563e9cd8686ac0a26bb6e7f1932094" name="ae5563e9cd8686ac0a26bb6e7f1932094"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>HistWrapperMap</b> (const std::string name, const std::string title, const Int_t nbins, const double xmin, const double xmax, std::map&lt; std::string, std::vector&lt; T * &gt; &gt; univs, const std::vector&lt; std::string &gt; tags)</td></tr>
-<tr class="separator:ae5563e9cd8686ac0a26bb6e7f1932094"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53c3c3ca6dd7138a940fda8dc6a6e338"><td class="memItemLeft" align="right" valign="top"><a id="a53c3c3ca6dd7138a940fda8dc6a6e338" name="a53c3c3ca6dd7138a940fda8dc6a6e338"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>HistWrapperMap</b> (const std::string name, const std::string title, const Int_t nbins, const double xmin, const double xmax, const Int_t nrecobins, const double xrecomin, const double xrecomax, std::map&lt; std::string, std::vector&lt; T * &gt; &gt; univs, const std::vector&lt; std::string &gt; tags)</td></tr>
-<tr class="separator:a53c3c3ca6dd7138a940fda8dc6a6e338"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed7211c36012f3a6b0275554097b96ac"><td class="memItemLeft" align="right" valign="top"><a id="aed7211c36012f3a6b0275554097b96ac" name="aed7211c36012f3a6b0275554097b96ac"></a>
-std::map&lt; const T *, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>UniverseDecoder</b> (const std::map&lt; std::string, std::vector&lt; T * &gt; &gt; univs) const</td></tr>
-<tr class="separator:aed7211c36012f3a6b0275554097b96ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f9efbe2cebf4cedad601e663dc3f31d"><td class="memItemLeft" align="right" valign="top"><a id="a1f9efbe2cebf4cedad601e663dc3f31d" name="a1f9efbe2cebf4cedad601e663dc3f31d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>HistWrapperMap</b> (const std::string name, const std::string title, const Int_t nbins, const std::vector&lt; double &gt; bins, std::map&lt; std::string, std::vector&lt; T * &gt; &gt; univs, std::vector&lt; std::string &gt; tags)</td></tr>
-<tr class="separator:a1f9efbe2cebf4cedad601e663dc3f31d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8863aa7690a5a4490e395c34546ac984"><td class="memItemLeft" align="right" valign="top"><a id="a8863aa7690a5a4490e395c34546ac984" name="a8863aa7690a5a4490e395c34546ac984"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>HistWrapperMap</b> (const std::string name, const std::string title, const Int_t nbins, const std::vector&lt; double &gt; bins, const Int_t nrecobins, const std::vector&lt; double &gt; recobins, std::map&lt; std::string, std::vector&lt; T * &gt; &gt; univs, std::vector&lt; std::string &gt; tags)</td></tr>
-<tr class="separator:a8863aa7690a5a4490e395c34546ac984"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae23ca2b3b18fd2d3c3af825f11e2efaf"><td class="memItemLeft" align="right" valign="top"><a id="ae23ca2b3b18fd2d3c3af825f11e2efaf" name="ae23ca2b3b18fd2d3c3af825f11e2efaf"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>AddResponse</b> (std::vector&lt; std::string &gt; tags, std::string tail=&quot;&quot;)</td></tr>
-<tr class="separator:ae23ca2b3b18fd2d3c3af825f11e2efaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09834ae6dbf1f720ab8c809e0d5bb081"><td class="memItemLeft" align="right" valign="top"><a id="a09834ae6dbf1f720ab8c809e0d5bb081" name="a09834ae6dbf1f720ab8c809e0d5bb081"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>AppendName</b> (const std::string n, const std::vector&lt; std::string &gt; tags)</td></tr>
-<tr class="separator:a09834ae6dbf1f720ab8c809e0d5bb081"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a213ff26a74ea043cdbb5607ee073012d"><td class="memItemLeft" align="right" valign="top"><a id="a213ff26a74ea043cdbb5607ee073012d" name="a213ff26a74ea043cdbb5607ee073012d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Fill</b> (const std::string tag, const T *universe, const Double_t value, const Double_t weight=1.0, const Double_t scale=1.0)</td></tr>
-<tr class="separator:a213ff26a74ea043cdbb5607ee073012d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab32270ad4afe2f94bc740955ef8923e"><td class="memItemLeft" align="right" valign="top"><a id="aab32270ad4afe2f94bc740955ef8923e" name="aab32270ad4afe2f94bc740955ef8923e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>FillResponse</b> (const std::string tag, const T *univ, const double value, const double truth, const double weight=1.0, const double scale=1.0)</td></tr>
-<tr class="separator:aab32270ad4afe2f94bc740955ef8923e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a637b3c1b735d7cc9acd317d31ad0466b"><td class="memItemLeft" align="right" valign="top"><a id="a637b3c1b735d7cc9acd317d31ad0466b" name="a637b3c1b735d7cc9acd317d31ad0466b"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>GetNhists</b> ()</td></tr>
-<tr class="separator:a637b3c1b735d7cc9acd317d31ad0466b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa0d324fcb0b47eb330b57834f5c0a19"><td class="memItemLeft" align="right" valign="top"><a id="afa0d324fcb0b47eb330b57834f5c0a19" name="afa0d324fcb0b47eb330b57834f5c0a19"></a>
-MnvH1D *&#160;</td><td class="memItemRight" valign="bottom"><b>GetHist</b> (const std::string tag)</td></tr>
-<tr class="separator:afa0d324fcb0b47eb330b57834f5c0a19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0dc3674c65d9675d1f20d32ef61a8c2"><td class="memItemLeft" align="right" valign="top"><a id="ac0dc3674c65d9675d1f20d32ef61a8c2" name="ac0dc3674c65d9675d1f20d32ef61a8c2"></a>
-MinervaUnfold::MnvResponse *&#160;</td><td class="memItemRight" valign="bottom"><b>GetResponse</b> (const std::string tag)</td></tr>
-<tr class="separator:ac0dc3674c65d9675d1f20d32ef61a8c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a150605bfd34778cf1b0a378406d4e08c"><td class="memItemLeft" align="right" valign="top"><a id="a150605bfd34778cf1b0a378406d4e08c" name="a150605bfd34778cf1b0a378406d4e08c"></a>
-MnvH2D *&#160;</td><td class="memItemRight" valign="bottom"><b>GetMigrationMatrix</b> (const std::string tag)</td></tr>
-<tr class="separator:a150605bfd34778cf1b0a378406d4e08c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae628b2cf21b6005478fc638ee40c5a9b"><td class="memItemLeft" align="right" valign="top"><a id="ae628b2cf21b6005478fc638ee40c5a9b" name="ae628b2cf21b6005478fc638ee40c5a9b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Scale</b> (const std::string tag, double scale)</td></tr>
-<tr class="separator:ae628b2cf21b6005478fc638ee40c5a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75195d9531ca3cb2035d87c93e877811"><td class="memItemLeft" align="right" valign="top"><a id="a75195d9531ca3cb2035d87c93e877811" name="a75195d9531ca3cb2035d87c93e877811"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Write</b> (const std::string tag, Int_t option=0)</td></tr>
-<tr class="separator:a75195d9531ca3cb2035d87c93e877811"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac730577f9b55759c061ff17d738d143"><td class="memItemLeft" align="right" valign="top"><a id="aac730577f9b55759c061ff17d738d143" name="aac730577f9b55759c061ff17d738d143"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>DeleteResponse</b> ()</td></tr>
-<tr class="separator:aac730577f9b55759c061ff17d738d143"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb977158d77b972c4ea3ae60ced042cb"><td class="memItemLeft" align="right" valign="top"><a id="abb977158d77b972c4ea3ae60ced042cb" name="abb977158d77b972c4ea3ae60ced042cb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SyncCVHistos</b> ()</td></tr>
-<tr class="separator:abb977158d77b972c4ea3ae60ced042cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>make_hists/include/<a class="el" href="_hist_wrapper_map_8h_source.html">HistWrapperMap.h</a></li>
-<li>make_hists/include/Sep18/<a class="el" href="_sep18_2_hist_wrapper_map_8h_source.html">HistWrapperMap.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
