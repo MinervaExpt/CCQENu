@@ -63,7 +63,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>fit</b></li><li class="navelem"><a class="el" href="classfit_1_1_scale_factors.html">ScaleFactors</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacefit.html">fit</a></li><li class="navelem"><a class="el" href="classfit_1_1_scale_factors.html">ScaleFactors</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -73,6 +73,8 @@ $(function() {
   <div class="headertitle"><div class="title">fit::ScaleFactors Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_scale_factors_8h_source.html">ScaleFactors.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for fit::ScaleFactors:</div>
 <div class="dyncontent">
@@ -94,22 +96,169 @@ Collaboration diagram for fit::ScaleFactors:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8c9dda8eafe4d7c11d0c93ebeb6d6e45"><td class="memItemLeft" align="right" valign="top"><a id="a8c9dda8eafe4d7c11d0c93ebeb6d6e45" name="a8c9dda8eafe4d7c11d0c93ebeb6d6e45"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ScaleFactors</b> (const std::vector&lt; TH1D * &gt; fitHists, const std::vector&lt; TH1D * &gt; unfitHists, const TH1D *dataHist, const int firstBin=1, const int lastBin=-1)</td></tr>
+<tr class="memitem:a8c9dda8eafe4d7c11d0c93ebeb6d6e45"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfit_1_1_scale_factors.html#a8c9dda8eafe4d7c11d0c93ebeb6d6e45">ScaleFactors</a> (const std::vector&lt; TH1D * &gt; fitHists, const std::vector&lt; TH1D * &gt; unfitHists, const TH1D *dataHist, const int firstBin=1, const int lastBin=-1)</td></tr>
 <tr class="separator:a8c9dda8eafe4d7c11d0c93ebeb6d6e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ff6549fb27240eac81d233d67fa7dee"><td class="memItemLeft" align="right" valign="top"><a id="a3ff6549fb27240eac81d233d67fa7dee" name="a3ff6549fb27240eac81d233d67fa7dee"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>NDim</b> () const override</td></tr>
+<tr class="memitem:a3ff6549fb27240eac81d233d67fa7dee"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfit_1_1_scale_factors.html#a3ff6549fb27240eac81d233d67fa7dee">NDim</a> () const override</td></tr>
 <tr class="separator:a3ff6549fb27240eac81d233d67fa7dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5516b66d8ac8b473a93afb17f4a7400"><td class="memItemLeft" align="right" valign="top"><a id="ab5516b66d8ac8b473a93afb17f4a7400" name="ab5516b66d8ac8b473a93afb17f4a7400"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>DoEval</b> (const double *parameters) const override</td></tr>
+<tr class="memitem:ab5516b66d8ac8b473a93afb17f4a7400"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfit_1_1_scale_factors.html#ab5516b66d8ac8b473a93afb17f4a7400">DoEval</a> (const double *parameters) const override</td></tr>
 <tr class="separator:ab5516b66d8ac8b473a93afb17f4a7400"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7b9dfb469538ea9548cd1a2b545fec1"><td class="memItemLeft" align="right" valign="top"><a id="ab7b9dfb469538ea9548cd1a2b545fec1" name="ab7b9dfb469538ea9548cd1a2b545fec1"></a>
-IBaseFunctionMultiDimTempl&lt; double &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>Clone</b> () const override</td></tr>
+<tr class="memitem:ab7b9dfb469538ea9548cd1a2b545fec1"><td class="memItemLeft" align="right" valign="top">IBaseFunctionMultiDimTempl&lt; double &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfit_1_1_scale_factors.html#ab7b9dfb469538ea9548cd1a2b545fec1">Clone</a> () const override</td></tr>
 <tr class="separator:ab7b9dfb469538ea9548cd1a2b545fec1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c199458ea737366da8fb6f1e47ff91a"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfit_1_1_scale_factors.html#a6c199458ea737366da8fb6f1e47ff91a">~ScaleFactors</a> ()=default</td></tr>
+<tr class="separator:a6c199458ea737366da8fb6f1e47ff91a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a8c9dda8eafe4d7c11d0c93ebeb6d6e45" name="a8c9dda8eafe4d7c11d0c93ebeb6d6e45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c9dda8eafe4d7c11d0c93ebeb6d6e45">&#9670;&nbsp;</a></span>ScaleFactors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">fit::ScaleFactors::ScaleFactors </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; TH1D * &gt;&#160;</td>
+          <td class="paramname"><em>fitHists</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; TH1D * &gt;&#160;</td>
+          <td class="paramname"><em>unfitHists</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const TH1D *&#160;</td>
+          <td class="paramname"><em>dataHist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>firstBin</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>lastBin</em> = <code>-1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6c199458ea737366da8fb6f1e47ff91a" name="a6c199458ea737366da8fb6f1e47ff91a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c199458ea737366da8fb6f1e47ff91a">&#9670;&nbsp;</a></span>~ScaleFactors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual fit::ScaleFactors::~ScaleFactors </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab7b9dfb469538ea9548cd1a2b545fec1" name="ab7b9dfb469538ea9548cd1a2b545fec1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7b9dfb469538ea9548cd1a2b545fec1">&#9670;&nbsp;</a></span>Clone()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ROOT::Math::IBaseFunctionMultiDimTempl&lt; double &gt; * fit::ScaleFactors::Clone </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab5516b66d8ac8b473a93afb17f4a7400" name="ab5516b66d8ac8b473a93afb17f4a7400"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5516b66d8ac8b473a93afb17f4a7400">&#9670;&nbsp;</a></span>DoEval()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double fit::ScaleFactors::DoEval </td>
+          <td>(</td>
+          <td class="paramtype">const double *&#160;</td>
+          <td class="paramname"><em>parameters</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3ff6549fb27240eac81d233d67fa7dee" name="a3ff6549fb27240eac81d233d67fa7dee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ff6549fb27240eac81d233d67fa7dee">&#9670;&nbsp;</a></span>NDim()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int fit::ScaleFactors::NDim </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>make_hists/fits/<a class="el" href="_scale_factors_8h_source.html">ScaleFactors.h</a></li>
-<li>make_hists/fits/ScaleFactors.cpp</li>
+<li>make_hists/fits/<a class="el" href="_scale_factors_8cpp.html">ScaleFactors.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

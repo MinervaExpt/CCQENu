@@ -70,25 +70,25 @@ $(function() {
   <div class="headertitle"><div class="title">GetStacked.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<a href="_get_stacked_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;PlotUtils/MnvH1D.h&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;PlotUtils/MnvH2D.h&quot;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;MinervaUnfold/MnvResponse.h&quot;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;MinervaUnfold/MnvUnfold.h&quot;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;utils/RebinFlux.h&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;utils/SyncBands.h&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="_rebin_flux_8h.html">utils/RebinFlux.h</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="_sync_bands_8h.html">utils/SyncBands.h</a>&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;TH2D.h&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;TF2.h&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;TCanvas.h&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;utils/NuConfig.h&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="_nu_config_8h.html">utils/NuConfig.h</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;PlotUtils/FluxReweighter.h&quot;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#ifndef __CINT__</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;include/plotting_pdf.h&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="plotting__pdf_8h.html">include/plotting_pdf.h</a>&quot;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keywordtype">void</span> applyStyle(MnvH1D* myhist){</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="_get_stacked_8h.html#a3080a108829e3840bfc291011f18cf7b">   19</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_get_stacked_8h.html#a3080a108829e3840bfc291011f18cf7b">applyStyle</a>(MnvH1D* myhist){</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  myhist-&gt;GetXaxis()-&gt;CenterTitle(<span class="keyword">true</span>);</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  myhist-&gt;GetYaxis()-&gt;CenterTitle(<span class="keyword">true</span>);</div>
@@ -115,38 +115,38 @@ $(function() {
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> MnvHistoType&gt;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordtype">int</span> drawStacked(std::string sample, std::string variable, std::string basename,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="_get_stacked_8h.html#a9213d3234ba73bf10be89649aa27d4a1">   46</a></span>  <span class="keywordtype">int</span> <a class="code hl_function" href="_get_stacked_8h.html#a9213d3234ba73bf10be89649aa27d4a1">drawStacked</a>(std::string sample, std::string <a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a>, std::string basename,</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                  std::map&lt;std::string,MnvHistoType*&gt; hists1D,</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                  <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config, <a class="code hl_class" href="class_nu_config.html">NuConfig</a> variables1DConfig, <a class="code hl_class" href="class_nu_config.html">NuConfig</a> samplesConfig,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                  <a class="code hl_class" href="class_nu_config.html">NuConfig</a> <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>, <a class="code hl_class" href="class_nu_config.html">NuConfig</a> variables1DConfig, <a class="code hl_class" href="class_nu_config.html">NuConfig</a> samplesConfig,</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                  std::string pdffilename1D, <span class="keywordtype">double</span> POTScale, </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                  <span class="keywordtype">bool</span> DEBUG, <span class="keywordtype">bool</span> binwid, TCanvas &amp; canvas) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                  <span class="keywordtype">bool</span> <a class="code hl_variable" href="analyze__v5_8_c.html#a117352cc494cc62c6b2f1882786a332c">DEBUG</a>, <span class="keywordtype">bool</span> binwid, TCanvas &amp; canvas) {</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                  </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">int</span> logscale = 0;</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="comment">// Read in signal, background, and data names and colors</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> sigkey = config.GetConfig(<span class="stringliteral">&quot;signal&quot;</span>);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> sigkey = <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>.GetConfig(<span class="stringliteral">&quot;signal&quot;</span>);</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::cout &lt;&lt; std::endl &lt;&lt; <span class="stringliteral">&quot;    Loading signal key&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    std::string sig = sigkey.GetString(sample);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> bkgkey = config.GetConfig(<span class="stringliteral">&quot;background&quot;</span>);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    std::vector&lt;std::string&gt; bkg = bkgkey.GetStringVector(sample);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    std::string sig = sigkey.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(sample);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> bkgkey = <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>.GetConfig(<span class="stringliteral">&quot;background&quot;</span>);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    std::vector&lt;std::string&gt; bkg = bkgkey.<a class="code hl_function" href="class_nu_config.html#a5e9ca9d6abad8c2213d277e4c5cdcb08">GetStringVector</a>(sample);</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;    Loading background key:&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> datkey = config.GetConfig(<span class="stringliteral">&quot;data&quot;</span>);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    std::string dat = datkey.GetString(sample);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> datkey = <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>.GetConfig(<span class="stringliteral">&quot;data&quot;</span>);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    std::string dat = datkey.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(sample);</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;    Loading data key:&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    </div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> sampleConfig = samplesConfig.GetConfig(sample);</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> colorFillConfig = sampleConfig.GetConfig(<span class="stringliteral">&quot;fill_colors&quot;</span>);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> colorLineConfig = sampleConfig.GetConfig(<span class="stringliteral">&quot;line_colors&quot;</span>);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> legendEntries = sampleConfig.GetConfig(<span class="stringliteral">&quot;legend_entries&quot;</span>);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> sampleConfig = samplesConfig.<a class="code hl_function" href="class_nu_config.html#a6384df3d7164118dce2ec3af6e404867">GetConfig</a>(sample);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> colorFillConfig = sampleConfig.<a class="code hl_function" href="class_nu_config.html#a6384df3d7164118dce2ec3af6e404867">GetConfig</a>(<span class="stringliteral">&quot;fill_colors&quot;</span>);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> colorLineConfig = sampleConfig.<a class="code hl_function" href="class_nu_config.html#a6384df3d7164118dce2ec3af6e404867">GetConfig</a>(<span class="stringliteral">&quot;line_colors&quot;</span>);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> legendEntries = sampleConfig.<a class="code hl_function" href="class_nu_config.html#a6384df3d7164118dce2ec3af6e404867">GetConfig</a>(<span class="stringliteral">&quot;legend_entries&quot;</span>);</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    </div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    </div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Set colors</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    hists1D[sig]-&gt;SetFillColor(colorFillConfig.GetInt(sig));</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    hists1D[sig]-&gt;SetLineColor(colorFillConfig.GetInt(sig));</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    hists1D[sig]-&gt;SetFillColor(colorFillConfig.<a class="code hl_function" href="class_nu_config.html#a22461a21acd1511f5ae912ec5a0820dc">GetInt</a>(sig));</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    hists1D[sig]-&gt;SetLineColor(colorFillConfig.<a class="code hl_function" href="class_nu_config.html#a22461a21acd1511f5ae912ec5a0820dc">GetInt</a>(sig));</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt;= bkg.size()-1; i++){</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>      hists1D[bkg[i]]-&gt;SetFillColor(colorFillConfig.GetInt(bkg[i]));</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      hists1D[bkg[i]]-&gt;SetLineColor(colorFillConfig.GetInt(bkg[i]));</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>      hists1D[bkg[i]]-&gt;SetFillColor(colorFillConfig.<a class="code hl_function" href="class_nu_config.html#a22461a21acd1511f5ae912ec5a0820dc">GetInt</a>(bkg[i]));</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      hists1D[bkg[i]]-&gt;SetLineColor(colorFillConfig.<a class="code hl_function" href="class_nu_config.html#a22461a21acd1511f5ae912ec5a0820dc">GetInt</a>(bkg[i]));</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    }</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    </div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment">// Bin width normalization</span></div>
@@ -175,26 +175,26 @@ $(function() {
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">auto</span> *leg = <span class="keyword">new</span> TLegend(0.62,0.6,0.89,0.89);</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    leg-&gt;SetFillColor(kWhite);</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="comment">//leg-&gt;SetLineColor(0);</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    leg-&gt;AddEntry(hists1D[dat],legendEntries.GetString(dat).c_str(),<span class="stringliteral">&quot;p&quot;</span>);</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keywordtype">double</span> maxEntryLength = legendEntries.GetString(dat).length();</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    leg-&gt;AddEntry(hists1D[sig],legendEntries.GetString(sig).c_str(),<span class="stringliteral">&quot;F&quot;</span>);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordflow">if</span>(legendEntries.GetString(sig).length() &gt; maxEntryLength){</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>      maxEntryLength =legendEntries.GetString(sig).length();</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    leg-&gt;AddEntry(hists1D[dat],legendEntries.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(dat).c_str(),<span class="stringliteral">&quot;p&quot;</span>);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keywordtype">double</span> maxEntryLength = legendEntries.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(dat).length();</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    leg-&gt;AddEntry(hists1D[sig],legendEntries.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(sig).c_str(),<span class="stringliteral">&quot;F&quot;</span>);</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordflow">if</span>(legendEntries.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(sig).length() &gt; maxEntryLength){</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>      maxEntryLength =legendEntries.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(sig).length();</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    }</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt;= bkg.size()-1; i++){</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>      leg-&gt;AddEntry(hists1D[bkg[i]],legendEntries.GetString(bkg[i]).c_str(),<span class="stringliteral">&quot;F&quot;</span>);</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>      <span class="keywordflow">if</span>(legendEntries.GetString(bkg[i]).length() &gt; maxEntryLength){</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        maxEntryLength =legendEntries.GetString(bkg[i]).length();</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>      leg-&gt;AddEntry(hists1D[bkg[i]],legendEntries.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(bkg[i]).c_str(),<span class="stringliteral">&quot;F&quot;</span>);</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>      <span class="keywordflow">if</span>(legendEntries.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(bkg[i]).length() &gt; maxEntryLength){</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        maxEntryLength =legendEntries.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(bkg[i]).length();</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>      }</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    }</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    std::cout &lt;&lt; std::endl &lt;&lt; <span class="stringliteral">&quot;    Max Legend Entry Length = &quot;</span> &lt;&lt; maxEntryLength &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <span class="comment">// Get variable titles</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  std::string title = sample + <span class="stringliteral">&quot;_&quot;</span> + variable;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <a class="code hl_class" href="class_nu_config.html">NuConfig</a> variableConfig = variables1DConfig.GetConfig(variable);</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  std::string xtitle = variableConfig.GetString(<span class="stringliteral">&quot;title&quot;</span>);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  std::string title = sample + <span class="stringliteral">&quot;_&quot;</span> + <a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a>;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <a class="code hl_class" href="class_nu_config.html">NuConfig</a> variableConfig = variables1DConfig.<a class="code hl_function" href="class_nu_config.html#a6384df3d7164118dce2ec3af6e404867">GetConfig</a>(<a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a>);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  std::string xtitle = variableConfig.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(<span class="stringliteral">&quot;title&quot;</span>);</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  std::string ytitle;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <span class="keywordflow">if</span>(binwid) ytitle = <span class="stringliteral">&quot;Events per &quot;</span> + variableConfig.GetString(<span class="stringliteral">&quot;units&quot;</span>);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <span class="keywordflow">if</span>(binwid) ytitle = <span class="stringliteral">&quot;Events per &quot;</span> + variableConfig.<a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(<span class="stringliteral">&quot;units&quot;</span>);</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  <span class="keywordflow">else</span> ytitle = <span class="stringliteral">&quot;Events&quot;</span>;</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    hists1D[dat]-&gt;GetXaxis()-&gt;SetTitle(xtitle.c_str());</div>
@@ -203,7 +203,7 @@ $(function() {
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    hists1D[dat]-&gt;GetYaxis()-&gt;SetTitleOffset(1.3);</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    hists1D[dat]-&gt;SetTitle(title.c_str());</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    hists1D[dat]-&gt;SetStats(0);</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    applyStyle(hists1D[dat]);</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <a class="code hl_function" href="_get_stacked_8h.html#a3080a108829e3840bfc291011f18cf7b">applyStyle</a>(hists1D[dat]);</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    </div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="comment">// Draw hists</span></div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    hists1D[dat]-&gt;Draw(<span class="stringliteral">&quot;PE1&quot;</span>);</div>
@@ -230,7 +230,20 @@ $(function() {
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    </div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    </div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    </div>
+<div class="ttc" id="a_get_stacked_8h_html_a3080a108829e3840bfc291011f18cf7b"><div class="ttname"><a href="_get_stacked_8h.html#a3080a108829e3840bfc291011f18cf7b">applyStyle</a></div><div class="ttdeci">void applyStyle(MnvH1D *myhist)</div><div class="ttdef"><b>Definition:</b> GetStacked.h:19</div></div>
+<div class="ttc" id="a_get_stacked_8h_html_a9213d3234ba73bf10be89649aa27d4a1"><div class="ttname"><a href="_get_stacked_8h.html#a9213d3234ba73bf10be89649aa27d4a1">drawStacked</a></div><div class="ttdeci">int drawStacked(std::string sample, std::string variable, std::string basename, std::map&lt; std::string, MnvHistoType * &gt; hists1D, NuConfig config, NuConfig variables1DConfig, NuConfig samplesConfig, std::string pdffilename1D, double POTScale, bool DEBUG, bool binwid, TCanvas &amp;canvas)</div><div class="ttdef"><b>Definition:</b> GetStacked.h:46</div></div>
+<div class="ttc" id="a_nu_config_8h_html"><div class="ttname"><a href="_nu_config_8h.html">NuConfig.h</a></div></div>
+<div class="ttc" id="a_rebin_flux_8h_html"><div class="ttname"><a href="_rebin_flux_8h.html">RebinFlux.h</a></div></div>
+<div class="ttc" id="a_sync_bands_8h_html"><div class="ttname"><a href="_sync_bands_8h.html">SyncBands.h</a></div></div>
+<div class="ttc" id="aanalyze__v5_8_c_html_a117352cc494cc62c6b2f1882786a332c"><div class="ttname"><a href="analyze__v5_8_c.html#a117352cc494cc62c6b2f1882786a332c">DEBUG</a></div><div class="ttdeci">bool DEBUG</div><div class="ttdef"><b>Definition:</b> analyze_v5.C:1</div></div>
 <div class="ttc" id="aclass_nu_config_html"><div class="ttname"><a href="class_nu_config.html">NuConfig</a></div><div class="ttdef"><b>Definition:</b> NuConfig.h:16</div></div>
+<div class="ttc" id="aclass_nu_config_html_a22461a21acd1511f5ae912ec5a0820dc"><div class="ttname"><a href="class_nu_config.html#a22461a21acd1511f5ae912ec5a0820dc">NuConfig::GetInt</a></div><div class="ttdeci">int GetInt(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:116</div></div>
+<div class="ttc" id="aclass_nu_config_html_a5e9ca9d6abad8c2213d277e4c5cdcb08"><div class="ttname"><a href="class_nu_config.html#a5e9ca9d6abad8c2213d277e4c5cdcb08">NuConfig::GetStringVector</a></div><div class="ttdeci">std::vector&lt; std::string &gt; GetStringVector(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:129</div></div>
+<div class="ttc" id="aclass_nu_config_html_a6384df3d7164118dce2ec3af6e404867"><div class="ttname"><a href="class_nu_config.html#a6384df3d7164118dce2ec3af6e404867">NuConfig::GetConfig</a></div><div class="ttdeci">NuConfig GetConfig(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:196</div></div>
+<div class="ttc" id="aclass_nu_config_html_a7641dfee89718c0e9fe1e0e5208e8eeb"><div class="ttname"><a href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">NuConfig::GetString</a></div><div class="ttdeci">std::string GetString(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:124</div></div>
+<div class="ttc" id="anamespace_background_sub_html_a8678cfa3ba31e3bcb3d6de71806b12cb"><div class="ttname"><a href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">BackgroundSub.config</a></div><div class="ttdeci">config</div><div class="ttdef"><b>Definition:</b> BackgroundSub.py:17</div></div>
+<div class="ttc" id="anamespace_background_sub_html_a8a684d6fdbbce9bccfe39b91e80cf9da"><div class="ttname"><a href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">BackgroundSub.variable</a></div><div class="ttdeci">variable</div><div class="ttdef"><b>Definition:</b> BackgroundSub.py:28</div></div>
+<div class="ttc" id="aplotting__pdf_8h_html"><div class="ttname"><a href="plotting__pdf_8h.html">plotting_pdf.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

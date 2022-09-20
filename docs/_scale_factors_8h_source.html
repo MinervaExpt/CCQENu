@@ -70,7 +70,7 @@ $(function() {
   <div class="headertitle"><div class="title">ScaleFactors.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//File: ScaleFactor.h</span></div>
+<a href="_scale_factors_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//File: ScaleFactor.h</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//Info: Class for passing as a function to TMinuit for minimization.</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//      Largely derived by example from Andrew Olivier&#39;s </span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//      github.com/MinervaExpt/NucCCNeutrons/tree/develop/fits/Universe.h </span></div>
@@ -92,7 +92,7 @@ $(function() {
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;bitset&gt;</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">namespace </span>fit{</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacefit.html">fit</a>{</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classfit_1_1_scale_factors.html">   24</a></span>  <span class="keyword">class </span><a class="code hl_class" href="classfit_1_1_scale_factors.html">ScaleFactors</a>: <span class="keyword">public</span> ROOT::Math::IBaseFunctionMultiDimTempl&lt;double&gt;{</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="comment">//Members to hold the histos</span></div>
@@ -106,23 +106,29 @@ $(function() {
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="comment">//CTOR</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <a class="code hl_class" href="classfit_1_1_scale_factors.html">ScaleFactors</a>(<span class="keyword">const</span> std::vector&lt;TH1D*&gt; fitHists, <span class="keyword">const</span> std::vector&lt;TH1D*&gt; unfitHists, <span class="keyword">const</span> TH1D* dataHist, <span class="keyword">const</span> <span class="keywordtype">int</span> firstBin = 1, <span class="keyword">const</span> <span class="keywordtype">int</span> lastBin = -1);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <a class="code hl_function" href="classfit_1_1_scale_factors.html#a8c9dda8eafe4d7c11d0c93ebeb6d6e45">ScaleFactors</a>(<span class="keyword">const</span> std::vector&lt;TH1D*&gt; fitHists, <span class="keyword">const</span> std::vector&lt;TH1D*&gt; unfitHists, <span class="keyword">const</span> TH1D* dataHist, <span class="keyword">const</span> <span class="keywordtype">int</span> firstBin = 1, <span class="keyword">const</span> <span class="keywordtype">int</span> lastBin = -1);</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> NDim() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classfit_1_1_scale_factors.html#a3ff6549fb27240eac81d233d67fa7dee">NDim</a>() <span class="keyword">const override</span>;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">//Function which the ROOT fitter will minimize</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">double</span> DoEval(<span class="keyword">const</span> <span class="keywordtype">double</span>* parameters) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">double</span> <a class="code hl_function" href="classfit_1_1_scale_factors.html#ab5516b66d8ac8b473a93afb17f4a7400">DoEval</a>(<span class="keyword">const</span> <span class="keywordtype">double</span>* parameters) <span class="keyword">const override</span>;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="comment">//Required for ROOT fittable function base class :( (indeed this is sad, Andrew)</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    IBaseFunctionMultiDimTempl&lt;double&gt;* Clone() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    IBaseFunctionMultiDimTempl&lt;double&gt;* <a class="code hl_function" href="classfit_1_1_scale_factors.html#ab7b9dfb469538ea9548cd1a2b545fec1">Clone</a>() <span class="keyword">const override</span>;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="comment">//DTOR</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="classfit_1_1_scale_factors.html">~ScaleFactors</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classfit_1_1_scale_factors.html#a6c199458ea737366da8fb6f1e47ff91a">   48</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classfit_1_1_scale_factors.html#a6c199458ea737366da8fb6f1e47ff91a">~ScaleFactors</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  };</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>}</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassfit_1_1_scale_factors_html"><div class="ttname"><a href="classfit_1_1_scale_factors.html">fit::ScaleFactors</a></div><div class="ttdef"><b>Definition:</b> ScaleFactors.h:24</div></div>
+<div class="ttc" id="aclassfit_1_1_scale_factors_html_a3ff6549fb27240eac81d233d67fa7dee"><div class="ttname"><a href="classfit_1_1_scale_factors.html#a3ff6549fb27240eac81d233d67fa7dee">fit::ScaleFactors::NDim</a></div><div class="ttdeci">unsigned int NDim() const override</div><div class="ttdef"><b>Definition:</b> ScaleFactors.cpp:49</div></div>
+<div class="ttc" id="aclassfit_1_1_scale_factors_html_a6c199458ea737366da8fb6f1e47ff91a"><div class="ttname"><a href="classfit_1_1_scale_factors.html#a6c199458ea737366da8fb6f1e47ff91a">fit::ScaleFactors::~ScaleFactors</a></div><div class="ttdeci">virtual ~ScaleFactors()=default</div></div>
+<div class="ttc" id="aclassfit_1_1_scale_factors_html_a8c9dda8eafe4d7c11d0c93ebeb6d6e45"><div class="ttname"><a href="classfit_1_1_scale_factors.html#a8c9dda8eafe4d7c11d0c93ebeb6d6e45">fit::ScaleFactors::ScaleFactors</a></div><div class="ttdeci">ScaleFactors(const std::vector&lt; TH1D * &gt; fitHists, const std::vector&lt; TH1D * &gt; unfitHists, const TH1D *dataHist, const int firstBin=1, const int lastBin=-1)</div><div class="ttdef"><b>Definition:</b> ScaleFactors.cpp:12</div></div>
+<div class="ttc" id="aclassfit_1_1_scale_factors_html_ab5516b66d8ac8b473a93afb17f4a7400"><div class="ttname"><a href="classfit_1_1_scale_factors.html#ab5516b66d8ac8b473a93afb17f4a7400">fit::ScaleFactors::DoEval</a></div><div class="ttdeci">double DoEval(const double *parameters) const override</div><div class="ttdef"><b>Definition:</b> ScaleFactors.cpp:54</div></div>
+<div class="ttc" id="aclassfit_1_1_scale_factors_html_ab7b9dfb469538ea9548cd1a2b545fec1"><div class="ttname"><a href="classfit_1_1_scale_factors.html#ab7b9dfb469538ea9548cd1a2b545fec1">fit::ScaleFactors::Clone</a></div><div class="ttdeci">IBaseFunctionMultiDimTempl&lt; double &gt; * Clone() const override</div><div class="ttdef"><b>Definition:</b> ScaleFactors.cpp:90</div></div>
+<div class="ttc" id="anamespacefit_html"><div class="ttname"><a href="namespacefit.html">fit</a></div><div class="ttdef"><b>Definition:</b> DoTheFit.cpp:9</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

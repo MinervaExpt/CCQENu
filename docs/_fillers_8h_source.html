@@ -70,13 +70,13 @@ $(function() {
   <div class="headertitle"><div class="title">Fillers.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// include at top of your loop code</span></div>
+<a href="_fillers_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// include at top of your loop code</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//==============================================================================</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// Fill Data or MC histograms</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">//==============================================================================</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keywordtype">void</span> FillData(std::string tag, <a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>* univ,</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="_fillers_8h.html#a317a52306e201a77c027053b9e0f9931">    7</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_fillers_8h.html#a317a52306e201a77c027053b9e0f9931">FillData</a>(std::string tag, <a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>* univ,</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>              std::vector&lt;CCQENu::VariableFromConfig*&gt; variables,</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>              std::vector&lt;CCQENu::Variable2DFromConfig*&gt; variables2D) {</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> v : variables) {</div>
@@ -96,7 +96,7 @@ $(function() {
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keywordtype">void</span> FillMC(std::string tag, <a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>* univ, <span class="keywordtype">double</span> weight,</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="_fillers_8h.html#a8f32dfd7a197a6f830e591494a4b462b">   27</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_fillers_8h.html#a8f32dfd7a197a6f830e591494a4b462b">FillMC</a>(std::string tag, <a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>* univ, <span class="keywordtype">double</span> weight,</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            std::vector&lt;CCQENu::VariableFromConfig*&gt; variables,</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            std::vector&lt;CCQENu::Variable2DFromConfig*&gt; variables2D,</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            <span class="keywordtype">double</span> scale = -1.) {</div>
@@ -144,7 +144,7 @@ $(function() {
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  }</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keywordtype">void</span> FillResponse(std::string tag,<a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>* univ, <span class="keywordtype">double</span> weight,</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="_fillers_8h.html#a043cba5d30fae35974196617ef392a5a">   75</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_fillers_8h.html#a043cba5d30fae35974196617ef392a5a">FillResponse</a>(std::string tag,<a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>* univ, <span class="keywordtype">double</span> weight,</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            std::vector&lt;CCQENu::VariableFromConfig*&gt; variables,</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            std::vector&lt;CCQENu::Variable2DFromConfig*&gt; variables2D,</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            <span class="keywordtype">double</span> scale=-1.) {</div>
@@ -173,13 +173,13 @@ $(function() {
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  }</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>}</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keywordtype">void</span> FillSignalTruth(std::string tag, <a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>* univ, <span class="keywordtype">double</span> weight,</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="_fillers_8h.html#ab8ad86eb6c3af09a04a0751a275f84cc">  104</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_fillers_8h.html#ab8ad86eb6c3af09a04a0751a275f84cc">FillSignalTruth</a>(std::string tag, <a class="code hl_class" href="class_c_v_universe.html">CVUniverse</a>* univ, <span class="keywordtype">double</span> weight,</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>               std::vector&lt;CCQENu::VariableFromConfig*&gt; variables,</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>               std::vector&lt;CCQENu::Variable2DFromConfig*&gt; variables2D,</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>               <span class="keywordtype">double</span> scale=-1.) {</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keywordtype">int</span> run = univ-&gt;GetTrueRun();</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keywordtype">int</span> subrun = univ-&gt;GetTrueSubRun();</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  <span class="keywordtype">int</span> gate = univ-&gt;GetTrueGate();</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keywordtype">int</span> run = univ-&gt;<a class="code hl_function" href="class_c_v_universe.html#a5edd62ba4bb30b9ac9abdd012a6599b2">GetTrueRun</a>();</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keywordtype">int</span> subrun = univ-&gt;<a class="code hl_function" href="class_c_v_universe.html#a6b011d81f8ea7d6ddb1aa05fb7d0d75a">GetTrueSubRun</a>();</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  <span class="keywordtype">int</span> gate = univ-&gt;<a class="code hl_function" href="class_c_v_universe.html#a27e47ce6ad2907b084233226557e8faa">GetTrueGate</a>();</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <span class="comment">//if (run == 123000 &amp;&amp; subrun == 288) return;</span></div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> v : variables) {</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keywordflow">if</span> (v-&gt;hasTruth[tag]){</div>
@@ -209,7 +209,14 @@ $(function() {
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    }</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>  }</div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>}</div>
+<div class="ttc" id="a_fillers_8h_html_a043cba5d30fae35974196617ef392a5a"><div class="ttname"><a href="_fillers_8h.html#a043cba5d30fae35974196617ef392a5a">FillResponse</a></div><div class="ttdeci">void FillResponse(std::string tag, CVUniverse *univ, double weight, std::vector&lt; CCQENu::VariableFromConfig * &gt; variables, std::vector&lt; CCQENu::Variable2DFromConfig * &gt; variables2D, double scale=-1.)</div><div class="ttdef"><b>Definition:</b> Fillers.h:75</div></div>
+<div class="ttc" id="a_fillers_8h_html_a317a52306e201a77c027053b9e0f9931"><div class="ttname"><a href="_fillers_8h.html#a317a52306e201a77c027053b9e0f9931">FillData</a></div><div class="ttdeci">void FillData(std::string tag, CVUniverse *univ, std::vector&lt; CCQENu::VariableFromConfig * &gt; variables, std::vector&lt; CCQENu::Variable2DFromConfig * &gt; variables2D)</div><div class="ttdef"><b>Definition:</b> Fillers.h:7</div></div>
+<div class="ttc" id="a_fillers_8h_html_a8f32dfd7a197a6f830e591494a4b462b"><div class="ttname"><a href="_fillers_8h.html#a8f32dfd7a197a6f830e591494a4b462b">FillMC</a></div><div class="ttdeci">void FillMC(std::string tag, CVUniverse *univ, double weight, std::vector&lt; CCQENu::VariableFromConfig * &gt; variables, std::vector&lt; CCQENu::Variable2DFromConfig * &gt; variables2D, double scale=-1.)</div><div class="ttdef"><b>Definition:</b> Fillers.h:27</div></div>
+<div class="ttc" id="a_fillers_8h_html_ab8ad86eb6c3af09a04a0751a275f84cc"><div class="ttname"><a href="_fillers_8h.html#ab8ad86eb6c3af09a04a0751a275f84cc">FillSignalTruth</a></div><div class="ttdeci">void FillSignalTruth(std::string tag, CVUniverse *univ, double weight, std::vector&lt; CCQENu::VariableFromConfig * &gt; variables, std::vector&lt; CCQENu::Variable2DFromConfig * &gt; variables2D, double scale=-1.)</div><div class="ttdef"><b>Definition:</b> Fillers.h:104</div></div>
 <div class="ttc" id="aclass_c_v_universe_html"><div class="ttname"><a href="class_c_v_universe.html">CVUniverse</a></div><div class="ttdef"><b>Definition:</b> CVUniverse.h:22</div></div>
+<div class="ttc" id="aclass_c_v_universe_html_a27e47ce6ad2907b084233226557e8faa"><div class="ttname"><a href="class_c_v_universe.html#a27e47ce6ad2907b084233226557e8faa">CVUniverse::GetTrueGate</a></div><div class="ttdeci">virtual int GetTrueGate() const</div><div class="ttdef"><b>Definition:</b> CVUniverse.cxx:514</div></div>
+<div class="ttc" id="aclass_c_v_universe_html_a5edd62ba4bb30b9ac9abdd012a6599b2"><div class="ttname"><a href="class_c_v_universe.html#a5edd62ba4bb30b9ac9abdd012a6599b2">CVUniverse::GetTrueRun</a></div><div class="ttdeci">virtual int GetTrueRun() const</div><div class="ttdef"><b>Definition:</b> CVUniverse.cxx:506</div></div>
+<div class="ttc" id="aclass_c_v_universe_html_a6b011d81f8ea7d6ddb1aa05fb7d0d75a"><div class="ttname"><a href="class_c_v_universe.html#a6b011d81f8ea7d6ddb1aa05fb7d0d75a">CVUniverse::GetTrueSubRun</a></div><div class="ttdeci">virtual int GetTrueSubRun() const</div><div class="ttdef"><b>Definition:</b> CVUniverse.cxx:510</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

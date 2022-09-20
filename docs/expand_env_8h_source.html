@@ -70,7 +70,7 @@ $(function() {
   <div class="headertitle"><div class="title">expandEnv.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef EXPANDENV_H</span></div>
+<a href="expand_env_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef EXPANDENV_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define EXPANDENV_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//https://codereview.stackexchange.com/questions/172644/c-environment-variable-expansion</span></div>
@@ -81,7 +81,7 @@ $(function() {
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;cstdlib&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">inline</span> std::string expandEnv(std::string text)</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="expand_env_8h.html#a2405658ed9f26fba080736f87ecf86a7">   12</a></span><span class="keyword">inline</span> std::string <a class="code hl_function" href="expand_env_8h.html#a2405658ed9f26fba080736f87ecf86a7">expandEnv</a>(std::string text)</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>{</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="comment">//std::cout &lt;&lt; &quot; expand text? &quot; &lt;&lt; text &lt;&lt; std::endl;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">static</span> <span class="keyword">const</span> std::regex env_re{R<span class="stringliteral">&quot;--(\$\{([^}]+)\})--&quot;};</span></div>
@@ -96,6 +96,7 @@ $(function() {
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keywordflow">return</span> text;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>}</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aexpand_env_8h_html_a2405658ed9f26fba080736f87ecf86a7"><div class="ttname"><a href="expand_env_8h.html#a2405658ed9f26fba080736f87ecf86a7">expandEnv</a></div><div class="ttdeci">std::string expandEnv(std::string text)</div><div class="ttdef"><b>Definition:</b> expandEnv.h:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

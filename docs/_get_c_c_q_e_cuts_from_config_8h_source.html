@@ -70,15 +70,15 @@ $(function() {
   <div class="headertitle"><div class="title">GetCCQECutsFromConfig.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef GETCCQECUTSFromConfig_H</span></div>
+<a href="_get_c_c_q_e_cuts_from_config_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef GETCCQECUTSFromConfig_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define GETCCQECUTSFromConfig_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;PlotUtils/Cut.h&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;include/CVUniverse.h&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;include/CutFromConfig.h&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;utils/NuConfig.h&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="_c_v_universe_8h.html">include/CVUniverse.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="_cut_from_config_8h.html">include/CutFromConfig.h</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="_nu_config_8h.html">utils/NuConfig.h</a>&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span>config_reco {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="namespaceconfig__reco.html">    9</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceconfig__reco.html">config_reco</a> {</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">//============================================================================</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// This function instantiates each of the above cuts and adds them to a</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// container, over which we&#39;ll loop during our event selection to apply the</span></div>
@@ -88,14 +88,14 @@ $(function() {
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">// shorthand for std::vector&lt;std::unique_ptr&lt;PlotUtils::Cut&lt;UNIVERSE, EVENT&gt;&gt;&gt;;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">//============================================================================</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> UNIVERSE, <span class="keyword">class</span> EVENT = PlotUtils::detail::empty&gt;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>PlotUtils::cuts_t&lt;UNIVERSE&gt; GetCCQECutsFromConfig(<a class="code hl_class" href="class_nu_config.html">NuConfig</a> &amp; config )</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="namespaceconfig__reco.html#abdeb8ce1616ee899b96a98491523dacc">   19</a></span>PlotUtils::cuts_t&lt;UNIVERSE&gt; <a class="code hl_function" href="namespaceconfig__reco.html#abdeb8ce1616ee899b96a98491523dacc">GetCCQECutsFromConfig</a>(<a class="code hl_class" href="class_nu_config.html">NuConfig</a> &amp; <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a> )</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">typedef</span> std::function&lt;double(<span class="keyword">const</span> UNIVERSE&amp;)&gt; PointerToCVUniverseFunction;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">typedef</span> std::function&lt;double(<span class="keyword">const</span> UNIVERSE&amp;)&gt; <a class="code hl_typedef" href="_get_variables_from_config_8cxx.html#ac99428e071a6be52e7f293511fff4488">PointerToCVUniverseFunction</a>;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  PlotUtils::cuts_t&lt;UNIVERSE, EVENT&gt; ccqe_cuts;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; set up the cuts&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="comment">// event cuts</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="comment">//std::vector&lt;std::string&gt;  cuts= config.GetKeys();</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  std::vector&lt;NuConfig&gt; cuts = config.GetConfigVector();</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  std::vector&lt;NuConfig&gt; cuts = <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>.GetConfigVector();</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <a class="code hl_class" href="class_c_v_functions.html">CVFunctions&lt;UNIVERSE&gt;</a> fun;</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="comment">// event cuts</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">//  ccqe_cuts.emplace_back(new NoDeadtime&lt;UNIVERSE, EVENT&gt;(config.GetValue(&quot;NoDeadTime&quot;)));</span></div>
@@ -118,8 +118,8 @@ $(function() {
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> cut:cuts){</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    std::string key = cut.GetString(<span class="stringliteral">&quot;name&quot;</span>);</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">//NuConfig cut(config.GetConfig(key)); // make a subconfig</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::string variable = cut.GetString(<span class="stringliteral">&quot;variable&quot;</span>);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::cout &lt;&lt; <span class="stringliteral">&quot; set up cut &quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; using variable &quot;</span> &lt;&lt; variable &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::string <a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a> = cut.GetString(<span class="stringliteral">&quot;variable&quot;</span>);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::cout &lt;&lt; <span class="stringliteral">&quot; set up cut &quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; using variable &quot;</span> &lt;&lt; <a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a> &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">if</span>( cut.IsMember(<span class="stringliteral">&quot;equals&quot;</span>)){</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      ccqe_cuts.emplace_back( <span class="keyword">new</span> IsSameFromConfigFunc&lt;UNIVERSE&gt;(cut,fun));</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
@@ -175,11 +175,11 @@ $(function() {
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>}</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="keyword">namespace </span>config_truth{</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="namespaceconfig__truth.html">  106</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceconfig__truth.html">config_truth</a>{</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment">//-----------signal</span></div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> UNIVERSE&gt;</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>PlotUtils::constraints_t&lt;UNIVERSE&gt; GetCCQEPhaseSpaceFromConfig(<a class="code hl_class" href="class_nu_config.html">NuConfig</a> &amp; config)</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="namespaceconfig__truth.html#a71b96e0cccccb643a634e6fe1fa1fad7">  110</a></span>PlotUtils::constraints_t&lt;UNIVERSE&gt; <a class="code hl_function" href="namespaceconfig__truth.html#a71b96e0cccccb643a634e6fe1fa1fad7">GetCCQEPhaseSpaceFromConfig</a>(<a class="code hl_class" href="class_nu_config.html">NuConfig</a> &amp; <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>)</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>{</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
@@ -190,18 +190,18 @@ $(function() {
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="comment">//  signalDef.emplace_back(new RangeConstraintFromConfig&lt;UNIVERSE,double,&amp;UNIVERSE::GetTrueZVertex&gt;(config.GetValue(&quot;ZRange&quot;)));</span></div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment">//</span></div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">typedef</span> std::function&lt;double(<span class="keyword">const</span> UNIVERSE&amp;)&gt; PointerToCVUniverseFunction;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">typedef</span> std::function&lt;double(<span class="keyword">const</span> UNIVERSE&amp;)&gt; <a class="code hl_typedef" href="_get_variables_from_config_8cxx.html#ac99428e071a6be52e7f293511fff4488">PointerToCVUniverseFunction</a>;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    PlotUtils::constraints_t&lt;UNIVERSE&gt; signalDef;</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    std::cout &lt;&lt; <span class="stringliteral">&quot; set up the constraints &quot;</span> &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="comment">// event cuts</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>     std::vector&lt;NuConfig&gt; cuts = config.GetConfigVector();</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>     std::vector&lt;NuConfig&gt; cuts = <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>.GetConfigVector();</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    </div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <a class="code hl_class" href="class_c_v_functions.html">CVFunctions&lt;UNIVERSE&gt;</a> fun;</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> cut:cuts){</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>      std::string key = cut.GetString(<span class="stringliteral">&quot;name&quot;</span>);</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>      std::string variable = cut.GetString(<span class="stringliteral">&quot;variable&quot;</span>);</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>      std::cout &lt;&lt; <span class="stringliteral">&quot; set up phase space  &quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; using variable &quot;</span> &lt;&lt; variable &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>      std::string <a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a> = cut.GetString(<span class="stringliteral">&quot;variable&quot;</span>);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>      std::cout &lt;&lt; <span class="stringliteral">&quot; set up phase space  &quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; using variable &quot;</span> &lt;&lt; <a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a> &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>      <span class="keywordflow">if</span>( cut.IsMember(<span class="stringliteral">&quot;equals&quot;</span>)){</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        signalDef.emplace_back( <span class="keyword">new</span> IsSameConstraintFromConfigFunc&lt;UNIVERSE&gt;(cut,fun));</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>      }</div>
@@ -234,19 +234,19 @@ $(function() {
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="comment">// CCQELike ------------------------ // this is actually identical to the fiducial stuff</span></div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> UNIVERSE&gt;</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>PlotUtils::constraints_t&lt;UNIVERSE&gt; GetCCQESignalFromConfig(<a class="code hl_class" href="class_nu_config.html">NuConfig</a> &amp; config)</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="namespaceconfig__truth.html#a2ec9c356c045ac695654a8a1fc07fd37">  165</a></span>PlotUtils::constraints_t&lt;UNIVERSE&gt; <a class="code hl_function" href="namespaceconfig__truth.html#a2ec9c356c045ac695654a8a1fc07fd37">GetCCQESignalFromConfig</a>(<a class="code hl_class" href="class_nu_config.html">NuConfig</a> &amp; <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>)</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>{</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keyword">typedef</span> std::function&lt;double(<span class="keyword">const</span> UNIVERSE&amp;)&gt; PointerToCVUniverseFunction;</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keyword">typedef</span> std::function&lt;double(<span class="keyword">const</span> UNIVERSE&amp;)&gt; <a class="code hl_typedef" href="_get_variables_from_config_8cxx.html#ac99428e071a6be52e7f293511fff4488">PointerToCVUniverseFunction</a>;</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    PlotUtils::constraints_t&lt;UNIVERSE&gt; signalDef;</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    std::cout &lt;&lt; <span class="stringliteral">&quot; set up the constraints &quot;</span> &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="comment">// event cuts</span></div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>  std::vector&lt;NuConfig&gt; cuts = config.GetConfigVector();</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>  std::vector&lt;NuConfig&gt; cuts = <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>.GetConfigVector();</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <a class="code hl_class" href="class_c_v_functions.html">CVFunctions&lt;UNIVERSE&gt;</a> fun;</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> cut:cuts){</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>      std::string key = cut.GetString(<span class="stringliteral">&quot;name&quot;</span>);<span class="comment">// make a subconfig</span></div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>      std::string variable = cut.GetString(<span class="stringliteral">&quot;variable&quot;</span>);</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>      std::cout &lt;&lt; <span class="stringliteral">&quot; set up signal definition  &quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; using variable &quot;</span> &lt;&lt; variable &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>      std::string <a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a> = cut.GetString(<span class="stringliteral">&quot;variable&quot;</span>);</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>      std::cout &lt;&lt; <span class="stringliteral">&quot; set up signal definition  &quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; using variable &quot;</span> &lt;&lt; <a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a> &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>      <span class="keywordflow">if</span>( cut.IsMember(<span class="stringliteral">&quot;equals&quot;</span>)){</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        signalDef.emplace_back( <span class="keyword">new</span> IsSameConstraintFromConfigFunc&lt;UNIVERSE&gt;(cut,fun));</div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>      }</div>
@@ -277,8 +277,19 @@ $(function() {
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>} <span class="comment">// end namespace</span></div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="a_c_v_universe_8h_html"><div class="ttname"><a href="_c_v_universe_8h.html">CVUniverse.h</a></div></div>
+<div class="ttc" id="a_cut_from_config_8h_html"><div class="ttname"><a href="_cut_from_config_8h.html">CutFromConfig.h</a></div></div>
+<div class="ttc" id="a_get_variables_from_config_8cxx_html_ac99428e071a6be52e7f293511fff4488"><div class="ttname"><a href="_get_variables_from_config_8cxx.html#ac99428e071a6be52e7f293511fff4488">PointerToCVUniverseFunction</a></div><div class="ttdeci">std::function&lt; double(const CVUniverse &amp;)&gt; PointerToCVUniverseFunction</div><div class="ttdef"><b>Definition:</b> GetVariablesFromConfig.cxx:41</div></div>
+<div class="ttc" id="a_nu_config_8h_html"><div class="ttname"><a href="_nu_config_8h.html">NuConfig.h</a></div></div>
 <div class="ttc" id="aclass_c_v_functions_html"><div class="ttname"><a href="class_c_v_functions.html">CVFunctions</a></div><div class="ttdef"><b>Definition:</b> CVFunctions.h:19</div></div>
 <div class="ttc" id="aclass_nu_config_html"><div class="ttname"><a href="class_nu_config.html">NuConfig</a></div><div class="ttdef"><b>Definition:</b> NuConfig.h:16</div></div>
+<div class="ttc" id="anamespace_background_sub_html_a8678cfa3ba31e3bcb3d6de71806b12cb"><div class="ttname"><a href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">BackgroundSub.config</a></div><div class="ttdeci">config</div><div class="ttdef"><b>Definition:</b> BackgroundSub.py:17</div></div>
+<div class="ttc" id="anamespace_background_sub_html_a8a684d6fdbbce9bccfe39b91e80cf9da"><div class="ttname"><a href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">BackgroundSub.variable</a></div><div class="ttdeci">variable</div><div class="ttdef"><b>Definition:</b> BackgroundSub.py:28</div></div>
+<div class="ttc" id="anamespaceconfig__reco_html"><div class="ttname"><a href="namespaceconfig__reco.html">config_reco</a></div><div class="ttdef"><b>Definition:</b> GetCCQECutsFromConfig.h:9</div></div>
+<div class="ttc" id="anamespaceconfig__reco_html_abdeb8ce1616ee899b96a98491523dacc"><div class="ttname"><a href="namespaceconfig__reco.html#abdeb8ce1616ee899b96a98491523dacc">config_reco::GetCCQECutsFromConfig</a></div><div class="ttdeci">PlotUtils::cuts_t&lt; UNIVERSE &gt; GetCCQECutsFromConfig(NuConfig &amp;config)</div><div class="ttdef"><b>Definition:</b> GetCCQECutsFromConfig.h:19</div></div>
+<div class="ttc" id="anamespaceconfig__truth_html"><div class="ttname"><a href="namespaceconfig__truth.html">config_truth</a></div><div class="ttdef"><b>Definition:</b> GetCCQECutsFromConfig.h:106</div></div>
+<div class="ttc" id="anamespaceconfig__truth_html_a2ec9c356c045ac695654a8a1fc07fd37"><div class="ttname"><a href="namespaceconfig__truth.html#a2ec9c356c045ac695654a8a1fc07fd37">config_truth::GetCCQESignalFromConfig</a></div><div class="ttdeci">PlotUtils::constraints_t&lt; UNIVERSE &gt; GetCCQESignalFromConfig(NuConfig &amp;config)</div><div class="ttdef"><b>Definition:</b> GetCCQECutsFromConfig.h:165</div></div>
+<div class="ttc" id="anamespaceconfig__truth_html_a71b96e0cccccb643a634e6fe1fa1fad7"><div class="ttname"><a href="namespaceconfig__truth.html#a71b96e0cccccb643a634e6fe1fa1fad7">config_truth::GetCCQEPhaseSpaceFromConfig</a></div><div class="ttdeci">PlotUtils::constraints_t&lt; UNIVERSE &gt; GetCCQEPhaseSpaceFromConfig(NuConfig &amp;config)</div><div class="ttdef"><b>Definition:</b> GetCCQECutsFromConfig.h:110</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
