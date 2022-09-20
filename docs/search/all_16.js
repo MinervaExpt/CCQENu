@@ -1,6 +1,12 @@
 var searchData=
 [
-  ['xmax_0',['xmax',['../class_fraction_fit_test_1_1logcheb.html#a33dcf3bc71829d28aa605177fc000682',1,'FractionFitTest.logcheb.xmax()'],['../class_fraction_fit_test_1_1logleg.html#a8b06b036ced3919fbadc3a76b00f0fb4',1,'FractionFitTest.logleg.xmax()'],['../class_fraction_fit_with_systematics_1_1logcheb.html#ab2ee5d32096cdfdd663e4b23cc40d4fb',1,'FractionFitWithSystematics.logcheb.xmax()'],['../class_fraction_fit_with_systematics_1_1logleg.html#aa28711a5b43c468a748f5579ad708e39',1,'FractionFitWithSystematics.logleg.xmax()'],['../plotting__pdf_8h.html#a30554afc6599846bcd01cbf986d0998a',1,'xmax():&#160;plotting_pdf.h']]],
-  ['xmin_1',['xmin',['../class_fraction_fit_test_1_1logcheb.html#a9f579ead7c53499037e4378fea80b7b0',1,'FractionFitTest.logcheb.xmin()'],['../class_fraction_fit_test_1_1logleg.html#a75b39774da6aea3b707ea64e7ca79234',1,'FractionFitTest.logleg.xmin()'],['../class_fraction_fit_with_systematics_1_1logcheb.html#a7b783de482bc2f48cba30385e2bc2fd5',1,'FractionFitWithSystematics.logcheb.xmin()'],['../class_fraction_fit_with_systematics_1_1logleg.html#a5877c2282d79e7e2a4bf4b67ad0c3dca',1,'FractionFitWithSystematics.logleg.xmin()'],['../plotting__pdf_8h.html#ab5bbe897a0c25c58341c216a1b31fbbf',1,'xmin():&#160;plotting_pdf.h']]],
-  ['xtra_2',['xtra',['../namespace_mnv_h1_d__viewer.html#a38dfd8ca851d07e19e7e7d31bd48f63c',1,'MnvH1D_viewer']]]
+  ['_7ecvuniverse_0',['~CVUniverse',['../class_c_v_universe.html#a9e4ac96a03a34dc35d0d7e284ea2759a',1,'CVUniverse']]],
+  ['_7eissameconstraintfromconfigfunc_1',['~IsSameConstraintFromConfigFunc',['../class_plot_utils_1_1_is_same_constraint_from_config_func.html#af22cb9d122ec9069042d4b82acf911ee',1,'PlotUtils::IsSameConstraintFromConfigFunc']]],
+  ['_7eissamefromconfigfunc_2',['~IsSameFromConfigFunc',['../class_plot_utils_1_1_is_same_from_config_func.html#ade289d1aabd8ed0223cc341ddd447e02',1,'PlotUtils::IsSameFromConfigFunc']]],
+  ['_7emaximumconstraintfromconfigfunc_3',['~MaximumConstraintFromConfigFunc',['../class_plot_utils_1_1_maximum_constraint_from_config_func.html#a4180b6eaf129fbc473abbe64c04159a2',1,'PlotUtils::MaximumConstraintFromConfigFunc']]],
+  ['_7emaximumfromconfigfunc_4',['~MaximumFromConfigFunc',['../class_plot_utils_1_1_maximum_from_config_func.html#a29f3dc448f035fc2ec3095d576de08b3',1,'PlotUtils::MaximumFromConfigFunc']]],
+  ['_7eminimumconstraintfromconfigfunc_5',['~MinimumConstraintFromConfigFunc',['../class_plot_utils_1_1_minimum_constraint_from_config_func.html#aa2cc99a05d9339c6b6c6565f23716ac5',1,'PlotUtils::MinimumConstraintFromConfigFunc']]],
+  ['_7eminimumfromconfigfunc_6',['~MinimumFromConfigFunc',['../class_plot_utils_1_1_minimum_from_config_func.html#ac579e87e41fe403dd703c2617334f8c6',1,'PlotUtils::MinimumFromConfigFunc']]],
+  ['_7erangeconstraintfromconfigfunc_7',['~RangeConstraintFromConfigFunc',['../class_plot_utils_1_1_range_constraint_from_config_func.html#a81f31fc95a00bddbd98215b021b264e7',1,'PlotUtils::RangeConstraintFromConfigFunc']]],
+  ['_7erangefromconfigfunc_8',['~RangeFromConfigFunc',['../class_plot_utils_1_1_range_from_config_func.html#a9bcb3262187bd7f052baaa20521d2420',1,'PlotUtils::RangeFromConfigFunc']]]
 ];

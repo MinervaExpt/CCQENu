@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['logcheb_0',['logcheb',['../class_fraction_fit_test_1_1logcheb.html',1,'FractionFitTest.logcheb'],['../class_fraction_fit_with_systematics_1_1logcheb.html',1,'FractionFitWithSystematics.logcheb']]],
-  ['logleg_1',['logleg',['../class_fraction_fit_test_1_1logleg.html',1,'FractionFitTest.logleg'],['../class_fraction_fit_with_systematics_1_1logleg.html',1,'FractionFitWithSystematics.logleg']]]
+  ['maximumconstraintfromconfigfunc_0',['MaximumConstraintFromConfigFunc',['../class_plot_utils_1_1_maximum_constraint_from_config_func.html',1,'PlotUtils']]],
+  ['maximumfromconfigfunc_1',['MaximumFromConfigFunc',['../class_plot_utils_1_1_maximum_from_config_func.html',1,'PlotUtils']]],
+  ['minimumconstraintfromconfigfunc_2',['MinimumConstraintFromConfigFunc',['../class_plot_utils_1_1_minimum_constraint_from_config_func.html',1,'PlotUtils']]],
+  ['minimumfromconfigfunc_3',['MinimumFromConfigFunc',['../class_plot_utils_1_1_minimum_from_config_func.html',1,'PlotUtils']]]
 ];

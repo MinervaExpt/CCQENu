@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['sample_0',['Sample',['../class_c_c_q_e_nu_1_1_sample.html',1,'CCQENu']]],
-  ['scalefactors_1',['ScaleFactors',['../classfit_1_1_scale_factors.html',1,'fit']]]
+  ['weight_5fmcrescale_0',['weight_MCreScale',['../class_plot_utils_1_1weight___m_cre_scale.html',1,'PlotUtils']]]
 ];
