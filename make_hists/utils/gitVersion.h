@@ -12,7 +12,7 @@ namespace git
 {
   std::string commitHash()
   {
-    return "https://github.com/MinervaExpt/CCQENu/commit/f354976c670e5d39edde41bb2edc640adf881fee";
+    return "https://github.com/MinervaExpt/CCQENu/commit/638892ee46b039e5c02a9d63ea383a60c8fd03fd";
   }
 }
 
