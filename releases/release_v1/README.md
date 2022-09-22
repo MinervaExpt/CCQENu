@@ -18,7 +18,7 @@ DataFull and MCFull refer to the special energy plots corrected to the full angl
 **MODEL** refers to the GENIE2.12.6 variation:
 
 - GENIE2.12.6 = default GENIE
-- 2p2h = replaces the GENIE RPA with our tuned 2p2h
+- 2p2h = replaces the GENIE 2p2h with our tuned 2p2h
 - rpa = adds RPA
 - piontune = adds pion tune (negligible  effect)
 - MINERvA_v1 = MINERvA v1 tune (used for extraction)
@@ -43,5 +43,5 @@ DataFull and MCFull refer to the special energy plots corrected to the full angl
 - py_1d
 - 2d  
 
-In the 2d files, the ordering is column is increasing x-view (pzmu), row is increasing y-view (ptmu).    
-In the covariance and correlation matrix the ordering is pzbin + ptbin*(Npzbin)
+In the 2d files, the ordering is: column is increasing x-view (pzmu), row is increasing y-view (ptmu).    
+In the covariance and correlation matrix the 2D histogram is compressed to 1D and the ordering is pzbin + ptbin*(Npzbin)
