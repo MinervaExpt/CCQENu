@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -21,9 +25,8 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">CCQENu<span id="projectnumber">&#160;1</span>
+   <div id="projectname">CCQENu
    </div>
-   <div id="projectbrief">CCQENu for MINERvA</div>
   </td>
  </tr>
  </tbody>
@@ -47,6 +50,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('class_c_v_universe.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -61,7 +81,6 @@ $(function() {
 </iframe>
 </div>
 
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -71,38 +90,21 @@ $(function() {
   <div class="headertitle"><div class="title">CVUniverse Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for CVUniverse:</div>
 <div class="dyncontent">
-<div class="center"><img src="class_c_v_universe__inherit__graph.png" border="0" usemap="#a_c_v_universe_inherit__map" alt="Inheritance graph"/></div>
-<map name="a_c_v_universe_inherit__map" id="a_c_v_universe_inherit__map">
-<area shape="rect" title=" " alt="" coords="142,80,235,107"/>
-<area shape="rect" href="class_plot_utils_1_1_hist2_d_wrapper_map.html" title=" " alt="" coords="5,155,175,196"/>
-<area shape="rect" href="class_plot_utils_1_1_hist_wrapper_map.html" title=" " alt="" coords="199,155,378,196"/>
-<area shape="rect" title=" " alt="" coords="99,5,278,32"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for CVUniverse:</div>
-<div class="dyncontent">
-<div class="center"><img src="class_c_v_universe__coll__graph.png" border="0" usemap="#a_c_v_universe_coll__map" alt="Collaboration graph"/></div>
-<map name="a_c_v_universe_coll__map" id="a_c_v_universe_coll__map">
-<area shape="rect" title=" " alt="" coords="124,95,217,121"/>
-<area shape="rect" title=" " alt="" coords="5,5,184,32"/>
-<area shape="rect" href="class_nu_config.html" title=" " alt="" coords="208,5,285,32"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+ <div class="center">
+  <img src="class_c_v_universe.png" usemap="#CVUniverse_map" alt=""/>
+  <map id="CVUniverse_map" name="CVUniverse_map">
+<area href="class_plot_utils_1_1_hist2_d_wrapper_map.html" alt="PlotUtils::Hist2DWrapperMap&lt; CVUniverse &gt;" shape="rect" coords="0,112,265,136"/>
+<area href="class_plot_utils_1_1_hist_wrapper_map.html" alt="PlotUtils::HistWrapperMap&lt; CVUniverse &gt;" shape="rect" coords="275,112,540,136"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a411f3ab53d307ae3c461a53aa9dd388c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_v_universe.html#a411f3ab53d307ae3c461a53aa9dd388c">CVUniverse</a> ()</td></tr>
-<tr class="separator:a411f3ab53d307ae3c461a53aa9dd388c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a212007ce1f67e29301957ae2a282e3d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_v_universe.html#a212007ce1f67e29301957ae2a282e3d9">CVUniverse</a> (PlotUtils::ChainWrapper *chw, double nsigma=0)</td></tr>
 <tr class="separator:a212007ce1f67e29301957ae2a282e3d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e4ac96a03a34dc35d0d7e284ea2759a"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_v_universe.html#a9e4ac96a03a34dc35d0d7e284ea2759a">~CVUniverse</a> ()</td></tr>
-<tr class="separator:a9e4ac96a03a34dc35d0d7e284ea2759a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc18a7e19afa76dbbf34e67914a13521"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_v_universe.html#afc18a7e19afa76dbbf34e67914a13521">GetWeight</a> () const</td></tr>
 <tr class="separator:afc18a7e19afa76dbbf34e67914a13521"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bb10cb642cba3a07f302679fae9705c"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_v_universe.html#a2bb10cb642cba3a07f302679fae9705c">GetMultiplicity</a> () const</td></tr>
@@ -296,7 +298,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a7fd8beb0b9f6c6cb8c086f484f49d633"><td class="memItemLeft" align="right" valign="top">static std::map&lt; std::string, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_v_universe.html#a7fd8beb0b9f6c6cb8c086f484f49d633">GetEventParticleCounts</a> ()</td></tr>
+<tr class="memitem:a7fd8beb0b9f6c6cb8c086f484f49d633"><td class="memItemLeft" align="right" valign="top"><a id="a7fd8beb0b9f6c6cb8c086f484f49d633" name="a7fd8beb0b9f6c6cb8c086f484f49d633"></a>
+static std::map&lt; std::string, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GetEventParticleCounts</b> ()</td></tr>
 <tr class="separator:a7fd8beb0b9f6c6cb8c086f484f49d633"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa59054b4bfb38b2c4c87a3cb3785d4cd"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_v_universe.html#aa59054b4bfb38b2c4c87a3cb3785d4cd">GetProtonKECut</a> ()</td></tr>
 <tr class="separator:aa59054b4bfb38b2c4c87a3cb3785d4cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -338,7 +341,10 @@ Static Protected Attributes</h2></td></tr>
 <tr class="memitem:a97755bdd63d48a9f524351c1caf16ab7"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_v_universe.html#a97755bdd63d48a9f524351c1caf16ab7">_is_photon_energy_cut_set</a> = false</td></tr>
 <tr class="separator:a97755bdd63d48a9f524351c1caf16ab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00022">22</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a411f3ab53d307ae3c461a53aa9dd388c" name="a411f3ab53d307ae3c461a53aa9dd388c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a411f3ab53d307ae3c461a53aa9dd388c">&#9670;&nbsp;</a></span>CVUniverse() <span class="overload">[1/2]</span></h2>
 
@@ -361,6 +367,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00057">57</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
 
 </div>
 </div>
@@ -398,6 +406,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00059">59</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
+
 </div>
 </div>
 <a id="a9e4ac96a03a34dc35d0d7e284ea2759a" name="a9e4ac96a03a34dc35d0d7e284ea2759a"></a>
@@ -422,6 +432,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00062">62</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
 
 </div>
 </div>
@@ -449,6 +461,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00941">941</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a4ef585fda32f838cacf1e09cda262ffc" name="a4ef585fda32f838cacf1e09cda262ffc"></a>
@@ -474,6 +488,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00834">834</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a2d607b76432aaeacf2d742d7187dbd37" name="a2d607b76432aaeacf2d742d7187dbd37"></a>
@@ -491,6 +507,8 @@ Static Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00471">471</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a153a44612ef13e1d364ae5dcb2cee752" name="a153a44612ef13e1d364ae5dcb2cee752"></a>
@@ -507,6 +525,8 @@ Static Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00465">465</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -533,6 +553,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00336">336</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ad05753c28640c55406f0c8f737910d5f" name="ad05753c28640c55406f0c8f737910d5f"></a>
@@ -557,6 +579,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00346">346</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -583,6 +607,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00420">420</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ac91f2a2b3c31ad48bf901db374cde4cf" name="ac91f2a2b3c31ad48bf901db374cde4cf"></a>
@@ -607,6 +633,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00442">442</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -633,6 +661,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00193">193</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a16406081745b053fa400fd19d2e0adac" name="a16406081745b053fa400fd19d2e0adac"></a>
@@ -657,6 +687,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00262">262</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -683,6 +715,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00213">213</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a5b936b84f7f6af40147e7163e9c90222" name="a5b936b84f7f6af40147e7163e9c90222"></a>
@@ -708,30 +742,7 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a7fd8beb0b9f6c6cb8c086f484f49d633" name="a7fd8beb0b9f6c6cb8c086f484f49d633"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7fd8beb0b9f6c6cb8c086f484f49d633">&#9670;&nbsp;</a></span>GetEventParticleCounts()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static std::map&lt; std::string, int &gt; CVUniverse::GetEventParticleCounts </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00204">204</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -758,6 +769,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00777">777</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="aa2382fa0d3591e8b36d3f207aefb45fb" name="aa2382fa0d3591e8b36d3f207aefb45fb"></a>
@@ -782,6 +795,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00514">514</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -808,6 +823,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00532">532</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a54cb080207ea7255744250957e9b6f8e" name="a54cb080207ea7255744250957e9b6f8e"></a>
@@ -832,6 +849,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00328">328</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -858,6 +877,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00623">623</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="adcbc330b44a95cb549aff6c67c4787c3" name="adcbc330b44a95cb549aff6c67c4787c3"></a>
@@ -882,6 +903,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00685">685</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -908,6 +931,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00681">681</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ad59065565f21c99def6a831654aaa38b" name="ad59065565f21c99def6a831654aaa38b"></a>
@@ -932,6 +957,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00199">199</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -958,6 +985,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00821">821</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a3483ce74420694f7c15e313d6081719f" name="a3483ce74420694f7c15e313d6081719f"></a>
@@ -982,6 +1011,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00251">251</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1008,6 +1039,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00371">371</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a1343880ccb96209af569185c04f02fbe" name="a1343880ccb96209af569185c04f02fbe"></a>
@@ -1032,6 +1065,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00412">412</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1058,6 +1093,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00929">929</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="aa234e01a278da4ea35fe85072452f6f5" name="aa234e01a278da4ea35fe85072452f6f5"></a>
@@ -1082,6 +1119,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00937">937</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1108,6 +1147,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00933">933</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="af5e6c7beac7263090fbcd511a4805b4e" name="af5e6c7beac7263090fbcd511a4805b4e"></a>
@@ -1132,6 +1173,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00055">55</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1158,6 +1201,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00189">189</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ae41bc4d80c57e8e3b059dce7bc7b5e82" name="ae41bc4d80c57e8e3b059dce7bc7b5e82"></a>
@@ -1182,6 +1227,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00629">629</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1208,6 +1255,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00677">677</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="aa8865a668a392d55f4e572cd53c06920" name="aa8865a668a392d55f4e572cd53c06920"></a>
@@ -1232,6 +1281,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00351">351</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1258,6 +1309,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00356">356</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a9d08a9b9bfcee2508752cac34aee0e5b" name="a9d08a9b9bfcee2508752cac34aee0e5b"></a>
@@ -1282,6 +1335,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00438">438</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1308,6 +1363,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00072">72</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a887243d619a429d5e862a0232f8fb7b7" name="a887243d619a429d5e862a0232f8fb7b7"></a>
@@ -1332,6 +1389,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00270">270</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1358,6 +1417,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00278">278</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a24014ccfb2b93b0563ad3104c4aecd87" name="a24014ccfb2b93b0563ad3104c4aecd87"></a>
@@ -1382,6 +1443,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00287">287</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1408,6 +1471,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00817">817</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="aa59054b4bfb38b2c4c87a3cb3785d4cd" name="aa59054b4bfb38b2c4c87a3cb3785d4cd"></a>
@@ -1432,6 +1497,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00089">89</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1459,6 +1526,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00106">106</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a4ae3455640e360e245ea74032327968f" name="a4ae3455640e360e245ea74032327968f"></a>
@@ -1483,6 +1552,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00229">229</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1509,6 +1580,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00360">360</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="aad96def3d09fad941ed536aedc00352a" name="aad96def3d09fad941ed536aedc00352a"></a>
@@ -1533,6 +1606,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00506">506</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1559,6 +1634,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00510">510</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="aebd37373d8c119b525bce6be11587d97" name="aebd37373d8c119b525bce6be11587d97"></a>
@@ -1584,6 +1661,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00450">450</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ac6fabe3714a5a282011b3a42c94dadf3" name="ac6fabe3714a5a282011b3a42c94dadf3"></a>
@@ -1608,6 +1687,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00317">317</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1635,6 +1716,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00424">424</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a0261de94cfb1a41e08a33c3b56f0d2af" name="a0261de94cfb1a41e08a33c3b56f0d2af"></a>
@@ -1652,6 +1735,8 @@ Static Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00482">482</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="adc7cdd1679c98ea451a69aa32046827d" name="adc7cdd1679c98ea451a69aa32046827d"></a>
@@ -1668,6 +1753,8 @@ Static Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00476">476</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1694,6 +1781,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00663">663</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a577faa670e6365610e60c04adc3a3bfe" name="a577faa670e6365610e60c04adc3a3bfe"></a>
@@ -1718,6 +1807,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00903">903</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1744,6 +1835,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00877">877</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a2db502e103c706bb9344df11f9e7961f" name="a2db502e103c706bb9344df11f9e7961f"></a>
@@ -1768,6 +1861,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00446">446</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1794,6 +1889,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00266">266</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a12208d753a4ed9428c0a27428c41933c" name="a12208d753a4ed9428c0a27428c41933c"></a>
@@ -1818,6 +1915,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00221">221</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1844,6 +1943,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00209">209</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a27e47ce6ad2907b084233226557e8faa" name="a27e47ce6ad2907b084233226557e8faa"></a>
@@ -1868,6 +1969,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00526">526</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1894,6 +1997,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00867">867</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ab149e69128918689684997d5a6c43e75" name="ab149e69128918689684997d5a6c43e75"></a>
@@ -1918,6 +2023,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00255">255</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1944,6 +2051,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00377">377</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a1957c0c1b17d7339fad2fff30a7a4e7a" name="a1957c0c1b17d7339fad2fff30a7a4e7a"></a>
@@ -1968,6 +2077,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00716">716</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -1994,6 +2105,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00761">761</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a0ed636d8ec28dbe72f274f38ccd4eabf" name="a0ed636d8ec28dbe72f274f38ccd4eabf"></a>
@@ -2018,6 +2131,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00274">274</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2044,6 +2159,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00283">283</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a30c0776c443d5e412726d32fe5447251" name="a30c0776c443d5e412726d32fe5447251"></a>
@@ -2068,6 +2185,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00292">292</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2094,6 +2213,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00847">847</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a1f32e53facabea64df64fce48ab2f30f" name="a1f32e53facabea64df64fce48ab2f30f"></a>
@@ -2118,6 +2239,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00383">383</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2144,6 +2267,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00402">402</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ae359b4d0fa8ddaa32bcfb0d584d721f6" name="ae359b4d0fa8ddaa32bcfb0d584d721f6"></a>
@@ -2168,6 +2293,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00243">243</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2194,6 +2321,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00391">391</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a3b0dd69d5a5608e88c3bb5437e352faf" name="a3b0dd69d5a5608e88c3bb5437e352faf"></a>
@@ -2218,6 +2347,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00365">365</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2244,6 +2375,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00518">518</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ae84bcd2c23a3c5e61417d39e61a725e8" name="ae84bcd2c23a3c5e61417d39e61a725e8"></a>
@@ -2268,6 +2401,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00916">916</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2294,6 +2429,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00888">888</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a6b011d81f8ea7d6ddb1aa05fb7d0d75a" name="a6b011d81f8ea7d6ddb1aa05fb7d0d75a"></a>
@@ -2318,6 +2455,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00522">522</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2344,6 +2483,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00313">313</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a501303cbb98276511025f2d5451d3b23" name="a501303cbb98276511025f2d5451d3b23"></a>
@@ -2368,6 +2509,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00321">321</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2394,6 +2537,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00296">296</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a6e22388196746e24ea2f04a88587d5fb" name="a6e22388196746e24ea2f04a88587d5fb"></a>
@@ -2419,6 +2564,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00304">304</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ad5c1fa5ae3e8f40eb319f729b0fc4ed1" name="ad5c1fa5ae3e8f40eb319f729b0fc4ed1"></a>
@@ -2436,6 +2583,8 @@ Static Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00492">492</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ae9fb7133ba8934358364fdcaf229c1f3" name="ae9fb7133ba8934358364fdcaf229c1f3"></a>
@@ -2452,6 +2601,8 @@ Static Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00498">498</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2478,6 +2629,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00694">694</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ae4ff54eacc53a223d6751199083ae40d" name="ae4ff54eacc53a223d6751199083ae40d"></a>
@@ -2502,6 +2655,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00690">690</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2528,6 +2683,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00731">731</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a174be2ff93e21dbd20297120496d2ab5" name="a174be2ff93e21dbd20297120496d2ab5"></a>
@@ -2552,6 +2709,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00644">644</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2578,6 +2737,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00698">698</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a731f7865c5e08848e7d4c3c7181c87be" name="a731f7865c5e08848e7d4c3c7181c87be"></a>
@@ -2602,6 +2763,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00830">830</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2628,6 +2791,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00541">541</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="afb82f8aaa1ea3a6e0ec90e0d06dcbd54" name="afb82f8aaa1ea3a6e0ec90e0d06dcbd54"></a>
@@ -2652,6 +2817,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00591">591</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2678,6 +2845,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00605">605</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a57eee7f4aab975f71a4390472161278e" name="a57eee7f4aab975f71a4390472161278e"></a>
@@ -2703,6 +2872,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00416">416</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="ade0e5598d83ccda9c428090787abb521" name="ade0e5598d83ccda9c428090787abb521"></a>
@@ -2719,6 +2890,8 @@ Static Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00457">457</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2745,6 +2918,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00153">153</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a0edac688eabe58a340f05ee93fb09a74" name="a0edac688eabe58a340f05ee93fb09a74"></a>
@@ -2761,6 +2936,8 @@ Static Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00487">487</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2786,6 +2963,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00434">434</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2823,6 +3002,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00806">806</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="adab2105ddb1356fb406ba57423b583f0" name="adab2105ddb1356fb406ba57423b583f0"></a>
@@ -2858,6 +3039,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00797">797</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2905,6 +3088,8 @@ Static Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00546">546</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="afe847e61c1af1e167a06234e84bfa757" name="afe847e61c1af1e167a06234e84bfa757"></a>
@@ -2940,6 +3125,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00058">58</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -2977,6 +3164,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00075">75</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <a id="a3b7c44c0c7b55e21b97077d88506d8c5" name="a3b7c44c0c7b55e21b97077d88506d8c5"></a>
@@ -3012,6 +3201,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00092">92</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
 
 </div>
 </div>
@@ -3049,6 +3240,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8cxx_source.html#l00118">118</a> of file <a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -3072,6 +3265,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00035">35</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
+
 </div>
 </div>
 <a id="a97755bdd63d48a9f524351c1caf16ab7" name="a97755bdd63d48a9f524351c1caf16ab7"></a>
@@ -3093,6 +3288,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00036">36</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
 
 </div>
 </div>
@@ -3116,6 +3313,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00033">33</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
+
 </div>
 </div>
 <a id="a9a99a07546b5451e9aa8e9daedda398e" name="a9a99a07546b5451e9aa8e9daedda398e"></a>
@@ -3137,6 +3336,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00034">34</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
 
 </div>
 </div>
@@ -3160,6 +3361,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00029">29</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
+
 </div>
 </div>
 <a id="ab3e9a559118f820187eb4a3162b5cfe8" name="ab3e9a559118f820187eb4a3162b5cfe8"></a>
@@ -3181,6 +3384,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00030">30</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
 
 </div>
 </div>
@@ -3204,6 +3409,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00025">25</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
+
 </div>
 </div>
 <a id="a055fa5c26c3892f3c64e157ee6c3a0e7" name="a055fa5c26c3892f3c64e157ee6c3a0e7"></a>
@@ -3225,6 +3432,8 @@ Static Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00026">26</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
 
 </div>
 </div>
@@ -3248,6 +3457,8 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00027">27</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
+
 </div>
 </div>
 <a id="ad9f37a14966ce9ebf8037ffaf2f536c9" name="ad9f37a14966ce9ebf8037ffaf2f536c9"></a>
@@ -3270,16 +3481,22 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_c_v_universe_8h_source.html#l00028">28</a> of file <a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>CCQENu/make_hists/include/<a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a></li>
-<li>CCQENu/make_hists/include/<a class="el" href="_c_v_universe_8cxx.html">CVUniverse.cxx</a></li>
+<li>make_hists/include/<a class="el" href="_c_v_universe_8h_source.html">CVUniverse.h</a></li>
+<li>make_hists/include/<a class="el" href="_c_v_universe_8cxx_source.html">CVUniverse.cxx</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="class_c_v_universe.html">CVUniverse</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+  </ul>
+</div>
 </body>
 </html>

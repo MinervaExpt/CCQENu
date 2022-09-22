@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -21,9 +25,8 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">CCQENu<span id="projectnumber">&#160;1</span>
+   <div id="projectname">CCQENu
    </div>
-   <div id="projectbrief">CCQENu for MINERvA</div>
   </td>
  </tr>
  </tbody>
@@ -47,6 +50,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('class_nu_config.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -61,7 +81,6 @@ $(function() {
 </iframe>
 </div>
 
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -70,13 +89,9 @@ $(function() {
   <div class="headertitle"><div class="title">NuConfig Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac0a536e1f18ca6ac766d46f843bcbf88"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nu_config.html#ac0a536e1f18ca6ac766d46f843bcbf88">NuConfig</a> ()</td></tr>
-<tr class="separator:ac0a536e1f18ca6ac766d46f843bcbf88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed2c4dd9bee337f86dda02f51c61823a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nu_config.html#aed2c4dd9bee337f86dda02f51c61823a">NuConfig</a> (const <a class="el" href="class_nu_config.html">NuConfig</a> &amp;f)</td></tr>
 <tr class="separator:aed2c4dd9bee337f86dda02f51c61823a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ecd5c9bdb9c36ea8bb3b5385e64a2c9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nu_config.html#a2ecd5c9bdb9c36ea8bb3b5385e64a2c9">NuConfig</a> (const std::string inputstringlong)</td></tr>
@@ -132,7 +147,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a57a43ac1ce5c8548f99b7d1c9fb85677"><td class="memItemLeft" align="right" valign="top">Json::Value&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a></td></tr>
 <tr class="separator:a57a43ac1ce5c8548f99b7d1c9fb85677"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00016">16</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac0a536e1f18ca6ac766d46f843bcbf88" name="ac0a536e1f18ca6ac766d46f843bcbf88"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac0a536e1f18ca6ac766d46f843bcbf88">&#9670;&nbsp;</a></span>NuConfig() <span class="overload">[1/4]</span></h2>
 
@@ -155,6 +173,8 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00027">27</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
 
 </div>
 </div>
@@ -182,6 +202,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00029">29</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a2ecd5c9bdb9c36ea8bb3b5385e64a2c9" name="a2ecd5c9bdb9c36ea8bb3b5385e64a2c9"></a>
@@ -208,6 +230,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00033">33</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a61a15b92b114135bf94fb9e9f9f815c7" name="a61a15b92b114135bf94fb9e9f9f815c7"></a>
@@ -233,6 +257,8 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00081">81</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
 
 </div>
 </div>
@@ -261,6 +287,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00085">85</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="af75f9eee6055a91f8632ce4469c85584" name="af75f9eee6055a91f8632ce4469c85584"></a>
@@ -287,6 +315,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00120">120</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a6384df3d7164118dce2ec3af6e404867" name="a6384df3d7164118dce2ec3af6e404867"></a>
@@ -312,6 +342,8 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00196">196</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
 
 </div>
 </div>
@@ -340,6 +372,8 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >this is specific to particular code and should go elsewher</p>
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00216">216</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a3af30198b4b54d9d2d60bb24ba50870d" name="a3af30198b4b54d9d2d60bb24ba50870d"></a>
@@ -364,6 +398,8 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00181">181</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
 
 </div>
 </div>
@@ -391,6 +427,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00169">169</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a352efb4e5bbd82cdf43671180691aa5d" name="a352efb4e5bbd82cdf43671180691aa5d"></a>
@@ -416,6 +454,8 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00112">112</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
 
 </div>
 </div>
@@ -443,6 +483,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00155">155</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a22461a21acd1511f5ae912ec5a0820dc" name="a22461a21acd1511f5ae912ec5a0820dc"></a>
@@ -469,6 +511,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00116">116</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="ad57a43326be0c96c75cd91580bb1ec64" name="ad57a43326be0c96c75cd91580bb1ec64"></a>
@@ -493,6 +537,8 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00201">201</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
 
 </div>
 </div>
@@ -522,6 +568,8 @@ template&lt;class var_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00212">212</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a7641dfee89718c0e9fe1e0e5208e8eeb" name="a7641dfee89718c0e9fe1e0e5208e8eeb"></a>
@@ -547,6 +595,8 @@ template&lt;class var_t &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00124">124</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
 
 </div>
 </div>
@@ -574,6 +624,8 @@ template&lt;class var_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00129">129</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="af01e5bcb9268dc2056e9b4f53eb179a5" name="af01e5bcb9268dc2056e9b4f53eb179a5"></a>
@@ -599,6 +651,8 @@ template&lt;class var_t &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00191">191</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
 
 </div>
 </div>
@@ -626,6 +680,8 @@ template&lt;class var_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00097">97</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="adbb488eb52e80214b27f887e833b7ba5" name="adbb488eb52e80214b27f887e833b7ba5"></a>
@@ -650,6 +706,8 @@ template&lt;class var_t &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00104">104</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
 
 </div>
 </div>
@@ -677,6 +735,8 @@ template&lt;class var_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00037">37</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="ac17266bbd8ea9e74fc8f0db979791c70" name="ac17266bbd8ea9e74fc8f0db979791c70"></a>
@@ -703,6 +763,8 @@ template&lt;class var_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00058">58</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a98935bb298e973c29a651150408628dd" name="a98935bb298e973c29a651150408628dd"></a>
@@ -728,6 +790,8 @@ template&lt;class var_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00108">108</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -743,6 +807,8 @@ template&lt;class var_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00020">20</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a57a43ac1ce5c8548f99b7d1c9fb85677" name="a57a43ac1ce5c8548f99b7d1c9fb85677"></a>
@@ -756,6 +822,8 @@ template&lt;class var_t &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00021">21</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
 
 </div>
 </div>
@@ -771,15 +839,21 @@ template&lt;class var_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_nu_config_8h_source.html#l00019">19</a> of file <a class="el" href="_nu_config_8h_source.html">NuConfig.h</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>CCQENu/make_hists/utils/<a class="el" href="_nu_config_8h_source.html">NuConfig.h</a></li>
+<li>make_hists/utils/<a class="el" href="_nu_config_8h_source.html">NuConfig.h</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="class_nu_config.html">NuConfig</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+  </ul>
+</div>
 </body>
 </html>

@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -21,9 +25,8 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">CCQENu<span id="projectnumber">&#160;1</span>
+   <div id="projectname">CCQENu
    </div>
-   <div id="projectbrief">CCQENu for MINERvA</div>
   </td>
  </tr>
  </tbody>
@@ -47,6 +50,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('class_c_c_q_e_nu_1_1_variable2_d_from_config.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -61,11 +81,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_c_c_q_e_nu.html">CCQENu</a></li><li class="navelem"><a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html">Variable2DFromConfig</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
@@ -75,30 +90,12 @@ $(function() {
   <div class="headertitle"><div class="title">CCQENu::Variable2DFromConfig Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for CCQENu::Variable2DFromConfig:</div>
 <div class="dyncontent">
-<div class="center"><img src="class_c_c_q_e_nu_1_1_variable2_d_from_config__inherit__graph.png" border="0" usemap="#a_c_c_q_e_nu_1_1_variable2_d_from_config_inherit__map" alt="Inheritance graph"/></div>
-<map name="a_c_c_q_e_nu_1_1_variable2_d_from_config_inherit__map" id="a_c_c_q_e_nu_1_1_variable2_d_from_config_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,95,225,121"/>
-<area shape="rect" title=" " alt="" coords="29,5,202,47"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for CCQENu::Variable2DFromConfig:</div>
-<div class="dyncontent">
-<div class="center"><img src="class_c_c_q_e_nu_1_1_variable2_d_from_config__coll__graph.png" border="0" usemap="#a_c_c_q_e_nu_1_1_variable2_d_from_config_coll__map" alt="Collaboration graph"/></div>
-<map name="a_c_c_q_e_nu_1_1_variable2_d_from_config_coll__map" id="a_c_c_q_e_nu_1_1_variable2_d_from_config_coll__map">
-<area shape="rect" title=" " alt="" coords="5,392,225,419"/>
-<area shape="rect" title=" " alt="" coords="7,171,181,212"/>
-<area shape="rect" href="class_plot_utils_1_1_hist2_d_wrapper_map.html" title=" " alt="" coords="205,171,375,212"/>
-<area shape="rect" href="class_c_v_universe.html" title=" " alt="" coords="243,95,337,121"/>
-<area shape="rect" title=" " alt="" coords="125,5,303,32"/>
-<area shape="rect" href="class_nu_config.html" title=" " alt="" coords="327,5,405,32"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+ <div class="center">
+  <img src="class_c_c_q_e_nu_1_1_variable2_d_from_config.png" alt=""/>
+ </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -162,7 +159,7 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aaeb53f8992c1abf19d9f2f117d13fced"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93f3343cbd8a77055f951b4dbf94e17b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">HM2D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html#a93f3343cbd8a77055f951b4dbf94e17b">m_selected_data</a></td></tr>
 <tr class="separator:a93f3343cbd8a77055f951b4dbf94e17b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade8acf28c0448b54d45f1a51c31d9368"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html#ae27b90bb57287574a25157d4f5a60f22">UniverseMap</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html#ade8acf28c0448b54d45f1a51c31d9368">m_universes</a></td></tr>
+<tr class="memitem:ade8acf28c0448b54d45f1a51c31d9368"><td class="memItemLeft" align="right" valign="top">UniverseMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html#ade8acf28c0448b54d45f1a51c31d9368">m_universes</a></td></tr>
 <tr class="separator:ade8acf28c0448b54d45f1a51c31d9368"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89d707ef368598c654118a8d7a995aa5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html#a89d707ef368598c654118a8d7a995aa5">m_units</a></td></tr>
 <tr class="separator:a89d707ef368598c654118a8d7a995aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,7 +182,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a09e32d0ac9af9263b2d4b01dba012c49"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html#a09e32d0ac9af9263b2d4b01dba012c49">m_tunedmc</a></td></tr>
 <tr class="separator:a09e32d0ac9af9263b2d4b01dba012c49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00030">30</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ae27b90bb57287574a25157d4f5a60f22" name="ae27b90bb57287574a25157d4f5a60f22"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae27b90bb57287574a25157d4f5a60f22">&#9670;&nbsp;</a></span>UniverseMap</h2>
 
@@ -193,10 +193,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::map&lt;std::string, std::vector&lt;<a class="el" href="class_c_v_universe.html">CVUniverse</a>*&gt; &gt; <a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html#ae27b90bb57287574a25157d4f5a60f22">CCQENu::Variable2DFromConfig::UniverseMap</a></td>
+          <td class="memname">typedef std::map&lt;std::string, std::vector&lt;<a class="el" href="class_c_v_universe.html">CVUniverse</a>*&gt; &gt; CCQENu::Variable2DFromConfig::UniverseMap</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00122">122</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -243,6 +245,8 @@ template&lt;class... ARGS&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00049">49</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a094bd9f042529beec7f5ebb1b9ca1a47" name="a094bd9f042529beec7f5ebb1b9ca1a47"></a>
@@ -278,6 +282,8 @@ template&lt;class... ARGS&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00059">59</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -327,6 +333,8 @@ template&lt;class... ARGS&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00068">68</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a47b465aad83db92290c0b242336fa5ce" name="a47b465aad83db92290c0b242336fa5ce"></a>
@@ -375,6 +383,8 @@ template&lt;class... ARGS&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00084">84</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -402,6 +412,8 @@ template&lt;class... ARGS&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00315">315</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="aba7068f74f8de00b58044e43806fcec2" name="aba7068f74f8de00b58044e43806fcec2"></a>
@@ -427,6 +439,8 @@ template&lt;class... ARGS&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00162">162</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -500,6 +514,8 @@ template&lt;class... ARGS&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00423">423</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a4805c81d1d13b431679de9726e208f95" name="a4805c81d1d13b431679de9726e208f95"></a>
@@ -524,6 +540,8 @@ template&lt;class... ARGS&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00153">153</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -563,6 +581,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00250">250</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="ace2c2f7b14dbd6e332cd60f4d0e9269e" name="ace2c2f7b14dbd6e332cd60f4d0e9269e"></a>
@@ -600,6 +620,8 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00169">169</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -639,6 +661,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00194">194</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="aac45a0d8a8ca20c58310bbdd828c0729" name="aac45a0d8a8ca20c58310bbdd828c0729"></a>
@@ -676,6 +700,8 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00220">220</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -727,6 +753,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00269">269</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="acc4458fb1f76b654e1c26c56dc46ffaf" name="acc4458fb1f76b654e1c26c56dc46ffaf"></a>
@@ -753,6 +781,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00155">155</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="ad57106ab0041e0b1e8f3a11689c85752" name="ad57106ab0041e0b1e8f3a11689c85752"></a>
@@ -777,6 +807,8 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00389">389</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -804,6 +836,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00342">342</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -819,6 +853,8 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00137">137</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a3364655880a30448496ab285bb0d0688" name="a3364655880a30448496ab285bb0d0688"></a>
@@ -832,6 +868,8 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00138">138</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -847,6 +885,8 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00142">142</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a6542da313019247dc6a5141b761c23e5" name="a6542da313019247dc6a5141b761c23e5"></a>
@@ -860,6 +900,8 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00141">141</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -875,6 +917,8 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00140">140</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="ac02055cb41f37e2ab55d206201efc8a6" name="ac02055cb41f37e2ab55d206201efc8a6"></a>
@@ -888,6 +932,8 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00139">139</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -903,6 +949,8 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00144">144</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a93f3343cbd8a77055f951b4dbf94e17b" name="a93f3343cbd8a77055f951b4dbf94e17b"></a>
@@ -916,6 +964,8 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00134">134</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -931,6 +981,8 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00128">128</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="ab0c0ffcf7f4d2171b67c158e56042395" name="ab0c0ffcf7f4d2171b67c158e56042395"></a>
@@ -944,6 +996,8 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00130">130</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -959,6 +1013,8 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00132">132</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a90171302b70eb8326ecfb7a7d7973801" name="a90171302b70eb8326ecfb7a7d7973801"></a>
@@ -972,6 +1028,8 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00143">143</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -987,6 +1045,8 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00129">129</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="abe7bfd13d3cd838681718bf09b32be68" name="abe7bfd13d3cd838681718bf09b32be68"></a>
@@ -1000,6 +1060,8 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00131">131</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -1015,6 +1077,8 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00133">133</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="a09e32d0ac9af9263b2d4b01dba012c49" name="a09e32d0ac9af9263b2d4b01dba012c49"></a>
@@ -1028,6 +1092,8 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00145">145</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
 
 </div>
 </div>
@@ -1043,6 +1109,8 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00136">136</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <a id="ade8acf28c0448b54d45f1a51c31d9368" name="ade8acf28c0448b54d45f1a51c31d9368"></a>
@@ -1052,20 +1120,26 @@ template&lt;typename T &gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html#ae27b90bb57287574a25157d4f5a60f22">UniverseMap</a> CCQENu::Variable2DFromConfig::m_universes</td>
+          <td class="memname">UniverseMap CCQENu::Variable2DFromConfig::m_universes</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_variable2_d_from_config_8h_source.html#l00135">135</a> of file <a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>CCQENu/make_hists/include/<a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a></li>
+<li>make_hists/include/<a class="el" href="_variable2_d_from_config_8h_source.html">Variable2DFromConfig.h</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>CCQENu</b></li><li class="navelem"><a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html">Variable2DFromConfig</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+  </ul>
+</div>
 </body>
 </html>

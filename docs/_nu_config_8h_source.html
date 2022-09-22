@@ -5,10 +5,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CCQENu: CCQENu/make_hists/utils/NuConfig.h Source File</title>
+<title>CCQENu: make_hists/utils/NuConfig.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -21,9 +25,8 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">CCQENu<span id="projectnumber">&#160;1</span>
+   <div id="projectname">CCQENu
    </div>
-   <div id="projectbrief">CCQENu for MINERvA</div>
   </td>
  </tr>
  </tbody>
@@ -47,6 +50,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('_nu_config_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -61,16 +81,11 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_22e7ca38542c6f2ec3c430262ab84946.html">CCQENu</a></li><li class="navelem"><a class="el" href="dir_8132c49adac5e9408d55e19e0c428302.html">make_hists</a></li><li class="navelem"><a class="el" href="dir_82e9344f3dda0680ff7ecb27f37a6d8f.html">utils</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle"><div class="title">NuConfig.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="_nu_config_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef NUCONFIG_H</span></div>
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef NUCONFIG_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define NUCONFIG_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;json/json.h&quot;</span></div>
@@ -79,40 +94,40 @@ $(function() {
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="expand_env_8h.html">utils/expandEnv.h</a>&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;utils/expandEnv.h&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">class </span><a class="code hl_class" href="class_nu_config.html">NuConfig</a>;</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">   14</a></span><span class="keyword">typedef</span> std::map&lt;const std::string, NuConfig*&gt; <a class="code hl_typedef" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a>;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">typedef</span> std::map&lt;const std::string, NuConfig*&gt; CONFIGMAP;</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="class_nu_config.html">   16</a></span><span class="keyword">class </span><a class="code hl_class" href="class_nu_config.html">NuConfig</a>{</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="class_nu_config.html#a2c6c3f5d6e866e6bc63dbd9156fced65">   19</a></span>  std::string <a class="code hl_variable" href="class_nu_config.html#a2c6c3f5d6e866e6bc63dbd9156fced65">f_filename</a>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="class_nu_config.html#a4e58ecedaeb896e6d4875936722e0be4">   20</a></span>  std::string <a class="code hl_variable" href="class_nu_config.html#a4e58ecedaeb896e6d4875936722e0be4">f_buffer</a>;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">   21</a></span>  Json::Value <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  std::string f_filename;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  std::string f_buffer;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  Json::Value f_config;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="class_nu_config.html#ac0a536e1f18ca6ac766d46f843bcbf88">   27</a></span>  <a class="code hl_function" href="class_nu_config.html#ac0a536e1f18ca6ac766d46f843bcbf88">NuConfig</a>(){};</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(){};</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="comment">// copy constructor</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="class_nu_config.html#aed2c4dd9bee337f86dda02f51c61823a">   29</a></span>  <a class="code hl_function" href="class_nu_config.html#aed2c4dd9bee337f86dda02f51c61823a">NuConfig</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a>&amp; <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#aff905ab888050900c3205bbb4543847d">f</a>){</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <a class="code hl_variable" href="class_nu_config.html#a2c6c3f5d6e866e6bc63dbd9156fced65">f_filename</a> = <span class="stringliteral">&quot;fromConfig&quot;</span>;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a> = <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#aff905ab888050900c3205bbb4543847d">f</a>.f_config;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a>&amp; f){</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    f_filename = <span class="stringliteral">&quot;fromConfig&quot;</span>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    f_config = f.f_config;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  }</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="class_nu_config.html#a2ecd5c9bdb9c36ea8bb3b5385e64a2c9">   33</a></span>    <a class="code hl_function" href="class_nu_config.html#a2ecd5c9bdb9c36ea8bb3b5385e64a2c9">NuConfig</a>(<span class="keyword">const</span> std::string inputstringlong){</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <a class="code hl_function" href="class_nu_config.html#ac17266bbd8ea9e74fc8f0db979791c70">ReadFromString</a>(inputstringlong);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(<span class="keyword">const</span> std::string inputstringlong){</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        ReadFromString(inputstringlong);</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    }</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="class_nu_config.html#adbdd2afb964a5b8472c80c9497304b58">   37</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="class_nu_config.html#adbdd2afb964a5b8472c80c9497304b58">Read</a>(<span class="keyword">const</span> std::string filename){</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <a class="code hl_variable" href="class_nu_config.html#a2c6c3f5d6e866e6bc63dbd9156fced65">f_filename</a>  = <a class="code hl_function" href="expand_env_8h.html#a2405658ed9f26fba080736f87ecf86a7">expandEnv</a>(filename);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordtype">bool</span> Read(<span class="keyword">const</span> std::string filename){</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    f_filename  = expandEnv(filename);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    Json::CharReaderBuilder rbuilder;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// Configure the Builder, then ...</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    std::ifstream <a class="code hl_variable" href="class_nu_config.html#a4e58ecedaeb896e6d4875936722e0be4">f_buffer</a>(<a class="code hl_variable" href="class_nu_config.html#a2c6c3f5d6e866e6bc63dbd9156fced65">f_filename</a>, std::ifstream::binary);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    std::ifstream f_buffer(f_filename, std::ifstream::binary);</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    std::string errs;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">bool</span> parsingSuccessful = Json::parseFromStream(rbuilder, <a class="code hl_variable" href="class_nu_config.html#a4e58ecedaeb896e6d4875936722e0be4">f_buffer</a>, &amp;<a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>, &amp;errs);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">bool</span> parsingSuccessful = Json::parseFromStream(rbuilder, f_buffer, &amp;f_config, &amp;errs);</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordflow">if</span> (!parsingSuccessful)</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      {</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <span class="comment">// report to the user the failure and their locations in the document.</span></div>
@@ -123,13 +138,13 @@ $(function() {
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      }</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;read in configuration file &quot;</span> &lt;&lt; <a class="code hl_variable" href="class_nu_config.html#a2c6c3f5d6e866e6bc63dbd9156fced65">f_filename</a> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;read in configuration file &quot;</span> &lt;&lt; f_filename &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  };</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="class_nu_config.html#ac17266bbd8ea9e74fc8f0db979791c70">   58</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="class_nu_config.html#ac17266bbd8ea9e74fc8f0db979791c70">ReadFromString</a>(<span class="keyword">const</span> std::string inputstringlong){</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="keywordtype">bool</span> ReadFromString(<span class="keyword">const</span> std::string inputstringlong){</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    JSONCPP_STRING err;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      std::string inputstring=<a class="code hl_function" href="expand_env_8h.html#a2405658ed9f26fba080736f87ecf86a7">expandEnv</a>(inputstringlong);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      std::string inputstring=expandEnv(inputstringlong);</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="comment">//Json::CharReader reader;</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    </div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">//    f_filename  = filename;</span></div>
@@ -140,7 +155,7 @@ $(function() {
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="comment">//https://github.com/open-source-parsers/jsoncpp/blob/master/example/readFromString/readFromString.cpp  says to use this somewhat cumbersome method instead the old one</span></div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    Json::CharReaderBuilder builder;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">const</span> std::unique_ptr&lt;Json::CharReader&gt; reader(builder.newCharReader());</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keywordflow">if</span> (!reader-&gt;parse(inputstring.c_str(), inputstring.c_str()+ inputstring.length(), &amp;<a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>,</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keywordflow">if</span> (!reader-&gt;parse(inputstring.c_str(), inputstring.c_str()+ inputstring.length(), &amp;f_config,</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                           &amp;err)) {</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>          std::cout &lt;&lt; <span class="stringliteral">&quot;error&quot;</span> &lt;&lt; err &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        </div>
@@ -150,15 +165,15 @@ $(function() {
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  };</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="class_nu_config.html#a61a15b92b114135bf94fb9e9f9f815c7">   81</a></span>  <a class="code hl_function" href="class_nu_config.html#a61a15b92b114135bf94fb9e9f9f815c7">NuConfig</a>(<span class="keyword">const</span> Json::Value value){  <span class="comment">// can read in a value from the file and then use that read in a subconfig</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a> = value;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(<span class="keyword">const</span> Json::Value value){  <span class="comment">// can read in a value from the file and then use that read in a subconfig</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    f_config = value;</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  };</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">   85</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">CheckMember</a>(std::string key)<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keywordtype">bool</span> CheckMember(std::string key)<span class="keyword">const</span>{</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="comment">// std::cout &lt;&lt; &quot; check Member&quot; &lt;&lt; f_config.type() &lt;&lt; &quot; &quot; &lt;&lt; f_config.isObject()  &lt;&lt; &quot; &quot; &lt;&lt;  f_config.isMember(key) &lt;&lt; std::endl;</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">if</span> (not <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.isObject() || not  <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.isMember(key)){</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      std::cerr &lt;&lt; <span class="stringliteral">&quot;NuConfig: &quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; is not a valid member of &quot;</span> &lt;&lt; <a class="code hl_variable" href="class_nu_config.html#a2c6c3f5d6e866e6bc63dbd9156fced65">f_filename</a> &lt;&lt;  <span class="stringliteral">&quot; maybe you have a default? &quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">if</span> (not f_config.isObject() || not  f_config.isMember(key)){</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      std::cerr &lt;&lt; <span class="stringliteral">&quot;NuConfig: &quot;</span> &lt;&lt; key &lt;&lt; <span class="stringliteral">&quot; is not a valid member of &quot;</span> &lt;&lt; f_filename &lt;&lt;  <span class="stringliteral">&quot; maybe you have a default? &quot;</span> &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    }</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
@@ -166,45 +181,45 @@ $(function() {
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="comment">// gentler version of CheckMember to use to see if you need to stick with a default.</span></div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="class_nu_config.html#a773f66f77843663c92e45ff9af86b3b2">   97</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="class_nu_config.html#a773f66f77843663c92e45ff9af86b3b2">IsMember</a>(std::string key)<span class="keyword">const</span>{</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordflow">if</span> (not <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.isObject() || not  <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.isMember(key)){</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keywordtype">bool</span> IsMember(std::string key)<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordflow">if</span> (not f_config.isObject() || not  f_config.isMember(key)){</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    }</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  };</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="class_nu_config.html#adbb488eb52e80214b27f887e833b7ba5">  104</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_nu_config.html#adbb488eb52e80214b27f887e833b7ba5">Print</a>()<span class="keyword"> const</span>{</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;config &quot;</span> &lt;&lt;  <a class="code hl_variable" href="class_nu_config.html#a2c6c3f5d6e866e6bc63dbd9156fced65">f_filename</a> &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="keywordtype">void</span> Print()<span class="keyword"> const</span>{</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;config &quot;</span> &lt;&lt;  f_filename &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; f_config &lt;&lt; std::endl;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  };</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="class_nu_config.html#a98935bb298e973c29a651150408628dd">  108</a></span>  std::string <a class="code hl_function" href="class_nu_config.html#a98935bb298e973c29a651150408628dd">ToString</a>()<span class="keyword"> const</span>{</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="expand_env_8h.html#a2405658ed9f26fba080736f87ecf86a7">expandEnv</a>(<a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.toStyledString());</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  std::string ToString()<span class="keyword"> const</span>{</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordflow">return</span> expandEnv(f_config.toStyledString());</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  }</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="class_nu_config.html#a352efb4e5bbd82cdf43671180691aa5d">  112</a></span>  <span class="keywordtype">double</span> <a class="code hl_function" href="class_nu_config.html#a352efb4e5bbd82cdf43671180691aa5d">GetDouble</a>(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    assert(<a class="code hl_function" href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">CheckMember</a>(key));</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.get(key,-9999.).asDouble();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <span class="keywordtype">double</span> GetDouble(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    assert(CheckMember(key));</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keywordflow">return</span> f_config.get(key,-9999.).asDouble();</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  };</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="class_nu_config.html#a22461a21acd1511f5ae912ec5a0820dc">  116</a></span>  <span class="keywordtype">int</span> <a class="code hl_function" href="class_nu_config.html#a22461a21acd1511f5ae912ec5a0820dc">GetInt</a>(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    assert(<a class="code hl_function" href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">CheckMember</a>(key));</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.get(key,-9999).asInt();</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  <span class="keywordtype">int</span> GetInt(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    assert(CheckMember(key));</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keywordflow">return</span> f_config.get(key,-9999).asInt();</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  };</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="class_nu_config.html#af75f9eee6055a91f8632ce4469c85584">  120</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="class_nu_config.html#af75f9eee6055a91f8632ce4469c85584">GetBool</a>(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    assert(<a class="code hl_function" href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">CheckMember</a>(key));</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.get(key,<span class="keyword">false</span>).asBool();</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <span class="keywordtype">bool</span> GetBool(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    assert(CheckMember(key));</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keywordflow">return</span> f_config.get(key,<span class="keyword">false</span>).asBool();</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  };</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">  124</a></span>  std::string <a class="code hl_function" href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">GetString</a>(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    assert(<a class="code hl_function" href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">CheckMember</a>(key));</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="expand_env_8h.html#a2405658ed9f26fba080736f87ecf86a7">expandEnv</a>(<a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.get(key,<span class="stringliteral">&quot;None&quot;</span>).asString());</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  std::string GetString(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    assert(CheckMember(key));</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keywordflow">return</span> expandEnv(f_config.get(key,<span class="stringliteral">&quot;None&quot;</span>).asString());</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  };</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno"><a class="line" href="class_nu_config.html#a5e9ca9d6abad8c2213d277e4c5cdcb08">  129</a></span>  std::vector &lt;std::string&gt; <a class="code hl_function" href="class_nu_config.html#a5e9ca9d6abad8c2213d277e4c5cdcb08">GetStringVector</a>(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    assert(<a class="code hl_function" href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">CheckMember</a>(key));</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  std::vector &lt;std::string&gt; GetStringVector(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    assert(CheckMember(key));</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    std::vector&lt;std::string&gt;  a;</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    Json::Value array = <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.get(key,0);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    Json::Value array = f_config.get(key,0);</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;el  : array){</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>      <span class="keywordflow">if</span> (el.isString()){</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        a.push_back(<a class="code hl_function" href="expand_env_8h.html#a2405658ed9f26fba080736f87ecf86a7">expandEnv</a>(el.asString()));</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        a.push_back(expandEnv(el.asString()));</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>      }</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    }</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordflow">return</span> a;</div>
@@ -224,10 +239,10 @@ $(function() {
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="comment">//    return a;</span></div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="comment">//  };</span></div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="class_nu_config.html#a09bd961adbfcafc9b94cd6b6b675f8ab">  155</a></span>  std::vector &lt;double&gt; <a class="code hl_function" href="class_nu_config.html#a09bd961adbfcafc9b94cd6b6b675f8ab">GetDoubleVector</a>(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    assert(<a class="code hl_function" href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">CheckMember</a>(key));</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  std::vector &lt;double&gt; GetDoubleVector(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    assert(CheckMember(key));</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    std::vector&lt;double&gt;  a;</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    Json::Value array = <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.get(key,0);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    Json::Value array = f_config.get(key,0);</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;el  : array){</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>      <span class="keywordflow">if</span> (el.isDouble()){</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        a.push_back(el.asDouble());</div>
@@ -238,10 +253,10 @@ $(function() {
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  <span class="comment">// get a vector of subconfigs</span></div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="class_nu_config.html#a57fcf53082376e97ad1651d87b83d32e">  169</a></span>  std::vector&lt;NuConfig&gt; <a class="code hl_function" href="class_nu_config.html#a57fcf53082376e97ad1651d87b83d32e">GetConfigVector</a>(std::string key)<span class="keyword">const</span>{</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    assert(<a class="code hl_function" href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">CheckMember</a>(key));</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  std::vector&lt;NuConfig&gt; GetConfigVector(std::string key)<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    assert(CheckMember(key));</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    std::vector&lt;NuConfig&gt;  a;</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    Json::Value array = <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.get(key,0);</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    Json::Value array = f_config.get(key,0);</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;el  : array){</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        a.push_back(el);</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    }</div>
@@ -250,73 +265,73 @@ $(function() {
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  </div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  <span class="comment">// do this when you already have the vector of configs in hand</span></div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno"><a class="line" href="class_nu_config.html#a3af30198b4b54d9d2d60bb24ba50870d">  181</a></span>  std::vector&lt;NuConfig&gt; <a class="code hl_function" href="class_nu_config.html#a3af30198b4b54d9d2d60bb24ba50870d">GetConfigVector</a>()<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>  std::vector&lt;NuConfig&gt; GetConfigVector()<span class="keyword">const</span>{</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    std::vector&lt;NuConfig&gt;  a;</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    Json::Value array = <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>;</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    Json::Value array = f_config;</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;el  : array){</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        a.push_back(el);</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    }</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keywordflow">return</span> a;</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  };</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno"><a class="line" href="class_nu_config.html#af01e5bcb9268dc2056e9b4f53eb179a5">  191</a></span>  Json::Value <a class="code hl_function" href="class_nu_config.html#af01e5bcb9268dc2056e9b4f53eb179a5">GetValue</a>(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    assert(<a class="code hl_function" href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">CheckMember</a>(key));</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.get(key,0);</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>  Json::Value GetValue(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    assert(CheckMember(key));</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keywordflow">return</span> f_config.get(key,0);</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>  };</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="class_nu_config.html#a6384df3d7164118dce2ec3af6e404867">  196</a></span>  <a class="code hl_class" href="class_nu_config.html">NuConfig</a> <a class="code hl_function" href="class_nu_config.html#a6384df3d7164118dce2ec3af6e404867">GetConfig</a>(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    assert(<a class="code hl_function" href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">CheckMember</a>(key));</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="class_nu_config.html#ac0a536e1f18ca6ac766d46f843bcbf88">NuConfig</a>(<a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.get(key,0));</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  <a class="code hl_class" href="class_nu_config.html">NuConfig</a> GetConfig(<span class="keyword">const</span> std::string key)<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    assert(CheckMember(key));</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordflow">return</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(f_config.get(key,0));</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  };</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno"><a class="line" href="class_nu_config.html#ad57a43326be0c96c75cd91580bb1ec64">  201</a></span>  std::vector&lt;std::string&gt; <a class="code hl_function" href="class_nu_config.html#ad57a43326be0c96c75cd91580bb1ec64">GetKeys</a>()<span class="keyword">const</span>{</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  std::vector&lt;std::string&gt; GetKeys()<span class="keyword">const</span>{</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="comment">// from https://github.com/open-source-parsers/jsoncpp/issues/288</span></div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    std::vector&lt;std::string&gt; result;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordflow">for</span> (Json::ValueConstIterator it = <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.begin(); it != <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.end(); ++it){</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordflow">for</span> (Json::ValueConstIterator it = f_config.begin(); it != f_config.end(); ++it){</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>      result.push_back(it.name());</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    }</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordflow">return</span> result;</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  };</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> var_t&gt;</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno"><a class="line" href="class_nu_config.html#a3398beff0bb3201b44ed40ab7fb1462c">  212</a></span>  var_t <a class="code hl_function" href="class_nu_config.html#a3398beff0bb3201b44ed40ab7fb1462c">GetNumber</a>(<span class="keyword">const</span> std::string key){</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keywordflow">return</span> <span class="keyword">typeid</span>(var_t) == <span class="keyword">typeid</span>(<span class="keywordtype">double</span>)?<a class="code hl_function" href="class_nu_config.html#a352efb4e5bbd82cdf43671180691aa5d">GetDouble</a>(key):<a class="code hl_function" href="class_nu_config.html#a22461a21acd1511f5ae912ec5a0820dc">GetInt</a>(key);</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>  var_t GetNumber(<span class="keyword">const</span> std::string key){</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keywordflow">return</span> <span class="keyword">typeid</span>(var_t) == <span class="keyword">typeid</span>(<span class="keywordtype">double</span>)?GetDouble(key):GetInt(key);</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  }</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="class_nu_config.html#a59a37a49061522244747f2e16e9ff49b">  216</a></span>  <a class="code hl_class" href="class_nu_config.html">NuConfig</a> <a class="code hl_function" href="class_nu_config.html#a59a37a49061522244747f2e16e9ff49b">GetConfigVariable</a>(std::string <a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a>){  </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="class_nu_config.html#a59a37a49061522244747f2e16e9ff49b">  216</a></span>  <a class="code hl_class" href="class_nu_config.html">NuConfig</a> <a class="code hl_function" href="class_nu_config.html#a59a37a49061522244747f2e16e9ff49b">GetConfigVariable</a>(std::string variable){  </div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> varsconfig;</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config1D;</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config2D;</div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <a class="code hl_class" href="class_nu_config.html">NuConfig</a> outconfig;</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="keywordflow">if</span>(<a class="code hl_function" href="class_nu_config.html#a773f66f77843663c92e45ff9af86b3b2">IsMember</a>(<span class="stringliteral">&quot;varsFile&quot;</span>)){</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>      std::string varsFile = <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>.get(<span class="stringliteral">&quot;varsFile&quot;</span>,<span class="stringliteral">&quot;None&quot;</span>).asString();</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>      varsconfig.<a class="code hl_function" href="class_nu_config.html#adbdd2afb964a5b8472c80c9497304b58">Read</a>(varsFile);</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="keywordflow">if</span>(IsMember(<span class="stringliteral">&quot;varsFile&quot;</span>)){</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>      std::string varsFile = f_config.get(<span class="stringliteral">&quot;varsFile&quot;</span>,<span class="stringliteral">&quot;None&quot;</span>).asString();</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>      varsconfig.Read(varsFile);</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    } <span class="keywordflow">else</span>{</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>      varsconfig = <a class="code hl_variable" href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">f_config</a>;</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>      varsconfig = f_config;</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    }</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="comment">// Get the variable config</span></div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="comment">// Get 1D and 2D</span></div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keywordflow">if</span>(varsconfig.<a class="code hl_function" href="class_nu_config.html#a773f66f77843663c92e45ff9af86b3b2">IsMember</a>(<span class="stringliteral">&quot;1D&quot;</span>)){</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>      config1D = varsconfig.<a class="code hl_function" href="class_nu_config.html#af01e5bcb9268dc2056e9b4f53eb179a5">GetValue</a>(<span class="stringliteral">&quot;1D&quot;</span>);</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>      <span class="keywordflow">if</span>(config1D.<a class="code hl_function" href="class_nu_config.html#a773f66f77843663c92e45ff9af86b3b2">IsMember</a>(<a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a>)){</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keywordflow">if</span>(varsconfig.IsMember(<span class="stringliteral">&quot;1D&quot;</span>)){</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>      config1D = varsconfig.GetValue(<span class="stringliteral">&quot;1D&quot;</span>);</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>      <span class="keywordflow">if</span>(config1D.IsMember(variable)){</div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <span class="comment">// NuConfig var1D;</span></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        outconfig = config1D.<a class="code hl_function" href="class_nu_config.html#af01e5bcb9268dc2056e9b4f53eb179a5">GetValue</a>(<a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a>);</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        outconfig = config1D.GetValue(variable);</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        <span class="comment">// return var1D;</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        std::cout &lt;&lt; <span class="stringliteral">&quot; NC: found 1D variable config for &quot;</span> &lt;&lt; <a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a> &lt;&lt; std::endl; <span class="comment">// print statement for debugging</span></div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        std::cout &lt;&lt; <span class="stringliteral">&quot; NC: found 1D variable config for &quot;</span> &lt;&lt; variable &lt;&lt; std::endl; <span class="comment">// print statement for debugging</span></div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>      }</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    }</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <span class="keywordflow">if</span>(varsconfig.<a class="code hl_function" href="class_nu_config.html#a773f66f77843663c92e45ff9af86b3b2">IsMember</a>(<span class="stringliteral">&quot;2D&quot;</span>)){</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>      config2D = varsconfig.<a class="code hl_function" href="class_nu_config.html#af01e5bcb9268dc2056e9b4f53eb179a5">GetValue</a>(<span class="stringliteral">&quot;2D&quot;</span>);</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>      <span class="keywordflow">if</span>(config2D.<a class="code hl_function" href="class_nu_config.html#a773f66f77843663c92e45ff9af86b3b2">IsMember</a>(<a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a>)){</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <span class="keywordflow">if</span>(varsconfig.IsMember(<span class="stringliteral">&quot;2D&quot;</span>)){</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>      config2D = varsconfig.GetValue(<span class="stringliteral">&quot;2D&quot;</span>);</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>      <span class="keywordflow">if</span>(config2D.IsMember(variable)){</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="comment">// NuConfig var2D;</span></div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        outconfig = config2D.<a class="code hl_function" href="class_nu_config.html#af01e5bcb9268dc2056e9b4f53eb179a5">GetValue</a>(<a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a>);</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        outconfig = config2D.GetValue(variable);</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="comment">// return var2D;</span></div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        std::cout &lt;&lt; <span class="stringliteral">&quot; NC: found 2D variable config for &quot;</span> &lt;&lt; <a class="code hl_variable" href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">variable</a> &lt;&lt; std::endl; <span class="comment">// print statement for debugging</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        std::cout &lt;&lt; <span class="stringliteral">&quot; NC: found 2D variable config for &quot;</span> &lt;&lt; variable &lt;&lt; std::endl; <span class="comment">// print statement for debugging</span></div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>      }</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    } <span class="keywordflow">else</span> {</div>
@@ -329,42 +344,16 @@ $(function() {
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>};</div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="a_nu_config_8h_html_a1128cc5014c49f4e349d71b292090cd5"><div class="ttname"><a href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a></div><div class="ttdeci">std::map&lt; const std::string, NuConfig * &gt; CONFIGMAP</div><div class="ttdef"><b>Definition:</b> NuConfig.h:12</div></div>
-<div class="ttc" id="aclass_nu_config_html"><div class="ttname"><a href="class_nu_config.html">NuConfig</a></div><div class="ttdef"><b>Definition:</b> NuConfig.h:16</div></div>
-<div class="ttc" id="aclass_nu_config_html_a09bd961adbfcafc9b94cd6b6b675f8ab"><div class="ttname"><a href="class_nu_config.html#a09bd961adbfcafc9b94cd6b6b675f8ab">NuConfig::GetDoubleVector</a></div><div class="ttdeci">std::vector&lt; double &gt; GetDoubleVector(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:155</div></div>
-<div class="ttc" id="aclass_nu_config_html_a22461a21acd1511f5ae912ec5a0820dc"><div class="ttname"><a href="class_nu_config.html#a22461a21acd1511f5ae912ec5a0820dc">NuConfig::GetInt</a></div><div class="ttdeci">int GetInt(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:116</div></div>
-<div class="ttc" id="aclass_nu_config_html_a2c6c3f5d6e866e6bc63dbd9156fced65"><div class="ttname"><a href="class_nu_config.html#a2c6c3f5d6e866e6bc63dbd9156fced65">NuConfig::f_filename</a></div><div class="ttdeci">std::string f_filename</div><div class="ttdef"><b>Definition:</b> NuConfig.h:19</div></div>
-<div class="ttc" id="aclass_nu_config_html_a2ecd5c9bdb9c36ea8bb3b5385e64a2c9"><div class="ttname"><a href="class_nu_config.html#a2ecd5c9bdb9c36ea8bb3b5385e64a2c9">NuConfig::NuConfig</a></div><div class="ttdeci">NuConfig(const std::string inputstringlong)</div><div class="ttdef"><b>Definition:</b> NuConfig.h:33</div></div>
-<div class="ttc" id="aclass_nu_config_html_a3398beff0bb3201b44ed40ab7fb1462c"><div class="ttname"><a href="class_nu_config.html#a3398beff0bb3201b44ed40ab7fb1462c">NuConfig::GetNumber</a></div><div class="ttdeci">var_t GetNumber(const std::string key)</div><div class="ttdef"><b>Definition:</b> NuConfig.h:212</div></div>
-<div class="ttc" id="aclass_nu_config_html_a352efb4e5bbd82cdf43671180691aa5d"><div class="ttname"><a href="class_nu_config.html#a352efb4e5bbd82cdf43671180691aa5d">NuConfig::GetDouble</a></div><div class="ttdeci">double GetDouble(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:112</div></div>
-<div class="ttc" id="aclass_nu_config_html_a3af30198b4b54d9d2d60bb24ba50870d"><div class="ttname"><a href="class_nu_config.html#a3af30198b4b54d9d2d60bb24ba50870d">NuConfig::GetConfigVector</a></div><div class="ttdeci">std::vector&lt; NuConfig &gt; GetConfigVector() const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:181</div></div>
-<div class="ttc" id="aclass_nu_config_html_a4e58ecedaeb896e6d4875936722e0be4"><div class="ttname"><a href="class_nu_config.html#a4e58ecedaeb896e6d4875936722e0be4">NuConfig::f_buffer</a></div><div class="ttdeci">std::string f_buffer</div><div class="ttdef"><b>Definition:</b> NuConfig.h:20</div></div>
-<div class="ttc" id="aclass_nu_config_html_a57a43ac1ce5c8548f99b7d1c9fb85677"><div class="ttname"><a href="class_nu_config.html#a57a43ac1ce5c8548f99b7d1c9fb85677">NuConfig::f_config</a></div><div class="ttdeci">Json::Value f_config</div><div class="ttdef"><b>Definition:</b> NuConfig.h:21</div></div>
-<div class="ttc" id="aclass_nu_config_html_a57fcf53082376e97ad1651d87b83d32e"><div class="ttname"><a href="class_nu_config.html#a57fcf53082376e97ad1651d87b83d32e">NuConfig::GetConfigVector</a></div><div class="ttdeci">std::vector&lt; NuConfig &gt; GetConfigVector(std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:169</div></div>
-<div class="ttc" id="aclass_nu_config_html_a59a37a49061522244747f2e16e9ff49b"><div class="ttname"><a href="class_nu_config.html#a59a37a49061522244747f2e16e9ff49b">NuConfig::GetConfigVariable</a></div><div class="ttdeci">NuConfig GetConfigVariable(std::string variable)</div><div class="ttdef"><b>Definition:</b> NuConfig.h:216</div></div>
-<div class="ttc" id="aclass_nu_config_html_a5e9ca9d6abad8c2213d277e4c5cdcb08"><div class="ttname"><a href="class_nu_config.html#a5e9ca9d6abad8c2213d277e4c5cdcb08">NuConfig::GetStringVector</a></div><div class="ttdeci">std::vector&lt; std::string &gt; GetStringVector(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:129</div></div>
-<div class="ttc" id="aclass_nu_config_html_a61a15b92b114135bf94fb9e9f9f815c7"><div class="ttname"><a href="class_nu_config.html#a61a15b92b114135bf94fb9e9f9f815c7">NuConfig::NuConfig</a></div><div class="ttdeci">NuConfig(const Json::Value value)</div><div class="ttdef"><b>Definition:</b> NuConfig.h:81</div></div>
-<div class="ttc" id="aclass_nu_config_html_a6384df3d7164118dce2ec3af6e404867"><div class="ttname"><a href="class_nu_config.html#a6384df3d7164118dce2ec3af6e404867">NuConfig::GetConfig</a></div><div class="ttdeci">NuConfig GetConfig(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:196</div></div>
-<div class="ttc" id="aclass_nu_config_html_a7641dfee89718c0e9fe1e0e5208e8eeb"><div class="ttname"><a href="class_nu_config.html#a7641dfee89718c0e9fe1e0e5208e8eeb">NuConfig::GetString</a></div><div class="ttdeci">std::string GetString(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:124</div></div>
-<div class="ttc" id="aclass_nu_config_html_a773f66f77843663c92e45ff9af86b3b2"><div class="ttname"><a href="class_nu_config.html#a773f66f77843663c92e45ff9af86b3b2">NuConfig::IsMember</a></div><div class="ttdeci">bool IsMember(std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:97</div></div>
-<div class="ttc" id="aclass_nu_config_html_a98935bb298e973c29a651150408628dd"><div class="ttname"><a href="class_nu_config.html#a98935bb298e973c29a651150408628dd">NuConfig::ToString</a></div><div class="ttdeci">std::string ToString() const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:108</div></div>
-<div class="ttc" id="aclass_nu_config_html_a99ea5473dfc297ece2ee8bb3527124fb"><div class="ttname"><a href="class_nu_config.html#a99ea5473dfc297ece2ee8bb3527124fb">NuConfig::CheckMember</a></div><div class="ttdeci">bool CheckMember(std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:85</div></div>
-<div class="ttc" id="aclass_nu_config_html_ac0a536e1f18ca6ac766d46f843bcbf88"><div class="ttname"><a href="class_nu_config.html#ac0a536e1f18ca6ac766d46f843bcbf88">NuConfig::NuConfig</a></div><div class="ttdeci">NuConfig()</div><div class="ttdef"><b>Definition:</b> NuConfig.h:27</div></div>
-<div class="ttc" id="aclass_nu_config_html_ac17266bbd8ea9e74fc8f0db979791c70"><div class="ttname"><a href="class_nu_config.html#ac17266bbd8ea9e74fc8f0db979791c70">NuConfig::ReadFromString</a></div><div class="ttdeci">bool ReadFromString(const std::string inputstringlong)</div><div class="ttdef"><b>Definition:</b> NuConfig.h:58</div></div>
-<div class="ttc" id="aclass_nu_config_html_ad57a43326be0c96c75cd91580bb1ec64"><div class="ttname"><a href="class_nu_config.html#ad57a43326be0c96c75cd91580bb1ec64">NuConfig::GetKeys</a></div><div class="ttdeci">std::vector&lt; std::string &gt; GetKeys() const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:201</div></div>
-<div class="ttc" id="aclass_nu_config_html_adbb488eb52e80214b27f887e833b7ba5"><div class="ttname"><a href="class_nu_config.html#adbb488eb52e80214b27f887e833b7ba5">NuConfig::Print</a></div><div class="ttdeci">void Print() const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:104</div></div>
-<div class="ttc" id="aclass_nu_config_html_adbdd2afb964a5b8472c80c9497304b58"><div class="ttname"><a href="class_nu_config.html#adbdd2afb964a5b8472c80c9497304b58">NuConfig::Read</a></div><div class="ttdeci">bool Read(const std::string filename)</div><div class="ttdef"><b>Definition:</b> NuConfig.h:37</div></div>
-<div class="ttc" id="aclass_nu_config_html_aed2c4dd9bee337f86dda02f51c61823a"><div class="ttname"><a href="class_nu_config.html#aed2c4dd9bee337f86dda02f51c61823a">NuConfig::NuConfig</a></div><div class="ttdeci">NuConfig(const NuConfig &amp;f)</div><div class="ttdef"><b>Definition:</b> NuConfig.h:29</div></div>
-<div class="ttc" id="aclass_nu_config_html_af01e5bcb9268dc2056e9b4f53eb179a5"><div class="ttname"><a href="class_nu_config.html#af01e5bcb9268dc2056e9b4f53eb179a5">NuConfig::GetValue</a></div><div class="ttdeci">Json::Value GetValue(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:191</div></div>
-<div class="ttc" id="aclass_nu_config_html_af75f9eee6055a91f8632ce4469c85584"><div class="ttname"><a href="class_nu_config.html#af75f9eee6055a91f8632ce4469c85584">NuConfig::GetBool</a></div><div class="ttdeci">bool GetBool(const std::string key) const</div><div class="ttdef"><b>Definition:</b> NuConfig.h:120</div></div>
-<div class="ttc" id="aexpand_env_8h_html"><div class="ttname"><a href="expand_env_8h.html">expandEnv.h</a></div></div>
-<div class="ttc" id="aexpand_env_8h_html_a2405658ed9f26fba080736f87ecf86a7"><div class="ttname"><a href="expand_env_8h.html#a2405658ed9f26fba080736f87ecf86a7">expandEnv</a></div><div class="ttdeci">std::string expandEnv(std::string text)</div><div class="ttdef"><b>Definition:</b> expandEnv.h:12</div></div>
-<div class="ttc" id="anamespace_background_sub_html_a8a684d6fdbbce9bccfe39b91e80cf9da"><div class="ttname"><a href="namespace_background_sub.html#a8a684d6fdbbce9bccfe39b91e80cf9da">BackgroundSub.variable</a></div><div class="ttdeci">variable</div><div class="ttdef"><b>Definition:</b> BackgroundSub.py:28</div></div>
-<div class="ttc" id="anamespace_mnv_h1_d__viewer_html_aff905ab888050900c3205bbb4543847d"><div class="ttname"><a href="namespace_mnv_h1_d__viewer.html#aff905ab888050900c3205bbb4543847d">MnvH1D_viewer.f</a></div><div class="ttdeci">f</div><div class="ttdef"><b>Definition:</b> MnvH1D_viewer.py:21</div></div>
+<div class="ttc" id="aclass_nu_config_html"><div class="ttname"><a href="class_nu_config.html">NuConfig</a></div><div class="ttdef"><b>Definition:</b> <a href="_nu_config_8h_source.html#l00016">NuConfig.h:16</a></div></div>
+<div class="ttc" id="aclass_nu_config_html_a59a37a49061522244747f2e16e9ff49b"><div class="ttname"><a href="class_nu_config.html#a59a37a49061522244747f2e16e9ff49b">NuConfig::GetConfigVariable</a></div><div class="ttdeci">NuConfig GetConfigVariable(std::string variable)</div><div class="ttdef"><b>Definition:</b> <a href="_nu_config_8h_source.html#l00216">NuConfig.h:216</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_8565e17dd1d9e454859bcebfad403d74.html">make_hists</a></li><li class="navelem"><a class="el" href="dir_586f7c604da2c6077892dfe30738d924.html">utils</a></li><li class="navelem"><b>NuConfig.h</b></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+  </ul>
+</div>
 </body>
 </html>

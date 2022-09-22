@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -21,9 +25,8 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">CCQENu<span id="projectnumber">&#160;1</span>
+   <div id="projectname">CCQENu
    </div>
-   <div id="projectbrief">CCQENu for MINERvA</div>
   </td>
  </tr>
  </tbody>
@@ -47,6 +50,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('class_plot_utils_1_1weight___m_cre_scale.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -61,11 +81,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespace_plot_utils.html">PlotUtils</a></li><li class="navelem"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">weight_MCreScale</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle"><div class="title">PlotUtils::weight_MCreScale Member List</div></div>
 </div><!--header-->
@@ -73,23 +88,26 @@ $(function() {
 
 <p>This is the complete list of members for <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#a0a900918cf8378d66fdc1bcbe304b756">f_Q2QEScaleFrac</a></td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#a774a56f34d03e1b8df839c010ad5fba6">GetScale</a>(std::string tag, const double q2qe, std::string uni_name, int iuniv)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#a393070bea41e81547e05bef5509d099f">GetScale</a>(std::string tag, const CVUniverse *univ, std::string uni_name, int iuniv)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#a8c73192150e78f42a7be6392b11cba58">h_scale</a></td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#a0d3a8ad28b56a909c4dd2f7aaa1879b6">isSignal</a></td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#ad9401aa3fd73ffad06e782fac47e8bbc">mnvh_BkgScale</a></td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#ae87c7395454a9857b478c40d6bb38cf5">mnvh_Scale</a></td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#af128815432cd453b05262c3ebbc80c40">mnvh_SigScale</a></td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#a82488c63846d6810bc977897bff40107">read</a>(TString filename)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#a5f43b706f0434fb16d622d5604de40e9">SetTag</a>(std::string tag)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#af2e5a1f516954621ef5f8f56c28e7512">useTuned</a></td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#a98cb53bfb280347c28420d8f5b407d91">weight_MCreScale</a>(const TString f)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html#a6f30cd07f159d46b0b72c04594ecf806">weight_MCreScale</a>(const NuConfig config)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>f_Q2QEScaleFrac</b> (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>GetScale</b>(std::string tag, const double q2qe, std::string uni_name, int iuniv) (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>GetScale</b>(std::string tag, const CVUniverse *univ, std::string uni_name, int iuniv) (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>h_scale</b> (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>isSignal</b> (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mnvh_BkgScale</b> (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>mnvh_Scale</b> (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>mnvh_SigScale</b> (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>read</b>(TString filename) (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>SetTag</b>(std::string tag) (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>useTuned</b> (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="odd"><td class="entry"><b>weight_MCreScale</b>(const TString f) (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>weight_MCreScale</b>(const NuConfig config) (defined in <a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a>)</td><td class="entry"><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">PlotUtils::weight_MCreScale</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+  </ul>
+</div>
 </body>
 </html>

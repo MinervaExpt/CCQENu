@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -21,9 +25,8 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">CCQENu<span id="projectnumber">&#160;1</span>
+   <div id="projectname">CCQENu
    </div>
-   <div id="projectbrief">CCQENu for MINERvA</div>
   </td>
  </tr>
  </tbody>
@@ -47,6 +50,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classfit_1_1_multi_scale_factors.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -61,11 +81,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespacefit.html">fit</a></li><li class="navelem"><a class="el" href="classfit_1_1_multi_scale_factors.html">MultiScaleFactors</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -73,30 +88,16 @@ $(function() {
   <div class="headertitle"><div class="title">fit::MultiScaleFactors Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_multi_scale_factors_8h_source.html">MultiScaleFactors.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for fit::MultiScaleFactors:</div>
 <div class="dyncontent">
-<div class="center"><img src="classfit_1_1_multi_scale_factors__inherit__graph.png" border="0" usemap="#afit_1_1_multi_scale_factors_inherit__map" alt="Inheritance graph"/></div>
-<map name="afit_1_1_multi_scale_factors_inherit__map" id="afit_1_1_multi_scale_factors_inherit__map">
-<area shape="rect" title=" " alt="" coords="27,95,173,121"/>
-<area shape="rect" title=" " alt="" coords="5,5,195,47"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for fit::MultiScaleFactors:</div>
-<div class="dyncontent">
-<div class="center"><img src="classfit_1_1_multi_scale_factors__coll__graph.png" border="0" usemap="#afit_1_1_multi_scale_factors_coll__map" alt="Collaboration graph"/></div>
-<map name="afit_1_1_multi_scale_factors_coll__map" id="afit_1_1_multi_scale_factors_coll__map">
-<area shape="rect" title=" " alt="" coords="27,95,173,121"/>
-<area shape="rect" title=" " alt="" coords="5,5,195,47"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+ <div class="center">
+  <img src="classfit_1_1_multi_scale_factors.png" alt=""/>
+ </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a16b8b2f148253be4d52d7bac52ec66b0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfit_1_1_multi_scale_factors.html#a16b8b2f148253be4d52d7bac52ec66b0">MultiScaleFactors</a> (const std::map&lt; const std::string, std::vector&lt; TH1D * &gt; &gt; unfitHists, const std::map&lt; const std::string, TH1D * &gt; dataHist, const std::map&lt; const std::string, bool &gt; Include, const <a class="el" href="namespacefit.html#a31656615d9adffc459835e6cdee73189">fit_type</a> type, const int firstBin=1, const int lastBin=-1)</td></tr>
+<tr class="memitem:a16b8b2f148253be4d52d7bac52ec66b0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfit_1_1_multi_scale_factors.html#a16b8b2f148253be4d52d7bac52ec66b0">MultiScaleFactors</a> (const std::map&lt; const std::string, std::vector&lt; TH1D * &gt; &gt; unfitHists, const std::map&lt; const std::string, TH1D * &gt; dataHist, const std::map&lt; const std::string, bool &gt; Include, const fit_type type, const int firstBin=1, const int lastBin=-1)</td></tr>
 <tr class="separator:a16b8b2f148253be4d52d7bac52ec66b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11f419d3556d2a383eec92a70d79c552"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfit_1_1_multi_scale_factors.html#a11f419d3556d2a383eec92a70d79c552">NDim</a> () const override</td></tr>
 <tr class="separator:a11f419d3556d2a383eec92a70d79c552"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -104,10 +105,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7f6fa620d3cde2b6e2c1bbe9429fd651"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d993276ac6880d87fc6efcb7704f142"><td class="memItemLeft" align="right" valign="top">IBaseFunctionMultiDimTempl&lt; double &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfit_1_1_multi_scale_factors.html#a3d993276ac6880d87fc6efcb7704f142">Clone</a> () const override</td></tr>
 <tr class="separator:a3d993276ac6880d87fc6efcb7704f142"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4115755c1eb97e4b67cf9e5b94266cf6"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfit_1_1_multi_scale_factors.html#a4115755c1eb97e4b67cf9e5b94266cf6">~MultiScaleFactors</a> ()=default</td></tr>
-<tr class="separator:a4115755c1eb97e4b67cf9e5b94266cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="_multi_scale_factors_8h_source.html#l00026">26</a> of file <a class="el" href="_multi_scale_factors_8h_source.html">MultiScaleFactors.h</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a16b8b2f148253be4d52d7bac52ec66b0" name="a16b8b2f148253be4d52d7bac52ec66b0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a16b8b2f148253be4d52d7bac52ec66b0">&#9670;&nbsp;</a></span>MultiScaleFactors()</h2>
 
@@ -135,7 +137,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="namespacefit.html#a31656615d9adffc459835e6cdee73189">fit_type</a>&#160;</td>
+          <td class="paramtype">const fit_type&#160;</td>
           <td class="paramname"><em>type</em>, </td>
         </tr>
         <tr>
@@ -158,30 +160,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a4115755c1eb97e4b67cf9e5b94266cf6" name="a4115755c1eb97e4b67cf9e5b94266cf6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4115755c1eb97e4b67cf9e5b94266cf6">&#9670;&nbsp;</a></span>~MultiScaleFactors()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual fit::MultiScaleFactors::~MultiScaleFactors </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p class="definition">Definition at line <a class="el" href="_multi_scale_factors_8cpp_source.html#l00014">14</a> of file <a class="el" href="_multi_scale_factors_8cpp_source.html">MultiScaleFactors.cpp</a>.</p>
 
 </div>
 </div>
@@ -209,6 +188,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_multi_scale_factors_8cpp_source.html#l00084">84</a> of file <a class="el" href="_multi_scale_factors_8cpp_source.html">MultiScaleFactors.cpp</a>.</p>
+
 </div>
 </div>
 <a id="a7f6fa620d3cde2b6e2c1bbe9429fd651" name="a7f6fa620d3cde2b6e2c1bbe9429fd651"></a>
@@ -235,6 +216,8 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_multi_scale_factors_8cpp_source.html#l00033">33</a> of file <a class="el" href="_multi_scale_factors_8cpp_source.html">MultiScaleFactors.cpp</a>.</p>
+
 </div>
 </div>
 <a id="a11f419d3556d2a383eec92a70d79c552" name="a11f419d3556d2a383eec92a70d79c552"></a>
@@ -260,16 +243,22 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="_multi_scale_factors_8cpp_source.html#l00028">28</a> of file <a class="el" href="_multi_scale_factors_8cpp_source.html">MultiScaleFactors.cpp</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>CCQENu/make_hists/fits/<a class="el" href="_multi_scale_factors_8h_source.html">MultiScaleFactors.h</a></li>
-<li>CCQENu/make_hists/fits/<a class="el" href="_multi_scale_factors_8cpp.html">MultiScaleFactors.cpp</a></li>
+<li>make_hists/fits/<a class="el" href="_multi_scale_factors_8h_source.html">MultiScaleFactors.h</a></li>
+<li>make_hists/fits/<a class="el" href="_multi_scale_factors_8cpp_source.html">MultiScaleFactors.cpp</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>fit</b></li><li class="navelem"><a class="el" href="classfit_1_1_multi_scale_factors.html">MultiScaleFactors</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+  </ul>
+</div>
 </body>
 </html>

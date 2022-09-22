@@ -1,9 +1,9 @@
-<map id="CCQENu/make_hists/include/HistWrapperMap.h" name="CCQENu/make_hists/include/HistWrapperMap.h">
-<area shape="rect" id="node1" title=" " alt="" coords="158,5,353,47"/>
-<area shape="rect" id="node2" href="$_variable_from_config_8h.html" title=" " alt="" coords="158,95,353,136"/>
+<map id="make_hists/include/HistWrapperMap.h" name="make_hists/include/HistWrapperMap.h">
+<area shape="rect" id="node1" title=" " alt="" coords="187,5,323,47"/>
+<area shape="rect" id="node2" href="$_variable_from_config_8h.html" title=" " alt="" coords="178,95,333,136"/>
 <area shape="rect" id="node3" href="$_get2_d_variables_from_config_8cxx.html" title=" " alt="" coords="5,184,217,225"/>
-<area shape="rect" id="node4" href="$_get_variables_from_config_8cxx.html" title=" " alt="" coords="133,273,327,315"/>
-<area shape="rect" id="node5" href="$_get_variables_from_config_8h.html" title=" " alt="" coords="342,184,537,225"/>
-<area shape="rect" id="node6" href="$sidebands_8_c.html" title=" " alt="" coords="351,281,578,307"/>
-<area shape="rect" id="node7" href="$sidebands__v2_8_c.html" title=" " alt="" coords="602,281,850,307"/>
+<area shape="rect" id="node4" href="$_get_variables_from_config_8cxx.html" title=" " alt="" coords="138,273,333,315"/>
+<area shape="rect" id="node5" href="$_get_variables_from_config_8h.html" title=" " alt="" coords="331,184,513,225"/>
+<area shape="rect" id="node6" href="$sidebands_8_c.html" title=" " alt="" coords="357,281,524,307"/>
+<area shape="rect" id="node7" href="$sidebands__v2_8_c.html" title=" " alt="" coords="549,281,738,307"/>
 </map>

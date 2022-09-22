@@ -5,10 +5,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CCQENu: CCQENu/make_hists/utils/RebinFlux.h Source File</title>
+<title>CCQENu: make_hists/utils/RebinFlux.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -21,9 +25,8 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">CCQENu<span id="projectnumber">&#160;1</span>
+   <div id="projectname">CCQENu
    </div>
-   <div id="projectbrief">CCQENu for MINERvA</div>
   </td>
  </tr>
  </tbody>
@@ -47,6 +50,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('_rebin_flux_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -61,22 +81,17 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_22e7ca38542c6f2ec3c430262ab84946.html">CCQENu</a></li><li class="navelem"><a class="el" href="dir_8132c49adac5e9408d55e19e0c428302.html">make_hists</a></li><li class="navelem"><a class="el" href="dir_82e9344f3dda0680ff7ecb27f37a6d8f.html">utils</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle"><div class="title">RebinFlux.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="_rebin_flux_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// utilities to deal with flux</span></div>
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// utilities to deal with flux</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#ifndef REBIN_FLUX_H</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#define REBIN_FLUX_H</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="_nu_config_8h.html">utils/NuConfig.h</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;utils/NuConfig.h&quot;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;PlotUtils/MnvH1D.h&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;TFile.h&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
@@ -85,16 +100,16 @@ $(function() {
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">// HMS change to use map of configs instead of config.  Put in calls with just a config to allow backwards compatibility.  Get rid of in future as they are nasty in terms of potential memory leaks.</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>MnvH1D* <a class="code hl_function" href="_rebin_flux_8h.html#a73c73260313190bafffb0fe85544e7c2">GetFlux</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>);</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>MnvH1D* <a class="code hl_function" href="_rebin_flux_8h.html#a73c73260313190bafffb0fe85544e7c2">GetFlux</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a>);</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>MnvH1D* GetFlux(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config);</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>MnvH1D* GetFlux(<span class="keyword">const</span> CONFIGMAP);</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">// - get the flux histogram derived above back rebinned according to histogram ehist</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a018eeed6b0e062e59aeca5a6fdf6e7a4">   21</a></span>MnvH1D* <a class="code hl_function" href="_rebin_flux_8h.html#a018eeed6b0e062e59aeca5a6fdf6e7a4">GetFluxEbins</a>(<span class="keyword">const</span> MnvH1D* h_flux_dewidthed, <span class="keyword">const</span> MnvH1D* ehist );</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#ab6d9302c3c19e4e367fc394197d7e0c8">   22</a></span>MnvH2D* <a class="code hl_function" href="_rebin_flux_8h.html#a018eeed6b0e062e59aeca5a6fdf6e7a4">GetFluxEbins</a>(<span class="keyword">const</span> MnvH1D* h_flux_dewidthed, <span class="keyword">const</span> MnvH2D* ehist );</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>MnvH1D* GetFluxEbins(<span class="keyword">const</span> MnvH1D* h_flux_dewidthed, <span class="keyword">const</span> MnvH1D* ehist );</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>MnvH2D* GetFluxEbins(<span class="keyword">const</span> MnvH1D* h_flux_dewidthed, <span class="keyword">const</span> MnvH2D* ehist );</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">// DeWidth -- utility to remove binwidth correction from an MnvH1D</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a636603cf279e8cd078786c0fd5fcd516">   25</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_rebin_flux_8h.html#a636603cf279e8cd078786c0fd5fcd516">DeWidth</a>(MnvH1D* h_mnv_with_binwidth, MnvH1D *&amp;h_mnv_with_binwidth_removed){</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keywordtype">void</span> DeWidth(MnvH1D* h_mnv_with_binwidth, MnvH1D *&amp;h_mnv_with_binwidth_removed){</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="comment">//cout &lt;&lt; &quot;TRACE: remove binwidth correction from MnvH1D &quot; &lt;&lt; h_mnv_with_binwidth-&gt;GetName() &lt;&lt; endl;</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
@@ -118,7 +133,7 @@ $(function() {
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">// rebin an MnvH1D to match a different subset of bins</span></div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">template</span> &lt;<span class="keyword">class</span> HistoType1D&gt;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a241eeb045d00ef7e560e3ae2b20046b5">   49</a></span>  HistoType1D* <a class="code hl_function" href="_rebin_flux_8h.html#a241eeb045d00ef7e560e3ae2b20046b5">RebinDeWidthedFluxHist</a>(<span class="keyword">const</span> HistoType1D* h_mnv_without_binwidth, <span class="keyword">const</span> HistoType1D * h_mnv_rebinned_without_binwidth){</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  HistoType1D* RebinDeWidthedFluxHist(<span class="keyword">const</span> HistoType1D* h_mnv_without_binwidth, <span class="keyword">const</span> HistoType1D * h_mnv_rebinned_without_binwidth){</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// this operates on a dewidthed as we want total counts.</span></div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">//cout &lt;&lt; &quot;TRACE: Rebin an MnvH1D &quot; &lt;&lt; h_mnv_without_binwidth-&gt;GetName() &lt;&lt; &quot; into  &quot;  &lt;&lt; h_mnv_rebinned_without_binwidth-&gt;GetName() &lt;&lt; endl;</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    std::vector&lt;double&gt;mnv_rebinned_without_binwidth_bin_edges;</div>
@@ -135,40 +150,40 @@ $(function() {
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">return</span> new_rebinned;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  }</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a503b414fc50352275d7222d2bf2a6ec1">   66</a></span><span class="keyword">template</span> MnvH1D* <a class="code hl_function" href="_rebin_flux_8h.html#a503b414fc50352275d7222d2bf2a6ec1">RebinDeWidthedFluxHist&lt;MnvH1D&gt;</a>(<span class="keyword">const</span> MnvH1D* h_mnv_without_binwidth, <span class="keyword">const</span> MnvH1D * h_mnv_rebinned_without_binwidth);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">template</span> MnvH1D* RebinDeWidthedFluxHist&lt;MnvH1D&gt;(<span class="keyword">const</span> MnvH1D* h_mnv_without_binwidth, <span class="keyword">const</span> MnvH1D * h_mnv_rebinned_without_binwidth);</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">// TH1D is sometimes useful for doing 2D stuff</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a617e593a23dd671ab7618f331a94696a">   68</a></span><span class="keyword">template</span> TH1D* <a class="code hl_function" href="_rebin_flux_8h.html#a617e593a23dd671ab7618f331a94696a">RebinDeWidthedFluxHist&lt;TH1D&gt;</a>(<span class="keyword">const</span> TH1D* h_mnv_without_binwidth, <span class="keyword">const</span> TH1D * h_mnv_rebinned_without_binwidth);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keyword">template</span> TH1D* RebinDeWidthedFluxHist&lt;TH1D&gt;(<span class="keyword">const</span> TH1D* h_mnv_without_binwidth, <span class="keyword">const</span> TH1D * h_mnv_rebinned_without_binwidth);</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment">// sometimes you need to make # of universes match - this does that</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a8e2d8a168a67cf9bbe8bd89c8a55e3c9">   72</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_rebin_flux_8h.html#a8e2d8a168a67cf9bbe8bd89c8a55e3c9">TruncateNumberOfFluxUniverses</a>( MnvH1D* <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>, <span class="keywordtype">int</span> nUniverses)</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="keywordtype">void</span> TruncateNumberOfFluxUniverses( MnvH1D* h, <span class="keywordtype">int</span> nUniverses)</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>{</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  MnvVertErrorBand *poppedFluxErrorBand = <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>-&gt;PopVertErrorBand(<span class="stringliteral">&quot;Flux&quot;</span>);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  MnvVertErrorBand *poppedFluxErrorBand = h-&gt;PopVertErrorBand(<span class="stringliteral">&quot;Flux&quot;</span>);</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  std::vector&lt;TH1D*&gt; fluxUniverses = poppedFluxErrorBand-&gt;GetHists();</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  fluxUniverses.resize(nUniverses);</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>-&gt;AddVertErrorBand(<span class="stringliteral">&quot;Flux&quot;</span>,fluxUniverses);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  h-&gt;AddVertErrorBand(<span class="stringliteral">&quot;Flux&quot;</span>,fluxUniverses);</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="comment">//CheckAndFixFluxErrorBand(h);</span></div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>}</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="comment">//2D</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a798f5746c0c86470bca1b0af1cb1ea3a">   81</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="_rebin_flux_8h.html#a8e2d8a168a67cf9bbe8bd89c8a55e3c9">TruncateNumberOfFluxUniverses</a>( MnvH2D* <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>, <span class="keywordtype">int</span> nUniverses)</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keywordtype">void</span> TruncateNumberOfFluxUniverses( MnvH2D* h, <span class="keywordtype">int</span> nUniverses)</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>{</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  MnvVertErrorBand2D *poppedFluxErrorBand = <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>-&gt;PopVertErrorBand(<span class="stringliteral">&quot;Flux&quot;</span>);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  MnvVertErrorBand2D *poppedFluxErrorBand = h-&gt;PopVertErrorBand(<span class="stringliteral">&quot;Flux&quot;</span>);</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  std::vector&lt;TH2D*&gt; fluxUniverses = poppedFluxErrorBand-&gt;GetHists();</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  fluxUniverses.resize(nUniverses);</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>-&gt;AddVertErrorBand(<span class="stringliteral">&quot;Flux&quot;</span>,fluxUniverses);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  h-&gt;AddVertErrorBand(<span class="stringliteral">&quot;Flux&quot;</span>,fluxUniverses);</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="comment">//CheckAndFixFluxErrorBand(h);</span></div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>}</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="comment">// implementation of GetFlux</span></div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="comment">// make a version that takes a pointer to the config</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a73c73260313190bafffb0fe85544e7c2">   92</a></span>MnvH1D* <a class="code hl_function" href="_rebin_flux_8h.html#a73c73260313190bafffb0fe85544e7c2">GetFlux</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>){</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <a class="code hl_typedef" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a> allconfigs;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    allconfigs[<span class="stringliteral">&quot;main&quot;</span>]=<span class="keyword">new</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(<a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="_rebin_flux_8h.html#a73c73260313190bafffb0fe85544e7c2">GetFlux</a>(allconfigs);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>MnvH1D* GetFlux(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config){</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    CONFIGMAP allconfigs;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    allconfigs[<span class="stringliteral">&quot;main&quot;</span>]=<span class="keyword">new</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(config);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">return</span> GetFlux(allconfigs);</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    </div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>}</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#acd15836801cf85093705f0cb873f8d92">   99</a></span>MnvH1D* <a class="code hl_function" href="_rebin_flux_8h.html#a73c73260313190bafffb0fe85544e7c2">GetFlux</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a> configmap){</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>MnvH1D* GetFlux(<span class="keyword">const</span> CONFIGMAP configmap){</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    </div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  std::string playlist = configmap.at(<span class="stringliteral">&quot;main&quot;</span>)-&gt;GetString(<span class="stringliteral">&quot;playlist&quot;</span>);</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="keywordtype">int</span> m_fluxUniverses = configmap.at(<span class="stringliteral">&quot;main&quot;</span>)-&gt;GetInt(<span class="stringliteral">&quot;fluxUniverses&quot;</span>);</div>
@@ -219,14 +234,14 @@ $(function() {
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  <span class="comment">// clean up the external flux by removing error bands we won&#39;t use in this analysis</span></div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  h_flux-&gt;PopVertErrorBand(<span class="stringliteral">&quot;Flux_BeamFocus&quot;</span>);</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  h_flux-&gt;PopVertErrorBand(<span class="stringliteral">&quot;ppfx1_Total&quot;</span>);</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  <a class="code hl_function" href="_rebin_flux_8h.html#a8e2d8a168a67cf9bbe8bd89c8a55e3c9">TruncateNumberOfFluxUniverses</a>(h_flux,m_fluxUniverses);</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  TruncateNumberOfFluxUniverses(h_flux,m_fluxUniverses);</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  <span class="comment">//</span></div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  <span class="comment">//  flux hist is stored with binwidth correction, need to undo that to get the integral and use for sigma(E)</span></div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  <span class="comment">//</span></div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  MnvH1D* h_flux_dewidthed;</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <a class="code hl_function" href="_rebin_flux_8h.html#a636603cf279e8cd078786c0fd5fcd516">DeWidth</a>(h_flux,h_flux_dewidthed);</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  DeWidth(h_flux,h_flux_dewidthed);</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  h_flux_dewidthed-&gt;SetName(<span class="stringliteral">&quot;flux_dewidthed&quot;</span>);</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  h_flux_dewidthed-&gt;Scale(1/10000.); <span class="comment">// convert from m^2 to cm^2</span></div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keywordflow">return</span> h_flux_dewidthed;</div>
@@ -235,9 +250,9 @@ $(function() {
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="comment">// given energy histogram, rebin flux to match</span></div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#aeb5a624224066ebb6d86e9054a6dc83a">  166</a></span>MnvH1D* <a class="code hl_function" href="_rebin_flux_8h.html#a018eeed6b0e062e59aeca5a6fdf6e7a4">GetFluxEbins</a>(<span class="keyword">const</span> MnvH1D* h_flux_dewidthed, <span class="keyword">const</span> MnvH1D* ihist, <a class="code hl_typedef" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a> configs , std::map&lt;std::string, bool&gt; FluxEnormBool){</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>MnvH1D* GetFluxEbins(<span class="keyword">const</span> MnvH1D* h_flux_dewidthed, <span class="keyword">const</span> MnvH1D* ihist, CONFIGMAP configs , std::map&lt;std::string, bool&gt; FluxEnormBool){</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  TString newname = ihist-&gt;GetName()+TString(<span class="stringliteral">&quot;_Flux&quot;</span>);</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  MnvH1D* h_flux_ebins = <a class="code hl_function" href="_rebin_flux_8h.html#a241eeb045d00ef7e560e3ae2b20046b5">RebinDeWidthedFluxHist</a>(h_flux_dewidthed,ihist);</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  MnvH1D* h_flux_ebins = RebinDeWidthedFluxHist(h_flux_dewidthed,ihist);</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  h_flux_ebins-&gt;SetName(newname);</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  h_flux_ebins-&gt;SetTitle(<span class="stringliteral">&quot;Integrated Flux/bin; GeV&quot;</span>);</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>  <span class="comment">// reapply the bin width correction to flux(this cancels out the plotter applying it later to the numerator)</span></div>
@@ -245,17 +260,17 @@ $(function() {
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>  <span class="keywordflow">return</span> h_flux_ebins;</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>}</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a380e50bc55a8a15a2587a8eceb970acd">  176</a></span>MnvH1D* <a class="code hl_function" href="_rebin_flux_8h.html#a018eeed6b0e062e59aeca5a6fdf6e7a4">GetFluxEbins</a>(<span class="keyword">const</span> MnvH1D* h_flux_dewidthed, <span class="keyword">const</span> MnvH1D* ihist, <a class="code hl_class" href="class_nu_config.html">NuConfig</a> <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>, std::map&lt;std::string, bool&gt; FluxEnormBool){</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <a class="code hl_typedef" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a> allconfigs;</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    allconfigs[<span class="stringliteral">&quot;main&quot;</span>]=<span class="keyword">new</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(<a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>);</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="_rebin_flux_8h.html#a018eeed6b0e062e59aeca5a6fdf6e7a4">GetFluxEbins</a>( h_flux_dewidthed, ihist , allconfigs,  FluxEnormBool);</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>MnvH1D* GetFluxEbins(<span class="keyword">const</span> MnvH1D* h_flux_dewidthed, <span class="keyword">const</span> MnvH1D* ihist, <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config, std::map&lt;std::string, bool&gt; FluxEnormBool){</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    CONFIGMAP allconfigs;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    allconfigs[<span class="stringliteral">&quot;main&quot;</span>]=<span class="keyword">new</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(config);</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keywordflow">return</span> GetFluxEbins( h_flux_dewidthed, ihist , allconfigs,  FluxEnormBool);</div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>}</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="comment">//MnvH2D* GetFluxEbins(const MnvH1D* h_flux, const MnvH2D* ihist , NuConfig* pconfig, std::map&lt;std::string, bool&gt; FluxEnormBool){</span></div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="comment">//    return GetFluxEbins(h_flux, ihist , *pconfig, FluxEnormBool);</span></div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="comment">//}</span></div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a8fe9a11d35759a20d8d936017830fe2b">  186</a></span>MnvH2D* <a class="code hl_function" href="_rebin_flux_8h.html#a018eeed6b0e062e59aeca5a6fdf6e7a4">GetFluxEbins</a>(<span class="keyword">const</span> MnvH1D* h_flux, <span class="keyword">const</span> MnvH2D* ihist , <a class="code hl_typedef" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a> configmap, std::map&lt;std::string, bool&gt; FluxEnormBool){  <span class="comment">//std::vector&lt;std::string&gt; varparse){</span></div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>MnvH2D* GetFluxEbins(<span class="keyword">const</span> MnvH1D* h_flux, <span class="keyword">const</span> MnvH2D* ihist , CONFIGMAP configmap, std::map&lt;std::string, bool&gt; FluxEnormBool){  <span class="comment">//std::vector&lt;std::string&gt; varparse){</span></div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  <span class="comment">// hist that will come out with flux hist in bins you want</span></div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    </div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  MnvH2D* h2D_flux_ebins = (MnvH2D*)ihist-&gt;Clone();</div>
@@ -293,7 +308,7 @@ $(function() {
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  <span class="comment">// Borrowed from 1D code</span></div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  MnvH1D* h_flux_dewidthed = (MnvH1D*)h_flux-&gt;Clone();</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>  <span class="comment">// Rebin flux to energy hist bins, Amit works with TH1D&#39;s for all this...</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  MnvH1D* mnvh_rebinned_flux = <a class="code hl_function" href="_rebin_flux_8h.html#a241eeb045d00ef7e560e3ae2b20046b5">RebinDeWidthedFluxHist</a>(h_flux_dewidthed,ihistproj);</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  MnvH1D* mnvh_rebinned_flux = RebinDeWidthedFluxHist(h_flux_dewidthed,ihistproj);</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  mnvh_rebinned_flux-&gt;SetTitle(<span class="stringliteral">&quot;Integrated Flux/projected bin; GeV&quot;</span>);</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>  <span class="comment">// reapply the bin width correction to flux(this cancels out the plotter applying it later to the numerator)</span></div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>  <span class="comment">// is this necessary for 2D?</span></div>
@@ -335,7 +350,7 @@ $(function() {
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        h_vert-&gt;SetName( Form(<span class="stringliteral">&quot;h_vert_%s_%i&quot;</span>, vertNames[k].c_str(), u) );</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        <span class="comment">//strategy is get 1D th1d and fill up h_flux_normalization</span></div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        TH1D* univerrBand = <span class="keyword">new</span> TH1D(*errBand-&gt;GetHist(u));</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        <a class="code hl_function" href="_rebin_flux_8h.html#a241eeb045d00ef7e560e3ae2b20046b5">RebinDeWidthedFluxHist</a>(univerrBand, h_rebinned_flux);</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        RebinDeWidthedFluxHist(univerrBand, h_rebinned_flux);</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0;i&lt;nxbins+1;i++){</div>
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>          <span class="keywordflow">for</span>(<span class="keywordtype">int</span> j=0;j&lt;nybins+1;j++){</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            h_vert-&gt;SetBinContent(i,j,h_rebinned_flux-&gt;GetBinContent(i));</div>
@@ -351,10 +366,10 @@ $(function() {
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>  <span class="keywordflow">return</span> h2D_flux_ebins;</div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>}</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a3c805622d7e09750b6f20947754427dc">  282</a></span>MnvH2D* <a class="code hl_function" href="_rebin_flux_8h.html#a018eeed6b0e062e59aeca5a6fdf6e7a4">GetFluxEbins</a>(<span class="keyword">const</span> MnvH1D* h_flux, <span class="keyword">const</span> MnvH2D* ihist , <a class="code hl_class" href="class_nu_config.html">NuConfig</a> <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>, std::map&lt;std::string, bool&gt; FluxEnormBool){</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>MnvH2D* GetFluxEbins(<span class="keyword">const</span> MnvH1D* h_flux, <span class="keyword">const</span> MnvH2D* ihist , <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config, std::map&lt;std::string, bool&gt; FluxEnormBool){</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    std::map&lt;const std::string, NuConfig*&gt; allconfigs;</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    allconfigs[<span class="stringliteral">&quot;main&quot;</span> ]=<span class="keyword">new</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(<a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>);</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="_rebin_flux_8h.html#a018eeed6b0e062e59aeca5a6fdf6e7a4">GetFluxEbins</a>( h_flux, ihist , allconfigs,  FluxEnormBool);</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    allconfigs[<span class="stringliteral">&quot;main&quot;</span> ]=<span class="keyword">new</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(config);</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    <span class="keywordflow">return</span> GetFluxEbins( h_flux, ihist , allconfigs,  FluxEnormBool);</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>}</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
@@ -362,14 +377,14 @@ $(function() {
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="comment">// backwards compatibility</span></div>
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> MnvHistoType&gt;</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a690ddddbf8655dbd852d1a683a878809">  293</a></span>  MnvHistoType* <a class="code hl_function" href="_rebin_flux_8h.html#a690ddddbf8655dbd852d1a683a878809">GetFluxFlat</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>,  MnvHistoType* <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>){</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>      <a class="code hl_typedef" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a> allconfigs;</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>      allconfigs[<span class="stringliteral">&quot;main&quot;</span>] = <span class="keyword">new</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(<a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>);</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="_rebin_flux_8h.html#a690ddddbf8655dbd852d1a683a878809">GetFluxFlat</a>(allconfigs,<a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>);</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>  MnvHistoType* GetFluxFlat(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config,  MnvHistoType* h){</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>      CONFIGMAP allconfigs;</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>      allconfigs[<span class="stringliteral">&quot;main&quot;</span>] = <span class="keyword">new</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a>(config);</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>      <span class="keywordflow">return</span> GetFluxFlat(allconfigs,h);</div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>  }</div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span> </div>
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> MnvHistoType&gt;</div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#af7bdf8cf64851536c2af10f391f05402">  300</a></span>  MnvHistoType* <a class="code hl_function" href="_rebin_flux_8h.html#a690ddddbf8655dbd852d1a683a878809">GetFluxFlat</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a> configs,  MnvHistoType* <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>){</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>  MnvHistoType* GetFluxFlat(<span class="keyword">const</span> CONFIGMAP configs,  MnvHistoType* h){</div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span> </div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    std::string playlist = configs.at(<span class="stringliteral">&quot;main&quot;</span>)-&gt;GetString(<span class="stringliteral">&quot;playlist&quot;</span>);</div>
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    <span class="keywordtype">int</span> m_fluxUniverses = configs.at(<span class="stringliteral">&quot;main&quot;</span>)-&gt;GetInt(<span class="stringliteral">&quot;fluxUniverses&quot;</span>);</div>
@@ -419,12 +434,12 @@ $(function() {
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span> </div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    FluxReweighter *frw = <span class="keyword">new</span> PlotUtils::FluxReweighter(pdg,m_nue_constraint,fluxplaylist[playlist],FluxReweighter::gen2thin, FluxReweighter::g4numiv6,m_fluxUniverses);</div>
 <div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    <span class="keywordtype">bool</span> use_muon_correlations = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    MnvHistoType *h_flux = frw-&gt;GetIntegratedFluxReweighted&lt;MnvHistoType&gt;(pdg,<a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>,0.,120., use_muon_correlations);</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    MnvHistoType *h_flux = frw-&gt;GetIntegratedFluxReweighted&lt;MnvHistoType&gt;(pdg,h,0.,120., use_muon_correlations);</div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    h_flux-&gt;SetDirectory(0);</div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>    <span class="comment">// clean up the external flux by removing error bands we won&#39;t use in this analysis</span></div>
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>    h_flux-&gt;PopVertErrorBand(<span class="stringliteral">&quot;Flux_BeamFocus&quot;</span>);</div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>    h_flux-&gt;PopVertErrorBand(<span class="stringliteral">&quot;ppfx1_Total&quot;</span>);</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>    <a class="code hl_function" href="_rebin_flux_8h.html#a8e2d8a168a67cf9bbe8bd89c8a55e3c9">TruncateNumberOfFluxUniverses</a>(h_flux,m_fluxUniverses);</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>    TruncateNumberOfFluxUniverses(h_flux,m_fluxUniverses);</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
 <div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    <span class="comment">//</span></div>
 <div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    <span class="comment">//  flux hist is stored with binwidth correction, need to undo that to get the integral and use for sigma(E)</span></div>
@@ -433,35 +448,25 @@ $(function() {
 <div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    <span class="keywordflow">return</span> h_flux;</div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>  }</div>
 <div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span> </div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a80d318d3d6583f8395579a3deafe6ebf">  364</a></span><span class="keyword">template</span> MnvH1D* <a class="code hl_function" href="_rebin_flux_8h.html#a80d318d3d6583f8395579a3deafe6ebf">GetFluxFlat&lt;MnvH1D&gt;</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>, MnvH1D* <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>);</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#a4b3cfdf5e1dae0865591a3b1a3d74dff">  365</a></span><span class="keyword">template</span> MnvH2D* <a class="code hl_function" href="_rebin_flux_8h.html#a4b3cfdf5e1dae0865591a3b1a3d74dff">GetFluxFlat&lt;MnvH2D&gt;</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> <a class="code hl_variable" href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">config</a>, MnvH2D* <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>);</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#ab30c2545cc472fc62bbb8c6545201d2f">  366</a></span><span class="keyword">template</span> MnvH1D* <a class="code hl_function" href="_rebin_flux_8h.html#a80d318d3d6583f8395579a3deafe6ebf">GetFluxFlat&lt;MnvH1D&gt;</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a> configs, MnvH1D* <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>);</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno"><a class="line" href="_rebin_flux_8h.html#ab90b81bb0dcef36dd11f8bb14a7a87a8">  367</a></span><span class="keyword">template</span> MnvH2D* <a class="code hl_function" href="_rebin_flux_8h.html#a4b3cfdf5e1dae0865591a3b1a3d74dff">GetFluxFlat&lt;MnvH2D&gt;</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a> configs, MnvH2D* <a class="code hl_variable" href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">h</a>);</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span><span class="keyword">template</span> MnvH1D* GetFluxFlat&lt;MnvH1D&gt;(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config, MnvH1D* h);</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span><span class="keyword">template</span> MnvH2D* GetFluxFlat&lt;MnvH2D&gt;(<span class="keyword">const</span> <a class="code hl_class" href="class_nu_config.html">NuConfig</a> config, MnvH2D* h);</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span><span class="keyword">template</span> MnvH1D* GetFluxFlat&lt;MnvH1D&gt;(<span class="keyword">const</span> CONFIGMAP configs, MnvH1D* h);</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span><span class="keyword">template</span> MnvH2D* GetFluxFlat&lt;MnvH2D&gt;(<span class="keyword">const</span> CONFIGMAP configs, MnvH2D* h);</div>
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span><span class="comment">//template MnvH1D* GetFluxFlat&lt;MnvH1D&gt;(const NuConfig* pconfig, MnvH1D* h);</span></div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span><span class="comment">//template MnvH2D* GetFluxFlat&lt;MnvH2D&gt;(const NuConfig* pconfig, MnvH2D* h);</span></div>
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="a_nu_config_8h_html"><div class="ttname"><a href="_nu_config_8h.html">NuConfig.h</a></div></div>
-<div class="ttc" id="a_nu_config_8h_html_a1128cc5014c49f4e349d71b292090cd5"><div class="ttname"><a href="_nu_config_8h.html#a1128cc5014c49f4e349d71b292090cd5">CONFIGMAP</a></div><div class="ttdeci">std::map&lt; const std::string, NuConfig * &gt; CONFIGMAP</div><div class="ttdef"><b>Definition:</b> NuConfig.h:12</div></div>
-<div class="ttc" id="a_rebin_flux_8h_html_a018eeed6b0e062e59aeca5a6fdf6e7a4"><div class="ttname"><a href="_rebin_flux_8h.html#a018eeed6b0e062e59aeca5a6fdf6e7a4">GetFluxEbins</a></div><div class="ttdeci">MnvH1D * GetFluxEbins(const MnvH1D *h_flux_dewidthed, const MnvH1D *ehist)</div></div>
-<div class="ttc" id="a_rebin_flux_8h_html_a241eeb045d00ef7e560e3ae2b20046b5"><div class="ttname"><a href="_rebin_flux_8h.html#a241eeb045d00ef7e560e3ae2b20046b5">RebinDeWidthedFluxHist</a></div><div class="ttdeci">HistoType1D * RebinDeWidthedFluxHist(const HistoType1D *h_mnv_without_binwidth, const HistoType1D *h_mnv_rebinned_without_binwidth)</div><div class="ttdef"><b>Definition:</b> RebinFlux.h:49</div></div>
-<div class="ttc" id="a_rebin_flux_8h_html_a4b3cfdf5e1dae0865591a3b1a3d74dff"><div class="ttname"><a href="_rebin_flux_8h.html#a4b3cfdf5e1dae0865591a3b1a3d74dff">GetFluxFlat&lt; MnvH2D &gt;</a></div><div class="ttdeci">template MnvH2D * GetFluxFlat&lt; MnvH2D &gt;(const NuConfig config, MnvH2D *h)</div></div>
-<div class="ttc" id="a_rebin_flux_8h_html_a503b414fc50352275d7222d2bf2a6ec1"><div class="ttname"><a href="_rebin_flux_8h.html#a503b414fc50352275d7222d2bf2a6ec1">RebinDeWidthedFluxHist&lt; MnvH1D &gt;</a></div><div class="ttdeci">template MnvH1D * RebinDeWidthedFluxHist&lt; MnvH1D &gt;(const MnvH1D *h_mnv_without_binwidth, const MnvH1D *h_mnv_rebinned_without_binwidth)</div></div>
-<div class="ttc" id="a_rebin_flux_8h_html_a617e593a23dd671ab7618f331a94696a"><div class="ttname"><a href="_rebin_flux_8h.html#a617e593a23dd671ab7618f331a94696a">RebinDeWidthedFluxHist&lt; TH1D &gt;</a></div><div class="ttdeci">template TH1D * RebinDeWidthedFluxHist&lt; TH1D &gt;(const TH1D *h_mnv_without_binwidth, const TH1D *h_mnv_rebinned_without_binwidth)</div></div>
-<div class="ttc" id="a_rebin_flux_8h_html_a636603cf279e8cd078786c0fd5fcd516"><div class="ttname"><a href="_rebin_flux_8h.html#a636603cf279e8cd078786c0fd5fcd516">DeWidth</a></div><div class="ttdeci">void DeWidth(MnvH1D *h_mnv_with_binwidth, MnvH1D *&amp;h_mnv_with_binwidth_removed)</div><div class="ttdef"><b>Definition:</b> RebinFlux.h:25</div></div>
-<div class="ttc" id="a_rebin_flux_8h_html_a690ddddbf8655dbd852d1a683a878809"><div class="ttname"><a href="_rebin_flux_8h.html#a690ddddbf8655dbd852d1a683a878809">GetFluxFlat</a></div><div class="ttdeci">MnvHistoType * GetFluxFlat(const NuConfig config, MnvHistoType *h)</div><div class="ttdef"><b>Definition:</b> RebinFlux.h:293</div></div>
-<div class="ttc" id="a_rebin_flux_8h_html_a73c73260313190bafffb0fe85544e7c2"><div class="ttname"><a href="_rebin_flux_8h.html#a73c73260313190bafffb0fe85544e7c2">GetFlux</a></div><div class="ttdeci">MnvH1D * GetFlux(const NuConfig config)</div><div class="ttdef"><b>Definition:</b> RebinFlux.h:92</div></div>
-<div class="ttc" id="a_rebin_flux_8h_html_a80d318d3d6583f8395579a3deafe6ebf"><div class="ttname"><a href="_rebin_flux_8h.html#a80d318d3d6583f8395579a3deafe6ebf">GetFluxFlat&lt; MnvH1D &gt;</a></div><div class="ttdeci">template MnvH1D * GetFluxFlat&lt; MnvH1D &gt;(const NuConfig config, MnvH1D *h)</div></div>
-<div class="ttc" id="a_rebin_flux_8h_html_a8e2d8a168a67cf9bbe8bd89c8a55e3c9"><div class="ttname"><a href="_rebin_flux_8h.html#a8e2d8a168a67cf9bbe8bd89c8a55e3c9">TruncateNumberOfFluxUniverses</a></div><div class="ttdeci">void TruncateNumberOfFluxUniverses(MnvH1D *h, int nUniverses)</div><div class="ttdef"><b>Definition:</b> RebinFlux.h:72</div></div>
-<div class="ttc" id="aclass_nu_config_html"><div class="ttname"><a href="class_nu_config.html">NuConfig</a></div><div class="ttdef"><b>Definition:</b> NuConfig.h:16</div></div>
-<div class="ttc" id="anamespace_background_sub_html_a8678cfa3ba31e3bcb3d6de71806b12cb"><div class="ttname"><a href="namespace_background_sub.html#a8678cfa3ba31e3bcb3d6de71806b12cb">BackgroundSub.config</a></div><div class="ttdeci">config</div><div class="ttdef"><b>Definition:</b> BackgroundSub.py:17</div></div>
-<div class="ttc" id="anamespace_mnv_h1_d__viewer_html_ada13f877b27ef487177df5b42a22e7fd"><div class="ttname"><a href="namespace_mnv_h1_d__viewer.html#ada13f877b27ef487177df5b42a22e7fd">MnvH1D_viewer.h</a></div><div class="ttdeci">h</div><div class="ttdef"><b>Definition:</b> MnvH1D_viewer.py:24</div></div>
+<div class="ttc" id="aclass_nu_config_html"><div class="ttname"><a href="class_nu_config.html">NuConfig</a></div><div class="ttdef"><b>Definition:</b> <a href="_nu_config_8h_source.html#l00016">NuConfig.h:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_8565e17dd1d9e454859bcebfad403d74.html">make_hists</a></li><li class="navelem"><a class="el" href="dir_586f7c604da2c6077892dfe30738d924.html">utils</a></li><li class="navelem"><b>RebinFlux.h</b></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+  </ul>
+</div>
 </body>
 </html>

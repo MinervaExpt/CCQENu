@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -21,9 +25,8 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">CCQENu<span id="projectnumber">&#160;1</span>
+   <div id="projectname">CCQENu
    </div>
-   <div id="projectbrief">CCQENu for MINERvA</div>
   </td>
  </tr>
  </tbody>
@@ -48,6 +51,22 @@ $(function() {
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classes.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -70,36 +89,39 @@ $(function() {
 <div class="classindex">
 <dl class="classindex even">
 <dt class="alphachar"><a id="letter_C" name="letter_C">C</a></dt>
-<dd><a class="el" href="class_c_c_q_e_nu_1_1_category.html">Category</a> (<a class="el" href="namespace_c_c_q_e_nu.html">CCQENu</a>)</dd><dd><a class="el" href="class_c_v_functions.html">CVFunctions</a></dd><dd><a class="el" href="class_c_v_universe.html">CVUniverse</a></dd></dl>
+<dd><a class="el" href="class_c_c_q_e_nu_1_1_category.html">Category</a> (CCQENu)</dd><dd><a class="el" href="class_c_v_functions.html">CVFunctions</a></dd><dd><a class="el" href="class_c_v_universe.html">CVUniverse</a></dd></dl>
 <dl class="classindex odd">
 <dt class="alphachar"><a id="letter_H" name="letter_H">H</a></dt>
-<dd><a class="el" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">Hist2DWrapperMap</a> (<a class="el" href="namespace_plot_utils.html">PlotUtils</a>)</dd><dd><a class="el" href="class_plot_utils_1_1_hist_wrapper_map.html">HistWrapperMap</a> (<a class="el" href="namespace_plot_utils.html">PlotUtils</a>)</dd></dl>
+<dd><a class="el" href="class_plot_utils_1_1_hist2_d_wrapper_map.html">Hist2DWrapperMap</a> (PlotUtils)</dd><dd><a class="el" href="class_plot_utils_1_1_hist_wrapper_map.html">HistWrapperMap</a> (PlotUtils)</dd></dl>
 <dl class="classindex even">
 <dt class="alphachar"><a id="letter_I" name="letter_I">I</a></dt>
-<dd><a class="el" href="class_plot_utils_1_1_is_same_constraint_from_config_func.html">IsSameConstraintFromConfigFunc</a> (<a class="el" href="namespace_plot_utils.html">PlotUtils</a>)</dd><dd><a class="el" href="class_plot_utils_1_1_is_same_from_config_func.html">IsSameFromConfigFunc</a> (<a class="el" href="namespace_plot_utils.html">PlotUtils</a>)</dd></dl>
+<dd><a class="el" href="class_plot_utils_1_1_is_same_constraint_from_config_func.html">IsSameConstraintFromConfigFunc</a> (PlotUtils)</dd><dd><a class="el" href="class_plot_utils_1_1_is_same_from_config_func.html">IsSameFromConfigFunc</a> (PlotUtils)</dd></dl>
 <dl class="classindex odd">
 <dt class="alphachar"><a id="letter_M" name="letter_M">M</a></dt>
-<dd><a class="el" href="class_plot_utils_1_1_maximum_constraint_from_config_func.html">MaximumConstraintFromConfigFunc</a> (<a class="el" href="namespace_plot_utils.html">PlotUtils</a>)</dd><dd><a class="el" href="class_plot_utils_1_1_maximum_from_config_func.html">MaximumFromConfigFunc</a> (<a class="el" href="namespace_plot_utils.html">PlotUtils</a>)</dd><dd><a class="el" href="class_plot_utils_1_1_minimum_constraint_from_config_func.html">MinimumConstraintFromConfigFunc</a> (<a class="el" href="namespace_plot_utils.html">PlotUtils</a>)</dd><dd><a class="el" href="class_plot_utils_1_1_minimum_from_config_func.html">MinimumFromConfigFunc</a> (<a class="el" href="namespace_plot_utils.html">PlotUtils</a>)</dd><dd><a class="el" href="classfit_1_1_multi_scale_factors.html">MultiScaleFactors</a> (<a class="el" href="namespacefit.html">fit</a>)</dd></dl>
+<dd><a class="el" href="class_plot_utils_1_1_maximum_constraint_from_config_func.html">MaximumConstraintFromConfigFunc</a> (PlotUtils)</dd><dd><a class="el" href="class_plot_utils_1_1_maximum_from_config_func.html">MaximumFromConfigFunc</a> (PlotUtils)</dd><dd><a class="el" href="class_plot_utils_1_1_minimum_constraint_from_config_func.html">MinimumConstraintFromConfigFunc</a> (PlotUtils)</dd><dd><a class="el" href="class_plot_utils_1_1_minimum_from_config_func.html">MinimumFromConfigFunc</a> (PlotUtils)</dd><dd><a class="el" href="classfit_1_1_multi_scale_factors.html">MultiScaleFactors</a> (fit)</dd></dl>
 <dl class="classindex even">
 <dt class="alphachar"><a id="letter_N" name="letter_N">N</a></dt>
 <dd><a class="el" href="class_nu_config.html">NuConfig</a></dd></dl>
 <dl class="classindex odd">
 <dt class="alphachar"><a id="letter_R" name="letter_R">R</a></dt>
-<dd><a class="el" href="class_plot_utils_1_1_range_constraint_from_config_func.html">RangeConstraintFromConfigFunc</a> (<a class="el" href="namespace_plot_utils.html">PlotUtils</a>)</dd><dd><a class="el" href="class_plot_utils_1_1_range_from_config_func.html">RangeFromConfigFunc</a> (<a class="el" href="namespace_plot_utils.html">PlotUtils</a>)</dd></dl>
+<dd><a class="el" href="class_plot_utils_1_1_range_constraint_from_config_func.html">RangeConstraintFromConfigFunc</a> (PlotUtils)</dd><dd><a class="el" href="class_plot_utils_1_1_range_from_config_func.html">RangeFromConfigFunc</a> (PlotUtils)</dd></dl>
 <dl class="classindex even">
 <dt class="alphachar"><a id="letter_S" name="letter_S">S</a></dt>
-<dd><a class="el" href="class_c_c_q_e_nu_1_1_sample.html">Sample</a> (<a class="el" href="namespace_c_c_q_e_nu.html">CCQENu</a>)</dd><dd><a class="el" href="classfit_1_1_scale_factors.html">ScaleFactors</a> (<a class="el" href="namespacefit.html">fit</a>)</dd></dl>
+<dd><a class="el" href="class_c_c_q_e_nu_1_1_sample.html">Sample</a> (CCQENu)</dd><dd><a class="el" href="classfit_1_1_scale_factors.html">ScaleFactors</a> (fit)</dd></dl>
 <dl class="classindex odd">
 <dt class="alphachar"><a id="letter_V" name="letter_V">V</a></dt>
-<dd><a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html">Variable2DFromConfig</a> (<a class="el" href="namespace_c_c_q_e_nu.html">CCQENu</a>)</dd><dd><a class="el" href="class_c_c_q_e_nu_1_1_variable_from_config.html">VariableFromConfig</a> (<a class="el" href="namespace_c_c_q_e_nu.html">CCQENu</a>)</dd></dl>
+<dd><a class="el" href="class_c_c_q_e_nu_1_1_variable2_d_from_config.html">Variable2DFromConfig</a> (CCQENu)</dd><dd><a class="el" href="class_c_c_q_e_nu_1_1_variable_from_config.html">VariableFromConfig</a> (CCQENu)</dd></dl>
 <dl class="classindex even">
 <dt class="alphachar"><a id="letter_W" name="letter_W">W</a></dt>
-<dd><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">weight_MCreScale</a> (<a class="el" href="namespace_plot_utils.html">PlotUtils</a>)</dd></dl>
+<dd><a class="el" href="class_plot_utils_1_1weight___m_cre_scale.html">weight_MCreScale</a> (PlotUtils)</dd></dl>
 </div>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+  </ul>
+</div>
 </body>
 </html>
