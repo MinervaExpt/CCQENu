@@ -1,0 +1,26 @@
+{
+  "version":12,  // short version for debugging
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
+  "prescale":999,
+  "playlist":"${MYPLAYLIST}",
+  "recoName":"CCQENu",
+    "useTuned":1,
+    "pdg":-14,
+    "runsamples":["${MYSAMPLE}"],
+  "cutsFile":"${CCQEMAT}/hms/AntiNuCuts_v9.json",
+  "varsFile":"${CCQEMAT}/hms/Variables_v12.json", // more bins
+  "samplesFile":"${CCQEMAT}/hms/AntiNuSamples_v9.json",
+  "outRoot":"Enu_${MYPLAYLIST}_${MYSAMPLE}",
+    "AnalyzeVariables":["pzmu","ptmu"],//"Q2QE","Log10recoil","recoil","Enu","EnuCCQE","EnuHad","ThetamuDegrees"],
+    "Analyze2DVariables":["pzmu_ptmu"],//"pzmu_ptmu","EnuCCQE_Q2QE","EnuCCQE_Enu"],
+  "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"},
+  "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
+  "data":{"QElike":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
+  "systematics":["Flux","MuonMinerva",
+    "MuonMINOS"],
+  "fluxUniverses":2,
+  "NuEConstraint":1,
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}
