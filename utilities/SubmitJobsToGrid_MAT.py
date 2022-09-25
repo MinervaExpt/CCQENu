@@ -42,7 +42,7 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
     writewrap(mywrapper,"export MYPLAYLIST="+opts.playlist+"\n")
     writewrap(mywrapper,"export MYSAMPLE="+opts.sample+"\n")
     theexe = opts.theexe
-    mylog = "%s_%s_%s.log"%(os.path.basename(opts.theexe),opts.config,tag)
+    mylog = "%s_%s_%s.log"%(os.path.basename(opts.theexe),os.path.basename(opts.config),tag)
     writewrap(mywrapper,os.path.join("time $RUNDIR",opts.theexe)+" "+os.path.join("$RUNDIR",opts.config)+" "+opts.prescale+" >& %s \n"%(mylog))
     writewrap(mywrapper,"echo \"run returned \" $?\n")
     writewrap(mywrapper,"ls -lrt\n")
