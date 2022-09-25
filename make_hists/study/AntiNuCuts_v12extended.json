@@ -11,7 +11,7 @@
     {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
     {"name":"Min MuonMomentum","min":1.5,"variable":"PmuGeV"},
-    {"name":"Max MuonMomentum","max":20.0,"variable":"PmuGeV"},
+    {"name":"Max MuonMomentum","max":100.0,"variable":"PmuGeV"},
     {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
     {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
   ],
@@ -24,7 +24,7 @@
     {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
     {"name":"Min MuonMomentum","min":1.5,"variable":"PmuGeV"},
-    {"name":"Max MuonMomentum","max":20.0,"variable":"PmuGeV"},
+    {"name":"Max MuonMomentum","max":100.0,"variable":"PmuGeV"},
     {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
     {"name":"GoodRecoil","equals":0,"variable":"GoodRecoil"}
   ],
@@ -37,7 +37,7 @@
       {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
       {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
       {"name":"Min MuonMomentum","min":1.5,"variable":"PmuGeV"},
-      {"name":"Max MuonMomentum","max":20.0,"variable":"PmuGeV"},
+      {"name":"Max MuonMomentum","max":100.0,"variable":"PmuGeV"},
       {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"}
     ],
   // phase space definitions
@@ -46,7 +46,7 @@
     {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
     {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"},
     {"name":"TrueMuonMomentumMin","min":1.5,"variable":"TruePmuGeV"},
-    {"name":"TrueMuonMomentumMax","max":20.0,"variable":"TruePmuGeV"},
+    {"name":"TrueMuonMomentumMax","max":100.0,"variable":"TruePmuGeV"},
     {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"TrueThetamuDegrees"}
   ],
   "phase_space_all_angles":[
@@ -54,7 +54,7 @@
     {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
     {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"},
     {"name":"TrueMuonMomentumMin","min":1.5,"variable":"TruePmuGeV"},
-    {"name":"TrueMuonMomentumMax","max":20.0,"variable":"TruePmuGeV"}
+    {"name":"TrueMuonMomentumMax","max":100.0,"variable":"TruePmuGeV"}
   ],
   
   // signal definitions
