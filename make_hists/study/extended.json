@@ -8,7 +8,7 @@
   "useTuned":1,
   "pdg":-14,
   "runsamples":["${MYSAMPLE}"],
-  "cutsFile":"${CCQEMAT}/study/AntiNuCuts_v12extended.json",
+  "cutsFile":"${CCQEMAT}/study/AntiNuCuts_v12_100GeV.json",
   "varsFile":"${CCQEMAT}/study/Variables_v12extended.json", // more bins
   "samplesFile":"${CCQEMAT}/hms/AntiNuSamples_v9.json",
   "outRoot":"Enu_${MYPLAYLIST}_${MYSAMPLE}",
