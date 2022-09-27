@@ -12,5 +12,5 @@ export APP=/minerva/app/users/$USER
 
 #RUNDIR is relative to BASEDIR
 #EXE and CONFIG are relative to RUNDIR
-
-python $APP/NEWMAT/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test --basedir=$APP/NEWMAT --rundir=CCQENu/make_hists --playlist=minervame5A --tag=v1 --mail --prescale=1 --config=hms/test_batch --exe=sidebands_v2 --sample=Background --setup=CCQENu/utilities/setup_batch_mat.sh --tmpdir=$BLUE/tmp --expected-lifetime=24h --memory=2000  #--debug --notimestamp
+mkdir -p $SCRATCH/test
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --tag=v1 --mail --prescale=1 --config=hms/test_batch --exe=sidebands_v2 --sample=Background --setup=CCQENu/utilities/setup_batch_mat.sh --tmpdir=$BLUE/tmp --expected-lifetime=24h --memory=2000  #--debug --notimestamp
