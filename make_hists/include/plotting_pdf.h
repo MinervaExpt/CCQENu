@@ -1,6 +1,6 @@
 #ifndef plotting_functions_H
 #define plotting_functions_H
-#define FULLDUMP 1
+//#define FULLDUMP 0
 #include "TCanvas.h"
 #include "PlotUtils/MnvVertErrorBand.h"
 #include "PlotUtils/MnvPlotter.h"
