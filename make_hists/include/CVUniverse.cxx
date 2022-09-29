@@ -170,7 +170,7 @@ namespace {
 			return 0; 
 		} else {
 			m_proton_score_config = protonScoreConfig;
-			if ( print == true ) m_proton_score_config.Print();
+			if ( print ) m_proton_score_config.Print();
 			if ( m_proton_score_config.GetKeys().size() == 1) {
 				// Passing proton score value same for all values of Q2QE
 				m_proton_score_mins = {};
