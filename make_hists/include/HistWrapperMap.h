@@ -34,9 +34,13 @@ private:
   std::string m_name = "NULL";
   std::string m_title = "NULL";
   int m_nbins = 0;
+  int m_nrecobins = 0;
   double m_xmin = 0.0;
   double m_xmax = 0.0;
+  double m_xrecomin = 0.0;
+  double m_xrecomax = 0.0;
   std::vector<double> m_bins;
+  std::vector<double> m_recobins;
   std::map< std::string, std::vector<T*> > m_universes;  // if you are using a vector need to add that
   std::map< std::string, MinervaUnfold::MnvResponse *> m_response;
   bool m_fixedbins;
@@ -61,6 +65,9 @@ public:
     m_nbins = nbins;
     m_xmin = xmin;
     m_xmax = xmax;
+    m_nrecobins = nbins;
+    m_xrecomin = xmin;
+    m_xrecomax = xmax;
     m_fixedbins = true;
     //    m_count = 0;
     m_univs = univs;
@@ -73,6 +80,30 @@ public:
     m_decoder = UniverseDecoder(univs);
 
   }
+// special version for MC that can build a response
+  inline  HistWrapperMap( const std::string name, const std::string title, const Int_t nbins, const double xmin,const double xmax, const Int_t nrecobins, const double xrecomin, const double xrecomax,  std::map< std::string,std::vector<T*>> univs, const std::vector<std::string> tags){
+      // just store the config
+      m_name = name;
+      m_title = title;
+      m_nbins = nbins;
+      m_xmin = xmin;
+      m_xmax = xmax;
+      m_nrecobins = nrecobins;
+      m_xrecomin = xrecomin;
+      m_xrecomax = xrecomax;
+      m_fixedbins = true;
+      //    m_count = 0;
+      m_univs = univs;
+      m_tags = tags;
+      for (auto tag : tags){
+       std::string hist_name = "h___"+tag +"___"+ name;
+       // std::string hist_name = name + "_" + tag;
+          // this is special case, only MC should have both true and reconstructed binning in the signature.
+        m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), nrecobins, xrecomin, xrecomax, univs);
+      }
+      m_decoder = UniverseDecoder(univs);
+
+    }
 
   // map that helps you find the index of a universe.
 
@@ -91,13 +122,15 @@ public:
 
 
 
-  // constructor
+  // constructor for case where you are not building a response.
   inline  HistWrapperMap( const std::string name, const std::string title, const Int_t nbins, const std::vector<double> bins,  std::map< std::string, std::vector<T*> > univs, std::vector<std::string> tags){
     // just store the config
     m_name = name;
     m_title = title;
     m_nbins = nbins;
     m_bins  = bins;
+    m_nrecobins = nbins;
+    m_recobins = bins;
     m_fixedbins = false;
     //    m_count = 0 ;
     m_univs = univs;
@@ -110,49 +143,32 @@ public:
     }
     m_decoder = UniverseDecoder(univs);
   }
+    
+    // constructor  This one is special for reconstructed/tuned MC so you can build a response.
+    inline  HistWrapperMap( const std::string name, const std::string title, const Int_t nbins, const std::vector<double> bins, const Int_t nrecobins, const std::vector<double> recobins, std::map< std::string, std::vector<T*> > univs, std::vector<std::string> tags){
+      // just store the config
+      m_name = name;
+      m_title = title;
+      m_nbins = nbins;
+      m_bins  = bins;
+      m_nrecobins = nrecobins;
+      m_recobins = recobins;
+        
+      m_fixedbins = false;
+      //    m_count = 0 ;
+      m_univs = univs;
+      m_tags = tags;
+      for (auto tag : tags){
+        //std::string hist_name = tag +"_"+ name;
+        std::string hist_name = "h___"+tag+"___"+name;
+          // this one is special, you need to make the primary histogram in reco variables.
+        m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), nrecobins, recobins, univs);
+        m_hashist[tag] = true;
+      }
+      m_decoder = UniverseDecoder(univs);
+    }
 
 
-  // inline std::string GetName(){return m_name;}
-
-  //  inline void AddHistWrapper(const std::string tag){
-  //    PlotUtils::HistWrapper<T> hist;
-  //    std::string hist_name = tag +"_"+ m_name;
-  //    if (m_fixedbins){
-  //      hist = PlotUtils::HistWrapper<T>(hist_name.c_str(), m_title.c_str(), m_nbins, m_xmin, m_xmax, m_universes);
-  //    }
-  //    else{
-  //      hist = PlotUtils::HistWrapper<T>(hist_name.c_str(), m_title.c_str(), m_nbins, m_bins, m_universes);
-  //    }
-  //    m_hists[tag]=hist;
-  //    m_hashist=true;
-  //  };
-
-  // inline void AddResponse(std::vector<std::string> tags){
-  //   // make a temp universe map to make Response happy
-  //   std::map<std::string, int> response_bands;
-  //   for (auto band : m_univs){
-  //     std::string name = band.first;
-  //     std::string realname = (band.second)[0]->ShortName();
-  //     int nuniv = band.second.size();
-  //     m_response_bands[realname] = nuniv;
-  //   }
-  //   for (auto tag:tags){
-  //     //std::string resp_name = tag+"_response_"+m_name;
-  //     std::string resp_name = "h___" + tag + "___"+m_name+"___response";
-  //
-  //     if (m_fixedbins){
-  //       TH1D tmp = TH1D("tmp", m_title.c_str(), m_nbins, m_xmin, m_xmax);
-  //       std::vector<double> edges;
-  //       for (int i = 1; i <= m_nbins+1; i++){
-  //         edges.push_back(tmp.GetXaxis()->GetBinLowEdge(i));
-  //       }
-  //       m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nbins, &edges[0],m_nbins,&edges[0], m_response_bands);
-  //     }
-  //     else{
-  //       m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nbins, &m_bins[0], m_nbins,&m_bins[0], m_response_bands);
-  //     }
-  //     m_hasresponse[tag] = true;
-  //   }
 
   inline void AddResponse(std::vector<std::string> tags, std::string tail=""){
     // make a temp universe map to make Response happy
@@ -169,14 +185,19 @@ public:
 
       if (m_fixedbins){
         TH1D tmp = TH1D("tmp", m_title.c_str(), m_nbins, m_xmin, m_xmax);
+        TH1D tmpreco = TH1D("tmp", m_title.c_str(), m_nrecobins, m_xrecomin, m_xrecomax);
         std::vector<double> edges;
+        std::vector<double> edgesreco;
         for (int i = 1; i <= m_nbins+1; i++){
           edges.push_back(tmp.GetXaxis()->GetBinLowEdge(i));
         }
-        m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nbins, &edges[0],m_nbins,&edges[0], m_response_bands);
+        for (int i = 1; i <= m_nrecobins+1; i++){
+            edgesreco.push_back(tmpreco.GetXaxis()->GetBinLowEdge(i));
+        }
+        m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nrecobins, &edgesreco[0],m_nbins,&edges[0], m_response_bands);
       }
       else{
-        m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nbins, &m_bins[0], m_nbins,&m_bins[0], m_response_bands);
+        m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nrecobins, &m_recobins[0], m_nbins,&m_bins[0], m_response_bands);
       }
       m_hasresponse[tag] = true;
     }

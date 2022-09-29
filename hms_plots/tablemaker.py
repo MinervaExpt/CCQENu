@@ -387,4 +387,3 @@ else:
     stex += texender()
     s.write(stex)
     s.close()
-

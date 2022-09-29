@@ -72,7 +72,7 @@ def MakeHistDict(rfile, category_list, sample):
             mnvh = hist.ProjectionY(mnvh_name, fitbin, fitbin, "e")
 
             # Rebin from 50 -> 25 fixed width bins
-            mnvh = mnvh.Rebin(2)
+            # mnvh = mnvh.Rebin(2)
 
             # Start organizing hists by their category (qelike, qelikenot, etc.)
             if fitbin_name in hist_dict:
