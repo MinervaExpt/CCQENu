@@ -443,10 +443,16 @@ public:
           std::cout << " write out tuned mc histogram " << m_tuned_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
         }
       }
-//       if(hasResponse[tag]){
-// // TODO: Add This
-//
-//       }
+      if(hasResponse[tag]){
+        if(m_tunedmc!=1){
+          std::cout << " write out response histograms " << tag << std::endl;
+          m_response.Write(tag);
+        }
+        if(hasTunedMC[tag]){
+          std::cout << " write out tuned response histograms " << tag << std::endl;
+          m_tuned_response.Write(tag);
+        }
+      }
       if(hasData[tag]){
         std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
         m_selected_data.Write(tag);
@@ -494,7 +500,7 @@ public:
     }
   }
 
-  void FillResponse(std::string tag, int iuniv, CVUniverse* univ,
+  void FillResponse(std::string tag, CVUniverse* univ,
                            const double value, const double truth,
                            const double weight=1.0, const double scale=1.0){
 

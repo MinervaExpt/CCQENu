@@ -93,7 +93,7 @@ void LoopAndFillEventSelection(std::string tag,
             const double q2qe = universe->GetQ2QEGeV();
             double scale = mcRescale.GetScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
             FillMC(tag, universe, weight, variables, variables2D, scale);
-            FillResponse(tag,iuniv,universe,weight,variables,variables2D, scale);
+            FillResponse(tag,universe,weight,variables,variables2D, scale);
           }
 
         }

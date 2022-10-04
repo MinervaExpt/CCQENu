@@ -21,13 +21,8 @@ private:
   std::map<std::string, MinervaUnfold::MnvResponse *> m_response;
 
   std::string m_name = "NULL";
-  // std::string m_title = "NULL";
   int m_n_recobins = 0;
   int m_n_truebins = 0;
-  double m_xtruemin = 0.0;
-  double m_xtruemax = 0.0;
-  double m_xrecomin = 0.0;
-  double m_xrecomax = 0.0;
   std::vector<double> m_recobins;
   std::vector<double> m_truebins;
   std::map< std::string, std::vector<T*> > m_reco_univs;
@@ -88,15 +83,17 @@ public:
 
 // ==============================WRITE RESPONSE=================================
 
-  void WriteResponse(const std::string tag){
-    // std::cout << " try to write response " << tag << " " << m_selected_mc_reco[tag].m_hists.hist->GetName()  << std::endl;
+  void Write(const std::string tag){
+    // Make some blank hists to put stuff in
     PlotUtils::MnvH2D* h_migration;
     PlotUtils::MnvH1D* h_reco;
     PlotUtils::MnvH1D* h_truth;
 
     std::cout << " GetMigrationObjects will now complain because I passed it pointers to uninitiated MnvH2D/1D to fill please ignore" << std::endl;
+    // Put the response objects into the hists
     m_response[tag]->GetMigrationObjects( h_migration, h_reco, h_truth);
     std::cout << h_migration << std::endl;
+    // Write hists to file
     if (h_reco->GetEntries() > 0){
       h_migration->Write();
       h_reco->Write();
@@ -126,13 +123,6 @@ public:
     }
     return 0;
   }
-// TODO: add append name method?
-  // inline void AppendName(const std::string n, const std::vector<std::string> tags){
-  //    for (auto tag : tags){
-  //      m_hists[tag].hist->SetName(Form("%s___%s",(m_hists[tag].hist->GetName()),n.c_str()));
-  //    }
-  //  }
-
 
   // This is used in HistWrapperMaps as well. Maybe could just do it as separate class
   std::map<const T*,int> UniverseDecoder(const std::map< std::string, std::vector<T*> > univs)const{

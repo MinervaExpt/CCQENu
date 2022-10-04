@@ -72,7 +72,7 @@ void FillMC(std::string tag, CVUniverse* univ, double weight,
   }
 }
 
-void FillResponse(std::string tag, int iuniv, CVUniverse* univ, double weight,
+void FillResponse(std::string tag, CVUniverse* univ, double weight,
             std::vector<CCQENu::VariableFromConfig*> variables,
             std::vector<CCQENu::Variable2DFromConfig*> variables2D,
             double scale=-1.) {
@@ -80,7 +80,8 @@ void FillResponse(std::string tag, int iuniv, CVUniverse* univ, double weight,
     if (v->hasResponse[tag]){
       double reco_val = v->GetRecoValue(*univ, 0);
       double true_val = v->GetTrueValue(*univ, 0);
-      v->FillResponse(tag,iuniv,univ,reco_val,true_val,weight,scale);
+      // This will fill both tuned and untuned
+      v->FillResponse(tag,univ,reco_val,true_val,weight,scale);
 
       // if(v->m_tunedmc!=1){
       //   v->FillResponse(tag,univ,reco_val,true_val,weight);
