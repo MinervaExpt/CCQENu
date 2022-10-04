@@ -1,10 +1,23 @@
+/**
+* @file
+* @author  Heidi Schellman/Noah Vaughan/SeanGilligan
+* @version 1.0 *
+* @section LICENSE *
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as
+* published by the Free Software Foundation; either version 2 of
+* the License, or (at your option) any later version. *
+* @section DESCRIPTION *
+* Code to fill histograms
+ */
+
 #ifndef VARIABLE2DFromConfig_H
 #define VARIABLE2DFromConfig_H
 
-#include "CVUniverse.h"
+#include "include/CVUniverse.h"
 // #include "PlotUtils/HistFolio.h"
-#include "HistWrapperMap.h"
-#include "Hist2DWrapperMap.h" //TODO: Need to make this to play wit Hist2DWrapper
+//#include "include/HistWrapperMap.h"
+#include "include/Hist2DWrapperMap.h" //TODO: Need to make this to play wit Hist2DWrapper
 #include "MinervaUnfold/MnvResponse.h"
 
 
@@ -172,8 +185,10 @@ public:
 
     std::vector<double> xbins = GetBinVecX();
     std::vector<double> ybins = GetBinVecY();
+    std::vector<double> xrecobins = GetRecoBinVecX();
+    std::vector<double> yrecobins = GetRecoBinVecY();
 
-    m_selected_mc_reco = HM2D(Form("%s",GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
+    m_selected_mc_reco = HM2D(Form("%s",GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(),xbins,ybins, xrecobins, yrecobins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
     m_selected_mc_reco.AppendName("reconstructed",tags);
   }
 
@@ -245,10 +260,10 @@ public:
     for (auto tag:tags){
       hasData[tag] = true;
     }
-    std::vector<double> xbins = GetBinVecX();
-    std::vector<double> ybins = GetBinVecY();
+    std::vector<double> xrecobins = GetRecoBinVecX();
+    std::vector<double> yrecobins = GetRecoBinVecY();
 
-    m_selected_data = HM2D(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
+    m_selected_data = HM2D(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xrecobins, yrecobins, univs, tags); //Hist2DWrapper doesn't need nbins for variable binning
     m_selected_data.AppendName("reconstructed",tags);
   }
 
@@ -266,10 +281,13 @@ public:
     }
     std::vector<double> xbins = GetBinVecX();
     std::vector<double> ybins = GetBinVecY();
+    std::vector<double> xrecobins = GetRecoBinVecX();
+    std::vector<double> yrecobins = GetRecoBinVecY();
 
     // Check which categories are configured and add a tuned version
+    // selected_reco is special - it needs to have both bins and reco bins to add a response.
     if (std::count(m_for.begin(), m_for.end(),"selected_reco")>=1){
-      m_tuned_mc_reco = HM2D(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, reco_univs, tuned_tags);
+      m_tuned_mc_reco = HM2D(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label+";"+m_yaxis_label).c_str(), xbins, ybins, xrecobins, yrecobins, reco_univs, tuned_tags);
       m_tuned_mc_reco.AppendName("reconstructed_tuned",tuned_tags);
     }
     if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) {
@@ -407,7 +425,7 @@ public:
 
 
 
-  inline void FillResponse2D(const std::string tag, CVUniverse* univ, const double x_value, const double y_value, const double x_truth, const double y_truth, const double weight=1.0){ //From Hist2DWrapperMap
+  inline void FillResponse2D(const std::string tag, CVUniverse* univ, const double x_value, const double y_value, const double x_truth, const double y_truth, const double weight){ //From Hist2DWrapperMap
     if(hasMC[tag] && m_tunedmc!=1){
       m_selected_mc_reco.FillResponse2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
     }
