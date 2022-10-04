@@ -3,9 +3,11 @@
 
 #include "CVUniverse.h"
 //#include "PlotUtils/HistFolio.h"  - gives annoying error messages
-#include "HistWrapperMap.h"
 #include "MinervaUnfold/MnvResponse.h"
+#include "HistWrapperMap.h"
+#include "include/ResponseWrapperMap.h"
 #include "utils/NuConfig.h"
+// #include "utils/UniverseDecoder.h"
 
 
 #include "include/CVFunctions.h"
@@ -21,8 +23,10 @@ namespace CCQENu {
 class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 private:
   typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
-  typedef PlotUtils::HistWrapperMap<CVUniverse> HM;
-  typedef PlotUtils::MnvH1D MH1D;
+  typedef HistWrapperMap<CVUniverse> HM;
+  // typedef PlotUtils::HistWrapperMap<CVUniverse> HM;
+  typedef ResponseWrapperMap<CVUniverse> RM;
+  // typedef PlotUtils::MnvH1D MH1D;
   //  typedef PlotUtils::HistFolio<PlotUtils::MnvH1D> FOLIO;
 
 
@@ -161,6 +165,11 @@ public:
   HM m_signal_mc_truth;
   HM m_tuned_signal_mc_truth;
   HM m_selected_data;
+  // ResponseWrapperMap<CVUniverse> m_response;
+  // ResponseWrapperMap<CVUniverse> m_tuned_response;
+  RM m_response;
+  RM m_tuned_response;
+
   UniverseMap m_universes;
   std::string m_units;
   std::map<const std::string, bool> hasData;
@@ -318,27 +327,33 @@ public:
       m_tuned_signal_mc_truth.AppendName("all_truth_tuned",tuned_tags);
     }
 
-    // Now do response
-    if (std::count(m_for.begin(), m_for.end(),"response")< 1) {
-      std::cout << "VariableFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
-      for (auto tag:response_tags){
-        hasResponse[tag] = false;
-      }
-      return;
+    if(std::count(m_for.begin(), m_for.end(),"response")>=1){
+      // m_response = RM(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
+      m_tuned_response = RM(Form("%s", GetName().c_str()), reco_univs, recobins, bins, response_tags, "_tuned");
     }
-    for (auto tag:response_tags){
-      assert(hasMC[tag]);
-      assert(hasSelectedTruth[tag]);
-      hasResponse[tag] = true;
-    }
-
-    m_tuned_mc_reco.AddResponse(response_tags,"_tuned");
+    // // Now do response
+    // if (std::count(m_for.begin(), m_for.end(),"response")< 1) {
+    //   std::cout << "VariableFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
+    //   for (auto tag:response_tags){
+    //     hasResponse[tag] = false;
+    //   }
+    //   return;
+    // }
+    // for (auto tag:response_tags){
+    //   assert(hasMC[tag]);
+    //   assert(hasSelectedTruth[tag]);
+    //   hasResponse[tag] = true;
+    // }
+    //
+    // m_tuned_mc_reco.AddResponse(response_tags,"_tuned");
   }
 
 
   //========== Add Response =================
-
-  void AddMCResponse(const std::vector<std::string>  tags) {
+  // reco_univs should be the same as selected_mc_reco (tuned or untuned)
+  template <typename T>
+  void InitializeResponse(T reco_univs, const std::vector<std::string> tags, std::string tail=""){
+    // Check if response is configured for this var
     if (std::count(m_for.begin(), m_for.end(),"response")< 1) {
       std::cout << "VariableFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
       for (auto tag:tags){
@@ -347,24 +362,51 @@ public:
       return;
     }
 
+    // Check that the var has both MC reco and truth configured, set bool to true
     for (auto tag:tags){
       assert(hasMC[tag]);
       assert(hasSelectedTruth[tag]);
       hasResponse[tag] = true;
     }
 
-    if(m_tunedmc==1){
-      std::cout << "VariableFromConfig Warning: untuned MC disabled. Disabling untuned response for this variable " << GetName() << std::endl;
-      return;
-    }
+    std::vector<double> bins = GetBinVec();
+    std::vector<double> recobins = GetRecoBinVec();
 
-    m_selected_mc_reco.AddResponse(tags);
+    // m_response = RM(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
+
+    m_response = RM(Form("%s", GetName().c_str()),reco_univs, recobins, bins, tags,tail);
+    //
+    // // Count the number of universes in each band
+    // std::map<std::string, int> response_bands;
+    // for (auto band : reco_univs){ // Using reco_univs since that's what originally was done
+    //   std::string name = band.first;
+    //   std::string realname = (band.second)[0]->ShortName();
+    //   int nuniv = band.second.size();
+    //   response_bands[realname] = nuniv;
+    // }
+    //
+    // std::vector<double> bins = GetBinVec();
+    // std::vector<double> recobins = GetRecoBinVec();
+    //
+    // // Loop over tags for initializing the response
+    // for(auto tag:tags){
+    //   // the name of the histogram. The "tail" at the end should be an empty string or "_tuned".
+    //   std::string resp_name = "h___" + tag + "___" + Form("%s", GetName().c_str()) + "___response" + tail;
+    //   if(tail!="_tuned"){
+    //     m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), GetNRecoBins(), &recobins[0], GetNBins() ,&bins[0], response_bands);
+    //   }
+    //   else{
+    //     m_tuned_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), GetNRecoBins(), &recobins[0], GetNBins() ,&bins[0], response_bands);
+    //   }
+    // }
   }
 
 
   //============================================================================
   // WRITE ALL HISTOGRAMS
   //============================================================================
+
+
   void WriteAllHistogramsToFile(TFile& f)  {
     std::cout << "should only be called once " << std::endl;
     f.cd();
@@ -401,6 +443,10 @@ public:
           std::cout << " write out tuned mc histogram " << m_tuned_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
         }
       }
+//       if(hasResponse[tag]){
+// // TODO: Add This
+//
+//       }
       if(hasData[tag]){
         std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
         m_selected_data.Write(tag);
@@ -448,13 +494,25 @@ public:
     }
   }
 
-  inline void FillResponse(std::string tag, CVUniverse* univ, const double value, const double truth, const double weight=1.0, const double scale=1.0){
+  void FillResponse(std::string tag, int iuniv, CVUniverse* univ,
+                           const double value, const double truth,
+                           const double weight=1.0, const double scale=1.0){
+
+    std::string name = univ->ShortName();
+    // int iuniv = m_decoder[univ];
+
     if(hasMC[tag] && m_tunedmc!=1){
-      m_selected_mc_reco.FillResponse(tag, univ, value, truth, weight);
+      m_response.Fill(tag,univ,value, truth, weight);
     }
-    if(hasTunedMC[tag]){
-      m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight);
+    if(hasTunedMC[tag] && scale>=0.){
+      m_tuned_response.Fill(tag,univ,value, truth, weight, scale);
     }
+    // if(hasMC[tag] && m_tunedmc!=1){
+    //   m_selected_mc_reco.FillResponse(tag, univ, value, truth, weight);
+    // }
+    // if(hasTunedMC[tag]){
+    //   m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight);
+    // }
   }
 
   // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.

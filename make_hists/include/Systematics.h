@@ -192,7 +192,7 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
   // Response systematics (which also have recoil syst)
   // Stole this from Andrew's code
   if(std::find(flags.begin(), flags.end(), "response")!=flags.end()){
-    UniverseMap response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, false, true, false) // Not totally sure what the args do here
+    UniverseMap response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, false, true, false); // Not totally sure what the args do here
     error_bands.insert(response_systematics.begin(),response_systematics.end());
     std::cout << " do make response systematics " << std::endl;
   }
