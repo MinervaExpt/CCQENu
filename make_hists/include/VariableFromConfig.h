@@ -159,7 +159,7 @@ public:
   // Histwrappers -- selected mc, selected data
 
   HM m_selected_mc_reco; // HM for normal MC hists - has special constructor to make response
-  HM m_tuned_mc_reco; // HM for tuned MC hists used for background subtraction -NHV - has special constructor to make response
+  HM m_tuned_selected_mc_reco; // HM for tuned MC hists used for background subtraction -NHV - has special constructor to make response
   HM m_selected_mc_truth;
   HM m_tuned_selected_mc_truth;
   HM m_signal_mc_truth;
@@ -223,10 +223,10 @@ public:
       return;
     }
 
-    std::vector<double> bins = GetBinVec();
+    //std::vector<double> bins = GetBinVec();
     std::vector<double> recobins = GetRecoBinVec();
-// this one is special as we need to take into account a non-square response
-    m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, GetNRecoBins(), recobins,  univs, tags);
+// need reco level binning here:
+    m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNRecoBins(), recobins, univs, tags);
     m_selected_mc_reco.AppendName("reconstructed",tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
   }
 
@@ -314,15 +314,15 @@ public:
     std::vector<double> recobins = GetRecoBinVec();
 
     // Check which categories are configured and add a tuned version
-    if (std::count(m_for.begin(), m_for.end(),"selected_reco")>=1){ // need special constructor to deal with reco bins
-      m_tuned_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(),GetNBins(),bins, GetNRecoBins(), recobins, reco_univs, tuned_tags);
-      m_tuned_mc_reco.AppendName("reconstructed_tuned",tuned_tags);
+    if (std::count(m_for.begin(), m_for.end(),"selected_reco")>=1){  // use recobins
+      m_tuned_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(),GetNBins(),recobins, reco_univs, tuned_tags);
+      m_tuned_selected_mc_reco.AppendName("reconstructed_tuned",tuned_tags);
     }
-    if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) {
+    if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) { // use bins
       m_tuned_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, reco_univs, tuned_tags);
       m_tuned_selected_mc_truth.AppendName("selected_truth_tuned",tuned_tags);
     }
-    if (std::count(m_for.begin(), m_for.end(),"truth")>=1) {
+    if (std::count(m_for.begin(), m_for.end(),"truth")>=1) { // use bins
       m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, truth_univs, tuned_tags);
       m_tuned_signal_mc_truth.AppendName("all_truth_tuned",tuned_tags);
     }
@@ -416,11 +416,11 @@ public:
       if(hasMC[tag]){
         if(m_tunedmc!=1){
           m_selected_mc_reco.Write(tag);
-          std::cout << " write out mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+          std::cout << " write out selected mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
         }
         if(hasTunedMC[tag]){
-          m_tuned_mc_reco.Write(tag);
-          std::cout << " write out tuned mc histogram " << m_tuned_mc_reco.GetHist(tag)->GetName() << std::endl;
+          m_tuned_selected_mc_reco.Write(tag);
+          std::cout << " write out tuned selected mc histogram " << m_tuned_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
         }
       }
       if(hasSelectedTruth[tag]){
@@ -470,7 +470,7 @@ public:
           m_selected_mc_reco.SyncCVHistos();
         }
         if(hasTunedMC[tag]){
-          m_tuned_mc_reco.SyncCVHistos();
+          m_tuned_selected_mc_reco.SyncCVHistos();
         }
       }
       if(hasSelectedTruth[tag]){

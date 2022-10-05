@@ -35,7 +35,7 @@ void FillMC(std::string tag, CVUniverse* univ, double weight,
         v->m_selected_mc_reco.Fill(tag, univ, fill_val, weight);
       }
       if(v->hasTunedMC[tag] && scale>=0.){
-        v->m_tuned_mc_reco.Fill(tag, univ, fill_val, scale*weight);
+        v->m_tuned_selected_mc_reco.Fill(tag, univ, fill_val, scale*weight);
       }
     }
     if (v->hasSelectedTruth[tag]){

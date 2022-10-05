@@ -81,30 +81,30 @@ public:
     m_decoder = UniverseDecoder(univs);
 
   }
-// special version for MC that can build a response
-  inline  HistWrapperMap( const std::string name, const std::string title, const Int_t nbins, const double xmin,const double xmax, const Int_t nrecobins, const double xrecomin, const double xrecomax,  std::map< std::string,std::vector<T*>> univs, const std::vector<std::string> tags){
-      // just store the config
-      m_name = name;
-      m_title = title;
-      m_nbins = nbins;
-      m_xmin = xmin;
-      m_xmax = xmax;
-      m_nrecobins = nrecobins;
-      m_xrecomin = xrecomin;
-      m_xrecomax = xrecomax;
-      m_fixedbins = true;
-      //    m_count = 0;
-      m_univs = univs;
-      m_tags = tags;
-      for (auto tag : tags){
-       std::string hist_name = "h___"+tag +"___"+ name;
-       // std::string hist_name = name + "_" + tag;
-          // this is special case, only MC should have both true and reconstructed binning in the signature.
-        m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), nrecobins, xrecomin, xrecomax, univs);
-      }
-      m_decoder = UniverseDecoder(univs);
-
-    }
+//// special version for MC that can build a response
+//  inline  HistWrapperMap( const std::string name, const std::string title, const Int_t nbins, const double xmin,const double xmax, const Int_t nrecobins, const double xrecomin, const double xrecomax,  std::map< std::string,std::vector<T*>> univs, const std::vector<std::string> tags){
+//      // just store the config
+//      m_name = name;
+//      m_title = title;
+//      m_nbins = nbins;
+//      m_xmin = xmin;
+//      m_xmax = xmax;
+//      m_nrecobins = nrecobins;
+//      m_xrecomin = xrecomin;
+//      m_xrecomax = xrecomax;
+//      m_fixedbins = true;
+//      //    m_count = 0;
+//      m_univs = univs;
+//      m_tags = tags;
+//      for (auto tag : tags){
+//       std::string hist_name = "h___"+tag +"___"+ name;
+//       // std::string hist_name = name + "_" + tag;
+//          // this is special case, only MC should have both true and reconstructed binning in the signature.
+//        m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), nrecobins, xrecomin, xrecomax, univs);
+//      }
+//      m_decoder = UniverseDecoder(univs);
+//
+//    }
 
   // map that helps you find the index of a universe.
 
@@ -130,8 +130,8 @@ public:
     m_title = title;
     m_nbins = nbins;
     m_bins  = bins;
-    m_nrecobins = nbins;
-    m_recobins = bins;
+//    m_nrecobins = nbins;
+//    m_recobins = bins;
     m_fixedbins = false;
     //    m_count = 0 ;
     m_univs = univs;
