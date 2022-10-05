@@ -315,7 +315,7 @@ public:
 
     // Check which categories are configured and add a tuned version
     if (std::count(m_for.begin(), m_for.end(),"selected_reco")>=1){  // use recobins
-      m_tuned_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(),GetNBins(),recobins, reco_univs, tuned_tags);
+      m_tuned_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(),GetNRecoBins(),recobins, reco_univs, tuned_tags);
       m_tuned_selected_mc_reco.AppendName("reconstructed_tuned",tuned_tags);
     }
     if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) { // use bins
