@@ -360,8 +360,10 @@ int main(const int argc, const char *argv[] ) {
     v->InitializeMCHistograms2D(mc_error_bands,selected_reco_tags);
     v->InitializeSelectedTruthHistograms2D(mc_error_bands,selected_truth_tags);
     v->InitializeDataHistograms2D(data_error_bands,datatags);
-    v->AddMCResponse2D(responsetags);
+    // v->AddMCResponse2D(responsetags);
     v->InitializeTruthHistograms2D(truth_error_bands,truthtags);
+    v->InitializeResponse2D(mc_error_bands,responsetags);
+
     if(useTuned){
       v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }

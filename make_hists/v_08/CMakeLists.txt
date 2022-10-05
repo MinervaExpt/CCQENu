@@ -65,6 +65,7 @@ include/GetStacked.h
 include/Hist2DWrapperMap.h
 include/HistWrapperMap.h
 include/ResponseWrapperMap.h
+include/Response2DWrapperMap.h
 include/Systematics.h
 utils/SyncBands.h
 include/Variable2DFromConfig.h

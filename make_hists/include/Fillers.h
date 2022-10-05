@@ -56,7 +56,7 @@ void FillMC(std::string tag, CVUniverse* univ, double weight,
         v2->m_selected_mc_reco.Fill2D(tag, univ, fill_val_x, fill_val_y, weight);
       }
       if(v2->hasTunedMC[tag] && scale>=0.){
-        v2->m_tuned_mc_reco.Fill2D(tag, univ, fill_val_x, fill_val_y, scale*weight);
+        v2->m_tuned_selected_mc_reco.Fill2D(tag, univ, fill_val_x, fill_val_y, scale*weight);
       }
     }
     if (v2->hasSelectedTruth[tag]){
@@ -97,12 +97,13 @@ void FillResponse(std::string tag, CVUniverse* univ, double weight,
       double reco_val_y = v2->GetRecoValueY(*univ, 0);
       double true_val_x = v2->GetTrueValueX(*univ, 0);
       double true_val_y = v2->GetTrueValueY(*univ, 0);
-      if(v2->m_tunedmc!=1){
-        v2->FillResponse2D(tag,univ,reco_val_x,reco_val_y,true_val_x,true_val_y,weight);
-      }
-      if(v2->hasTunedMC[tag] && scale>=0.){
-        v2->FillResponse2D(tag,univ,reco_val_x,reco_val_y,true_val_x,true_val_y,scale*weight);
-      }
+      v2->FillResponse2D(tag,univ,reco_val_x,reco_val_y,true_val_x,true_val_y,weight,scale);
+      // if(v2->m_tunedmc!=1){
+      //   v2->FillResponse2D(tag,univ,reco_val_x,reco_val_y,true_val_x,true_val_y,weight);
+      // }
+      // if(v2->hasTunedMC[tag] && scale>=0.){
+      //   v2->FillResponse2D(tag,univ,reco_val_x,reco_val_y,true_val_x,true_val_y,scale*weight);
+      // }
     }
   }
 }
