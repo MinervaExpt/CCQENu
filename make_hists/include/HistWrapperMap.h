@@ -145,30 +145,6 @@ public:
     m_decoder = UniverseDecoder(univs);
   }
 
-  // constructor  This one is special for reconstructed/tuned MC so you can build a response.
-  inline  HistWrapperMap( const std::string name, const std::string title, const Int_t nbins, const std::vector<double> bins, const Int_t nrecobins, const std::vector<double> recobins, std::map< std::string, std::vector<T*> > univs, std::vector<std::string> tags){
-    // just store the config
-    m_name = name;
-    m_title = title;
-    m_nbins = nbins;
-    m_bins  = bins;
-    m_nrecobins = nrecobins;
-    m_recobins = recobins;
-
-    m_fixedbins = false;
-    //    m_count = 0 ;
-    m_univs = univs;
-    m_tags = tags;
-    for (auto tag : tags){
-      //std::string hist_name = tag +"_"+ name;
-      std::string hist_name = "h___"+tag+"___"+name;
-        // this one is special, you need to make the primary histogram in reco variables.
-      m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), nrecobins, recobins, univs);
-      m_hashist[tag] = true;
-    }
-    m_decoder = UniverseDecoder(univs);
-  }
-
 
   inline void AppendName(const std::string n, const std::vector<std::string> tags){
      for (auto tag : tags){
