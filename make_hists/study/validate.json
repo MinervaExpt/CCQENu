@@ -13,7 +13,7 @@
   "samplesFile":"${CCQEMAT}/hms/AntiNuSamples_v9.json",
   "outRoot":"Enu_${MYPLAYLIST}_${MYSAMPLE}",
   "AnalyzeVariables":["Q2QE","pzmu","ptmu","Enu","EnuCCQE"],
-  "Analyze2DVariables":["pzmu_ptmu","pzmu_Q2QE","EnuCCQE_Enu"],
+  "Analyze2DVariables":["pzmu_ptmu","EnuCCQE_Q2QE"],
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"},
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
   "data":{"QElike":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
