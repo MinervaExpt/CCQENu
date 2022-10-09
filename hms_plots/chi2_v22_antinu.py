@@ -121,7 +121,6 @@ if "mu" in var:
     models.append("G18_02b_02_11a")
     models.append("G18_10a_02_11a")
 
-titles = {"pzmu":"p_{||}, GeV/c","ptmu":"p_{#perp}, GeV/c","enu":"E_{#nu}, GeV","enuQE":"E_{#nu QE}, GeV","q2":"Q^2_{QE}, GeV^2"}
 titles = {"pzmu":"p_{||}, GeV/c","ptmu":"p_{#perp}, GeV/c","enu":"E_{#nu}, GeV","enuQE":"E_{#nu QE}, GeV","q2":"Q^2_{QE}, GeV^2","pzmu_ptmu":":p_{||}, GeV/c;p_{#perp}, GeV/c"}
 translate={
 "2p2hrpa":"GENIE+recoil fit+RPA",
@@ -325,17 +324,28 @@ else:
     
 datahist.SetDirectory(0)
 datahist.Scale(SCALE*norm)
-
 dataname = "MINERvA_AntiNeutrino_CCQElike_"+var+"_Data_Meas"
 if full:
     dataname = dataname.replace("Meas","MeasFull")
 datahist.SetName(dataname)
+
+xmin = 1
+ymin = 1
+xmax = datahist.GetXaxis().GetNbins()
+ymax = datahist.GetYaxis().GetNbins()
+
+if var == "q2" or "enu" in var:
+  xmin = 0
+  ymin = 0
+  xmax = -1
+  ymax = -1
     
 dobinwidth = ("enu" not in var)
 #datahist.Scale(norm)
 if BIN and var != "enu":
     datahist.Scale(1.,"width")
 
+print ("thevat",var,titles)
 thetitle = titles[var]
 print ("thetitle",thetitle)
 
@@ -352,7 +362,8 @@ print ("var is ", var)
 #datadraw.Scale(1.,"width")
 rfile=TFile.Open(rname,"RECREATE")
 if proj == "_px":
-  oneDhist = datahist.ProjectionX()
+ 
+  oneDhist = datahist.ProjectionX(datahist.GetName()+"_px",ymin,ymax)
   datavals = readData1D(oneDhist)
   matrix = readMatrix1D(oneDhist.GetTotalErrorMatrix(),oneDhist)
   uncov = readMatrix(oneDhist.GetSysErrorMatrix("unfoldingCov"),oneDhist)
@@ -378,7 +389,8 @@ if proj == "_px":
   datadraw.Print("ALL")
   oneDhist.Delete()
 if proj == "_py":
-  oneDhist = datahist.ProjectionY()
+  nx = datahist.GetXaxis().GetNbins()
+  oneDhist = datahist.ProjectionY(datahist.GetName()+"_py",xmin,xmax)
   datavals = readData1D(oneDhist)
   oneDhist.Print("ALL")
   matrix = readMatrix1D(oneDhist.GetTotalErrorMatrix(),oneDhist)
@@ -568,7 +580,8 @@ for model in models:
     rfile.cd()
     if proj == "_px":
       if not model in extramodels:
-        oneDhist = mchist[model].ProjectionX()
+        ny = datahist.GetYaxis().GetNbins()
+        oneDhist = mchist[model].ProjectionX(mchist[model].GetName()+"_px",ymin,ymax)
         mcdraw[model]=oneDhist.GetCVHistoWithError()
       
       else:
@@ -594,7 +607,9 @@ for model in models:
     if proj == "_py":
       print (" got to _py",model)
       if not model in extramodels:
-        oneDhist = mchist[model].ProjectionY()
+        nx = mchist[model].GetXaxis().GetNbins()
+        oneDhist = mchist[model].ProjectionY(mchist[model].GetName()+"_py",xmin,xmax)
+      
         mcdraw[model]=oneDhist.GetCVHistoWithError()
         for bin in range(0,datadraw.GetNbinsX()+1):
             mcdraw[model].SetBinError(bin,0.0)
@@ -603,7 +618,8 @@ for model in models:
           oneDhist = mchist[model].Clone()
           mcdraw[model] = oneDhist.Clone()
         else:  #pt
-          oneDhist = mchist[model].ProjectionY()
+          nx = mchist[model].GetXaxis().GetNbins()
+          oneDhist = mchist[model].ProjectionY(mchist[model].GetName()+"_py",xmin,xmax)
           mcdraw[model] = oneDhist.Clone()
       mcdraw[model].SetDirectory(0)
       oneDhist.SetBinContent(0,0)
@@ -675,7 +691,7 @@ print ("got here after reading input")
 onames = {}
   #for model in models:
 #ofile[model] = open(basemodel+var+"_"+model+".tex",'w')
-oname =  "chi2-%s-%s-%f_v21.tex"%(basemodel,var,norm)
+oname =  "chi2-%s-%s-%f_v22.tex"%(basemodel,var,norm)
 ofile["ALL"] = open(oname,'w')
 out = ofile["ALL"]
 top = "\\documentclass[12pt,landscape]{article}\n \\begin{document} \n"
@@ -803,7 +819,7 @@ for model in models:
       residual[i] = data[i]-mc[model][i]
       logresidual[i] = logdata[i] - logmc[model][i]
        
-      print ("compare",model,data[i],mc[model][i])
+      #print ("compare",model,data[i],mc[model][i])
       #print i, data[i],mc[model][i],logdata[i],logmc[model][i]
       dof += 1
     chi2diag = TVectorD(residual)
@@ -849,7 +865,7 @@ for model in models:
   
 
       mcdraw[model].Write()
-      pname =  basemodel+"%s-%s-v21.pdf" %(var,model)
+      pname =  basemodel+"%s-%s-v22.pdf" %(var,model)
     #  c1[model].SaveAs(pname,"pdf")
       print (" Try to save ",pname)
     #mchist[model].Delete()

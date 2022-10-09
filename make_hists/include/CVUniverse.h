@@ -22,18 +22,18 @@
 class CVUniverse : public PlotUtils::MinervaUniverse {
 protected:
 	// default values
-	static double m_proton_ke_cut;
-	static NuConfig m_proton_score_config;
-    static std::vector<double> m_proton_score_mins;
-    static std::vector<double> m_proton_score_Q2QEs;
     static double m_min_blob_zvtx;
     static double m_photon_energy_cut;
+	static double m_proton_ke_cut;
+	static NuConfig m_proton_score_config;
+    static std::vector<double> m_proton_score_Q2QEs;
+    static std::vector<double> m_proton_score_mins;
     
     // initially set to false
-    static bool _is_proton_ke_cut_set;
-    static bool _is_proton_score_config_set;
     static bool _is_min_blob_zvtx_set;
     static bool _is_photon_energy_cut_set;
+    static bool _is_proton_ke_cut_set;
+    static bool _is_proton_score_config_set;
 
 public:
 #ifndef HAZMAT
@@ -86,19 +86,19 @@ public:
     
     virtual int GetDeadTime() const;
     
-    // ----------------------- Cut-configuring Variables -------------------------
+    // ----------------------- Cut-configuring Functions -------------------------
+     
+    static double GetMinBlobZVtx();
+    static bool SetMinBlobZVtx(double min_zvtx, bool print);
+    
+    static double GetPhotonEnergyCut();
+    static bool SetPhotonEnergyCut(double energy, bool print);
     
     static double GetProtonKECut();
     static bool SetProtonKECut(double proton_KECut, bool print);
     
     static NuConfig GetProtonScoreConfig(bool print);
     static bool SetProtonScoreConfig(NuConfig protonScoreConfig, bool print);
-    
-    static double GetMinBlobZVtx();
-    static bool SetMinBlobZVtx(double min_zvtx, bool print);
-    
-    static double GetPhotonEnergyCut();
-    static bool SetPhotonEnergyCut(double energy, bool print);
     
     // ----------------------- Analysis-related Variables ------------------------
     
@@ -247,7 +247,10 @@ public:
     
     virtual int GetNMichel() const;
     virtual int GetImprovedNMichel() const;
+    virtual int GetFittedNMichel() const;
     virtual int GetHasMichelElectron() const;
+    virtual int GetHasImprovedMichelElectron() const;
+    virtual int GetTrueFittedNMichel() const;
     virtual int GetTruthHasMichel() const;
     virtual int GetTruthHasImprovedMichel() const;
     

@@ -131,26 +131,36 @@ public:
 
     recointfunctions["HasInteractionVertex"] = &CVUNIVERSE::GetHasInteractionVertex;
     
-    // Isolated Blobs and Charged Pions
+    // Isolated Blobs
     
     recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
     
+	// Michel Electrons
+
     recointfunctions["HasMichelElectron"] = &CVUNIVERSE::GetHasMichelElectron;
+    recointfunctions["HasImprovedMichelElectron"] = &CVUNIVERSE::GetHasImprovedMichelElectron;
     recointfunctions["NMichel"] = &CVUNIVERSE::GetNMichel;
     recofunctions["NMichel"] = &CVUNIVERSE::GetNMichel;
     recointfunctions["ImprovedNMichel"] = &CVUNIVERSE::GetImprovedNMichel;
     recofunctions["ImprovedNMichel"] = &CVUNIVERSE::GetImprovedNMichel;
+    recointfunctions["FittedNMichel"] = &CVUNIVERSE::GetFittedNMichel;
+    recofunctions["FittedNMichel"] = &CVUNIVERSE::GetFittedNMichel;
     trueintfunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
     truefunctions["TruthHasMichel"] = &CVUNIVERSE::GetTruthHasMichel;
     trueintfunctions["TruthHasImprovedMichel"] = &CVUNIVERSE::GetTruthHasImprovedMichel;
     truefunctions["TruthHasImprovedMichel"] = &CVUNIVERSE::GetTruthHasImprovedMichel;
+    trueintfunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
+    truefunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
+
+	// Protons
 
     recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
     recointfunctions["IsPrimaryProton"] = &CVUNIVERSE::GetIsPrimaryProton;
     recofunctions["PrimaryProtonScore"] = &CVUNIVERSE::GetPrimaryProtonScore;
     trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
     
-    // genie particle counts
+    // Genie Particle Counts
+    
     trueintfunctions["TrueChargedPionCount"] = &CVUNIVERSE::GetTrueChargedPionCount;
     truefunctions["TrueChargedPionCount"] = &CVUNIVERSE::GetTrueChargedPionCount;
     trueintfunctions["TrueNeutralPionCount"] = &CVUNIVERSE::GetTrueNeutralPionCount;

@@ -152,7 +152,6 @@ int main(const int argc, const char *argv[] ) {
   std::cout << " mc error bands is " << mc_error_bands.size() << std::endl;
   std::cout << " truth error bands is " << truth_error_bands.size() << std::endl;
 
-
   // If we're doing data we need a single central value universe.
   // TODO Take care of this in PU::MacroUtil.
   CVUniverse* data_universe = new CVUniverse(util.m_data);
@@ -163,6 +162,7 @@ int main(const int argc, const char *argv[] ) {
 
   //Selection Criteria
 	if (config.IsMember("universeFile")) {
+
 
 		std::cout << " setting universe configurables" << std::endl;
 		std::string universefilename = config.GetString("universeFile");
@@ -391,7 +391,6 @@ int main(const int argc, const char *argv[] ) {
     std::cout << "Loop and Fill MC Reco  for " <<  tag << "\n";
     LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag],model, mcRescale);
     // LoopAndFillEventSelection2D(tag, util, mc_error_bands, variables2D, kMC, *selectionCriteria[tag]);
-
     std::cout << "\nCut summary for MC Reco:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
     selectionCriteria[tag]->resetStats();
   }
