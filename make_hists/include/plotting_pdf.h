@@ -1,6 +1,6 @@
 #ifndef plotting_functions_H
 #define plotting_functions_H
-//#define FULLDUMP 0
+//#define FULLDUMP  // dumps all syst error subgroups
 #include "TCanvas.h"
 #include "PlotUtils/MnvVertErrorBand.h"
 #include "PlotUtils/MnvPlotter.h"
@@ -434,7 +434,8 @@ void PlotCVAndError(TCanvas & cE, MnvH2D* idatahist, MnvH2D* imchist, std::strin
   std::string ytitle = "Y Projection "+yaxis;
   std::string xlabel = "_projx";
   std::string ylabel = "_projy";
-
+  TText *t = new TText(.3,.90,label.c_str());
+    
 
   MnvH1D* d_xhist = d->ProjectionX(Form("%s%s",d->GetName(),xlabel.c_str()),0,-1,"o");
   d_xhist->GetXaxis()->SetTitle(Form("%s",xtitle.c_str()));
@@ -447,13 +448,13 @@ void PlotCVAndError(TCanvas & cE, MnvH2D* idatahist, MnvH2D* imchist, std::strin
 
   std::string dlabel = d->GetTitle();
   std::string mclabel = mc->GetTitle();
-  Plot2D(cE,d,dlabel,logscale,binwid);
+  Plot2D(cE,d,label,logscale,binwid);
   resetLogScale();
-  Plot2D(cE,mc,dlabel,logscale,binwid);
+  Plot2D(cE,mc,label,logscale,binwid);
   resetLogScale();
-  PlotCVAndError(cE,d_xhist,mc_xhist,mclabel,false,logscale,binwid);
+  PlotCVAndError(cE,d_xhist,mc_xhist,label,false,logscale,binwid);
   resetLogScale();
-  PlotCVAndError(cE,d_yhist,mc_yhist,mclabel,false,logscale,binwid);
+  PlotCVAndError(cE,d_yhist,mc_yhist,label,false,logscale,binwid);
   resetLogScale();
 }
 

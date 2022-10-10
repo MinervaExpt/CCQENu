@@ -282,7 +282,7 @@ template<> MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* ire
    // bool MnvUnfold::UnfoldHistoWithFakes(PlotUtils::MnvH1D* &h_unfold, TMatrixD &covmx, const PlotUtils::MnvH2D* const h_migration, const PlotUtils::MnvH1D* const h_data, const PlotUtils::MnvH1D* const  h_model_reco, const PlotUtils::MnvH1D* const h_model_truth, const PlotUtils::MnvH1D* const h_model_background, double regparam,bool addSystematics,bool useSysVariatedMigrations) const
     // this defaults to Bayesian
    // bool data_unfolded = unfold.UnfoldHistoWithFakes(unsmeared,covmatrix,migration,bkgsub,imcsighist,iseltruhist,empty,4.,true, true);
-    bkgsub->Print("ALL");
+    if(DEBUG) bkgsub->Print("ALL");
 
   for (int i = 0; i < covmatrix.GetNrows(); i++){
     covmatrix[i][i] = 0.0;
@@ -331,10 +331,10 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
   std::cout << "bkgsub " << bkgsub->Integral() << " " << bkgsub->Integral() << std::endl;
   
   std::cout << "migration x y" << migration->ProjectionX()->Integral() << " " << migration->ProjectionY()->Integral() << std::endl;
-  if (imcsighist->Integral() != migration->ProjectionX()->Integral() ){
-    std::cout << " make migration matrix have same scale as imcsighist" << std::endl;
-    migration->Scale(imcsighist->Integral()/migration->ProjectionX()->Integral());
-  }
+//  if (imcsighist->Integral() != migration->ProjectionX()->Integral() ){
+//    std::cout << " make migration matrix have same scale as imcsighist" << std::endl;
+//    migration->Scale(imcsighist->Integral()/migration->ProjectionX()->Integral());
+//  }
   bool data_unfolded = unfold.UnfoldHisto2D(unsmeared,migration,imcsighist,iseltruhist,bkgsub,num_iter,true,true);
   std::cout << " Done with 2D unfolding " << std::endl;
   std::cout << "unsmeared " << unsmeared->Integral() << " " << unsmeared->Integral() << std::endl;
@@ -372,6 +372,8 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
 
 //-------------------------------- DoUnfolding ---------------------------------
 // Putting the unfolding all together.
+
+// check call  std::vector<MnvHistoType*> unsmearedVec = DoUnfolding(basename,iresponse,iresponse_reco,iresponse_truth,bkgsub,idatahist,unfold,num_iter);
 template<class MnvHistoType>
   std::vector<MnvHistoType*> DoUnfolding(std::string basename, MnvH2D* iresponse,
                               MnvHistoType* imcsighist, MnvHistoType* iseltruhist, MnvHistoType* bkgsub,
@@ -623,7 +625,22 @@ template<class MnvHistoType>
           if (histsND[type][category] != 0) {
             double t = histsND[type][category]->Integral();
             histsND[type][category]->Scale(POTScale);
-            if (DEBUG) std::cout << " POTScaled " << histsND[type][category]->GetName() << " " << t << " " << histsND[type][category]->Integral() <<  std::endl;
+            std::cout << " POTScaled " << histsND[type][category]->GetName() << " " << t << " " << histsND[type][category]->Integral() <<  std::endl;
+          }
+        }
+      }
+    }
+    for(auto types : responseND){
+      std::string type = types.first;
+      std::cout << "response key " << type << std::endl;
+      for(auto categories : responseND[type]){
+        std::string category = categories.first;
+        if (category.find(dat)==std::string::npos){
+          
+          if (responseND[type][category] != 0) {
+            double t = responseND[type][category]->Integral();
+            responseND[type][category]->Scale(POTScale);
+            std::cout << " POTScaled " << responseND[type][category]->GetName() << " " << t << " " << responseND[type][category]->Integral() <<  std::endl;
           }
         }
       }
@@ -670,12 +687,18 @@ template<class MnvHistoType>
     }
     
     MnvH2D* iresponse;
+    MnvHistoType* iresponse_reco=imcsighist;
+    MnvHistoType* iresponse_truth=iseltruhist;
     if (responseND.count("response_migration_tuned") && usetune){
         iresponse = responseND["response_migration_tuned"][sig];
+        iresponse_reco=histsND["response_tuned_reco"][sig];
+        iresponse_truth=histsND["response_tuned_truth"][sig];
         std::cout << " using " << iresponse->GetName() <<  " " << iresponse->ProjectionX()->Integral()<< " " <<iresponse->ProjectionY()->Integral()<< std::endl;
     }
     else{
         iresponse = responseND["response_migration"][sig];
+        iresponse_reco=histsND["response_reco"][sig];
+        iresponse_truth=histsND["response_truth"][sig];
         std::cout << " using " << iresponse->GetName() <<  " " << iresponse->ProjectionX()->Integral()<< " " <<iresponse->ProjectionY()->Integral()<< std::endl;
     }
     // TODO: POTScale by if (not data) --> POTScale
@@ -710,13 +733,15 @@ template<class MnvHistoType>
     
     // if (DEBUG) std::cout << " MC bkg scaled by POT for " << variable << std::endl;
  
-    // Where response is scaled by POT.
-    if(iresponse!=0){
+    
+    
+ 
+
       // HACK as the response seems to have gotten the wrong normalization
-      double fix = imcsighist->Integral()/iresponse->ProjectionX()->Integral();
-      iresponse->Scale(fix);
-      if (DEBUG) std::cout << " HACK? response scaled by " << fix << " for " << iresponse->GetName() << "POTScale would be "<< POTScale<< std::endl;
-    }
+    //  double fix = imcsighist->Integral()/iresponse->ProjectionX()->Integral();
+    //  iresponse->Scale(fix);
+    //  if (DEBUG) std::cout << " HACK? response scaled by " << fix << " for " << iresponse->GetName() << "POTScale would be "<< POTScale<< std::endl;
+    
 
     //==================================Make MC=====================================
     MnvHistoType* mc;
@@ -784,7 +809,8 @@ template<class MnvHistoType>
     // std::string unsmearedname = bkgsubname+"_unfolded";
     // std::string unsmearingname = basename+"_unsmearing";
     MnvHistoType* unsmeared;
-    std::vector<MnvHistoType*> unsmearedVec = DoUnfolding(basename,iresponse,imcsighist,iseltruhist,bkgsub,idatahist,unfold,num_iter);
+    // change this to use
+    std::vector<MnvHistoType*> unsmearedVec = DoUnfolding(basename,iresponse,iresponse_reco,iresponse_truth,bkgsub,idatahist,unfold,num_iter);
 
     std::cout << "Unfolding Vector Size: " << unsmearedVec.size() << std::endl;
     if(unsmearedVec.size()==0){
