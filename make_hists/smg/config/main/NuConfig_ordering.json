@@ -1,0 +1,56 @@
+{
+	"version":8,  // Dec 2021 large scale tests
+	"mcIn":"playlists/CCQENu_minervame1N_MC_Inextinguishable_merged.txt",
+	"dataIn":"playlists/CCQENu_minervame1N_DATA_Inextinguishable_merged.txt",
+	"prescale":1,
+	"playlist":"minervame1N",
+	"recoName":"CCQENu",
+	"pdg":14,
+	"useTuned":false,
+	"runsamples":["QElike1","QElike2","QElike3","QElike4","QElike5","QElike6","QElike7","QElike8"],
+	"cutsFile":"config/cuts/NuCuts_ordering.json",
+	"configUniFile":"config/cuts/NuCutsConfig_cvuniverse.json",
+	"varsFile":"config/variables/NuVariables_v8.json",
+	"samplesFile":"config/samples/NuSamples_ordering.json",
+	"outRoot":"SB",
+	"AnalyzeVariables":["ptmu"],
+	"Analyze2DVariables":[],
+	"signal":{
+		"QElike1":"qelike1",
+		"QElike2":"qelike1",
+		"QElike3":"qelike1",
+		"QElike4":"qelike1",
+		"QElike5":"qelike2",
+		"QElike6":"qelike2",
+		"QElike7":"qelike2",
+		"QElike8":"qelike2"
+	},
+	"background":{
+		"QElike1":["1chargedpion1","1neutralpion1","multipion1","other"],
+		"QElike2":["1chargedpion2","1neutralpion2","multipion2","other"],
+		"QElike3":["1chargedpion3","1neutralpion3","multipion3","other"],
+		"QElike4":["1chargedpion4","1neutralpion4","multipion4","other"],
+		"QElike5":["1chargedpion5","1neutralpion5","multipion5","other"],
+		"QElike6":["1chargedpion6","1neutralpion6","multipion6","other"],
+		"QElike7":["1chargedpion1","1neutralpion1","multipion1","other"],
+		"QElike8":["1chargedpion1","1neutralpion1","multipion1","other"]
+	},
+	"data":{
+		"QElike1":"data",
+		"QElike2":"data",
+		"QElike3":"data",
+		"QElike4":"data",
+		"QElike5":"data",
+		"QElike6":"data",
+		"QElike7":"data",
+		"QElike8":"data"
+	},
+	"systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+	               "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+	"fluxUniverses":0,
+	"NuEConstraint":1,
+	"DeuteriumGeniePiTune":1, // set to true?
+	"NonResPiReweight":1, // set to true?
+	"Geant4NeutronCV":1, // set true by default docdb 28556
+	"Geant4Elastics":1 // set to true by default
+}

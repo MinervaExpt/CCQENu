@@ -140,8 +140,8 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
   mnvPlotter.error_summary_group_map["Tune"].push_back("Low_Recoil_2p2h_Tune");
 
 
-  mnvPlotter.error_summary_group_map["Angle"].push_back("BeamAngleX");
-  mnvPlotter.error_summary_group_map["Angle"].push_back("BeamAngleY");
+//mnvPlotter.error_summary_group_map["Angle"].push_back("BeamAngleX");
+//  mnvPlotter.error_summary_group_map["Angle"].push_back("BeamAngleY");
 
   mnvPlotter.error_summary_group_map["Response"].push_back("response_em");
   mnvPlotter.error_summary_group_map["Response"].push_back("response_proton");
@@ -160,7 +160,8 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
  mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_MINERvA");
   mnvPlotter.error_summary_group_map["Muon Energy"].push_back("MINOS_Reconstruction_Efficiency");
    mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_Resolution");
-
+    mnvPlotter.error_summary_group_map["Muon Energy"].push_back("BeamAngleX");
+    mnvPlotter.error_summary_group_map["Muon Energy"].push_back("BeamAngleY");
 //  mnvPlotter.error_summary_group_map["Unfolding"].push_back("Unfolding");
 
 
@@ -321,12 +322,15 @@ void PlotCVAndError(TCanvas & cE, PlotUtils::MnvH1D* idatahist,PlotUtils::MnvH1D
   d->SetDirectory(0);
   MnvH1D* m = (MnvH1D*) hist->Clone();
   m->SetDirectory(0);
-
+  if (d->GetXaxis()->GetNbins() != m->GetXaxis()->GetNbins()){
+    std::cout << " data and mc bins don't agree" << d->GetName() << m->GetName() << std::endl;
+    return;
+  }
   MnvH1D* mc = (MnvH1D*) m->Clone();
   mc->SetDirectory(0);
   mc->ClearAllErrorBands();
   mc->AddMissingErrorBandsAndFillWithCV(*m);
-
+  
   d->Divide(d,mc,1.,1.);
 
   d->GetYaxis()->SetTitle("Data/MC");

@@ -1,0 +1,9 @@
+{
+	"outputpdf":"ratio_main_universeConfig_multi.pdf",
+	"legendLabel1":"main",
+	"legendLabel2":"universeConfig",
+	"legendTitle":"multitrack branch",
+	"ratioLabel":"ratio",
+	"rootFile1":"/home/sean/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_v8_multitrack_me1N_1.root",
+	"rootFile2":"/home/sean/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_v8_multitrack_me1N_1_universeConfig.root"
+}

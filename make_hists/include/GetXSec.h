@@ -1,3 +1,15 @@
+/**
+* @file
+* @author  Heidi Schellman/Noah Vaughan/SeanGilligan
+* @version 1.0 *
+* @section LICENSE *
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as
+* published by the Free Software Foundation; either version 2 of
+* the License, or (at your option) any later version. *
+* @section DESCRIPTION *
+* Code to fill histograms
+ */
 #include <iostream>
 #include <string>
 #include "PlotUtils/MnvH1D.h"
@@ -15,6 +27,7 @@
 #ifndef __CINT__
 #include "include/plotting_pdf.h"
 #endif
+
 
 /*
 ================================= GetXSec.h ====================================
@@ -56,6 +69,14 @@ std::vector<std::string> split (std::string s, std::string delimiter) {
 
   res.push_back (s.substr (pos_start));
   return res;
+}
+
+void ZeroDiagonal(TMatrixD &m){
+  std::cout << " TRACE: enter ZeroDiagonal  "   << std::endl;
+  int n = m.GetNrows();
+  for (int i = 0; i < n; i++){
+    m[i][i] = 0;
+  }
 }
 
 // Returns a map of bools for { 'fluxnorm', 'xfluxnorm', 'yfluxnorm'} based off "fluxnorm" set in variable config
@@ -190,6 +211,7 @@ template <class MnvHistoType>
     std::vector<MnvHistoType*> outUnsmearingVec;
     std::string unsmearedname = std::string(bkgsub->GetName()) + "_unfolded";
     MnvHistoType* unsmeared = (MnvHistoType*)idatahist->Clone(unsmearedname.c_str());
+    
     unsmeared->SetDirectory(0);
 
     std::string unsmearingname = basename + "_ratiounsmearing";
@@ -239,22 +261,38 @@ template<> MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* ire
   migration->PopVertErrorBand("cv");
 
   std::string unsmearedname = std::string(bkgsub->GetName()) + "_unfolded";
-  MnvH1D* unsmeared = (MnvH1D*)idatahist->Clone(unsmearedname.c_str());
+    MnvH1D* unsmeared;// = (MnvH1D*)iseltruhist->Clone(unsmearedname.c_str());
+    // make an unsmeared without error bands so that the unfolding can add them
+  unsmeared = new MnvH1D( *dynamic_cast<const TH1D*>((iseltruhist)->Clone(unsmearedname.c_str())) );
+  //  unsmeared->SetName(unsmearedname.c_str());
+  //unsmeared->AddMissingErrorBandsAndFillWithCV(*iseltruhist);
   unsmeared->SetDirectory(0);
   std::cout << " Migration matrix has size " << migration->GetErrorBandNames().size() << std::endl;
   std::cout << " Data has  size " << bkgsub->GetErrorBandNames().size() << std::endl;
-
+  //MnvH1D* empty = (MnvH1D*)bkgsub->Clone((std::string(bkgsub->GetName())+"_empty").c_str());
+  //empty->Reset();
   // make an empty covariance matrix for the unfolding to give back to you
   TMatrixD covmatrix;
-  bool data_unfolded = unfold.UnfoldHisto(unsmeared,covmatrix,migration,bkgsub,RooUnfold::kBayes,num_iter,true,true);
+
+
+  // try doing with variable size matrices.
+    bool data_unfolded = unfold.UnfoldHisto(unsmeared,covmatrix,migration,bkgsub,RooUnfold::kBayes,num_iter,true,true);
+   // bool MnvUnfold::UnfoldHistoWithFakes(PlotUtils::MnvH1D* &h_unfold, TMatrixD &covmx, const PlotUtils::MnvH2D* const h_migration, const PlotUtils::MnvH1D* const h_data, const PlotUtils::MnvH1D* const  h_model_reco, const PlotUtils::MnvH1D* const h_model_truth, const PlotUtils::MnvH1D* const h_model_background, double regparam,bool addSystematics,bool useSysVariatedMigrations) const
+    // this defaults to Bayesian
+   // bool data_unfolded = unfold.UnfoldHistoWithFakes(unsmeared,covmatrix,migration,bkgsub,imcsighist,iseltruhist,empty,4.,true, true);
+    bkgsub->Print("ALL");
 
   for (int i = 0; i < covmatrix.GetNrows(); i++){
     covmatrix[i][i] = 0.0;
   }
+    
 
   unsmeared->FillSysErrorMatrix("Unfolding",covmatrix);
+    
   // Commenting out since may not be necessary.
   SyncBands(unsmeared);
+  unsmeared->MnvH1DToCSV(unsmeared->GetName(),"./csv",1.0,false,true,true,false);
+  //  unsmeared->Print("ALL");
   return unsmeared;
 };
 
@@ -275,17 +313,55 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
   // std::cout << " Data has  size " << bkgsub->GetErrorBandNames().size() << std::endl;
 
   std::string unsmearedname = std::string(bkgsub->GetName()) + "_unfolded";
-  MnvH2D* unsmeared = (MnvH2D*)idatahist->Clone(unsmearedname.c_str());
+  // HMS MnvH2D* unsmeared = (MnvH2D*)idatahist->Clone(unsmearedname.c_str());
+  MnvH2D* unsmeared = (MnvH2D*)iseltruhist->Clone(unsmearedname.c_str());
   unsmeared->SetDirectory(0);
   bkgsub->Print();
   iseltruhist->Print();
   imcsighist->Print();
+  
+  // now to get the covariance matrix for the unfolding itself using only the central value  This is the method Amit used
   // make an empty covariance matrix for the unfolding to give back to you
   std::cout << " starting 2D unfolding " << std::endl;
   // bool data_unfolded = unfold.UnfoldHisto2D(unsmeared,migration,mc,iseltruhist,bkgsub,num_iter,true,true);
+  std::cout << "imcsighist " << imcsighist->Integral() << " " << imcsighist->Integral() << std::endl;
+  std::cout << "iseltruhist " << iseltruhist->Integral() << " " << iseltruhist->Integral() << std::endl;
+  std::cout << "bkgsub " << bkgsub->Integral() << " " << bkgsub->Integral() << std::endl;
+  
+  std::cout << "migration x y" << migration->ProjectionX()->Integral() << " " << migration->ProjectionY()->Integral() << std::endl;
+  if (imcsighist->Integral() != migration->ProjectionX()->Integral() ){
+    std::cout << " make migration matrix have same scale as imcsighist" << std::endl;
+    migration->Scale(imcsighist->Integral()/migration->ProjectionX()->Integral());
+  }
   bool data_unfolded = unfold.UnfoldHisto2D(unsmeared,migration,imcsighist,iseltruhist,bkgsub,num_iter,true,true);
   std::cout << " Done with 2D unfolding " << std::endl;
-
+  std::cout << "unsmeared " << unsmeared->Integral() << " " << unsmeared->Integral() << std::endl;
+  bkgsub->Print();
+  imcsighist->Print();
+  iseltruhist->Print();
+  // extra code just to get CV covmx
+  TH2D* hUnfoldedDummy=new TH2D(unsmeared->GetCVHistoWithStatError());
+  TH2D* hMigrationDummy=new TH2D(migration->GetCVHistoWithStatError());
+  TH2D* hRecoDummy=new TH2D(imcsighist->GetCVHistoWithStatError());
+  TH2D* hTruthDummy=new TH2D(iseltruhist->GetCVHistoWithStatError());
+  TH2D* hBGSubDataDummy=new TH2D(bkgsub->GetCVHistoWithStatError());
+  TMatrixD unfoldingCovMatrixOrig_hist_type;
+  std::cout << "HERE for COVARIANCE " << std::endl;
+  //unfoldingCovMatrixOrig_hist_type.Print("ALL");
+  unfold.UnfoldHisto2D(hUnfoldedDummy, unfoldingCovMatrixOrig_hist_type, hMigrationDummy, hRecoDummy, hTruthDummy, hBGSubDataDummy, num_iter);
+  int correctNbins = hUnfoldedDummy->fN;
+  int matrixRows = unfoldingCovMatrixOrig_hist_type.GetNrows();
+  
+  if(correctNbins!=matrixRows){
+  
+  cout << "****************************************************************************" << endl;
+ cout << "*  Fixing unfolding matrix size because of RooUnfold bug. From " << matrixRows << " to " << correctNbins << endl;
+ cout << "****************************************************************************" << endl;
+ // It looks like this DTRT, since the extra last two bins don't have any content
+ unfoldingCovMatrixOrig_hist_type.ResizeTo(correctNbins, correctNbins);
+  }
+ ZeroDiagonal(unfoldingCovMatrixOrig_hist_type);
+ // unsmeared->PushCovMatrix("unfoldingCov",unfoldingCovMatrixOrig_hist_type);
   // Commenting out since may not be necessary.
   SyncBands(unsmeared);
   return unsmeared;
@@ -476,7 +552,7 @@ template<class MnvHistoType>
     // this can come out of the sample information:
     // configs["main"]->Print();
     NuConfig sigkey = configs["main"]->GetConfig("signal");
-    sigkey.Print();
+    //sigkey.Print();
     std::string sig = sigkey.GetString(sample);
     std::cout << " got sig " << sig << std::endl;
     NuConfig bkgkey;
@@ -484,7 +560,7 @@ template<class MnvHistoType>
     if (!hasbkgsub){
       // this likely needs to be fixed
       bkgkey = configs["main"]->GetConfig("background");
-      bkgkey.Print();
+      //bkgkey.Print();
       std::cout << bkgkey.CheckMember(sample) << std::endl;
       bkg = bkgkey.GetString(sample);
       std::cout << " got bkg " << bkg << std::endl;
@@ -494,7 +570,7 @@ template<class MnvHistoType>
     std::cout << " got dat " << dat << std::endl;
     
     
-    datkey.Print();
+    //datkey.Print();
     //std::string bkg = config.GetString("background");
     // std::string dat = config.GetString("data");
 
@@ -526,8 +602,12 @@ template<class MnvHistoType>
       for(auto categories : histsND[type]){
         std::string category = categories.first;
         if (category.find(dat)==std::string::npos){
-          if (histsND[type][category] != 0) histsND[type][category]->Scale(POTScale);
-          if (DEBUG) std::cout << " POTScaled " << category << std::endl;
+          
+          if (histsND[type][category] != 0) {
+            double t = histsND[type][category]->Integral();
+            histsND[type][category]->Scale(POTScale);
+            if (DEBUG) std::cout << " POTScaled " << histsND[type][category]->GetName() << " " << t << " " << histsND[type][category]->Integral() <<  std::endl;
+          }
         }
       }
     }
@@ -536,26 +616,51 @@ template<class MnvHistoType>
     // MnvHistoType can be MnvH1D or MnvH2D so far. Response is always MnvH2D.
     MnvHistoType* idatahist = histsND["reconstructed"][dat];
     MnvHistoType* imcsighist = histsND["reconstructed"][sig];
+    std::string stuned = "";
     if (histsND.count("reconstructed_tuned") && usetune){
-      
-      imcsighist = histsND["reconstructed_tuned"][sig];
+        stuned = "Tuned ";
+        imcsighist = histsND["reconstructed_tuned"][sig];
+        std::cout << " using " << imcsighist->GetName() << std::endl;
     }
-    std::cout << "using signal " << imcsighist->GetName() << std::endl;
+    //std::cout << "using signal " << imcsighist->GetName() << std::endl;
     MnvHistoType* imcbkghist;
     MnvHistoType* ibkgsubhist;
     if (!hasbkgsub){
       imcbkghist = histsND["reconstructed"][bkg];
       if (histsND.count("reconstructed_tuned")&& usetune){
         imcbkghist = histsND["reconstructed_tuned"][bkg];
+        std::cout << " using " << imcbkghist->GetName() << std::endl;
       }
     }
     std::cout << "using background " << imcbkghist->GetName() << std::endl;
     if (hasbkgsub) ibkgsubhist = histsND["fitted"]["bkgsub"];
-    MnvHistoType* iseltruhist = histsND["selected_truth"][sig];
-    MnvHistoType* ialltruhist = histsND["all_truth"][sig];
+      MnvHistoType* iseltruhist;
+    if (histsND.count("selected_truth_tuned") && usetune){
+        iseltruhist = histsND["selected_truth_tuned"][sig];
+        std::cout << " using " << iseltruhist->GetName() << std::endl;
+    }
+    else{
+        iseltruhist = histsND["selected_truth"][sig];
+    }
+    MnvHistoType* ialltruhist;
+      
+    if (histsND.count("all_truth_tuned") && usetune){
+        ialltruhist = histsND["all_truth_tuned"][sig];
+        std::cout << " using " << ialltruhist->GetName() << std::endl;
+    }
+    else{
+        ialltruhist = histsND["all_truth"][sig];
+    }
     
-    
-    MnvH2D* iresponse = responseND["response_migration"][sig];
+    MnvH2D* iresponse;
+    if (responseND.count("response_migration_tuned") && usetune){
+        iresponse = responseND["response_migration_tuned"][sig];
+        std::cout << " using " << iresponse->GetName() <<  " " << iresponse->ProjectionX()->Integral()<< " " <<iresponse->ProjectionY()->Integral()<< std::endl;
+    }
+    else{
+        iresponse = responseND["response_migration"][sig];
+        std::cout << " using " << iresponse->GetName() <<  " " << iresponse->ProjectionX()->Integral()<< " " <<iresponse->ProjectionY()->Integral()<< std::endl;
+    }
     // TODO: POTScale by if (not data) --> POTScale
 
 
@@ -571,7 +676,7 @@ template<class MnvHistoType>
       std::cout << " no sig for " << variable << std::endl;
       return 1;
     }
-    // imcsighist->Scale(POTScale);
+    //imcsighist->Scale(POTScale);
     imcsighist->Print();
     imcsighist->Write();
     // if (DEBUG) std::cout << " MC sig scaled by POT for " << variable << std::endl;
@@ -587,42 +692,50 @@ template<class MnvHistoType>
     }
     
     // if (DEBUG) std::cout << " MC bkg scaled by POT for " << variable << std::endl;
-
+ 
     // Where response is scaled by POT.
     if(iresponse!=0){
-      iresponse->Scale(POTScale);
-      if (DEBUG) std::cout << " response scaled by POT for " << variable << std::endl;
+      // HACK as the response seems to have gotten the wrong normalization
+      double fix = imcsighist->Integral()/iresponse->ProjectionX()->Integral();
+      iresponse->Scale(fix);
+      if (DEBUG) std::cout << " HACK? response scaled by " << fix << " for " << iresponse->GetName() << "POTScale would be "<< POTScale<< std::endl;
     }
 
     //==================================Make MC=====================================
     MnvHistoType* mc;
     MnvHistoType* signalFraction;
-    if (!hasbkgsub){
-    if (DEBUG) std::cout << " Start MakeMC... " << std::endl;
-    // std::string mcname = basename+"_mc_tot";
-    mc = MakeMC(basename,imcsighist,imcbkghist);
-    if(DEBUG)mc->Print();
-    mc->Write();
-    PlotCVAndError(canvas,idatahist,mc,sample + "_"+ "DATA_vs_MC" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,mc,sample + "_"+"Raw MC Systematics" ,logscale );
-
-    //================================Signal Fraction===========================
-
-    if (DEBUG) std::cout << " Start signal fraction... " << std::endl;
-    // std::string fracname = basename+"_signalfraction";
-    signalFraction = GetSignalFraction(basename,imcsighist,mc);
-    MnvHistoType* bkgFraction = GetBkgFraction(basename,imcbkghist,mc);
-    if(DEBUG) signalFraction->Print();
-    signalFraction->Write();
-    bkgFraction->Write();
-    Plot2DFraction(canvas, signalFraction,bkgFraction, sample + "_fractions",logscale);
-      
-    PlotCVAndError(canvas,signalFraction,signalFraction, sample + "_"+"Signal Fraction" ,true,logscale,false);
-    PlotErrorSummary(canvas,signalFraction,"Signal Fraction Systematics" ,0);
-    }
-    else{
-      mc = (MnvHistoType*)imcsighist->Clone();
-    }
+    
+      if (!hasbkgsub){
+          if (DEBUG) std::cout << " Start MakeMC... " << std::endl;
+          // std::string mcname = basename+"_mc_tot";
+          mc = MakeMC(basename,imcsighist,imcbkghist);
+          if(DEBUG)mc->Print();
+          mc->Write();
+          
+         
+          PlotCVAndError(canvas,idatahist,mc,stuned+sample + "_"+ "DATA_vs_MC" ,true,logscale,binwid);
+          PlotErrorSummary(canvas,mc,sample + "_"+"Raw MC Systematics" ,logscale );
+          
+          //================================Signal Fraction===========================
+          
+          if (DEBUG) std::cout << " Start signal fraction... " << std::endl;
+          // std::string fracname = basename+"_signalfraction";
+          signalFraction = GetSignalFraction(basename,imcsighist,mc);
+          MnvHistoType* bkgFraction = GetBkgFraction(basename,imcbkghist,mc);
+          if(DEBUG) signalFraction->Print();
+          signalFraction->Write();
+          bkgFraction->Write();
+          Plot2DFraction(canvas, signalFraction,bkgFraction, stuned+sample + "_fractions",logscale);
+          
+          PlotCVAndError(canvas,signalFraction,signalFraction, stuned+sample + "_"+"Signal Fraction" ,true,logscale,false);
+          PlotErrorSummary(canvas,signalFraction,stuned+sample+" Signal Fraction Systematics" ,0);
+      }
+      else{
+          mc = (MnvHistoType*)imcsighist->Clone();
+          
+          
+      }
+    
 
     //============================Background Subtraction========================
 
@@ -645,8 +758,8 @@ template<class MnvHistoType>
       bkgsub->Write();
  
     
-    PlotCVAndError(canvas,bkgsub,imcsighist, sample + "_"+"BKGsub vs. MC signal" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,bkgsub,sample + "_"+"BKGsub Systematics" ,0);
+    PlotCVAndError(canvas,bkgsub,imcsighist, stuned+sample + "_"+"BKGsub vs. MC signal" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,bkgsub,stuned+sample + "_"+"BKGsub Systematics" ,0);
 
     //==================================Unfolding===============================
 
@@ -666,7 +779,7 @@ template<class MnvHistoType>
       unsmeared = unsmearedVec[0];
       if (DEBUG) unsmeared->Print();
       unsmeared->Write();
-      PlotCVAndError(canvas,bkgsub,unsmeared,sample + "_"+"Data Before and After Unsmearing", true,logscale,binwid);
+      PlotCVAndError(canvas,bkgsub,unsmeared,stuned+sample + "_"+"Data Before and After Unsmearing", true,logscale,binwid); 
       
     }
     if(unsmearedVec.size()==2){
@@ -677,8 +790,8 @@ template<class MnvHistoType>
       // PlotCVAndError(canvas,imcsighist,iseltruhist,"Fractional Unfolding" ,true,logscale,binwid);
     }
 
-    PlotCVAndError(canvas,unsmeared,iseltruhist,sample + "_"+ "Unsmeared Data Compared to Selected MC" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,unsmeared,sample + "_"+"Unsmeared Data Systematics" ,0);
+    PlotCVAndError(canvas,unsmeared,iseltruhist,stuned+sample + "_"+ "Unsmeared Data Compared to Selected MC" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,unsmeared,stuned+sample + "_"+"Unsmeared Data Systematics" ,0);
 
     //==================================Efficiency==============================
 
@@ -698,10 +811,10 @@ template<class MnvHistoType>
     MnvHistoType* efficiency = vecEffCorr[1];
     if (DEBUG) efficiency->Print();
     efficiency->Write();
-    PlotCVAndError(canvas,iseltruhist,ialltruhist, sample + "_"+"efficiency: selected and true" ,true,logscale,binwid);
-    PlotCVAndError(canvas,effcorr,ialltruhist, sample + "_"+"effcorr data vs truth" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,efficiency,sample + "_"+"Efficiency Factor Systematics" ,0);
-    PlotErrorSummary(canvas,effcorr,sample + "_"+"Efficiency Corrected Data Systematics" ,0);
+    PlotCVAndError(canvas,iseltruhist,ialltruhist, stuned+sample + "_"+"efficiency: selected and true" ,true,logscale,binwid);
+    PlotCVAndError(canvas,effcorr,ialltruhist,stuned+ sample + "_"+"effcorr data vs truth" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,efficiency,stuned+sample + "_"+"Efficiency Factor Systematics" ,0);
+    PlotErrorSummary(canvas,effcorr,stuned+sample + "_"+"Efficiency Corrected Data Systematics" ,0);
     
     //============================POT/Flux Normalization========================
     // bool energydep = false;
@@ -753,8 +866,9 @@ template<class MnvHistoType>
     sigmaMC->Write();
     sigmaMC->Print();
 
-    PlotCVAndError(canvas,sigma,sigmaMC, sample + "_"+"sigma" ,true,logscale,binwid);
-    PlotErrorSummary(canvas,sigma,sample + "_"+"Cross Section Systematics" ,0);
+    PlotCVAndError(canvas,sigma,sigmaMC, stuned+sample + "_"+"sigma" ,true,logscale,binwid);
+    PlotErrorSummary(canvas,sigma,stuned+sample + "_"+"Cross Section Systematics" ,0);
+    
 
     //============================Binwidth Normalization============================
     // Just a check on bin width corrections...

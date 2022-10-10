@@ -127,8 +127,6 @@ public:
     
     // ----------------------- Sean Neutrino Functions ------------------------------------------
   
-    trueintfunctions["TruthIsOther"] = &CVUNIVERSE::GetTruthIsOther;
-  
     // Interaction Vertex
 
     recointfunctions["HasInteractionVertex"] = &CVUNIVERSE::GetHasInteractionVertex;
@@ -148,7 +146,8 @@ public:
     truefunctions["TruthHasImprovedMichel"] = &CVUNIVERSE::GetTruthHasImprovedMichel;
 
     recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
-    recointfunctions["IsSingleProton"] = &CVUNIVERSE::GetIsSingleProton;
+    recointfunctions["IsPrimaryProton"] = &CVUNIVERSE::GetIsPrimaryProton;
+    recofunctions["PrimaryProtonScore"] = &CVUNIVERSE::GetPrimaryProtonScore;
     trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
     
     // genie particle counts
