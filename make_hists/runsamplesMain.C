@@ -152,7 +152,6 @@ int main(const int argc, const char *argv[] ) {
   std::cout << " mc error bands is " << mc_error_bands.size() << std::endl;
   std::cout << " truth error bands is " << truth_error_bands.size() << std::endl;
 
-
   // If we're doing data we need a single central value universe.
   // TODO Take care of this in PU::MacroUtil.
   CVUniverse* data_universe = new CVUniverse(util.m_data);
@@ -161,9 +160,10 @@ int main(const int argc, const char *argv[] ) {
 
   data_error_bands["cv"] = data_band;
 
-  //Selection Criteria           
-	if (config.IsMember("universeFile")) {	
-	
+  //Selection Criteria
+	if (config.IsMember("universeFile")) {
+
+
 		std::cout << " setting universe configurables" << std::endl;
 		std::string universefilename = config.GetString("universeFile");
 		NuConfig universeConfig;
@@ -178,7 +178,7 @@ int main(const int argc, const char *argv[] ) {
 		if (universeConfig.IsMember("PhotonEnergyCut")) {
 			CVUniverse::SetPhotonEnergyCut(universeConfig.GetConfig("PhotonEnergyCut").GetDouble("energy"),printConfigs);
 		}
-		if (universeConfig.IsMember("ProtonScoreConfig")) {	
+		if (universeConfig.IsMember("ProtonScoreConfig")) {
 			CVUniverse::SetProtonScoreConfig(universeConfig.GetConfig("ProtonScoreConfig"),printConfigs);
 		}
 		if (universeConfig.IsMember("ProtonKECut")) {
@@ -204,7 +204,7 @@ int main(const int argc, const char *argv[] ) {
       std::cout << "IsMember(" << s << "): TRUE" << std::endl;
       if(samplesConfig.CheckMember(s)) std::cout << "CheckMember(" << s << "): TRUE" << std::endl;
       NuConfig tmp = samplesConfig.GetConfig(s);
-      samples.push_back(CCQENu::Sample(tmp));		
+      samples.push_back(CCQENu::Sample(tmp));
     }
     else{
       std::cout << "requested sample " << s << " which is not in " << samplesfilename << std::endl;
@@ -217,7 +217,7 @@ int main(const int argc, const char *argv[] ) {
 
   std::vector<std::string> tags;
   std::string tag;
-  for (auto sample:samples){ 
+  for (auto sample:samples){
   	std::string name = sample.GetName();
     std::string tag = name+"___data";
     tags.push_back(tag);
@@ -344,14 +344,15 @@ int main(const int argc, const char *argv[] ) {
     v->InitializeMCHistograms(mc_error_bands,selected_reco_tags);
     v->InitializeSelectedTruthHistograms(mc_error_bands,selected_truth_tags);
     v->InitializeDataHistograms(data_error_bands,datatags);
-    v->AddMCResponse(responsetags);
+    // v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands,truthtags);
+    v->InitializeResponse(mc_error_bands,responsetags);
     if(useTuned){
       v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
     variables1D.push_back(v);
   }
-  
+
 
   for (auto var2D : variablesmap2D ) {
     std::string varname = var2D.first;
@@ -359,8 +360,10 @@ int main(const int argc, const char *argv[] ) {
     v->InitializeMCHistograms2D(mc_error_bands,selected_reco_tags);
     v->InitializeSelectedTruthHistograms2D(mc_error_bands,selected_truth_tags);
     v->InitializeDataHistograms2D(data_error_bands,datatags);
-    v->AddMCResponse2D(responsetags);
+    // v->AddMCResponse2D(responsetags);
     v->InitializeTruthHistograms2D(truth_error_bands,truthtags);
+    v->InitializeResponse2D(mc_error_bands,responsetags);
+
     if(useTuned){
       v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
@@ -388,7 +391,6 @@ int main(const int argc, const char *argv[] ) {
     std::cout << "Loop and Fill MC Reco  for " <<  tag << "\n";
     LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag],model, mcRescale);
     // LoopAndFillEventSelection2D(tag, util, mc_error_bands, variables2D, kMC, *selectionCriteria[tag]);
-
     std::cout << "\nCut summary for MC Reco:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
     selectionCriteria[tag]->resetStats();
   }

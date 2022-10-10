@@ -42,15 +42,16 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
     writewrap(mywrapper,"export MYPLAYLIST="+opts.playlist+"\n")
     writewrap(mywrapper,"export MYSAMPLE="+opts.sample+"\n")
     theexe = opts.theexe
-    writewrap(mywrapper,os.path.join("$CCQEMAT",opts.theexe)+" "+os.path.join("$CCQEMAT",opts.config)+" "+opts.prescale+" >& sidebands_%s.log\n"%(tag))
+    mylog = "%s_%s_%s.log"%(os.path.basename(opts.theexe),os.path.basename(opts.config),tag)
+    writewrap(mywrapper,os.path.join("time $RUNDIR",opts.theexe)+" "+os.path.join("$RUNDIR",opts.config)+" "+opts.prescale+" >& %s \n"%(mylog))
     writewrap(mywrapper,"echo \"run returned \" $?\n")
     writewrap(mywrapper,"ls -lrt\n")
     if not opts.debug:
-        writewrap(mywrapper,"echo \"ifdh cp -D ./*.root "+theoutdir+"\"\n")
+       #writewrap(mywrapper,"echo \"ifdh cp -D ./*.root "+theoutdir+"\"\n")
         writewrap(mywrapper,"ifdh cp -D ./*.root "+theoutdir+"\n")
         writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
-        writewrap(mywrapper,"echo \"ifdh cp -D sidebands_"+tag+".log "+theoutdir+"\"\n")
-        writewrap(mywrapper,"ifdh cp -D sidebands_"+tag+".log "+theoutdir+" \n")
+       # writewrap(mywrapper,"echo \"ifdh cp -D "+mylog+ " " + theoutdir +"\"\n")
+        writewrap(mywrapper,"ifdh cp -D %s %s \n"%(mylog, theoutdir))
         writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
     #writewrap(mywrapper,"env | grep -v ups\n")
     

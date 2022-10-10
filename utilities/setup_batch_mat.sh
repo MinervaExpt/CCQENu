@@ -1,4 +1,6 @@
 # batch version to run - assumes you are in the unfolded CCQEMAT directory
+# BASEDIR needs to be the directory that contains your MAT/MAT-MINERvA/UnfoldUtils/Analysis code
+# RUNDIR is where your analysis executable actually lie, in this case in $BASEDIR/CCQENu/make_hists
 source /cvmfs/fermilab.opensciencegrid.org/products/common/etc/setups
 
 export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
@@ -19,11 +21,7 @@ export INSTALL_DIR=$BASEDIR/opt
 source ${INSTALL_DIR}/bin/setup_MAT.sh
 source ${INSTALL_DIR}/bin/setup_MAT-MINERvA.sh
 source ${INSTALL_DIR}/bin/setup_UnfoldUtils.sh
-#source ${INSTALL_DIR}/bin/setup_MAT_IncPions.sh
-#source ${INSTALL_DIR}/bin/setup_GENIEXSecExtract.sh
-
-#Don't repeat a lot of copies of INSTALL_DIR on PATH and LD_LIBRARY_PATH.
-#WARNING: This is very specific to the tutorial.  Don't copy this blindly!
+# get the MINERvA utils
 export PATH=${OLD_PATH}:${INSTALL_DIR}/bin
 export PLOTUTILSROOT=${BASEDIR}/opt/lib  # need this for weights?
 export LD_LIBRARY_PATH=${OLD_LIBS}:${INSTALL_DIR}/lib
