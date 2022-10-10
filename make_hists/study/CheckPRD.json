@@ -17,7 +17,7 @@
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"},
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
   "data":{"QElike":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
-  "systematics":["Flux","MuonMINOS","MuonResolution","MINOSEfficiency","Angle","GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva","geant4","response"],
+  "systematics":["Flux","MuonMINOS","MuonResolution","MINOSEfficiency","Angle","GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva","geant4"],
   "fluxUniverses":100,
   "NuEConstraint":1,
   //"DeuteriumGeniePiTune":, // these are now set for v1
