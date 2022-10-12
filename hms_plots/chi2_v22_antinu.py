@@ -120,6 +120,7 @@ if "mu" in var:
     models.append("G18_02a_02_11a")
     models.append("G18_02b_02_11a")
     models.append("G18_10a_02_11a")
+    models.append("G18_10b_02_11a")
 
 titles = {"pzmu":"p_{||}, GeV/c","ptmu":"p_{#perp}, GeV/c","enu":"E_{#nu}, GeV","enuQE":"E_{#nu QE}, GeV","q2":"Q^2_{QE}, GeV^2","pzmu_ptmu":":p_{||}, GeV/c;p_{#perp}, GeV/c"}
 translate={
@@ -195,7 +196,8 @@ translate={
 "CV_RPA_Res_MINOS":"\qquad+Low Recoil Tune+RPA+$\pi$tune+MINOS low $Q^2$ sup.",
 "G18_02a_02_11a":"GENIE3 G18\_02a\_02\_11a",
 "G18_02b_02_11a":"GENIE3 G18\_02b\_02\_11a",
-"G18_10a_02_11a":"GENIE3 G18\_10a\_02\_11a"
+"G18_10a_02_11a":"GENIE3 G18\_10a\_02\_11a",
+"G18_10b_02_11a":"GENIE3 G18\_10b\_02\_11a"
 }
 #models = ["default"]
 #models = ["$\pi$tune","pion_rpa","pion_2p2h"]
@@ -263,7 +265,8 @@ if var in ["ptmu","q2"]:
 
 #thefile = "CrossSection_CV_minervame5A6A6B6C6D6E6F6G_Nominal_ver33_pzmu.root"
 thefile = "XS_pzmu_proj_%s.root"%("CV")
-thegeniefile = "xsection_XXX_50Mcombined_RHC.root"
+
+
 #if var in ["pzmu","pzmu_ptmu","ptmu"]:
   
 if var in ["q2"]:
@@ -465,6 +468,10 @@ for model in models:
       mcname = mcname.replace("CV_","NA_")
       mcname = mcname.replace("CV.","NA.")
     if "G18" in model:
+        if model == "G18_10b_02_11a":
+          thegeniefile = "xsection_XXX_50Mcombined_RHC_rebinned.root"
+        else:
+          thegeniefile = "xsection_XXX_50Mcombined_RHC.root"
         mcname = os.path.join(mcdir,"GENIE",thegeniefile)
         mcname = mcname.replace("XXX",model)
         print ("GENIE2", model,mcname)
