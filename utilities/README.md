@@ -34,6 +34,16 @@ python $BASEDIR/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdi
 --tmpdir=$BLUE/tmp --expected-lifetime=12h --memory=2000  #--debug --notimestamp 
 ```
 
+You will want to measure the memory and time for a job, memory is pretty constant from playlist to playlist but expect to use about 5 x the 5A time for the longest.
+
+The script bigsub.sh can make your submit file (like the above) into a full expt submit for AntiNeutrino. 
+
+`./bigsub.sh testbatch.sh `  
+
+creates `bigtestbatch.sh`   
+
+Here is the help file
+
 `python SubmitJobsToGrid_MAT.py --help`
 
 ```Usage: SubmitJobsToGrid_MAT.py[opts]
