@@ -107,24 +107,30 @@ double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_nam
 
   xbin = mnvh_Scale->GetXaxis()->FindBin(checkval);
   static int errcount = 0;
+  TH1D *hcv = (TH1D*)mnvh_Scale;
   if (uni_name=="cv" || uni_name=="CV") {
     // h_scale = (TH1D*)mnvh_Scale->GetCVHistoWithStatError();
-    TH1D *hcv = (TH1D*)mnvh_Scale;
     h_scale = hcv;
     // double s = hcv->GetBinError(xbin);
     // double x = TRandom::Gaus(0.0,1.0);
   }
   else{  // check to see that error band exists
-    if (mnvh_Scale->HasVertErrorBand(uni_name) && iuniv < mnvh_Scale->GetNVertErrorBands()){
-      
+    if (mnvh_Scale->HasVertErrorBand(uni_name) && iuniv < mnvh_Scale->GetVertErrorBand(uni_name)->GetNHists()){
+
       h_scale = (TH1D*)mnvh_Scale->GetVertErrorBand(uni_name)->GetHist(iuniv);
     // std::cout << "weight_MCreScale: pulling out error band " << uni_name << std::endl;
     }
     else{
       errcount ++;
-      if (errcount < 100) std::cout << " could not find error band "<< uni_name << " # " << iuniv << "returning CV" << std::endl;
-      TH1D *hcv = (TH1D*)mnvh_Scale;
-      h_scale = hcv;
+      if (!mnvh_Scale->HasVertErrorBand(uni_name)){
+        if(errcount < 100) std::cout << " MCreScale could not find error band  " << uni_name << " at all, returning CV" << std::endl;
+        h_scale = hcv;
+        return h_scale->GetBinContent(xbin);
+      }
+      if (iuniv >= mnvh_Scale->GetVertErrorBand(uni_name)->GetNHists()){
+        if (errcount < 100) std::cout << " MCreScale could not find " << uni_name << " error band # " << iuniv << " you need to set requested number to value <= " << mnvh_Scale->GetVertErrorBand(uni_name)->GetNHists() << std::endl;
+        assert(0);
+      }
     }
   }
   retval = h_scale->GetBinContent(xbin);
