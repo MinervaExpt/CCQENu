@@ -46,6 +46,11 @@ void LoopAndFillEventSelection(std::string tag,
 
   }
 
+
+  unsigned int loc = tag.find("___")+3;
+  std::string cat(tag,loc,string::npos);
+  std::string sample(tag,0,loc-3);
+  std::cout << sample << " category " << cat << std::endl;
   std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
   // Begin entries loop
   for (int i = 0; i < nentries; i++) {
@@ -91,7 +96,7 @@ void LoopAndFillEventSelection(std::string tag,
              && selection.isSignal(*universe)) {
             //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
             const double q2qe = universe->GetQ2QEGeV();
-            double scale = mcRescale.GetScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+            double scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
             FillMC(tag, universe, weight, variables, variables2D, scale);
             FillResponse(tag,universe,weight,variables,variables2D, scale);
           }
@@ -101,7 +106,7 @@ void LoopAndFillEventSelection(std::string tag,
 
           if(selection.isEfficiencyDenom(*universe, weight)){
             const double q2qe = universe->GetTrueQ2QEGeV();
-            double scale = mcRescale.GetScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+            double scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
             FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
           }
         }
