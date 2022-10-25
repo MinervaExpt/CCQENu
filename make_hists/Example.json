@@ -2,10 +2,9 @@
   "version":13,  // Run major variables in batch
   "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
   "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
-  "MinervaModel":"MnvTunev1",
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
-  "MinervaModel":"${MYMODEL}",
+  "MinervaModel":"${MYMODEL}", // set this as an environmental to MnvTunev1 or MnvTunev2
   "recoName":"CCQENu", // change if running on MAT tuples
   "useTuned":1, // uses the tunes if available
   "scalefileIn":"${CCQEMAT}/data/FullSample_${MYMODEL}_Q2QErecoil.root", // location of anti-nu background tuning
