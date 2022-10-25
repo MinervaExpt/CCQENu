@@ -367,6 +367,13 @@ int main(const int argc, const char *argv[] ) {
     }
   }
  
+  o->cd();
+  for (auto config:allconfigs){
+    std::cout << " write out config " << config.first << std::endl;
+    std::string obj = config.second->ToString();
+    TNamed object(config.first,obj.c_str());
+    object.Write();
+  }
   // Set up pdf for 1D plots.
   TCanvas canvas1D(pdffilename1D.c_str());
   canvas1D.SetLeftMargin(0.15);
