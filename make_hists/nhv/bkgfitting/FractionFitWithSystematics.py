@@ -29,7 +29,9 @@ recoil_type = "recoil"
 def GetDataMCMnvH2D(rfile, category_list, sample, useTuned=0):
     # Make a dictionary of the histos for fitting.
     # Requires CCQENuMAT naming convention for hists.
+    print("Before GetDataMCMnvH2D")
     histkeys_list = rfile.GetListOfKeys()
+    print("After GetListOfKeys")
     datafound = 0
     qelikefound = 0
     qeliketunedfound = 0
@@ -37,6 +39,7 @@ def GetDataMCMnvH2D(rfile, category_list, sample, useTuned=0):
     qelikenottunedfound = 0
     for histkey in histkeys_list:
         hist_name = histkey.GetName()
+        print(hist_name)
         # Get rid of non-hist branches.
         if hist_name.find("___") == -1:
             continue
@@ -72,19 +75,19 @@ def GetDataMCMnvH2D(rfile, category_list, sample, useTuned=0):
                 qelike_hist2d = rfile.Get(hist_name).Clone()
                 qelikefound = 1
             else:
-                qelike_hist2d_tuned = rfile.Get(hist_name).Clone()
+                # qelike_hist2d_tuned = rfile.Get(hist_name).Clone()
                 qeliketunedfound = 1
         if histocategory == 'qelikenot':
             if 'tuned' not in splitnames_list[4]:
                 qelikenot_hist2d = rfile.Get(hist_name).Clone()
                 qelikenotfound = 1
             else:
-                qelikenot_hist2d_tuned = rfile.Get(hist_name).Clone()
+                # qelikenot_hist2d_tuned = rfile.Get(hist_name).Clone()
                 qelikenottunedfound = 1
-
-        if datafound == 1 and qelikefound == 1 and qelikenotfound == 1 and qeliketunedfound == 1 and qelikenottunedfound == 1:
+        print("Before if found check")
+        if datafound == 1 and qelikefound == 1 and qelikenotfound == 1: #and qeliketunedfound == 1 and qelikenottunedfound == 1:
             print("Looking at hist: ",hist_name)
-            return data_hist2D, qelike_hist2d, qelikenot_hist2d, qelike_hist2d_tuned, qelikenot_hist2d_tuned
+            return data_hist2D, qelike_hist2d, qelikenot_hist2d#, qelike_hist2d_tuned, qelikenot_hist2d_tuned
         else:
             continue
 
@@ -646,7 +649,7 @@ def GetFitBinning(rfile):
     # Grabs binning from a CCQENuMAT variable config stored in root file.
     varsFile = rfile.Get("varsFile").GetTitle()
     vars_dict = json.loads(varsFile)
-    binning = vars_dict['1D']['Q2QE']['bins']
+    binning = vars_dict['1D']['Q2QE']['recobins']
     return binning
 
 def main():
@@ -677,12 +680,13 @@ def main():
         print("Starting on sample ", sample)
         # Grab the MnvH2D's from the file for data, and MC categories
         print("Getting MnvH2D's from file...")
-        data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D, qelike_tuned_MnvH2D, qelikenot_tuned_MnvH2D= GetDataMCMnvH2D(infile, category_list, sample)
+        # data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D, qelike_tuned_MnvH2D, qelikenot_tuned_MnvH2D= GetDataMCMnvH2D(infile, category_list, sample)
+        data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D= GetDataMCMnvH2D(infile, category_list, sample)
         print("Done getting MnvH2D's from file.")
         # Area normalize MC categories to match data, and make total MC MnvH2D
         print("Making MC total and scaling MC hists...")
         mctot_MnvH2D = MakeMC(qelike_MnvH2D, qelikenot_MnvH2D)
-        mctot_tuned_MnvH2D = MakeMC(qelike_tuned_MnvH2D, qelikenot_tuned_MnvH2D)
+        # mctot_tuned_MnvH2D = MakeMC(qelike_tuned_MnvH2D, qelikenot_tuned_MnvH2D)
         print("Done making MC total and scaling MC hists.")
 
         # This finds the number of x bins in Q^2 for fit bins.
@@ -709,7 +713,8 @@ def main():
         prefit_chi2_dict = {}
         postfit_chi2_dict = {}
         # Quick dict to store MnvH2Ds
-        MnvH2D_dict = {'data': data_MnvH2D, 'mctot': mctot_MnvH2D, 'mctot_tuned':mctot_tuned_MnvH2D, 'qelike': qelike_MnvH2D, 'qelike_tuned': qelike_tuned_MnvH2D, 'qelikenot': qelikenot_MnvH2D, 'qelikenot_tuned':qelikenot_tuned_MnvH2D}
+        # MnvH2D_dict = {'data': data_MnvH2D, 'mctot': mctot_MnvH2D, 'mctot_tuned':mctot_tuned_MnvH2D, 'qelike': qelike_MnvH2D, 'qelike_tuned': qelike_tuned_MnvH2D, 'qelikenot': qelikenot_MnvH2D, 'qelikenot_tuned':qelikenot_tuned_MnvH2D}
+        MnvH2D_dict = {'data': data_MnvH2D, 'mctot': mctot_MnvH2D, 'qelike': qelike_MnvH2D, 'qelikenot': qelikenot_MnvH2D}
 
         universe_names = qelike_MnvH2D.GetVertErrorBandNames()
         # Add in cv to universe

@@ -262,12 +262,37 @@ public:
     
     // Proton Score, Primary and Secondary Proton Tracks
     
+    virtual double GetProtonScore(int i) const;
+    virtual double GetProtonScore_0() const;
+    virtual double GetProtonScore_1() const;
+    virtual double GetProtonScore_2() const;
+    virtual double GetProtonScore_3() const;
+    virtual double GetProtonScore_4() const;
+    virtual double GetProtonScore_5() const;
+    virtual double GetProtonScore_6() const;
+    virtual double GetProtonScore_7() const;
+    virtual double GetProtonScore_8() const;
+    virtual double GetProtonScore_9() const;
+    
+    virtual int GetPassProtonScoreCut(double score, double tree_Q2) const;
+    virtual int GetPassScoreCutProton_0() const;
+    virtual int GetPassScoreCutProton_1() const;
+    virtual int GetPassScoreCutProton_2() const;
+    virtual int GetPassScoreCutProton_3() const;
+    virtual int GetPassScoreCutProton_4() const;
+    virtual int GetPassScoreCutProton_5() const;
+    virtual int GetPassScoreCutProton_6() const;
+    virtual int GetPassScoreCutProton_7() const;
+    virtual int GetPassScoreCutProton_8() const;
+    virtual int GetPassScoreCutProton_9() const;
+    
+    virtual int GetSecondaryProtonCandidateCount() const;
     virtual double GetPrimaryProtonScore() const;
-    virtual int PassProtonScoreCut(double score, double tree_Q2) const;
-    virtual int PassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const;
+    virtual int GetPassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const;
     virtual int GetIsPrimaryProton() const;
     virtual int GetAllExtraTracksProtons() const;
     virtual int GetTruthHasSingleProton() const;
+    virtual int GetProtonCount() const;
     
     // GENIE Particle Counts
     
