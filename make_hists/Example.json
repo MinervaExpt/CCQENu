@@ -6,7 +6,7 @@
   "playlist":"${MYPLAYLIST}",
   "recoName":"CCQENu", // change if running on MAT tuples
   "useTuned":1, // uses the tunes if available
-  "scalefileIn":"${CCQEMAT}/data/BkgStudy6A_BkgStudy_1_OutVals_fix.root", // location of anti-nu background tuning
+  "scalefileIn":"${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", // location of anti-nu background tuning
   "TuneCategories":["qelike","qelikenot"], // categories that have tunes
   "pdg":-14, // I'm anti-neutrino
   "cutsFile":"${CCQEMAT}/study/AntiNuCuts_v12_15GeV.json", // describe the cuts, choose them in samples
