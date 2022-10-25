@@ -154,10 +154,37 @@ public:
 
 	// Protons
 
+	recofunctions["ProtonScore_0"] = &CVUNIVERSE::GetProtonScore_0;
+	recofunctions["ProtonScore_1"] = &CVUNIVERSE::GetProtonScore_1;
+	recofunctions["ProtonScore_2"] = &CVUNIVERSE::GetProtonScore_2;
+	recofunctions["ProtonScore_3"] = &CVUNIVERSE::GetProtonScore_3;
+	recofunctions["ProtonScore_4"] = &CVUNIVERSE::GetProtonScore_4;
+	recofunctions["ProtonScore_5"] = &CVUNIVERSE::GetProtonScore_5;
+	recofunctions["ProtonScore_6"] = &CVUNIVERSE::GetProtonScore_6;
+	recofunctions["ProtonScore_7"] = &CVUNIVERSE::GetProtonScore_7;
+	recofunctions["ProtonScore_8"] = &CVUNIVERSE::GetProtonScore_8;
+	recofunctions["ProtonScore_9"] = &CVUNIVERSE::GetProtonScore_9;
+	
+	recointfunctions["PassScoreCutProton_0"] = &CVUNIVERSE::GetPassScoreCutProton_0;
+	recointfunctions["PassScoreCutProton_1"] = &CVUNIVERSE::GetPassScoreCutProton_1;
+	recointfunctions["PassScoreCutProton_2"] = &CVUNIVERSE::GetPassScoreCutProton_2;
+	recointfunctions["PassScoreCutProton_3"] = &CVUNIVERSE::GetPassScoreCutProton_3;
+	recointfunctions["PassScoreCutProton_4"] = &CVUNIVERSE::GetPassScoreCutProton_4;
+	recointfunctions["PassScoreCutProton_5"] = &CVUNIVERSE::GetPassScoreCutProton_5;
+	recointfunctions["PassScoreCutProton_6"] = &CVUNIVERSE::GetPassScoreCutProton_6;
+	recointfunctions["PassScoreCutProton_7"] = &CVUNIVERSE::GetPassScoreCutProton_7;
+	recointfunctions["PassScoreCutProton_8"] = &CVUNIVERSE::GetPassScoreCutProton_8;
+	recointfunctions["PassScoreCutProton_9"] = &CVUNIVERSE::GetPassScoreCutProton_9;
+
+	recointfunctions["SecondaryProtonCandidateCount"] = &CVUNIVERSE::GetSecondaryProtonCandidateCount;
+	recofunctions["SecondaryProtonCandidateCount"] = &CVUNIVERSE::GetSecondaryProtonCandidateCount;
     recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
     recointfunctions["IsPrimaryProton"] = &CVUNIVERSE::GetIsPrimaryProton;
     recofunctions["PrimaryProtonScore"] = &CVUNIVERSE::GetPrimaryProtonScore;
     trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
+    truefunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
+    recointfunctions["ProtonCount"] = &CVUNIVERSE::GetProtonCount;
+    recofunctions["ProtonCount"] = &CVUNIVERSE::GetProtonCount;
     
     // Genie Particle Counts
     
@@ -167,6 +194,9 @@ public:
     truefunctions["TrueNeutralPionCount"] = &CVUNIVERSE::GetTrueNeutralPionCount;
     trueintfunctions["TruePionCount"] = &CVUNIVERSE::GetTruePionCount;
     truefunctions["TruePionCount"] = &CVUNIVERSE::GetTruePionCount;
+    
+    trueintfunctions["TrueProtonCount"] = &CVUNIVERSE::GetTrueProtonCount;
+    truefunctions["TrueProtonCount"] = &CVUNIVERSE::GetTrueProtonCount;
     
     trueintfunctions["TrueCharmedBaryonCount"] = &CVUNIVERSE::GetTrueCharmedBaryonCount;
     truefunctions["TrueCharmedBaryonCount"] = &CVUNIVERSE::GetTrueCharmedBaryonCount;

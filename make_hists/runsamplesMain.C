@@ -437,9 +437,9 @@ int main(const int argc, const char *argv[] ) {
   std::string sam = samplesConfig.ToString();
   TNamed samobj("samplesFile",cuts.c_str());
   samobj.Write();
-  std::string git = git::commitHash();
-  TNamed gitobj("gitVersion",git.c_str());
-  gitobj.Write();
+  //std::string git = git::commitHash();
+  //TNamed gitobj("gitVersion",git.c_str());
+  //gitobj.Write();
 
   for (auto v : variables1D){
     std::cout << "Writing 1D hist to file" << std::endl;

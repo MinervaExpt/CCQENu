@@ -115,7 +115,7 @@ namespace {
 		} else {
 			m_min_blob_zvtx = min_zvtx;
 			_is_min_blob_zvtx_set = true;
-			if ( print ) std::cout << "Minimum blob Z vertex cutoff set to " << m_min_blob_zvtx << std::endl;
+			if( print ) std::cout << "Minimum blob Z vertex cutoff set to " << m_min_blob_zvtx << std::endl;
 			return 1;
 		}
 	}
@@ -130,7 +130,7 @@ namespace {
 		} else {
 			m_photon_energy_cut = energy;
 			_is_photon_energy_cut_set = true;
-			if ( print ) std::cout << "Photon low energy cutoff set to " << m_photon_energy_cut << " MeV" << std::endl;
+			if( print ) std::cout << "Photon low energy cutoff set to " << m_photon_energy_cut << " MeV" << std::endl;
 			return 0;
 		}
 	}
@@ -145,21 +145,21 @@ namespace {
 		} else {
 			m_proton_ke_cut = proton_KECut;
 			_is_proton_ke_cut_set = true;
-			if ( print ) std::cout << "ProtonKECut set to " << m_proton_ke_cut << " MeV" << std::endl;
+			if( print ) std::cout << "ProtonKECut set to " << m_proton_ke_cut << " MeV" << std::endl;
 			return 1;
 		}
 	}
 	
 	///////////////// Proton Score configuration /////////////////
 	NuConfig CVUniverse::GetProtonScoreConfig(bool print = false) {
-		if (!_is_proton_score_config_set) { // Uses default configuration, which produces default m_proton_score_* values
+		if(!_is_proton_score_config_set) { // Uses default configuration, which produces default m_proton_score_* values
 			std::cout << "\nUSING DEFAULT PROTON SCORE CONFIGURATION.\n\n";
 			m_proton_score_config.ReadFromString(R"({"band1":{"Q2QE_max":0.2,"pass_proton_score_min":0.2},"band2":{"Q2QE_range":[0.2,0.6],"pass_proton_score_min":0.1},"band3":{"Q2QE_min":0.6,"pass_proton_score_min":0.0}})");
-			if ( print ) m_proton_score_config.Print();
+			if( print ) m_proton_score_config.Print();
 		}
 		else {
 			std::cout << "\nUsing proton score configuration provided by user configuration file.\n\n";
-			if ( print ) m_proton_score_config.Print();
+			if( print ) m_proton_score_config.Print();
 		}
 		return m_proton_score_config;
 	}
@@ -170,8 +170,8 @@ namespace {
 			return 0; 
 		} else {
 			m_proton_score_config = protonScoreConfig;
-			if ( print ) m_proton_score_config.Print();
-			if ( m_proton_score_config.GetKeys().size() == 1) {
+			if( print ) m_proton_score_config.Print();
+			if( m_proton_score_config.GetKeys().size() == 1) {
 				// Passing proton score value same for all values of Q2QE
 				m_proton_score_mins = {};
 				m_proton_score_Q2QEs = {};
@@ -183,10 +183,10 @@ namespace {
 				for ( auto band:m_proton_score_config.GetKeys() ) {
 					NuConfig bandConfig = m_proton_score_config.GetConfig(band);
 					m_proton_score_mins.push_back(bandConfig.GetDouble("pass_proton_score_min"));
-					if ( bandConfig.IsMember("Q2QE_max") ) {
+					if( bandConfig.IsMember("Q2QE_max") ) {
 						m_proton_score_Q2QEs.push_back(bandConfig.GetDouble("Q2QE_max"));
 					}
-					else if ( bandConfig.IsMember("Q2QE_range") ) {
+					else if( bandConfig.IsMember("Q2QE_range") ) {
 						m_proton_score_Q2QEs.push_back(bandConfig.GetDoubleVector("Q2QE_range")[1]);
 					}
 				}
@@ -217,10 +217,10 @@ namespace {
 		wgt_rpa = GetRPAWeight();
 
 		if(!IsTruth()) wgt_geant = GetGeantHadronWeight();
-		// if (wgt_geant != 1.0) std::cout << ShortName() << wgt_geant << std::endl;
+		// if(wgt_geant != 1.0) std::cout << ShortName() << wgt_geant << std::endl;
 		 
 		// MINOS muon tracking efficiency
-		if (!IsTruth() && IsMinosMatchMuon()) wgt_mueff = GetMinosEfficiencyWeight();
+		if(!IsTruth() && IsMinosMatchMuon()) wgt_mueff = GetMinosEfficiencyWeight();
 
 		return wgt_flux_and_cv * wgt_genie * wgt_2p2h * wgt_rpa * wgt_mueff * wgt_geant;
 	}
@@ -263,12 +263,12 @@ namespace {
 	double CVUniverse::GetQ2QEGeV() const {
 		const double q2min = 0.001;
 		int charge = GetAnalysisNuPDG() > 0? 1:-1;
-		if (CVUniverse::GetEnuCCQEGeV()<=0.0)return 0.0;
+		if(CVUniverse::GetEnuCCQEGeV()<=0.0)return 0.0;
 		//std::cout<<"CVUniverse::GetQ2QE Cannot calculate neutrino energy "<<std::endl;
 		else{
 			// Q2 = 2.0*GetEnuCCQE() * ( GetEmu() - GetPmu() * cos( GetThetamu() ) ) - pow( MinervaUnits::M_mu, 2 );
 			double q2 = PlotUtils::qSquaredCCQE( GetEmu(), GetPmu(), GetThetamu(), charge )*MeVGeV*MeVGeV;
-			//  if (q2 < q2min)q2 =  q2min;
+			//  if(q2 < q2min)q2 =  q2min;
 			return q2;
 		}
 		// return Q2;
@@ -278,7 +278,7 @@ namespace {
 		const double q2min = 0.001;
 		int charge = GetAnalysisNuPDG() > 0? 1:-1;
 		double q2 = PlotUtils::qSquaredCCQE( GetElepTrue(), GetPlepTrue(), GetThetalepTrue(), charge )*MeVGeV*MeVGeV;
-		// if (q2 < q2min)q2 =  q2min;
+		// if(q2 < q2min)q2 =  q2min;
 		return q2;
 	}
 
@@ -329,7 +329,7 @@ namespace {
 		bool neutrinoMode = GetAnalysisNuPDG() > 0;
 		if(neutrinoMode) return (GetDouble("nonvtx_iso_blobs_energy")+GetDouble("dis_id_energy")); // several definitions of this, be careful
 		else {
-			//if (GetVecDouble("recoil_summed_energy").size()==0) return -999.; // protect against bad input,
+			//if(GetVecDouble("recoil_summed_energy").size()==0) return -999.; // protect against bad input,
 			//return (GetVecDouble("recoil_summed_energy")[0] - GetDouble("recoil_energy_nonmuon_vtx100mm"));
 			return GetDouble("recoil_energy_nonmuon_nonvtx100mm");
 		}
@@ -620,7 +620,7 @@ namespace {
 			if(      pdg             ==  111   ) return 0; // Neutral pions
 			else if( abs(pdg)        ==  211   ) genie_n_charged_pion++;
 			// Intermediate check of charged pion count
-			if ( genie_n_charged_pion >    1   ) return 0;
+			if( genie_n_charged_pion >    1   ) return 0;
 		}
 		
 		if( genie_n_charged_pion == 1 ) return 1;
@@ -651,8 +651,8 @@ namespace {
 		for (int i =0; i< nfittedmichels; i++) {
 			double datafrac = GetVecElem("FittedMichel_michel_datafraction", i);
 			int fitted = GetVecElem("FittedMichel_michel_fitPass", i);
-			if (fitted == 0) continue;
-			if (datafrac > 0.5) continue;
+			if(fitted == 0) continue;
+			if(datafrac > 0.5) continue;
 			ntruefittedmichels++;
 		}
 		return ntruefittedmichels;
@@ -765,22 +765,54 @@ namespace {
 
 	// Protons
 	
-	int CVUniverse::PassProtonScoreCut(double score, double tree_Q2) const {
-		int index = 0;
-		for (int i = 0 ; i < m_proton_score_Q2QEs.size() ; i++ ) {
-			if ( tree_Q2 >= m_proton_score_Q2QEs[i] ) index++;
-		}
-		if ( score < m_proton_score_mins[index] ) return 0;
-		return 1; 
+	double CVUniverse::GetProtonScore(int i) const {
+		if( GetMultiplicity() < i+2 ) return -1.;
+		else if( i == 0 ) return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
+		else if( GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str()) < i ) return -1.;
+		else return GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1").c_str(), i-1);
 	}
+	double CVUniverse::GetProtonScore_0() const { return GetProtonScore(0); }
+	double CVUniverse::GetProtonScore_1() const { return GetProtonScore(1); }
+	double CVUniverse::GetProtonScore_2() const { return GetProtonScore(2); }
+	double CVUniverse::GetProtonScore_3() const { return GetProtonScore(3); }
+	double CVUniverse::GetProtonScore_4() const { return GetProtonScore(4); }
+	double CVUniverse::GetProtonScore_5() const { return GetProtonScore(5); }
+	double CVUniverse::GetProtonScore_6() const { return GetProtonScore(6); }
+	double CVUniverse::GetProtonScore_7() const { return GetProtonScore(7); }
+	double CVUniverse::GetProtonScore_8() const { return GetProtonScore(8); }
+	double CVUniverse::GetProtonScore_9() const { return GetProtonScore(9); }
 	
-	int CVUniverse::PassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const {
+	int CVUniverse::GetPassProtonScoreCut(double score, double tree_Q2) const {
+		if( score < 0 ) return -1;
 		int index = 0;
 		for ( int i = 0 ; i < m_proton_score_Q2QEs.size() ; i++ ) {
-			if ( tree_Q2 >= m_proton_score_Q2QEs[i] ) index++;
+			if( tree_Q2 >= m_proton_score_Q2QEs[i] ) index++;
+		}
+		if( score < m_proton_score_mins[index] ) return 0;
+		else return 1; 
+	}
+	int CVUniverse::GetPassScoreCutProton_0() const { return GetPassProtonScoreCut(GetProtonScore_0(),GetQ2QEGeV()); }
+	int CVUniverse::GetPassScoreCutProton_1() const { return GetPassProtonScoreCut(GetProtonScore_1(),GetQ2QEGeV()); }
+	int CVUniverse::GetPassScoreCutProton_2() const { return GetPassProtonScoreCut(GetProtonScore_2(),GetQ2QEGeV()); }
+	int CVUniverse::GetPassScoreCutProton_3() const { return GetPassProtonScoreCut(GetProtonScore_3(),GetQ2QEGeV()); }
+	int CVUniverse::GetPassScoreCutProton_4() const { return GetPassProtonScoreCut(GetProtonScore_4(),GetQ2QEGeV()); }
+	int CVUniverse::GetPassScoreCutProton_5() const { return GetPassProtonScoreCut(GetProtonScore_5(),GetQ2QEGeV()); }
+	int CVUniverse::GetPassScoreCutProton_6() const { return GetPassProtonScoreCut(GetProtonScore_6(),GetQ2QEGeV()); }
+	int CVUniverse::GetPassScoreCutProton_7() const { return GetPassProtonScoreCut(GetProtonScore_7(),GetQ2QEGeV()); }
+	int CVUniverse::GetPassScoreCutProton_8() const { return GetPassProtonScoreCut(GetProtonScore_8(),GetQ2QEGeV()); }
+	int CVUniverse::GetPassScoreCutProton_9() const { return GetPassProtonScoreCut(GetProtonScore_9(),GetQ2QEGeV()); }
+	
+	int CVUniverse::GetSecondaryProtonCandidateCount() const {
+		return GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
+	}
+	
+	int CVUniverse::GetPassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const {
+		int index = 0;
+		for ( int i = 0 ; i < m_proton_score_Q2QEs.size() ; i++ ) {
+			if( tree_Q2 >= m_proton_score_Q2QEs[i] ) index++;
 		}
 		for ( auto score:scores ) {
-			if ( score < m_proton_score_mins[index] ) return 0;
+			if( score < m_proton_score_mins[index] ) return 0;
 		}
 		return 1; 
 	}
@@ -790,18 +822,18 @@ namespace {
 	}
 
 	int CVUniverse::GetIsPrimaryProton() const {
-		if(GetMultiplicity() == 1) return 1; // NA when multiplicity is 1
+		if(GetMultiplicity() < 2) return 1; // NA when multiplicity is < 2
 		// define and get applicable variables
 		double tree_Q2 = GetQ2QEGeV();
 		double proton_score1 = GetPrimaryProtonScore();
-		int passes = PassProtonScoreCut(proton_score1,tree_Q2);
+		int passes = GetPassProtonScoreCut(proton_score1,tree_Q2);
 		return passes;
 	}
 
 	int CVUniverse::GetTruthHasSingleProton() const { return GetInt("truth_reco_has_single_proton"); }
 
 	int CVUniverse::GetAllExtraTracksProtons() const {
-		if(GetMultiplicity() == 1) return 1; // NA when multiplicity is 1
+		if(GetMultiplicity() < 2) return 1; // NA when multiplicity is < 2
 		int n_sec_proton_scores1 = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
 		if(n_sec_proton_scores1 == 0) return 1; // NA if not secondary proton candidates
 
@@ -809,8 +841,22 @@ namespace {
 		double tree_Q2 = GetQ2QEGeV();
 		std::vector<double> sec_proton_scores1 = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1").c_str());
 
-		int passes = PassAllProtonScoreCuts(sec_proton_scores1,tree_Q2);
+		int passes = GetPassAllProtonScoreCuts(sec_proton_scores1,tree_Q2);
 		return passes;
+	}
+	
+	int CVUniverse::GetProtonCount() const {
+		if(GetMultiplicity() < 2) return 0;
+		int count = 0;
+		double tree_Q2 = GetQ2QEGeV();
+		double proton_score1 = GetPrimaryProtonScore();
+		if( GetPassProtonScoreCut(proton_score1,tree_Q2) ) count++;
+		int n_sec_proton_scores1 = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
+		std::vector<double> sec_proton_scores1 = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1").c_str());
+		for ( int i=0; i<n_sec_proton_scores1; i++ ) {
+			if(GetPassProtonScoreCut(sec_proton_scores1[i],tree_Q2)) count++;
+		}
+		return count;
 	}
 
 	int CVUniverse::GetTrueProtonCount() const {
