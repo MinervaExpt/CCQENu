@@ -387,7 +387,10 @@ int main(const int argc, const char *argv[] ) {
   }
 
   for (auto tag:selected_reco_tags){
-    mcRescale.SetTag(tag);
+    unsigned int loc = tag.find("___")+3;
+    std::string cat(tag,loc,string::npos);
+    std::string sample(tag,0,loc-3);
+    mcRescale.SetCat(cat);
     std::cout << "Loop and Fill MC Reco  for " <<  tag << "\n";
     LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag],model, mcRescale);
     // LoopAndFillEventSelection2D(tag, util, mc_error_bands, variables2D, kMC, *selectionCriteria[tag]);
