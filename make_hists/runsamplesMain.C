@@ -120,20 +120,30 @@ int main(const int argc, const char *argv[] ) {
 
 
   //=== MODELS === needs a driver
+  std::string modeltune="MnvTunev1";
+  if(config.IsMember("MinervaModel")){ //TODO
+    modeltune = config.GetString("MinervaModel");
+    std::cout << "runsamplesMain: MinervaModel configured in main config and set to " << modeltune << std::endl;
+  }
+  else{
+    std::cout << "runsamplesMain: MinervaModel NOT configured or set in main config. Defaulting to MnvTunev1." << std::endl;
+    modeltune="MnvTunev1";
+  }
+  std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse,PlotUtils::detail::empty>>> MnvTune;
+  if(modeltune=="MnvTunev1" || modeltune=="MnvTunev2"){
+    MnvTune.emplace_back(new PlotUtils::FluxAndCVReweighter<CVUniverse, PlotUtils::detail::empty>());
+      bool NonResPiReweight = true;
+      bool DeuteriumGeniePiTune = false; // Deut should be 0? for v1?
+    MnvTune.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse,PlotUtils::detail::empty>(NonResPiReweight,DeuteriumGeniePiTune));  // Deut should be 0? for v1?
+    MnvTune.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
+    MnvTune.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
+    MnvTune.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
+  }
+  if(modeltune=="MnvTunev2"){
+    MnvTune.emplace_back(new PlotUtils::LowQ2PiReweighter<CVUniverse, PlotUtils::detail::empty>("JOINT"));
+  }
 
-
-
-  std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse,PlotUtils::detail::empty>>> MnvTunev1;
-  MnvTunev1.emplace_back(new PlotUtils::FluxAndCVReweighter<CVUniverse, PlotUtils::detail::empty>());
-    bool NonResPiReweight = true;
-    bool DeuteriumGeniePiTune = false; // Deut should be 0? for v1?
-  MnvTunev1.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse,PlotUtils::detail::empty>(NonResPiReweight,DeuteriumGeniePiTune));  // Deut should be 0? for v1?
-  MnvTunev1.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
-  MnvTunev1.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
-  MnvTunev1.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
-
-
-  PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTunev1));
+  PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTune));
 
   //====================MC Reco tuning for bkg subtraction======================
   // Initialize the rescale for tuning MC reco for background subtraction later
