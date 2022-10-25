@@ -2,7 +2,7 @@
   "version":13,  // Run major variables in batch
   "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
   "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
-  "model":"MnvTunev1",
+  "MinervaModel":"MnvTunev1",
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
   "recoName":"CCQENu", // change if running on MAT tuples

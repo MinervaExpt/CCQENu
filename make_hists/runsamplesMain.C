@@ -120,14 +120,14 @@ int main(const int argc, const char *argv[] ) {
 
 
   //=== MODELS === needs a driver
-  std::string modeltune=""
-  if(config.IsMember("model")){
-    modeltune = config.GetString("model");
-    std::cout << "runsamplesMain: model configured in main config and set to " << modeltune << std::endl;
+  std::string modeltune="MnvTunev1";
+  if(config.IsMember("MinervaModel")){ //TODO
+    modeltune = config.GetString("MinervaModel");
+    std::cout << "runsamplesMain: MinervaModel configured in main config and set to " << modeltune << std::endl;
   }
-  if(modeltune==""){
-    std::cout << "runsamplesMain: model NOT configured or set in main config. Defaulting to MnvTunev1." << std::endl;
-    modeltune="MnvTunev1"
+  else{
+    std::cout << "runsamplesMain: MinervaModel NOT configured or set in main config. Defaulting to MnvTunev1." << std::endl;
+    modeltune="MnvTunev1";
   }
   std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse,PlotUtils::detail::empty>>> MnvTune;
   if(modeltune=="MnvTunev1" || modeltune=="MnvTunev2"){
