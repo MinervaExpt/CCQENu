@@ -288,10 +288,22 @@ public:
     
     virtual int GetSecondaryProtonCandidateCount() const;
     virtual double GetPrimaryProtonScore() const;
-    virtual int GetPassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const;
+    virtual int GetAreClustsFoundAtPrimaryProtonEnd() const;
+    virtual int GetNumClustsPrimaryProtonEnd() const;
+    virtual double GetPrimaryProtonTrackLength() const;
+    virtual double GetCalibEClustsPrimaryProtonEnd() const;
+    virtual double GetVisEClustsPrimaryProtonEnd() const;
+    virtual double GetPrimaryProtonTfromdEdx() const;
+    virtual double GetTotalPrimaryProtonEnergydEdxAndClusters() const;
+    virtual double GetPrimaryProtonTrueKE() const;
+    virtual double GetEnergyDiffTruedEdx() const;
+    virtual double GetPrimaryProtonFractionEnergyInCone() const;
+    virtual int GetRecoTruthIsPrimaryProton() const;
     virtual int GetIsPrimaryProton() const;
-    virtual int GetAllExtraTracksProtons() const;
     virtual int GetTruthHasSingleProton() const;
+    
+    virtual int GetPassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const;
+    virtual int GetAllExtraTracksProtons() const;
     virtual int GetProtonCount() const;
     
     // GENIE Particle Counts
