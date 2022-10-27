@@ -3,7 +3,7 @@
 enum EDataMCTruth {kData, kMC, kTruth, kNDataMCTruthTypes};
 
 
-
+//#define CLOSUREDETAIL
 
 //==============================================================================
 // Loop and fill
@@ -16,7 +16,7 @@ void LoopAndFillEventSelection(std::string tag,
                                std::vector<CCQENu::Variable2DFromConfig*>& variables2D,
                                EDataMCTruth data_mc_truth,
                                PlotUtils::Cutter<CVUniverse>& selection, PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model,
-                               PlotUtils::weight_MCreScale mcRescale) {
+                               PlotUtils::weight_MCreScale mcRescale, bool closure=false) {
   // Prepare loop
   MinervaUniverse::SetTruth(false);
   int nentries = -1;
@@ -61,11 +61,11 @@ void LoopAndFillEventSelection(std::string tag,
     if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
 
-    const double cvWeight = (data_mc_truth == kData) ? 1. : model.GetWeight(*cvUniv,event);  // detail may be used for more complex things
+    const double cvWeight = (data_mc_truth == kData ||  closure ) ? 1. : model.GetWeight(*cvUniv,event);  // detail may be used for more complex things
     // TODO: Is this scaled cvWeight necessary?
     // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
 
-
+    
     // Loop bands and universes
     for (auto band : error_bands) {
       std::vector<CVUniverse*> error_band_universes = band.second;
@@ -84,19 +84,28 @@ void LoopAndFillEventSelection(std::string tag,
         //if (universe->ShortName() == "cv" ) weight = data_mc_truth == kData ? 1. : universe->GetWeight();
 
         // probably want to move this later on inside the loop
-        const double weight = (data_mc_truth == kData) ? 1. : model.GetWeight(*universe, event); //Only calculate the per-universe weight for events that will actually use it.
+        const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event); //Only calculate the per-universe weight for events that will actually use it.
         //PlotUtils::detail::empty event;
 
         //=========================================
         // Fill
         //=========================================
-
+        
         if(data_mc_truth == kMC){
+#ifdef CLOSUREDETAIL
+          if(closure && universe->ShortName() == "cv" && selection.isMCSelected(*universe, event, weight).all()){
+            std::cout  << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all() << " " << tag  << selection.isSignal(*universe)  << " " << universe->ShortName() <<  std::endl;
+              universe->Print();
+          }
+#endif
           if(selection.isMCSelected(*universe, event, weight).all()
              && selection.isSignal(*universe)) {
+            
             //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
             const double q2qe = universe->GetQ2QEGeV();
-            double scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+            double scale = 1.0;
+            if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+        
             FillMC(tag, universe, weight, variables, variables2D, scale);
             FillResponse(tag,universe,weight,variables,variables2D, scale);
           }
@@ -106,13 +115,22 @@ void LoopAndFillEventSelection(std::string tag,
 
           if(selection.isEfficiencyDenom(*universe, weight)){
             const double q2qe = universe->GetTrueQ2QEGeV();
-            double scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+            double scale = 1.0;
+            if (!closure) scale =mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+            if (closure) scale = 1.0;
             FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
           }
         }
         else{ //kData
-
-          if(selection.isDataSelected(*universe, event).all()) FillData(tag, universe, variables, variables2D);
+#ifdef CLOSUREDETAIL
+          if (closure && selection.isDataSelected(*universe, event).all() ){
+            std::cout  << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all()  << "  " << tag  << "1" << " " << universe->ShortName() <<  std::endl;
+          }
+#endif
+          if(selection.isDataSelected(*universe, event).all()) {
+            FillData(tag, universe, variables, variables2D);
+            
+          }
         }
 
       } // End universes

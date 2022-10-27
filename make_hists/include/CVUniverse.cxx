@@ -288,7 +288,7 @@ namespace {
 
 	// ------------------------------ Muon Variables -----------------------------
 
-	double CVUniverse::GetEmuGeV() const { return std::sqrt(GetPmu()*GetPmu() + pow( MinervaUnits::M_mu, 2 ))*MeVGeV; }
+	double CVUniverse::GetEmuGeV() const { return std::sqrt(GetPmu()*GetPmu() + MinervaUnits::M_mu*MinervaUnits::M_mu)*MeVGeV; }
 	double CVUniverse::GetTrueEmuGeV() const { return GetElepTrue(); } // not sure if this is right
 	double CVUniverse::GetPmuGeV() const { return GetPmu()*MeVGeV;	}
 	double CVUniverse::GetTruePmuGeV() const { return GetPlepTrue()*MeVGeV; }
@@ -316,7 +316,11 @@ namespace {
 
 	double CVUniverse::GetTrueThetamu() const { return GetThetalepTrue(); }
 	double CVUniverse::GetThetamuDegrees() const { return GetThetamu()*180/M_PI; }
+  double CVUniverse::GetThetaXmuDegrees() const { return GetThetaXmu()*180/M_PI; }
+  double CVUniverse::GetThetaYmuDegrees() const { return GetThetaYmu()*180/M_PI; }
 	double CVUniverse::GetTrueThetamuDegrees() const { return GetThetalepTrue()*180/M_PI; }
+  double CVUniverse::GetTrueThetaXmuDegrees() const { return GetTrueThetaXmu()*180/M_PI; }
+  double CVUniverse::GetTrueThetaYmuDegrees() const { return GetTrueThetaYmu()*180/M_PI; }
 
 	// ----------------------------- Proton Variables ----------------------------
 
@@ -560,6 +564,8 @@ namespace {
 	}
 
 	int CVUniverse::GetTruthIsCCQELike() const {  // cut hardwired for now
+    if (!GetTruthIsCC()) return false;
+    if (GetTruthNuPDG() != -14) return false;
 		std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
 		std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
 		bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
@@ -947,4 +953,15 @@ namespace {
 
 	int CVUniverse::Dummy() const { return 0; }
     
+void CVUniverse::Print() const { std::cout
+  << ShortName() << ", "
+  << GetRun() << ", "
+  << GetSubRun() << ", "
+  << GetGate() << ", "
+  << GetTruthNuPDG() << ","
+  << GetTruthIsCC() << ","
+  << GetTruthIsCCQELike() << ", "
+  << GetIsMinosMatchTrack() << ", "
+  << std::endl;
+}
 #endif

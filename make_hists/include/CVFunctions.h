@@ -66,7 +66,11 @@ public:
     // there is not true value
     
     recofunctions["ThetamuDegrees"] = &CVUNIVERSE::GetThetamuDegrees;
+    recofunctions["ThetaXmuDegrees"] = &CVUNIVERSE::GetThetaXmuDegrees;
+    recofunctions["ThetaYmuDegrees"] = &CVUNIVERSE::GetThetaYmuDegrees;
     truefunctions["TrueThetamuDegrees"] = &CVUNIVERSE::GetTrueThetamuDegrees;
+    truefunctions["TrueThetaXmuDegrees"] = &CVUNIVERSE::GetTrueThetaXmuDegrees;
+    truefunctions["TrueThetaYmuDegrees"] = &CVUNIVERSE::GetTrueThetaYmuDegrees;
     
     recofunctions["DeadTime"] = &CVUNIVERSE::GetDeadTime;
     

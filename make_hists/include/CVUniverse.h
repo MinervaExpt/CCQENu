@@ -138,7 +138,11 @@ public:
     virtual double GetTrueThetamu() const;
     
     virtual double GetThetamuDegrees() const;
+    virtual double GetThetaXmuDegrees() const;
+    virtual double GetThetaYmuDegrees() const;
     virtual double GetTrueThetamuDegrees() const;
+    virtual double GetTrueThetaXmuDegrees() const;
+    virtual double GetTrueThetaYmuDegrees() const;
     
     
     // ----------------------------- Hadron Variables ----------------------------
@@ -312,5 +316,6 @@ public:
     virtual int GetMCTargetNucleon() const;
     virtual int Dummy() const;
     
+  virtual void Print() const;
 };
 #endif

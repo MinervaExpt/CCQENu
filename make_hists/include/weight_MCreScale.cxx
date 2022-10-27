@@ -26,7 +26,6 @@ weight_MCreScale::weight_MCreScale(TString filename){
 
 weight_MCreScale::weight_MCreScale(const NuConfig config){
   std::string filename = "${CCQEMAT}/data/BkgStudy6A_BkgStudy_1_OutVals_fix.root";
-
   if(config.IsMember("scalefileIn")){
     filename=config.GetString("scalefileIn");
   }
