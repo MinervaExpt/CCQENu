@@ -35,6 +35,12 @@ int main(const int argc, const char *argv[] ) {
   if (config.IsMember("version")){
     version = config.GetInt("version");
   }
+  
+  bool closure = false;
+  if (config.IsMember("closure")){
+    closure = config.GetBool("closure");
+  }
+  
   bool useTuned=false;
   if(config.IsMember("useTuned")){
     useTuned = config.GetBool("useTuned");
@@ -74,7 +80,15 @@ int main(const int argc, const char *argv[] ) {
   //=========================================
 
   const std::string mc_file_list(config.GetString("mcIn"));
-  const std::string data_file_list(config.GetString("dataIn"));
+  std::string data_file_list;
+  if (!closure){
+    data_file_list = config.GetString("dataIn");
+  }
+  else{
+    data_file_list = mc_file_list;
+  }
+  
+  
 
   const std::string plist_string(config.GetString("playlist"));
   const std::string reco_tree_name(config.GetString("recoName"));
@@ -389,7 +403,7 @@ int main(const int argc, const char *argv[] ) {
     // Entry loop and fill
     //=========================================
     std::cout << "Loop and Fill Data for " << tag << "\n" ;
-    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale);
+    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale,closure);
     // LoopAndFillEventSelection2D(tag, util, data_error_bands, variables2D, kData, *selectionCriteria[tag]);
 
     std::cout << "\nCut summary for Data:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
@@ -402,7 +416,7 @@ int main(const int argc, const char *argv[] ) {
     std::string sample(tag,0,loc-3);
     mcRescale.SetCat(cat);
     std::cout << "Loop and Fill MC Reco  for " <<  tag << "\n";
-    LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag],model, mcRescale);
+    LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag],model, mcRescale,closure);
     // LoopAndFillEventSelection2D(tag, util, mc_error_bands, variables2D, kMC, *selectionCriteria[tag]);
     std::cout << "\nCut summary for MC Reco:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
     selectionCriteria[tag]->resetStats();
@@ -410,7 +424,7 @@ int main(const int argc, const char *argv[] ) {
 
   for (auto tag:truthtags){
     std::cout << "Loop and Fill MC Truth  for " <<  tag << "\n";
-    LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, kTruth, *selectionCriteria[tag],model,mcRescale);
+    LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, kTruth, *selectionCriteria[tag],model,mcRescale,closure);
     // LoopAndFillEventSelection2D(tag, util, truth_error_bands, variables2D, kTruth, *selectionCriteria[tag]);
     std::cout << "\nCut summary for MC Truth:" <<  tag << "\n";
     // this is a special overload to allow printing truth

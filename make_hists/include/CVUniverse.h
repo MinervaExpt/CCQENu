@@ -323,6 +323,7 @@ public:
     virtual int GetMCTargetZ() const;
     virtual int GetMCTargetNucleon() const;
     virtual int Dummy() const;
-    
+
+  virtual void Print() const;
 };
 #endif

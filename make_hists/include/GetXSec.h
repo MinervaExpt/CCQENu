@@ -10,6 +10,8 @@
 * @section DESCRIPTION *
 * Code to fill histograms
  */
+
+
 #include <iostream>
 #include <string>
 #include "PlotUtils/MnvH1D.h"
@@ -213,7 +215,7 @@ template <class MnvHistoType>
     std::vector<MnvHistoType*> outUnsmearingVec;
     std::string unsmearedname = std::string(bkgsub->GetName()) + "_unfolded";
     MnvHistoType* unsmeared = (MnvHistoType*)idatahist->Clone(unsmearedname.c_str());
-    
+
     unsmeared->SetDirectory(0);
 
     std::string unsmearingname = basename + "_ratiounsmearing";
@@ -287,13 +289,13 @@ template<> MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* ire
   for (int i = 0; i < covmatrix.GetNrows(); i++){
     covmatrix[i][i] = 0.0;
   }
-    
+
 
   unsmeared->FillSysErrorMatrix("Unfolding",covmatrix);
-    
+
   // Commenting out since may not be necessary.
   SyncBands(unsmeared);
-  
+
   //  unsmeared->Print("ALL");
   return unsmeared;
 };
@@ -321,7 +323,7 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
   bkgsub->Print();
   iseltruhist->Print();
   imcsighist->Print();
-  
+
   // now to get the covariance matrix for the unfolding itself using only the central value  This is the method Amit used
   // make an empty covariance matrix for the unfolding to give back to you
   std::cout << " starting 2D unfolding " << std::endl;
@@ -329,7 +331,7 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
   std::cout << "imcsighist " << imcsighist->Integral() << " " << imcsighist->Integral() << std::endl;
   std::cout << "iseltruhist " << iseltruhist->Integral() << " " << iseltruhist->Integral() << std::endl;
   std::cout << "bkgsub " << bkgsub->Integral() << " " << bkgsub->Integral() << std::endl;
-  
+
   std::cout << "migration x y" << migration->ProjectionX()->Integral() << " " << migration->ProjectionY()->Integral() << std::endl;
 //  if (imcsighist->Integral() != migration->ProjectionX()->Integral() ){
 //    std::cout << " make migration matrix have same scale as imcsighist" << std::endl;
@@ -353,9 +355,9 @@ template<> MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* ire
   unfold.UnfoldHisto2D(hUnfoldedDummy, unfoldingCovMatrixOrig_hist_type, hMigrationDummy, hRecoDummy, hTruthDummy, hBGSubDataDummy, num_iter);
   int correctNbins = hUnfoldedDummy->fN;
   int matrixRows = unfoldingCovMatrixOrig_hist_type.GetNrows();
-  
+
   if(correctNbins!=matrixRows){
-  
+
   cout << "****************************************************************************" << endl;
  cout << "*  Fixing unfolding matrix size because of RooUnfold bug. From " << matrixRows << " to " << correctNbins << endl;
  cout << "****************************************************************************" << endl;
@@ -493,7 +495,7 @@ template<class MnvHistoType>
       std::cout << " Using energy dependent flux normalization. " << std::endl;
       // Returns flux hist in bins of energy variable of input hist (for 2D the bins on the non-energy axis are integrated)
       MnvHistoType* h_flux_ebins = GetFluxEbins(h_flux_dewidthed,ialltruhist,*config,FluxNorm);
-       
+
 
       // TODO: Flipped the order of the Divide and Scale steps. Does this matter?
       h_flux_ebins->AddMissingErrorBandsAndFillWithCV(*sigma);
@@ -503,7 +505,7 @@ template<class MnvHistoType>
       sigma->Divide(sigma,h_flux_ebins);
       // target normalization
       sigma->Scale(norm);
-  
+
       SyncBands(sigma);
       // if (DEBUG) sigma->GetSysErrorMatrix("Unfolding").Print();
 
@@ -512,17 +514,25 @@ template<class MnvHistoType>
       sigmaMC->Divide(sigmaMC,h_flux_ebins,1.0,1.0);
       // target normalization
       sigmaMC->Scale(norm);
-      
+
     }
     SyncBands(sigma);
     SyncBands(sigmaMC);
     if(sigma->InheritsFrom("TH2")){
       MnvH2D* sigma2D=dynamic_cast<MnvH2D*>(sigma->Clone());
+      MnvH2D* sigma2DMC=dynamic_cast<MnvH2D*>(sigmaMC->Clone());
       sigma2D->MnvH2DToCSV(sigma2D->GetName(),"./csv",1.E39,false,true,true,true);
+      sigma2DMC->MnvH2DToCSV(sigma2DMC->GetName(),"./csv",1.E39,false,true,true,true);
+      //sigma2D->Delete();
+      sigma2DMC->Delete();
     }
     else{
       MnvH1D* sigma1D=dynamic_cast<MnvH1D*>(sigma->Clone());
+      MnvH1D* sigma1DMC=dynamic_cast<MnvH1D*>(sigmaMC->Clone());
       sigma1D->MnvH1DToCSV(sigma1D->GetName(),"./csv",1.E39,false,true,true,true);
+      sigma1DMC->MnvH1DToCSV(sigma1DMC->GetName(),"./csv",1.E39,false,true,true,true);
+      //sigma1D->Delete();
+      sigma1DMC->Delete();
     }
     std::vector<MnvHistoType*> sigmaVec;
     sigmaVec.push_back(sigma);
@@ -566,7 +576,7 @@ template<class MnvHistoType>
 
     // Get "category" tags set in config. Needs to match ones used in the event loop.
     //TODO: Make this a map in config.
-    
+
     std::cout << " at the top of GetXsec" << sample <<  std::endl;
     // this can come out of the sample information:
     // configs["main"]->Print();
@@ -587,8 +597,8 @@ template<class MnvHistoType>
     NuConfig datkey = configs["main"]->GetConfig("data");
     std::string dat = datkey.GetString(sample);
     std::cout << " got dat " << dat << std::endl;
-    
-    
+
+
     //datkey.Print();
     //std::string bkg = config.GetString("background");
     // std::string dat = config.GetString("data");
@@ -621,7 +631,7 @@ template<class MnvHistoType>
       for(auto categories : histsND[type]){
         std::string category = categories.first;
         if (category.find(dat)==std::string::npos){
-          
+
           if (histsND[type][category] != 0) {
             double t = histsND[type][category]->Integral();
             histsND[type][category]->Scale(POTScale);
@@ -636,7 +646,7 @@ template<class MnvHistoType>
       for(auto categories : responseND[type]){
         std::string category = categories.first;
         if (category.find(dat)==std::string::npos){
-          
+
           if (responseND[type][category] != 0) {
             double t = responseND[type][category]->Integral();
             responseND[type][category]->Scale(POTScale);
@@ -677,7 +687,7 @@ template<class MnvHistoType>
         iseltruhist = histsND["selected_truth"][sig];
     }
     MnvHistoType* ialltruhist;
-      
+
     if (histsND.count("all_truth_tuned") && usetune){
         ialltruhist = histsND["all_truth_tuned"][sig];
         std::cout << " using " << ialltruhist->GetName() << std::endl;
@@ -685,7 +695,7 @@ template<class MnvHistoType>
     else{
         ialltruhist = histsND["all_truth"][sig];
     }
-    
+
     MnvH2D* iresponse;
     MnvHistoType* iresponse_reco=imcsighist;
     MnvHistoType* iresponse_truth=iseltruhist;
@@ -730,36 +740,41 @@ template<class MnvHistoType>
       imcbkghist->Print();
       imcbkghist->Write();
     }
-    
+
     // if (DEBUG) std::cout << " MC bkg scaled by POT for " << variable << std::endl;
- 
-    
-    
- 
+
+
+
+
 
       // HACK as the response seems to have gotten the wrong normalization
     //  double fix = imcsighist->Integral()/iresponse->ProjectionX()->Integral();
     //  iresponse->Scale(fix);
     //  if (DEBUG) std::cout << " HACK? response scaled by " << fix << " for " << iresponse->GetName() << "POTScale would be "<< POTScale<< std::endl;
-    
+
 
     //==================================Make MC=====================================
     MnvHistoType* mc;
     MnvHistoType* signalFraction;
-    
+
       if (!hasbkgsub){
           if (DEBUG) std::cout << " Start MakeMC... " << std::endl;
           // std::string mcname = basename+"_mc_tot";
+        if(DEBUG){
+          std::cout << " basename is " << basename << std::endl;
+          imcsighist->Print();
+          imcbkghist->Print();
+        }
           mc = MakeMC(basename,imcsighist,imcbkghist);
           if(DEBUG)mc->Print();
           mc->Write();
-          
-         
+
+
           PlotCVAndError(canvas,idatahist,mc,stuned+sample + "_"+ "DATA_vs_MC" ,true,logscale,binwid);
           PlotErrorSummary(canvas,mc,sample + "_"+"Raw MC Systematics" ,logscale );
-          
+
           //================================Signal Fraction===========================
-          
+
           if (DEBUG) std::cout << " Start signal fraction... " << std::endl;
           // std::string fracname = basename+"_signalfraction";
           signalFraction = GetSignalFraction(basename,imcsighist,mc);
@@ -768,16 +783,16 @@ template<class MnvHistoType>
           signalFraction->Write();
           bkgFraction->Write();
           Plot2DFraction(canvas, signalFraction,bkgFraction, stuned+sample + "_fractions",logscale);
-          
+
           PlotCVAndError(canvas,signalFraction,signalFraction, stuned+sample + "_"+"Signal Fraction" ,true,logscale,false);
           PlotErrorSummary(canvas,signalFraction,stuned+sample+" Signal Fraction Systematics" ,0);
       }
       else{
           mc = (MnvHistoType*)imcsighist->Clone();
-          
-          
+
+
       }
-    
+
 
     //============================Background Subtraction========================
 
@@ -798,8 +813,8 @@ template<class MnvHistoType>
     }
     if(DEBUG)bkgsub->Print();
       bkgsub->Write();
- 
-    
+
+
     PlotCVAndError(canvas,bkgsub,imcsighist, stuned+sample + "_"+"BKGsub vs. MC signal" ,true,logscale,binwid);
     PlotErrorSummary(canvas,bkgsub,stuned+sample + "_"+"BKGsub Systematics" ,0);
 
@@ -822,8 +837,8 @@ template<class MnvHistoType>
       unsmeared = unsmearedVec[0];
       if (DEBUG) unsmeared->Print();
       unsmeared->Write();
-      PlotCVAndError(canvas,bkgsub,unsmeared,stuned+sample + "_"+"Data Before and After Unsmearing", true,logscale,binwid); 
-      
+      PlotCVAndError(canvas,bkgsub,unsmeared,stuned+sample + "_"+"Data Before and After Unsmearing", true,logscale,binwid);
+
     }
     if(unsmearedVec.size()==2){
       // Output for crude ratio unfolding, DOES include "unsmearing" hist, so this picks that up
@@ -862,7 +877,7 @@ template<class MnvHistoType>
     PlotCVAndError(canvas,effcorr,ialltruhist,stuned+ sample + "_"+"effcorr data vs truth" ,true,logscale,binwid);
     PlotErrorSummary(canvas,efficiency,stuned+sample + "_"+"Efficiency Factor Systematics" ,0);
     PlotErrorSummary(canvas,effcorr,stuned+sample + "_"+"Efficiency Corrected Data Systematics" ,0);
-    
+
     //============================POT/Flux Normalization========================
     // bool energydep = false;
     // bool energydepx = false;
@@ -881,27 +896,27 @@ template<class MnvHistoType>
     //   energydep = true;
     // }
     // binwid = energydep;
-      // hack in a varsFile if it does not exist 
+      // hack in a varsFile if it does not exist
       if (!(configs.count("varsFile")>0)){
-  
+
           // backwards compatibility change a file read into a configmap
           NuConfig* vars = new NuConfig();
           vars->Read(configs["main"]->GetString("varsFile"));
           configs["varsFile"]=vars;
-          
+
       }
       std::map< std::string, bool> fluxnorm = CheckFluxNorm(configs["varsFile"],variable);
     if(DEBUG) std::cout << " fluxnorm: " << fluxnorm["fluxnorm"] << ", xfluxnorm: " << fluxnorm["xfluxnorm"] << ", yfluxnorm: " << fluxnorm["yfluxnorm"] << std::endl;
-    
-    // HMS dec-1-2021 - flip these? 
+
+    // HMS dec-1-2021 - flip these?
     if (fluxnorm["fluxnorm"]) {
       binwid =  true;
     }
     if (!fluxnorm["fluxnorm"]) {
       binwid = true;
     }
-    
-   
+
+
 
     std::vector<MnvHistoType*> sigmaVec = DoNormalization(configs,basename,fluxnorm,norm,effcorr,ialltruhist,h_flux_dewidthed);
     MnvHistoType* sigma = sigmaVec[0];
@@ -915,7 +930,7 @@ template<class MnvHistoType>
 
     PlotCVAndError(canvas,sigma,sigmaMC, stuned+sample + "_"+"sigma" ,true,logscale,binwid);
     PlotErrorSummary(canvas,sigma,stuned+sample + "_"+"Cross Section Systematics" ,0);
-    
+
 
     //============================Binwidth Normalization============================
     // Just a check on bin width corrections...
@@ -951,5 +966,3 @@ template int GetCrossSection<MnvH2D>(std::string sample, std::string variable, s
                                      std::map< std::string, std::map <std::string, MnvH2D*> > responseND,
                                      NuConfig mainconfig, TCanvas & canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
                                      MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG=false,bool hasbksub=false, bool usetune = false);
-
-

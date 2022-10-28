@@ -27,7 +27,7 @@ std::map<std::string, CCQENu::Variable2DFromConfig*> Get2DVariablesFromConfig( s
   bool is2D = false;
   std::map<std::string, CCQENu::Variable2DFromConfig*> variables2Dmap; // this is the 2D set that actually gets returned
 
-  configraw.Print();
+  //configraw.Print();
   NuConfig config;
   if(configraw.IsMember("2D")){
     config = configraw.GetValue("2D");

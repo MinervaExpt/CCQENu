@@ -1004,5 +1004,15 @@ namespace {
 	int CVUniverse::GetMCTargetNucleon() const { return GetInt("mc_targetNucleon"); }
 
 	int CVUniverse::Dummy() const { return 0; }
-    
+void CVUniverse::Print() const { std::cout
+<< ShortName() << ", "
+<< GetRun() << ", "
+<< GetSubRun() << ", "
+<< GetGate() << ", "
+<< GetTruthNuPDG() << ","
+<< GetTruthIsCC() << ","
+<< GetTruthIsCCQELike() << ", "
+<< GetIsMinosMatchTrack() << ", "
+<< std::endl;
+}
 #endif
