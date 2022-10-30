@@ -16,12 +16,12 @@ def timeform():
   timeFormat = "%Y%m%d%H%M%S"
   nowtime = now.strftime(timeFormat)
   return nowtime
-  
+
 # write a line to the wrapper, make certain it is properly terminated
 def writewrap(mywrapper,text):
   mywrapper.write("#cmd: \t%s\n"%(text))
   mywrapper.write("%s\n"%(text))
-  
+
 # Write the command you used to run your analysis
 
 # this is for the tutorial, not recently tested
@@ -32,7 +32,7 @@ def writeEventLoop(mywrapper,outdir):
 
 # this is for CCQEMAT
 def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
-     
+
     writewrap(mywrapper,"echo \"go to scratch dir and run it\"\n")
     writewrap(mywrapper,"cd $_CONDOR_SCRATCH_DIR\n")
     # tell it where to find the code to run
@@ -41,6 +41,7 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
     writewrap(mywrapper,"echo \" check on CCQEMAT\" $CCQEMAT")
     writewrap(mywrapper,"export MYPLAYLIST="+opts.playlist+"\n")
     writewrap(mywrapper,"export MYSAMPLE="+opts.sample+"\n")
+    writewrap(mywrapper,"export MYMODEL="+opts.model+"\n")
     theexe = opts.theexe
     mylog = "%s_%s_%s.log"%(os.path.basename(opts.theexe),os.path.basename(opts.config),tag)
     writewrap(mywrapper,os.path.join("time $RUNDIR",opts.theexe)+" "+os.path.join("$RUNDIR",opts.config)+" "+opts.prescale+" >& %s \n"%(mylog))
@@ -54,11 +55,11 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
         writewrap(mywrapper,"ifdh cp -D %s %s \n"%(mylog, theoutdir))
         writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
     #writewrap(mywrapper,"env | grep -v ups\n")
-    
+
 # do generic setup of code
 
 def writeSetups(mywrapper,basedirname,setup):
-    
+
     writewrap(mywrapper,"cd $INPUT_TAR_DIR_LOCAL\n")
     writewrap(mywrapper,"echo \"in code directory\"\n")
     writewrap(mywrapper,"pwd\n")
@@ -79,11 +80,11 @@ def writeSetups(mywrapper,basedirname,setup):
     writewrap(mywrapper,"source "+setuppath+" \n")
     #writewrap(mywrapper,"setup ifdhc\n")
     writewrap(mywrapper,"echo \"after setup\";pwd\n")
-    
+
 
 # Define function to create tarball
 def createTarball(tmpdir,tardir,tag,basedirname):
-    
+
     found = os.path.isfile("%s/myareatar_%s.tar.gz"%(tardir,tag))
 
     if(not found):
@@ -93,10 +94,10 @@ def createTarball(tmpdir,tardir,tag,basedirname):
         cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif} -zcf  %s ./%s"%(tarpath,basedirname)
         print ("Making tar",cmd)
         os.system(cmd)
-       
+
         cmd2 = "cp %s %s/"%(tarpath,tardir)
         print ("Copying tar",cmd2)
-        
+
         os.system(cmd2)
         return "myareatar_%s.tar.gz"%(tag)
 
@@ -107,7 +108,7 @@ def writeTarballProceedure(mywrapper,tag,basedir):
     print ("Path is",basedir)
     writewrap(mywrapper,"cd $INPUT_TAR_DIR_LOCAL\n")
     writewrap(mywrapper,"ls\n")
-    
+
 
 def writeOptions(parser):
     print ("Now write options to the parser")
@@ -121,10 +122,11 @@ def writeOptions(parser):
     parser.add_option('--stage', dest='stage', help='Processing type [CCQEMAT or (future) EventLoop]', default="NONE")
     parser.add_option('--sample', dest='sample', help='[OPTIONAL] Sample type to set $MYSAMPLE when doing 1 sample/job otherwise you can still use a hardcoded list of samples ', default="QElike")
     parser.add_option('--playlist', dest='playlist', help='Playlist type', default="NONE")
+    parser.add_option('--model', dest='model', help='[OPTIONAL] Model tune type to set $MYMODEL for MinervaModel. Defaults to MnvTunev1 ', default="MnvTunev1")
 
     parser.add_option('--prescale', dest='prescale', help='Prescale MC by this factor (CCQEMAT)', default="1")
     ##########################################################################
-    #  Options for making tar files....Basically you can make tarfiles 
+    #  Options for making tar files....Basically you can make tarfiles
     #######################################################################
     parser.add_option('--tag', dest='tag', help="Tag your release",default="tag_")
     parser.add_option('--mail',dest='mail',help="Want mail after job completion or failure",default=False,action="store_true")
@@ -142,7 +144,7 @@ valid_stages=["eventLoop","CCQEMAT"]
 avail_playlists=["minervame1A, minervame5A"]
 # Get user's name
 _user_ = os.getenv("USER")
-usage = "usage: %prog[opts]" 
+usage = "usage: %prog[opts]"
 parser = OptionParser(usage=usage)
 writeOptions(parser)
 (opts,args) = parser.parse_args()
@@ -161,7 +163,7 @@ time_stamp = int(time.time())
 if tag_name=="tag_":
     print ("YOU DIDNT SPECIFY ANY ANY TAG...SO I WILL USE MY OWN TAGGING SCHEME" )
     # You can add in your own tagging scheme
-    tag_name += "default_" 
+    tag_name += "default_"
 
 print ("Is everything fine till here*********")
 # Add the time stamp to tag
@@ -196,7 +198,7 @@ if opts.stage not in valid_stages:
 #  Create wrapper
 ##############################################
 
-wrapper_name = "%s_%s_wrapper_%s.sh"%(opts.stage,opts.playlist,tag_name)
+wrapper_name = "%s_%s_%s_wrapper_%s.sh"%(opts.stage,opts.playlist,opts.model,tag_name)
 
 mywrapper = open(wrapper_name,"w")
 mywrapper.write("#!/bin/sh\n") # don't wrap this one
@@ -223,7 +225,7 @@ if (not opts.debug):
     if (opts.sametar==False):
     # some tar voodoo to get a tarball that has the name of the directory the code is in but not the rest of the path.  Go into the directory above, tar up just that name.
         here = os.getenv("PWD")
-        
+
         os.chdir(basedirpath)
         print (" move to directory",basedirpath,os.getcwd())
         if (not os.path.exists(opts.tmpdir)):
@@ -248,7 +250,7 @@ if (not opts.debug):
 if (".json" in opts.config):
     print ("stripping .json from ",opts.config)
     opts.config = opts.config.replace(".json","")
-    
+
 # write an environment setup
 
 writeSetups(mywrapper,basedirname,opts.setup)
@@ -266,11 +268,11 @@ mywrapper.close()
 os.system("chmod 777 %s"%(wrapper_name))
 
 # TODO: not sure if this is needed
-configstring = "" 
+configstring = ""
 # Get gcc release
-gccstring = "x86_64-slc7-gcc49-opt" 
+gccstring = "x86_64-slc7-gcc49-opt"
 # Now add the execute command
-cmd = "" 
+cmd = ""
 cmd += "jobsub_submit --group minerva " #Group of experiment
 #cmd += "--cmtconfig "+gccstring+" " #Setup minerva soft release built with minerva configuration
 #cmd += "--OS sl7 " #Operating system #Not needed in SL7
@@ -299,7 +301,7 @@ if not opts.debug:
     answer="failed"
     try:
         answer = os.popen(cmd).read()
-        
+
     except:
         print ("could not submit")
     print ("answer was",answer)
@@ -311,7 +313,7 @@ if not opts.debug:
 localscript = os.path.join(opts.tmpdir,wrapper_name)
 os.system("cp "+wrapper_name+" "+ localscript)
 
-    
+
 print ("Sleeping" )
 
 time.sleep(1)
