@@ -147,9 +147,9 @@ public:
           PlotUtils::VariableBase<CVUniverse>::m_has_reco_binning = false;
       }
     }
-      std::cout << " Check Binning For" << config.GetString("name") << std::endl;
-      PrintBinning();
-      PrintRecoBinning();
+      //std::cout << " Check Binning For" << config.GetString("name") << std::endl;
+      //PrintBinning();
+      //wPrintRecoBinning();
   }
 
   typedef std::map<std::string, std::vector<CVUniverse*>> UniverseMap;
