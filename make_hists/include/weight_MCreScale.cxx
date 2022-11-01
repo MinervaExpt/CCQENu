@@ -57,7 +57,7 @@ void weight_MCreScale::read(TString filename){
   if(m_f_Q2QEScaleFrac){
     std::cout << "weight_MCreScale: I'm using this scale file " << filename << std::endl;
     for (auto cat:m_categories){
-      std::string name = "h___QELike___"+cat+"___Q2QE___scale";
+      std::string name = "h___Background___"+cat+"___Q2QE___scale";
       m_mnvh_Scales[cat] = (MnvH1D*)m_f_Q2QEScaleFrac->Get(name.c_str());
    }
   }
@@ -111,7 +111,7 @@ double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_nam
   }
 
   if(q2qe<0.){
-    std::cout << "weight_MCreScale: You have a q2qe passed to weight_minervaq2qe less than 0. Non-physical. Returning 1.0"<< std::endl;
+    std::cout << "weight_MCreScale: You have a q2qe passed less than 0. Non-physical. Returning 1.0"<< std::endl;
     return 1.0;
   }
   else if(q2qe>=2.0){
