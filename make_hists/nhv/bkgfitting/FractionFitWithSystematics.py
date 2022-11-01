@@ -13,7 +13,9 @@ import time
 category_list = ["data", "qelike", "qelikenot"]
 # names associated with each "sample" e.g. QElike, QElikeALL
 # sample_list = ["QElike", "QElike_hiE", "QElike_loE"]
-sample_list = ["QElike"]
+# sample_list = ["Background"]
+sample = "Background"
+sample_list = [sample]
 # DO_SYSTEMATICS = False
 # DRAW = True
 # CONFINT = True
@@ -722,16 +724,16 @@ def main():
         for name in universe_names:
             universe_names_list.append(name)
 
-        sig_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___fraction")
+        sig_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___"+sample+"___qelike___Q2QE___fraction")
         # sig_tuned_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___fraction_tuned")
 
-        sig_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___scale")
+        sig_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___"+sample+"___qelike___Q2QE___scale")
         # sig_tuned_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___scale_tuned")
 
-        bkg_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___fraction")
+        bkg_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___"+sample+"___qelikenot___Q2QE___fraction")
         # bkg_tuned_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___fraction_tuned")
 
-        bkg_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___scale")
+        bkg_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___"+sample+"___qelikenot___Q2QE___scale")
         # bkg_tuned_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___scale_tuned")
 #
         # Loop over universe names
@@ -804,9 +806,9 @@ def main():
                             print(">>>>>>>>> key: ",key)
                             if 'tuned' in key:
                                 tmpname = key.replace('_tuned','')
-                                prefit_mnvh1d_name = "h___QELike___" + tmpname + "___"+recoil_type+"_" + fitbin_name + "___prefit_tuned"
+                                prefit_mnvh1d_name = "h___"+sample+"___" + tmpname + "___"+recoil_type+"_" + fitbin_name + "___prefit_tuned"
                             else:
-                                prefit_mnvh1d_name = "h___QELike___" + key + "___"+recoil_type+"_" + fitbin_name + "___prefit"
+                                prefit_mnvh1d_name = "h___"+sample+"___" + key + "___"+recoil_type+"_" + fitbin_name + "___prefit"
 
                             print(prefit_mnvh1d_name)
                             prefit_recoil_mnvh = MnvH2D_dict[key].ProjectionY(prefit_mnvh1d_name, fitbin, fitbin, "e").Clone()
@@ -827,7 +829,7 @@ def main():
                     prefit_mctot_hist, prefit_qelike_hist, prefit_qelikenot_hist = ScaleMC(data_hist,prefit_mctot_hist,prefit_qelike_hist,prefit_qelikenot_hist)
 
                     # Calculate Chi2 between data & MC before the fit.
-                    prefit_chi2 = data_hist.Chi2Test(prefit_mctot_hist, "CHI2")
+                    prefit_chi2 = data_hist.Chi2Test(prefit_mctot_hist, "UW,CHI2")
                     prefit_ndf = data_hist.GetNbinsX() - 1
 
 
@@ -853,7 +855,7 @@ def main():
                     fit_mctot_hist = fit_qelike_hist.Clone("fit_mctot")
                     fit_mctot_hist.Add(fit_qelikenot_hist)
 
-                    postfit_chi2 = data_hist.Chi2Test(fit_mctot_hist,"CHI2")
+                    postfit_chi2 = data_hist.Chi2Test(fit_mctot_hist,"UW,CHI2")
                     postfit_ndf = prefit_ndf
 
 
@@ -877,15 +879,15 @@ def main():
 
 
                         fit_sig_mnvh1d = MnvH1D(fit_qelike_hist)
-                        fit_sig_mnvh1d.SetName("h___QELike___qelike___"+recoil_type+"_" + fitbin_name + "___fit")
+                        fit_sig_mnvh1d.SetName("h___"+sample+"___qelike___"+recoil_type+"_" + fitbin_name + "___fit")
                         fit_mnvh1d_dict[fitbin]['qelike'] = fit_sig_mnvh1d
 
                         fit_bkg_mnvh1d = MnvH1D(fit_qelikenot_hist)
-                        fit_bkg_mnvh1d.SetName("h___QELike___qelikenot___"+recoil_type+"_" + fitbin_name + "___fit")
+                        fit_bkg_mnvh1d.SetName("h___"+sample+"___qelikenot___"+recoil_type+"_" + fitbin_name + "___fit")
                         fit_mnvh1d_dict[fitbin]['qelikenot'] = fit_bkg_mnvh1d
 
                         fit_mctot_mnvh1d = MnvH1D(fit_mctot_hist)
-                        fit_mctot_mnvh1d.SetName("h___QELike___mctot___"+recoil_type+"_" + fitbin_name + "___fit")
+                        fit_mctot_mnvh1d.SetName("h___"+sample+"___mctot___"+recoil_type+"_" + fitbin_name + "___fit")
                         fit_mnvh1d_dict[fitbin]['mctot'] = fit_mctot_mnvh1d
 
                     else:
