@@ -74,7 +74,7 @@ def MakeScaleFactorPlot(canvas, i_scale_hist,sample_str='',color=ROOT.kBlack):
     scale_hist = i_scale_hist.Clone()
     ROOT.gStyle.SetOptStat(0)
 
-    xmax = 2.0
+    xmax = 4.0
     ROOT.gPad.SetLogx(1)
     # scale_hist.SetMaximum(1.5)
     # scale_hist.SetMinimum(0.7)
@@ -84,11 +84,11 @@ def MakeScaleFactorPlot(canvas, i_scale_hist,sample_str='',color=ROOT.kBlack):
         # title_suffix = sample_str
         title = sample_str+' '+title_base
         if "QELikeNot" in sample_str:
-            scale_hist.SetMaximum(0.8)
-            scale_hist.SetMinimum(1.7)
+            scale_hist.SetMaximum(1.2)
+            scale_hist.SetMinimum(0.4)
         else:
-            scale_hist.SetMaximum(0.3)
-            scale_hist.SetMinimum(1.2)
+            scale_hist.SetMaximum(1.6)
+            scale_hist.SetMinimum(0.8)
 
     else:
         title = title_base
@@ -139,7 +139,7 @@ def MakeScaleFactorPlot(canvas, i_scale_hist,sample_str='',color=ROOT.kBlack):
 
 
 # def MakeScaleCompPlot(canvas, i_h1_dict,h1_name,i_h2_dict,h2_name,h1_color=ROOT.kBlue,h2_color=ROOT.kRed):
-def MakeScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,plot_name='',h1_color=ROOT.kBlue+1,h2_color=ROOT.kRed+1):
+def MakeScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,plot_name='',h1_color=ROOT.kBlue+2,h2_color=ROOT.kRed+2):
     # h1_hist = i_h1_dict['hist'].Clone()
     # h2_hist = i_h2_dict['hist'].Clone()
     h1_hist = i_h1.Clone()
@@ -149,10 +149,11 @@ def MakeScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,plot_name='',h1_color=RO
     # h2_fit = i_h2_dict['fit']
 
     # xmin = 0.02 #0.02
-    xmax = 2.0  # 1.4
+    xmax = 4.0  # 1.4
     ROOT.gPad.SetLogx(1)
     # ROOT.gPad.SetLogy(1)
     ROOT.gStyle.SetOptStat(0)
+    legend = ROOT.TLegend(0.7, 0.8, 0.95, 0.7)
 
     h1_hist.SetTitle("Scale Factor vs. Q^{2}_{QE}: "+plot_name+" Comparison")
     h1_hist.GetXaxis().SetTitle("Q^{2}_{QE} (GeV^{2})")
@@ -163,24 +164,37 @@ def MakeScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,plot_name='',h1_color=RO
     h1_hist.SetMarkerStyle(20)
     h1_hist.SetMarkerColor(h1_color)
     h1_hist.SetLineColor(h1_color)
-
-    # h1_fit.SetLineColor(h1_color)
-    if plot_name in ["QELike", "QElike","qelike"]:
-        h1_hist.SetMaximum(1.45)
-        h1_hist.SetMinimum(0.85)
-        legend = ROOT.TLegend(0.7, 0.8, 0.95, 0.7)
-        legend.SetBorderSize(1)
-
-    if plot_name in ["QELikeNot", "QElikenot","QElikenot","qelikenot"]:
-        h1_hist.SetMaximum(1.17)
-        h1_hist.SetMinimum(0.45)
-        legend = ROOT.TLegend(0.7, 0.25, 0.95, 0.35)
-        legend.SetBorderSize(1)
-
-
     h2_hist.SetMarkerStyle(20)
     h2_hist.SetMarkerColor(h2_color)
     h2_hist.SetLineColor(h2_color)
+
+    # h1_hist.SetMaximum(1.5)
+    # h1_hist.SetMinimum(0.5)
+    legend = ROOT.TLegend(0.05, 0.45, 0.3, 0.55)
+    legend.SetBorderSize(1)
+    legend.AddEntry(h1_hist, h1_name)
+    legend.AddEntry(h2_hist, h2_name)
+
+    # h1_fit.SetLineColor(h1_color)
+    # if plot_name in ["QELike", "QElike","qelike"]:
+    #     h1_hist.SetMaximum(1.6)
+    #     h1_hist.SetMinimum(0.8)
+    #     legend = ROOT.TLegend(0.7, 0.8, 0.95, 0.7)
+    #     legend.SetBorderSize(1)
+    #     legend.AddEntry(h1_hist, h1_name)
+    #     legend.AddEntry(h2_hist, h2_name)
+    #
+    #
+    # if plot_name in ["QELikeNot", "QElikenot","QElikenot","qelikenot"]:
+    #     h1_hist.SetMaximum(1.2)
+    #     h1_hist.SetMinimum(0.4)
+    #     legend = ROOT.TLegend(0.7, 0.25, 0.95, 0.35)
+    #     legend.SetBorderSize(1)
+    #     legend.AddEntry(h1_hist, h1_name)
+    #     legend.AddEntry(h2_hist, h2_name)
+
+
+
 
     # h2_fit.SetLineColor(h2_color)
 
@@ -196,8 +210,6 @@ def MakeScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,plot_name='',h1_color=RO
     # h2confint_hist.SetFillColorAlpha(h2_color, 0.2)
 
     #
-    legend.AddEntry(h1_hist, h1_name)
-    legend.AddEntry(h2_hist, h2_name)
 
     # ks = h1_hist.KolmogorovTest(h2_hist)
     # chi2 = h1_hist.Chi2Test(h2_hist,"CHI2")
@@ -402,8 +414,8 @@ def MakeFitRatioPlot(canvas, title, i_data_hist, i_mctot_hist, i_fit_mctot_hist,
 
 
     before_ratio.GetXaxis().CenterTitle()
-    before_ratio.SetMarkerColor(ROOT.kRed)
-    before_ratio.SetLineColor(ROOT.kRed)
+    before_ratio.SetMarkerColor(ROOT.kRed+1)
+    before_ratio.SetLineColor(ROOT.kRed+1)
     before_ratio.SetMarkerStyle(ROOT.kFullCircle)
     legend.AddEntry(before_ratio, "Before Fit", "p")
 
@@ -411,8 +423,8 @@ def MakeFitRatioPlot(canvas, title, i_data_hist, i_mctot_hist, i_fit_mctot_hist,
     after_ratio.Divide(data_hist, fit_mctot_hist, 1.0, 1.0, "B")
     # after_ratio = fit_mctot_hist.Clone()
     # after_ratio.Divide(fit_mctot_hist, data_hist, 1.0, 1.0, "B")
-    after_ratio.SetMarkerColor(ROOT.kBlue)
-    after_ratio.SetLineColor(ROOT.kBlue)
+    after_ratio.SetMarkerColor(ROOT.kBlue+1)
+    after_ratio.SetLineColor(ROOT.kBlue+1)
     after_ratio.SetMarkerStyle(ROOT.kFullSquare)
     legend.AddEntry(after_ratio, "After Fit", "p")
 
@@ -515,17 +527,22 @@ def main():
     if len(sys.argv) < 2:
         print("python FitPlotting.py <infile>.root <outfilename>")
     else:
-        filename = sys.argv[1]
+        filename1 = sys.argv[1]
+        filename2 = sys.argv[2]
         # if len(sys.argv)>=3:
         #     plotfilename_base = sys.argv[2]
         # else if len(sys.argv)==2:
         #     plotfilename_base = filename.replace(".root","_plots")
-        plotfilename_base = filename.replace(".root","_plots")
+        # plotfilename_base = filename.replace(".root","_plots")
+        plotfilename_base = "ScaleFactorComp_6AvsFull_11022022"
 
-    f = ROOT.TFile(filename, "READONLY")
+    f1 = ROOT.TFile(filename1, "READONLY")
+    f2 = ROOT.TFile(filename2,"READONLY")
     plotfilename = plotfilename_base # + '_' + sample
 
-    scale_hist_dict = GetScaleHists(f)
+    scale_hist_dict1 = GetScaleHists(f1)
+    scale_hist_dict2 = GetScaleHists(f2)
+
     canvas = InitializeCanvas(plotfilename)
     canvas.Print(str(plotfilename + "." + plotfiletype+"["), plotfiletype)
     # MakeScaleFactorPlot(canvas, scale_hist_dict['qelike']['tuned'],'Tuned QELike',ROOT.kBlue+1)
@@ -533,10 +550,14 @@ def main():
     # MakeScaleFactorPlot(canvas, scale_hist_dict['qelikenot']['tuned'],'Tuned QELikeNot',ROOT.kRed+1)
     # MakeScaleFactorPlot(canvas, scale_hist_dict['qelikenot']['untuned'],'Untuned QELikeNot',ROOT.kRed)
 
-    MakeScaleFactorPlot(canvas, scale_hist_dict['qelike'],'Untuned QELike',ROOT.kBlue)
+    # MakeScaleFactorPlot(canvas, scale_hist_dict1['qelike'],'QELike, MnvTune v1',ROOT.kBlue)
+    # MakeScaleFactorPlot(canvas, scale_hist_dict2['qelike'],'QELike, MnvTune v2',ROOT.kBlue)
+    #
+    # MakeScaleFactorPlot(canvas, scale_hist_dict1['qelikenot'],'QELikeNot, MnvTune v1',ROOT.kRed)
+    # MakeScaleFactorPlot(canvas, scale_hist_dict2['qelikenot'],'QELikeNot, MnvTune v2',ROOT.kRed)
 
-    MakeScaleFactorPlot(canvas, scale_hist_dict['qelikenot'],'Untuned QELikeNot',ROOT.kRed)
-
+    MakeScaleCompPlot(canvas,scale_hist_dict1['qelike'],"6A",scale_hist_dict2['qelike'],"Full Sample","QElike 6A vs. Full Sample",h1_color=ROOT.kBlue+4,h2_color=ROOT.kBlue)
+    MakeScaleCompPlot(canvas,scale_hist_dict1['qelikenot'],"6A",scale_hist_dict2['qelikenot'],"Full Sample","QElikenot 6A vs. Full Sample",h1_color=ROOT.kRed+4,h2_color=ROOT.kRed)
     # MakeScaleCompPlot(canvas, scale_hist_dict['qelike']['tuned'],'Tuned', scale_hist_dict['qelike']['untuned'],'Untuned','QELike')
     # MakeScaleCompPlot(canvas, scale_hist_dict['qelikenot']['tuned'],'Tuned', scale_hist_dict['qelikenot']['untuned'],'Untuned','QELikeNot')
 
