@@ -457,7 +457,7 @@ def ScaleMC(i_data_hist,i_mctot_hist,i_qelike_hist,i_qelikenot_hist):
 
     min_bin = 1
     max_xbin = data_hist.GetNbinsX()
-    area_scale = (data_hist.Integral(min_bin, max_xbin)) / (mctot_hist.Integral(min_bin, max_xbin))
+    area_scale = (data_hist.Integral(6, max_xbin)) / (mctot_hist.Integral(6, max_xbin))
 
     # Scale MC hists to area normalize them to Data (so # counts is the same)
     mctot_hist.Scale(area_scale)
@@ -484,7 +484,7 @@ def RunFractionFitter(i_mctot_hist, i_qelike_hist, i_qelikenot_hist, i_data_hist
     data_hist = i_data_hist.Clone()
 
     # Get some info for some calculations
-    min_bin = 1
+    min_bin = 6
     max_bin = mctot_hist.GetNbinsX()
 
     print(">>>>>>>>>max_bin ", max_bin)
@@ -960,7 +960,7 @@ def main():
         outhistfile.Close()
 
         # Write out each hist to a root file.
-        outvalhistfile_tail = "_OutVals_fix.root"
+        outvalhistfile_tail = "_OutVals_100MeVFit.root"
         outvalhistfile = outfilebase.replace(".root", outvalhistfile_tail)
         print("Writing scale and fraction hists to file: ", outvalhistfile)
         outvalfile = ROOT.TFile(outvalhistfile, "RECREATE")
@@ -975,7 +975,7 @@ def main():
         outvalfile.cd()
         outvalfile.Close()
 
-        plotfilename = outfilebase.replace(".root", "_Hists")
+        plotfilename = outfilebase.replace(".root", "_Hists_100MeVFit")
         i_fitbin = 0
 
         binning = GetFitBinning(infile)
