@@ -1,0 +1,23 @@
+{
+  "MnvTunev1":{
+    "FluxAndCVReweighter":true,
+    "LowRecoil2p2hReweighter":true,
+    "GENIEReweighter":{"NonResPiReweight":true,"DeuteriumGeniePiTune":false},
+    "MINOSEfficiencyReweighter":true,
+    "RPAReweighter":true
+  },
+  "MnvTunev2":{
+    "FluxAndCVReweighter":true,
+    "LowRecoil2p2hReweighter":true,
+    "GENIEReweighter":{"NonResPiReweight":true,"DeuteriumGeniePiTune":false},
+    "MINOSEfficiencyReweighter":true,
+    "RPAReweighter":true,
+    "LowQ2PiReweighter":{"fit":"JOINT"}
+  },
+  "MnvTunev3":{
+    "XYZ":true
+  },
+  "MnvTunev4":{
+    "XYZ":true
+  }
+}
