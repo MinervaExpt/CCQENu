@@ -175,6 +175,8 @@ def MakeScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,plot_name='',h1_color=RO
     legend.AddEntry(h1_hist, h1_name)
     legend.AddEntry(h2_hist, h2_name)
 
+    h1_hist.SetMaximum(2.)
+    h1_hist.SetMinimum(0.)
     # h1_fit.SetLineColor(h1_color)
     # if plot_name in ["QELike", "QElike","qelike"]:
     #     h1_hist.SetMaximum(1.6)
@@ -534,7 +536,7 @@ def main():
         # else if len(sys.argv)==2:
         #     plotfilename_base = filename.replace(".root","_plots")
         # plotfilename_base = filename.replace(".root","_plots")
-        plotfilename_base = "ScaleFactorComp_6AvsFull_11022022"
+        plotfilename_base = "ScaleFactorComp_Comp100MeVCut"
 
     f1 = ROOT.TFile(filename1, "READONLY")
     f2 = ROOT.TFile(filename2,"READONLY")
@@ -556,8 +558,8 @@ def main():
     # MakeScaleFactorPlot(canvas, scale_hist_dict1['qelikenot'],'QELikeNot, MnvTune v1',ROOT.kRed)
     # MakeScaleFactorPlot(canvas, scale_hist_dict2['qelikenot'],'QELikeNot, MnvTune v2',ROOT.kRed)
 
-    MakeScaleCompPlot(canvas,scale_hist_dict1['qelike'],"6A",scale_hist_dict2['qelike'],"Full Sample","QElike 6A vs. Full Sample",h1_color=ROOT.kBlue+4,h2_color=ROOT.kBlue)
-    MakeScaleCompPlot(canvas,scale_hist_dict1['qelikenot'],"6A",scale_hist_dict2['qelikenot'],"Full Sample","QElikenot 6A vs. Full Sample",h1_color=ROOT.kRed+4,h2_color=ROOT.kRed)
+    MakeScaleCompPlot(canvas,scale_hist_dict1['qelike'],"No cut",scale_hist_dict2['qelike'],"100 MeV Cut","QElike No cut vs. Cut",h1_color=ROOT.kBlue+4,h2_color=ROOT.kBlue)
+    MakeScaleCompPlot(canvas,scale_hist_dict1['qelikenot'],"No cut",scale_hist_dict2['qelikenot'],"100 MeV Cut","QElikenot Not cut vs. Cut",h1_color=ROOT.kRed+4,h2_color=ROOT.kRed)
     # MakeScaleCompPlot(canvas, scale_hist_dict['qelike']['tuned'],'Tuned', scale_hist_dict['qelike']['untuned'],'Untuned','QELike')
     # MakeScaleCompPlot(canvas, scale_hist_dict['qelikenot']['tuned'],'Tuned', scale_hist_dict['qelikenot']['untuned'],'Untuned','QELikeNot')
 

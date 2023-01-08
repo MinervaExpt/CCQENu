@@ -2,6 +2,10 @@
 
 This repository will contain the MAT hist creation and analysis codes
 
+There is a doxygen site associated with it at https://minervaexpt.github.io/CCQENu/  which is built off of branch CCQENu-doxygen
+
+
+
 utilities/ useful utililties for analysis
 
 here is how to build CCQEMAT using the new MAT
@@ -17,7 +21,7 @@ that avoids duplicating 2GB of files locally
 then... 
 
 ```
-export WHEREMIPUTMYCODE=<directory where MAT code is> 
+export WHEREMIPUTMYCODE=<directory where MAT code is
 source $WHEREIPUTMYCODE/opt/build/setup.sh
 
 # now get the CCQEMAT code
@@ -43,13 +47,11 @@ export JSONCPP_DIR=/minerva/app/users/schellma/LocalApps/jsoncpp-build
 cd $CCQEMAT
 # I haven't figured out how to do Andrew style builds yet so this builds on the source directory. But there is a MAT compatible cmake now.  
 
-
-
-cmake v_08 # for the new version 8 with multiple signal components for Sean
+cmake hms # or one of the other user directories for different people's particular builds
 
 cmake fits # adds in independent code that can do fits for backgrounds across multiple sample
 ```
-then type make
+then type `make`
 
 The code now supports using environmentals to set values in json files so you can have one file which then has ${MYPLAYLIST} to switch among playlists
 
