@@ -1,20 +1,9 @@
-/**
-* @file
-* @author  Heidi Schellman/Noah Vaughan/SeanGilligan
-* @version 1.0 *
-* @section LICENSE *
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License as
-* published by the Free Software Foundation; either version 2 of
-* the License, or (at your option) any later version. *
-* @section DESCRIPTION *
-* This implements a loop over the tuple that fills the histograms
- */
+#define CLOSURE 1
 
 enum EDataMCTruth {kData, kMC, kTruth, kNDataMCTruthTypes};
 
 
-//#define CLOSUREDETAIL
+
 
 //==============================================================================
 // Loop and fill
@@ -23,11 +12,11 @@ enum EDataMCTruth {kData, kMC, kTruth, kNDataMCTruthTypes};
 void LoopAndFillEventSelection(std::string tag,
                                const PlotUtils::MacroUtil& util,
                                std::map<std::string, std::vector<CVUniverse*> > error_bands,
-                               std::vector<CCQENu::VariableFromConfig*>& variables,
+                              std::vector<CCQENu::VariableFromConfig*>& variables,
                                std::vector<CCQENu::Variable2DFromConfig*>& variables2D,
                                EDataMCTruth data_mc_truth,
                                PlotUtils::Cutter<CVUniverse>& selection, PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model,
-                               PlotUtils::weight_MCreScale mcRescale, bool closure=false) {
+                               PlotUtils::weight_MCreScale mcRescale) {
   // Prepare loop
   MinervaUniverse::SetTruth(false);
   int nentries = -1;
@@ -57,11 +46,6 @@ void LoopAndFillEventSelection(std::string tag,
 
   }
 
-
-  unsigned int loc = tag.find("___")+3;
-  std::string cat(tag,loc,string::npos);
-  std::string sample(tag,0,loc-3);
-  std::cout << sample << " category " << cat << std::endl;
   std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
   // Begin entries loop
   for (int i = 0; i < nentries; i++) {
@@ -71,12 +55,16 @@ void LoopAndFillEventSelection(std::string tag,
 
     if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
-
-    const double cvWeight = (data_mc_truth == kData ||  closure ) ? 1. : model.GetWeight(*cvUniv,event);  // detail may be used for more complex things
+#ifdef CLOSURE
+      const double cvWeight = 1.0;
+#else
+      const double cvWeight = (data_mc_truth == kData) ? 1.: model.GetWeight(*cvUniv,event);
+#endif
+    // detail may be used for more complex things
     // TODO: Is this scaled cvWeight necessary?
     // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
 
-    
+
     // Loop bands and universes
     for (auto band : error_bands) {
       std::vector<CVUniverse*> error_band_universes = band.second;
@@ -95,28 +83,28 @@ void LoopAndFillEventSelection(std::string tag,
         //if (universe->ShortName() == "cv" ) weight = data_mc_truth == kData ? 1. : universe->GetWeight();
 
         // probably want to move this later on inside the loop
-        const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event); //Only calculate the per-universe weight for events that will actually use it.
+#ifdef CLOSURE
+          const double weight = 1.0;
+        
+#else
+          const double weight = (data_mc_truth == kData) ? 1. : model.GetWeight(*universe, event);
+#endif
+        //Only calculate the per-universe weight for events that will actually use it.
         //PlotUtils::detail::empty event;
 
         //=========================================
         // Fill
         //=========================================
-        
+
         if(data_mc_truth == kMC){
-#ifdef CLOSUREDETAIL
-          if(closure && universe->ShortName() == "cv" && selection.isMCSelected(*universe, event, weight).all()){
-            std::cout  << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all() << " " << tag  << selection.isSignal(*universe)  << " " << universe->ShortName() <<  std::endl;
-              universe->Print();
-          }
-#endif
           if(selection.isMCSelected(*universe, event, weight).all()
              && selection.isSignal(*universe)) {
-            
             //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
             const double q2qe = universe->GetQ2QEGeV();
-            double scale = 1.0;
-            if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
-        
+            double scale = mcRescale.GetScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+#ifdef CLOSURE
+            scale = 1.0;
+#endif
             FillMC(tag, universe, weight, variables, variables2D, scale);
             FillResponse(tag,universe,weight,variables,variables2D, scale);
           }
@@ -126,22 +114,16 @@ void LoopAndFillEventSelection(std::string tag,
 
           if(selection.isEfficiencyDenom(*universe, weight)){
             const double q2qe = universe->GetTrueQ2QEGeV();
-            double scale = 1.0;
-            if (!closure) scale =mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
-            if (closure) scale = 1.0;
+            double scale = mcRescale.GetScale(tag, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+#ifdef CLOSURE
+            scale = 1.0;
+#endif
             FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
           }
         }
         else{ //kData
-#ifdef CLOSUREDETAIL
-          if (closure && selection.isDataSelected(*universe, event).all() ){
-            std::cout  << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all()  << "  " << tag  << "1" << " " << universe->ShortName() <<  std::endl;
-          }
-#endif
-          if(selection.isDataSelected(*universe, event).all()) {
-            FillData(tag, universe, variables, variables2D);
-            
-          }
+
+          if(selection.isDataSelected(*universe, event).all()) FillData(tag, universe, variables, variables2D);
         }
 
       } // End universes

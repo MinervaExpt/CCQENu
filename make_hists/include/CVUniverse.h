@@ -1,12 +1,27 @@
+/**
+* @file
+* @author  Heidi Schellman/Noah Vaughan/SeanGilligan
+* @version 1.0 *
+* @section LICENSE *
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as
+* published by the Free Software Foundation; either version 2 of
+* the License, or (at your option) any later version. *
+* @section DESCRIPTION *
+* The main universe class, it inherits from MinervaUniverse which implements most of the variations
+* one addition is units of GeV and degrees where the base classes use MeV and radians
+
+
 // ========================================================================
 // Base class for an un-systematically shifted (i.e. CV) universe.
 // Implement "Get" functions for all the quantities that you need for your
 // analysis.
 //
-// This class inherits from PU::sUniverse. PU::DCVU may already define
+//
 // your "Get" functions the way you want them. In that case, you  don't need to
 // re-write them here.
 // ========================================================================
+ */
 #ifndef CVUNIVERSE_H
 #define CVUNIVERSE_H
 
