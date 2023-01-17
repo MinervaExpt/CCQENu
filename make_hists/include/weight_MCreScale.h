@@ -24,32 +24,34 @@ namespace PlotUtils{
   class weight_MCreScale{
     public:
       // Boolean set to switch on and off if want to use tuned hists
-      bool useTuned=false;
-      // Boolean set based off tag
-      int isSignal;
+      bool m_useTuned=false;
+      // Boolean set based off Cat
 
       // std::map<
       // Member file with scale/fraction MnvH1Ds
-      TFile* f_Q2QEScaleFrac;
+      TFile* m_f_Q2QEScaleFrac;
+      std::vector<std::string> m_categories;
       // Member MnvH1D's for each scale from the file (set at initialization)
       // TODO: turn these into a map to allow for more bkg channels for Sean's analysis
-      MnvH1D* mnvh_SigScale;
-      MnvH1D* mnvh_BkgScale;
+      std::map<const std::string, MnvH1D*> m_mnvh_Scales;
+      //MnvH1D* mnvh_SigScale;
+      //MnvH1D* mnvh_BkgScale;
       // Member scale set to be sig or bkg (set at GetWeight)
-      MnvH1D* mnvh_Scale;
-      TH1D* h_scale;
+      MnvH1D* m_mnvh_Scale;
+      TH1D* m_h_scale;
+      std::string m_category;
 
     public:
       // Constructor that reads in hists from file
       weight_MCreScale(const TString f);
-      // Constructor that reads in hists from file and sets the tag
+      // Constructor that reads in hists from file and sets the Cat
       weight_MCreScale(const NuConfig config);
 
-      double GetScale(std::string tag, const double q2qe, std::string uni_name, int iuniv); // q2qe in GeV2
-      double GetScale(std::string tag, const CVUniverse* univ, std::string uni_name, int iuniv);
+      double GetScale(std::string cat, const double q2qe, std::string uni_name, int iuniv); // q2qe in GeV2
+      double GetScale(std::string cat, const CVUniverse* univ, std::string uni_name, int iuniv);
 
       void read(TString filename);
-      void SetTag(std::string tag);
+      void SetCat(std::string cat);
 
     private:
       double GetScaleInternal(const double q2qe, std::string uni_name, int iuniv);

@@ -1,12 +1,27 @@
+/**
+* @file
+* @author  Heidi Schellman/Noah Vaughan/SeanGilligan
+* @version 1.0 *
+* @section LICENSE *
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as
+* published by the Free Software Foundation; either version 2 of
+* the License, or (at your option) any later version. *
+* @section DESCRIPTION *
+* The main universe class, it inherits from MinervaUniverse which implements most of the variations
+* one addition is units of GeV and degrees where the base classes use MeV and radians
+
+
 // ========================================================================
 // Base class for an un-systematically shifted (i.e. CV) universe.
 // Implement "Get" functions for all the quantities that you need for your
 // analysis.
 //
-// This class inherits from PU::sUniverse. PU::DCVU may already define
+//
 // your "Get" functions the way you want them. In that case, you  don't need to
 // re-write them here.
 // ========================================================================
+ */
 #ifndef CVUNIVERSE_H
 #define CVUNIVERSE_H
 
@@ -22,18 +37,18 @@
 class CVUniverse : public PlotUtils::MinervaUniverse {
 protected:
 	// default values
-	static double m_proton_ke_cut;
-	static NuConfig m_proton_score_config;
-    static std::vector<double> m_proton_score_mins;
-    static std::vector<double> m_proton_score_Q2QEs;
     static double m_min_blob_zvtx;
     static double m_photon_energy_cut;
+	static double m_proton_ke_cut;
+	static NuConfig m_proton_score_config;
+    static std::vector<double> m_proton_score_Q2QEs;
+    static std::vector<double> m_proton_score_mins;
     
     // initially set to false
-    static bool _is_proton_ke_cut_set;
-    static bool _is_proton_score_config_set;
     static bool _is_min_blob_zvtx_set;
     static bool _is_photon_energy_cut_set;
+    static bool _is_proton_ke_cut_set;
+    static bool _is_proton_score_config_set;
 
 public:
 #ifndef HAZMAT
@@ -86,19 +101,19 @@ public:
     
     virtual int GetDeadTime() const;
     
-    // ----------------------- Cut-configuring Variables -------------------------
+    // ----------------------- Cut-configuring Functions -------------------------
+     
+    static double GetMinBlobZVtx();
+    static bool SetMinBlobZVtx(double min_zvtx, bool print);
+    
+    static double GetPhotonEnergyCut();
+    static bool SetPhotonEnergyCut(double energy, bool print);
     
     static double GetProtonKECut();
     static bool SetProtonKECut(double proton_KECut, bool print);
     
     static NuConfig GetProtonScoreConfig(bool print);
     static bool SetProtonScoreConfig(NuConfig protonScoreConfig, bool print);
-    
-    static double GetMinBlobZVtx();
-    static bool SetMinBlobZVtx(double min_zvtx, bool print);
-    
-    static double GetPhotonEnergyCut();
-    static bool SetPhotonEnergyCut(double energy, bool print);
     
     // ----------------------- Analysis-related Variables ------------------------
     
@@ -247,7 +262,10 @@ public:
     
     virtual int GetNMichel() const;
     virtual int GetImprovedNMichel() const;
+    virtual int GetFittedNMichel() const;
     virtual int GetHasMichelElectron() const;
+    virtual int GetHasImprovedMichelElectron() const;
+    virtual int GetTrueFittedNMichel() const;
     virtual int GetTruthHasMichel() const;
     virtual int GetTruthHasImprovedMichel() const;
     
@@ -259,12 +277,49 @@ public:
     
     // Proton Score, Primary and Secondary Proton Tracks
     
+    virtual double GetProtonScore(int i) const;
+    virtual double GetProtonScore_0() const;
+    virtual double GetProtonScore_1() const;
+    virtual double GetProtonScore_2() const;
+    virtual double GetProtonScore_3() const;
+    virtual double GetProtonScore_4() const;
+    virtual double GetProtonScore_5() const;
+    virtual double GetProtonScore_6() const;
+    virtual double GetProtonScore_7() const;
+    virtual double GetProtonScore_8() const;
+    virtual double GetProtonScore_9() const;
+    
+    virtual int GetPassProtonScoreCut(double score, double tree_Q2) const;
+    virtual int GetPassScoreCutProton_0() const;
+    virtual int GetPassScoreCutProton_1() const;
+    virtual int GetPassScoreCutProton_2() const;
+    virtual int GetPassScoreCutProton_3() const;
+    virtual int GetPassScoreCutProton_4() const;
+    virtual int GetPassScoreCutProton_5() const;
+    virtual int GetPassScoreCutProton_6() const;
+    virtual int GetPassScoreCutProton_7() const;
+    virtual int GetPassScoreCutProton_8() const;
+    virtual int GetPassScoreCutProton_9() const;
+    
+    virtual int GetSecondaryProtonCandidateCount() const;
     virtual double GetPrimaryProtonScore() const;
-    virtual int PassProtonScoreCut(double score, double tree_Q2) const;
-    virtual int PassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const;
+    virtual int GetAreClustsFoundAtPrimaryProtonEnd() const;
+    virtual int GetNumClustsPrimaryProtonEnd() const;
+    virtual double GetPrimaryProtonTrackLength() const;
+    virtual double GetCalibEClustsPrimaryProtonEnd() const;
+    virtual double GetVisEClustsPrimaryProtonEnd() const;
+    virtual double GetPrimaryProtonTfromdEdx() const;
+    virtual double GetTotalPrimaryProtonEnergydEdxAndClusters() const;
+    virtual double GetPrimaryProtonTrueKE() const;
+    virtual double GetEnergyDiffTruedEdx() const;
+    virtual double GetPrimaryProtonFractionEnergyInCone() const;
+    virtual int GetRecoTruthIsPrimaryProton() const;
     virtual int GetIsPrimaryProton() const;
-    virtual int GetAllExtraTracksProtons() const;
     virtual int GetTruthHasSingleProton() const;
+    
+    virtual int GetPassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const;
+    virtual int GetAllExtraTracksProtons() const;
+    virtual int GetProtonCount() const;
     
     // GENIE Particle Counts
     
@@ -283,6 +338,7 @@ public:
     virtual int GetMCTargetZ() const;
     virtual int GetMCTargetNucleon() const;
     virtual int Dummy() const;
-    
+
+  virtual void Print() const;
 };
 #endif

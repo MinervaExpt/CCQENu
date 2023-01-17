@@ -122,6 +122,7 @@ if "mu" in var:
     models.append("G18_10a_02_11a")
 
 titles = {"pzmu":"p_{||}, GeV/c","ptmu":"p_{#perp}, GeV/c","enu":"E_{#nu}, GeV","enuQE":"E_{#nu QE}, GeV","q2":"Q^2_{QE}, GeV^2"}
+titles = {"pzmu":"p_{||}, GeV/c","ptmu":"p_{#perp}, GeV/c","enu":"E_{#nu}, GeV","enuQE":"E_{#nu QE}, GeV","q2":"Q^2_{QE}, GeV^2","pzmu_ptmu":":p_{||}, GeV/c;p_{#perp}, GeV/c"}
 translate={
 "2p2hrpa":"GENIE+recoil fit+RPA",
 "rpapiontune":"GENIE+RPA+$\pi$tune",
@@ -324,6 +325,7 @@ else:
     
 datahist.SetDirectory(0)
 datahist.Scale(SCALE*norm)
+
 dataname = "MINERvA_AntiNeutrino_CCQElike_"+var+"_Data_Meas"
 if full:
     dataname = dataname.replace("Meas","MeasFull")

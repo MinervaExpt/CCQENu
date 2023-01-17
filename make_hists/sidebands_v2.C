@@ -22,7 +22,7 @@
 #include <iostream>
 #include <vector>
 #include "utils/NuConfig.h"
-#include "utils/gitVersion.h"
+//#include "utils/gitVersion.h"
 #include "PlotUtils/MacroUtil.h"
 #include "include/CVUniverse.h"
 
@@ -48,6 +48,7 @@
 #include "PlotUtils/reweighters/LowRecoil2p2hReweighter.h"
 #include "PlotUtils/reweighters/RPAReweighter.h"
 #include "PlotUtils/reweighters/MINOSEfficiencyReweighter.h"
+#include "PlotUtils/reweighters/LowQ2PiReweighter.h"
 #else
 #include "weighters/Model.h"
 #include "weighters/FluxAndCVReweighter.h"
@@ -55,7 +56,7 @@
 #include "weighters/LowRecoil2p2hReweighter.h"
 #include "weighters/RPAReweighter.h"
 #include "weighters/MINOSEfficiencyReweighter.h"
-
+#include "weighters/LowQ2PiReweighter.h"
 #endif
 #include "include/Fillers.h"
 #include "include/Sample.h"

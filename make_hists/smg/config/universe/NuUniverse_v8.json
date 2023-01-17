@@ -1,9 +1,12 @@
 {
 	"printConfigs":0,
+	"MinimumBlobZVtx":{ "min":4750.0 },
+	"PhotonEnergyCut":{ "energy":10.0 },
+	"ProtonKECut":{ "energy":120.0 },
 	"ProtonScoreConfig": {
 		"band1":{ "Q2QE_max":0.2, "pass_proton_score_min":0.2 },
 		"band2":{ "Q2QE_range":[0.2,0.6], "pass_proton_score_min":0.1 },
-		"band4":{ "Q2QE_min":0.6, "pass_proton_score_min":0.0 }
+		"band3":{ "Q2QE_min":0.6, "pass_proton_score_min":0.0 }
 	},
 	"LE_ProtonScoreConfig": {
 		"band1":{ "Q2QE_max":0.1, "pass_proton_score_min":0.25 },
@@ -11,8 +14,5 @@
 		"band3":{ "Q2QE_range":[0.2,0.75], "pass_proton_score_min":0.1 },
 		"band4":{ "Q2QE_min":0.75, "pass_proton_score_min":0.0 }
 	},
-	"allQ2QE_ProtonScoreConfig": { "pass_proton_score_min":0.15 },
-	"MinimumBlobZVtx":{ "min":4750.0 },
-	"PhotonEnergyCut":{ "energy":10.0 },
-	"ProtonKECut":{ "energy":120.0 }
+	"allQ2QE_ProtonScoreConfig": { "pass_proton_score_min":0.15 }
 }
