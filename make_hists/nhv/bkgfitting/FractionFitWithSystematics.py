@@ -13,7 +13,9 @@ import time
 category_list = ["data", "qelike", "qelikenot"]
 # names associated with each "sample" e.g. QElike, QElikeALL
 # sample_list = ["QElike", "QElike_hiE", "QElike_loE"]
-sample_list = ["QElike"]
+# sample_list = ["Background"]
+sample = "Background"
+sample_list = [sample]
 # DO_SYSTEMATICS = False
 # DRAW = True
 # CONFINT = True
@@ -29,7 +31,9 @@ recoil_type = "recoil"
 def GetDataMCMnvH2D(rfile, category_list, sample, useTuned=0):
     # Make a dictionary of the histos for fitting.
     # Requires CCQENuMAT naming convention for hists.
+    print("Before GetDataMCMnvH2D")
     histkeys_list = rfile.GetListOfKeys()
+    print("After GetListOfKeys")
     datafound = 0
     qelikefound = 0
     qeliketunedfound = 0
@@ -37,6 +41,7 @@ def GetDataMCMnvH2D(rfile, category_list, sample, useTuned=0):
     qelikenottunedfound = 0
     for histkey in histkeys_list:
         hist_name = histkey.GetName()
+        print(hist_name)
         # Get rid of non-hist branches.
         if hist_name.find("___") == -1:
             continue
@@ -72,19 +77,19 @@ def GetDataMCMnvH2D(rfile, category_list, sample, useTuned=0):
                 qelike_hist2d = rfile.Get(hist_name).Clone()
                 qelikefound = 1
             else:
-                qelike_hist2d_tuned = rfile.Get(hist_name).Clone()
+                # qelike_hist2d_tuned = rfile.Get(hist_name).Clone()
                 qeliketunedfound = 1
         if histocategory == 'qelikenot':
             if 'tuned' not in splitnames_list[4]:
                 qelikenot_hist2d = rfile.Get(hist_name).Clone()
                 qelikenotfound = 1
             else:
-                qelikenot_hist2d_tuned = rfile.Get(hist_name).Clone()
+                # qelikenot_hist2d_tuned = rfile.Get(hist_name).Clone()
                 qelikenottunedfound = 1
-
-        if datafound == 1 and qelikefound == 1 and qelikenotfound == 1 and qeliketunedfound == 1 and qelikenottunedfound == 1:
+        print("Before if found check")
+        if datafound == 1 and qelikefound == 1 and qelikenotfound == 1: #and qeliketunedfound == 1 and qelikenottunedfound == 1:
             print("Looking at hist: ",hist_name)
-            return data_hist2D, qelike_hist2d, qelikenot_hist2d, qelike_hist2d_tuned, qelikenot_hist2d_tuned
+            return data_hist2D, qelike_hist2d, qelikenot_hist2d#, qelike_hist2d_tuned, qelikenot_hist2d_tuned
         else:
             continue
 
@@ -450,7 +455,7 @@ def ScaleMC(i_data_hist,i_mctot_hist,i_qelike_hist,i_qelikenot_hist):
     qelike_hist=i_qelike_hist.Clone()
     qelikenot_hist=i_qelikenot_hist.Clone()
 
-    min_bin = 1
+    min_bin = 6 #1
     max_xbin = data_hist.GetNbinsX()
     area_scale = (data_hist.Integral(min_bin, max_xbin)) / (mctot_hist.Integral(min_bin, max_xbin))
 
@@ -463,9 +468,10 @@ def ScaleMC(i_data_hist,i_mctot_hist,i_qelike_hist,i_qelikenot_hist):
 
 
 def GetSigBkgFrac(i_mctot_hist, i_sig_hist, i_bkg_hist):
-    mc_int = i_mctot_hist.Integral(1, i_mctot_hist.GetNbinsX())
-    qelike_int = i_sig_hist.Integral(1, i_sig_hist.GetNbinsX())
-    qelikenot_int = i_bkg_hist.Integral(1, i_bkg_hist.GetNbinsX())
+    min_bin = 6
+    mc_int = i_mctot_hist.Integral(min_bin, i_mctot_hist.GetNbinsX())
+    qelike_int = i_sig_hist.Integral(min_bin, i_sig_hist.GetNbinsX())
+    qelikenot_int = i_bkg_hist.Integral(min_bin, i_bkg_hist.GetNbinsX())
 
     sig_frac = qelike_int / mc_int
     bkg_frac = qelikenot_int / mc_int
@@ -479,7 +485,7 @@ def RunFractionFitter(i_mctot_hist, i_qelike_hist, i_qelikenot_hist, i_data_hist
     data_hist = i_data_hist.Clone()
 
     # Get some info for some calculations
-    min_bin = 1
+    min_bin = 6
     max_bin = mctot_hist.GetNbinsX()
 
     print(">>>>>>>>>max_bin ", max_bin)
@@ -496,8 +502,8 @@ def RunFractionFitter(i_mctot_hist, i_qelike_hist, i_qelikenot_hist, i_data_hist
     # Get bin width for "step size" of fit
     x_max = mctot_hist.GetXaxis().GetXmax()
     x_min = mctot_hist.GetXaxis().GetXmin()
-    binwid = (x_max-x_min) / ((max_bin-min_bin)+1)
-    print(">>>>>>>>>binwid ",binwid)
+    # binwid = (x_max-x_min) / ((max_bin-min_bin)+1)
+    # print(">>>>>>>>>binwid ",binwid)
     # Set up fitter in verbose mode
     fit = ROOT.TFractionFitter(data_hist, mc_list, "V")
     virtual_fitter = fit.GetFitter()
@@ -646,7 +652,7 @@ def GetFitBinning(rfile):
     # Grabs binning from a CCQENuMAT variable config stored in root file.
     varsFile = rfile.Get("varsFile").GetTitle()
     vars_dict = json.loads(varsFile)
-    binning = vars_dict['1D']['Q2QE']['bins']
+    binning = vars_dict['1D']['Q2QE']['recobins']
     return binning
 
 def main():
@@ -677,12 +683,13 @@ def main():
         print("Starting on sample ", sample)
         # Grab the MnvH2D's from the file for data, and MC categories
         print("Getting MnvH2D's from file...")
-        data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D, qelike_tuned_MnvH2D, qelikenot_tuned_MnvH2D= GetDataMCMnvH2D(infile, category_list, sample)
+        # data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D, qelike_tuned_MnvH2D, qelikenot_tuned_MnvH2D= GetDataMCMnvH2D(infile, category_list, sample)
+        data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D= GetDataMCMnvH2D(infile, category_list, sample)
         print("Done getting MnvH2D's from file.")
         # Area normalize MC categories to match data, and make total MC MnvH2D
         print("Making MC total and scaling MC hists...")
         mctot_MnvH2D = MakeMC(qelike_MnvH2D, qelikenot_MnvH2D)
-        mctot_tuned_MnvH2D = MakeMC(qelike_tuned_MnvH2D, qelikenot_tuned_MnvH2D)
+        # mctot_tuned_MnvH2D = MakeMC(qelike_tuned_MnvH2D, qelikenot_tuned_MnvH2D)
         print("Done making MC total and scaling MC hists.")
 
         # This finds the number of x bins in Q^2 for fit bins.
@@ -709,7 +716,8 @@ def main():
         prefit_chi2_dict = {}
         postfit_chi2_dict = {}
         # Quick dict to store MnvH2Ds
-        MnvH2D_dict = {'data': data_MnvH2D, 'mctot': mctot_MnvH2D, 'mctot_tuned':mctot_tuned_MnvH2D, 'qelike': qelike_MnvH2D, 'qelike_tuned': qelike_tuned_MnvH2D, 'qelikenot': qelikenot_MnvH2D, 'qelikenot_tuned':qelikenot_tuned_MnvH2D}
+        # MnvH2D_dict = {'data': data_MnvH2D, 'mctot': mctot_MnvH2D, 'mctot_tuned':mctot_tuned_MnvH2D, 'qelike': qelike_MnvH2D, 'qelike_tuned': qelike_tuned_MnvH2D, 'qelikenot': qelikenot_MnvH2D, 'qelikenot_tuned':qelikenot_tuned_MnvH2D}
+        MnvH2D_dict = {'data': data_MnvH2D, 'mctot': mctot_MnvH2D, 'qelike': qelike_MnvH2D, 'qelikenot': qelikenot_MnvH2D}
 
         universe_names = qelike_MnvH2D.GetVertErrorBandNames()
         # Add in cv to universe
@@ -717,16 +725,16 @@ def main():
         for name in universe_names:
             universe_names_list.append(name)
 
-        sig_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___fraction")
+        sig_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___"+sample+"___qelike___Q2QE___fraction")
         # sig_tuned_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___fraction_tuned")
 
-        sig_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___scale")
+        sig_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___"+sample+"___qelike___Q2QE___scale")
         # sig_tuned_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___scale_tuned")
 
-        bkg_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___fraction")
+        bkg_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___"+sample+"___qelikenot___Q2QE___fraction")
         # bkg_tuned_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___fraction_tuned")
 
-        bkg_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___scale")
+        bkg_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___"+sample+"___qelikenot___Q2QE___scale")
         # bkg_tuned_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___scale_tuned")
 #
         # Loop over universe names
@@ -788,6 +796,8 @@ def main():
                     for key in tmp_th2d_dict.keys():
                         proj_name = fitbin_name + '_' + key
                         tmp_fitbin_th1d = tmp_th2d_dict[key].ProjectionY(proj_name, fitbin, fitbin, "e")
+                        # for i in range(1,6):
+                        #     tmp_fitbin_th1d.SetBinContent(i,0)
                         prefit_th1d_dict[key] = tmp_fitbin_th1d
                         print("     Number of entries in ", key,": ", tmp_fitbin_th1d.GetEntries())
                         # Need to make a Mnvh1d of each fitbin before the fit.
@@ -799,12 +809,14 @@ def main():
                             print(">>>>>>>>> key: ",key)
                             if 'tuned' in key:
                                 tmpname = key.replace('_tuned','')
-                                prefit_mnvh1d_name = "h___QELike___" + tmpname + "___"+recoil_type+"_" + fitbin_name + "___prefit_tuned"
+                                prefit_mnvh1d_name = "h___"+sample+"___" + tmpname + "___"+recoil_type+"_" + fitbin_name + "___prefit_tuned"
                             else:
-                                prefit_mnvh1d_name = "h___QELike___" + key + "___"+recoil_type+"_" + fitbin_name + "___prefit"
+                                prefit_mnvh1d_name = "h___"+sample+"___" + key + "___"+recoil_type+"_" + fitbin_name + "___prefit"
 
                             print(prefit_mnvh1d_name)
                             prefit_recoil_mnvh = MnvH2D_dict[key].ProjectionY(prefit_mnvh1d_name, fitbin, fitbin, "e").Clone()
+                            # for i in range(1,6):
+                            #     prefit_recoil_mnvh.SetBinContent(i,0)
 
                             prefit_mnvh1d_dict[fitbin][key] = prefit_recoil_mnvh
 
@@ -822,7 +834,7 @@ def main():
                     prefit_mctot_hist, prefit_qelike_hist, prefit_qelikenot_hist = ScaleMC(data_hist,prefit_mctot_hist,prefit_qelike_hist,prefit_qelikenot_hist)
 
                     # Calculate Chi2 between data & MC before the fit.
-                    prefit_chi2 = data_hist.Chi2Test(prefit_mctot_hist, "CHI2")
+                    prefit_chi2 = data_hist.Chi2Test(prefit_mctot_hist, "UW,CHI2")
                     prefit_ndf = data_hist.GetNbinsX() - 1
 
 
@@ -848,7 +860,7 @@ def main():
                     fit_mctot_hist = fit_qelike_hist.Clone("fit_mctot")
                     fit_mctot_hist.Add(fit_qelikenot_hist)
 
-                    postfit_chi2 = data_hist.Chi2Test(fit_mctot_hist,"CHI2")
+                    postfit_chi2 = data_hist.Chi2Test(fit_mctot_hist,"UW,CHI2")
                     postfit_ndf = prefit_ndf
 
 
@@ -872,15 +884,15 @@ def main():
 
 
                         fit_sig_mnvh1d = MnvH1D(fit_qelike_hist)
-                        fit_sig_mnvh1d.SetName("h___QELike___qelike___"+recoil_type+"_" + fitbin_name + "___fit")
+                        fit_sig_mnvh1d.SetName("h___"+sample+"___qelike___"+recoil_type+"_" + fitbin_name + "___fit")
                         fit_mnvh1d_dict[fitbin]['qelike'] = fit_sig_mnvh1d
 
                         fit_bkg_mnvh1d = MnvH1D(fit_qelikenot_hist)
-                        fit_bkg_mnvh1d.SetName("h___QELike___qelikenot___"+recoil_type+"_" + fitbin_name + "___fit")
+                        fit_bkg_mnvh1d.SetName("h___"+sample+"___qelikenot___"+recoil_type+"_" + fitbin_name + "___fit")
                         fit_mnvh1d_dict[fitbin]['qelikenot'] = fit_bkg_mnvh1d
 
                         fit_mctot_mnvh1d = MnvH1D(fit_mctot_hist)
-                        fit_mctot_mnvh1d.SetName("h___QELike___mctot___"+recoil_type+"_" + fitbin_name + "___fit")
+                        fit_mctot_mnvh1d.SetName("h___"+sample+"___mctot___"+recoil_type+"_" + fitbin_name + "___fit")
                         fit_mnvh1d_dict[fitbin]['mctot'] = fit_mctot_mnvh1d
 
                     else:
@@ -953,7 +965,7 @@ def main():
         outhistfile.Close()
 
         # Write out each hist to a root file.
-        outvalhistfile_tail = "_OutVals_fix.root"
+        outvalhistfile_tail = "_OutVals_100MeVFit.root"
         outvalhistfile = outfilebase.replace(".root", outvalhistfile_tail)
         print("Writing scale and fraction hists to file: ", outvalhistfile)
         outvalfile = ROOT.TFile(outvalhistfile, "RECREATE")
@@ -968,7 +980,7 @@ def main():
         outvalfile.cd()
         outvalfile.Close()
 
-        plotfilename = outfilebase.replace(".root", "_Hists")
+        plotfilename = outfilebase.replace(".root", "_Hists_100MeVFit")
         i_fitbin = 0
 
         binning = GetFitBinning(infile)
