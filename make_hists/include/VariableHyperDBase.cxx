@@ -72,7 +72,7 @@ int VariableHyperDBase<UNIVERSE>::GetNBins() const {
   return m_lin_var->GetNBins();
 }
 
-// Used to get the numbrer of bins in a given axis
+// Used to get the number of bins in a given axis
 template <class UNIVERSE>
 int VariableHyperDBase<UNIVERSE>::GetNBins(const int axis) const {
   return m_var_vec[axis]->GetNBins();
