@@ -15,9 +15,11 @@
     "LowQ2PiReweighter":{"fit":"JOINT"}
   },
   "MnvTunev3":{
+    "RemovalEnergy":true,
     "XYZ":true
   },
   "MnvTunev4":{
+    "PiTune":true,
     "XYZ":true
   }
 }

@@ -24,7 +24,11 @@ namespace PlotUtils{
 // template <typename T>
   class ModelFromConfig{
   public:
-    ModelFromConfig();
+    ModelFromConfig(NuConfig config){
+      ModelFunctions<CVUniverse> fun;
+
+      
+    };
 
     NuConfig m_config; // Should be the main config
     std::string m_tunename;

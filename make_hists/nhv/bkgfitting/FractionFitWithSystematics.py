@@ -13,7 +13,7 @@ import time
 category_list = ["data", "qelike", "qelikenot"]
 # names associated with each "sample" e.g. QElike, QElikeALL
 # sample_list = ["QElike", "QElike_hiE", "QElike_loE"]
-sample_list = ["QElike"]
+sample_list = ["Background"]
 # DO_SYSTEMATICS = False
 # DRAW = True
 # CONFINT = True
@@ -21,7 +21,7 @@ sample_list = ["QElike"]
 # This is based off of how fitbins are made (i.e. making sidebands that have
 # cuts on binedges of the variable you're making), and the histogram naming
 # convention CCQENuMAT
-
+min_bin = 1
 # recoil_type = "Log10recoil"
 recoil_type = "recoil"
 
@@ -37,6 +37,7 @@ def GetDataMCMnvH2D(rfile, category_list, sample, useTuned=0):
     qeliketunedfound = 0
     qelikenotfound = 0
     qelikenottunedfound = 0
+    # potfound = 0
     for histkey in histkeys_list:
         hist_name = histkey.GetName()
         print(hist_name)
@@ -52,10 +53,10 @@ def GetDataMCMnvH2D(rfile, category_list, sample, useTuned=0):
         histosample = str(splitnames_list[1])
         if histosample != sample:
             continue
-        # Only grab recoil vs. Q2QE 2D hists
+        # Only grab recoil vs. ptmu 2D hists
         histovariable = str(splitnames_list[3])
-        # if histovariable != 'Q2QE_recoil':
-        if histovariable != 'Q2QE_'+recoil_type:
+        # if histovariable != 'ptmu_recoil':
+        if histovariable != 'ptmu_'+recoil_type:
             continue
         # Only grab data and qelike & qelikenot MC reco
         histocategory = str(splitnames_list[2])
@@ -85,9 +86,9 @@ def GetDataMCMnvH2D(rfile, category_list, sample, useTuned=0):
                 # qelikenot_hist2d_tuned = rfile.Get(hist_name).Clone()
                 qelikenottunedfound = 1
         print("Before if found check")
-        if datafound == 1 and qelikefound == 1 and qelikenotfound == 1: #and qeliketunedfound == 1 and qelikenottunedfound == 1:
+        if datafound == 1 and qelikefound == 1 and qelikenotfound == 1:# and potfound == 1: #and qeliketunedfound == 1 and qelikenottunedfound == 1:
             print("Looking at hist: ",hist_name)
-            return data_hist2D, qelike_hist2d, qelikenot_hist2d#, qelike_hist2d_tuned, qelikenot_hist2d_tuned
+            return data_hist2D, qelike_hist2d, qelikenot_hist2d, #pot_hist#, qelike_hist2d_tuned, qelikenot_hist2d_tuned
         else:
             continue
 
@@ -362,8 +363,8 @@ def MakeFitRatioPlot(canvas, title, i_data_hist, i_mctot_hist, i_fit_mctot_hist,
     ROOT.gPad.SetLogy(0)
 
 
-def GetDummyHistCV(rfile, variable_name="___Q2QE___"):
-    # Make a dummy 1D hist to get binning. Just grabs first 1D Q2QE plot
+def GetDummyHistCV(rfile, variable_name="___ptmu___"):
+    # Make a dummy 1D hist to get binning. Just grabs first 1D ptmu plot
     histkeys_list = rfile.GetListOfKeys()
     for histkey in histkeys_list:
         hist_name = histkey.GetName()
@@ -425,10 +426,10 @@ def MakeMCandScale2D(i_data_hist, qelike_hist, qelikenot_hist):
     mctot_hist.Add(qelikenot_hist, 1.0)
 
     # Make area scale for MC hists. Don't include underflow & overflow bins
-    min_bin = 1
+    # min_bin = 1
     max_xbin = data_hist.GetNbinsX()
     max_ybin = data_hist.GetNbinsY()
-    # area_scale = (data_hist.Integral(min_bin, max_xbin, min_bin, max_ybin)) / (mctot_hist.Integral(min_bin, max_xbin, min_bin, max_ybin))
+    area_scale = (data_hist.Integral(min_bin, max_xbin, 1, max_ybin)) / (mctot_hist.Integral(min_bin, max_xbin, 1, max_ybin))
 
     # Scale MC hists to area normalize them to Data (so # counts is the same)
     mctot_hist.Scale(area_scale)
@@ -447,28 +448,31 @@ def MakeMC(i_qelike_hist, i_qelikenot_hist):
 
     return mctot_hist
 
-def ScaleMC(i_data_hist,i_mctot_hist,i_qelike_hist,i_qelikenot_hist):
+def ScaleMC(i_data_hist,i_mctot_hist,i_qelike_hist,i_qelikenot_hist, pot_scale=1.):
     data_hist = i_data_hist.Clone()
     mctot_hist = i_mctot_hist.Clone()
     qelike_hist=i_qelike_hist.Clone()
     qelikenot_hist=i_qelikenot_hist.Clone()
 
-    min_bin = 1
+    scale = pot_scale
+    # min_bin = 1
     max_xbin = data_hist.GetNbinsX()
-    area_scale = (data_hist.Integral(min_bin, max_xbin)) / (mctot_hist.Integral(min_bin, max_xbin))
+    if pot_scale==1.:
+        area_scale = (data_hist.Integral(min_bin, max_xbin)) / (mctot_hist.Integral(min_bin, max_xbin))
+        scale = area_scale
 
     # Scale MC hists to area normalize them to Data (so # counts is the same)
-    mctot_hist.Scale(area_scale)
-    qelike_hist.Scale(area_scale)
-    qelikenot_hist.Scale(area_scale)
+    mctot_hist.Scale(scale)
+    qelike_hist.Scale(scale)
+    qelikenot_hist.Scale(scale)
 
     return mctot_hist,qelike_hist,qelikenot_hist
 
 
 def GetSigBkgFrac(i_mctot_hist, i_sig_hist, i_bkg_hist):
-    mc_int = i_mctot_hist.Integral(1, i_mctot_hist.GetNbinsX())
-    qelike_int = i_sig_hist.Integral(1, i_sig_hist.GetNbinsX())
-    qelikenot_int = i_bkg_hist.Integral(1, i_bkg_hist.GetNbinsX())
+    mc_int = i_mctot_hist.Integral(min_bin, i_mctot_hist.GetNbinsX())
+    qelike_int = i_sig_hist.Integral(min_bin, i_sig_hist.GetNbinsX())
+    qelikenot_int = i_bkg_hist.Integral(min_bin, i_bkg_hist.GetNbinsX())
 
     sig_frac = qelike_int / mc_int
     bkg_frac = qelikenot_int / mc_int
@@ -482,7 +486,7 @@ def RunFractionFitter(i_mctot_hist, i_qelike_hist, i_qelikenot_hist, i_data_hist
     data_hist = i_data_hist.Clone()
 
     # Get some info for some calculations
-    min_bin = 1
+    # min_bin = 1
     max_bin = mctot_hist.GetNbinsX()
 
     print(">>>>>>>>>max_bin ", max_bin)
@@ -649,7 +653,7 @@ def GetFitBinning(rfile):
     # Grabs binning from a CCQENuMAT variable config stored in root file.
     varsFile = rfile.Get("varsFile").GetTitle()
     vars_dict = json.loads(varsFile)
-    binning = vars_dict['1D']['Q2QE']['recobins']
+    binning = vars_dict['1D']['ptmu']['bins']
     return binning
 
 def main():
@@ -668,7 +672,7 @@ def main():
     # ROOT file from output of eventloop in CCQENuMAT
     infile = ROOT.TFile(filename, "READONLY")
 
-    outfilebase = filename.replace(".root","_"+recoil_type+".root")
+    outfilebase = filename.replace(".root","_"+recoil_type+".root") #"_Amitfit"+
     dummy_q2_mnvh1d, dummy_q2_th1d = GetDummyHistCV(infile)
 
     dummy_recoil_mnvh1d, dummy_recoil_th1d = GetDummyHistCV(
@@ -681,7 +685,7 @@ def main():
         # Grab the MnvH2D's from the file for data, and MC categories
         print("Getting MnvH2D's from file...")
         # data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D, qelike_tuned_MnvH2D, qelikenot_tuned_MnvH2D= GetDataMCMnvH2D(infile, category_list, sample)
-        data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D= GetDataMCMnvH2D(infile, category_list, sample)
+        data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D = GetDataMCMnvH2D(infile, category_list, sample)
         print("Done getting MnvH2D's from file.")
         # Area normalize MC categories to match data, and make total MC MnvH2D
         print("Making MC total and scaling MC hists...")
@@ -692,6 +696,10 @@ def main():
         # This finds the number of x bins in Q^2 for fit bins.
         n_xbins = data_MnvH2D.GetNbinsX()
 
+        # data_pot = pot_hist.GetBinContent(1)
+        # mc_pot = pot_hist.GetBinContent(2)
+        # print("mcpot: ",mc_pot," datapot: ",data_pot)
+        # pot_scale = data_pot/mc_pot
         # Make a dictionary for fitted recoil mnvh1ds to store later
         data_mnvh_dict = {}
         prefit_mctot_dict = {}
@@ -722,17 +730,17 @@ def main():
         for name in universe_names:
             universe_names_list.append(name)
 
-        sig_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___fraction")
-        # sig_tuned_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___fraction_tuned")
+        sig_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___ptmu___fraction")
+        # sig_tuned_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___ptmu___fraction_tuned")
 
-        sig_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___scale")
-        # sig_tuned_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___Q2QE___scale_tuned")
+        sig_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___ptmu___scale")
+        # sig_tuned_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___ptmu___scale_tuned")
 
-        bkg_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___fraction")
-        # bkg_tuned_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___fraction_tuned")
+        bkg_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___ptmu___fraction")
+        # bkg_tuned_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___ptmu___fraction_tuned")
 
-        bkg_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___scale")
-        # bkg_tuned_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___Q2QE___scale_tuned")
+        bkg_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___ptmu___scale")
+        # bkg_tuned_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___ptmu___scale_tuned")
 #
         # Loop over universe names
         for uni_name in universe_names_list:
@@ -815,7 +823,7 @@ def main():
 
                     # Scale prefit MnvH1D's
                     if uni_name=='cv':
-                        prefit_mnvh1d_dict[fitbin]['mctot'],prefit_mnvh1d_dict[fitbin]['qelike'],prefit_mnvh1d_dict[fitbin]['qelikenot'] = ScaleMC(prefit_mnvh1d_dict[fitbin]['data'],prefit_mnvh1d_dict[fitbin]['mctot'],prefit_mnvh1d_dict[fitbin]['qelike'],prefit_mnvh1d_dict[fitbin]['qelikenot'])
+                        prefit_mnvh1d_dict[fitbin]['mctot'],prefit_mnvh1d_dict[fitbin]['qelike'],prefit_mnvh1d_dict[fitbin]['qelikenot'] = ScaleMC(prefit_mnvh1d_dict[fitbin]['data'],prefit_mnvh1d_dict[fitbin]['mctot'],prefit_mnvh1d_dict[fitbin]['qelike'],prefit_mnvh1d_dict[fitbin]['qelikenot'])#,pot_scale)
 
 
                     data_hist = prefit_th1d_dict['data']
@@ -824,7 +832,7 @@ def main():
                     prefit_qelikenot_hist = prefit_th1d_dict['qelikenot']
 
                     # Scale MC hists to area normalize them to Data (so # counts is the same)
-                    prefit_mctot_hist, prefit_qelike_hist, prefit_qelikenot_hist = ScaleMC(data_hist,prefit_mctot_hist,prefit_qelike_hist,prefit_qelikenot_hist)
+                    prefit_mctot_hist, prefit_qelike_hist, prefit_qelikenot_hist = ScaleMC(data_hist,prefit_mctot_hist,prefit_qelike_hist,prefit_qelikenot_hist)#,pot_scale)
 
                     # Calculate Chi2 between data & MC before the fit.
                     prefit_chi2 = data_hist.Chi2Test(prefit_mctot_hist, "CHI2")

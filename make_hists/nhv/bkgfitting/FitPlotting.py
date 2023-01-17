@@ -75,7 +75,7 @@ def MakeScaleFactorPlot(canvas, i_scale_hist,sample_str='',color=ROOT.kBlack):
     ROOT.gStyle.SetOptStat(0)
 
     xmax = 2.0
-    ROOT.gPad.SetLogx(1)
+    # ROOT.gPad.SetLogx(1)
     # scale_hist.SetMaximum(1.5)
     # scale_hist.SetMinimum(0.7)
 
@@ -84,11 +84,11 @@ def MakeScaleFactorPlot(canvas, i_scale_hist,sample_str='',color=ROOT.kBlack):
         # title_suffix = sample_str
         title = sample_str+' '+title_base
         if "QELikeNot" in sample_str:
-            scale_hist.SetMaximum(0.8)
-            scale_hist.SetMinimum(1.7)
+            # scale_hist.SetMaximum(0.8)
+            scale_hist.SetMinimum(0.1)
         else:
-            scale_hist.SetMaximum(0.3)
-            scale_hist.SetMinimum(1.2)
+            scale_hist.SetMaximum(1.9)
+            # scale_hist.SetMinimum(1.2)
 
     else:
         title = title_base
@@ -149,8 +149,8 @@ def MakeScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,plot_name='',h1_color=RO
     # h2_fit = i_h2_dict['fit']
 
     # xmin = 0.02 #0.02
-    xmax = 2.0  # 1.4
-    ROOT.gPad.SetLogx(1)
+    xmax = 4.0  # 1.4
+    # ROOT.gPad.SetLogx(1)
     # ROOT.gPad.SetLogy(1)
     ROOT.gStyle.SetOptStat(0)
 
@@ -166,7 +166,7 @@ def MakeScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,plot_name='',h1_color=RO
 
     # h1_fit.SetLineColor(h1_color)
     if plot_name in ["QELike", "QElike","qelike"]:
-        h1_hist.SetMaximum(1.45)
+        h1_hist.SetMaximum(1.6)
         h1_hist.SetMinimum(0.85)
         legend = ROOT.TLegend(0.7, 0.8, 0.95, 0.7)
         legend.SetBorderSize(1)
@@ -227,6 +227,109 @@ def MakeScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,plot_name='',h1_color=RO
     # legend2.Draw("same")
 
     canvas_title = "Title: ScaleComp "+h1_name+" "+h2_name
+    canvas.Print(canvas.GetName(), canvas_title)
+    ROOT.gPad.SetLogx(0)
+    # ROOT.gPad.SetLogy(0)
+
+
+def Make3ScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,i_h3,h3_name,plot_name='',h1_color=ROOT.kBlue+1,h2_color=ROOT.kRed+1):
+    # h1_hist = i_h1_dict['hist'].Clone()
+    # h2_hist = i_h2_dict['hist'].Clone()
+    h1_hist = i_h1.Clone()
+    h2_hist = i_h2.Clone()
+    h3_hist = i_h3.Clone()
+
+    # h1_fit = i_h1_dict['fit']
+    # h2_fit = i_h2_dict['fit']
+
+    # xmin = 0.02 #0.02
+    xmax = 4.0  # 1.4
+    # ROOT.gPad.SetLogx(1)
+    # ROOT.gPad.SetLogy(1)
+    ROOT.gStyle.SetOptStat(0)
+
+
+    # h1_hist.SetTitle("Scale Factor vs. Q^{2}_{QE}: "+plot_name+" Comparison")
+    # h1_hist.GetXaxis().SetTitle("Q^{2}_{QE} (GeV^{2})")
+    h1_hist.SetTitle("Scale Factor vs. p_{T}: "+plot_name+" Comparison")
+    h1_hist.GetXaxis().SetTitle("p_{T} (GeV)")
+    h1_hist.GetXaxis().CenterTitle()
+    h1_hist.GetYaxis().SetTitle("Scale Factor")
+    h1_hist.GetYaxis().CenterTitle()
+
+    h1_hist.SetMarkerStyle(20)
+    h1_hist.SetMarkerColor(h1_color)
+    h1_hist.SetLineColor(h1_color)
+
+    # h1_fit.SetLineColor(h1_color)
+    if plot_name in ["QELike", "QElike","qelike"]:
+        h1_hist.SetMaximum(2)
+        h1_hist.SetMinimum(0)
+        legend = ROOT.TLegend(0.7, 0.8, 0.95, 0.7)
+        legend.SetBorderSize(1)
+
+    if plot_name in ["QELikeNot", "QElikenot","QElikenot","qelikenot"]:
+        h1_hist.SetMaximum(2)
+        h1_hist.SetMinimum(0)
+        legend = ROOT.TLegend(0.7, 0.25, 0.95, 0.35)
+        legend.SetBorderSize(1)
+
+
+    h2_hist.SetMarkerStyle(20)
+    h2_hist.SetMarkerColor(h2_color)
+    h2_hist.SetLineColor(h2_color)
+
+    # h2_fit.SetLineColor(h2_color)
+
+    h3_hist.SetMarkerStyle(20)
+    h3_hist.SetMarkerColor(ROOT.kBlack)
+    h3_hist.SetLineColor(ROOT.kBlack)
+
+
+    line = ROOT.TLine(0, 1., xmax, 1.)
+    line.SetLineStyle(2)
+    line.SetLineWidth(3)
+    line.SetLineColor(36)
+
+    # h1confint_hist = i_h1_dict['confint_hist'].Clone()
+    # h2confint_hist = i_h2_dict['confint_hist'].Clone()
+    # h1confint_hist.SetFillColorAlpha(h1_color, 0.2)
+    # h2confint_hist.SetFillColorAlpha(h2_color, 0.2)
+
+    #
+    legend.AddEntry(h1_hist, h1_name)
+    legend.AddEntry(h2_hist, h2_name)
+    legend.AddEntry(h3_hist, h3_name)
+
+    # ks = h1_hist.KolmogorovTest(h2_hist)
+    # chi2 = h1_hist.Chi2Test(h2_hist,"CHI2")
+    # ndf = h1_hist.GetNbinsX() - 1
+    # h1_hist.Chi2Test(h2_hist,"P")
+
+    # ks_label = 'K-S GoF = ' + str("{:.4f}".format(ks))
+    # chi2_label = '\chi^{2} = ' + str("{:.2f}".format(chi2))
+    # ndf_label = 'NDF = ' + str(ndf)
+
+    # legend2 = ROOT.TLegend(0.7, 0.15, 0.9, 0.35)
+    # legend2.SetBorderSize(1)
+
+    # legend2.AddEntry("ks", ks_label, "")
+    # legend2.AddEntry("chi2",chi2_label,"")
+    # legend2.AddEntry("ndf",ndf_label,"")
+
+    h1_hist.Draw("E1")
+    line.Draw("same")
+    # h1confint_hist.Draw("e3,same")
+    # h1_fit.Draw("same")
+    h2_hist.Draw("E1,same")
+    # h2confint_hist.Draw("e3,same")
+    # h2_fit.Draw("same")
+    h3_hist.Draw("E1,same")
+
+    legend.Draw("same")
+    # legend2.Draw("same")
+
+    canvas_title = "Title: ScaleComp "+h1_name+" "+h2_name+" "+h3_name
     canvas.Print(canvas.GetName(), canvas_title)
     ROOT.gPad.SetLogx(0)
     # ROOT.gPad.SetLogy(0)
@@ -515,17 +618,66 @@ def main():
     if len(sys.argv) < 2:
         print("python FitPlotting.py <infile>.root <outfilename>")
     else:
-        filename = sys.argv[1]
+        filename1 = sys.argv[1]
+        filename2 = sys.argv[2]
         # if len(sys.argv)>=3:
         #     plotfilename_base = sys.argv[2]
         # else if len(sys.argv)==2:
         #     plotfilename_base = filename.replace(".root","_plots")
-        plotfilename_base = filename.replace(".root","_plots")
+        plotfilename1_base = filename1.replace(".root","_plots")
+        # plotfilename2_base = filename2.replace(".root","_plots")
 
-    f = ROOT.TFile(filename, "READONLY")
-    plotfilename = plotfilename_base # + '_' + sample
+    f1 = ROOT.TFile(filename1, "READONLY")
+    f2 = ROOT.TFile(filename2, "READONLY")
+    f3 = ROOT.TFile("/Users/vaughann/merged_BkgScaleFactor_CV_minervame5A6A6B6C6D6E6F6G6H6I6J_Nominal_nue_ver27.root","READONLY")
+    plotfilename = plotfilename1_base # + '_' + sample
 
-    scale_hist_dict = GetScaleHists(f)
+    scale_hist_dict1 = GetScaleHists(f1)
+    scale_hist_dict2 = GetScaleHists(f2)
+    frac_hist_dict1 = GetScaleHists(f1,"frac")
+    frac_hist_dict2 = GetScaleHists(f2,"frac")
+
+    # amit_sig_scale_hist_raw = f3.Get("scale_hist_sig").Clone()
+    # amit_bkg_scale_hist_raw = f3.Get("scale_hist_res").Clone()
+
+
+    amit_sig_before_hist = f3.Get("frac_sig_before")
+    amit_bkg_before_hist = f3.Get("frac_bkg_before")
+    amit_sig_after_hist = f3.Get("frac_sig_after")
+    amit_bkg_after_hist = f3.Get("frac_bkg_after")
+
+    amit_sig_scale_hist_raw = amit_sig_after_hist.Clone()
+    amit_bkg_scale_hist_raw = amit_bkg_after_hist.Clone()
+    amit_sig_scale_hist_raw.Divide(amit_sig_after_hist,amit_sig_before_hist,1,1)
+    amit_bkg_scale_hist_raw.Divide(amit_bkg_after_hist,amit_bkg_before_hist,1,1)
+
+    amit_sig_scale_hist = scale_hist_dict1["qelike"].Clone()
+    amit_sig_scale_hist.Reset("ICES")
+    frac_after_sig = scale_hist_dict1["qelike"].Clone()
+    frac_after_sig.Reset("ICES")
+    frac_after_bkg = frac_after_sig.Clone()
+    for i in range(1,7):
+        scale = amit_sig_scale_hist_raw.GetBinContent(i)
+        scale_err = amit_sig_scale_hist_raw.GetBinError(i)
+        amit_sig_scale_hist.SetBinContent(i, scale)
+        amit_sig_scale_hist.SetBinError(i, scale_err)
+        frac = amit_sig_after_hist.GetBinContent(i)
+        frac_err =amit_sig_after_hist.GetBinError(i)
+        frac_after_sig.SetBinContent(i,frac)
+        frac_after_sig.SetBinError(i,frac_err)
+    amit_bkg_scale_hist = scale_hist_dict1["qelikenot"].Clone()
+    amit_bkg_scale_hist.Reset("ICES")
+    for i in range(1,7):
+        scale = amit_bkg_scale_hist_raw.GetBinContent(i)
+        scale_err = amit_bkg_scale_hist_raw.GetBinError(i)
+        amit_bkg_scale_hist.SetBinContent(i, scale)
+        amit_bkg_scale_hist.SetBinError(i, scale_err)
+        frac = amit_bkg_after_hist.GetBinContent(i)
+        frac_err =amit_bkg_after_hist.GetBinError(i)
+        frac_after_bkg.SetBinContent(i,frac)
+        frac_after_bkg.SetBinError(i,frac_err)
+
+
     canvas = InitializeCanvas(plotfilename)
     canvas.Print(str(plotfilename + "." + plotfiletype+"["), plotfiletype)
     # MakeScaleFactorPlot(canvas, scale_hist_dict['qelike']['tuned'],'Tuned QELike',ROOT.kBlue+1)
@@ -533,13 +685,17 @@ def main():
     # MakeScaleFactorPlot(canvas, scale_hist_dict['qelikenot']['tuned'],'Tuned QELikeNot',ROOT.kRed+1)
     # MakeScaleFactorPlot(canvas, scale_hist_dict['qelikenot']['untuned'],'Untuned QELikeNot',ROOT.kRed)
 
-    MakeScaleFactorPlot(canvas, scale_hist_dict['qelike'],'Untuned QELike',ROOT.kBlue)
+    # MakeScaleFactorPlot(canvas, scale_hist_dict2['qelike'],'QELike',ROOT.kBlue)
 
-    MakeScaleFactorPlot(canvas, scale_hist_dict['qelikenot'],'Untuned QELikeNot',ROOT.kRed)
+    # MakeScaleFactorPlot(canvas, scale_hist_dict2['qelikenot'],'QELikeNot',ROOT.kRed)
 
-    # MakeScaleCompPlot(canvas, scale_hist_dict['qelike']['tuned'],'Tuned', scale_hist_dict['qelike']['untuned'],'Untuned','QELike')
-    # MakeScaleCompPlot(canvas, scale_hist_dict['qelikenot']['tuned'],'Tuned', scale_hist_dict['qelikenot']['untuned'],'Untuned','QELikeNot')
+    # MakeScaleCompPlot(canvas, scale_hist_dict1['qelike'],'Noah Fit', scale_hist_dict2['qelike'],'Amit Fit','QELike')
+    # MakeScaleCompPlot(canvas, scale_hist_dict1['qelikenot'],'Noah Fit', scale_hist_dict2['qelikenot'],'Amit Fit','QELikeNot')
+    Make3ScaleCompPlot(canvas, scale_hist_dict1['qelike'],'Noah Fit', scale_hist_dict2['qelike'],'Amit Fit',amit_sig_scale_hist,"Amit Value",'QELike')
+    Make3ScaleCompPlot(canvas, scale_hist_dict1['qelikenot'],'Noah Fit', scale_hist_dict2['qelikenot'],'Amit Fit',amit_bkg_scale_hist,"Amit Value",'QELikeNot')
 
+    Make3ScaleCompPlot(canvas, frac_hist_dict1['qelike'],'Noah Fit Frac', frac_hist_dict2['qelikenot'],'Amit Fit Frac',frac_after_sig,"Amit Value Frac",'QELike')
+    Make3ScaleCompPlot(canvas, frac_hist_dict1['qelikenot'],'Noah Fit Frac', frac_hist_dict2['qelike'],'Amit Fit Frac',frac_after_bkg,"Amit Value Frac",'QELikeNot')
     canvas.Print(str(plotfilename + "." + plotfiletype+"]"), plotfiletype)
 
 
