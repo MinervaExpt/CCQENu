@@ -13,7 +13,7 @@ import time
 category_list = ["data", "qelike", "qelikenot"]
 # names associated with each "sample" e.g. QElike, QElikeALL
 # sample_list = ["QElike", "QElike_hiE", "QElike_loE"]
-sample_list = ["Background"]
+sample_list = ["QElike"]
 # DO_SYSTEMATICS = False
 # DRAW = True
 # CONFINT = True
@@ -64,9 +64,12 @@ def GetDataMCMnvH2D(rfile, category_list, sample, useTuned=0):
             continue
 
         if useTuned>0:
+            if 'tuned' in splitnames_list[4]:
+                print(splitnames_list[4])
             if 'tuned' not in splitnames_list[4]:
+                print(splitnames_list[4])
                 if histocategory!='data':
-                        continue
+                    continue
 
         if histocategory == 'data':
             data_hist2D = rfile.Get(hist_name).Clone()
@@ -76,15 +79,15 @@ def GetDataMCMnvH2D(rfile, category_list, sample, useTuned=0):
                 qelike_hist2d = rfile.Get(hist_name).Clone()
                 qelikefound = 1
             else:
-                # qelike_hist2d_tuned = rfile.Get(hist_name).Clone()
-                qeliketunedfound = 1
+                qelike_hist2d = rfile.Get(hist_name).Clone()
+                qelikefound = 1
         if histocategory == 'qelikenot':
             if 'tuned' not in splitnames_list[4]:
                 qelikenot_hist2d = rfile.Get(hist_name).Clone()
                 qelikenotfound = 1
             else:
-                # qelikenot_hist2d_tuned = rfile.Get(hist_name).Clone()
-                qelikenottunedfound = 1
+                qelikenot_hist2d = rfile.Get(hist_name).Clone()
+                qelikenotfound = 1
         print("Before if found check")
         if datafound == 1 and qelikefound == 1 and qelikenotfound == 1:# and potfound == 1: #and qeliketunedfound == 1 and qelikenottunedfound == 1:
             print("Looking at hist: ",hist_name)
@@ -685,7 +688,7 @@ def main():
         # Grab the MnvH2D's from the file for data, and MC categories
         print("Getting MnvH2D's from file...")
         # data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D, qelike_tuned_MnvH2D, qelikenot_tuned_MnvH2D= GetDataMCMnvH2D(infile, category_list, sample)
-        data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D = GetDataMCMnvH2D(infile, category_list, sample)
+        data_MnvH2D, qelike_MnvH2D, qelikenot_MnvH2D = GetDataMCMnvH2D(infile, category_list, sample,1)
         print("Done getting MnvH2D's from file.")
         # Area normalize MC categories to match data, and make total MC MnvH2D
         print("Making MC total and scaling MC hists...")
@@ -732,12 +735,14 @@ def main():
 
         sig_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___ptmu___fraction")
         # sig_tuned_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___ptmu___fraction_tuned")
+        sig_prefrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___ptmu___before_fraction")
 
         sig_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___ptmu___scale")
         # sig_tuned_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelike___ptmu___scale_tuned")
 
         bkg_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___ptmu___fraction")
         # bkg_tuned_fitfrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___ptmu___fraction_tuned")
+        bkg_prefrac_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___ptmu___before_fraction")
 
         bkg_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___ptmu___scale")
         # bkg_tuned_scale_mnvh1d = dummy_q2_mnvh1d.Clone("h___QELike___qelikenot___ptmu___scale_tuned")
@@ -747,9 +752,13 @@ def main():
             print("  Starting universe ", uni_name, "...")
             sig_fitfrac_hist_list = []
 
+            sig_prefrac_hist_list = []
+
             sig_scale_hist_list = []
 
             bkg_fitfrac_hist_list = []
+
+            bkg_prefrac_hist_list = []
 
             bkg_scale_hist_list = []
 
@@ -769,9 +778,13 @@ def main():
                 print("    Starting universe number", uni, "...")
                 sig_fitfrac_hist = dummy_q2_th1d.Clone()
 
+                sig_prefrac_hist = dummy_q2_th1d.Clone()
+
                 sig_scale_hist = dummy_q2_th1d.Clone()
 
                 bkg_fitfrac_hist = dummy_q2_th1d.Clone()
+
+                bkg_prefrac_hist = dummy_q2_th1d.Clone()
 
                 bkg_scale_hist = dummy_q2_th1d.Clone()
 
@@ -874,11 +887,15 @@ def main():
                         sig_fitfrac_mnvh1d.SetBinContent(fitbin, fit_sig_frac)
                         sig_fitfrac_mnvh1d.SetBinError(fitbin, fit_sig_err)
 
+                        sig_prefrac_mnvh1d.SetBinContent(fitbin, prefit_sig_frac)
+
                         sig_scale_mnvh1d.SetBinContent(fitbin, sig_scale)
                         sig_scale_mnvh1d.SetBinError(fitbin, sig_scale_err)
 
                         bkg_fitfrac_mnvh1d.SetBinContent(fitbin, fit_bkg_frac)
                         bkg_fitfrac_mnvh1d.SetBinError(fitbin, fit_bkg_err)
+
+                        bkg_prefrac_mnvh1d.SetBinContent(fitbin, prefit_bkg_frac)
 
                         bkg_scale_mnvh1d.SetBinContent(fitbin, bkg_scale)
                         bkg_scale_mnvh1d.SetBinError(fitbin, bkg_scale_err)
@@ -901,14 +918,19 @@ def main():
                         sig_fitfrac_hist.SetBinContent(fitbin, fit_sig_frac)
                         sig_fitfrac_hist.SetBinError(fitbin, fit_sig_err)
 
+                        sig_prefrac_hist.SetBinContent(fitbin, prefit_sig_frac)
+
                         sig_scale_hist.SetBinContent(fitbin, sig_scale)
                         sig_scale_hist.SetBinError(fitbin, sig_scale_err)
 
                         bkg_fitfrac_hist.SetBinContent(fitbin, fit_bkg_frac)
                         bkg_fitfrac_hist.SetBinError(fitbin, fit_bkg_err)
 
+                        bkg_fitfrac_hist.SetBinContent(fitbin, prefit_bkg_frac)
+
                         bkg_scale_hist.SetBinContent(fitbin, bkg_scale)
                         bkg_scale_hist.SetBinError(fitbin, bkg_scale_err)
+
                         fit_sig_uni_dict[fitbin].append(fit_qelike_hist)
                         fit_bkg_uni_dict[fitbin].append(fit_qelikenot_hist)
 
@@ -921,8 +943,10 @@ def main():
                 # Add the hists for this universe to a list (unless its the cv)
                 if uni_name != 'cv':
                     sig_fitfrac_hist_list.append(sig_fitfrac_hist)
+                    sig_prefrac_hist_list.append(sig_prefrac_hist)
                     sig_scale_hist_list.append(sig_scale_hist)
                     bkg_fitfrac_hist_list.append(bkg_fitfrac_hist)
+                    bkg_prefrac_hist_list.append(bkg_prefrac_hist)
                     bkg_scale_hist_list.append(bkg_scale_hist)
             # Add list of TH1D's for error band to MnvH1D
             # NOTE 'cv' needs to be first in the list of universes
@@ -931,15 +955,19 @@ def main():
             else:
                 print("  Adding vert error band ", uni_name, " to MnvH1Ds... ")
                 sig_fitfrac_mnvh1d.AddVertErrorBand(uni_name, sig_fitfrac_hist_list)
+                sig_prefrac_mnvh1d.AddVertErrorBand(uni_name, sig_prefrac_hist_list)
                 sig_scale_mnvh1d.AddVertErrorBand(uni_name, sig_scale_hist_list)
                 bkg_fitfrac_mnvh1d.AddVertErrorBand(uni_name, bkg_fitfrac_hist_list)
+                bkg_prefrac_mnvh1d.AddVertErrorBand(uni_name, bkg_prefrac_hist_list)
                 bkg_scale_mnvh1d.AddVertErrorBand(uni_name, bkg_scale_hist_list)
 
         print("Done filling hists... ")
         print("Syncing bands... ")
         SyncBands(sig_fitfrac_mnvh1d)
+        SyncBands(sig_prefrac_mnvh1d)
         SyncBands(sig_scale_mnvh1d)
         SyncBands(bkg_fitfrac_mnvh1d)
+        SyncBands(bkg_prefrac_mnvh1d)
         SyncBands(bkg_scale_mnvh1d)
         for fitbin in prefit_mnvh1d_dict:
             for key in prefit_mnvh1d_dict[fitbin]:
@@ -973,67 +1001,73 @@ def main():
         outvalfile.cd()
         sig_fitfrac_mnvh1d.Write()
         outvalfile.cd()
+        sig_prefrac_mnvh1d.Write()
+        outvalfile.cd()
         sig_scale_mnvh1d.Write()
+
         outvalfile.cd()
         bkg_fitfrac_mnvh1d.Write()
         outvalfile.cd()
+        bkg_prefrac_mnvh1d.Write()
+        outvalfile.cd()
         bkg_scale_mnvh1d.Write()
         outvalfile.cd()
+
         outvalfile.Close()
 
-        plotfilename = outfilebase.replace(".root", "_Hists")
-        i_fitbin = 0
-
-        binning = GetFitBinning(infile)
-        # Initialize a pdf canvas for making plots
-        canvas = ROOT.TCanvas(str(str(plotfilename) + ".pdf"))
-
-        canvas.cd()
-        canvas.SetLeftMargin(0.1)
-        canvas.SetRightMargin(0.07)
-        canvas.SetBottomMargin(0.11)
-        canvas.SetTopMargin(0.1)
-
-        canvas.Print(str(plotfilename+".pdf["), "pdf")
-
-        for fitbin in range(1, n_xbins + 1):
-
-            print("Starting fitbin ", fitbin)
-            fitbin_loedge = binning[i_fitbin]
-            fitbin_upedge = binning[i_fitbin + 1]
-            # Base title for plotting later
-            title = "Recoil: " + str(fitbin_loedge) +" GeV^{2} < Q^{2}_{QE} < " + str(fitbin_upedge) + " GeV^{2}"
-
-            data_hist = prefit_mnvh1d_dict[fitbin]['data'].Clone().GetCVHistoWithStatError()
-            prefit_mctot_hist = prefit_mnvh1d_dict[fitbin]['mctot'].Clone().GetCVHistoWithStatError()
-            prefit_sig_hist = prefit_mnvh1d_dict[fitbin]['qelike'].Clone().GetCVHistoWithStatError()
-            prefit_bkg_hist = prefit_mnvh1d_dict[fitbin]['qelikenot'].Clone().GetCVHistoWithStatError()
-            fit_mctot_hist = fit_mnvh1d_dict[fitbin]['mctot'].Clone()
-            fit_sig_hist = fit_mnvh1d_dict[fitbin]['qelike'].Clone().GetCVHistoWithStatError()
-            fit_bkg_hist = fit_mnvh1d_dict[fitbin]['qelikenot'].Clone().GetCVHistoWithStatError()
-
-
-            fit_chi2 = fit_chi2_dict[fitbin]["chi2"]
-            fit_ndf = fit_chi2_dict[fitbin]["ndf"]
-            prefit_chi2 = prefit_chi2_dict[fitbin]["chi2"]
-            prefit_ndf = prefit_chi2_dict[fitbin]["ndf"]
-            postfit_chi2 = postfit_chi2_dict[fitbin]["chi2"]
-            postfit_ndf = postfit_chi2_dict[fitbin]["ndf"]
-
-            # Plot Data & pre-fit MC
-            logx=False
-            logy=True
-            MakeDataMCPlot(canvas, title+", prefit", data_hist, prefit_sig_hist,prefit_bkg_hist, prefit_chi2, prefit_ndf, logx, logy)
-            # Plot Data & post-fit MC
-            MakeDataMCPlot(canvas, title+", postfit", data_hist, fit_sig_hist,fit_bkg_hist, postfit_chi2, postfit_ndf, logx, logy, fit_chi2)
-            ROOT.gPad.SetLogx(0)
-            ROOT.gPad.SetLogy(0)
-
-            # Plot Data/MC ratio for both pre- and post-fit MC
-            MakeFitRatioPlot(canvas, title+" data/MC ratio", data_hist, prefit_mctot_hist, fit_mctot_hist, logx)
-            # canvas.Print(str(plotfilename +"_"+fitbin+".pdf]"), "pdf")
-            i_fitbin+=1
-        canvas.Print(str(plotfilename +".pdf]"), "pdf")
+        # plotfilename = outfilebase.replace(".root", "_Hists")
+        # i_fitbin = 0
+        #
+        # binning = GetFitBinning(infile)
+        # # Initialize a pdf canvas for making plots
+        # canvas = ROOT.TCanvas(str(str(plotfilename) + ".pdf"))
+        #
+        # canvas.cd()
+        # canvas.SetLeftMargin(0.1)
+        # canvas.SetRightMargin(0.07)
+        # canvas.SetBottomMargin(0.11)
+        # canvas.SetTopMargin(0.1)
+        #
+        # canvas.Print(str(plotfilename+".pdf["), "pdf")
+        #
+        # for fitbin in range(1, n_xbins + 1):
+        #
+        #     print("Starting fitbin ", fitbin)
+        #     fitbin_loedge = binning[i_fitbin]
+        #     fitbin_upedge = binning[i_fitbin + 1]
+        #     # Base title for plotting later
+        #     title = "Recoil: " + str(fitbin_loedge) +" GeV^{2} < Q^{2}_{QE} < " + str(fitbin_upedge) + " GeV^{2}"
+        #
+        #     data_hist = prefit_mnvh1d_dict[fitbin]['data'].Clone().GetCVHistoWithStatError()
+        #     prefit_mctot_hist = prefit_mnvh1d_dict[fitbin]['mctot'].Clone().GetCVHistoWithStatError()
+        #     prefit_sig_hist = prefit_mnvh1d_dict[fitbin]['qelike'].Clone().GetCVHistoWithStatError()
+        #     prefit_bkg_hist = prefit_mnvh1d_dict[fitbin]['qelikenot'].Clone().GetCVHistoWithStatError()
+        #     fit_mctot_hist = fit_mnvh1d_dict[fitbin]['mctot'].Clone()
+        #     fit_sig_hist = fit_mnvh1d_dict[fitbin]['qelike'].Clone().GetCVHistoWithStatError()
+        #     fit_bkg_hist = fit_mnvh1d_dict[fitbin]['qelikenot'].Clone().GetCVHistoWithStatError()
+        #
+        #
+        #     fit_chi2 = fit_chi2_dict[fitbin]["chi2"]
+        #     fit_ndf = fit_chi2_dict[fitbin]["ndf"]
+        #     prefit_chi2 = prefit_chi2_dict[fitbin]["chi2"]
+        #     prefit_ndf = prefit_chi2_dict[fitbin]["ndf"]
+        #     postfit_chi2 = postfit_chi2_dict[fitbin]["chi2"]
+        #     postfit_ndf = postfit_chi2_dict[fitbin]["ndf"]
+        #
+        #     # Plot Data & pre-fit MC
+        #     logx=False
+        #     logy=True
+        #     MakeDataMCPlot(canvas, title+", prefit", data_hist, prefit_sig_hist,prefit_bkg_hist, prefit_chi2, prefit_ndf, logx, logy)
+        #     # Plot Data & post-fit MC
+        #     MakeDataMCPlot(canvas, title+", postfit", data_hist, fit_sig_hist,fit_bkg_hist, postfit_chi2, postfit_ndf, logx, logy, fit_chi2)
+        #     ROOT.gPad.SetLogx(0)
+        #     ROOT.gPad.SetLogy(0)
+        #
+        #     # Plot Data/MC ratio for both pre- and post-fit MC
+        #     MakeFitRatioPlot(canvas, title+" data/MC ratio", data_hist, prefit_mctot_hist, fit_mctot_hist, logx)
+        #     # canvas.Print(str(plotfilename +"_"+fitbin+".pdf]"), "pdf")
+        #     i_fitbin+=1
+        # canvas.Print(str(plotfilename +".pdf]"), "pdf")
 
 
 

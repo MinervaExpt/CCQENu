@@ -251,7 +251,7 @@ def Make3ScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,i_h3,h3_name,plot_name=
 
     # h1_hist.SetTitle("Scale Factor vs. Q^{2}_{QE}: "+plot_name+" Comparison")
     # h1_hist.GetXaxis().SetTitle("Q^{2}_{QE} (GeV^{2})")
-    h1_hist.SetTitle("Scale Factor vs. p_{T}: "+plot_name+" Comparison")
+    h1_hist.SetTitle("Fraction vs. p_{T}: "+plot_name+" Comparison")
     h1_hist.GetXaxis().SetTitle("p_{T} (GeV)")
     h1_hist.GetXaxis().CenterTitle()
     h1_hist.GetYaxis().SetTitle("Scale Factor")
@@ -263,13 +263,13 @@ def Make3ScaleCompPlot(canvas, i_h1,h1_name,i_h2,h2_name,i_h3,h3_name,plot_name=
 
     # h1_fit.SetLineColor(h1_color)
     if plot_name in ["QELike", "QElike","qelike"]:
-        h1_hist.SetMaximum(2)
-        h1_hist.SetMinimum(0)
+        h1_hist.SetMaximum(1)
+        h1_hist.SetMinimum(.5)
         legend = ROOT.TLegend(0.7, 0.8, 0.95, 0.7)
         legend.SetBorderSize(1)
 
     if plot_name in ["QELikeNot", "QElikenot","QElikenot","qelikenot"]:
-        h1_hist.SetMaximum(2)
+        h1_hist.SetMaximum(.5)
         h1_hist.SetMinimum(0)
         legend = ROOT.TLegend(0.7, 0.25, 0.95, 0.35)
         legend.SetBorderSize(1)
@@ -630,6 +630,7 @@ def main():
     f1 = ROOT.TFile(filename1, "READONLY")
     f2 = ROOT.TFile(filename2, "READONLY")
     f3 = ROOT.TFile("/Users/vaughann/merged_BkgScaleFactor_CV_minervame5A6A6B6C6D6E6F6G6H6I6J_Nominal_nue_ver27.root","READONLY")
+    f4 = ROOT.TFile("/Users/vaughann/CCQENu_minervame5A_MnvTunev1_QElike_lowpz_ptrecoilq2qe_1_recoil_OutVals_fix.root","READONLY")
     plotfilename = plotfilename1_base # + '_' + sample
 
     scale_hist_dict1 = GetScaleHists(f1)
@@ -637,6 +638,8 @@ def main():
     frac_hist_dict1 = GetScaleHists(f1,"frac")
     frac_hist_dict2 = GetScaleHists(f2,"frac")
 
+    tuned_sig_frac = f4.Get("h___QELike___qelike___ptmu___before_fraction")
+    tuned_bkg_frac = f4.Get("h___QELike___qelikenot___ptmu___before_fraction")
     # amit_sig_scale_hist_raw = f3.Get("scale_hist_sig").Clone()
     # amit_bkg_scale_hist_raw = f3.Get("scale_hist_res").Clone()
 
@@ -691,11 +694,13 @@ def main():
 
     # MakeScaleCompPlot(canvas, scale_hist_dict1['qelike'],'Noah Fit', scale_hist_dict2['qelike'],'Amit Fit','QELike')
     # MakeScaleCompPlot(canvas, scale_hist_dict1['qelikenot'],'Noah Fit', scale_hist_dict2['qelikenot'],'Amit Fit','QELikeNot')
-    Make3ScaleCompPlot(canvas, scale_hist_dict1['qelike'],'Noah Fit', scale_hist_dict2['qelike'],'Amit Fit',amit_sig_scale_hist,"Amit Value",'QELike')
-    Make3ScaleCompPlot(canvas, scale_hist_dict1['qelikenot'],'Noah Fit', scale_hist_dict2['qelikenot'],'Amit Fit',amit_bkg_scale_hist,"Amit Value",'QELikeNot')
+    # Make3ScaleCompPlot(canvas, scale_hist_dict1['qelike'],'Noah Fit', scale_hist_dict2['qelike'],'Amit Fit',amit_sig_scale_hist,"Amit Value",'QELike')
+    # Make3ScaleCompPlot(canvas, scale_hist_dict1['qelikenot'],'Noah Fit', scale_hist_dict2['qelikenot'],'Amit Fit',amit_bkg_scale_hist,"Amit Value",'QELikeNot')
 
-    Make3ScaleCompPlot(canvas, frac_hist_dict1['qelike'],'Noah Fit Frac', frac_hist_dict2['qelikenot'],'Amit Fit Frac',frac_after_sig,"Amit Value Frac",'QELike')
-    Make3ScaleCompPlot(canvas, frac_hist_dict1['qelikenot'],'Noah Fit Frac', frac_hist_dict2['qelike'],'Amit Fit Frac',frac_after_bkg,"Amit Value Frac",'QELikeNot')
+    # Make3ScaleCompPlot(canvas, frac_hist_dict1['qelike'],'Noah Fit Frac', frac_hist_dict2['qelikenot'],'Amit Fit Frac',frac_after_sig,"Amit Value Frac",'QELike')
+    # Make3ScaleCompPlot(canvas, frac_hist_dict1['qelikenot'],'Noah Fit Frac', frac_hist_dict2['qelike'],'Amit Fit Frac',frac_after_bkg,"Amit Value Frac",'QELikeNot')
+    Make3ScaleCompPlot(canvas, frac_hist_dict1['qelike'],'No recoil cut', tuned_sig_frac,'Recoil Cut',frac_after_sig,"Amit Value Frac",'QELike')
+    Make3ScaleCompPlot(canvas, frac_hist_dict1['qelikenot'],'No recoil cut', tuned_bkg_frac,'Recoil Cut',frac_after_bkg,"Amit Value Frac",'QELikeNot')
     canvas.Print(str(plotfilename + "." + plotfiletype+"]"), plotfiletype)
 
 
