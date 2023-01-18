@@ -20,7 +20,7 @@ namespace CCQENu {
 
 
 
-class VariableHyperDFromConfig : public VariableBase<CVUniverse> {
+class VariableHyperDFromConfig : public VariableHyperDBase<CVUniverse> {
 private:
   typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
   typedef PlotUtils::HistWrapperMap<CVUniverse> HM;
@@ -34,7 +34,7 @@ public:
                            std::vector<const CCQENu:VariableFromConfig<CVUniverse>&> vars1D,
                            const std::vector<std::string> fors){
 
-    PlotUtils::VariableBase<CVUniverse>::m_name = config.GetString("name");
+    PlotUtils::VariableHyperDBase<CVUniverse>::m_name = config.GetString("name");
 
     for(auto var:vars1D){
       m_varbins.push_back(var->GetbinVec());

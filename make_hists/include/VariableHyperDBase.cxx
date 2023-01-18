@@ -1,7 +1,7 @@
 #ifndef VARIABLEHYPERDBASE_CXX
 #define VARIABLEHYPERDBASE_CXX
 
-#include "PlotUtils/VariableHyperDBase.h"
+#include "VariableHyperDBase.h"
 
 using namespace PlotUtils;
 
@@ -17,11 +17,11 @@ template <class UNIVERSE>
 VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::vector<const VariableBase<UNIVERSE>&> d){
   std::string name;
   std::vector<std::string> axis_label_vec;
-  std::vector<std::unique_ptr<VariableBase<UNIVERSE>> var_vec;
+  std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> var_vec;
 
   for(int i=0; i<d.size(); i++){
     name+=d[i].GetName();
-    i<d.size()-1? name+="_";
+    if(i<(d.size()-1)) name+="_" ;
     axis_label_vec.push_back(d[i].GetAxisLabel());
     var_vec.pushback(new VariableBase<UNIVERSE>(d[i]));
   }

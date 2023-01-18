@@ -49,6 +49,7 @@ include/Get2DVariablesFromConfig.cxx
 include/GetVariablesFromConfig.cxx
 utils/SyncBands.cxx
 include/weight_MCreScale.cxx
+include/VariableHyperDBase.cxx
 )
 
 # tell it about the header files
@@ -72,6 +73,7 @@ include/Variable2DFromConfig.h
 include/VariableFromConfig.h
 include/weight_MCreScale.h
 include/plotting_pdf.h
+include/VariableHyperDBase.h
 )
 
 include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils)

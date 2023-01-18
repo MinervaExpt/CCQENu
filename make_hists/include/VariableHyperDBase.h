@@ -49,7 +49,7 @@ class VariableHyperDBase {
                       const int idx2 = -1) const;
 
  protected:
-  std::vector<std::string> m_axis_label_vec
+  std::vector<std::string> m_axis_label_vec;
 
  private:
   //============================================================================
@@ -58,7 +58,7 @@ class VariableHyperDBase {
   std::string m_name;
 
   // Linearized variable
-  std::unique_ptr<VariableBase<UNIVERSE>>> m_lin_var;
+  std::unique_ptr<VariableBase<UNIVERSE>> m_lin_var;
 
   // Vector of component variables
   std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> m_var_vec;
