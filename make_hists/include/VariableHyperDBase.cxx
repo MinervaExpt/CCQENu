@@ -28,6 +28,12 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::vector<const VariableBase<
   m_name = name;
   m_axis_label_vec = axis_label_vec;
   m_var_vec = var_vec;
+
+  for(auto var:d){
+    m_varbins.pushback(var->GetBinVec());
+    m_axis_label_vec.pushback(var->GetAxisLabel());
+  }
+  m_hyperdim = new HyperDL(m_varbins,0);
 }
 
 template <class UNIVERSE>
@@ -42,6 +48,12 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::string name, std::ve
   m_name = name;
   m_axis_label_vec = axis_label_vec;
   m_var_vec = var_vec;
+
+  for(auto var:d){
+    m_varbins.pushback(var->GetBinVec());
+    m_axis_label_vec.pushback(var->GetAxisLabel());
+  }
+  m_hyperdim = new HyperDL(m_varbins,0);
 }
 //==============================================================================
 // Set/Get

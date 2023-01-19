@@ -22,6 +22,7 @@ class VariableHyperDBase {
   //============================================================================
   // Setters/Getters
   //============================================================================
+
   std::string SetName(const std::string name);
   std::string GetName() const;
   std::string GetAxisLabel(int axis) const;
@@ -57,11 +58,18 @@ class VariableHyperDBase {
   //============================================================================
   std::string m_name;
 
+  // Member HyperDim
+  PlotUtils::HyperDimLinearizer m_hyperdim;
+
   // Linearized variable
   std::unique_ptr<VariableBase<UNIVERSE>> m_lin_var;
 
   // Vector of component variables
   std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> m_var_vec;
+
+  // Vector of bins in variable phase space
+  std::vector<std::vector<double>> m_varbins;
+
 
   VariableHyperDBase();  // off-limits
 };
