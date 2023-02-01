@@ -1,4 +1,15 @@
-
+/**
+* @file
+* @author  Heidi Schellman/Noah Vaughan/SeanGilligan
+* @version 1.0 *
+* @section LICENSE *
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as
+* published by the Free Software Foundation; either version 2 of
+* the License, or (at your option) any later version. *
+* @section DESCRIPTION *
+* This implements a loop over the tuple that fills the histograms
+ */
 
 enum EDataMCTruth {kData, kMC, kTruth, kNDataMCTruthTypes};
 
@@ -15,8 +26,11 @@ void LoopAndFillEventSelection(std::string tag,
                                std::vector<CCQENu::VariableFromConfig*>& variables,
                                std::vector<CCQENu::Variable2DFromConfig*>& variables2D,
                                EDataMCTruth data_mc_truth,
-                               PlotUtils::Cutter<CVUniverse>& selection, PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model,
-                               PlotUtils::weight_MCreScale mcRescale, bool closure=false) {
+                               PlotUtils::Cutter<CVUniverse>& selection, 
+                               PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model, 
+                               PlotUtils::weight_MCreScale mcRescale, 
+                               bool closure=false, bool mc_reco_to_csv=false) {
+
   // Prepare loop
   MinervaUniverse::SetTruth(false);
   int nentries = -1;
@@ -28,6 +42,7 @@ void LoopAndFillEventSelection(std::string tag,
   // make a dummy event - may need to make fancier
   PlotUtils::detail::empty event;
 
+	std::ofstream csvFile;
   if ( variables.size() < 1) {
     std::cout << " no variables to fill " << std::endl;
     return;  // don't bother if there are no variables.
@@ -40,10 +55,8 @@ void LoopAndFillEventSelection(std::string tag,
     nentries = util.GetMCEntries();
   }
   else{
-
     nentries = util.GetTruthEntries() ;
     MinervaUniverse::SetTruth(true);
-
   }
 
 
@@ -52,10 +65,59 @@ void LoopAndFillEventSelection(std::string tag,
   std::string sample(tag,0,loc-3);
   std::cout << sample << " category " << cat << std::endl;
   std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
-  // Begin entries loop
+  
+  // If sending MC Reco values to CSV create file and add columns names
+  if (data_mc_truth == kMC && mc_reco_to_csv){
+
+  	std::string csvFileName = "mc_reco_entries_"+sample+"_"+cat+".csv";
+	  csvFile.open(csvFileName);
+	  csvFile << "Entry";
+	  for (auto v : variables) {
+	  	if (v->hasMC[tag]){
+	  		csvFile << ";" << v->GetName();
+	  	}
+	  }
+	  csvFile << std::endl;
+
+  }
+  
+  // status bar stuff
+  std::cout << std::endl;
+	std::cout << "  0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%" << std::endl;
+	std::cout << "   \\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\ " << std::endl;
+	std::cout << "   |________________________________________|   [__0.0%]";
+	double progress = 0;
+	
+	// Begin entries loop
   for (int i = 0; i < nentries; i++) {
     if(data_mc_truth != kData) i+= prescale-1;
-    if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
+    
+    //if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
+    // status bar stuff
+    if( ((double)(i+1)/nentries)*100 >= progress+2.5 ) {
+	  
+	  	progress+=2.5;
+			std::cout << '\r' << std::flush << "   |";
+			//std::cout << std::endl << "   |";
+		
+			for(int j=0;j<progress/2.5;j++) std::cout << "\e[0;31;47m \e[0m";
+			for(int j=40;j>progress/2.5;j--) std::cout << "_";
+
+			std::cout << "|   [";
+			if(progress<10) std::cout << "_";
+			if(progress<100) std::cout << "_";
+			std::cout << progress;
+			if(((int)(0.5 + progress/2.5))%2==0) std::cout << ".0";
+			std::cout << "%]";
+			std::cout << "   ( ";
+			for(int j=((int)log10(nentries)-(int)log10(i+1)); j>0; j--) {
+				std::cout << "_";
+			}
+			std::cout << i+1 << " / " << nentries << " )";
+
+			if(progress == 100) std::cout << std::endl << std::endl;
+		}
+		
     cvUniv->SetEntry(i);
 
     if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
@@ -108,8 +170,20 @@ void LoopAndFillEventSelection(std::string tag,
         
             FillMC(tag, universe, weight, variables, variables2D, scale);
             FillResponse(tag,universe,weight,variables,variables2D, scale);
-          }
+            
+            // Send MC Reco value to CSV here
+            if (mc_reco_to_csv) {
+		          csvFile << i;
+		          for (auto v : variables) {
+		          	if (v->hasMC[tag]){
+		          		csvFile << ";" << v->GetRecoValue(*universe, 0);
+		          	}
+		          }
+		          csvFile << std::endl;
+            }
+            // Done Sending MC Reco value to CSV
 
+          }
         }
         else if (data_mc_truth == kTruth){
 
@@ -136,6 +210,13 @@ void LoopAndFillEventSelection(std::string tag,
       } // End universes
     } // End error bands
   } // End entries loop
+  if (data_mc_truth == kMC && mc_reco_to_csv) {
+  	csvFile.close();
+  	std::string csvFileName = "mc_reco_entries_"+sample+"_"+cat+".csv";
+    std::cout << std::endl;
+    std::cout << "MC Reco events for " << sample << " category " << cat << " saved to " << csvFileName;
+    std::cout << std::endl;
+  }
 }
 
 #endif //__CINT__

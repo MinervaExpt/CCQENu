@@ -23,7 +23,11 @@ for arg in sys.argv[1:]:
             print('Searched files need to end in .C or .h. Ignoring argument '+arg)
     elif os.path.exists(arg) and not os.path.isfile(arg):
         fileList += glob.glob(arg+'/**/*.C', recursive=True)
+        fileList += glob.glob(arg+'/**/*.cxx', recursive=True)
         fileList += glob.glob(arg+'/**/*.h', recursive=True)
+        fileList += glob.glob(arg+'/*.C', recursive=True)
+        fileList += glob.glob(arg+'/*.cxx', recursive=True)
+        fileList += glob.glob(arg+'/*.h', recursive=True)
 
 # Get files       
 if filesFile or len(fileList) == 0:
@@ -33,7 +37,11 @@ if filesFile or len(fileList) == 0:
             path = path.split()[0]
             if os.path.exists(path) and not os.path.isfile(path):
                 fileList += glob.glob(path+'/**/*.C', recursive=True)
+                fileList += glob.glob(path+'/**/*.cxx', recursive=True)
                 fileList += glob.glob(path+'/**/*.h', recursive=True)
+                fileList += glob.glob(path+'/*.C', recursive=True)
+                fileList += glob.glob(path+'/*.cxx', recursive=True)
+                fileList += glob.glob(path+'/*.h', recursive=True)
             elif os.path.isfile(path):
                 fileList.append(path)
             else:
@@ -175,8 +183,25 @@ for fileName in fileList:
                 
         lineNo += 1
 
+# likely missed variables
+maybeMissed = ['muon_thetaX','muon_thetay','truth_genie_wgt_AGKYxF1pi','truth_genie_wgt_AhtBY']
+maybeMissedTypes = ['double','double','double','double']
+maybeMissedLengths = [11,11,25,21]
+maybeMissedPaths = ["NA","NA","NA","NA"]
+maybeMissedPathLengths = [2,2,2,2]
+maybeMissedLine = ["NA","NA","NA","NA"]
+maybeMissedLineNo = [0,0,0,0]
+maybeMissedPart = ["NA","NA","NA","NA"]
+
+variables = variables + maybeMissed
+varLengths = varLengths + maybeMissedLengths
+varPaths = varPaths + maybeMissedPaths
+varPathLengths = varPathLengths + maybeMissedPathLengths
+varLine = varLine + maybeMissedLine
+varLineNo = varLineNo + maybeMissedLineNo
+varPart = varPart + maybeMissedPart
+
 # variables and files per variable
-        
 varsSorted = list(set(variables))
 varsSorted = sorted(varsSorted, key=str.lower)       
 varsFile = open('Output_Files/ccqenu_variables.txt','w')

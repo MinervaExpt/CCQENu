@@ -1,17 +1,86 @@
-/home/gilligas/gitMinerva/MAT-MINERvA/calculators/CCQE3DFitFunctions.h
+/home/sean/MinervaExpt/CCQENu/make_hists/include/CVUniverse.cxx
+
+    calibE_clusters_at_end_proton_prong
+    calibE_clusters_at_end_proton_prong_sz
+    CCQENu_minos_trk_qp
+    CCQENu_nuHelicity
+    CCQENu_proton_score
+    CCQENu_proton_score1
+    CCQENu_proton_T_fromdEdx
+    CCQENu_sec_protons_proton_scores
+    CCQENu_sec_protons_proton_scores1
+    CCQENu_sec_protons_proton_scores1_sz
+    CCQENu_sec_protons_proton_scores_sz
+    clusters_found_at_end_proton_prong
+    clusters_found_at_end_proton_prong_sz
+    dis_id_energy
+    ev_gate
+    ev_run
+    ev_subrun
+    FittedMichel_michel_datafraction
+    FittedMichel_michel_fitPass
+    FittedMichel_michel_fitPass_sz
+    has_interaction_vertex
+    has_michel_vertex_type
+    has_michel_vertex_type_sz
+    improved_michel_match_vec
+    improved_michel_match_vec_sz
+    mc_current
+    mc_er_ID
+    mc_er_nPart
+    mc_er_status
+    mc_FSPartE
+    mc_FSPartPDG
+    mc_incoming
+    mc_incomingE
+    mc_incomingPartVec
+    mc_intType
+    mc_nFSPart
+    mc_nthEvtInFile
+    mc_primFSLepton
+    mc_run
+    mc_subrun
+    mc_targetA
+    mc_targetNucleon
+    mc_targetZ
+    mc_vtx
+    multiplicity
+    muon_is_minos_match_track
+    nonvtx_iso_blobs_energy
+    nonvtx_iso_blobs_start_position_z_in_prong
+    nonvtx_iso_blobs_start_position_z_in_prong_sz
+    number_clusters_at_end_proton_prong
+    number_clusters_at_end_proton_prong_sz
+    phys_n_dead_discr_pair_upstream_prim_track_proj
+    proton_prong_4p
+    proton_prong_PDG
+    proton_track_endx
+    proton_track_endy
+    proton_track_endz
+    proton_track_length
+    recoil_energy_nonmuon_nonvtx100mm
+    slice_numbers
+    truth_improved_michel_electron
+    truth_reco_has_michel_electron
+    truth_reco_has_single_proton
+    visE_clusters_at_end_proton_prong
+    visE_clusters_at_end_proton_prong_sz
+    vtx
+
+/home/sean/MinervaExpt/opt/include/calculators/CCQE3DFitFunctions.h
 
     mc_FSPartE
     mc_FSPartPDG
     mc_nFSPart
     mc_primFSLepton
 
-/home/gilligas/gitMinerva/MAT-MINERvA/calculators/MuonFunctions.h
+/home/sean/MinervaExpt/opt/include/calculators/MuonFunctions.h
 
     CCQENu_leptonE
     CCQENu_minos_trk_p
     vtx
 
-/home/gilligas/gitMinerva/MAT-MINERvA/calculators/TruthFunctions.h
+/home/sean/MinervaExpt/opt/include/calculators/TruthFunctions.h
 
     mc_incomingE
     mc_primFSLepton
@@ -19,7 +88,7 @@
     mc_targetZ
     mc_vtx
 
-/home/gilligas/gitMinerva/MAT-MINERvA/calculators/WeightFunctions.h
+/home/sean/MinervaExpt/opt/include/calculators/WeightFunctions.h
 
     mc_charm
     mc_er_E
@@ -38,15 +107,50 @@
     mc_primaryLepton
     mc_resID
     mc_targetA
+    mc_targetNucleus
     mc_targetZ
     truth_genie_wgt_MaRES
 
-/home/gilligas/gitMinerva/MAT-MINERvA/weighters/FluxAndCVReweighter.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/BodekRitchieReweighter.h
+
+    mc_er_ID
+    mc_er_nPart
+    mc_er_Px
+    mc_er_Py
+    mc_er_Pz
+    mc_er_status
+    mc_intType
+    mc_targetA
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/CCQE3DFitFunctions.h
+
+    mc_FSPartE
+    mc_FSPartPDG
+    mc_nFSPart
+    mc_primFSLepton
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/CCQE3DFitsSystematics.cxx
+
+    mc_FSPartE
+    mc_FSPartPDG
+    mc_nFSPart
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/DiffractiveUncSystematics.cxx
+
+    mc_intType
+    mc_vtx
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/FluxAndCVReweighter.h
 
     mc_incoming
     mc_incomingE
 
-/home/gilligas/gitMinerva/MAT-MINERvA/weighters/FSIReweighter.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/FluxSystematics.cxx
+
+    mc_incoming
+    mc_incomingE
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/FSIReweighter.h
 
     mc_charm
     mc_er_E
@@ -66,11 +170,44 @@
     mc_targetA
     mc_targetZ
 
-/home/gilligas/gitMinerva/MAT-MINERvA/weighters/GENIEReweighter.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/GENIEReweighter.h
 
     truth_genie_wgt_MaRES
 
-/home/gilligas/gitMinerva/MAT-MINERvA/weighters/MnvHadronReweight.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/GenieSystematics.cxx
+
+    mc_current
+    mc_intType
+    mc_Q2
+    mc_targetZ
+    truth_genie_wgt_MaCCQE
+    truth_genie_wgt_MaRES
+    truth_genie_wgt_Rvn1pi
+    truth_genie_wgt_Rvp1pi
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MacroUtil.cxx
+
+    POT_Used
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MinervaUniverse.cxx
+
+    batch_structure
+    numi_pot
+    reco_vertex_batch
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvHadronReweight.cxx
+
+    mc_FSPartE
+    mc_FSPartPDG
+    mc_FSPartPx
+    mc_FSPartPy
+    mc_FSPartPz
+    mc_nFSPart
+    mc_targetZ
+    mc_vtx
+    truth_hadronReweightNPaths
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvHadronReweight.h
 
     mc_FSPartE
     mc_FSPartPDG
@@ -109,11 +246,16 @@
     truth_hadronReweightTrackID
     truth_hadronReweightTrackID_sz
 
-/home/gilligas/gitMinerva/MAT-MINERvA/weighters/SuSAFromValencia2p2hReweighter.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvTuneSystematics.cxx
 
+    mc_current
     mc_intType
+    mc_targetNucleon
+    mc_targetNucleus
+    mc_targetZ
+    mc_w
 
-/home/gilligas/gitMinerva/MAT/PlotUtils/modifier_Eb.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/modifier_Eb.h
 
     mc_current
     mc_incoming
@@ -123,32 +265,253 @@
     mc_targetA
     mc_targetZ
 
-/home/gilligas/Minerva/Ana/PickledCCQENu/ana/make_hists/include/CVUniverse.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/MuonFunctions.h
 
-    CCQENu_minos_trk_qp
-    CCQENu_nuHelicity
-    dis_id_energy
-    ev_gate
-    ev_run
-    ev_subrun
-    mc_current
-    mc_FSPartE
-    mc_FSPartPDG
+    CCQENu_leptonE
+    CCQENu_minos_trk_p
+    vtx
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MuonResolutionSystematics.cxx
+
+    mc_primFSLepton
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MuonSystematics.cxx
+
+    CCQENu_minos_used_curvature
     mc_incoming
     mc_incomingE
-    mc_incomingPartVec
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/NeutronInelasticReweighter.h
+
+    mc_FSPartE
+    mc_FSPartPDG
+    mc_FSPartPx
+    mc_FSPartPy
+    mc_FSPartPz
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/SuSAFromValencia2p2hReweighter.h
+
     mc_intType
-    mc_nFSPart
-    mc_nthEvtInFile
-    mc_primFSLepton
-    mc_run
-    mc_subrun
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/TargetMassSystematics.cxx
+
     mc_vtx
-    multiplicity
-    muon_is_minos_match_track
-    nonvtx_iso_blobs_energy
-    phys_n_dead_discr_pair_upstream_prim_track_proj
-    recoil_energy_nonmuon_vtx100mm
-    recoil_summed_energy
-    vtx
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/TruthFunctions.h
+
+    mc_incomingE
+    mc_primFSLepton
+    mc_Q2
+    mc_targetZ
+    mc_vtx
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/weight_fsi.cxx
+
+    mc_charm
+    mc_er_E
+    mc_er_FD
+    mc_er_ID
+    mc_er_LD
+    mc_er_mother
+    mc_er_nPart
+    mc_er_Px
+    mc_er_Py
+    mc_er_Pz
+    mc_er_status
+    mc_incoming
+    mc_intType
+    mc_primaryLepton
+    mc_resID
+    mc_targetA
+    mc_targetZ
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/weight_fsi_absorption.cxx
+
+    mc_charm
+    mc_er_E
+    mc_er_FD
+    mc_er_ID
+    mc_er_LD
+    mc_er_nPart
+    mc_er_status
+    mc_incoming
+    mc_intType
+    mc_primaryLepton
+    mc_targetA
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/WeightFunctions.h
+
+    mc_charm
+    mc_er_E
+    mc_er_FD
+    mc_er_ID
+    mc_er_LD
+    mc_er_mother
+    mc_er_nPart
+    mc_er_Px
+    mc_er_Py
+    mc_er_Pz
+    mc_er_status
+    mc_incoming
+    mc_incomingE
+    mc_intType
+    mc_primaryLepton
+    mc_resID
+    mc_targetA
+    mc_targetNucleus
+    mc_targetZ
+    truth_genie_wgt_MaRES
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/weightMK.cxx
+
+    mc_current
+    mc_er_ID
+    mc_er_nPart
+    mc_er_status
+    mc_intType
+    mc_Q2
+    mc_targetA
+    mc_w
+
+/home/sean/MinervaExpt/opt/include/universes/CCQE3DFitsSystematics.cxx
+
+    mc_FSPartE
+    mc_FSPartPDG
+    mc_nFSPart
+
+/home/sean/MinervaExpt/opt/include/universes/DiffractiveUncSystematics.cxx
+
+    mc_intType
+    mc_vtx
+
+/home/sean/MinervaExpt/opt/include/universes/GenieSystematics.cxx
+
+    mc_current
+    mc_intType
+    mc_Q2
+    mc_targetZ
+    truth_genie_wgt_MaCCQE
+    truth_genie_wgt_MaRES
+    truth_genie_wgt_Rvn1pi
+    truth_genie_wgt_Rvp1pi
+
+/home/sean/MinervaExpt/opt/include/universes/MinervaUniverse.cxx
+
+    batch_structure
+    numi_pot
+    reco_vertex_batch
+
+/home/sean/MinervaExpt/opt/include/universes/MnvTuneSystematics.cxx
+
+    mc_current
+    mc_intType
+    mc_targetNucleon
+    mc_targetNucleus
+    mc_targetZ
+    mc_w
+
+/home/sean/MinervaExpt/opt/include/universes/MuonResolutionSystematics.cxx
+
+    mc_primFSLepton
+
+/home/sean/MinervaExpt/opt/include/universes/MuonSystematics.cxx
+
+    CCQENu_minos_used_curvature
+    mc_incoming
+    mc_incomingE
+
+/home/sean/MinervaExpt/opt/include/universes/TargetMassSystematics.cxx
+
+    mc_vtx
+
+/home/sean/MinervaExpt/opt/include/weighters/BodekRitchieReweighter.h
+
+    mc_er_ID
+    mc_er_nPart
+    mc_er_Px
+    mc_er_Py
+    mc_er_Pz
+    mc_er_status
+    mc_intType
+    mc_targetA
+
+/home/sean/MinervaExpt/opt/include/weighters/FluxAndCVReweighter.h
+
+    mc_incoming
+    mc_incomingE
+
+/home/sean/MinervaExpt/opt/include/weighters/FSIReweighter.h
+
+    mc_charm
+    mc_er_E
+    mc_er_FD
+    mc_er_ID
+    mc_er_LD
+    mc_er_mother
+    mc_er_nPart
+    mc_er_Px
+    mc_er_Py
+    mc_er_Pz
+    mc_er_status
+    mc_incoming
+    mc_intType
+    mc_primaryLepton
+    mc_resID
+    mc_targetA
+    mc_targetZ
+
+/home/sean/MinervaExpt/opt/include/weighters/GENIEReweighter.h
+
+    truth_genie_wgt_MaRES
+
+/home/sean/MinervaExpt/opt/include/weighters/MnvHadronReweight.h
+
+    mc_FSPartE
+    mc_FSPartPDG
+    mc_FSPartPx
+    mc_FSPartPy
+    mc_FSPartPz
+    mc_nFSPart
+    mc_targetZ
+    mc_vtx
+    truth_hadronReweightColumnarDensity
+    truth_hadronReweightColumnarDensity_sz
+    truth_hadronReweightFinalE
+    truth_hadronReweightFinalE_sz
+    truth_hadronReweightFinalSigmaE
+    truth_hadronReweightFinalSigmaE_sz
+    truth_hadronReweightInitialE
+    truth_hadronReweightInitialE_sz
+    truth_hadronReweightInitialSigmaE
+    truth_hadronReweightInitialSigmaE_sz
+    truth_hadronReweightIntCode
+    truth_hadronReweightIntCode_sz
+    truth_hadronReweightIntCodePerSegment
+    truth_hadronReweightIntCodePerSegment_sz
+    truth_hadronReweightNPaths
+    truth_hadronReweightNPoints
+    truth_hadronReweightNuke
+    truth_hadronReweightNuke_sz
+    truth_hadronReweightPDG
+    truth_hadronReweightPDG_sz
+    truth_hadronReweightPosX
+    truth_hadronReweightPosX_sz
+    truth_hadronReweightPosY
+    truth_hadronReweightPosY_sz
+    truth_hadronReweightPosZ
+    truth_hadronReweightPosZ_sz
+    truth_hadronReweightTrackID
+    truth_hadronReweightTrackID_sz
+
+/home/sean/MinervaExpt/opt/include/weighters/NeutronInelasticReweighter.h
+
+    mc_FSPartE
+    mc_FSPartPDG
+    mc_FSPartPx
+    mc_FSPartPy
+    mc_FSPartPz
+
+/home/sean/MinervaExpt/opt/include/weighters/SuSAFromValencia2p2hReweighter.h
+
+    mc_intType
 

@@ -1,4 +1,283 @@
-/home/gilligas/gitMinerva/MAT-MINERvA/calculators/CCQE3DFitFunctions.h
+/home/sean/MinervaExpt/CCQENu/make_hists/include/CVUniverse.cxx
+
+    calibE_clusters_at_end_proton_prong
+       972  return GetVecElem("calibE_clusters_at_end_proton_prong",0);
+
+    calibE_clusters_at_end_proton_prong_sz
+       971  if( GetInt("calibE_clusters_at_end_proton_prong_sz") > 0) {
+
+    CCQENu_minos_trk_qp
+       416  return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_minos_trk_qp").c_str());
+
+    CCQENu_nuHelicity
+       413  return GetInt(std::string(MinervaUniverse::GetTreeName()+"_nuHelicity").c_str());
+
+    CCQENu_proton_score
+       871  else if( i == 0 ) return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score").c_str());
+       926  return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score").c_str());
+
+    CCQENu_proton_score1
+       865  else if( i == 0 ) return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
+       930  return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
+
+    CCQENu_proton_T_fromdEdx
+       985  return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_T_fromdEdx").c_str());
+
+    CCQENu_sec_protons_proton_scores
+       873  else return GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores").c_str(), i-1);
+      1035  std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores").c_str());
+      1060  std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores").c_str());
+
+    CCQENu_sec_protons_proton_scores1
+       867  else return GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1").c_str(), i-1);
+      1047  std::vector<double> sec_proton_scores1 = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1").c_str());
+      1073  std::vector<double> sec_proton_scores1 = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1").c_str());
+
+    CCQENu_sec_protons_proton_scores1_sz
+       866  else if( GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str()) < i ) return -9999.;
+       907  return GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
+      1042  int n_sec_proton_scores1 = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
+      1072  int n_sec_proton_scores1 = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
+
+    CCQENu_sec_protons_proton_scores_sz
+       872  else if( GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores_sz").c_str()) < i ) return -9999.;
+       911  return GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores_sz").c_str());
+      1030  int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores_sz").c_str());
+      1059  int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores_sz").c_str());
+
+    clusters_found_at_end_proton_prong
+       953  return GetVecElem("clusters_found_at_end_proton_prong",0);
+
+    clusters_found_at_end_proton_prong_sz
+       952  if( GetInt("clusters_found_at_end_proton_prong_sz") > 0) {
+
+    dis_id_energy
+       347  if(neutrinoMode) return (GetDouble("nonvtx_iso_blobs_energy")+GetDouble("dis_id_energy")); // several definitions of this, be careful
+
+    ev_gate
+       477  int CVUniverse::GetGate() const { return GetInt("ev_gate"); }
+      1200  int gate = GetInt("ev_gate");
+
+    ev_run
+       475  int CVUniverse::GetRun() const { return GetInt("ev_run"); }
+      1198  int run = GetInt("ev_run");
+
+    ev_subrun
+       476  int CVUniverse::GetSubRun() const { return GetInt("ev_subrun"); }
+      1199  int subrun = GetInt("ev_subrun");
+
+    FittedMichel_michel_datafraction
+       741  double datafrac = GetVecElem("FittedMichel_michel_datafraction", i);
+
+    FittedMichel_michel_fitPass
+       735  std::vector<int> CVUniverse:GetFittedMichelFitPass() const { return GetVecInt("FittedMichel_michel_fitPass"); }
+       742  int fitted = GetVecElem("FittedMichel_michel_fitPass", i);
+
+    FittedMichel_michel_fitPass_sz
+       734  int CVUniverse::GetFittedMichelFitPass() const { return GetInt("FittedMichel_michel_fitPass_sz"); }
+
+    has_interaction_vertex
+       621  int CVUniverse::GetHasInteractionVertex() const { return GetInt("has_interaction_vertex"); }
+
+    has_michel_vertex_type
+       729  std::vector<int> CVUniverse:GetMichelVertexType() const { return GetVecInt("has_michel_vertex_type"); }
+
+    has_michel_vertex_type_sz
+       728  int CVUniverse::GetNMichel() const { return GetInt("has_michel_vertex_type_sz"); }
+
+    improved_michel_match_vec
+       732  std::vector<int> CVUniverse:GetImprovedMichelMatch() const { return GetVecInt("improved_michel_match_vec"); }
+
+    improved_michel_match_vec_sz
+       731  int CVUniverse::GetImprovedNMichel() const { return GetInt("improved_michel_match_vec_sz"); }
+       856  if( GetInt("improved_michel_match_vec_sz") > 0 ||
+
+    mc_current
+       396  int CVUniverse::GetCurrent() const { return GetInt("mc_current"); }
+       586  if(GetInt("mc_current") == 1 && GetInt("mc_incoming") == m_analysis_neutrino_pdg) {
+
+    mc_er_ID
+       810  std::vector<int> erpartID = GetVecInt("mc_er_ID");
+       841  std::vector<int> erpartID = GetVecInt("mc_er_ID");
+
+    mc_er_nPart
+       809  int nerpart = GetInt("mc_er_nPart");
+       840  int nerpart = GetInt("mc_er_nPart");
+
+    mc_er_status
+       811  std::vector<int> erpartstatus = GetVecInt("mc_er_status");
+       842  std::vector<int> erpartstatus = GetVecInt("mc_er_status");
+
+    mc_FSPartE
+       581  std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
+       598  std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
+       641  std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+       678  std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+
+    mc_FSPartPDG
+       580  std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+       597  std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+       640  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+       659  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+       677  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+       765  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+       783  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+       798  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+       826  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+      1083  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+      1084  std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartPDG");
+      1106  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+      1116  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+      1127  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+      1142  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+      1155  std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+
+    mc_incoming
+       395  int CVUniverse::GetTruthNuPDG() const { return GetInt("mc_incoming"); }
+       586  if(GetInt("mc_current") == 1 && GetInt("mc_incoming") == m_analysis_neutrino_pdg) {
+
+    mc_incomingE
+       262  double CVUniverse::GetTrueEnuGeV() const { return GetDouble("mc_incomingE")*MeVGeV; }
+
+    mc_incomingPartVec
+       368  mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
+       376  mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
+
+    mc_intType
+       394  int CVUniverse::GetMCIntType() const { return GetInt("mc_intType"); }
+
+    mc_nFSPart
+       583  int mc_nFSPart = GetInt("mc_nFSPart");
+       600  int mc_nFSPart = GetInt("mc_nFSPart");
+       642  int mc_nFSPart = GetInt("mc_nFSPart");
+       660  int mc_nFSPart = GetInt("mc_nFSPart");
+       679  int mc_nFSPart = GetInt("mc_nFSPart");
+       766  int mc_nFSPart = GetInt("mc_nFSPart");
+       784  int mc_nFSPart = GetInt("mc_nFSPart");
+       799  int mc_nFSPart = GetInt("mc_nFSPart");
+       827  int mc_nFSPart = GetInt("mc_nFSPart");
+      1085  int mc_nFSPart = GetInt("mc_nFSPart");
+      1101  return GetInt("mc_nFSPart");
+      1107  int mc_nFSPart = GetInt("mc_nFSPart");
+      1117  int mc_nFSPart = GetInt("mc_nFSPart");
+      1128  int mc_nFSPart = GetInt("mc_nFSPart");
+      1143  int mc_nFSPart = GetInt("mc_nFSPart");
+      1156  int mc_nFSPart = GetInt("mc_nFSPart");
+
+    mc_nthEvtInFile
+       480  int CVUniverse::GetTrueGate() const { return GetInt("mc_nthEvtInFile")+1; } // not certain if this is stored
+      1179  int gate = GetInt("mc_nthEvtInFile") + 1;
+
+    mc_primFSLepton
+       318  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
+       318  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
+       318  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
+       326  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
+       326  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
+       326  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
+       369  mc_primFSLepton = GetVecDouble("mc_primFSLepton");
+       377  mc_primFSLepton = GetVecDouble("mc_primFSLepton");
+
+    mc_run
+       478  int CVUniverse::GetTrueRun() const { return GetInt("mc_run"); }
+      1177  int run = GetInt("mc_run");
+
+    mc_subrun
+       479  int CVUniverse::GetTrueSubRun() const { return GetInt("mc_subrun"); }
+      1178  int subrun = GetInt("mc_subrun");
+
+    mc_targetA
+      1166  int CVUniverse::GetMCTargetA() const { return GetInt("mc_targetA"); }
+
+    mc_targetNucleon
+      1168  int CVUniverse::GetMCTargetNucleon() const { return GetInt("mc_targetNucleon"); }
+
+    mc_targetZ
+      1167  int CVUniverse::GetMCTargetZ() const { return GetInt("mc_targetZ"); }
+
+    mc_vtx
+       447  std::vector<double> vertex = GetVec<double>("mc_vtx");
+       452  std::vector<double> vertex = GetVec<double>("mc_vtx");
+       463  result.SetCoordinates(GetVec<double>("mc_vtx").data());
+       468  std::vector<double> tmp = GetVec<double>("mc_vtx");
+
+    multiplicity
+       254  int CVUniverse::GetMultiplicity() const { return GetInt("multiplicity"); }
+
+    muon_is_minos_match_track
+       260  int CVUniverse::GetIsMinosMatchTrack()const { return GetInt("muon_is_minos_match_track"); }
+       408  bool CVUniverse::IsMinosMatchMuon() const { return GetInt("muon_is_minos_match_track") == -1; }
+
+    nonvtx_iso_blobs_energy
+       347  if(neutrinoMode) return (GetDouble("nonvtx_iso_blobs_energy")+GetDouble("dis_id_energy")); // several definitions of this, be careful
+
+    nonvtx_iso_blobs_start_position_z_in_prong
+       628  std::vector<double> blob_z_starts = GetVecDouble("nonvtx_iso_blobs_start_position_z_in_prong");	
+
+    nonvtx_iso_blobs_start_position_z_in_prong_sz
+       627  int kmax = GetInt("nonvtx_iso_blobs_start_position_z_in_prong_sz");
+
+    number_clusters_at_end_proton_prong
+       960  return GetVecElem("number_clusters_at_end_proton_prong",0);
+
+    number_clusters_at_end_proton_prong_sz
+       959  if( GetInt("number_clusters_at_end_proton_prong_sz") > 0) {
+
+    phys_n_dead_discr_pair_upstream_prim_track_proj
+       255  int CVUniverse::GetDeadTime() const { return GetInt("phys_n_dead_discr_pair_upstream_prim_track_proj"); }
+
+    proton_prong_4p
+       998  return GetVecElem("proton_prong_4p",0) - MinervaUnits::M_p;
+
+    proton_prong_PDG
+       997  if (GetInt("proton_prong_PDG") == 2212) {
+      1004  return GetInt("proton_prong_PDG");
+      1012  if (GetInt("proton_prong_PDG") == 2212) return 1;
+      1016  int pdg = GetInt("proton_prong_PDG");
+      1021  int pdg = GetInt("proton_prong_PDG");
+
+    proton_track_endx
+       966  double CVUniverse::GetPrimaryProtonTrackEndX() const { return GetDouble("proton_track_endx"); }
+
+    proton_track_endy
+       967  double CVUniverse::GetPrimaryProtonTrackEndY() const { return GetDouble("proton_track_endy"); }
+
+    proton_track_endz
+       968  double CVUniverse::GetPrimaryProtonTrackEndZ() const { return GetDouble("proton_track_endz"); }
+
+    proton_track_length
+       965  double CVUniverse::GetPrimaryProtonTrackLength() const { return GetDouble("proton_track_length"); }
+
+    recoil_energy_nonmuon_nonvtx100mm
+       351  return GetDouble("recoil_energy_nonmuon_nonvtx100mm");
+
+    slice_numbers
+      1180  int slice = GetVecElem("slice_numbers", 0);
+      1201  int slice = GetVecElem("slice_numbers", 0);
+
+    truth_improved_michel_electron
+       761  int CVUniverse::GetTruthHasImprovedMichel() const { return GetInt("truth_improved_michel_electron"); }
+
+    truth_reco_has_michel_electron
+       760  int CVUniverse::GetTruthHasMichel() const { return GetInt("truth_reco_has_michel_electron"); }
+
+    truth_reco_has_single_proton
+      1026  int CVUniverse::GetTruthHasSingleProton() const { return GetInt("truth_reco_has_single_proton"); }
+
+    visE_clusters_at_end_proton_prong
+       979  return GetVecElem("visE_clusters_at_end_proton_prong",0);
+
+    visE_clusters_at_end_proton_prong_sz
+       978  if( GetInt("visE_clusters_at_end_proton_prong_sz") > 0) {
+
+    vtx
+       428  result.SetCoordinates(GetVec<double>("vtx").data());
+       436  std::vector<double> vertex = GetVec<double>("vtx");
+       441  std::vector<double> vertex = GetVec<double>("vtx");
+       457  std::vector<double> tmp = GetVec<double>("vtx");
+
+
+/home/sean/MinervaExpt/opt/include/calculators/CCQE3DFitFunctions.h
 
     mc_FSPartE
         42  if(pdg == 22) recoil+=GetVecElem("mc_FSPartE",i);//total energy
@@ -20,7 +299,7 @@
         25  const double pzlep=GetVecElem("mc_primFSLepton", 2);
 
 
-/home/gilligas/gitMinerva/MAT-MINERvA/calculators/MuonFunctions.h
+/home/sean/MinervaExpt/opt/include/calculators/MuonFunctions.h
 
     CCQENu_leptonE
         58  std::string lepton_branch = GetAnaToolName() + "_leptonE";  // AnaTool
@@ -29,10 +308,10 @@
         70  std::string minos_momentum_branch = GetAnaToolName() + "_minos_trk_p";
 
     vtx
-       156  double vertex_Z = GetVecElem("vtx", 2);
+       155  double vertex_Z = GetVecElem("vtx", 2);
 
 
-/home/gilligas/gitMinerva/MAT-MINERvA/calculators/TruthFunctions.h
+/home/sean/MinervaExpt/opt/include/calculators/TruthFunctions.h
 
     mc_incomingE
          7  return GetDouble("mc_incomingE");
@@ -59,69 +338,148 @@
         54  return GetVecElem("mc_vtx",2);
 
 
-/home/gilligas/gitMinerva/MAT-MINERvA/calculators/WeightFunctions.h
+/home/sean/MinervaExpt/opt/include/calculators/WeightFunctions.h
 
     mc_charm
-        75  GetInt("mc_incoming"), GetInt("mc_primaryLepton"), GetInt("mc_charm"),
+        84  GetInt("mc_incoming"), GetInt("mc_primaryLepton"), GetInt("mc_charm"),
 
     mc_er_E
-        81  GetVecDouble("mc_er_E"), m_entry);
+        90  GetVecDouble("mc_er_E"), m_entry);
 
     mc_er_FD
-        78  GetVecInt("mc_er_status"), GetVecInt("mc_er_FD"), GetVecInt("mc_er_LD"),
+        87  GetVecInt("mc_er_status"), GetVecInt("mc_er_FD"), GetVecInt("mc_er_LD"),
 
     mc_er_ID
-        77  GetInt("mc_resID"), GetInt("mc_er_nPart"), GetVecInt("mc_er_ID"),
+        86  GetInt("mc_resID"), GetInt("mc_er_nPart"), GetVecInt("mc_er_ID"),
 
     mc_er_LD
-        78  GetVecInt("mc_er_status"), GetVecInt("mc_er_FD"), GetVecInt("mc_er_LD"),
+        87  GetVecInt("mc_er_status"), GetVecInt("mc_er_FD"), GetVecInt("mc_er_LD"),
 
     mc_er_mother
-        79  GetVecInt("mc_er_mother"), GetVecDouble("mc_er_Px"),
+        88  GetVecInt("mc_er_mother"), GetVecDouble("mc_er_Px"),
 
     mc_er_nPart
-        77  GetInt("mc_resID"), GetInt("mc_er_nPart"), GetVecInt("mc_er_ID"),
+        86  GetInt("mc_resID"), GetInt("mc_er_nPart"), GetVecInt("mc_er_ID"),
 
     mc_er_Px
-        79  GetVecInt("mc_er_mother"), GetVecDouble("mc_er_Px"),
+        88  GetVecInt("mc_er_mother"), GetVecDouble("mc_er_Px"),
 
     mc_er_Py
-        80  GetVecDouble("mc_er_Py"), GetVecDouble("mc_er_Pz"),
+        89  GetVecDouble("mc_er_Py"), GetVecDouble("mc_er_Pz"),
 
     mc_er_Pz
-        80  GetVecDouble("mc_er_Py"), GetVecDouble("mc_er_Pz"),
+        89  GetVecDouble("mc_er_Py"), GetVecDouble("mc_er_Pz"),
 
     mc_er_status
-        78  GetVecInt("mc_er_status"), GetVecInt("mc_er_FD"), GetVecInt("mc_er_LD"),
+        87  GetVecInt("mc_er_status"), GetVecInt("mc_er_FD"), GetVecInt("mc_er_LD"),
 
     mc_incoming
-        61  nu_pdg = GetInt("mc_incoming");
-        75  GetInt("mc_incoming"), GetInt("mc_primaryLepton"), GetInt("mc_charm"),
+        70  nu_pdg = GetInt("mc_incoming");
+        84  GetInt("mc_incoming"), GetInt("mc_primaryLepton"), GetInt("mc_charm"),
 
     mc_incomingE
-        53  if (Enu == -99.) Enu = GetDouble("mc_incomingE") * 1e-3;
+        62  if (Enu == -99.) Enu = GetDouble("mc_incomingE") * 1e-3;
 
     mc_intType
-        45  if (GetInt("mc_intType") != 4) return 1.;
-        76  GetInt("mc_intType"), GetInt("mc_targetA"), GetInt("mc_targetZ"),
+        54  if (GetInt("mc_intType") != 4) return 1.;
+        85  GetInt("mc_intType"), GetInt("mc_targetA"), GetInt("mc_targetZ"),
 
     mc_primaryLepton
-        75  GetInt("mc_incoming"), GetInt("mc_primaryLepton"), GetInt("mc_charm"),
+        84  GetInt("mc_incoming"), GetInt("mc_primaryLepton"), GetInt("mc_charm"),
 
     mc_resID
-        77  GetInt("mc_resID"), GetInt("mc_er_nPart"), GetVecInt("mc_er_ID"),
+        86  GetInt("mc_resID"), GetInt("mc_er_nPart"), GetVecInt("mc_er_ID"),
 
     mc_targetA
-        76  GetInt("mc_intType"), GetInt("mc_targetA"), GetInt("mc_targetZ"),
+        85  GetInt("mc_intType"), GetInt("mc_targetA"), GetInt("mc_targetZ"),
+
+    mc_targetNucleus
+        42  channel, variation, GetInt("mc_targetNucleus"));
+        49  channel, variation, GetInt("mc_targetNucleus"));
 
     mc_targetZ
-        76  GetInt("mc_intType"), GetInt("mc_targetA"), GetInt("mc_targetZ"),
+        85  GetInt("mc_intType"), GetInt("mc_targetA"), GetInt("mc_targetZ"),
 
     truth_genie_wgt_MaRES
         12  ( PlotUtils::GetGenieParReweight(*this,"truth_genie_wgt_MaRES", 
 
 
-/home/gilligas/gitMinerva/MAT-MINERvA/weighters/FluxAndCVReweighter.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/BodekRitchieReweighter.h
+
+    mc_er_ID
+        28  univ.GetVecInt("mc_er_ID"), univ.GetVecDouble("mc_er_Px"),
+
+    mc_er_nPart
+        26  return m_weighter.getWeight(m_mode, univ.GetInt("mc_er_nPart"), univ.GetInt("mc_intType"),
+
+    mc_er_Px
+        28  univ.GetVecInt("mc_er_ID"), univ.GetVecDouble("mc_er_Px"),
+
+    mc_er_Py
+        29  univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"));
+
+    mc_er_Pz
+        29  univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"));
+
+    mc_er_status
+        27  univ.GetInt("mc_targetA"), univ.GetVecInt("mc_er_status"),
+
+    mc_intType
+        26  return m_weighter.getWeight(m_mode, univ.GetInt("mc_er_nPart"), univ.GetInt("mc_intType"),
+
+    mc_targetA
+        27  univ.GetInt("mc_targetA"), univ.GetVecInt("mc_er_status"),
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/CCQE3DFitFunctions.h
+
+    mc_FSPartE
+        42  if(pdg == 22) recoil+=GetVecElem("mc_FSPartE",i);//total energy
+        43  if(pdg == 211 || pdg == -211) recoil+=GetVecElem("mc_FSPartE",i)-mass_pion;//kinetic
+        44  if(pdg == 111) recoil+=GetVecElem("mc_FSPartE",i);//total energy
+        45  if(pdg == 2212) recoil+=GetVecElem("mc_FSPartE",i)-mass_proton;//kinetic
+
+    mc_FSPartPDG
+        41  int pdg = GetVecElemInt("mc_FSPartPDG",i);
+
+    mc_nFSPart
+        37  int n_parts = GetInt("mc_nFSPart");
+
+    mc_primFSLepton
+        10  const double px=GetVecElem("mc_primFSLepton", 0);
+        11  const double py=GetVecElem("mc_primFSLepton", 1);
+        12  const double pz=GetVecElem("mc_primFSLepton", 2);
+        24  const double pylep=GetVecElem("mc_primFSLepton", 1);
+        25  const double pzlep=GetVecElem("mc_primFSLepton", 2);
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/CCQE3DFitsSystematics.cxx
+
+    mc_FSPartE
+        26  double energy = universe.GetVecElem("mc_FSPartE",i);
+
+    mc_FSPartPDG
+        25  int pdg = universe.GetVecElemInt("mc_FSPartPDG",i);
+
+    mc_nFSPart
+        23  int nparticles = universe.GetInt("mc_nFSPart");
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/DiffractiveUncSystematics.cxx
+
+    mc_intType
+        44  if( T::GetInt("mc_intType") != 4 ) return 1;
+
+    mc_vtx
+        49  if( PlotUtils::TargetUtils::Get().InNukeRegion( T::GetVecElem("mc_vtx",0), 
+        50  T::GetVecElem("mc_vtx",1), T::GetVecElem("mc_vtx",2) ) ) fracDiffUnc = m_fracTarUnc; 
+        50  T::GetVecElem("mc_vtx",1), T::GetVecElem("mc_vtx",2) ) ) fracDiffUnc = m_fracTarUnc; 
+        52  if( PlotUtils::TargetUtils::Get().InTracker( T::GetVecElem("mc_vtx",0), 
+        53  T::GetVecElem("mc_vtx",1), T::GetVecElem("mc_vtx",2) ) ) fracDiffUnc = m_fracTrkUnc; 
+        53  T::GetVecElem("mc_vtx",1), T::GetVecElem("mc_vtx",2) ) ) fracDiffUnc = m_fracTrkUnc; 
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/FluxAndCVReweighter.h
 
     mc_incoming
         30  if(univ.IsPlaylistME(univ.GetPlaylist())) nu_pdg = univ.GetInt("mc_incoming");
@@ -130,7 +488,16 @@
         33  univ.GetNFluxUniverses()).GetFluxCVWeight(univ.GetDouble("mc_incomingE") * 1e-3, nu_pdg);
 
 
-/home/gilligas/gitMinerva/MAT-MINERvA/weighters/FSIReweighter.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/FluxSystematics.cxx
+
+    mc_incoming
+        52  if(nu_pdg == -99) nu_pdg = T::GetInt("mc_incoming");     // If the user hasn't specific nu_pdg, use default
+
+    mc_incomingE
+        51  if(Enu == -99.) Enu = T::GetDouble("mc_incomingE")*1e-3; // If the user hasn't specified enu, use default
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/FSIReweighter.h
 
     mc_charm
         35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
@@ -184,13 +551,105 @@
         35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
 
 
-/home/gilligas/gitMinerva/MAT-MINERvA/weighters/GENIEReweighter.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/GENIEReweighter.h
 
     truth_genie_wgt_MaRES
         36  ( PlotUtils::GetGenieParReweight(univ,"truth_genie_wgt_MaRES",
 
 
-/home/gilligas/gitMinerva/MAT-MINERvA/weighters/MnvHadronReweight.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/GenieSystematics.cxx
+
+    mc_current
+       382  universe.GetInt("mc_current") == 1; // CC
+
+    mc_intType
+       380  bool is_ccres = universe.GetInt("mc_intType") == 2  // Res
+       847  if(T::GetInt("mc_intType")!=1) return T::GetGenieWeight();  // Only reweight CCQE events
+       867  if(T::GetInt("mc_intType")!=1) return 1;  // Only reweight CCQE events
+
+    mc_Q2
+       849  const double q2 = T::GetDouble("mc_Q2")/(1000*1000); // Convert to GeV
+       869  const double q2 = T::GetDouble("mc_Q2")/(1000*1000); // Convert to GeV
+
+    mc_targetZ
+       848  if(T::GetInt("mc_targetZ")<6) return T::GetGenieWeight(); // Don't reweight hydrogen
+       868  if(T::GetInt("mc_targetZ")<6) return 1; // Don't reweight hydrogen
+
+    truth_genie_wgt_MaCCQE
+       838  double wgt = T::m_nsigma < 0 ? T::GetVecElem("truth_genie_wgt_MaCCQE", 2):
+       839  T::GetVecElem("truth_genie_wgt_MaCCQE", 4);
+       858  double wgt = T::m_nsigma < 0 ? T::GetVecElem("truth_genie_wgt_MaCCQE", 2):
+       859  T::GetVecElem("truth_genie_wgt_MaCCQE", 4);
+
+    truth_genie_wgt_MaRES
+       734  double new_ma_wgt = PlotUtils::GetGenieParReweight(*this,"truth_genie_wgt_MaRES", NSFDefaults::DEUTERIUM_MaRES, 
+       775  double new_ma_wgt = PlotUtils::GetGenieParReweight(*this,"truth_genie_wgt_MaRES", NSFDefaults::DEUTERIUM_MaRES, 
+
+    truth_genie_wgt_Rvn1pi
+       369  bool is_nonrespi = universe.GetVecElem("truth_genie_wgt_Rvn1pi", 2) < 1.0
+
+    truth_genie_wgt_Rvp1pi
+       371  universe.GetVecElem("truth_genie_wgt_Rvp1pi", 2) < 1.0;
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MacroUtil.cxx
+
+    POT_Used
+        28  for(int entry = 0; entry < nEntries; ++entry) pot_used += meta.GetValue("POT_Used", entry);
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MinervaUniverse.cxx
+
+    batch_structure
+       405  batch_structure = GetInt("batch_structure");
+
+    numi_pot
+       400  double numi_pot = GetDouble("numi_pot");
+
+    reco_vertex_batch
+       406  reco_vertex_batch = GetInt("reco_vertex_batch");
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvHadronReweight.cxx
+
+    mc_FSPartE
+       715  *mc_FSPartE   = *(Double_t*)fChain->GetLeaf("mc_FSPartE")->GetValuePointer();
+       741  Double_t *t_mc_FSPartE   = (Double_t*)fChain->GetBranch("mc_FSPartE")->GetAddress();
+
+    mc_FSPartPDG
+       714  *mc_FSPartPDG = *(Double_t*)fChain->GetLeaf("mc_FSPartPDG")->GetValuePointer();
+       740  Int_t *t_mc_FSPartPDG = (Int_t*)fChain->GetBranch("mc_FSPartPDG")->GetAddress();
+
+    mc_FSPartPx
+       716  *mc_FSPartPx  = *(Double_t*)fChain->GetLeaf("mc_FSPartPx")->GetValuePointer();
+       742  Double_t *t_mc_FSPartPx  = (Double_t*)fChain->GetBranch("mc_FSPartPx")->GetAddress();
+
+    mc_FSPartPy
+       717  *mc_FSPartPy  = *(Double_t*)fChain->GetLeaf("mc_FSPartPy")->GetValuePointer();
+       743  Double_t *t_mc_FSPartPy  = (Double_t*)fChain->GetBranch("mc_FSPartPy")->GetAddress();
+
+    mc_FSPartPz
+       718  *mc_FSPartPz  = *(Double_t*)fChain->GetLeaf("mc_FSPartPz")->GetValuePointer();
+       744  Double_t *t_mc_FSPartPz  = (Double_t*)fChain->GetBranch("mc_FSPartPz")->GetAddress();
+
+    mc_nFSPart
+       713  mc_nFSPart    = *((Int_t*)fChain->GetBranch("mc_nFSPart")->GetAddress());
+       737  this->mc_nFSPart    = *((Int_t*)fChain->GetBranch("mc_nFSPart")->GetAddress());
+
+    mc_targetZ
+       679  if( fChain->GetBranch("mc_targetZ")->GetAddress() == nullptr )
+       710  mc_targetZ = *((Double_t*)fChain->GetBranch("mc_targetZ")->GetAddress());
+       732  this->mc_targetZ = *((Double_t*)fChain->GetBranch("mc_targetZ")->GetAddress());
+
+    mc_vtx
+       711  *mc_vtx     = *(Double_t*)fChain->GetLeaf("mc_vtx")->GetValuePointer();
+       733  Double_t *t_mc_vtx = (Double_t*)fChain->GetBranch("mc_vtx")->GetAddress();
+
+    truth_hadronReweightNPaths
+       609  if (!tree->GetListOfBranches()->FindObject("truth_hadronReweightNPaths"))
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvHadronReweight.h
 
     mc_FSPartE
        154  mc_FSPartE[i]   = univ.GetVecElem("mc_FSPartE",i);
@@ -309,13 +768,40 @@
        115  truth_hadronReweightTrackID_sz = univ.GetInt("truth_hadronReweightTrackID_sz");
 
 
-/home/gilligas/gitMinerva/MAT-MINERvA/weighters/SuSAFromValencia2p2hReweighter.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvTuneSystematics.cxx
+
+    mc_current
+       138  universe.GetInt("mc_current") == 1; // CC
+       146  universe.GetInt("mc_current") == 1; // CC
+       152  bool is_ccpion = ( universe.GetInt("mc_current") == 1 )
 
     mc_intType
-        33  if(univ.GetInt("mc_intType") == 8) return fWeighter.getWeight(univ.Getq0True() * 1.e-3, univ.Getq3True() * 1.e-3, 0);
+        29  if(universe.GetInt("mc_intType")!=1 && universe.GetInt("mc_intType")!=8){
+        29  if(universe.GetInt("mc_intType")!=1 && universe.GetInt("mc_intType")!=8){
+        42  if(universe.GetInt("mc_intType")==1 && !applyOn1p1h) return 1.0; //if CCQE and don't apply 1p1h, don't apply weights
+        43  if(universe.GetInt("mc_intType")==8 && !applyOn2p2h) return 1.0; //if MEC and don't apply 2p2h, don't apply weights
+        44  if(universe.GetInt("mc_intType")==8 && applyOn1p1h)  return 1.0; //if MEC and don't apply 1p1h, don't apply weights
+       103  if(universe.GetInt("mc_intType")!=1) return 1.0;
+       136  bool is_cccoh = universe.GetInt("mc_intType") == 4  // Coherent
+       144  bool is_ccres = universe.GetInt("mc_intType") == 2  // Res
+       154  ( universe.GetInt("mc_intType") == 2 // Res (Delta+Higher)
+       156  ( universe.GetInt("mc_intType") == 3
+
+    mc_targetNucleon
+        48  int target = universe.GetInt("mc_targetNucleon");
+
+    mc_targetNucleus
+       268  return PlotUtils::weight_lowq2pi().getWeight(T::GetQ2True()*1e-6 /*GeV^2*/, channel, T::m_nsigma, T::GetInt("mc_targetNucleus"));
+
+    mc_targetZ
+        34  if(universe.GetInt("mc_targetZ")<2) {
+       104  if(universe.GetInt("mc_targetZ")<6) return 1.0;
+
+    mc_w
+       158  universe.GetInt("mc_w") < 2000. ) );
 
 
-/home/gilligas/gitMinerva/MAT/PlotUtils/modifier_Eb.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/modifier_Eb.h
 
     mc_current
        247  if( chw->GetInt("mc_intType", entry) != 1 && chw->GetInt("mc_current", entry)!=1 ) return;
@@ -353,107 +839,724 @@
        366  const int Z = chw->GetInt("mc_targetZ",entry);
 
 
-/home/gilligas/Minerva/Ana/PickledCCQENu/ana/make_hists/include/CVUniverse.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/MuonFunctions.h
 
-    CCQENu_minos_trk_qp
-       328  return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_minos_trk_qp").c_str());
+    CCQENu_leptonE
+        58  std::string lepton_branch = GetAnaToolName() + "_leptonE";  // AnaTool
 
-    CCQENu_nuHelicity
-       324  return GetInt(std::string(MinervaUniverse::GetTreeName()+"_nuHelicity").c_str());
-
-    dis_id_energy
-       236  if(neutrinoMode) return (GetDouble("nonvtx_iso_blobs_energy")+GetDouble("dis_id_energy")); // several definitions of this, be careful
-
-    ev_gate
-       403  return GetInt("ev_gate");
-
-    ev_run
-       395  return GetInt("ev_run");
-
-    ev_subrun
-       399  return GetInt("ev_subrun");
-
-    mc_current
-       306  return GetInt("mc_current");
-       479  int mc_current = GetInt("mc_current");
-       494  int mc_current = GetInt("mc_current");
-
-    mc_FSPartE
-       475  std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
-       490  std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
-
-    mc_FSPartPDG
-       474  std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
-       489  std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
-
-    mc_incoming
-       302  return GetInt("mc_incoming");
-       478  int mc_incoming = GetInt("mc_incoming");
-       493  int mc_incoming = GetInt("mc_incoming");
-
-    mc_incomingE
-       108  return GetDouble("mc_incomingE")*MeVGeV;
-
-    mc_incomingPartVec
-       271  mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
-       279  mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
-
-    mc_intType
-       298  return GetInt("mc_intType");
-
-    mc_nFSPart
-       477  int mc_nFSPart = GetInt("mc_nFSPart");
-       492  int mc_nFSPart = GetInt("mc_nFSPart");
-
-    mc_nthEvtInFile
-       415  return GetInt("mc_nthEvtInFile")+1;
-
-    mc_primFSLepton
-       195  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
-       195  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
-       195  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
-       203  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
-       203  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
-       203  TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
-       272  mc_primFSLepton = GetVecDouble("mc_primFSLepton");
-       280  mc_primFSLepton = GetVecDouble("mc_primFSLepton");
-
-    mc_run
-       407  return GetInt("mc_run");
-
-    mc_subrun
-       411  return GetInt("mc_subrun");
-
-    mc_vtx
-       363  std::vector<double> vertex = GetVec<double>("mc_vtx");
-       368  std::vector<double> vertex = GetVec<double>("mc_vtx");
-       381  result.SetCoordinates(GetVec<double>("mc_vtx").data());
-       387  std::vector<double> tmp = GetVec<double>("mc_vtx");
-
-    multiplicity
-        88  return GetInt("multiplicity");
-
-    muon_is_minos_match_track
-        98  return GetInt("muon_is_minos_match_track");
-       320  return GetInt("muon_is_minos_match_track") == -1;  // does this flip for neutrino?
-
-    nonvtx_iso_blobs_energy
-       236  if(neutrinoMode) return (GetDouble("nonvtx_iso_blobs_energy")+GetDouble("dis_id_energy")); // several definitions of this, be careful
-
-    phys_n_dead_discr_pair_upstream_prim_track_proj
-        92  return GetInt("phys_n_dead_discr_pair_upstream_prim_track_proj") ;
-
-    recoil_energy_nonmuon_vtx100mm
-       239  return (GetVecDouble("recoil_summed_energy")[0] - GetDouble("recoil_energy_nonmuon_vtx100mm"));
-
-    recoil_summed_energy
-       238  if (GetVecDouble("recoil_summed_energy").size()==0) return -999.; // protect against bad input,
-       239  return (GetVecDouble("recoil_summed_energy")[0] - GetDouble("recoil_energy_nonmuon_vtx100mm"));
+    CCQENu_minos_trk_p
+        70  std::string minos_momentum_branch = GetAnaToolName() + "_minos_trk_p";
 
     vtx
-       344  result.SetCoordinates(GetVec<double>("vtx").data());
-       352  std::vector<double> vertex = GetVec<double>("vtx");
-       357  std::vector<double> vertex = GetVec<double>("vtx");
-       374  std::vector<double> tmp = GetVec<double>("vtx");
+       155  double vertex_Z = GetVecElem("vtx", 2);
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MuonResolutionSystematics.cxx
+
+    mc_primFSLepton
+        70  std::vector<double> truePVec = T::GetVecDouble("mc_primFSLepton");
+       101  std::vector<double> truePVec = T::GetVecDouble("mc_primFSLepton");
+       142  std::vector<double> truePVec = T::GetVecDouble("mc_primFSLepton");
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MuonSystematics.cxx
+
+    CCQENu_minos_used_curvature
+       130  std::string minosRangeCurveBool = T::GetAnaToolName()+"_minos_used_curvature";
+
+    mc_incoming
+       179  if (nu_pdg == -99) nu_pdg = T::GetInt("mc_incoming");
+       197  const int nu_pdg = T::GetInt("mc_incoming");
+
+    mc_incomingE
+       178  if (Enu == -99.)   Enu    = T::GetDouble("mc_incomingE")*1e-3;
+       196  const double Enu    = T::GetDouble("mc_incomingE")*1e-3;
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/NeutronInelasticReweighter.h
+
+    mc_FSPartE
+       334  const auto fsEnergies = univ.GetVecDouble("mc_FSPartE");
+
+    mc_FSPartPDG
+       333  const auto fsPDGs = univ.GetVecInt("mc_FSPartPDG");
+
+    mc_FSPartPx
+       335  const auto fsPx = univ.GetVecDouble("mc_FSPartPx"), fsPy = univ.GetVecDouble("mc_FSPartPy"), fsPz = univ.GetVecDouble("mc_FSPartPz");
+
+    mc_FSPartPy
+       335  const auto fsPx = univ.GetVecDouble("mc_FSPartPx"), fsPy = univ.GetVecDouble("mc_FSPartPy"), fsPz = univ.GetVecDouble("mc_FSPartPz");
+
+    mc_FSPartPz
+       335  const auto fsPx = univ.GetVecDouble("mc_FSPartPx"), fsPy = univ.GetVecDouble("mc_FSPartPy"), fsPz = univ.GetVecDouble("mc_FSPartPz");
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/SuSAFromValencia2p2hReweighter.h
+
+    mc_intType
+        33  if(univ.GetInt("mc_intType") == 8) return fWeighter.getWeight(univ.Getq0True() * 1.e-3, univ.Getq3True() * 1.e-3, 0);
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/TargetMassSystematics.cxx
+
+    mc_vtx
+       252  else if( PlotUtils::TargetUtils::Get().InPassiveTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       252  else if( PlotUtils::TargetUtils::Get().InPassiveTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       253  T::GetVecElem("mc_vtx",2)) ){
+       278  else if( PlotUtils::TargetUtils::Get().InPassiveTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       278  else if( PlotUtils::TargetUtils::Get().InPassiveTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       279  T::GetVecElem("mc_vtx",2)) ){
+       308  if( PlotUtils::TargetUtils::Get().InCarbonTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       308  if( PlotUtils::TargetUtils::Get().InCarbonTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       309  T::GetVecElem("mc_vtx",2)) ){
+       326  if( PlotUtils::TargetUtils::Get().InCarbonTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       326  if( PlotUtils::TargetUtils::Get().InCarbonTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       327  T::GetVecElem("mc_vtx",2)) ){
+       358  if( PlotUtils::TargetUtils::Get().InWaterTargetMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       358  if( PlotUtils::TargetUtils::Get().InWaterTargetMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       359  T::GetVecElem("mc_vtx",2), targetZ ) ){
+       378  if( PlotUtils::TargetUtils::Get().InWaterTargetMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       378  if( PlotUtils::TargetUtils::Get().InWaterTargetMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       379  T::GetVecElem("mc_vtx",2), targetZ ) ){
+       408  if( PlotUtils::TargetUtils::Get().InIronTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       408  if( PlotUtils::TargetUtils::Get().InIronTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       409  T::GetVecElem("mc_vtx",2)) ){
+       426  if( PlotUtils::TargetUtils::Get().InIronTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       426  if( PlotUtils::TargetUtils::Get().InIronTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       427  T::GetVecElem("mc_vtx",2)) ){
+       456  if( PlotUtils::TargetUtils::Get().InLeadTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       456  if( PlotUtils::TargetUtils::Get().InLeadTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       457  T::GetVecElem("mc_vtx",2)) ){
+       474  if( PlotUtils::TargetUtils::Get().InLeadTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       474  if( PlotUtils::TargetUtils::Get().InLeadTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       475  T::GetVecElem("mc_vtx",2)) ){
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/TruthFunctions.h
+
+    mc_incomingE
+         7  return GetDouble("mc_incomingE");
+
+    mc_primFSLepton
+        11  return GetVecElem("mc_primFSLepton", 3);
+        15  TVector3 p3lep(GetVecElem("mc_primFSLepton", 0),
+        16  GetVecElem("mc_primFSLepton", 1),
+        17  GetVecElem("mc_primFSLepton", 2));
+        22  TVector3 p3lep(GetVecElem("mc_primFSLepton", 0),
+        23  GetVecElem("mc_primFSLepton", 1),
+        24  GetVecElem("mc_primFSLepton", 2));
+        30  TVector3 p3lep(GetVecElem("mc_primFSLepton", 0),
+        31  GetVecElem("mc_primFSLepton", 1),
+        32  GetVecElem("mc_primFSLepton", 2));
+
+    mc_Q2
+        38  return GetDouble("mc_Q2");
+
+    mc_targetZ
+        50  return GetInt("mc_targetZ");
+
+    mc_vtx
+        54  return GetVecElem("mc_vtx",2);
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/weight_fsi.cxx
+
+    mc_charm
+        98  int mc_charm = chw->GetInt("mc_charm", entry);
+       381  int mc_charm = chw->GetInt("mc_charm", entry);
+
+    mc_er_E
+       111  std::vector<double> mc_er_E  = chw->GetValueVector<double>("mc_er_E",  entry);
+       395  std::vector<double> mc_er_E  = chw->GetValueVector<double>("mc_er_E",  entry);
+
+    mc_er_FD
+       105  std::vector<int> mc_er_FD     = chw->GetValueVector<int>("mc_er_FD", entry);
+       389  std::vector<int> mc_er_FD     = chw->GetValueVector<int>("mc_er_FD", entry);
+
+    mc_er_ID
+       103  std::vector<int> mc_er_ID     = chw->GetValueVector<int>("mc_er_ID", entry);
+       387  std::vector<int> mc_er_ID     = chw->GetValueVector<int>("mc_er_ID", entry);
+
+    mc_er_LD
+       106  std::vector<int> mc_er_LD     = chw->GetValueVector<int>("mc_er_LD", entry);
+       390  std::vector<int> mc_er_LD     = chw->GetValueVector<int>("mc_er_LD", entry);
+
+    mc_er_mother
+       107  std::vector<int> mc_er_mother = chw->GetValueVector<int>("mc_er_mother", entry);
+       391  std::vector<int> mc_er_mother = chw->GetValueVector<int>("mc_er_mother", entry);
+
+    mc_er_nPart
+       102  int mc_er_nPart = chw->GetInt("mc_er_nPart", entry);
+       386  int mc_er_nPart = chw->GetInt("mc_er_nPart", entry);
+
+    mc_er_Px
+       108  std::vector<double> mc_er_Px = chw->GetValueVector<double>("mc_er_Px", entry);
+       392  std::vector<double> mc_er_Px = chw->GetValueVector<double>("mc_er_Px", entry);
+
+    mc_er_Py
+       109  std::vector<double> mc_er_Py = chw->GetValueVector<double>("mc_er_Py", entry);
+       393  std::vector<double> mc_er_Py = chw->GetValueVector<double>("mc_er_Py", entry);
+
+    mc_er_Pz
+       110  std::vector<double> mc_er_Pz = chw->GetValueVector<double>("mc_er_Pz", entry);
+       394  std::vector<double> mc_er_Pz = chw->GetValueVector<double>("mc_er_Pz", entry);
+
+    mc_er_status
+       104  std::vector<int> mc_er_status = chw->GetValueVector<int>("mc_er_status", entry);
+       388  std::vector<int> mc_er_status = chw->GetValueVector<int>("mc_er_status", entry);
+
+    mc_incoming
+        96  int mc_incoming = chw->GetInt("mc_incoming", entry);
+       379  int mc_incoming = chw->GetInt("mc_incoming", entry);
+
+    mc_intType
+        99  int mc_intType = chw->GetInt("mc_intType", entry);
+       382  int mc_intType = chw->GetInt("mc_intType", entry);
+
+    mc_primaryLepton
+        97  int mc_primaryLepton = chw->GetInt("mc_primaryLepton", entry);
+       380  int mc_primaryLepton = chw->GetInt("mc_primaryLepton", entry);
+
+    mc_resID
+       385  int mc_resID   = chw->GetInt("mc_resID",   entry);
+
+    mc_targetA
+       100  int mc_targetA = chw->GetInt("mc_targetA", entry);
+       383  int mc_targetA = chw->GetInt("mc_targetA", entry);
+
+    mc_targetZ
+       101  int mc_targetZ = chw->GetInt("mc_targetZ", entry);
+       384  int mc_targetZ = chw->GetInt("mc_targetZ", entry);
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/weight_fsi_absorption.cxx
+
+    mc_charm
+       400  int mc_charm = chw->GetInt("mc_charm", entry);
+
+    mc_er_E
+       413  std::vector<double> mc_er_E  = chw->GetValueVector<double>("mc_er_E",  entry);
+
+    mc_er_FD
+       407  std::vector<int> mc_er_FD     = chw->GetValueVector<int>("mc_er_FD", entry);
+
+    mc_er_ID
+       405  std::vector<int> mc_er_ID     = chw->GetValueVector<int>("mc_er_ID", entry);
+
+    mc_er_LD
+       408  std::vector<int> mc_er_LD     = chw->GetValueVector<int>("mc_er_LD", entry);
+
+    mc_er_nPart
+       404  int mc_er_nPart = chw->GetInt("mc_er_nPart", entry);
+
+    mc_er_status
+       406  std::vector<int> mc_er_status = chw->GetValueVector<int>("mc_er_status", entry);
+
+    mc_incoming
+       398  int mc_incoming = chw->GetInt("mc_incoming", entry);
+
+    mc_intType
+       401  int mc_intType = chw->GetInt("mc_intType", entry);
+
+    mc_primaryLepton
+       399  int mc_primaryLepton = chw->GetInt("mc_primaryLepton", entry);
+
+    mc_targetA
+       402  int mc_targetA = chw->GetInt("mc_targetA", entry);
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/WeightFunctions.h
+
+    mc_charm
+        84  GetInt("mc_incoming"), GetInt("mc_primaryLepton"), GetInt("mc_charm"),
+
+    mc_er_E
+        90  GetVecDouble("mc_er_E"), m_entry);
+
+    mc_er_FD
+        87  GetVecInt("mc_er_status"), GetVecInt("mc_er_FD"), GetVecInt("mc_er_LD"),
+
+    mc_er_ID
+        86  GetInt("mc_resID"), GetInt("mc_er_nPart"), GetVecInt("mc_er_ID"),
+
+    mc_er_LD
+        87  GetVecInt("mc_er_status"), GetVecInt("mc_er_FD"), GetVecInt("mc_er_LD"),
+
+    mc_er_mother
+        88  GetVecInt("mc_er_mother"), GetVecDouble("mc_er_Px"),
+
+    mc_er_nPart
+        86  GetInt("mc_resID"), GetInt("mc_er_nPart"), GetVecInt("mc_er_ID"),
+
+    mc_er_Px
+        88  GetVecInt("mc_er_mother"), GetVecDouble("mc_er_Px"),
+
+    mc_er_Py
+        89  GetVecDouble("mc_er_Py"), GetVecDouble("mc_er_Pz"),
+
+    mc_er_Pz
+        89  GetVecDouble("mc_er_Py"), GetVecDouble("mc_er_Pz"),
+
+    mc_er_status
+        87  GetVecInt("mc_er_status"), GetVecInt("mc_er_FD"), GetVecInt("mc_er_LD"),
+
+    mc_incoming
+        70  nu_pdg = GetInt("mc_incoming");
+        84  GetInt("mc_incoming"), GetInt("mc_primaryLepton"), GetInt("mc_charm"),
+
+    mc_incomingE
+        62  if (Enu == -99.) Enu = GetDouble("mc_incomingE") * 1e-3;
+
+    mc_intType
+        54  if (GetInt("mc_intType") != 4) return 1.;
+        85  GetInt("mc_intType"), GetInt("mc_targetA"), GetInt("mc_targetZ"),
+
+    mc_primaryLepton
+        84  GetInt("mc_incoming"), GetInt("mc_primaryLepton"), GetInt("mc_charm"),
+
+    mc_resID
+        86  GetInt("mc_resID"), GetInt("mc_er_nPart"), GetVecInt("mc_er_ID"),
+
+    mc_targetA
+        85  GetInt("mc_intType"), GetInt("mc_targetA"), GetInt("mc_targetZ"),
+
+    mc_targetNucleus
+        42  channel, variation, GetInt("mc_targetNucleus"));
+        49  channel, variation, GetInt("mc_targetNucleus"));
+
+    mc_targetZ
+        85  GetInt("mc_intType"), GetInt("mc_targetA"), GetInt("mc_targetZ"),
+
+    truth_genie_wgt_MaRES
+        12  ( PlotUtils::GetGenieParReweight(*this,"truth_genie_wgt_MaRES", 
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/weightMK.cxx
+
+    mc_current
+       190  const int mc_current  = chw->GetValue("mc_current", entry); 
+
+    mc_er_ID
+       195  std::vector<int> mc_er_ID     = chw->GetValueVector<int>("mc_er_ID", entry); 
+
+    mc_er_nPart
+       193  const int mc_er_nPart = chw->GetValue("mc_er_nPart",entry);
+
+    mc_er_status
+       196  std::vector<int> mc_er_status = chw->GetValueVector<int>("mc_er_status", entry); 	
+
+    mc_intType
+       191  const int mc_intType  = chw->GetValue("mc_intType", entry); 
+
+    mc_Q2
+       188  const double mc_Q2    = mev2gev*mev2gev*chw->GetValue("mc_Q2", entry);
+
+    mc_targetA
+       192  const int mc_targetA  = chw->GetValue("mc_targetA", entry); 
+
+    mc_w
+       189  const double mc_w     = mev2gev*chw->GetValue("mc_w", entry);
+
+
+/home/sean/MinervaExpt/opt/include/universes/CCQE3DFitsSystematics.cxx
+
+    mc_FSPartE
+        26  double energy = universe.GetVecElem("mc_FSPartE",i);
+
+    mc_FSPartPDG
+        25  int pdg = universe.GetVecElemInt("mc_FSPartPDG",i);
+
+    mc_nFSPart
+        23  int nparticles = universe.GetInt("mc_nFSPart");
+
+
+/home/sean/MinervaExpt/opt/include/universes/DiffractiveUncSystematics.cxx
+
+    mc_intType
+        44  if( T::GetInt("mc_intType") != 4 ) return 1;
+
+    mc_vtx
+        49  if( PlotUtils::TargetUtils::Get().InNukeRegion( T::GetVecElem("mc_vtx",0), 
+        50  T::GetVecElem("mc_vtx",1), T::GetVecElem("mc_vtx",2) ) ) fracDiffUnc = m_fracTarUnc; 
+        50  T::GetVecElem("mc_vtx",1), T::GetVecElem("mc_vtx",2) ) ) fracDiffUnc = m_fracTarUnc; 
+        52  if( PlotUtils::TargetUtils::Get().InTracker( T::GetVecElem("mc_vtx",0), 
+        53  T::GetVecElem("mc_vtx",1), T::GetVecElem("mc_vtx",2) ) ) fracDiffUnc = m_fracTrkUnc; 
+        53  T::GetVecElem("mc_vtx",1), T::GetVecElem("mc_vtx",2) ) ) fracDiffUnc = m_fracTrkUnc; 
+
+
+/home/sean/MinervaExpt/opt/include/universes/GenieSystematics.cxx
+
+    mc_current
+       382  universe.GetInt("mc_current") == 1; // CC
+
+    mc_intType
+       380  bool is_ccres = universe.GetInt("mc_intType") == 2  // Res
+       847  if(T::GetInt("mc_intType")!=1) return T::GetGenieWeight();  // Only reweight CCQE events
+       867  if(T::GetInt("mc_intType")!=1) return 1;  // Only reweight CCQE events
+
+    mc_Q2
+       849  const double q2 = T::GetDouble("mc_Q2")/(1000*1000); // Convert to GeV
+       869  const double q2 = T::GetDouble("mc_Q2")/(1000*1000); // Convert to GeV
+
+    mc_targetZ
+       848  if(T::GetInt("mc_targetZ")<6) return T::GetGenieWeight(); // Don't reweight hydrogen
+       868  if(T::GetInt("mc_targetZ")<6) return 1; // Don't reweight hydrogen
+
+    truth_genie_wgt_MaCCQE
+       838  double wgt = T::m_nsigma < 0 ? T::GetVecElem("truth_genie_wgt_MaCCQE", 2):
+       839  T::GetVecElem("truth_genie_wgt_MaCCQE", 4);
+       858  double wgt = T::m_nsigma < 0 ? T::GetVecElem("truth_genie_wgt_MaCCQE", 2):
+       859  T::GetVecElem("truth_genie_wgt_MaCCQE", 4);
+
+    truth_genie_wgt_MaRES
+       734  double new_ma_wgt = PlotUtils::GetGenieParReweight(*this,"truth_genie_wgt_MaRES", NSFDefaults::DEUTERIUM_MaRES, 
+       775  double new_ma_wgt = PlotUtils::GetGenieParReweight(*this,"truth_genie_wgt_MaRES", NSFDefaults::DEUTERIUM_MaRES, 
+
+    truth_genie_wgt_Rvn1pi
+       369  bool is_nonrespi = universe.GetVecElem("truth_genie_wgt_Rvn1pi", 2) < 1.0
+
+    truth_genie_wgt_Rvp1pi
+       371  universe.GetVecElem("truth_genie_wgt_Rvp1pi", 2) < 1.0;
+
+
+/home/sean/MinervaExpt/opt/include/universes/MinervaUniverse.cxx
+
+    batch_structure
+       405  batch_structure = GetInt("batch_structure");
+
+    numi_pot
+       400  double numi_pot = GetDouble("numi_pot");
+
+    reco_vertex_batch
+       406  reco_vertex_batch = GetInt("reco_vertex_batch");
+
+
+/home/sean/MinervaExpt/opt/include/universes/MnvTuneSystematics.cxx
+
+    mc_current
+       138  universe.GetInt("mc_current") == 1; // CC
+       146  universe.GetInt("mc_current") == 1; // CC
+       152  bool is_ccpion = ( universe.GetInt("mc_current") == 1 )
+
+    mc_intType
+        29  if(universe.GetInt("mc_intType")!=1 && universe.GetInt("mc_intType")!=8){
+        29  if(universe.GetInt("mc_intType")!=1 && universe.GetInt("mc_intType")!=8){
+        42  if(universe.GetInt("mc_intType")==1 && !applyOn1p1h) return 1.0; //if CCQE and don't apply 1p1h, don't apply weights
+        43  if(universe.GetInt("mc_intType")==8 && !applyOn2p2h) return 1.0; //if MEC and don't apply 2p2h, don't apply weights
+        44  if(universe.GetInt("mc_intType")==8 && applyOn1p1h)  return 1.0; //if MEC and don't apply 1p1h, don't apply weights
+       103  if(universe.GetInt("mc_intType")!=1) return 1.0;
+       136  bool is_cccoh = universe.GetInt("mc_intType") == 4  // Coherent
+       144  bool is_ccres = universe.GetInt("mc_intType") == 2  // Res
+       154  ( universe.GetInt("mc_intType") == 2 // Res (Delta+Higher)
+       156  ( universe.GetInt("mc_intType") == 3
+
+    mc_targetNucleon
+        48  int target = universe.GetInt("mc_targetNucleon");
+
+    mc_targetNucleus
+       268  return PlotUtils::weight_lowq2pi().getWeight(T::GetQ2True()*1e-6 /*GeV^2*/, channel, T::m_nsigma, T::GetInt("mc_targetNucleus"));
+
+    mc_targetZ
+        34  if(universe.GetInt("mc_targetZ")<2) {
+       104  if(universe.GetInt("mc_targetZ")<6) return 1.0;
+
+    mc_w
+       158  universe.GetInt("mc_w") < 2000. ) );
+
+
+/home/sean/MinervaExpt/opt/include/universes/MuonResolutionSystematics.cxx
+
+    mc_primFSLepton
+        70  std::vector<double> truePVec = T::GetVecDouble("mc_primFSLepton");
+       101  std::vector<double> truePVec = T::GetVecDouble("mc_primFSLepton");
+       142  std::vector<double> truePVec = T::GetVecDouble("mc_primFSLepton");
+
+
+/home/sean/MinervaExpt/opt/include/universes/MuonSystematics.cxx
+
+    CCQENu_minos_used_curvature
+       130  std::string minosRangeCurveBool = T::GetAnaToolName()+"_minos_used_curvature";
+
+    mc_incoming
+       179  if (nu_pdg == -99) nu_pdg = T::GetInt("mc_incoming");
+       197  const int nu_pdg = T::GetInt("mc_incoming");
+
+    mc_incomingE
+       178  if (Enu == -99.)   Enu    = T::GetDouble("mc_incomingE")*1e-3;
+       196  const double Enu    = T::GetDouble("mc_incomingE")*1e-3;
+
+
+/home/sean/MinervaExpt/opt/include/universes/TargetMassSystematics.cxx
+
+    mc_vtx
+       252  else if( PlotUtils::TargetUtils::Get().InPassiveTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       252  else if( PlotUtils::TargetUtils::Get().InPassiveTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       253  T::GetVecElem("mc_vtx",2)) ){
+       278  else if( PlotUtils::TargetUtils::Get().InPassiveTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       278  else if( PlotUtils::TargetUtils::Get().InPassiveTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       279  T::GetVecElem("mc_vtx",2)) ){
+       308  if( PlotUtils::TargetUtils::Get().InCarbonTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       308  if( PlotUtils::TargetUtils::Get().InCarbonTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       309  T::GetVecElem("mc_vtx",2)) ){
+       326  if( PlotUtils::TargetUtils::Get().InCarbonTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       326  if( PlotUtils::TargetUtils::Get().InCarbonTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       327  T::GetVecElem("mc_vtx",2)) ){
+       358  if( PlotUtils::TargetUtils::Get().InWaterTargetMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       358  if( PlotUtils::TargetUtils::Get().InWaterTargetMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       359  T::GetVecElem("mc_vtx",2), targetZ ) ){
+       378  if( PlotUtils::TargetUtils::Get().InWaterTargetMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       378  if( PlotUtils::TargetUtils::Get().InWaterTargetMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       379  T::GetVecElem("mc_vtx",2), targetZ ) ){
+       408  if( PlotUtils::TargetUtils::Get().InIronTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       408  if( PlotUtils::TargetUtils::Get().InIronTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       409  T::GetVecElem("mc_vtx",2)) ){
+       426  if( PlotUtils::TargetUtils::Get().InIronTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       426  if( PlotUtils::TargetUtils::Get().InIronTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       427  T::GetVecElem("mc_vtx",2)) ){
+       456  if( PlotUtils::TargetUtils::Get().InLeadTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       456  if( PlotUtils::TargetUtils::Get().InLeadTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       457  T::GetVecElem("mc_vtx",2)) ){
+       474  if( PlotUtils::TargetUtils::Get().InLeadTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       474  if( PlotUtils::TargetUtils::Get().InLeadTargetVolMC( T::GetVecElem("mc_vtx",0), T::GetVecElem("mc_vtx",1),
+       475  T::GetVecElem("mc_vtx",2)) ){
+
+
+/home/sean/MinervaExpt/opt/include/weighters/BodekRitchieReweighter.h
+
+    mc_er_ID
+        28  univ.GetVecInt("mc_er_ID"), univ.GetVecDouble("mc_er_Px"),
+
+    mc_er_nPart
+        26  return m_weighter.getWeight(m_mode, univ.GetInt("mc_er_nPart"), univ.GetInt("mc_intType"),
+
+    mc_er_Px
+        28  univ.GetVecInt("mc_er_ID"), univ.GetVecDouble("mc_er_Px"),
+
+    mc_er_Py
+        29  univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"));
+
+    mc_er_Pz
+        29  univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"));
+
+    mc_er_status
+        27  univ.GetInt("mc_targetA"), univ.GetVecInt("mc_er_status"),
+
+    mc_intType
+        26  return m_weighter.getWeight(m_mode, univ.GetInt("mc_er_nPart"), univ.GetInt("mc_intType"),
+
+    mc_targetA
+        27  univ.GetInt("mc_targetA"), univ.GetVecInt("mc_er_status"),
+
+
+/home/sean/MinervaExpt/opt/include/weighters/FluxAndCVReweighter.h
+
+    mc_incoming
+        30  if(univ.IsPlaylistME(univ.GetPlaylist())) nu_pdg = univ.GetInt("mc_incoming");
+
+    mc_incomingE
+        33  univ.GetNFluxUniverses()).GetFluxCVWeight(univ.GetDouble("mc_incomingE") * 1e-3, nu_pdg);
+
+
+/home/sean/MinervaExpt/opt/include/weighters/FSIReweighter.h
+
+    mc_charm
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_er_E
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_er_FD
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_er_ID
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_er_LD
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_er_mother
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_er_nPart
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_er_Px
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_er_Py
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_er_Pz
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_er_status
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_incoming
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_intType
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_primaryLepton
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_resID
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_targetA
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+    mc_targetZ
+        35  fCalculator.calcWeights(univ.GetInt("mc_incoming"), univ.GetInt("mc_primaryLepton"), univ.GetInt("mc_charm"), univ.GetInt("mc_intType"), univ.GetInt("mc_targetA"), univ.GetInt("mc_targetZ"), univ.GetInt("mc_resID"), univ.GetInt("mc_er_nPart"), univ.GetVecInt("mc_er_ID"), univ.GetVecInt("mc_er_status"), univ.GetVecInt("mc_er_FD"), univ.GetVecInt("mc_er_LD"), univ.GetVecInt("mc_er_mother"), univ.GetVecDouble("mc_er_Px"), univ.GetVecDouble("mc_er_Py"), univ.GetVecDouble("mc_er_Pz"), univ.GetVecDouble("mc_er_E"), univ.GetEntry());
+
+
+/home/sean/MinervaExpt/opt/include/weighters/GENIEReweighter.h
+
+    truth_genie_wgt_MaRES
+        36  ( PlotUtils::GetGenieParReweight(univ,"truth_genie_wgt_MaRES",
+
+
+/home/sean/MinervaExpt/opt/include/weighters/MnvHadronReweight.h
+
+    mc_FSPartE
+       154  mc_FSPartE[i]   = univ.GetVecElem("mc_FSPartE",i);
+       314  leadingPartIdxE[part_pdg].second = univ.GetVecElem("mc_FSPartE",iPart);
+       318  if( univ.GetVecElem("mc_FSPartE",iPart) > leadingPartIdxE[part_pdg].second )
+       321  leadingPartIdxE[part_pdg].second = univ.GetVecElem("mc_FSPartE",iPart);
+
+    mc_FSPartPDG
+       153  mc_FSPartPDG[i] = univ.GetVecElemInt("mc_FSPartPDG",i);
+       298  const int pdg = univ.GetVecElemInt("mc_FSPartPDG",iPart);
+
+    mc_FSPartPx
+       155  mc_FSPartPx[i]  = univ.GetVecElem("mc_FSPartPx",i);
+       335  TVector3 p3FS( univ.GetVecElem("mc_FSPartPx",fs_idx), univ.GetVecElem("mc_FSPartPy",fs_idx), univ.GetVecElem("mc_FSPartPz",fs_idx) );
+
+    mc_FSPartPy
+       156  mc_FSPartPy[i]  = univ.GetVecElem("mc_FSPartPy",i);
+       335  TVector3 p3FS( univ.GetVecElem("mc_FSPartPx",fs_idx), univ.GetVecElem("mc_FSPartPy",fs_idx), univ.GetVecElem("mc_FSPartPz",fs_idx) );
+
+    mc_FSPartPz
+       157  mc_FSPartPz[i]  = univ.GetVecElem("mc_FSPartPz",i);
+       335  TVector3 p3FS( univ.GetVecElem("mc_FSPartPx",fs_idx), univ.GetVecElem("mc_FSPartPy",fs_idx), univ.GetVecElem("mc_FSPartPz",fs_idx) );
+
+    mc_nFSPart
+       145  mc_nFSPart = univ.GetInt("mc_nFSPart");
+       296  for( int iPart = 0; iPart < univ.GetInt("mc_nFSPart"); ++iPart )
+
+    mc_targetZ
+       141  mc_targetZ = univ.GetInt("mc_targetZ");
+
+    mc_vtx
+       142  for( int i = 0; i < 3; ++i ) mc_vtx[i] = univ.GetVecElem("mc_vtx",i);
+
+    truth_hadronReweightColumnarDensity
+       119  for( int i = 0; i < truth_hadronReweightColumnarDensity_sz; ++i ) truth_hadronReweightColumnarDensity[i] = univ.GetVecElem("truth_hadronReweightColumnarDensity",i);   
+
+    truth_hadronReweightColumnarDensity_sz
+       118  truth_hadronReweightColumnarDensity_sz = univ.GetInt("truth_hadronReweightColumnarDensity_sz");
+
+    truth_hadronReweightFinalE
+       122  for( int i = 0; i < truth_hadronReweightFinalE_sz; ++i ) truth_hadronReweightFinalE[i] = univ.GetVecElem("truth_hadronReweightFinalE",i);   
+
+    truth_hadronReweightFinalE_sz
+       121  truth_hadronReweightFinalE_sz = univ.GetInt("truth_hadronReweightFinalE_sz");
+
+    truth_hadronReweightFinalSigmaE
+       124  for( int i = 0; i < truth_hadronReweightFinalSigmaE_sz; ++i ) truth_hadronReweightFinalSigmaE[i] = univ.GetVecElem("truth_hadronReweightFinalSigmaE",i);   
+
+    truth_hadronReweightFinalSigmaE_sz
+       123  truth_hadronReweightFinalSigmaE_sz = univ.GetInt("truth_hadronReweightFinalSigmaE_sz");
+
+    truth_hadronReweightInitialE
+       127  for( int i = 0; i < truth_hadronReweightInitialE_sz; ++i ) truth_hadronReweightInitialE[i] = univ.GetVecElem("truth_hadronReweightInitialE",i);   
+
+    truth_hadronReweightInitialE_sz
+       126  truth_hadronReweightInitialE_sz = univ.GetInt("truth_hadronReweightInitialE_sz");
+
+    truth_hadronReweightInitialSigmaE
+       129  for( int i = 0; i < truth_hadronReweightInitialSigmaE_sz; ++i ) truth_hadronReweightInitialSigmaE[i] = univ.GetVecElem("truth_hadronReweightInitialSigmaE",i);   
+
+    truth_hadronReweightInitialSigmaE_sz
+       128  truth_hadronReweightInitialSigmaE_sz = univ.GetInt("truth_hadronReweightInitialSigmaE_sz");
+
+    truth_hadronReweightIntCode
+       107  for( int i = 0; i < truth_hadronReweightIntCode_sz; ++i ) truth_hadronReweightIntCode[i] = univ.GetVecElemInt("truth_hadronReweightIntCode",i);   
+
+    truth_hadronReweightIntCode_sz
+       106  truth_hadronReweightIntCode_sz = univ.GetInt("truth_hadronReweightIntCode_sz");
+
+    truth_hadronReweightIntCodePerSegment
+       139  for( int i = 0; i < truth_hadronReweightIntCodePerSegment_sz; ++i ) truth_hadronReweightIntCodePerSegment[i] = univ.GetVecElemInt("truth_hadronReweightIntCodePerSegment",i);     
+
+    truth_hadronReweightIntCodePerSegment_sz
+       138  truth_hadronReweightIntCodePerSegment_sz = univ.GetInt("truth_hadronReweightIntCodePerSegment_sz");
+
+    truth_hadronReweightNPaths
+       103  truth_hadronReweightNPaths  = univ.GetInt("truth_hadronReweightNPaths" );
+
+    truth_hadronReweightNPoints
+       104  truth_hadronReweightNPoints = univ.GetInt("truth_hadronReweightNPoints");
+
+    truth_hadronReweightNuke
+       110  for( int i = 0; i < truth_hadronReweightNuke_sz; ++i ) truth_hadronReweightNuke[i] = univ.GetVecElemInt("truth_hadronReweightNuke",i);   
+
+    truth_hadronReweightNuke_sz
+       109  truth_hadronReweightNuke_sz = univ.GetInt("truth_hadronReweightNuke_sz");
+
+    truth_hadronReweightPDG
+       113  for( int i = 0; i < truth_hadronReweightPDG_sz; ++i ) truth_hadronReweightPDG[i] = univ.GetVecElemInt("truth_hadronReweightPDG",i);   
+
+    truth_hadronReweightPDG_sz
+       112  truth_hadronReweightPDG_sz = univ.GetInt("truth_hadronReweightPDG_sz");
+
+    truth_hadronReweightPosX
+       132  for( int i = 0; i < truth_hadronReweightPosX_sz; ++i ) truth_hadronReweightPosX[i] = univ.GetVecElem("truth_hadronReweightPosX",i);   
+
+    truth_hadronReweightPosX_sz
+       131  truth_hadronReweightPosX_sz = univ.GetInt("truth_hadronReweightPosX_sz");
+
+    truth_hadronReweightPosY
+       134  for( int i = 0; i < truth_hadronReweightPosY_sz; ++i ) truth_hadronReweightPosY[i] = univ.GetVecElem("truth_hadronReweightPosY",i);   
+
+    truth_hadronReweightPosY_sz
+       133  truth_hadronReweightPosY_sz = univ.GetInt("truth_hadronReweightPosY_sz");
+
+    truth_hadronReweightPosZ
+       136  for( int i = 0; i < truth_hadronReweightPosZ_sz; ++i ) truth_hadronReweightPosZ[i] = univ.GetVecElem("truth_hadronReweightPosZ",i);     
+
+    truth_hadronReweightPosZ_sz
+       135  truth_hadronReweightPosZ_sz = univ.GetInt("truth_hadronReweightPosZ_sz");
+
+    truth_hadronReweightTrackID
+       116  for( int i = 0; i < truth_hadronReweightTrackID_sz; ++i ) truth_hadronReweightTrackID[i] = univ.GetVecElemInt("truth_hadronReweightTrackID",i);   
+
+    truth_hadronReweightTrackID_sz
+       115  truth_hadronReweightTrackID_sz = univ.GetInt("truth_hadronReweightTrackID_sz");
+
+
+/home/sean/MinervaExpt/opt/include/weighters/NeutronInelasticReweighter.h
+
+    mc_FSPartE
+       334  const auto fsEnergies = univ.GetVecDouble("mc_FSPartE");
+
+    mc_FSPartPDG
+       333  const auto fsPDGs = univ.GetVecInt("mc_FSPartPDG");
+
+    mc_FSPartPx
+       335  const auto fsPx = univ.GetVecDouble("mc_FSPartPx"), fsPy = univ.GetVecDouble("mc_FSPartPy"), fsPz = univ.GetVecDouble("mc_FSPartPz");
+
+    mc_FSPartPy
+       335  const auto fsPx = univ.GetVecDouble("mc_FSPartPx"), fsPy = univ.GetVecDouble("mc_FSPartPy"), fsPz = univ.GetVecDouble("mc_FSPartPz");
+
+    mc_FSPartPz
+       335  const auto fsPx = univ.GetVecDouble("mc_FSPartPx"), fsPy = univ.GetVecDouble("mc_FSPartPy"), fsPz = univ.GetVecDouble("mc_FSPartPz");
+
+
+/home/sean/MinervaExpt/opt/include/weighters/SuSAFromValencia2p2hReweighter.h
+
+    mc_intType
+        33  if(univ.GetInt("mc_intType") == 8) return fWeighter.getWeight(univ.Getq0True() * 1.e-3, univ.Getq3True() * 1.e-3, 0);
 
 

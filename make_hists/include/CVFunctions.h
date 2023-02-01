@@ -1,3 +1,15 @@
+/**
+* @file
+* @author  Heidi Schellman/Noah Vaughan/SeanGilligan
+* @version 1.0 *
+* @section LICENSE *
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as
+* published by the Free Software Foundation; either version 2 of
+* the License, or (at your option) any later version. *
+* @section DESCRIPTION *
+* This implements a map of CVFunctions so you can configure them at run time
+ */
 // ========================================================================
 // Place to put a map of CVUniverse functions
 //
@@ -41,6 +53,9 @@ public:
 
 		recofunctions["EnuHadGeV"] = &CVUNIVERSE::GetEnuHadGeV;
 		truefunctions["TrueEnuGeV"] = &CVUNIVERSE::GetTrueEnuGeV;
+		
+		recofunctions["EmuGeV"] = &CVUNIVERSE::GetEmuGeV;
+		truefunctions["TrueEmuGeV"] = &CVUNIVERSE::GetTrueEmuGeV;
 
 		recofunctions["PmuGeV"] = &CVUNIVERSE::GetPmuGeV;
 		truefunctions["TruePmuGeV"] = &CVUNIVERSE::GetTruePmuGeV;
@@ -72,6 +87,9 @@ public:
 
 		recofunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
 		recointfunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+		
+		recofunctions["EventID"] = &CVUNIVERSE::GetEventID;
+		truefunctions["EventID"] = &CVUNIVERSE::GetEventID;
 
 		// truth only variables for studies
 
@@ -105,6 +123,8 @@ public:
 		trueintfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
 
 		trueintfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
+		
+		trueintfunctions["TruthIsQELike"] = &CVUNIVERSE::GetTruthIsQELike;
 
 		trueintfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
 
@@ -152,6 +172,10 @@ public:
 		trueintfunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
 		truefunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
 
+		// Both
+		
+		recointfunctions["HasMichelOrNBlobs"] = &CVUNIVERSE::GetHasMichelOrNBlobs;
+
 		// Protons
 
 		recofunctions["ProtonScore_0"] = &CVUNIVERSE::GetProtonScore_0;
@@ -177,30 +201,55 @@ public:
 		recointfunctions["PassScoreCutProton_9"] = &CVUNIVERSE::GetPassScoreCutProton_9;
 
 		recointfunctions["IsPrimaryProton"] = &CVUNIVERSE::GetIsPrimaryProton;
+		recointfunctions["IsPrimaryProton1"] = &CVUNIVERSE::GetIsPrimaryProton1;
 		recofunctions["PrimaryProtonScore"] = &CVUNIVERSE::GetPrimaryProtonScore;
+		recofunctions["PrimaryProtonScore1"] = &CVUNIVERSE::GetPrimaryProtonScore1;
+		recofunctions["PrimaryProtonScore2"] = &CVUNIVERSE::GetPrimaryProtonScore2;
 		recointfunctions["AreClustsFoundAtPrimaryProtonEnd"] = &CVUNIVERSE::GetAreClustsFoundAtPrimaryProtonEnd;
 		recofunctions["AreClustsFoundAtPrimaryProtonEnd"] = &CVUNIVERSE::GetAreClustsFoundAtPrimaryProtonEnd;
 		recointfunctions["NumClustsPrimaryProtonEnd"] = &CVUNIVERSE::GetNumClustsPrimaryProtonEnd;
 		recofunctions["NumClustsPrimaryProtonEnd"] = &CVUNIVERSE::GetNumClustsPrimaryProtonEnd;
+		
 		recofunctions["PrimaryProtonTrackLength"] = &CVUNIVERSE::GetPrimaryProtonTrackLength;
+		recofunctions["PrimaryProtonTrackEndX"] = &CVUNIVERSE::GetPrimaryProtonTrackEndX;
+		recofunctions["PrimaryProtonTrackEndY"] = &CVUNIVERSE::GetPrimaryProtonTrackEndY;
+		recofunctions["PrimaryProtonTrackEndZ"] = &CVUNIVERSE::GetPrimaryProtonTrackEndZ;
+		recofunctions["PrimaryProtonAngle"] = &CVUNIVERSE::GetPrimaryProtonAngle;
+		
 		recofunctions["CalibEClustsPrimaryProtonEnd"] = &CVUNIVERSE::GetCalibEClustsPrimaryProtonEnd;
 		recofunctions["VisEClustsPrimaryProtonEnd"] = &CVUNIVERSE::GetVisEClustsPrimaryProtonEnd;
 		recofunctions["PrimaryProtonTfromdEdx"] = &CVUNIVERSE::GetPrimaryProtonTfromdEdx;
 		recofunctions["TotalPrimaryProtonEnergydEdxAndClusters"] = &CVUNIVERSE::GetTotalPrimaryProtonEnergydEdxAndClusters;
 		recofunctions["PrimaryProtonTrueKE"] = &CVUNIVERSE::GetPrimaryProtonTrueKE;
 		recofunctions["EnergyDiffTruedEdx"] = &CVUNIVERSE::GetEnergyDiffTruedEdx;
+		recofunctions["PrimaryProtonFractionEnergyInCone"] = &CVUNIVERSE::GetPrimaryProtonFractionEnergyInCone;
+		
+		recointfunctions["PrimaryProtonCandidatePDG"] = &CVUNIVERSE::GetPrimaryProtonCandidatePDG;
+		recofunctions["PrimaryProtonCandidatePDG"] = &CVUNIVERSE::GetPrimaryProtonCandidatePDG;
+		
 		recointfunctions["RecoTruthIsPrimaryProton"] = &CVUNIVERSE::GetRecoTruthIsPrimaryProton;
+		recointfunctions["RecoTruthIsPrimaryPion"] = &CVUNIVERSE::GetRecoTruthIsPrimaryPion;
+		recointfunctions["RecoTruthIsPrimaryOther"] = &CVUNIVERSE::GetRecoTruthIsPrimaryOther;
+		
 		trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
 		truefunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
 
 		recointfunctions["SecondaryProtonCandidateCount"] = &CVUNIVERSE::GetSecondaryProtonCandidateCount;
 		recofunctions["SecondaryProtonCandidateCount"] = &CVUNIVERSE::GetSecondaryProtonCandidateCount;
+		recointfunctions["SecondaryProtonCandidateCount1"] = &CVUNIVERSE::GetSecondaryProtonCandidateCount1;
+		recofunctions["SecondaryProtonCandidateCount1"] = &CVUNIVERSE::GetSecondaryProtonCandidateCount1;
 		recointfunctions["AllExtraTracksProtons"] = &CVUNIVERSE::GetAllExtraTracksProtons;
+		recointfunctions["AllExtraTracksProtons1"] = &CVUNIVERSE::GetAllExtraTracksProtons1;
 
 		recointfunctions["ProtonCount"] = &CVUNIVERSE::GetProtonCount;
 		recofunctions["ProtonCount"] = &CVUNIVERSE::GetProtonCount;
+		recointfunctions["ProtonCount1"] = &CVUNIVERSE::GetProtonCount1;
+		recofunctions["ProtonCount1"] = &CVUNIVERSE::GetProtonCount1;
 
 		// Genie Particle Counts
+
+		trueintfunctions["TrueFSPartCount"] = &CVUNIVERSE::GetTrueNumberOfFSParticles;
+		truefunctions["TrueFSPartCount"] = &CVUNIVERSE::GetTrueNumberOfFSParticles;
 
 		trueintfunctions["TrueChargedPionCount"] = &CVUNIVERSE::GetTrueChargedPionCount;
 		truefunctions["TrueChargedPionCount"] = &CVUNIVERSE::GetTrueChargedPionCount;
@@ -222,6 +271,7 @@ public:
 		trueintfunctions["TrueStrangeMesonCount"] = &CVUNIVERSE::GetTrueStrangeMesonCount;
 		truefunctions["TrueStrangeMesonCount"] = &CVUNIVERSE::GetTrueStrangeMesonCount;
 
+		trueintfunctions["TruthCCQELikeExceptForChargedPions"] = &CVUNIVERSE::GetTruthCCQELikeExceptForChargedPions;
 		trueintfunctions["TruthHasSingleChargedPion"] = &CVUNIVERSE::GetTruthHasSingleChargedPion;
 		trueintfunctions["TruthHasSingleNeutralPion"] = &CVUNIVERSE::GetTruthHasSingleNeutralPion;
 		trueintfunctions["TruthHasMultiPion"] = &CVUNIVERSE::GetTruthHasMultiPion;

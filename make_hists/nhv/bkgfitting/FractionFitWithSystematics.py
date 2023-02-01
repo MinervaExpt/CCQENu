@@ -455,7 +455,7 @@ def ScaleMC(i_data_hist,i_mctot_hist,i_qelike_hist,i_qelikenot_hist):
     qelike_hist=i_qelike_hist.Clone()
     qelikenot_hist=i_qelikenot_hist.Clone()
 
-    min_bin = 1
+    min_bin = 6 #1
     max_xbin = data_hist.GetNbinsX()
     area_scale = (data_hist.Integral(min_bin, max_xbin)) / (mctot_hist.Integral(min_bin, max_xbin))
 
@@ -468,9 +468,10 @@ def ScaleMC(i_data_hist,i_mctot_hist,i_qelike_hist,i_qelikenot_hist):
 
 
 def GetSigBkgFrac(i_mctot_hist, i_sig_hist, i_bkg_hist):
-    mc_int = i_mctot_hist.Integral(1, i_mctot_hist.GetNbinsX())
-    qelike_int = i_sig_hist.Integral(1, i_sig_hist.GetNbinsX())
-    qelikenot_int = i_bkg_hist.Integral(1, i_bkg_hist.GetNbinsX())
+    min_bin = 6
+    mc_int = i_mctot_hist.Integral(min_bin, i_mctot_hist.GetNbinsX())
+    qelike_int = i_sig_hist.Integral(min_bin, i_sig_hist.GetNbinsX())
+    qelikenot_int = i_bkg_hist.Integral(min_bin, i_bkg_hist.GetNbinsX())
 
     sig_frac = qelike_int / mc_int
     bkg_frac = qelikenot_int / mc_int
@@ -484,7 +485,7 @@ def RunFractionFitter(i_mctot_hist, i_qelike_hist, i_qelikenot_hist, i_data_hist
     data_hist = i_data_hist.Clone()
 
     # Get some info for some calculations
-    min_bin = 1
+    min_bin = 6
     max_bin = mctot_hist.GetNbinsX()
 
     print(">>>>>>>>>max_bin ", max_bin)
@@ -501,8 +502,8 @@ def RunFractionFitter(i_mctot_hist, i_qelike_hist, i_qelikenot_hist, i_data_hist
     # Get bin width for "step size" of fit
     x_max = mctot_hist.GetXaxis().GetXmax()
     x_min = mctot_hist.GetXaxis().GetXmin()
-    binwid = (x_max-x_min) / ((max_bin-min_bin)+1)
-    print(">>>>>>>>>binwid ",binwid)
+    # binwid = (x_max-x_min) / ((max_bin-min_bin)+1)
+    # print(">>>>>>>>>binwid ",binwid)
     # Set up fitter in verbose mode
     fit = ROOT.TFractionFitter(data_hist, mc_list, "V")
     virtual_fitter = fit.GetFitter()
@@ -795,6 +796,8 @@ def main():
                     for key in tmp_th2d_dict.keys():
                         proj_name = fitbin_name + '_' + key
                         tmp_fitbin_th1d = tmp_th2d_dict[key].ProjectionY(proj_name, fitbin, fitbin, "e")
+                        # for i in range(1,6):
+                        #     tmp_fitbin_th1d.SetBinContent(i,0)
                         prefit_th1d_dict[key] = tmp_fitbin_th1d
                         print("     Number of entries in ", key,": ", tmp_fitbin_th1d.GetEntries())
                         # Need to make a Mnvh1d of each fitbin before the fit.
@@ -812,6 +815,8 @@ def main():
 
                             print(prefit_mnvh1d_name)
                             prefit_recoil_mnvh = MnvH2D_dict[key].ProjectionY(prefit_mnvh1d_name, fitbin, fitbin, "e").Clone()
+                            # for i in range(1,6):
+                            #     prefit_recoil_mnvh.SetBinContent(i,0)
 
                             prefit_mnvh1d_dict[fitbin][key] = prefit_recoil_mnvh
 
@@ -960,7 +965,7 @@ def main():
         outhistfile.Close()
 
         # Write out each hist to a root file.
-        outvalhistfile_tail = "_OutVals_fix.root"
+        outvalhistfile_tail = "_OutVals_100MeVFit.root"
         outvalhistfile = outfilebase.replace(".root", outvalhistfile_tail)
         print("Writing scale and fraction hists to file: ", outvalhistfile)
         outvalfile = ROOT.TFile(outvalhistfile, "RECREATE")
@@ -975,7 +980,7 @@ def main():
         outvalfile.cd()
         outvalfile.Close()
 
-        plotfilename = outfilebase.replace(".root", "_Hists")
+        plotfilename = outfilebase.replace(".root", "_Hists_100MeVFit")
         i_fitbin = 0
 
         binning = GetFitBinning(infile)
