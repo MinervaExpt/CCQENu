@@ -293,7 +293,7 @@ cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC " # remove OFFS
 # make a very complicated thing to tell it to use a singularity image
 cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
 cmd += " --role=Analysis "
-cmd += " --disk=10GB "
+#cmd += " --disk=10GB " # comment out for test
 cmd += " --expected-lifetime  " + opts.lifetime
 cmd += " --memory "+str(memory)+"MB "
 cmd += configstring+" " #the environments for the tunes to bee applied
