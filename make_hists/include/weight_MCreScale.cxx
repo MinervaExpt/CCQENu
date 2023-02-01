@@ -73,7 +73,7 @@ void weight_MCreScale::read(TString filename){
 void weight_MCreScale::SetCat(std::string cat){
   //isSignal = -1;
   if (std::find(m_categories.begin(), m_categories.end(), cat ) == m_categories.end()){
-    std::cout << " can't find this category for mcrescale " << cat << std::endl;
+    //std::cout << " can't find this category for mcrescale " << cat << std::endl;
     m_category = "None";
     return;
   }

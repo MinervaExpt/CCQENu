@@ -1,15 +1,390 @@
-/home/gilligas/gitMinerva/MAT-MINERvA/calculators/LowRecoilFunctions.h
+/home/sean/MinervaExpt/CCQENu/make_hists/analyze_v9.C
+
+    Analyze2DVariables
+       138  std::vector<std::string> AnalyzeVariables2D = allconfigs["main"]->GetStringVector("Analyze2DVariables");
+
+    AnalyzeVariables
+       137  std::vector<std::string> AnalyzeVariables = allconfigs["main"]->GetStringVector("AnalyzeVariables");
+
+    fluxUniverses
+       150  int m_fluxUniverses = allconfigs["main"]->GetInt("fluxUniverses");
+
+    outRoot
+       128  inputname = theconfig->GetString("outRoot")+"_"+inputtag+".root";
+
+    playlist
+       148  std::string playlist = allconfigs["main"]->GetString("playlist");
+
+    runsamples
+       143  SampleRequest = allconfigs["main"]->GetStringVector("runsamples");
+
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/CVUniverse.cxx
+
+    hadron_track_length_area
+       399  double TLA = GetVecElem("hadron_track_length_area", hadron);
+
+    pass_proton_score_min
+       202  m_proton_score_mins.push_back(bandConfig.GetDouble("pass_proton_score_min"));
+
+    Q2QE_max
+       204  m_proton_score_Q2QEs.push_back(bandConfig.GetDouble("Q2QE_max"));
+
+    Q2QE_range
+       207  m_proton_score_Q2QEs.push_back(bandConfig.GetDoubleVector("Q2QE_range")[1]);
+
+    tdead
+       420  int CVUniverse::GetTDead() const { return GetInt("tdead"); }
+
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/Get2DVariablesFromConfig.cxx
+
+    1D
+        40  config1D = configraw.GetValue("1D");
+
+    2D
+        33  config = configraw.GetValue("2D");
+
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/GetStacked.h
+
+    F
+       108  leg->AddEntry(hists1D[sig],legendEntries.GetString(sig).c_str(),"F");
+       113  leg->AddEntry(hists1D[bkg[i]],legendEntries.GetString(bkg[i]).c_str(),"F");
+
+    p
+       106  leg->AddEntry(hists1D[dat],legendEntries.GetString(dat).c_str(),"p");
+
+    title
+       123  std::string xtitle = variableConfig.GetString("title");
+
+    units
+       125  if(binwid) ytitle = "Events per " + variableConfig.GetString("units");
+
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/GetVariablesFromConfig.cxx
+
+    1D
+        62  config = configraw.GetValue("1D");
+
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/GetXSec.h
+
+    varsFile
+       889  vars->Read(configs["main"]->GetString("varsFile"));
+
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/GetXSec3.h
+
+    varsFile
+       719  vars->Read(configs["main"]->GetString("varsFile"));
+
+
+/home/sean/MinervaExpt/CCQENu/make_hists/runsamplesMain.C
+
+    data
+       237  NuConfig truecuts = cutsConfig.GetValue("data");
+
+    energy
+       188  CVUniverse::SetPhotonEnergyCut(paramsConfig.GetConfig("PhotonEnergyCut").GetDouble("energy"),printConfigs);
+       194  CVUniverse::SetProtonKECut(paramsConfig.GetConfig("ProtonKECut").GetDouble("energy"),printConfigs);
+
+    min
+       185  CVUniverse::SetMinBlobZVtx(paramsConfig.GetConfig("MinimumBlobZVtx").GetDouble("min"),printConfigs);
+
+    printConfigs
+       182  if (paramsConfig.IsMember("printConfigs")) printConfigs = paramsConfig.GetBool("printConfigs");
+
+
+/home/sean/MinervaExpt/CCQENu/make_hists/utils/RebinFlux.h
+
+    fluxUniverses
+       102  int m_fluxUniverses = configmap.at("main")->GetInt("fluxUniverses");
+       250  int nfluxUniverses = configmap.at("main")->GetInt("fluxUniverses");
+       303  int m_fluxUniverses = configs.at("main")->GetInt("fluxUniverses");
+
+    NuEConstraint
+       103  bool m_nue_constraint = configmap.at("main")->GetInt("NuEConstraint");
+       304  bool m_nue_constraint = configs.at("main")->GetInt("NuEConstraint");
+
+    pdg
+       104  int pdg = configmap.at("main")->GetInt("pdg");
+       305  int pdg = configs.at("main")->GetInt("pdg");
+
+    playlist
+       101  std::string playlist = configmap.at("main")->GetString("playlist");
+       302  std::string playlist = configs.at("main")->GetString("playlist");
+
+
+/home/sean/MinervaExpt/opt/include/calculators/LowRecoilFunctions.h
 
     MasterAnaDev_recoil_E
         30  return GetDouble("MasterAnaDev_recoil_E");
 
 
-/home/gilligas/Minerva/Ana/PickledCCQENu/ana/make_hists/include/CVUniverse.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/FluxReweighter.cxx
 
-    hadron_track_length_area
-       310  double TLA = GetVecElem("hadron_track_length_area", hadron);
+    Flux
+      1542  MnvVertErrorBand* flux_band     = h_flux->GetVertErrorBand("Flux");
+      1584  MnvVertErrorBand* flux_band       = h_flux->GetVertErrorBand("Flux");
 
-    tdead
-       335  return GetInt("tdead");
+    ratio
+       958  return GetMnvH1D(filename, "ratio");
+
+    width
+      1559  double flux_int = flux_band->GetHist(iUni)->Integral( b_min, b_max, "width" );
+      1601  double flux_int = flux_band->GetHist(iUni)->Integral( b_min, b_max, "width" );
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/LowRecoilFunctions.h
+
+    MasterAnaDev_recoil_E
+        30  return GetDouble("MasterAnaDev_recoil_E");
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvH1D.cxx
+
+    ,
+      2340  Warning("GetAreaNormFactor","MC Area Histogram is zero. No Scale Factor calculated");
+      3271  *f_bins<< Form("\"%s\"",GetTitle())<<",";
+      3272  *f_bins<<GetXaxis()->GetBinLowEdge(1)<< ","; //<<std::endl;
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvH1DToCSV.cxx
+
+    \t
+        50  *f_bins<<hist->GetXaxis()->GetBinLowEdge(1)<< "\t"; //<<std::endl;
+        65  *f_bins<<hist->GetXaxis()->GetBinUpEdge(i)<< "\t";//<<std::endl;
+        76  *f_bins<<hist->GetXaxis()->GetBinLowEdge(1)<< "\t"; //<<std::endl;
+        92  *f_bins<<hist->GetXaxis()->GetBinUpEdge(i)<< "\t";//<<std::endl;
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvH2D.cxx
+
+    ,
+      1876  *f_bins<<Form("\"%s\"",GetXaxis()->GetTitle())<< ",";
+      1877  *f_bins<<GetXaxis()->GetBinLowEdge(1)<< ","; //<<std::endl;
+      1881  if (x != GetXaxis()->GetNbins()) *f_bins  << ",";//<<std::endl;
+      1920  *f_bins<< Form("\"%s\"",GetYaxis()->GetTitle())<< ",";
+
+    x
+      1165  std::cout << "Warning [MnvH2D::pushCovMatrix] : The pushed covariance matrix dimensions are incorrect (it should be a " << highBin << "x" << highBin << " matrix, but is actually " << covmx.GetNrows() << "x" << covmx.GetNcols() << "). Doing nothing." <<std::endl;
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvH2DToCSV.cxx
+
+    \t
+        50  *f_bins<<hist->GetXaxis()->GetBinLowEdge(1)<< "\t"; //<<std::endl;
+        53  *f_bins<<hist->GetXaxis()->GetBinUpEdge(x)<< "\t";//<<std::endl;
+        88  *f_bins<<hist->GetYaxis()->GetBinUpEdge(y) << "\t";//<<std::endl;
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvPlotter.cxx
+
+    Data
+      2903  const string data_name    = (useHistTitles ? tmpData->GetTitle() : "Data" );
+      3105  const string data_name    = (useHistTitles ? tmpData->GetTitle() : "Data" );
+      4389  leg->AddEntry(tmpData,useDataHistTitle ? tmpData->GetTitle() : "Data","ple");
+      4391  leg->AddEntry(tmpData,useDataHistTitle ? tmpData->GetTitle() : "Data","l");
+
+    f
+      5397  leg->AddEntry( hst, mnvhst->GetTitle(), "f" );
+      5555  leg->AddEntry( hst, mnvhst->GetTitle(), "f" );
+      5725  leg->AddEntry( hst, mnvhst->GetTitle(), "f" );
+
+    l
+      4430  leg->AddEntry( hst, mnvMC->GetTitle(), "l" );
+
+    mnv_tmp_data_statonly
+      2959  tmpDataStat = TH1Ptr( (TH1*)dataHist->GetCVHistoWithStatError().Clone( "mnv_tmp_data_statonly" ) );
+
+    SAMEPE1
+      6362  ((MnvH1D*)allHists.At(start))->GetCVHistoWithStatError().DrawClone("SAMEPE1");
+      6419  ((MnvH1D*)allHists.At(start))->GetCVHistoWithStatError().DrawClone("SAMEPE1");
+      6487  ((MnvH1D*)allHists.At(start))->GetCVHistoWithStatError().DrawClone("SAMEPE1");
+      6554  ((MnvH1D*)allHists.At(start))->GetCVHistoWithStatError().DrawClone("SAMEPE1");
+
+    Simulation
+      2904  const string mc_name      = (useHistTitles ? tmpMC->GetTitle()     : "Simulation" );
+      3106  const string mc_name      = (useHistTitles ? tmpMC->GetTitle()     : "Simulation" );
+
+    width
+      2972  tmpData->Scale( dataHist->GetNormBinWidth(), "width" );
+      2974  tmpDataStat->Scale( dataHist->GetNormBinWidth(), "width" );
+      2978  tmpMC->Scale( mcHist  ->GetNormBinWidth(), "width" );
+      2985  tmpBK->Scale( bkgdHist->GetNormBinWidth(), "width" );
+      2991  tmpDataBK->Scale( dataBkgdHist->GetNormBinWidth(), "width" );
+      3402  tmpData->Scale( dataHist->GetNormBinWidth(), "width" );
+      3405  tmpMC  ->Scale( mcHist  ->GetNormBinWidth(), "width" );
+      5109  if (!asfrac) hTotalErr->Scale( hTotalErr->GetBinWidth(1), "width" );
+      5240  if (!asfrac) hTmpErr->Scale(hTmpErr->GetBinWidth(1),"width");
+      5288  if (!asfrac)hist->Scale(hist->GetBinWidth(1),"width");
+      5514  if (dataHist->GetNormBinWidth() > 0 ) tmpData->Scale( dataHist->GetNormBinWidth(), "width" );
+      5686  if (dataHist->GetNormBinWidth() > 0 ) tmpData->Scale( dataHist->GetNormBinWidth(), "width" );
+
+    XY
+      6015  h2D->SetTitleSize( axis->GetTitleSize(), "XY");
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MuonSystematics.cxx
+
+    Muon_Energy_MINOS
+       184  T::GetPlaylist(),nu_pdg,T::UseNuEConstraint(),T::GetNFluxUniverses()).GetSysUniFluxWeightCorrection(Enu,nu_pdg,"Muon_Energy_MINOS",universe); // Putting in Amit's CVS commit 1.19/20 changes -David L.
+       202  T::GetPlaylist(),nu_pdg,T::UseNuEConstraint(),T::GetNFluxUniverses()).GetSysUniFluxWeightCorrection(Enu,nu_pdg,"Muon_Energy_MINOS",universe); // Putting in Amit's CVS commit 1.19/20 changes -David L.
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/NeutronInelasticReweighter.h
+
+    ColumnarDensity
+       233  densityPerPoint = univ.GetVecDouble((prefix + "ColumnarDensity").c_str()),
+
+    FinalE
+       232  endEnergyPerPoint = univ.GetVecDouble((prefix + "FinalE").c_str()),
+
+    InelasticChildPDGs
+       239  allInelChildren = univ.GetVecInt((prefix + "InelasticChildPDGs").c_str()),
+
+    InitialE
+       231  const auto startEnergyPerPoint = univ.GetVecDouble((prefix + "InitialE").c_str()),
+
+    IntCodePerSegment
+       241  intCodePerPoint = univ.GetVecInt((prefix + "IntCodePerSegment").c_str());
+
+    NInelasticChildren
+       238  nInelasticChildren = univ.GetVecInt((prefix + "NInelasticChildren").c_str()),
+
+    NPaths
+       230  const int nNeutrons = univ.GetInt((prefix + "NPaths").c_str());
+
+    NTrajPointsSaved
+       237  const auto nPointsPerNeutron = univ.GetVecInt((prefix + "NTrajPointsSaved").c_str()),
+
+    Nuke
+       240  materialPerPoint = univ.GetVecInt((prefix + "Nuke").c_str()),
+
+    PosX
+       234  xPerPoint = univ.GetVecDouble((prefix + "PosX").c_str()),
+
+    PosY
+       235  yPerPoint = univ.GetVecDouble((prefix + "PosY").c_str()),
+
+    PosZ
+       236  zPerPoint = univ.GetVecDouble((prefix + "PosZ").c_str());
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/ResponseSystematics.cxx
+
+    part_response_container_total_recoil_passive_id
+       121  total_passive_recoil -= T::GetVecElem("part_response_container_total_recoil_passive_id", *idx);
+
+    part_response_total_recoil_passive_id
+       116  double total_passive_recoil = T::GetDouble("part_response_total_recoil_passive_id");
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/TargetMassSystematics.cxx
+
+    Target_Mass_C
+       110  h_number_of_targets->GetVertErrorBand("Target_Mass_C")->GetHist(0)->SetBinContent(i,nTargets*(1-NSFDefaults::c_err));
+       111  h_number_of_targets->GetVertErrorBand("Target_Mass_C")->GetHist(1)->SetBinContent(i,nTargets*(1+NSFDefaults::c_err));
+
+    Target_Mass_CH
+        76  h_number_of_targets->GetVertErrorBand("Target_Mass_CH")->GetHist(0)->SetBinContent(i,nTargets*(1-NSFDefaults::ch_err));
+        77  h_number_of_targets->GetVertErrorBand("Target_Mass_CH")->GetHist(1)->SetBinContent(i,nTargets*(1+NSFDefaults::ch_err));
+
+    Target_Mass_Fe
+       178  h_number_of_targets->GetVertErrorBand("Target_Mass_Fe")->GetHist(0)->SetBinContent(i,nTargets*(1-NSFDefaults::fe_err));
+       179  h_number_of_targets->GetVertErrorBand("Target_Mass_Fe")->GetHist(1)->SetBinContent(i,nTargets*(1+NSFDefaults::fe_err));
+
+    Target_Mass_H2O
+       144  h_number_of_targets->GetVertErrorBand("Target_Mass_H2O")->GetHist(0)->SetBinContent(i,nTargets*(1-NSFDefaults::h2o_err));
+       145  h_number_of_targets->GetVertErrorBand("Target_Mass_H2O")->GetHist(1)->SetBinContent(i,nTargets*(1+NSFDefaults::h2o_err));
+
+    Target_Mass_Pb
+       212  h_number_of_targets->GetVertErrorBand("Target_Mass_Pb")->GetHist(0)->SetBinContent(i,nTargets*(1-NSFDefaults::pb_err));
+       213  h_number_of_targets->GetVertErrorBand("Target_Mass_Pb")->GetHist(1)->SetBinContent(i,nTargets*(1+NSFDefaults::pb_err));
+
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/weightZExp.cxx
+
+    zexpCov
+        13  hZExpRatioBand = hZExpRatioCov->GetVertErrorBand("zexpCov");
+
+
+/home/sean/MinervaExpt/opt/include/universes/MuonSystematics.cxx
+
+    Muon_Energy_MINOS
+       184  T::GetPlaylist(),nu_pdg,T::UseNuEConstraint(),T::GetNFluxUniverses()).GetSysUniFluxWeightCorrection(Enu,nu_pdg,"Muon_Energy_MINOS",universe); // Putting in Amit's CVS commit 1.19/20 changes -David L.
+       202  T::GetPlaylist(),nu_pdg,T::UseNuEConstraint(),T::GetNFluxUniverses()).GetSysUniFluxWeightCorrection(Enu,nu_pdg,"Muon_Energy_MINOS",universe); // Putting in Amit's CVS commit 1.19/20 changes -David L.
+
+
+/home/sean/MinervaExpt/opt/include/universes/ResponseSystematics.cxx
+
+    part_response_container_total_recoil_passive_id
+       121  total_passive_recoil -= T::GetVecElem("part_response_container_total_recoil_passive_id", *idx);
+
+    part_response_total_recoil_passive_id
+       116  double total_passive_recoil = T::GetDouble("part_response_total_recoil_passive_id");
+
+
+/home/sean/MinervaExpt/opt/include/universes/TargetMassSystematics.cxx
+
+    Target_Mass_C
+       110  h_number_of_targets->GetVertErrorBand("Target_Mass_C")->GetHist(0)->SetBinContent(i,nTargets*(1-NSFDefaults::c_err));
+       111  h_number_of_targets->GetVertErrorBand("Target_Mass_C")->GetHist(1)->SetBinContent(i,nTargets*(1+NSFDefaults::c_err));
+
+    Target_Mass_CH
+        76  h_number_of_targets->GetVertErrorBand("Target_Mass_CH")->GetHist(0)->SetBinContent(i,nTargets*(1-NSFDefaults::ch_err));
+        77  h_number_of_targets->GetVertErrorBand("Target_Mass_CH")->GetHist(1)->SetBinContent(i,nTargets*(1+NSFDefaults::ch_err));
+
+    Target_Mass_Fe
+       178  h_number_of_targets->GetVertErrorBand("Target_Mass_Fe")->GetHist(0)->SetBinContent(i,nTargets*(1-NSFDefaults::fe_err));
+       179  h_number_of_targets->GetVertErrorBand("Target_Mass_Fe")->GetHist(1)->SetBinContent(i,nTargets*(1+NSFDefaults::fe_err));
+
+    Target_Mass_H2O
+       144  h_number_of_targets->GetVertErrorBand("Target_Mass_H2O")->GetHist(0)->SetBinContent(i,nTargets*(1-NSFDefaults::h2o_err));
+       145  h_number_of_targets->GetVertErrorBand("Target_Mass_H2O")->GetHist(1)->SetBinContent(i,nTargets*(1+NSFDefaults::h2o_err));
+
+    Target_Mass_Pb
+       212  h_number_of_targets->GetVertErrorBand("Target_Mass_Pb")->GetHist(0)->SetBinContent(i,nTargets*(1-NSFDefaults::pb_err));
+       213  h_number_of_targets->GetVertErrorBand("Target_Mass_Pb")->GetHist(1)->SetBinContent(i,nTargets*(1+NSFDefaults::pb_err));
+
+
+/home/sean/MinervaExpt/opt/include/weighters/NeutronInelasticReweighter.h
+
+    ColumnarDensity
+       233  densityPerPoint = univ.GetVecDouble((prefix + "ColumnarDensity").c_str()),
+
+    FinalE
+       232  endEnergyPerPoint = univ.GetVecDouble((prefix + "FinalE").c_str()),
+
+    InelasticChildPDGs
+       239  allInelChildren = univ.GetVecInt((prefix + "InelasticChildPDGs").c_str()),
+
+    InitialE
+       231  const auto startEnergyPerPoint = univ.GetVecDouble((prefix + "InitialE").c_str()),
+
+    IntCodePerSegment
+       241  intCodePerPoint = univ.GetVecInt((prefix + "IntCodePerSegment").c_str());
+
+    NInelasticChildren
+       238  nInelasticChildren = univ.GetVecInt((prefix + "NInelasticChildren").c_str()),
+
+    NPaths
+       230  const int nNeutrons = univ.GetInt((prefix + "NPaths").c_str());
+
+    NTrajPointsSaved
+       237  const auto nPointsPerNeutron = univ.GetVecInt((prefix + "NTrajPointsSaved").c_str()),
+
+    Nuke
+       240  materialPerPoint = univ.GetVecInt((prefix + "Nuke").c_str()),
+
+    PosX
+       234  xPerPoint = univ.GetVecDouble((prefix + "PosX").c_str()),
+
+    PosY
+       235  yPerPoint = univ.GetVecDouble((prefix + "PosY").c_str()),
+
+    PosZ
+       236  zPerPoint = univ.GetVecDouble((prefix + "PosZ").c_str());
 
 

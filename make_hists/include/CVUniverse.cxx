@@ -27,6 +27,7 @@ namespace {
 	// ===========================================================
 
 	///////////////// Defaults and Declarations /////////////////
+	int CVUniverse::m_analysis_neutrino_pdg = -14;
 	double CVUniverse::m_min_blob_zvtx = 4750.0;
 	double CVUniverse::m_photon_energy_cut = 10.0; // in MeV
 	double CVUniverse::m_proton_ke_cut = NSFDefaults::TrueProtonKECutCentral; // Default value
@@ -100,10 +101,26 @@ namespace {
 		
 	*/
 	
+	bool CVUniverse::_is_analysis_neutrino_pdg_set = false;
 	bool CVUniverse::_is_min_blob_zvtx_set = false;
 	bool CVUniverse::_is_photon_energy_cut_set = false;
 	bool CVUniverse::_is_proton_ke_cut_set = false;
 	bool CVUniverse::_is_proton_score_config_set = false;
+	
+	///////////////// Incoming Neutrino PDG /////////////////
+	int CVUniverse::GetAnalysisNeutrinoPDG() { return m_analysis_neutrino_pdg; }
+	bool CVUniverse::SetAnalysisNeutrinoPDG( int neutrino_pdg, bool print ) {
+		if( _is_analysis_neutrino_pdg_set ) {  
+			std::cout << "WARNING: YOU ATTEMPTED TO SET PHOTON ENERGY CUT A SECOND TIME. "
+			          << "THIS IS NOT ALLOWED FOR CONSISTENCY." << std::endl;
+			return 0; 
+		} else {
+			m_analysis_neutrino_pdg = neutrino_pdg;
+			_is_analysis_neutrino_pdg_set = true;
+			if( print ) std::cout << "Analysis neutrino PDG set to " << m_analysis_neutrino_pdg << std::endl;
+			return 1;
+		}
+	}
 	
 	///////////////// Blob minimum Z vertex in order to be counted /////////////////
 	double CVUniverse::GetMinBlobZVtx() { return m_min_blob_zvtx; }
@@ -131,7 +148,7 @@ namespace {
 			m_photon_energy_cut = energy;
 			_is_photon_energy_cut_set = true;
 			if( print ) std::cout << "Photon low energy cutoff set to " << m_photon_energy_cut << " MeV" << std::endl;
-			return 0;
+			return 1;
 		}
 	}
 
@@ -234,13 +251,13 @@ namespace {
 	// to write all your own functions for now.
 	// ========================================================================
 
+	double CVUniverse::GetEventID() const { return GetDouble("eventID"); }
 	int CVUniverse::GetMultiplicity() const { return GetInt("multiplicity"); }
 	int CVUniverse::GetDeadTime() const { return GetInt("phys_n_dead_discr_pair_upstream_prim_track_proj"); }
 	
 	// ----------------------- Analysis-related Variables ------------------------
 
-
-	int CVUniverse::GetIsMinosMatchTrack()const { return GetInt("muon_is_minos_match_track"); }
+	int CVUniverse::GetIsMinosMatchTrack() const { return GetInt("muon_is_minos_match_track"); }
 	double CVUniverse::GetEnuHadGeV() const { return CVUniverse::GetEmuGeV()+CVUniverse::GetHadronEGeV(); } // GetEnuGeV()?
 	double CVUniverse::GetTrueEnuGeV() const { return GetDouble("mc_incomingE")*MeVGeV; }
 
@@ -492,26 +509,26 @@ namespace {
 			if(      abs_pdg ==  211 ||            // Charged Pions            Pions
 			         pdg     ==  111   ) return 0; // Neutral Pions            Pions
 			else if( abs_pdg == 3112 ||            // Sigma- and Sigma~+      Strange Baryons
-				     abs_pdg == 3122 ||            // Lambda0 and Lambda~0    Strange Baryons
-				     abs_pdg == 3212 ||            // Sigma0 and Sigma~0      Strange Baryons
-				     abs_pdg == 3222   ) return 0; // Sigma+ and Sigma~-      Strange Baryons
+				     	 abs_pdg == 3122 ||            // Lambda0 and Lambda~0    Strange Baryons
+				     	 abs_pdg == 3212 ||            // Sigma0 and Sigma~0      Strange Baryons
+				     	 abs_pdg == 3222   ) return 0; // Sigma+ and Sigma~-      Strange Baryons
 			else if( energy > m_photon_energy_cut &&
 			         pdg     ==   22   ) return 0; // Photons > Energy Cut
 			else if( pdg     ==  130 ||            // KL0                     Strange Mesons
-				     pdg     ==  310 ||            // KS0                     Strange Mesons
-				     abs_pdg ==  311 ||            // K0 and K~0              Strange Mesons
-				     abs_pdg ==  313 ||            // K*(892)0 and K*(892)~0  Strange Mesons
-				     abs_pdg ==  321 ||            // K+ and K-               Strange Mesons
-				     abs_pdg ==  323   ) return 0; // K*(892)+ and K*(892)-   Strange Mesons
+				     	 pdg     ==  310 ||            // KS0                     Strange Mesons
+				     	 abs_pdg ==  311 ||            // K0 and K~0              Strange Mesons
+				       abs_pdg ==  313 ||            // K*(892)0 and K*(892)~0  Strange Mesons
+				    	 abs_pdg ==  321 ||            // K+ and K-               Strange Mesons
+				       abs_pdg ==  323   ) return 0; // K*(892)+ and K*(892)-   Strange Mesons
 			else if( abs_pdg == 4112 ||            // Sigma_c0 and Sigma_c~0   Charmed Baryons
-				     abs_pdg == 4122 ||            // Lambda_c+ and Lambda_c~- Charmed Baryons
-				     abs_pdg == 4212 ||            // Sigma_c+ and Sigma_c~-   Charmed Baryons
-				     abs_pdg == 4222   ) return 0; // Sigma_c++ and Sigma_c~-- Charmed Baryons
+				       abs_pdg == 4122 ||            // Lambda_c+ and Lambda_c~- Charmed Baryons
+				       abs_pdg == 4212 ||            // Sigma_c+ and Sigma_c~-   Charmed Baryons
+				       abs_pdg == 4222   ) return 0; // Sigma_c++ and Sigma_c~-- Charmed Baryons
 			else if( abs_pdg ==  411 ||            // D+ and D-                Charned Mesons
-				     abs_pdg ==  421   ) return 0; // D0 and D~0               Charmed Mesons
+				       abs_pdg ==  421   ) return 0; // D0 and D~0               Charmed Mesons
 			else if( !neutrinoMode   &&
-				     pdg     == 2212 && 
-				     KEp  > protonKECut) return 0; // For antinus, no protons > cut-off KE
+				       pdg     == 2212 && 
+				       KEp  > protonKECut) return 0; // For antinus, no protons > cut-off KE
 			else if( pdg     ==   13   ) genie_n_muons++;
 			else if( pdg     ==  -13   ) genie_n_antimuons++;
 			// Intermediate muon counts check
@@ -565,8 +582,11 @@ namespace {
 		bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
 		int mc_nFSPart = GetInt("mc_nFSPart");
 		//int mc_incoming = GetInt("mc_incoming");
-		//int mc_current = GetInt("mc_current");
-		bool passes = ( CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, m_proton_ke_cut));
+		bool passes = 0; // Assume not CCQELike, if CC check 
+		if(GetInt("mc_current") == 1 && GetInt("mc_incoming") == m_analysis_neutrino_pdg) {
+			passes = ( CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, m_proton_ke_cut));
+		}
+		
 
 		return passes;
 	}
@@ -583,6 +603,13 @@ namespace {
 		bool passes = ( CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, 10000.));
 
 		return passes;
+	}
+	
+	int CVUniverse::GetTruthIsQELike() const {
+		if(CVUniverse::GetTruthIsCCQELikeAll() == 1 &&
+		   CVUniverse::GetTruthNuPDG() == m_analysis_neutrino_pdg &&
+		   CVUniverse::GetCurrent() == 1 ) return 1;
+		else return 0;
 	}
 
 	// ------------------------------------------------------------------------------
@@ -606,7 +633,7 @@ namespace {
 		return n_blobs;
 	}
 
-	// One charged pion and charged pion count
+	// One charged pion and charged pion count and CCQE except 1+ charged pions
 	
 	int CVUniverse::GetTruthHasSingleChargedPion() const {
 		int genie_n_charged_pion = 0;
@@ -638,12 +665,74 @@ namespace {
 		
 		return genie_n_charged_pion;
 	}
+	
+	int CVUniverse::GetTruthCCQELikeExceptForChargedPions() const {
+		if( CVUniverse::GetTruthNuPDG() != m_analysis_neutrino_pdg ) return 0;
+		if ( CVUniverse::GetCurrent() != 1 ) return 0;
+		int genie_n_muons = 0;
+		int genie_n_antimuons = 0;
+		int genie_n_chargedpions = 0;
+		double protonKECut = m_proton_ke_cut;
+		bool neutrinoMode = 0;
+		std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+		std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+		int mc_nFSPart = GetInt("mc_nFSPart");
+		
+		if( m_analysis_neutrino_pdg > 0 ) neutrinoMode = 1;
+		
+		for(int i = 0; i < mc_nFSPart; i++){
+			int pdg =  mc_FSPartPDG[i];
+			int abs_pdg = abs(pdg);
+			double energy = mc_FSPartE[i];
+			double KEp = energy - MinervaUnits::M_p;
+
+			// implement 120 MeV KE cut, if needed
+			// The photon energy cut is hard-coded at 10 MeV at present. We're happy to make it general, if the need arises !
+			
+			if(      abs_pdg ==  211   ) genie_n_chargedpions++;
+			else if( pdg     ==  111   ) return 0; // Neutral Pions            Neutral Pions
+			else if( abs_pdg == 3112 ||            // Sigma- and Sigma~+      Strange Baryons
+				       abs_pdg == 3122 ||            // Lambda0 and Lambda~0    Strange Baryons
+				       abs_pdg == 3212 ||            // Sigma0 and Sigma~0      Strange Baryons
+				       abs_pdg == 3222   ) return 0; // Sigma+ and Sigma~-      Strange Baryons
+			else if( energy > m_photon_energy_cut &&
+			         pdg     ==   22   ) return 0; // Photons > Energy Cut
+			else if( pdg     ==  130 ||            // KL0                     Strange Mesons
+				       pdg     ==  310 ||            // KS0                     Strange Mesons
+				       abs_pdg ==  311 ||            // K0 and K~0              Strange Mesons
+				       abs_pdg ==  313 ||            // K*(892)0 and K*(892)~0  Strange Mesons
+				       abs_pdg ==  321 ||            // K+ and K-               Strange Mesons
+				       abs_pdg ==  323   ) return 0; // K*(892)+ and K*(892)-   Strange Mesons
+			else if( abs_pdg == 4112 ||            // Sigma_c0 and Sigma_c~0   Charmed Baryons
+				       abs_pdg == 4122 ||            // Lambda_c+ and Lambda_c~- Charmed Baryons
+				       abs_pdg == 4212 ||            // Sigma_c+ and Sigma_c~-   Charmed Baryons
+				       abs_pdg == 4222   ) return 0; // Sigma_c++ and Sigma_c~-- Charmed Baryons
+			else if( abs_pdg ==  411 ||            // D+ and D-                Charned Mesons
+				       abs_pdg ==  421   ) return 0; // D0 and D~0               Charmed Mesons
+			else if( !neutrinoMode   &&
+				       pdg     == 2212 && 
+				       KEp  > protonKECut) return 0; // For antinus, no protons > cut-off KE
+			else if( pdg     ==   13   ) genie_n_muons++;
+			else if( pdg     ==  -13   ) genie_n_antimuons++;
+			// Intermediate muon counts check
+			if( genie_n_muons + genie_n_antimuons > 1 ) return 0;
+		}
+		if( ( neutrinoMode && genie_n_muons     == 0) ||
+		    (!neutrinoMode && genie_n_antimuons == 0) ||
+		    ( genie_n_chargedpions              == 0)   ) return 0;
+		else return 1;
+	}
 
 	// Michel Electrons and Neutral Pions
 
 	int CVUniverse::GetNMichel() const { return GetInt("has_michel_vertex_type_sz"); }
+	std::vector<int> CVUniverse::GetMichelVertexType() const { return GetVecInt("has_michel_vertex_type"); }
+	
 	int CVUniverse::GetImprovedNMichel() const { return GetInt("improved_michel_match_vec_sz"); }
+	std::vector<int> CVUniverse::GetImprovedMichelMatch() const { return GetVecInt("improved_michel_match_vec"); }
+	
 	int CVUniverse::GetFittedNMichel() const { return GetInt("FittedMichel_michel_fitPass_sz"); }
+	std::vector<int> CVUniverse::GetFittedMichelFitPass() const { return GetVecInt("FittedMichel_michel_fitPass"); }
 	
 	int CVUniverse::GetTrueFittedNMichel() const {
 		int ntruefittedmichels = 0;
@@ -762,10 +851,22 @@ namespace {
 
 		return genie_er_n_eta;
 	}
+	
+	int CVUniverse::GetHasMichelOrNBlobs() const {
+		if( GetInt("improved_michel_match_vec_sz") > 0 ||
+		    CVUniverse::GetNBlobs() > 1 ) return 1;
+		else return 0;
+	}
 
 	// Protons
 	
 	double CVUniverse::GetProtonScore(int i) const {
+		if( GetMultiplicity() < i+2 ) return -9999.;
+		else if( i == 0 ) return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score").c_str());
+		else if( GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores_sz").c_str()) < i ) return -9999.;
+		else return GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores").c_str(), i-1);
+	}
+	double CVUniverse::GetProtonScore1(int i) const {
 		if( GetMultiplicity() < i+2 ) return -9999.;
 		else if( i == 0 ) return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
 		else if( GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str()) < i ) return -9999.;
@@ -802,8 +903,12 @@ namespace {
 	int CVUniverse::GetPassScoreCutProton_8() const { return GetPassProtonScoreCut(GetProtonScore_8(),GetQ2QEGeV()); }
 	int CVUniverse::GetPassScoreCutProton_9() const { return GetPassProtonScoreCut(GetProtonScore_9(),GetQ2QEGeV()); }
 	
-	int CVUniverse::GetSecondaryProtonCandidateCount() const {
+	int CVUniverse::GetSecondaryProtonCandidateCount1() const {
 		return GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
+	}
+	
+	int CVUniverse::GetSecondaryProtonCandidateCount() const {
+		return GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores_sz").c_str());
 	}
 	
 	int CVUniverse::GetPassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const {
@@ -818,9 +923,24 @@ namespace {
 	}
 
 	double CVUniverse::GetPrimaryProtonScore() const {
+		return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score").c_str());
+	}
+	double CVUniverse::GetPrimaryProtonScore1() const {
 		return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
 	}
+	double CVUniverse::GetPrimaryProtonScore2() const {
+		return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score2").c_str());
+	}
 
+	int CVUniverse::GetIsPrimaryProton1() const {
+		if(GetMultiplicity() < 2) return 1; // NA when multiplicity is < 2
+		// define and get applicable variables
+		double tree_Q2 = GetQ2QEGeV();
+		double proton_score1 = GetPrimaryProtonScore1();
+		int passes = GetPassProtonScoreCut(proton_score1,tree_Q2);
+		return passes;
+	}
+	
 	int CVUniverse::GetIsPrimaryProton() const {
 		if(GetMultiplicity() < 2) return 1; // NA when multiplicity is < 2
 		// define and get applicable variables
@@ -845,6 +965,12 @@ namespace {
 	}
 	
 	double CVUniverse::GetPrimaryProtonTrackLength() const { return GetDouble("proton_track_length"); }
+	double CVUniverse::GetPrimaryProtonTrackEndX() const { return GetDouble("proton_track_endx"); }
+	double CVUniverse::GetPrimaryProtonTrackEndY() const { return GetDouble("proton_track_endy"); }
+	double CVUniverse::GetPrimaryProtonTrackEndZ() const { return GetDouble("proton_track_endz"); }
+	double CVUniverse::GetPrimaryProtonAngle() const { 
+		return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_theta").c_str());
+	}
 	
 	double CVUniverse::GetCalibEClustsPrimaryProtonEnd() const {
 		if( GetInt("calibE_clusters_at_end_proton_prong_sz") > 0) {
@@ -879,6 +1005,10 @@ namespace {
 		else return -9999.;
 	}
 	
+	int CVUniverse::GetPrimaryProtonCandidatePDG() const {
+		return GetInt("proton_prong_PDG");
+	}
+	
 	double CVUniverse::GetEnergyDiffTruedEdx() const {
 		return GetPrimaryProtonTrueKE() - GetTotalPrimaryProtonEnergydEdxAndClusters();
 	}
@@ -887,10 +1017,32 @@ namespace {
 		if (GetInt("proton_prong_PDG") == 2212) return 1;
 		else return 0; 
 	}
+	int CVUniverse::GetRecoTruthIsPrimaryPion() const {
+		int pdg = GetInt("proton_prong_PDG");
+		if (pdg == 211 || pdg == -211) return 1;
+		else return 0; 
+	}
+	int CVUniverse::GetRecoTruthIsPrimaryOther() const {
+		int pdg = GetInt("proton_prong_PDG");
+		if (pdg == 2212 || pdg == 211 || pdg == -211) return 0;
+		else return 1; 
+	}
 	
 	int CVUniverse::GetTruthHasSingleProton() const { return GetInt("truth_reco_has_single_proton"); }
 
 	int CVUniverse::GetAllExtraTracksProtons() const {
+		if(GetMultiplicity() < 2) return 1; // NA when multiplicity is < 2
+		int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores_sz").c_str());
+		if(n_sec_proton_scores == 0) return 1; // NA if not secondary proton candidates
+
+		// define and get applicable variables
+		double tree_Q2 = GetQ2QEGeV();
+		std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores").c_str());
+
+		int passes = GetPassAllProtonScoreCuts(sec_proton_scores,tree_Q2);
+		return passes;
+	}	
+	int CVUniverse::GetAllExtraTracksProtons1() const {
 		if(GetMultiplicity() < 2) return 1; // NA when multiplicity is < 2
 		int n_sec_proton_scores1 = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
 		if(n_sec_proton_scores1 == 0) return 1; // NA if not secondary proton candidates
@@ -907,7 +1059,20 @@ namespace {
 		if(GetMultiplicity() < 2) return 0;
 		int count = 0;
 		double tree_Q2 = GetQ2QEGeV();
-		double proton_score1 = GetPrimaryProtonScore();
+		double proton_score = GetPrimaryProtonScore();
+		if( GetPassProtonScoreCut(proton_score,tree_Q2) ) count++;
+		int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores_sz").c_str());
+		std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores").c_str());
+		for ( int i=0; i<n_sec_proton_scores; i++ ) {
+			if(GetPassProtonScoreCut(sec_proton_scores[i],tree_Q2)) count++;
+		}
+		return count;
+	}	
+	int CVUniverse::GetProtonCount1() const {
+		if(GetMultiplicity() < 2) return 0;
+		int count = 0;
+		double tree_Q2 = GetQ2QEGeV();
+		double proton_score1 = GetPrimaryProtonScore1();
 		if( GetPassProtonScoreCut(proton_score1,tree_Q2) ) count++;
 		int n_sec_proton_scores1 = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
 		std::vector<double> sec_proton_scores1 = GetVecDouble(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1").c_str());
@@ -936,6 +1101,10 @@ namespace {
 	}
 
 	// Other particles
+	
+	int CVUniverse::GetTrueNumberOfFSParticles() const {
+		return GetInt("mc_nFSPart");
+	}
 
 	int CVUniverse::GetTrueLightMesonCount() const { // Just base etas right now
 		int genie_n_light_meson = 0;
@@ -1004,6 +1173,46 @@ namespace {
 	int CVUniverse::GetMCTargetNucleon() const { return GetInt("mc_targetNucleon"); }
 
 	int CVUniverse::Dummy() const { return 0; }
+	
+	// Arachne
+	
+	void CVUniverse::PrintTrueArachneLink() const {
+		int link_size = 200;
+		char link[link_size];
+		int run = GetInt("mc_run");
+		int subrun = GetInt("mc_subrun");
+		int gate = GetInt("mc_nthEvtInFile") + 1;
+		int slice = GetVecElem("slice_numbers", 0);
+		sprintf(link,
+			    "https://minerva05.fnal.gov/Arachne/"
+			    "arachne.html\?det=SIM_minerva&recoVer=v21r1p1&run=%d&subrun=%d&gate="
+			    "%d&slice=%d",run, subrun, gate, slice);
+		/*std::cout << link << std::endl;
+		std::cout << "Lepton E: " <<  GetElepTrueGeV() << " Run " << run << "/"<<subrun << "/" << gate << "/" << slice << std::endl;
+		std::cout << "Printing Available Energy " << NewEavail() << std::endl;
+		std::cout << "Muon P: " << GetMuonP() << std::endl;
+		std::cout << "Get Muon Pt: " << GetMuonPT() << std::endl;
+		std::cout << "Get Muon Pz: " << GetMuonPz() << std::endl;
+		std::cout << "Get Muon PT True " << GetMuonPTTrue() << std::endl;*/
+		
+	}
+
+	void CVUniverse::PrintDataArachneLink() const {
+		int link_size = 200;
+		char link[link_size];
+		int run = GetInt("ev_run");
+		int subrun = GetInt("ev_subrun");
+		int gate = GetInt("ev_gate");
+		int slice = GetVecElem("slice_numbers", 0);
+		sprintf(link,
+			    "https://minerva05.fnal.gov/Arachne/"
+			    "arachne.html\?det=MV&recoVer=v21r1p1&run=%d&subrun=%d&gate="
+			    "%d&slice=%d",run, subrun, gate, slice);
+		std::cout << link << std::endl;
+		// std::cout << "Lepton E: " <<  GetMuonPT() << " Run " << run << "/"<<subrun << "/" << gate << "/" << slice << std::endl;
+	}
+	
+
 void CVUniverse::Print() const { std::cout
 << ShortName() << ", "
 << GetRun() << ", "
@@ -1015,4 +1224,5 @@ void CVUniverse::Print() const { std::cout
 << GetIsMinosMatchTrack() << ", "
 << std::endl;
 }
+
 #endif
