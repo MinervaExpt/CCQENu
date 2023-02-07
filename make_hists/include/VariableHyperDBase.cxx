@@ -17,33 +17,41 @@ using namespace PlotUtils;
 template <class UNIVERSE>
 VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::vector<const VariableBase<UNIVERSE>&> d){
   std::string name;
+  std::string lin_axis_label;
   std::vector<std::string> axis_label_vec;
   std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> var_vec;
-  m_dimension = d.size();
-  // Set up the vector of variables, make the axis label name 
-  for(int i=0; i<d.size(); i++){
-    name+=d[i].GetName();
-    if(i<(d.size()-1)) name+="_" ;
-    axis_label_vec.push_back(d[i].GetAxisLabel());
-    var_vec.push_back(new VariableBase<UNIVERSE>(d[i]));
-  }
-  m_name = name;
-  m_axis_label_vec = axis_label_vec;
-  m_var_vec = var_vec;
-
-  // Make a list of the binning, and count how many bins are in the space
-  // TODO: consolidate with previous loop
   int n_lin_bins = 1;
   std::vector<std::vector<double>> var_bins;
+  m_dimension = d.size();
 
-  for(auto var:d){
-    std::vector<double> varbin = var->GetBinVec();
-    std::string axislabel = var->GetAxisLabel();
-    m_lin_axis_label+=axislabel;
-    var_bins.push_back(varbin);
-    n_lin_bins *= (varbin.size() +1); // number of bins = length -1 (for bin edge) +2 (for underflow, overflow)
+  for(int i=0; i<d.size(); i++){
+    // Make vector of input variables
+    var_vec.push_back(new VariableBase<UNIVERSE>(d[i]));
+
+    // Make name for variable, axis
+    name+=d[i].GetName();
+    lin_axis_label+=d[i].GetAxisLabel();
+
+    if(i<(d.size()-1)){ 
+      name+="_" ;
+      lin_axis_label+=", ";
+    }
+
+    // // Make vector of axis labels TODO: Necessary?
+    // axis_label_vec.push_back(d[i].GetAxisLabel());
+
+    // Make vector of binnings, count number of bins
+    std::vector<double> var_binning = d[i]->GetBinVec();
+    var_bins.push_back(var_binning);
+    n_lin_bins*=(var_binning.size()+1); // includes under/over flow (total bins = size of bin edges -1 (high edge) + 2 (under/overflow))
   }
-  
+
+  m_name = name;
+  m_lin_axis_label = lin_axis_label;
+  // m_axis_label_vec = axis_label_vec; //TODO: Necessary?
+  m_var_vec = var_vec;
+
+
   // Initialize a hyperdim with that binning
   m_hyperdim = new HyperDimLinearizer(var_bins,0);
 
@@ -59,29 +67,40 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::vector<const VariableBase<
 
 template <class UNIVERSE>
 VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::string name, std::vector<const VariableBase<UNIVERSE>&> d){
+  std::string lin_axis_label;
   std::vector<std::string> axis_label_vec;
   std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> var_vec;
+  std::vector<std::vector<double>> var_bins;
+  int n_lin_bins = 1;
   m_dimension = d.size();
 
-  for(auto variable:d){
-    axis_label_vec.push_back(variable.GetAxisLabel());
-    var_vec.push_back(new VariableBase<UNIVERSE>(variable));
+  for(int i=0; i<d.size(); i++){
+    // Make vector of input variables
+    var_vec.push_back(new VariableBase<UNIVERSE>(d[i]));
+
+    // Make name for variable, axis
+    lin_axis_label+=d[i].GetAxisLabel();
+
+    if(i<(d.size()-1)){ 
+      lin_axis_label+=", ";
+    }
+
+    // // Make vector of axis labels // TODO: Necessary?
+    // axis_label_vec.push_back(d[i].GetAxisLabel());
+
+    // Make vector of binnings, count number of bins
+    std::vector<double> var_binning = d[i]->GetBinVec();
+    var_bins.push_back(var_binning);
+    n_lin_bins*=(var_binning.size()+1); // includes under/over flow (total bins = size of bin edges -1 (high edge) + 2 (under/overflow))
   }
+  
   m_name = name;
-  m_axis_label_vec = axis_label_vec;
+  m_lin_axis_label = lin_axis_label;
+  // m_axis_label_vec = axis_label_vec; //TODO: Necessary?
   m_var_vec = var_vec;
 
   // Place holder to manipulate
-  int n_lin_bins = 1;
-  std::vector<std::vector<double>> var_bins;
-  // TODO consolidate with previous loop
-  for(auto var:d){
-    std::vector<double> varbin = var->GetBinVec();
-    std::string axislabel = var->GetAxisLabel();
-    m_lin_axis_label+=axislabel;
-    var_bins.push_back(varbin);
-    n_lin_bins *= (varbin.size() +1); // number of bins = length -1 (for bin edge) +2 (for underflow, overflow)
-  }
+
   // Initialize a hyperdim with that binning
   m_hyperdim = new HyperDimLinearizer(var_bins,0);
 
