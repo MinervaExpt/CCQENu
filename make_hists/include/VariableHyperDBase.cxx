@@ -2,6 +2,7 @@
 #define VARIABLEHYPERDBASE_CXX
 
 #include "VariableHyperDBase.h"
+#include "PlotUtils/HyperDimLinearizer.h"
 
 using namespace PlotUtils;
 
@@ -18,7 +19,8 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::vector<const VariableBase<
   std::string name;
   std::vector<std::string> axis_label_vec;
   std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> var_vec;
-
+  m_dimension = d.size();
+  // Set up the vector of variables, make the axis label name 
   for(int i=0; i<d.size(); i++){
     name+=d[i].GetName();
     if(i<(d.size()-1)) name+="_" ;
@@ -29,17 +31,34 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::vector<const VariableBase<
   m_axis_label_vec = axis_label_vec;
   m_var_vec = var_vec;
 
+  // Make a list of the binning, and count how many bins are in the space
+  // TODO: consolidate with previous loop
+  int n_lin_bins = 1;
   for(auto var:d){
-    m_varbins.pushback(var->GetBinVec());
-    m_axis_label_vec.pushback(var->GetAxisLabel());
+    int varbin = var->GetBinVec();
+    std::string axislabel = var->GetAxisLabel());
+    m_lin_axis_label+=axislabel;
+    m_var_bins.pushback(varbin);
+    n_lin_bins *= (varbin.size() +1); // number of bins = length -1 (for bin edge) +2 (for underflow, overflow)
   }
-  m_hyperdim = new HyperDL(m_varbins,0);
+  // Initialize a hyperdim with that binning
+  m_hyperdim = new HyperDL(m_var_bins,0);
+
+  // Make a binning in bin space
+  std::vector<double> lin_binning;
+  for(int i=0;i<n_lin_bins;i++) lin_binning.push_back(i);
+  m_lin_binning = lin_binning;
+
+  // Make the linearized variable TODO: Is this necessary?
+  m_lin_var = VariableBase(m_name,m_lin_axis_label,m_lin_binning);
+
 }
 
 template <class UNIVERSE>
 VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::string name, std::vector<const VariableBase<UNIVERSE>&> d){
   std::vector<std::string> axis_label_vec;
   std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> var_vec;
+  m_dimension = d.size();
 
   for(auto variable:d){
     axis_label_vec.push_back(variable.GetAxisLabel());
@@ -49,11 +68,26 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::string name, std::ve
   m_axis_label_vec = axis_label_vec;
   m_var_vec = var_vec;
 
+  // Place holder to manipulate
+  int n_lin_bins = 1;
+  // TODO consolidate with previous loop
   for(auto var:d){
-    m_varbins.pushback(var->GetBinVec());
-    m_axis_label_vec.pushback(var->GetAxisLabel());
+    int varbin = var->GetBinVec();
+    std::string axislabel = var->GetAxisLabel());
+    m_lin_axis_label+=axislabel;
+    m_var_bins.pushback(varbin);
+    n_lin_bins *= (varbin.size() +1); // number of bins = length -1 (for bin edge) +2 (for underflow, overflow)
   }
-  m_hyperdim = new HyperDL(m_varbins,0);
+  // Initialize a hyperdim with that binning
+  m_hyperdim = new HyperDL(m_var_bins,0);
+
+  // Make a vector in bin space
+  vector<double> lin_binning;
+  for(int i=0;i<n_lin_bins;i++) lin_binning.push_back(i);
+  m_lin_binning = lin_binning;
+
+  // Make the linearized variable TODO: Is this necessary?
+  m_lin_var = VariableBase(m_name,m_lin_axis_label,m_lin_binning);
 }
 //==============================================================================
 // Set/Get
@@ -69,19 +103,34 @@ std::string VariableHyperDBase<UNIVERSE>::GetName() const {
 }
 
 template <class UNIVERSE>
+std::string VariableHyperDBase<UNIVERSE>::GetName(const int axis) const {
+  return m_var_vec[axis]->GetName();
+}
+
+template <class UNIVERSE>
+std::string VariableHyperDBase<UNIVERSE>::GetAxisLabel() const {
+  return m_lin_axis_label;
+}
+
+template <class UNIVERSE>
 std::string VariableHyperDBase<UNIVERSE>::GetAxisLabel(const int axis) const {
   return m_axis_label_vec[axis];
 }
 
 template <class UNIVERSE>
-std::string VariableHyperDBase<UNIVERSE>::GetAxisName(const int axis) const {
-  return m_var_vec[axis]->GetName();
+std::vector<std::string> VariableHyperDBase<UNIVERSE>::GetAxisLabelVec() const {
+  return m_axis_label_vec;
 }
 
 // Used to get the number of linearized bins
 template <class UNIVERSE>
 int VariableHyperDBase<UNIVERSE>::GetNBins() const {
-  return m_lin_var->GetNBins();
+  return m_lin_var->GetNBins();  //TODO: is this calculation correct? It will include under/overflow bins...
+  // return m_lin_binning.size() - 1; 
+
+  // This will not count under/overflow bins that are interspersed in the bins of the lin variable
+  // int nbins = (m_lin_var->GetNBins())-2*d;
+  // return nbins;
 }
 
 // Used to get the number of bins in a given axis
@@ -94,6 +143,7 @@ int VariableHyperDBase<UNIVERSE>::GetNBins(const int axis) const {
 template <class UNIVERSE>
 std::vector<double> VariableHyperDBase<UNIVERSE>::GetBinVec() const {
   return m_lin_var->GetBinVec();
+  // return m_lin_binning;
 }
 
 // Used to get the bin edges of a given axis
@@ -112,6 +162,11 @@ void VariableHyperDBase<UNIVERSE>::PrintBinning() const {
 template <class UNIVERSE>
 void VariableHyperDBase<UNIVERSE>::PrintBinning(const int axis) const {
   m_var_vec[axis]->PrintBinning();
+}
+
+template <class UNIVERSE>
+PlotUtils::HyperDimLinearizer GetHyperDimLinearizer() const {
+  return m_hyperdim;
 }
 
 //==============================================================================

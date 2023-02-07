@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "PlotUtils/VariableBase.h"
+#include "PlotUtils/HyperDimLinearizer.h"
 
 namespace PlotUtils {
 
@@ -25,14 +26,18 @@ class VariableHyperDBase {
 
   std::string SetName(const std::string name);
   std::string GetName() const;
+  std::string GetName(int axis) const;
+  std::string GetAxisLabel() const;
   std::string GetAxisLabel(int axis) const;
-  std::string GetAxisName(int axis) const;
+  std::vector GetAxisLabelVec() const;
   int GetNBins() const;
   int GetNBins(int axis) const;
   std::vector<double> GetBinVec() const;
   std::vector<double> GetBinVec(int axis) const;
   void PrintBinning() const;
   void PrintBinning(int axis) const;
+  PlotUtils::HyperDimLinearizer GetHyperDimLinearizer() const;
+
 
   //============================================================================
   // Get Value
@@ -51,12 +56,15 @@ class VariableHyperDBase {
 
  protected:
   std::vector<std::string> m_axis_label_vec;
-
+  std::string m_lin_axis_label;
  private:
   //============================================================================
   // Member Variables
   //============================================================================
   std::string m_name;
+
+  // Number of axes/dimensions in variable phase space
+  int n_dimension;
 
   // Member HyperDim
   PlotUtils::HyperDimLinearizer m_hyperdim;
@@ -70,6 +78,8 @@ class VariableHyperDBase {
   // Vector of bins in variable phase space
   std::vector<std::vector<double>> m_varbins;
 
+  // Bector of bins in bin space
+  std::vector<double> m_lin_binning;
 
   VariableHyperDBase();  // off-limits
 };
