@@ -29,14 +29,14 @@ class VariableHyperDBase {
   std::string GetName(int axis) const;
   std::string GetAxisLabel() const;
   std::string GetAxisLabel(int axis) const;
-  std::vector GetAxisLabelVec() const;
+  std::vector<std::string> GetAxisLabelVec() const;
   int GetNBins() const;
   int GetNBins(int axis) const;
   std::vector<double> GetBinVec() const;
   std::vector<double> GetBinVec(int axis) const;
   void PrintBinning() const;
   void PrintBinning(int axis) const;
-  PlotUtils::HyperDimLinearizer GetHyperDimLinearizer() const;
+  PlotUtils::HyperDimLinearizer* GetHyperDimLinearizer() const;
 
 
   //============================================================================
@@ -57,6 +57,7 @@ class VariableHyperDBase {
  protected:
   std::vector<std::string> m_axis_label_vec;
   std::string m_lin_axis_label;
+
  private:
   //============================================================================
   // Member Variables
@@ -64,10 +65,10 @@ class VariableHyperDBase {
   std::string m_name;
 
   // Number of axes/dimensions in variable phase space
-  int n_dimension;
+  int m_dimension;
 
   // Member HyperDim
-  PlotUtils::HyperDimLinearizer m_hyperdim;
+  PlotUtils::HyperDimLinearizer *m_hyperdim;
 
   // Linearized variable
   std::unique_ptr<VariableBase<UNIVERSE>> m_lin_var;
