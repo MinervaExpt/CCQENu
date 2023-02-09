@@ -26,7 +26,7 @@ namespace PlotUtils
     // Default Constructor
     MnvHHyperD();
 
-    MnvHHyperD()
+    MnvHHyperD();
   }
 
 
