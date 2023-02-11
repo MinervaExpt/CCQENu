@@ -24,29 +24,36 @@ class VariableHyperDBase {
   //============================================================================
   // Setters/Getters
   //============================================================================
-
+  // TODO: reco binning!
   std::string SetName(const std::string name);
-  void SetAnalysisType(const EAnalysisType t2D_t1D);
-  std::string GetName() const;
-  std::string GetName(int axis) const;
-  std::string GetAxisLabel() const;
-  std::string GetAxisLabel(int axis) const;
-  std::vector<std::string> GetAxisLabelVec() const;
-  int GetNBins() const;
-  int GetNBins(int axis) const;
-  std::vector<double> GetBinVec() const;
-  std::vector<double> GetBinVec(int axis) const;
-  void PrintBinning() const;
-  void PrintBinning(int axis) const;
+  void SetAnalysisType(const EAnalysisType t2D_t1D); // Set hyperdim to project to 2D or 1D
+  std::string GetName() const; // Get Name of linearized variable
+  std::string GetName(int axis) const; // Get name of variable on an axis
+  std::string GetAxisLabel() const; // Get axis label for linearzed variable
+  std::string GetAxisLabel(int axis) const; // Get axis label for one variable
+  std::vector<std::string> GetAxisLabelVec() const; // Get vector of all the variables in the phase space
+  int GetNBins() const; // Get number of linearized bins
+  int GetNBins(int axis) const; // Get number of bins on an axis
+  int GetNRecoBins() const; // Get number of linearized reco bins
+  int GetNRecoBins(int axis) const; // Get number of reco bins for a variable 
+  std::vector<double> GetBinVec() const; // Get vector of linearized bin edges, should just be a list of indexes essentially
+  std::vector<double> GetBinVec(int axis) const; // Get vector of bin edges for an input variable
+  std::vector<double> GetRecoBinVec() const; // Same but reco bins
+  std::vector<double> GetRecoBinVec(int axis) const; // Same but reco bins
+  void PrintBinning() const; // Print linearized binning
+  void PrintBinning(int axis) const; // Print binning for one input variable
+  void PrintRecoBinning() const; // Same but reco bins
+  void PrintRecoBinning(int axis) const; // Same but reco bins
   PlotUtils::HyperDimLinearizer* GetHyperDimLinearizer() const;
   double GetBinVolume(int lin_bin) const; // TODO: Maybe this belongs to hyperdim?
+  double GetRecoBinVolume(int lin_recobin) const; // TODO: Maybe this belongs to hyperdim?
 
-      //============================================================================
-      // Get Value
-      //============================================================================
-      double
-      GetRecoValue(int axis, const UNIVERSE &universe, const int idx1 = -1,
-                   const int idx2 = -1) const;
+  //============================================================================
+  // Get Value
+  //============================================================================
+  double
+  GetRecoValue(int axis, const UNIVERSE &universe, const int idx1 = -1,
+               const int idx2 = -1) const;
 
   double GetRecoValue(const UNIVERSE& universe, const int idx1 = -1,
                       const int idx2 = -1) const;
