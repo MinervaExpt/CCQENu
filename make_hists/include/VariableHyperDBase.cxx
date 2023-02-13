@@ -39,7 +39,7 @@ using namespace PlotUtils;
 
       // Make vector of binnings, count number of bins
       std::vector<double> var_binning = d[i]->GetBinVec();
-      var_bins.push_back(var_binning);
+      vars_bins.push_back(var_binning);
       // Need to add underflow and overflow bins (+2) and take out one from bin edges (-1) => var_binning.size()+1
       n_lin_bins*=(var_binning.size()+1);
     }
@@ -51,7 +51,7 @@ using namespace PlotUtils;
 
     m_analysis_type = k1D;
     // Initialize a hyperdim with that binning
-    m_hyperdim = new HyperDimLinearizer(var_bins,m_analysis_type); 
+    m_hyperdim = new HyperDimLinearizer(vars_bins,m_analysis_type); 
 
     // Make a binning in bin space
     std::vector<double> lin_binning;
@@ -69,7 +69,7 @@ using namespace PlotUtils;
     std::string lin_axis_label;
     std::vector<std::string> axis_label_vec;
     std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> var_vec;
-    std::vector<std::vector<double>> var_bins;
+    std::vector<std::vector<double>> vars_bins;
     m_dimension = d.size();
     int n_lin_bins = 1;
 
@@ -96,7 +96,7 @@ using namespace PlotUtils;
     m_analysis_type = k1D;
 
     // Initialize a hyperdim with that binning
-    m_hyperdim = new HyperDimLinearizer(var_bins, m_analysis_type);
+    m_hyperdim = new HyperDimLinearizer(vars_bins, m_analysis_type);
 
     // Make a vector in bin space
     std::vector<double> lin_binning;
@@ -145,13 +145,15 @@ using namespace PlotUtils;
   template <class UNIVERSE>
   std::string VariableHyperDBase<UNIVERSE>::GetAxisLabel(const int axis) const
   {
-    return m_axis_label_vec[axis];
+    return m_vars_vec[axis]->GetAxisLabel();
   }
 
   template <class UNIVERSE>
   std::vector<std::string> VariableHyperDBase<UNIVERSE>::GetAxisLabelVec() const
   {
-    return m_axis_label_vec;
+    std::vector<std::string> axis_label_vec = {};    
+    for(int i = 0; i < m_dimension; i++){ axis_label_vec.push_back(m_vars_vec[i]->GetAxisLabel());}
+    return axis_label_vec;
   }
 
   // Used to get the number of linearized bins
@@ -260,10 +262,11 @@ using namespace PlotUtils;
   {
     // Given the linearized bin number, get corresponding bin number in phase space coordinates
     double ps_bin_vol = 1;
-    std::vector<int> ps_coords = m_hyperdim.GetValues(lin_bin);
+    std::vector<int> ps_coords = m_hyperdim->GetValues(lin_bin);
     for (int i = 0; i < ps_coords.size(); i++)
     {
-      std::int var_bin = ps_coords[i] std::vector<double> var_binning = m_vars_vec[i]->GetBinVec();
+      int var_bin = ps_coords[i]; 
+      std::vector<double> var_binning = m_vars_vec[i]->GetBinVec();
       double bin_width = var_binning[var_bin + 1] - var_binning[var_bin];
       if (bin_width <= 0)
       {
