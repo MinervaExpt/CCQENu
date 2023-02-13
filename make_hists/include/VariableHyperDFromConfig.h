@@ -147,7 +147,7 @@ public:
 
     //std::vector<double> bins = GetBinVec();
     std::vector<double> recobins = GetRecoBinVec(); //TODO: set this up in VariableHyperDBase
-// need reco level binning here:
+    // need reco level binning here:
     // m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNRecoBins(), recobins, univs, tags);
     m_selected_mc_reco = HM(Form("%s", GetName(.c_str()),(GetName()+";"+m_axis_label+";").c_str(),bins,recobins,univs,tags);
     m_selected_mc_reco.AppendName("reconstructed",tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
@@ -254,21 +254,6 @@ public:
       // m_response = RM(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
       m_tuned_response = RM(Form("%s", GetName().c_str()), reco_univs, recobins, bins, response_tags, "_tuned");
     }
-    // // Now do response
-    // if (std::count(m_for.begin(), m_for.end(),"response")< 1) {
-    //   std::cout << "VariableHyperDFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
-    //   for (auto tag:response_tags){
-    //     hasResponse[tag] = false;
-    //   }
-    //   return;
-    // }
-    // for (auto tag:response_tags){
-    //   assert(hasMC[tag]);
-    //   assert(hasSelectedTruth[tag]);
-    //   hasResponse[tag] = true;
-    // }
-    //
-    // m_tuned_mc_reco.AddResponse(response_tags,"_tuned");
   }
 
 
@@ -298,30 +283,6 @@ public:
     // m_response = RM(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
 
     m_response = RM(Form("%s", GetName().c_str()),reco_univs, recobins, bins, tags,tail);
-    //
-    // // Count the number of universes in each band
-    // std::map<std::string, int> response_bands;
-    // for (auto band : reco_univs){ // Using reco_univs since that's what originally was done
-    //   std::string name = band.first;
-    //   std::string realname = (band.second)[0]->ShortName();
-    //   int nuniv = band.second.size();
-    //   response_bands[realname] = nuniv;
-    // }
-    //
-    // std::vector<double> bins = GetBinVec();
-    // std::vector<double> recobins = GetRecoBinVec();
-    //
-    // // Loop over tags for initializing the response
-    // for(auto tag:tags){
-    //   // the name of the histogram. The "tail" at the end should be an empty string or "_tuned".
-    //   std::string resp_name = "h___" + tag + "___" + Form("%s", GetName().c_str()) + "___response" + tail;
-    //   if(tail!="_tuned"){
-    //     m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), GetNRecoBins(), &recobins[0], GetNBins() ,&bins[0], response_bands);
-    //   }
-    //   else{
-    //     m_tuned_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), GetNRecoBins(), &recobins[0], GetNBins() ,&bins[0], response_bands);
-    //   }
-    // }
   }
 
 
@@ -436,12 +397,6 @@ public:
     if(hasTunedMC[tag] && scale>=0.){
       m_tuned_response.Fill(tag,univ,value, truth, weight, scale);
     }
-    // if(hasMC[tag] && m_tunedmc!=1){
-    //   m_selected_mc_reco.FillResponse(tag, univ, value, truth, weight);
-    // }
-    // if(hasTunedMC[tag]){
-    //   m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight);
-    // }
   }
 
   // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.
