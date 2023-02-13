@@ -32,19 +32,19 @@ class VariableHyperDBase {
   std::string GetAxisLabel() const; // Get axis label for linearzed variable
   std::string GetAxisLabel(int axis) const; // Get axis label for one variable
   std::vector<std::string> GetAxisLabelVec() const; // Get vector of all the variables in the phase space
-  int GetNBins() const; // Get number of linearized bins
+  int GetNBins() const; // Get number of linearized bins TODO: right now just true binning
   int GetNBins(int axis) const; // Get number of bins on an axis
   int GetNRecoBins() const; // Get number of linearized reco bins
   int GetNRecoBins(int axis) const; // Get number of reco bins for a variable 
   std::vector<double> GetBinVec() const; // Get vector of linearized bin edges, should just be a list of indexes essentially
   std::vector<double> GetBinVec(int axis) const; // Get vector of bin edges for an input variable
-  std::vector<double> GetRecoBinVec() const; // Same but reco bins
+  std::vector<double> GetRecoBinVec() const;  // Same but reco bins TODO: right now just true binning
   std::vector<double> GetRecoBinVec(int axis) const; // Same but reco bins
   void PrintBinning() const; // Print linearized binning
   void PrintBinning(int axis) const; // Print binning for one input variable
-  void PrintRecoBinning() const; // Same but reco bins
+  void PrintRecoBinning() const; // Same but reco bins TODO: right now just true binning
   void PrintRecoBinning(int axis) const; // Same but reco bins
-  PlotUtils::HyperDimLinearizer* GetHyperDimLinearizer() const;
+  PlotUtils::HyperDimLinearizer* GetHyperDimLinearizer() const; // Returns the hyperdim
   double GetBinVolume(int lin_bin) const; // TODO: Maybe this belongs to hyperdim?
   double GetRecoBinVolume(int lin_recobin) const; // TODO: Maybe this belongs to hyperdim?
 

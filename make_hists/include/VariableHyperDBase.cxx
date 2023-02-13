@@ -173,6 +173,20 @@ using namespace PlotUtils;
     return m_vars_vec[axis]->GetNBins();
   }
 
+  template <class UNIVERSE>
+  int VariableHyperDBase<UNIVERSE>::GetNRecoBins() const
+  {
+    return m_lin_var->GetNBins();
+    // TODO: Right now just returns true binning. Is it worth storing a second hyperdim?
+  }
+
+  template <class UNIVERSE>
+  int VariableHyperDBase<UNIVERSE>::GetNRecoBins(const int axis) const
+  {
+    return m_lin_var[axis]->GetNRecoBins();
+    // Returns the reco binning for one of the input variables
+  }
+
   // Used to get the linearized bin edges
   template <class UNIVERSE>
   std::vector<double> VariableHyperDBase<UNIVERSE>::GetBinVec() const
@@ -188,6 +202,22 @@ using namespace PlotUtils;
     return m_vars_vec[axis]->GetBinVec();
   }
 
+  // Used to get the linearized reco bin edges
+  template <class UNIVERSE>
+  std::vector<double> VariableHyperDBase<UNIVERSE>::GetRecoBinVec() const
+  {
+    return m_lin_var->GetBinVec();
+    // TODO: Right now just returns true binning
+    // return m_lin_binning;
+  }
+
+  // Used to get the reco bin edges of a given axis
+  template <class UNIVERSE>
+  std::vector<double> VariableHyperDBase<UNIVERSE>::GetRecoBinVec(const int axis) const
+  {
+    return m_vars_vec[axis]->GetRecoBinVec();
+  }
+
   // Print the linearized binning
   template <class UNIVERSE>
   void VariableHyperDBase<UNIVERSE>::PrintBinning() const
@@ -200,6 +230,21 @@ using namespace PlotUtils;
   void VariableHyperDBase<UNIVERSE>::PrintBinning(const int axis) const
   {
     m_vars_vec[axis]->PrintBinning();
+  }
+
+  // Print the linearized binning
+  template <class UNIVERSE>
+  void VariableHyperDBase<UNIVERSE>::PrintRecoBinning() const
+  {
+    m_lin_var->PrintBinning();
+    // TODO: right now just returns true binning
+  }
+
+  // Print the binning of an axis
+  template <class UNIVERSE>
+  void VariableHyperDBase<UNIVERSE>::PrintRecoBinning(const int axis) const
+  {
+    m_vars_vec[axis]->PrintRecoBinning();
   }
 
   // Return the hyperdim
