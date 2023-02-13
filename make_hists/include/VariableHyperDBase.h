@@ -16,9 +16,9 @@ class VariableHyperDBase {
   //============================================================================
   // CTORS
   //============================================================================
-  VariableHyperDBase(std::vector<const VariableBase<UNIVERSE>&> d);
-  VariableHyperDBase(const std::string name,
-                     std::vector<const VariableBase<UNIVERSE>&> d);
+   VariableHyperDBase(std::vector<const VariableBase<UNIVERSE>>& d);
+   VariableHyperDBase(const std::string name,
+                      std::vector<const VariableBase<UNIVERSE>>& d);
 
  public:
   //============================================================================

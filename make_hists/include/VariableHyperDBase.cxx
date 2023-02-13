@@ -16,7 +16,7 @@ using namespace PlotUtils;
 // CTORS
 //==============================================================================
   template <class UNIVERSE>
-  VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::vector<const VariableBase<UNIVERSE>&> d) {
+  VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::vector< const VariableBase<UNIVERSE>>& d) {
     std::string name;
     std::string lin_axis_label;
     std::vector<std::string> axis_label_vec;
@@ -65,7 +65,7 @@ using namespace PlotUtils;
 
 
   template <class UNIVERSE>
-  VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::string name, std::vector<const VariableBase<UNIVERSE> &> d) {
+  VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::string name, std::vector< const VariableBase<UNIVERSE> >& d) {
     std::string lin_axis_label;
     std::vector<std::string> axis_label_vec;
     std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> var_vec;
