@@ -85,7 +85,7 @@ using namespace PlotUtils;
       // Make vector of binnings, count number of bins
       std::vector<double> var_binning = d[i]->GetBinVec();
       vars_bins.push_back(var_binning);
-      n_lin_bins *= (var_binning.size() + 1); // includes under/over flow (total bins = size of bin edges -1 (high edge) + 2 (under/overflow))
+      n_lin_bins *= (var_binning.size() + 1); // includes under/over flow (total bins = size of bin edges - 1 (high edge) + 2 (under/overflow))
     }
 
     m_name = name;
