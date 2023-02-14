@@ -16,9 +16,9 @@ class VariableHyperDBase {
   //============================================================================
   // CTORS
   //============================================================================
-   VariableHyperDBase(std::vector<const VariableBase<UNIVERSE>&> d);
+   VariableHyperDBase(const std::vector<VariableBase<UNIVERSE>>& d);
    VariableHyperDBase(const std::string name,
-                      std::vector<const VariableBase<UNIVERSE>&> d);
+                      const std::vector<VariableBase<UNIVERSE>>& d);
 
  public:
   //============================================================================
@@ -87,7 +87,7 @@ class VariableHyperDBase {
   std::unique_ptr<VariableBase<UNIVERSE>> m_lin_var;
 
   // Vector of component variables
-  std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> m_vars_vec;
+  std::unique_ptr<std::vector < VariableBase < UNIVERSE >>> m_vars_vec;
 
   // Vector of bins in variable phase space
   std::vector<std::vector<double>> m_vars_bins;

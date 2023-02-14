@@ -49,13 +49,12 @@ public:
   //=======================================================================================
   // CTOR
   //=======================================================================================
-  //template <class... ARGS>
-  //VariableHyperDFromConfig(ARGS... args) : PlotUtils::VariableBase<CVUniverse>(args...) {}
+  template <class... ARGS>
+  // VariableHyperDFromConfig(ARGS... args) : PlotUtils::VariableBase<CVUniverse>(args...) {}
 
-  // HMS 2-13-202 replace the templated constructor with explicit ones so we can make a config version without introducing a dependency in the Base class.
 
   VariableHyperDFromConfig(const std::string name,
-                           const std::vector<VarableBase<CVUniverse>&> vars,
+                           const std::vector<VariableBase<CVUniverse>>& vars,
                            const std::vector<std::string> fors) :
   PlotUtils::VariableHyperDBase<CVUniverse>(name, vars) {
     if (fors.size()>0){
@@ -73,6 +72,14 @@ public:
     // TODO: Setup tuned checks like in Var2DFromConfig
     // std::vector<int> vars_tunedmc; 
   }
+
+  // VariableHyperDFromConfig(const std::string name,
+  //                          std::vector<const VariableBase<CVUniverse>&> vars,
+  //                          const std::vector<std::string> fors){
+  //   // I guess we can build the VariableHyperDBase by hand? Seems unneccessary...
+
+  // }
+
 
 
   typedef std::map<std::string, std::vector<CVUniverse*>> UniverseMap;
@@ -145,11 +152,11 @@ public:
       return;
     }
 
-    //std::vector<double> bins = GetBinVec();
+    std::vector<double> bins = GetBinVec();
     std::vector<double> recobins = GetRecoBinVec(); //TODO: set this up in VariableHyperDBase
     // need reco level binning here:
     // m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNRecoBins(), recobins, univs, tags);
-    m_selected_mc_reco = HM(Form("%s", GetName(.c_str()),(GetName()+";"+m_axis_label+";").c_str(),bins,recobins,univs,tags);
+    m_selected_mc_reco = HM(Form("%s", GetName().c_str()),(GetName()+";"+m_lin_axis_label+";").c_str(),bins,recobins,univs,tags);
     m_selected_mc_reco.AppendName("reconstructed",tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
   }
 
@@ -173,7 +180,7 @@ public:
 
     std::vector<double> bins = GetBinVec();
 
-    m_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
+    m_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), bins, univs, tags);
     m_selected_mc_truth.AppendName("selected_truth",tags);
   }
 
@@ -197,7 +204,7 @@ public:
 
     std::vector<double> bins = GetBinVec();
 
-    m_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
+    m_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), bins, univs, tags);
     m_signal_mc_truth.AppendName("all_truth",tags);
   }
 
@@ -215,7 +222,7 @@ public:
     }
     std::vector<double> recobins = GetRecoBinVec();
 
-    m_selected_data = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNRecoBins(), recobins, univs,tags);
+    m_selected_data = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), recobins, univs, tags);
     m_selected_data.AppendName("reconstructed",tags);
   }
 
@@ -238,15 +245,15 @@ public:
 
     // Check which categories are configured and add a tuned version
     if (std::count(m_for.begin(), m_for.end(),"selected_reco")>=1){  // use recobins
-      m_tuned_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(),GetNRecoBins(),recobins, reco_univs, tuned_tags);
+      m_tuned_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), recobins, reco_univs, tuned_tags);
       m_tuned_selected_mc_reco.AppendName("reconstructed_tuned",tuned_tags);
     }
     if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) { // use bins
-      m_tuned_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, reco_univs, tuned_tags);
+      m_tuned_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), bins, reco_univs, tuned_tags);
       m_tuned_selected_mc_truth.AppendName("selected_truth_tuned",tuned_tags);
     }
     if (std::count(m_for.begin(), m_for.end(),"truth")>=1) { // use bins
-      m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, truth_univs, tuned_tags);
+      m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), bins, truth_univs, tuned_tags);
       m_tuned_signal_mc_truth.AppendName("all_truth_tuned",tuned_tags);
     }
 
