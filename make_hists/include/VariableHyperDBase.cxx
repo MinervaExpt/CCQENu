@@ -16,18 +16,18 @@ using namespace PlotUtils;
 // CTORS
 //==============================================================================
   template <class UNIVERSE>
-  VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::vector< const VariableBase<UNIVERSE>>& d) {
+  VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::vector< const VariableBase<UNIVERSE>&> d) {
     std::string name;
     std::string lin_axis_label;
     std::vector<std::string> axis_label_vec;
-    std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> var_vec;
+    std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> vars_vec;
     int n_lin_bins = 1;
     std::vector<std::vector<double>> vars_bins;
     m_dimension = d.size();
 
     for(int i=0; i<d.size(); i++){
       // Make vector of input variables
-      var_vec.push_back(new VariableBase<UNIVERSE>(d[i]));
+      vars_vec.push_back(new VariableBase<UNIVERSE>(d[i]));
 
       // Make name for variable, axis
       name+=d[i].GetName();
@@ -46,7 +46,7 @@ using namespace PlotUtils;
     
     m_name = name;
     m_lin_axis_label = lin_axis_label;
-    m_vars_vec = var_vec;
+    m_vars_vec = vars_vec;
     m_vars_bins = vars_bins;
 
     m_analysis_type = k1D;
@@ -65,10 +65,10 @@ using namespace PlotUtils;
 
 
   template <class UNIVERSE>
-  VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::string name, std::vector< const VariableBase<UNIVERSE> >& d) {
+  VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::string name, std::vector< const VariableBase<UNIVERSE>&> d) {
     std::string lin_axis_label;
     std::vector<std::string> axis_label_vec;
-    std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> var_vec;
+    std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> vars_vec;
     std::vector<std::vector<double>> vars_bins;
     m_dimension = d.size();
     int n_lin_bins = 1;
@@ -76,7 +76,7 @@ using namespace PlotUtils;
     for (int i = 0; i < d.size(); i++)
     {
       // Make vector of input variables
-      var_vec.push_back(new VariableBase<UNIVERSE>(d[i]));
+      vars_vec.push_back(new VariableBase<UNIVERSE>(d[i]));
 
       // Make name for variable, axis
       lin_axis_label += d[i].GetAxisLabel();
@@ -90,7 +90,7 @@ using namespace PlotUtils;
 
     m_name = name;
     m_lin_axis_label = lin_axis_label;
-    m_vars_vec = var_vec;
+    m_vars_vec = vars_vec;
     m_vars_bins = vars_bins;
 
     m_analysis_type = k1D;
