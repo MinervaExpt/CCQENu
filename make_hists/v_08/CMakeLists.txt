@@ -47,7 +47,7 @@ set(SRC_FILES
 include/CVUniverse.cxx
 include/Get2DVariablesFromConfig.cxx
 include/GetVariablesFromConfig.cxx
-# include/GetHyperDVariablesFromConfig.cxx
+include/GetHyperDVariablesFromConfig.cxx
 utils/SyncBands.cxx
 include/weight_MCreScale.cxx
 include/VariableHyperDBase.cxx
@@ -63,7 +63,7 @@ include/CVUniverse.h
 include/GetCCQECutsFromConfig.h
 include/GetVariablesFromConfig.h
 include/Get2DVariablesFromConfig.h
-# include/GetHyperDVariablesFromConfig.h
+include/GetHyperDVariablesFromConfig.h
 include/GetStacked.h
 include/Hist2DWrapperMap.h
 include/HistWrapperMap.h
