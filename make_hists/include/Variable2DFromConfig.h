@@ -33,11 +33,6 @@ private:
 
   typedef PlotUtils::Response2DWrapperMap<CVUniverse> RM2D;
 
-  // typedef PlotUtils::MnvH1D MH1D;
-  // typedef PlotUtils::MnvH2D MH2D;
-  // typedef PlotUtils::HistFolio<PlotUtils::MnvH1D> FOLIO;
-  // typedef PlotUtils::HistFolio<PlotUtils::MnvH2D> FOLIO2D;
-
 
 public:
   //=======================================================================================
@@ -53,18 +48,18 @@ public:
                        const VariableBase<CVUniverse>& y) :
   PlotUtils::Variable2DBase<CVUniverse>(name, x, y ){
     std::vector<std::string> def = {"data","selected_reco","selected_truth","response","truth"};
-   for (auto s:def){
-     m_for.push_back(s);
-   }
+    for (auto s:def){
+      m_for.push_back(s);
+    }
   };
 
   Variable2DFromConfig(const VariableBase<CVUniverse>& x,
                        const VariableBase<CVUniverse>& y) :
   PlotUtils::Variable2DBase<CVUniverse>(x, y ){
     std::vector<std::string> def = {"data","selected_reco","selected_truth","response","truth"};
-   for (auto s:def){
-     m_for.push_back(s);
-   }
+    for (auto s:def){
+      m_for.push_back(s);
+    }
   };
 
   Variable2DFromConfig(const std::string name,
@@ -148,13 +143,7 @@ public:
   std::vector<std::string> m_tags;
   std::vector<std::string> m_for;
   int m_tunedmc;
-  //RESPONSE* m_response;
-  // helpers for response
 
-  // std::map< CVUniverse* , int> m_map; // map to get name and index from Universe;
-  // Histofolio to categorize MC by interaction channel
-  //FOLIO m_selected_mc_by_channel;
-  //FOLIO m_selected_mc_truth_by_channel;
   inline virtual std::string GetUnits(){return m_units;};
 
   inline virtual void SetUnits(std::string units){m_units=units;};
@@ -249,9 +238,6 @@ public:
     m_signal_mc_truth.AppendName("all_truth",tags);
   }
 
-  //  void AddTruthWrapper(std::string tag){
-  //     m_signal_mc_truth.AddResponse(tag);
-  //  }
 
   template <typename T>
   void InitializeDataHistograms2D(T univs, const std::vector<std::string> tags) {
@@ -306,20 +292,6 @@ public:
     if(std::count(m_for.begin(), m_for.end(),"response")>=1){
       m_tuned_response = RM2D(Form("%s", GetName().c_str()),reco_univs, xrecobins, xbins, yrecobins, ybins, response_tags, "_tuned");
     }
-    // // Now do response
-    // if (std::count(m_for.begin(), m_for.end(),"response")< 1) {
-    //   std::cout << "Variable2DFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
-    //   for (auto tag:response_tags){
-    //     hasResponse[tag] = false;
-    //   }
-    //   return;
-    // }
-    // for (auto tag:response_tags){
-    //   assert(hasTunedMC[tag]);
-    //   assert(hasSelectedTruth[tag]);
-    // }
-
-    // m_tuned_selected_mc_reco.AddResponse2D(response_tags,"_tuned");
   }
 
   // =========================== Initialize Response ===========================
@@ -347,31 +319,7 @@ public:
     m_response = RM2D(Form("%s", GetName().c_str()),reco_univs, xrecobins, xbins, yrecobins, ybins, tags, tail);
 
   }
-  //
-  // //========== Add Response =================
-  //
-  // void AddMCResponse2D(const std::vector<std::string>  tags) { //Does this take in True at all?
-  //   if (std::count(m_for.begin(), m_for.end(),"response")< 1) {
-  //     std::cout << "Variable2DFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
-  //     for (auto tag:tags){
-  //       hasResponse[tag] = false;
-  //     }
-  //     return;
-  //   }
-  //   for (auto tag:tags){
-  //     assert(hasMC[tag]);
-  //   }
-  //
-  //   if(m_tunedmc==1){
-  //     std::cout << "Variable2DFromConfig Warning: untuned MC disabled. Disabling untuned response for this variable " << GetName() << std::endl;
-  //     return;
-  //   }
-  //
-  //   m_selected_mc_reco.AddResponse2D(tags);
-  //   for (auto tag:tags){
-  //     hasResponse[tag] = true;
-  //   }
-  // }
+
 
   //=======================================================================================
   // WRITE ALL HISTOGRAMS
@@ -476,14 +424,6 @@ public:
       m_tuned_response.Fill2D(tag, univ, x_value, y_value, x_truth, y_truth, weight, scale); //value here is reco
     }
   }
-
-  // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.
-
-  //  inline int UniverseIndex(CVUniverse* univ){
-  //    return m_map[univ];
-  //  }
-  //
-  //  //
 };
 
 }  // namespace Ben
