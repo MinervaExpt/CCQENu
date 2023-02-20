@@ -17,9 +17,11 @@ class VariableHyperDBase {
   //============================================================================
   // CTORS
   //============================================================================
-   VariableHyperDBase(const std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> &d);
+   VariableHyperDBase(const std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> &d,
+                      EAnalysisType t2D_t1D = k1D);
    VariableHyperDBase(const std::string name,
-                      const std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> &d);
+                      const std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> &d,
+                      EAnalysisType t2D_t1D = k1D);
 
  public:
   //============================================================================
@@ -38,78 +40,71 @@ class VariableHyperDBase {
 
   int GetNBins() const; // Get number of linearized bins TODO: right now just true binning
   int GetNBins(int axis) const; // Get number of bins on an axis
-  int GetNRecoBins() const; // Get number of linearized reco bins
-  int GetNRecoBins(int axis) const; // Get number of reco bins for a variable 
-
   std::vector<double> GetBinVec() const; // Get vector of linearized bin edges, should just be a list of indexes essentially
   std::vector<double> GetBinVec(int axis) const; // Get vector of bin edges for an input variable
-  std::vector<double> GetRecoBinVec() const;  // Same but reco bins TODO: right now just true binning
-  std::vector<double> GetRecoBinVec(int axis) const; // Same but reco bins
-
   void PrintBinning() const; // Print linearized binning
   void PrintBinning(int axis) const; // Print binning for one input variable
+  PlotUtils::HyperDimLinearizer* GetHyperDimLinearizer() const; // Returns the hyperdim
+  double GetBinVolume(int lin_bin) const; // TODO: Maybe this belongs to hyperdimlinearizer?
+
+  bool HasRecoBinning() const;         // Check if linearized space has reco binning (yes, if at least one input variable has reco binning, false otherwise)
+  bool HasRecoBinning(int axis) const; // Check if given axis has reco binning
+  int GetNRecoBins() const; // Get number of linearized reco bins
+  int GetNRecoBins(int axis) const; // Get number of reco bins for a variable 
+  std::vector<double> GetRecoBinVec() const;  // Same but reco bins TODO: right now just true binning
+  std::vector<double> GetRecoBinVec(int axis) const; // Same but reco bins
   void PrintRecoBinning() const; // Same but reco bins TODO: right now just true binning
   void PrintRecoBinning(int axis) const; // Same but reco bins
-
-  PlotUtils::HyperDimLinearizer* GetHyperDimLinearizer() const; // Returns the hyperdim
-  PlotUtils::VariableBase<UNIVERSE> GetLinVariable() const;
-
-  double GetBinVolume(int lin_bin) const; // TODO: Maybe this belongs to hyperdim?
-  double GetRecoBinVolume(int lin_recobin) const; // TODO: Maybe this belongs to hyperdim?
+  PlotUtils::HyperDimLinearizer* GetRecoHyperDimLinearizer();// const; // Returns the reco bins hyperdim
+  double GetRecoBinVolume(int lin_recobin) const;                   // TODO: Maybe this belongs to hyperdimlinearizer?
+  
+  PlotUtils::VariableBase<UNIVERSE> GetLinVariable() const; // Maybe not possible/necessary
 
   //============================================================================
   // Get Value
   //============================================================================
-  double
-  GetRecoValue(int axis, const UNIVERSE &universe, const int idx1 = -1,
-               const int idx2 = -1) const;
-
-  double GetRecoValue(const UNIVERSE& universe, const int idx1 = -1,
-                      const int idx2 = -1) const;
-
-  double GetTrueValue(const UNIVERSE& universe, const int idx1 = -1,
+  // Get value of single variable
+  double GetRecoValue(int axis, const UNIVERSE& universe, const int idx1 = -1,
                       const int idx2 = -1) const;
 
   double GetTrueValue(int axis, const UNIVERSE& universe, const int idx1 = -1,
                       const int idx2 = -1) const;
 
- protected:
+  // Get value of all vars as a vec
+  std::vector<double> GetRecoValue(const UNIVERSE& universe, const int idx1 = -1,
+                      const int idx2 = -1) const;
+
+  std::vector<double> GetTrueValue(const UNIVERSE& universe, const int idx1 = -1,
+                      const int idx2 = -1) const;
+
+protected:
 
   std::string m_lin_axis_label;
-
-
 
  private:
   //============================================================================
   // Member Variables
   //============================================================================
-  // Name of variable, should be var1name_var2name_var3name etc
-  std::string m_name;
+   std::string m_name;                                              // Name of variable, should be var1name_var2name_var3name etc
 
-  // Number of axes/dimensions in variable phase space
-  int m_dimension;
+   int m_dimension;                                                 // Number of axes/dimensions in variable phase space
+   EAnalysisType m_analysis_type;                                   // This sets the "Analysis type" from Hyperdim: k2D (not configured yet) is type 0, k1D (default) is type 1
+   bool m_has_reco_binning;                                         // Bool to note if there's separate reco binning or not
 
-  // Member HyperDim
-  PlotUtils::HyperDimLinearizer *m_hyperdim;
+   PlotUtils::HyperDimLinearizer *m_hyperdim;                       // Member HyperDim
+   PlotUtils::HyperDimLinearizer *m_reco_hyperdim;                  // Member HyperDim for reco bins
 
-  // Linearized variable
-  std::unique_ptr<VariableBase<UNIVERSE>> m_lin_var;
+   std::unique_ptr<VariableBase<UNIVERSE>> m_lin_var;               // Linearized variable TODO: is this viable? Need input Values functions
 
-  // Vector of component variables
-  std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> m_vars_vec;
+   std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> m_vars_vec; // Vector of component variables
 
-  // Vector of bins in variable phase space
-  std::vector<std::vector<double>> m_vars_bins;
+   std::vector<std::vector<double>> m_vars_binnings;                // Vector of binnings each variable's binning in phase space
+   std::vector<std::vector<double>> m_vars_reco_binnings;           // Vector of reco binnings each variable's binning in phase space
 
-  // Vector of bins in bin space
-  std::vector<double> m_lin_binning;
+   std::vector<double> m_lin_binning;                               // Vector of bins in linearized bin space
+   std::vector<double> m_lin_reco_binning;                          // Vector of reco bins in bin space, currently unused but can use a getter to get them
 
-  // This sets the "Analysis type" from Hyperdim:
-  // k2D: 2D leaves y axis alone, "projects" all others down to x (like Dan's analysis)
-  // k1D: 1D fully linearizes, "projects" everything down to x
-  EAnalysisType m_analysis_type;
-
-  VariableHyperDBase();  // off-limits
+   VariableHyperDBase();                                            // off-limits default constructor
 };
 #endif
 

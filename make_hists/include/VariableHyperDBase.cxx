@@ -17,67 +17,66 @@ using namespace PlotUtils;
 //==============================================================================
 
 template <class UNIVERSE>
-VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::string name, const std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> &d)
+VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::string name, const std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> &d, EAnalysisType t2D_t1D)
 {
-  std::string lin_axis_label;
-  std::vector<std::string> axis_label_vec;
-  // std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> vars_vec;
-  std::vector<std::vector<double>> vars_bins;
+  m_name = name;
+  m_vars_vec = d;
   m_dimension = d.size();
+
+  std::string lin_axis_label;
+  // std::vector<std::string> axis_label_vec; TODO: needed?
+
+  std::vector<std::vector<double>> vars_bins;
   int n_lin_bins = 1;
 
   for (int i = 0; i < d.size(); i++)
   {
-    // Make vector of input variables
-    // vars_vec.emplace_back(new VariableBase<UNIVERSE>(d[i]));
-
     // Make name for variable, axis
     lin_axis_label += d[i].GetAxisLabel();
     if (i < (d.size() - 1))
+    {
       lin_axis_label += ", ";
+    }
 
     // Make vector of binnings, count number of bins
     std::vector<double> var_binning = d[i]->GetBinVec();
     vars_bins.push_back(var_binning);
     n_lin_bins *= (var_binning.size() + 1); // includes under/over flow (total bins = size of bin edges - 1 (high edge) + 2 (under/overflow))
+   
+    if (d[i]->HasRecoBinning()) m_has_reco_binning = true; // if any input vars has reco binning, it will set this off
   }
 
-  m_name = name;
   m_lin_axis_label = lin_axis_label;
-  // m_vars_vec = vars_vec;
-  m_vars_vec = d;
-  m_vars_bins = vars_bins;
-
-  m_analysis_type = k1D;
+  m_vars_binnings = vars_bins;
+  m_analysis_type = t2D_t1D; // Default analysis type for now
 
   // Initialize a hyperdim with that binning
   m_hyperdim = new HyperDimLinearizer(vars_bins, m_analysis_type);
 
   // Make a vector in bin space
   std::vector<double> lin_binning;
-  for (int i = 0; i < n_lin_bins; i++)
-    lin_binning.push_back(i);
+  for (int i = 0; i < n_lin_bins+1; i++) lin_binning.push_back(i);
   m_lin_binning = lin_binning;
 
-  // Make the linearized variable TODO: Is this necessary?
-  m_lin_var = new VariableBase<UNIVERSE>(m_name, m_lin_axis_label, m_lin_binning);
+  // Make the linearized variable TODO: Need to figure out how to work out Get Values methods will work here...
+  // m_lin_var = new VariableBase<UNIVERSE>(m_name, m_lin_axis_label, m_lin_binning);
 }
 
 template <class UNIVERSE>
-VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> &d) {
+VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> &d, EAnalysisType t2D_t1D) 
+{
+  m_vars_vec = d;
+  m_dimension = d.size();
+
   std::string name;
   std::string lin_axis_label;
-  std::vector<std::string> axis_label_vec;
-  // std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> vars_vec;
-  int n_lin_bins = 1;
+  // std::vector<std::string> axis_label_vec;
+
   std::vector<std::vector<double>> vars_bins;
-  m_dimension = d.size();
+  int n_lin_bins = 1;
 
   for (int i = 0; i < d.size(); i++)
   {
-    // Make vector of input variables
-    // vars_vec.emplace_back(new VariableBase<UNIVERSE>(d[i]));
-
     // Make name for variable, axis
     name += d[i].GetName();
     lin_axis_label += d[i].GetAxisLabel();
@@ -92,31 +91,31 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
     vars_bins.push_back(var_binning);
     // Need to add underflow and overflow bins (+2) and take out one from bin edges (-1) => var_binning.size()+1
     n_lin_bins *= (var_binning.size() + 1);
+
+    if (d[i]->HasRecoBinning()) m_has_reco_binning = true; // if any input vars has reco binning, it will set this off
   }
 
   m_name = name;
   m_lin_axis_label = lin_axis_label;
-  // m_vars_vec = vars_vec;
-  m_vars_vec = d;
-  m_vars_bins = vars_bins;
+  m_vars_binnings = vars_bins;
+  m_analysis_type = t2D_t1D;
 
-  m_analysis_type = k1D;
   // Initialize a hyperdim with that binning
   m_hyperdim = new HyperDimLinearizer(vars_bins, m_analysis_type);
 
   // Make a binning in bin space
   std::vector<double> lin_binning;
-  for (int i = 0; i < n_lin_bins; i++)
-    lin_binning.push_back(i);
+  for (int i = 0; i < n_lin_bins; i++) lin_binning.push_back(i);
   m_lin_binning = lin_binning;
 
-  // Make the linearized variable TODO: Is this necessary?
-  m_lin_var = new VariableBase<UNIVERSE>(m_name, m_lin_axis_label, m_lin_binning);
+  // Make the linearized variable TODO: Need to figure out how to work out Get Values methods will work here...
+  // m_lin_var = new VariableBase<UNIVERSE>(m_name, m_lin_axis_label, m_lin_binning);
 }
 
   //==============================================================================
-  // Set/Get
+  // Set
   //==============================================================================
+
   template <class UNIVERSE>
   std::string VariableHyperDBase<UNIVERSE>::SetName(const std::string name)
   {
@@ -127,9 +126,28 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
   void VariableHyperDBase<UNIVERSE>::SetAnalysisType(const EAnalysisType t2D_t1D)
   {
     m_analysis_type = t2D_t1D;
+    if(t2D_t1D==k2D){ //TODO: Add this, although general use 1D is usually fine.
+      std::cout << "VariableHyperDBase: WARNING, type 0, 2D analysis not configured yet. Setting to type 1, 1D..." <<std::endl;
+      m_analysis_type = k1D; 
+    }
     std::cout << "VariableHyperDBase: WARNING you may be changing your analysis type." << std::endl;
-    m_hyperdim = new HyperDimLinearizer(m_vars_bins, t2D_t1D);
+    m_hyperdim = new HyperDimLinearizer(m_vars_binnings, m_analysis_type);
+    
+    // TODO: Now do reco
+    // if(m_has_reco_binning){
+    //   std::vector<double> vars_reco_bins;
+    //   for (const auto var : m_vars_vec)
+    //   {
+    //     vars_reco_bins.push_back(var->GetRecoBinVec());
+    //   }
+    //   m_vars_reco_binnings = vars_reco_bins;
+    //   m_reco_hyperdim = new HyperDimLinearizer(m_vars_reco_binnings, m_analysis_type);
+    // }
   }
+
+  //==============================================================================
+  // Gets (truth binning, reco further down)
+  //==============================================================================
 
   template <class UNIVERSE>
   std::string VariableHyperDBase<UNIVERSE>::GetName() const
@@ -138,7 +156,7 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
   }
 
   template <class UNIVERSE>
-  std::string VariableHyperDBase<UNIVERSE>::GetName(const int axis) const
+  std::string VariableHyperDBase<UNIVERSE>::GetName(int axis) const
   {
     return m_vars_vec[axis]->GetName();
   }
@@ -150,7 +168,7 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
   }
 
   template <class UNIVERSE>
-  std::string VariableHyperDBase<UNIVERSE>::GetAxisLabel(const int axis) const
+  std::string VariableHyperDBase<UNIVERSE>::GetAxisLabel(int axis) const
   {
     return m_vars_vec[axis]->GetAxisLabel();
   }
@@ -159,7 +177,7 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
   std::vector<std::string> VariableHyperDBase<UNIVERSE>::GetAxisLabelVec() const
   {
     std::vector<std::string> axis_label_vec = {};    
-    for(int i = 0; i < m_dimension; i++){ axis_label_vec.push_back(m_vars_vec[i]->GetAxisLabel());}
+    for(const auto var:m_vars_vec){ axis_label_vec.push_back(var->GetAxisLabel());}
     return axis_label_vec;
   }
 
@@ -167,93 +185,44 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
   template <class UNIVERSE>
   int VariableHyperDBase<UNIVERSE>::GetNBins() const
   {
-    return m_lin_var->GetNBins(); // TODO: is this calculation correct? It will include under/overflow bins...
-    // return m_lin_binning.size() - 1;
-
-    // This will not count under/overflow bins that are interspersed in the bins of the lin variable
-    // int nbins = (m_lin_var->GetNBins())-2*d;
-    // return nbins;
+    return m_lin_binning.size()-1;
   }
 
   // Used to get the number of bins in a given axis
   template <class UNIVERSE>
-  int VariableHyperDBase<UNIVERSE>::GetNBins(const int axis) const
+  int VariableHyperDBase<UNIVERSE>::GetNBins(int axis) const
   {
     return m_vars_vec[axis]->GetNBins();
-  }
-
-  template <class UNIVERSE>
-  int VariableHyperDBase<UNIVERSE>::GetNRecoBins() const
-  {
-    return m_lin_var->GetNBins();
-    // TODO: Right now just returns true binning. Is it worth storing a second hyperdim?
-  }
-
-  template <class UNIVERSE>
-  int VariableHyperDBase<UNIVERSE>::GetNRecoBins(const int axis) const
-  {
-    return m_lin_var[axis]->GetNRecoBins();
-    // Returns the reco binning for one of the input variables
   }
 
   // Used to get the linearized bin edges
   template <class UNIVERSE>
   std::vector<double> VariableHyperDBase<UNIVERSE>::GetBinVec() const
   {
-    return m_lin_var->GetBinVec();
-    // return m_lin_binning;
+    return m_lin_binning;
   }
 
   // Used to get the bin edges of a given axis
   template <class UNIVERSE>
-  std::vector<double> VariableHyperDBase<UNIVERSE>::GetBinVec(const int axis) const
+  std::vector<double> VariableHyperDBase<UNIVERSE>::GetBinVec(int axis) const
   {
     return m_vars_vec[axis]->GetBinVec();
-  }
-
-  // Used to get the linearized reco bin edges
-  template <class UNIVERSE>
-  std::vector<double> VariableHyperDBase<UNIVERSE>::GetRecoBinVec() const
-  {
-    return m_lin_var->GetBinVec();
-    // TODO: Right now just returns true binning
-    // return m_lin_binning;
-  }
-
-  // Used to get the reco bin edges of a given axis
-  template <class UNIVERSE>
-  std::vector<double> VariableHyperDBase<UNIVERSE>::GetRecoBinVec(const int axis) const
-  {
-    return m_vars_vec[axis]->GetRecoBinVec();
   }
 
   // Print the linearized binning
   template <class UNIVERSE>
   void VariableHyperDBase<UNIVERSE>::PrintBinning() const
   {
-    m_lin_var->PrintBinning();
+    std::cout << GetName() << " binning: ";
+    for (const auto b : m_lin_binning) std::cout << b << " ";
+    std::cout << "\n";
   }
 
   // Print the binning of an axis
   template <class UNIVERSE>
-  void VariableHyperDBase<UNIVERSE>::PrintBinning(const int axis) const
+  void VariableHyperDBase<UNIVERSE>::PrintBinning(int axis) const
   {
     m_vars_vec[axis]->PrintBinning();
-  }
-
-  // Print the linearized binning
-  template <class UNIVERSE>
-  void VariableHyperDBase<UNIVERSE>::PrintRecoBinning() const
-  {
-    m_lin_var->PrintBinning();
-    // TODO: right now just returns true binning
-  }
-
-  // Print the binning of an axis
-  template <class UNIVERSE>
-  void VariableHyperDBase<UNIVERSE>::PrintRecoBinning(const int axis) const
-  {
-    m_vars_vec[axis]->PrintRecoBinning();
   }
 
   // Return the hyperdim
@@ -263,13 +232,6 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
     return m_hyperdim;
   }
 
-  template <class UNIVERSE>
-  PlotUtils::VariableBase<UNIVERSE> VariableHyperDBase<UNIVERSE>::GetLinVariable() const 
-  {
-    if(!m_lin_var) m_lin_var = new VariableBase<UNIVERSE>(m_name, m_lin_axis_label, m_lin_binning);
-    return m_lin_var;
-  }
-
   // Return the phase space volume for a given linearized bin // TODO: Maybe this belongs to hyperdim?
   template <class UNIVERSE>
   double VariableHyperDBase<UNIVERSE>::GetBinVolume(int lin_bin) const
@@ -277,36 +239,165 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
     // Given the linearized bin number, get corresponding bin number in phase space coordinates
     double ps_bin_vol = 1;
     std::vector<int> ps_coords = m_hyperdim->GetValues(lin_bin);
-    for (int i = 0; i < ps_coords.size(); i++)
+    for (int i = 1; i < ps_coords.size()+1; i++)
     {
-      int var_bin = ps_coords[i]; 
-      std::vector<double> var_binning = m_vars_vec[i]->GetBinVec();
-      double bin_width = var_binning[var_bin + 1] - var_binning[var_bin];
-      if (bin_width <= 0)
-      {
-        std::cout << "VariableHyperDBase: GetBinVolumeVec(): WARNING, negative or zero binwidth" << std::endl;
-      }
+    int var_bin = ps_coords[i];
+    std::vector<double> var_binning = m_vars_vec[i]->GetBinVec();
+    double bin_width = var_binning[var_bin] - var_binning[var_bin-1];
+    if (bin_width < 0)
+      std::cout << "VariableHyperDBase: WARNING, negative binwidth, will affect bin volume" << std::endl;
+    else if (bin_width == 0)
+      std::cout << "VariableHyperDBase: WARNING, 0 binwidth, will affect bin volume" << std::endl;
+    ps_bin_vol *= bin_width;
+    }
+    return ps_bin_vol;
+  }
+  
+  // TODO: This might not actually be feasible, since we don't have seperate value functions that variable base wants
+  // TODO: Figure out the lin variable. Not sure about the Get Value methods
+  // template <class UNIVERSE>
+  // PlotUtils::VariableBase<UNIVERSE> VariableHyperDBase<UNIVERSE>::GetLinVariable() const
+  // {
+  //   if (!m_lin_var)
+  //     m_lin_var = new VariableBase<UNIVERSE>(m_name, m_lin_axis_label, m_lin_binning);
+  //   return m_lin_var;
+  // }
+
+  //==============================================================================
+  // Reco Getters
+  //==============================================================================
+
+  // TODO: Need to add HasRecoBining to header defs
+  template <class UNIVERSE>
+  bool VariableHyperDBase<UNIVERSE>::HasRecoBinning() const
+  {
+    return m_has_reco_binning;
+  }
+
+  template <class UNIVERSE>
+  bool VariableHyperDBase<UNIVERSE>::HasRecoBinning(int axis) const
+  {
+    return m_vars_vec[axis]->HasRecoBinning();
+  }
+
+  template <class UNIVERSE>
+  int VariableHyperDBase<UNIVERSE>::GetNRecoBins() const
+  {
+    if(!m_has_reco_binning) return m_lin_binning.size() - 1;
+    
+    int n_lin_bins = 1;
+    for(const auto var:m_vars_vec){
+      n_lin_bins*=(var->GetNRecoBins()+1); //This should return reco binning if var has it, true binning if it doesn't
+    }
+    return n_lin_bins;
+  }
+
+  template <class UNIVERSE>
+  int VariableHyperDBase<UNIVERSE>::GetNRecoBins(int axis) const
+  {
+    return m_vars_vec[axis]->GetNRecoBins();
+    // Returns the reco binning for one of the input variables
+  }
+
+  // Used to get the linearized reco bin edges
+  template <class UNIVERSE>
+  std::vector<double> VariableHyperDBase<UNIVERSE>::GetRecoBinVec() const
+  {
+    if(!m_has_reco_binning) return m_lin_binning;
+
+    std::vector<double> lin_reco_binning;
+    for (int i = 0; i < GetNRecoBins() + 1; i++) lin_reco_binning.push_back(double(i));
+    // m_lin_reco_binning = lin_reco_binning;
+    return lin_reco_binning;
+    // return m_lin_reco_binning;
+    // return m_lin_binning;
+  }
+
+  // Used to get the reco bin edges of a given axis
+  template <class UNIVERSE>
+  std::vector<double> VariableHyperDBase<UNIVERSE>::GetRecoBinVec(int axis) const
+  {
+    return m_vars_vec[axis]->GetRecoBinVec();
+  }
+
+  // Print the linearized binning
+  template <class UNIVERSE>
+  void VariableHyperDBase<UNIVERSE>::PrintRecoBinning() const
+  {
+    if (!m_has_reco_binning){
+      std::cout << GetName() << " reco binning same as true: ";
+      for (const auto b : m_lin_binning) {std::cout << b << " ";}
+      std::cout << "\n";
+    }
+    else {
+      std::cout << GetName() << " reco binning: ";
+      for (const auto b : GetRecoBinVec()) {std::cout << b << " ";}
+      std::cout << "\n";
+    }
+  }
+
+  // Print the binning of an axis
+  template <class UNIVERSE>
+  void VariableHyperDBase<UNIVERSE>::PrintRecoBinning(int axis) const
+  {
+    m_vars_vec[axis]->PrintRecoBinning();
+  }
+
+  // Return the hyperdim
+  template <class UNIVERSE>
+  PlotUtils::HyperDimLinearizer* VariableHyperDBase<UNIVERSE>::GetRecoHyperDimLinearizer()
+  {
+    if(!m_has_reco_binning){
+      return m_hyperdim;
+    }
+
+    std::vector<std::vector<double>> vars_reco_bins;
+    for(const auto var:m_vars_vec){
+      std::vector<double> var_binning = var->GetRecoBinVec();
+      vars_reco_bins.push_back(var_binning);
+    }
+    m_vars_reco_binnings = vars_reco_bins;
+    m_reco_hyperdim = new HyperDimLinearizer(m_vars_reco_binnings, m_analysis_type);
+    return m_reco_hyperdim;
+  }
+
+  // Return the phase space volume for a given linearized bin // TODO: Maybe this belongs to hyperdim?
+  template <class UNIVERSE>
+  double VariableHyperDBase<UNIVERSE>::GetRecoBinVolume(int lin_bin) const
+  {
+    if(!m_has_reco_binning){
+      return GetBinVolume(lin_bin);
+    }
+    // Given the linearized bin number, get corresponding bin number in phase space coordinates
+    double ps_bin_vol = 1.;
+    std::vector<int> ps_coords;
+    if(!m_reco_hyperdim){ps_coords = GetRecoHyperDimLinearizer();}
+    else{ps_coords = m_reco_hyperdim->GetValues(lin_bin);} // Not good to do a member variable without making sure it's initialized first.
+    
+    for (int i = 1; i < ps_coords.size()+1; i++)
+    {
+      int var_bin = ps_coords[i];
+      std::vector<double> var_binning = m_vars_vec[i]->GetRecoBinVec();
+      double bin_width = var_binning[var_bin] - var_binning[var_bin-1];
+
+      if (bin_width < 0)
+        std::cout << "VariableHyperDBase: WARNING, negative binwidth, will affect bin volume" << std::endl;
+      else if (bin_width == 0)
+        std::cout << "VariableHyperDBase: WARNING, 0 binwidth, will affect bin volume" << std::endl;
+
       ps_bin_vol *= bin_width;
     }
     return ps_bin_vol;
   }
 
-  // TODO: Make Axis label vector getter.
 
   //==============================================================================
   // GetValues
   //==============================================================================
 
+  // These return values of single vars 
   template <class UNIVERSE>
-  double VariableHyperDBase<UNIVERSE>::GetRecoValue(const UNIVERSE &universe,
-                                                    const int idx1,
-                                                    const int idx2) const
-  {
-    return m_lin_var->GetRecoValue(universe, idx1, idx2);
-  }
-
-  template <class UNIVERSE>
-  double VariableHyperDBase<UNIVERSE>::GetRecoValue(const int axis, const UNIVERSE &universe,
+  double VariableHyperDBase<UNIVERSE>::GetRecoValue(const int axis, const UNIVERSE& universe,
                                                     const int idx1,
                                                     const int idx2) const
   {
@@ -314,19 +405,38 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
   }
 
   template <class UNIVERSE>
-  double VariableHyperDBase<UNIVERSE>::GetTrueValue(const UNIVERSE &universe,
-                                                    const int idx1,
-                                                    const int idx2) const
-  {
-    return m_lin_var->GetTrueValue(universe, idx1, idx2);
-  }
-
-  template <class UNIVERSE>
-  double VariableHyperDBase<UNIVERSE>::GetTrueValue(const int axis, const UNIVERSE &universe,
+  double VariableHyperDBase<UNIVERSE>::GetTrueValue(const int axis, const UNIVERSE& universe,
                                                     const int idx1,
                                                     const int idx2) const
   {
     return m_vars_vec[axis]->GetTrueValue(universe, idx1, idx2);
+  }
+
+  // These return values of all vars in one vector
+  template <class UNIVERSE>
+  std::vector<double> VariableHyperDBase<UNIVERSE>::GetRecoValue(const UNIVERSE& universe,
+                                                    const int idx1,
+                                                    const int idx2) const
+  {
+    std::vector<double> value_vec;
+    for(auto var : m_vars_vec)
+    {
+      value_vec.push_back(var->GetRecoValue(universe, idx1, idx2));
+    }
+    return value_vec;
+  }
+
+  template <class UNIVERSE>
+  std::vector<double> VariableHyperDBase<UNIVERSE>::GetTrueValue(const UNIVERSE& universe,
+                                                                 const int idx1,
+                                                                 const int idx2) const
+  {
+    std::vector<double> value_vec;
+    for (auto var : m_vars_vec)
+    {
+      value_vec.push_back(var->GetTrueValue(universe, idx1, idx2));
+    }
+    return value_vec;
   }
 
 
