@@ -61,19 +61,15 @@ public:
                            const std::vector< std::unique_ptr< PlotUtils::VariableBase<CVUniverse> > > &vars,
                            const std::vector<std::string> fors) : 
   PlotUtils::VariableHyperDBase<CVUniverse>(name, vars)
-  {
-    if (fors.size() > 0)
-    {
-      for (auto s : fors)
-      {
+    { //Right now GetVariables isn't clever on getting "fors". Either takes in some form Variable config file, or defaults to all of them
+    if (fors.size() > 0) {
+      for (auto s : fors) {
         m_for.push_back(s);
       }
     }
-    else
-    {
+    else {
       std::vector<std::string> def = {"data", "selected_reco", "selected_truth", "response", "truth"};
-      for (auto s : def)
-      {
+      for (auto s : def) {
         m_for.push_back(s);
       }
     }
@@ -81,13 +77,6 @@ public:
     // TODO: Setup tuned checks like in Var2DFromConfig
     // std::vector<int> vars_tunedmc;
   };
-
-  // VariableHyperDFromConfig(const std::string name,
-    //                          std::vector<const VariableBase<CVUniverse>&> vars,
-    //                          const std::vector<std::string> fors){
-    //   // I guess we can build the VariableHyperDBase by hand? Seems unneccessary...
-
-    // }
 
     typedef std::map<std::string, std::vector<CVUniverse *>> UniverseMap;
     //=======================================================================================
@@ -459,10 +448,8 @@ public:
                       const double value, const double truth,
                       const double weight = 1.0, const double scale = 1.0)
     {
-
       std::string name = univ->ShortName();
       // int iuniv = m_decoder[univ];
-
       if (hasMC[tag] && m_tunedmc != 1)
       {
         m_response.Fill(tag, univ, value, truth, weight);
@@ -472,16 +459,8 @@ public:
         m_tuned_response.Fill(tag, univ, value, truth, weight, scale);
       }
     }
-
-    // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.
-
-    //  inline int UniverseIndex(CVUniverse* univ){
-    //    return m_map[univ];
-    //  }
-    //
-    //  //
   }; // end of class
 
 }  // namespace Ben
 
-#endif  // VARIABLE_H
+#endif  // VARIABLEHyperDFromConfig_H
