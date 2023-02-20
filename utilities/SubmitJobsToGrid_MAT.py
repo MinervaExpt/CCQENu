@@ -99,7 +99,7 @@ def createTarball(tmpdir,tardir,tag,basedirname):
         #cmd = "tar -czf /minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
         print (" in directory",os.getcwd())
         tarpath = os.path.join(tmpdir,"myareatar_%s.tar.gz"%(tag))
-        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif} -zcf  %s ./%s"%(tarpath,basedirname)
+        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif,*.csv} -zcf  %s ./%s"%(tarpath,basedirname)
         print ("Making tar",cmd)
         os.system(cmd)
 
@@ -122,7 +122,7 @@ def writeOptions(parser):
     print ("Now write options to the parser")
     # Directory to write output
     parser.add_option('--outdir', dest='outdir', help='Directory to write tagged output directory to', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
-    parser.add_option('--tardir', dest='tardir', help='Tarball location', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
+    parser.add_option('--tardir', dest='tardir', help='Tarball location', default = "/minerva/data/users/"+_user_+"/tars/")
     parser.add_option('--basedir', dest='basedirpath', help='Base directory for making tarball (full path)', default = "NONE")
     parser.add_option('--rundir', dest='rundir', help='relative path in basedir for the directory you run from, if different', default = ".")
     parser.add_option('--setup', dest='setup', help='relative path in basedir to the setup script', default = ".")
