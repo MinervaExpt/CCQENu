@@ -286,8 +286,13 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
     if(!m_has_reco_binning) return m_lin_binning.size() - 1;
     
     int n_lin_bins = 1;
-    for(const auto var:m_vars_vec){
-      n_lin_bins*=(var->GetNRecoBins()+1); //This should return reco binning if var has it, true binning if it doesn't
+    // for (const auto var : m_vars_vec)
+    // {
+    // n_lin_bins *= (var->GetNRecoBins() + 1); // This should return reco binning if var has it, true binning if it doesn't
+    // }
+    for (int i = 0; i < m_dimension; i++)
+    {
+      n_lin_bins *= (m_vars_vec[i]->GetNRecoBins() + 1); // This should return reco binning if var has it, true binning if it doesn't
     }
     return n_lin_bins;
   }
@@ -343,6 +348,7 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
     m_vars_vec[axis]->PrintRecoBinning();
   }
 
+  // TODO: separate initialization from Getter
   // Return the hyperdim
   template <class UNIVERSE>
   PlotUtils::HyperDimLinearizer* VariableHyperDBase<UNIVERSE>::GetRecoHyperDimLinearizer()
@@ -352,8 +358,14 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
     }
 
     std::vector<std::vector<double>> vars_reco_bins;
-    for(const auto var:m_vars_vec){
-      std::vector<double> var_binning = var->GetRecoBinVec();
+    // for (const auto var : m_vars_vec)
+    // {
+    //   std::vector<double> var_binning = var->GetRecoBinVec();
+    //   vars_reco_bins.push_back(var_binning);
+    // }
+    for (int i = 0; i < m_dimension; i++)
+    {
+      std::vector<double> var_binning = m_vars_vec[i]->GetRecoBinVec();
       vars_reco_bins.push_back(var_binning);
     }
     m_vars_reco_binnings = vars_reco_bins;
@@ -395,6 +407,32 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
   // GetValues
   //==============================================================================
 
+  // These will return values in bin space
+  template <class UNIVERSE>
+  double VariableHyperDBase<UNIVERSE>::GetRecoValue(const UNIVERSE &universe,
+                                                       const int idx1,
+                                                       const int idx2) const
+  {
+    std::vector<double> val_vec;
+    for (auto var:m_vars_vec) {val_vec.push_back(var->GetRecoValue(universe, idx1, idx2));}
+    if(!m_has_reco_binning){
+      return m_hyperdim->GetBin(val_vec).first+0.0001; // 0.0001 offset to so fillers can put it in that bin
+    }
+    else {
+      return m_reco_hyperdim->GetBin(val_vec).first+0.0001; // Requires initialization of reco hyperdim TODO: automatically intialize this
+    }
+  }
+
+  template <class UNIVERSE>
+  double VariableHyperDBase<UNIVERSE>::GetTrueValue(const UNIVERSE &universe,
+                                                       const int idx1,
+                                                       const int idx2) const
+  {
+    std::vector<double> val_vec;
+    for (auto var : m_vars_vec){val_vec.push_back(var->GetRecoValue(universe, idx1, idx2));}
+    return m_hyperdim->GetBin(val_vec).first + 0.0001; // 0.0001 offset to so fillers can put it in that bin
+  }
+
   // These return values of single vars 
   template <class UNIVERSE>
   double VariableHyperDBase<UNIVERSE>::GetRecoValue(const int axis, const UNIVERSE& universe,
@@ -414,7 +452,7 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
 
   // These return values of all vars in one vector
   template <class UNIVERSE>
-  std::vector<double> VariableHyperDBase<UNIVERSE>::GetRecoValue(const UNIVERSE& universe,
+  std::vector<double> VariableHyperDBase<UNIVERSE>::GetRecoValueVec(const UNIVERSE& universe,
                                                     const int idx1,
                                                     const int idx2) const
   {
@@ -427,7 +465,7 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<std::unique_p
   }
 
   template <class UNIVERSE>
-  std::vector<double> VariableHyperDBase<UNIVERSE>::GetTrueValue(const UNIVERSE& universe,
+  std::vector<double> VariableHyperDBase<UNIVERSE>::GetTrueValueVec(const UNIVERSE& universe,
                                                                  const int idx1,
                                                                  const int idx2) const
   {

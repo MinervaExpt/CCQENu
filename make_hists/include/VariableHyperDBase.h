@@ -63,18 +63,25 @@ class VariableHyperDBase {
   //============================================================================
   // Get Value
   //============================================================================
-  // Get value of single variable
-  double GetRecoValue(int axis, const UNIVERSE& universe, const int idx1 = -1,
+  // Get value in bin space (plus 0.0001 offset to put firmly in bin)
+  double GetRecoValue(const UNIVERSE &universe, const int idx1 = -1,
+                                   const int idx2 = -1) const;
+
+  double GetTrueValue(const UNIVERSE &universe, const int idx1 = -1,
+                                   const int idx2 = -1) const;
+
+  // Get value of single variable in variable space
+  double GetRecoValue(int axis, const UNIVERSE &universe, const int idx1 = -1,
                       const int idx2 = -1) const;
 
   double GetTrueValue(int axis, const UNIVERSE& universe, const int idx1 = -1,
                       const int idx2 = -1) const;
 
   // Get value of all vars as a vec
-  std::vector<double> GetRecoValue(const UNIVERSE& universe, const int idx1 = -1,
+  std::vector<double> GetRecoValueVec(const UNIVERSE& universe, const int idx1 = -1,
                       const int idx2 = -1) const;
 
-  std::vector<double> GetTrueValue(const UNIVERSE& universe, const int idx1 = -1,
+  std::vector<double> GetTrueValueVec(const UNIVERSE& universe, const int idx1 = -1,
                       const int idx2 = -1) const;
 
 protected:
