@@ -73,6 +73,21 @@ private:
   std::map<const T*,int> m_decoder;
 
 public:
+  // map that helps you find the index of a universe.
+  std::map<const T *, int> UniverseDecoder(const std::map<std::string, std::vector<T *>> univs) const
+  {
+    std::map<const T *, int> decoder;
+    for (auto univ : univs)
+    {
+      std::string name = univ.first;
+      std::vector<T *> pointers = univ.second;
+      for (int i = 0; i < pointers.size(); i++)
+      {
+        decoder[pointers[i]] = i;
+      }
+    }
+    return decoder;
+  }
 
   Hist2DWrapperMap(){};
   // constructor
@@ -194,19 +209,6 @@ public:
     }
 
 
-  // map that helps you find the index of a universe.
-  std::map<const T*,int> UniverseDecoder(const std::map< std::string, std::vector<T*> > univs)const{
-    std::map<const T*, int> decoder;
-    for(auto univ:univs){
-      std::string name = univ.first;
-      std::vector<T*> pointers = univ.second;
-      for (int i = 0; i < pointers.size(); i++){
-        decoder[pointers[i]] = i;
-      }
-    }
-    return decoder;
-  }
-
 
 
   inline void AppendName(const std::string n, const std::vector<std::string> tags){
@@ -215,76 +217,11 @@ public:
       }
   }
 
-  // inline void AddResponse2D(std::vector<std::string> tags, std::string tail=""){ //TODO: This name okay?
-  //
-  //   // make a temp universe map to make Response happy
-  //   std::map<std::string, int> response_bands; // necessary?
-  //   for (auto band : m_univs){
-  //     std::string name = band.first;
-  //     const std::string realname = (band.second)[0]->ShortName();
-  //     int nuniv = band.second.size();
-  //
-  //     m_response_bands[realname] = nuniv;
-  //   }
-  //   for (auto tag:tags){
-  //     //std::string resp_name = tag+"_response_"+m_name;
-  //     std::string resp_name = "h2D___"+ tag + "___"+m_name+"___response"+tail;
-  //
-  //     if (m_fixedbins){
-  //       TH2D tmp = TH2D("tmp", m_title.c_str(), m_nxbins, m_xmin, m_xmax, m_nybins, m_ymin, m_ymax);
-  //       TH2D recotmp = TH2D("recotmp", m_title.c_str(), m_nxrecobins, m_xrecomin, m_xrecomax, m_nyrecobins, m_yrecomin, m_yrecomax);
-  //
-  //       std::vector<Double_t> xedges;
-  //       std::vector<Double_t> yedges;
-  //       std::vector<Double_t> xrecoedges;
-  //       std::vector<Double_t> yrecoedges;
-  //       for (int i = 1; i <= m_nxbins+1; i++){
-  //         xedges.push_back(tmp.GetXaxis()->GetBinLowEdge(i));
-  //       }
-  //       for (int i = 1; i <= m_nybins+1; i++){
-  //         yedges.push_back(tmp.GetYaxis()->GetBinLowEdge(i));
-  //       }
-  //       for (int i = 1; i <= m_nxrecobins+1; i++){
-  //           xrecoedges.push_back(recotmp.GetXaxis()->GetBinLowEdge(i));
-  //       }
-  //       for (int i = 1; i <= m_nyrecobins+1; i++){
-  //           yrecoedges.push_back(recotmp.GetYaxis()->GetBinLowEdge(i));
-  //       }
-  //       m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nxrecobins, &xrecoedges[0], m_nyrecobins, &yrecoedges[0], m_nxbins, &xedges[0], m_nybins, &yedges[0], m_response_bands);
-  //       //Reco is first set of bin params, truth is second set
-  //     }
-  //     else{
-  //       m_nxbins = m_xbins.size()-1;
-  //       m_nybins = m_ybins.size()-1;
-  //       m_nxrecobins = m_xrecobins.size()-1;
-  //       m_nyrecobins = m_yrecobins.size()-1;
-  //       m_response[tag] = new MinervaUnfold::MnvResponse(resp_name.c_str(), resp_name.c_str(), m_nxrecobins, &m_xrecobins[0], m_nyrecobins, &m_yrecobins[0], m_nxbins, &m_xbins[0], m_nybins, &m_ybins[0], m_response_bands);
-  //     }
-  //     m_hasresponse[tag] = true;
-  //   }
-  //
-  //
-  //
-  //
-  // };
-
-
-
   //  can we make this smarter?
   inline void Fill2D(const std::string tag, const T* universe, const Double_t x_value, const Double_t y_value, const Double_t weight=1.0){
 
     m_hists[tag].FillUniverse(universe, x_value, y_value, weight);
   }
-
-  // inline void FillResponse2D(const std::string tag, const T* univ, const double x_value, const double y_value, const double x_truth, const double y_truth, const double weight=1.0){ //TODO
-  //   std::string name = univ->ShortName();
-  //
-  //   int iuniv = m_decoder[univ];
-  //   //std::cout << " fillresponse " << name << " " << iuniv << std::endl;
-  //
-  //   m_response[tag]->Fill(x_value, y_value, x_truth, y_truth, name, iuniv, weight);
-  //
-  // }
 
   inline int GetNhists(){return m_hists.size();}
 
@@ -293,26 +230,6 @@ public:
     return 0;
   }
 
-  // inline MinervaUnfold::MnvResponse* GetResponse(const std::string tag){
-  //   if (m_response.count(tag)>0) return m_response[tag];
-  //   return 0;
-  // }
-
-//   inline MnvH2D* GetMigrationMatrix(const std::string tag){
-//     MnvH2D* matrix;
-//     MnvH1D* dummy; //why are these here?
-//     MnvH1D* dummy2;
-//
-//     if (m_response.count(tag)>0){
-// #ifdef HSTDBG
-//       std::cout << " HistWrapperMap::Migration matrix has size " << m_response[tag]->GetMigrationMatrix()->GetErrorBandNames().size() << std::endl;
-//       std::cout << " HistWrapperMap::getting migration matrix " << m_response[tag]->GetMigrationMatrix()->GetName() << std::endl;
-// #endif
-//       matrix = m_response[tag]->GetMigrationMatrix();
-//       return matrix;
-//     }
-//     return 0;
-//   }
 
 
 
@@ -329,36 +246,8 @@ public:
         m_hists[tag].hist->Write();
 
       }
-
-
-      // if(m_hasresponse[tag]){
-      //   std::cout << " try to write response " << tag << " " << m_hists[tag].hist->GetName()  << std::endl;
-      //   PlotUtils::MnvH2D* h_migration;
-      //   PlotUtils::MnvH2D* h_reco;
-      //   PlotUtils::MnvH2D* h_truth;
-      //   //        h_migration->SetDirectory(0);
-      //   //        h_reco->SetDirectory(0);
-      //   //        h_truth->SetDirectory(0);
-      //   std::cout << " GetMigrationObjects will now complain because I passed it pointers to uninitiated MnvH2D/1D to fill please ignore" << std::endl;
-      //   m_response[tag]->GetMigrationObjects( h_migration, h_reco, h_truth);
-      //   std::cout << h_migration << std::endl;
-      //   if (h_reco->GetEntries() > 0){
-      //     h_migration->Write();
-      //     h_reco->Write();
-      //     h_truth->Write();
-      //   }
-      //
-      // }
-
   };
 
-
-  // inline void DeleteResponse(){
-  //   for (auto resp: m_response){
-  //     std::cout << "delete migration matrix" << resp.second->GetMigrationMatrix()->GetName() ;
-  //     delete resp.second;
-  //   }
-  // }
 
   // voodoo you sometimes need
   inline void SyncCVHistos(){
