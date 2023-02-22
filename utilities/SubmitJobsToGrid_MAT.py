@@ -19,7 +19,7 @@ def timeform():
 
 # write a line to the wrapper, make certain it is properly terminated
 def writewrap(mywrapper,text):
-  mywrapper.write("#cmd: \t%s\n"%(text))
+  mywrapper.write("echo '#cmd: \t%s'\n"%(text.replace("\n","")))
   mywrapper.write("%s\n"%(text))
 
 # Write the command you used to run your analysis
@@ -27,7 +27,11 @@ def writewrap(mywrapper,text):
 # this is for the tutorial, not recently tested
 def writeEventLoop(mywrapper,outdir):
     writewrap(mywrapper,"echo Rint.Logon: ./rootlogon_grid.C > ./.rootrc\n")
+    writewrap(mywrapper,"echo '------------------------- check locations 1 ---------------'\n")
+    writewrap(mywrapper,"pwd;ls -c1;ifdh ls "+outdir)
     writewrap(mywrapper,"root -l -b load.C+ runEventLoop.C+\n")
+    writewrap(mywrapper,"echo '------------------------- check locations 2 ---------------'\n")
+    writewrap(mywrapper,"pwd;ls -c1;ifdh ls "+outdir)
     writewrap(mywrapper,"ifdh cp -D ./*.root "+outdir)
 
 # this is for CCQEMAT
@@ -45,14 +49,16 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
     theexe = opts.theexe
     mylog = "%s_%s_%s.log"%(os.path.basename(opts.theexe),os.path.basename(opts.config),tag)
     writewrap(mywrapper,os.path.join("time $RUNDIR",opts.theexe)+" "+os.path.join("$RUNDIR",opts.config)+" "+opts.prescale+" >& %s \n"%(mylog))
+    writewrap(mywrapper,"cat "+mylog+"\n")
     writewrap(mywrapper,"echo \"run returned \" $?\n")
     writewrap(mywrapper,"ls -lrt\n")
     if not opts.debug:
        #writewrap(mywrapper,"echo \"ifdh cp -D ./*.root "+theoutdir+"\"\n")
-        writewrap(mywrapper,"ifdh cp -D ./*.root "+theoutdir+"\n")
+        writewrap(mywrapper,"ifdh cp -D ./*.root "+theoutdir+"/\n")
+    
         writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
        # writewrap(mywrapper,"echo \"ifdh cp -D "+mylog+ " " + theoutdir +"\"\n")
-        writewrap(mywrapper,"ifdh cp -D %s %s \n"%(mylog, theoutdir))
+        writewrap(mywrapper,"ifdh cp -D %s %s/\n"%(mylog, theoutdir))
         writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
     #writewrap(mywrapper,"env | grep -v ups\n")
 
@@ -68,6 +74,8 @@ def writeSetups(mywrapper,basedirname,setup):
     writewrap(mywrapper,"cd "+topdir+"\n")
     writewrap(mywrapper,"export BASEDIR=$PWD\n")
     writewrap(mywrapper,"export RUNDIR=$BASEDIR/"+opts.rundir+"\n")
+    writewrap(mywrapper,"export GFAL_PLUGIN_DIR=/usr/lib64/gfal2-plugins\n")
+    writewrap(mywrapper,"export GFAL_CONFIG_DIR=/etc/gfal2.d\n")
     writewrap(mywrapper,"ls\n")
     writewrap(mywrapper,"echo \"set codelocation $BASEDIR\";pwd\n")
     writewrap(mywrapper,"ls -lt \n")
@@ -91,7 +99,7 @@ def createTarball(tmpdir,tardir,tag,basedirname):
         #cmd = "tar -czf /minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
         print (" in directory",os.getcwd())
         tarpath = os.path.join(tmpdir,"myareatar_%s.tar.gz"%(tag))
-        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif} -zcf  %s ./%s"%(tarpath,basedirname)
+        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif,*.csv} -zcf  %s ./%s"%(tarpath,basedirname)
         print ("Making tar",cmd)
         os.system(cmd)
 
@@ -114,7 +122,7 @@ def writeOptions(parser):
     print ("Now write options to the parser")
     # Directory to write output
     parser.add_option('--outdir', dest='outdir', help='Directory to write tagged output directory to', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
-    parser.add_option('--tardir', dest='tardir', help='Tarball location', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
+    parser.add_option('--tardir', dest='tardir', help='Tarball location', default = "/minerva/data/users/"+_user_+"/tars/")
     parser.add_option('--basedir', dest='basedirpath', help='Base directory for making tarball (full path)', default = "NONE")
     parser.add_option('--rundir', dest='rundir', help='relative path in basedir for the directory you run from, if different', default = ".")
     parser.add_option('--setup', dest='setup', help='relative path in basedir to the setup script', default = ".")
@@ -278,12 +286,14 @@ cmd += "jobsub_submit --group minerva " #Group of experiment
 #cmd += "--OS sl7 " #Operating system #Not needed in SL7
 
 if opts.mail:
-    cmd += " -M " #this option to make decide if you want the mail or not
+    print ("mail option does not work with jobsub_lite")
+    #cmd += " -M " #this option to make decide if you want the mail or not
 #cmd += "--subgroup=Nightly " #This is only for high priority jobs
 cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC " # remove OFFSITE
 # make a very complicated thing to tell it to use a singularity image
 cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
 cmd += " --role=Analysis "
+#cmd += " --disk=10GB " # comment out for test
 cmd += " --expected-lifetime  " + opts.lifetime
 cmd += " --memory "+str(memory)+"MB "
 cmd += configstring+" " #the environments for the tunes to bee applied

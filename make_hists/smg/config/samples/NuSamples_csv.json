@@ -1,0 +1,11 @@
+{"Basic":{
+		"name":"Basic",
+		"reco":"Basic",
+		"phase_space":"phase_space",
+		"signal":["basic"],
+		"background":["basicnot"],
+		"categories":{
+		     "basic":{"for":["selected_reco"]}
+		}
+	}
+}
