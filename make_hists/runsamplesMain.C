@@ -279,88 +279,86 @@ int main(const int argc, const char *argv[] ) {
   //=========================================
   // Get variables and initialize their hists
   //=========================================
-
-
-  std::vector<std::string> vars1D = config.GetStringVector("AnalyzeVariables");
-  std::vector<std::string> vars2D = config.GetStringVector("Analyze2DVariables");
-
-  std::vector<CCQENu::VariableFromConfig*> variables1D;
-  std::vector<CCQENu::Variable2DFromConfig*> variables2D;
-
-  // std::string variables1Dname = config.GetString("varsFile");
-  std::string varsFile = config.GetString("varsFile");
-
-  NuConfig configvar;
-  if (varsFile != "" ){
-    configvar.Read(varsFile);
-  }
-  else{
-    std::cout << " no varsFile" << std::endl;
-    exit(1);
-  }
-
-  // new way
-  std::map<std::string,CCQENu::VariableFromConfig*> variablesmap1D = GetVariablesFromConfig(vars1D,tags,configvar);
-
-  std::map<std::string,CCQENu::Variable2DFromConfig*> variablesmap2D = Get2DVariablesFromConfig(vars2D,variablesmap1D,tags,configvar);
-
-
-  // associate different datasets with types so you don't have to loop over everything for everything
-
-  //  std::vector<std::string> selected_reco_tags = {signal_tag,background_tag};  //bkg only needed for recontructed MC
-  //  std::vector<std::string> datatags = {data_tag};
-  //  std::vector<std::string> truthtags = {signal_tag};
-  //  std::vector<std::string> responsetags = {signal_tag};
-  //
-  // for (auto v : variables) {
-
-  std::vector<std::string> selected_reco_tags ;  //bkg only needed for recontructed MC
-  std::vector<std::string> selected_truth_tags ;
+  std::vector<std::string> selected_reco_tags; // bkg only needed for recontructed MC
+  std::vector<std::string> selected_truth_tags;
   std::vector<std::string> datatags;
   std::vector<std::string> truthtags;
-  // std::vector<std::string> tuned_mc_tags ;
   std::vector<std::string> responsetags;
   std::vector<std::string> types;
 
   // here we decide what histograms to fill
 
-  for (auto sample:samples){
+  for (auto sample : samples)
+  {
     std::map<const std::string, CCQENu::Category> categories = sample.GetCategories();
-    std::string data_tag = sample.GetName()+"___data";
+    std::string data_tag = sample.GetName() + "___data";
     datatags.push_back(data_tag);
-    for (auto category:categories){
+    for (auto category : categories)
+    {
       std::string cname = category.first;
       std::vector<std::string> forlist = category.second.GetFor();
       std::cout << "for ";
-      for (auto f:forlist){
+      for (auto f : forlist)
+      {
         std::cout << " " << f;
       }
       std::cout << std::endl;
 
-      std::string tag = sample.GetName()+"___"+cname;
+      std::string tag = sample.GetName() + "___" + cname;
       std::cout << "make a tag " << tag << std::endl;
 
-      if (IsInVector<std::string>("selected_reco",forlist)){
+      if (IsInVector<std::string>("selected_reco", forlist))
+      {
         selected_reco_tags.push_back(tag);
       }
-      if (IsInVector<std::string>("selected_truth",forlist)){
+      if (IsInVector<std::string>("selected_truth", forlist))
+      {
         selected_truth_tags.push_back(tag);
       }
-      if(IsInVector<std::string>("truth",forlist )){
+      if (IsInVector<std::string>("truth", forlist))
+      {
         truthtags.push_back(tag);
       }
-      // if (IsInVector<std::string>("tuned_mc",forlist)){
-      //   tuned_mc_tags.push_back(tag);
-      // }
-      if(IsInVector<std::string>("response",forlist)){
+      if (IsInVector<std::string>("response", forlist))
+      {
         responsetags.push_back(tag);
       }
     }
   }
 
-  for (auto tag:tags){
-  std:cout << "tag: " << tag << std::endl;
+  for (auto tag : tags)
+  {
+    std::cout << "tag: " << tag << std::endl;
   }
+
+  std::string varsFile = config.GetString("varsFile");
+
+  NuConfig configvar;
+  if (varsFile != "")
+  {
+    configvar.Read(varsFile);
+  }
+  else
+  {
+    std::cout << " no varsFile" << std::endl;
+    exit(1);
+  }
+
+  // new way
+  std::vector<std::string> vars1D = config.GetStringVector("AnalyzeVariables");
+  std::vector<CCQENu::VariableFromConfig *> variables1D;
+  std::map<std::string, CCQENu::VariableFromConfig *> variablesmap1D = GetVariablesFromConfig(vars1D, tags, configvar);
+
+  std::vector<std::string> vars2D = config.GetStringVector("Analyze2DVariables");
+  std::vector<CCQENu::Variable2DFromConfig *> variables2D;
+  std::map<std::string, CCQENu::Variable2DFromConfig *> variablesmap2D = Get2DVariablesFromConfig(vars2D, variablesmap1D, tags, configvar);
+
+  std::vector<std::string> varsHD = config.GetStringVector("AnalyzeHyperDVariables");
+  std::vector<CCQENu::VariableHyperDFromConfig *> variablesHD;
+  std::map<std::string, CCQENu::VariableHyperDFromConfig *> variablesmapHD = GetHyperDVariablesFromConfig(varsHD, variablesmap1D, tags, configvar);
+
+
+
   // here we initialist ghem
 
   for (auto var1D : variablesmap1D) {
@@ -376,7 +374,6 @@ int main(const int argc, const char *argv[] ) {
     }
     variables1D.push_back(v);
   }
-
 
   for (auto var2D : variablesmap2D ) {
     std::string varname = var2D.first;
@@ -394,8 +391,24 @@ int main(const int argc, const char *argv[] ) {
     variables2D.push_back(v);
   }
 
-    std::cout << " just before event loop" << std::endl;
-    util.PrintMacroConfiguration("runEventLoop");
+  for (auto varHD : variablesmapHD)
+  {
+    CCQENu::VariableHyperDFromConfig *v = varHD.second;
+    v->InitializeMCHistograms(mc_error_bands, selected_reco_tags);
+    v->InitializeSelectedTruthHistograms(mc_error_bands, selected_truth_tags);
+    v->InitializeDataHistograms(data_error_bands, datatags);
+    // v->AddMCResponse(responsetags);
+    v->InitializeTruthHistograms(truth_error_bands, truthtags);
+    v->InitializeResponse(mc_error_bands, responsetags);
+    if (useTuned)
+    {
+      v->InitializeTunedMCHistograms(mc_error_bands, truth_error_bands, selected_reco_tags, responsetags);
+    }
+    variablesHD.push_back(v);
+  }
+
+  std::cout << " just before event loop" << std::endl;
+  util.PrintMacroConfiguration("runEventLoop");
   // here we fill them
 
   for (auto tag:datatags){
@@ -437,6 +450,7 @@ int main(const int argc, const char *argv[] ) {
 
   for (auto v : variables1D) v->SyncAllHists();
   for (auto v : variables2D) v->SyncAllHists();
+  for (auto v : variablesHD) v->SyncAllHists();
   //=========================================
   // Plot
   //=========================================
@@ -472,9 +486,14 @@ int main(const int argc, const char *argv[] ) {
     std::cout << "Writing 1D hist to file" << std::endl;
     v->WriteAllHistogramsToFile(*out);
   }
-  for (auto v : variables2D){
+  for (auto v : variables2D)
+  {
     std::cout << "Writing 2D hist to file" << std::endl;
     v->WriteAllHistogramsToFile2D(*out);
+  }  
+  for (auto v : variablesHD){
+    std::cout << "Writing HyperD hist to file" << std::endl;
+    v->WriteAllHistogramsToFile(*out);
   }
 
   PlotUtils::MnvH1D* h_pot = new PlotUtils::MnvH1D("POT_summary","data, mc, Prescaled mc", 3, 0., 3.);

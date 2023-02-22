@@ -33,7 +33,9 @@
 #include "include/GetCCQECutsFromConfig.h"
 #include "include/GetVariablesFromConfig.h"
 #include "include/Get2DVariablesFromConfig.h"
+#include "include/GetHyperDVariablesFromConfig.h"
 #include "include/Variable2DFromConfig.h"
+#include "include/VariableHyperDFromConfig.h"
 #include "include/weight_MCreScale.h"
 //#include "include/plotting_pdf.h"
 #include "TROOT.h"
@@ -76,6 +78,7 @@ template <typename T> bool IsInVector(const T & what, const std::vector<T> & vec
 namespace CCQENu {
   class VariableFromConfig;
   class Variable2DFromConfig;
+  class VariableHyperDFromConfig;
 }
 
 #include "include/Loops.h"
