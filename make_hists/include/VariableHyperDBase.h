@@ -7,7 +7,7 @@
 #include "PlotUtils/HyperDimLinearizer.h"
 
 namespace PlotUtils {
-enum EAnalysisType {k2D,k1D};
+enum EAnalysisType {k2D,k1D}; // Enum used for denoting "analysis type" of hyperdim. Right now only type 1 with fully linearized 1D available.
 
 #ifndef __CINT__
 // template <class UNIVERSE>
@@ -34,7 +34,7 @@ public:
   void AddVariable(VariableBase<UNIVERSE> &var);     // Add variables individually and setup, recommended used with default or name only ctr
 
 private:
-  void Setup(const std::string i_name = "");         // Setup a variable based off current state of input variables, should only be used internally for now
+  void Setup(const std::string i_name = ""); // Setup a variable based off current state of input variables (e.g after adding another variable), should only be used internally for now
 
 public:
   std::string GetName() const;                      // Get Name of linearized variable
@@ -110,9 +110,9 @@ private:
   std::vector<std::vector<double>> m_vars_reco_binnings;           // Vector of reco binnings each variable's binning in phase space
 
   std::vector<double> m_lin_binning;                               // Vector of bins in linearized bin space
-std::vector<double> m_lin_reco_binning;                          // Vector of reco bins in bin space, currently unused but can use a getter to get them
+  std::vector<double> m_lin_reco_binning;                          // Vector of reco bins in bin space, currently unused but can use a getter to get them
 
-};
+}; // Class def
 #endif
 
 }  // namespace PlotUtils
