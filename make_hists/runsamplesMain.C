@@ -405,15 +405,15 @@ int main(const int argc, const char *argv[] ) {
     variablesHD.push_back(v);
   }
 
-        // Check if sending events to csv file
-        bool mc_reco_to_csv = 0;
-        if (config.IsMember("mcRecoToCSV")) {
-          mc_reco_to_csv = config.GetBool("mcRecoToCSV");
-        }
+  // Check if sending events to csv file
+  bool mc_reco_to_csv = 0;
+  if (config.IsMember("mcRecoToCSV")) {
+    mc_reco_to_csv = config.GetBool("mcRecoToCSV");
+  }
 
-        std::cout << " just before event loop" << std::endl;
-        util.PrintMacroConfiguration("runEventLoop");
-  // here we fill them
+  std::cout << " just before event loop" << std::endl;
+  util.PrintMacroConfiguration("runEventLoop");
+// here we fill them
 
   //===========================================================================
   // Entry loop and fill
@@ -425,7 +425,7 @@ int main(const int argc, const char *argv[] ) {
     //=========================================
     std::cout << "Loop and Fill Data for " << tag << "\n";
 
-    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag], model, mcRescale, closure, mc_reco_to_csv);
+    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale,closure,mc_reco_to_csv);
 
     // LoopAndFillEventSelection2D(tag, util, data_error_bands, variables2D, kData, *selectionCriteria[tag]);
 
