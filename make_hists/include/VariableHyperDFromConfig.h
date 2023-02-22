@@ -53,19 +53,26 @@ public:
   // VariableHyperDFromConfig(ARGS... args) : PlotUtils::VariableBase<CVUniverse>(args...) {}
 
   VariableHyperDFromConfig(const std::string name,
-                            // const std::vector<CCQENu::VariableFromConfig>& vars,
-                           const std::vector< std::unique_ptr< PlotUtils::VariableBase<CVUniverse> > > &vars,
-                           const std::vector<std::string> fors) : 
-  PlotUtils::VariableHyperDBase<CVUniverse>(name, vars)
-    { //Right now GetVariables isn't clever on getting "fors". Either takes in some form Variable config file, or defaults to all of them
-    if (fors.size() > 0) {
-      for (auto s : fors) {
+                           const std::vector<CCQENu::VariableFromConfig*> &vars,
+                           const std::vector<std::string> fors) : PlotUtils::VariableHyperDBase<CVUniverse>(name)
+  { // Right now GetVariables isn't clever on getting "fors". Either takes in some form Variable config file, or defaults to all of them
+    for (int i=0; i < vars.size(); i++)
+    {
+      AddVariable(*vars[i]);
+    }
+
+    if (fors.size() > 0)
+    {
+      for (auto s : fors)
+      {
         m_for.push_back(s);
       }
     }
-    else {
+    else
+    {
       std::vector<std::string> def = {"data", "selected_reco", "selected_truth", "response", "truth"};
-      for (auto s : def) {
+      for (auto s : def)
+      {
         m_for.push_back(s);
       }
     }
@@ -126,84 +133,6 @@ public:
       }
     };
 
-    template <typename T>
-    void InitializeAllMCHistograms(T univs, const std::vector<std::string> selected_reco_tags, const std::vector<std::string> selected_truth_tags, const std::vector<std::string> truth_tags, const std::vector<std::string> response_tags)
-    {
-      std::vector<double> bins = GetBinVec();
-      std::vector<double> recobins = GetRecoBinVec();
-
-      if (std::count(m_for.begin(), m_for.end(), "selected_reco">=1){
-        for (auto tag : selected_reco_tags)
-        {
-          hasMC[tag] = true;
-        }
-
-        // need reco level binning here:
-        m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";").c_str(), bins, recobins, univs, selected_reco_tags);
-        m_selected_mc_reco.AppendName("reconstructed", selected_reco_tags); // patch to conform to CCQENU standard 
-      }
-      else{
-        std::cout << "VariableHyperDFromConfig Warning: selected_reco is disabled for this variable " << GetName() << std::endl;
-        for (auto tag : selected_reco_tags)
-        {
-          hasMC[tag] = true;
-        }      
-      }
-
-      if (std::count(m_for.begin(), m_for.end(), "selected_truth") >= 1){
-        for (auto tag : selected_truth_tags)
-        {
-          hasSelectedTruth[tag] = true;
-        }
-        m_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), bins, univs, selected_truth_tags);
-        m_selected_mc_truth.AppendName("selected_truth", selected_truth_tags);
-      }
-      else{
-        std::cout << "VariableHyperDFromConfig Warning: selected_truth is disabled for this variable " << GetName() << std::endl;
-        for (auto tag : selected_truth_tags)
-        {
-          hasSelectedTruth[tag] = false;
-        }
-        return;
-      }
-      if (std::count(m_for.begin(), m_for.end(), "truth") >= 1){
-        for (auto const tag : truth_tags)
-        {
-          hasTruth[tag] = true;
-        }
-
-        m_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), bins, univs, truth_tags);
-        m_signal_mc_truth.AppendName("all_truth", truth_tags);
-      }
-      else{
-        std::cout << "VariableHyperDFromConfig Warning: truth is disabled for this variable " << GetName() << std::endl;
-        for (auto tag : truth_tags)
-        {
-          hasTruth[tag] = false;
-        }
-        return;
-      }
-
-      if (std::count(m_for.begin(), m_for.end(), "response") >= 1)
-      {
-        for (auto tag : response_tags)
-        {
-          assert(hasMC[tag]);
-          assert(hasSelectedTruth[tag]);
-          hasResponse[tag] = true;
-        }
-        m_response = RM(Form("%s", GetName().c_str()), reco_univs, recobins, bins, response_tags);
-      }
-      else{
-        std::cout << "VariableHyperDFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
-        for (auto tag : response_tags)
-        {
-          hasResponse[tag] = false;
-        }
-        return;
-      }
-    }
-
     // all of the following could probably be the same code, sigh...
     template <typename T>
     void InitializeMCHistograms(T univs, const std::vector<std::string> tags)
@@ -231,8 +160,7 @@ public:
       std::vector<double> bins = GetBinVec();
       std::vector<double> recobins = GetRecoBinVec(); // TODO: set this up in VariableHyperDBase
       // need reco level binning here:
-      // m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNRecoBins(), recobins, univs, tags);
-      m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";").c_str(), bins, recobins, univs, tags);
+      m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), recobins, univs, tags);
       m_selected_mc_reco.AppendName("reconstructed", tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
     }
 
