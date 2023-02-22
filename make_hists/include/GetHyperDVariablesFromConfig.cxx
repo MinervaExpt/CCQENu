@@ -5,8 +5,9 @@
 #include "CVUniverse.h"
 #include <cassert>
 
-template <class CVUniverse> // TODO: This may be a hack that doesn't work. Need to tell a later VariableBase what template it is.
-std::map<std::string, CCQENu::VariableHyperDFromConfig*> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, std::map<std::string, CCQENu::VariableFromConfig*> variablesmap, const std::vector<std::string> tags, const NuConfig configraw)
+// template <class CVUniverse> // TODO: This may be a hack that doesn't work. Need to tell a later VariableBase what template it is.
+std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, std::map<std::string, CCQENu::VariableFromConfig *> variablesmap, const std::vector<std::string> tags, const NuConfig configraw)
+// std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, std::map<std::string, PlotUtils::VariableBase<CVUniverse> *> variablesmap, const std::vector<std::string> tags, const NuConfig configraw)
 {
   //=========================================
   // Constructor wants: name,
@@ -67,9 +68,10 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig*> GetHyperDVariablesFromC
         // Initialize vectors containing  configs,"fors", and their VariableFromConfigs for each axis
         std::vector<NuConfig> axisvarconfigvec;
         std::vector<std::vector<std::string>> axisforsvec; //TODO
-        // This is the vector that gets passed to VariableHyperDim constructor, which needs somethign that looks like a vector of VariableBase. 
+        // This is the vector that gets passed to VariableHyperDim constructor, which needs somethign that looks like a vector of VariableBase.
         // Unique pointers hopefully let you put in a VariableFromConfig without getting a conversion error or data slicing
-        std::vector<std::unique_ptr<PlotUtils::VariableBase<CVUniverse> > > axisvars;
+        // std::vector<std::unique_ptr<PlotUtils::VariableBase<CVUniverse> > > axisvars;
+        std::vector<CCQENu::VariableFromConfig* > tmp_axisvars;
 
         // Loop over each axis
         for (auto axisname : axisvarnamevec) {
@@ -89,7 +91,7 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig*> GetHyperDVariablesFromC
             // Check that name of axis is a name of an input variable
             if(axisname == varname){
               // Put that input variable into vector to feed VarHyperD constructor, emplace_back (vs push_back) is used because its smarter idfk
-              axisvars.emplace_back(variablesmap[varname]);
+              tmp_axisvars.emplace_back(variablesmap[varname]);
               foundvec[i]= true;
               i += 1;
             }
@@ -102,8 +104,9 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig*> GetHyperDVariablesFromC
             assert(0);
           }
         }
+        const std::vector<CCQENu::VariableFromConfig*> axisvars = tmp_axisvars;
         // Initialize new hyper d variable and add the tags
-        CCQENu::VariableHyperDFromConfig* varHDfromconfig = new CCQENu::VariableHyperDFromConfig(nameHD, axisvars, fors);
+        CCQENu::VariableHyperDFromConfig *varHDfromconfig = new CCQENu::VariableHyperDFromConfig(nameHD, axisvars, fors);
         varHDfromconfig->AddTags(tags);
         std::cout << "GetHyperDVariablesFromConfig: set up HyperDim variable " << nameHD << " of dimension " << dim << std::endl;
         // Add it to the map
