@@ -13,25 +13,30 @@ enum EAnalysisType {k2D,k1D};
 // template <class UNIVERSE>
 template <class UNIVERSE>
 class VariableHyperDBase {
- public:
+public:
   //============================================================================
   // CTORS
   //============================================================================
-   VariableHyperDBase(const std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> &d,
-                      EAnalysisType t2D_t1D = k1D);
-   VariableHyperDBase(const std::string name,
-                      const std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> &d,
-                      EAnalysisType t2D_t1D = k1D);
+  VariableHyperDBase();                                               // Defualt, recommended if using derived Variable class.
+  VariableHyperDBase(const std::string name);                         // Just sets name, recommended if using derived Variable class
+  VariableHyperDBase(const std::vector<VariableBase<UNIVERSE> *> &d); // Build based off vector of input variables, can get tricky
+  VariableHyperDBase(const std::string name,                          // Build based off vector of input variables and set a name
+                     const std::vector<VariableBase<UNIVERSE>*> &d);
 
- public:
+public:
   //============================================================================
   // Setters/Getters
   //============================================================================
   // TODO: reco binning!
   std::string SetName(const std::string name);
-  
-  void SetAnalysisType(const EAnalysisType t2D_t1D); // Set hyperdim to project to 2D or 1D
+  void SetAnalysisType(const EAnalysisType t2D_t1D); // Set hyperdim to project to 2D or 1D, 2D not configured yet -NHV 2/21/23
 
+  void AddVariable(VariableBase<UNIVERSE> &var); // Add variables individually and setup, recommended used with default or name only ctr
+
+private:
+  void Setup(const std::string i_name = ""); // Setup a variable based off current state of input variables, should only be used internally for now
+
+public:
   std::string GetName() const; // Get Name of linearized variable
   std::string GetName(int axis) const; // Get name of variable on an axis
   std::string GetAxisLabel() const; // Get axis label for linearzed variable
@@ -88,30 +93,27 @@ protected:
 
   std::string m_lin_axis_label;
 
- private:
+private:
   //============================================================================
   // Member Variables
   //============================================================================
-   std::string m_name;                                              // Name of variable, should be var1name_var2name_var3name etc
+  std::string m_name;                                              // Name of variable, should be var1name_var2name_var3name etc
 
-   int m_dimension;                                                 // Number of axes/dimensions in variable phase space
-   EAnalysisType m_analysis_type;                                   // This sets the "Analysis type" from Hyperdim: k2D (not configured yet) is type 0, k1D (default) is type 1
-   bool m_has_reco_binning;                                         // Bool to note if there's separate reco binning or not
+  int m_dimension;                                                 // Number of axes/dimensions in variable phase space
+  EAnalysisType m_analysis_type;                                   // This sets the "Analysis type" from Hyperdim: k2D (not configured yet) is type 0, k1D (default) is type 1
+  bool m_has_reco_binning;                                         // Bool to note if there's separate reco binning or not
 
-   PlotUtils::HyperDimLinearizer *m_hyperdim;                       // Member HyperDim
-   PlotUtils::HyperDimLinearizer *m_reco_hyperdim;                  // Member HyperDim for reco bins
+  PlotUtils::HyperDimLinearizer* m_hyperdim;                       // Member HyperDim
+  PlotUtils::HyperDimLinearizer* m_reco_hyperdim;                  // Member HyperDim for reco bins
 
-   std::unique_ptr<VariableBase<UNIVERSE>> m_lin_var;               // Linearized variable TODO: is this viable? Need input Values functions
+  std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> m_vars_vec; // Vector of component variables
 
-   std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> m_vars_vec; // Vector of component variables
+  std::vector<std::vector<double>> m_vars_binnings;                // Vector of binnings each variable's binning in phase space
+  std::vector<std::vector<double>> m_vars_reco_binnings;           // Vector of reco binnings each variable's binning in phase space
 
-   std::vector<std::vector<double>> m_vars_binnings;                // Vector of binnings each variable's binning in phase space
-   std::vector<std::vector<double>> m_vars_reco_binnings;           // Vector of reco binnings each variable's binning in phase space
+  std::vector<double> m_lin_binning;                               // Vector of bins in linearized bin space
+std::vector<double> m_lin_reco_binning;                          // Vector of reco bins in bin space, currently unused but can use a getter to get them
 
-   std::vector<double> m_lin_binning;                               // Vector of bins in linearized bin space
-   std::vector<double> m_lin_reco_binning;                          // Vector of reco bins in bin space, currently unused but can use a getter to get them
-
-   VariableHyperDBase();                                            // off-limits default constructor
 };
 #endif
 
