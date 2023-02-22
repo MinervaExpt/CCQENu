@@ -21,16 +21,17 @@ enum EDataMCTruth {kData, kMC, kTruth, kNDataMCTruthTypes};
 //==============================================================================
 #ifndef __CINT__ //for PlotUtils::cuts_t<>
 void LoopAndFillEventSelection(std::string tag,
-                               const PlotUtils::MacroUtil& util,
-                               std::map<std::string, std::vector<CVUniverse*> > error_bands,
-                               std::vector<CCQENu::VariableFromConfig*>& variables,
-                               std::vector<CCQENu::Variable2DFromConfig*>& variables2D,
-                               std::vector<CCQENu::VariableHyperDFromConfig*>& variablesHD,
+                               const PlotUtils::MacroUtil &util,
+                               std::map<std::string, std::vector<CVUniverse *>> error_bands,
+                               std::vector<CCQENu::VariableFromConfig *> &variables,
+                               std::vector<CCQENu::Variable2DFromConfig *> &variables2D,
+                               std::vector<CCQENu::VariableHyperDFromConfig *> &variablesHD,
                                EDataMCTruth data_mc_truth,
-                               PlotUtils::Cutter<CVUniverse>& selection, 
-                               PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model,
-                               PlotUtils::weight_MCreScale mcRescale, 
-                               bool closure=false) {
+                               PlotUtils::Cutter<CVUniverse> &selection,
+                               PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> &model,
+                               PlotUtils::weight_MCreScale mcRescale,
+                               bool closure = false, bool mc_reco_to_csv = false)
+{
   // Prepare loop
   MinervaUniverse::SetTruth(false);
   int nentries = -1;

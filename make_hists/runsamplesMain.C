@@ -181,30 +181,35 @@ int main(const int argc, const char *argv[] ) {
   data_error_bands["cv"] = data_band;
 
   //Selection Criteria
-	if (config.IsMember("universeFile")) {
-
-
-		std::cout << " setting universe configurables" << std::endl;
-		std::string universefilename = config.GetString("universeFile");
-		NuConfig universeConfig;
-		universeConfig.Read(universefilename);
-		// Print applicable configurables?
-		bool printConfigs = 0;
-		if (universeConfig.IsMember("printConfigs")) printConfigs = universeConfig.GetBool("printConfigs");
-		// Set applicable configurables
-		if (universeConfig.IsMember("MinimumBlobZVtx")) {
-			CVUniverse::SetMinBlobZVtx(universeConfig.GetConfig("MinimumBlobZVtx").GetDouble("min"),printConfigs);
-		}
-		if (universeConfig.IsMember("PhotonEnergyCut")) {
-			CVUniverse::SetPhotonEnergyCut(universeConfig.GetConfig("PhotonEnergyCut").GetDouble("energy"),printConfigs);
-		}
-		if (universeConfig.IsMember("ProtonScoreConfig")) {
-			CVUniverse::SetProtonScoreConfig(universeConfig.GetConfig("ProtonScoreConfig"),printConfigs);
-		}
-		if (universeConfig.IsMember("ProtonKECut")) {
-			CVUniverse::SetProtonKECut(universeConfig.GetConfig("ProtonKECut").GetDouble("energy"),printConfigs);
-		}
-	}
+  if (config.IsMember("paramsFile"))
+  {
+    std::cout << " configuring cvuniverse parameters" << std::endl;
+    std::string paramsfilename = config.GetString("paramsFile");
+    NuConfig paramsConfig;
+    paramsConfig.Read(paramsfilename);
+    // Print applicable configurables?
+    bool printConfigs = 0;
+    if (paramsConfig.IsMember("printConfigs"))
+      printConfigs = paramsConfig.GetBool("printConfigs");
+    // Set applicable configurables
+    if (paramsConfig.IsMember("MinimumBlobZVtx"))
+    {
+      CVUniverse::SetMinBlobZVtx(paramsConfig.GetConfig("MinimumBlobZVtx").GetDouble("min"), printConfigs);
+    }
+    if (paramsConfig.IsMember("PhotonEnergyCut"))
+    {
+      CVUniverse::SetPhotonEnergyCut(paramsConfig.GetConfig("PhotonEnergyCut").GetDouble("energy"), printConfigs);
+    }
+    if (paramsConfig.IsMember("ProtonScoreConfig"))
+    {
+      CVUniverse::SetProtonScoreConfig(paramsConfig.GetConfig("ProtonScoreConfig"), printConfigs);
+    }
+    if (paramsConfig.IsMember("ProtonKECut"))
+    {
+      CVUniverse::SetProtonKECut(paramsConfig.GetConfig("ProtonKECut").GetDouble("energy"), printConfigs);
+    }
+    CVUniverse::SetAnalysisNeutrinoPDG(pdg, printConfigs);
+  }
 
   std::string cutsfilename = config.GetString("cutsFile");
   NuConfig cutsConfig;
@@ -405,6 +410,15 @@ int main(const int argc, const char *argv[] ) {
     variablesHD.push_back(v);
   }
 
+  // Check if sending events to csv file
+  bool mc_reco_to_csv = 0;
+  if (config.IsMember("mcRecoToCSV"))
+  {
+    mc_reco_to_csv = config.GetBool("mcRecoToCSV");
+  }
+
+  std::cout << " just before event loop" << std::endl;
+  util.PrintMacroConfiguration("runEventLoop");
   std::cout << " just before event loop" << std::endl;
   util.PrintMacroConfiguration("runEventLoop");
   // here we fill them
@@ -414,8 +428,13 @@ int main(const int argc, const char *argv[] ) {
   //===========================================================================
 
   for (auto tag:datatags){
-    std::cout << "Loop and Fill Data for " << tag << "\n" ;
-    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale,closure);
+    //=========================================
+    // Entry loop and fill
+    //=========================================
+    std::cout << "Loop and Fill Data for " << tag << "\n";
+
+    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag], model, mcRescale, closure, mc_reco_to_csv);
+
     // LoopAndFillEventSelection2D(tag, util, data_error_bands, variables2D, kData, *selectionCriteria[tag]);
 
     std::cout << "\nCut summary for Data:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
