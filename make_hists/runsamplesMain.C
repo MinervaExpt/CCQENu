@@ -181,35 +181,30 @@ int main(const int argc, const char *argv[] ) {
   data_error_bands["cv"] = data_band;
 
   //Selection Criteria
-  if (config.IsMember("paramsFile"))
-  {
-    std::cout << " configuring cvuniverse parameters" << std::endl;
-    std::string paramsfilename = config.GetString("paramsFile");
-    NuConfig paramsConfig;
-    paramsConfig.Read(paramsfilename);
-    // Print applicable configurables?
-    bool printConfigs = 0;
-    if (paramsConfig.IsMember("printConfigs"))
-      printConfigs = paramsConfig.GetBool("printConfigs");
-    // Set applicable configurables
-    if (paramsConfig.IsMember("MinimumBlobZVtx"))
-    {
-      CVUniverse::SetMinBlobZVtx(paramsConfig.GetConfig("MinimumBlobZVtx").GetDouble("min"), printConfigs);
-    }
-    if (paramsConfig.IsMember("PhotonEnergyCut"))
-    {
-      CVUniverse::SetPhotonEnergyCut(paramsConfig.GetConfig("PhotonEnergyCut").GetDouble("energy"), printConfigs);
-    }
-    if (paramsConfig.IsMember("ProtonScoreConfig"))
-    {
-      CVUniverse::SetProtonScoreConfig(paramsConfig.GetConfig("ProtonScoreConfig"), printConfigs);
-    }
-    if (paramsConfig.IsMember("ProtonKECut"))
-    {
-      CVUniverse::SetProtonKECut(paramsConfig.GetConfig("ProtonKECut").GetDouble("energy"), printConfigs);
-    }
-    CVUniverse::SetAnalysisNeutrinoPDG(pdg, printConfigs);
-  }
+        if (config.IsMember("paramsFile")) {
+
+          std::cout << " configuring cvuniverse parameters" << std::endl;
+          std::string paramsfilename = config.GetString("paramsFile");
+          NuConfig paramsConfig;
+          paramsConfig.Read(paramsfilename);
+          // Print applicable configurables?
+          bool printConfigs = 0;
+          if (paramsConfig.IsMember("printConfigs")) printConfigs = paramsConfig.GetBool("printConfigs");
+          // Set applicable configurables
+          if (paramsConfig.IsMember("MinimumBlobZVtx")) {
+            CVUniverse::SetMinBlobZVtx(paramsConfig.GetConfig("MinimumBlobZVtx").GetDouble("min"),printConfigs);
+          }
+          if (paramsConfig.IsMember("PhotonEnergyCut")) {
+            CVUniverse::SetPhotonEnergyCut(paramsConfig.GetConfig("PhotonEnergyCut").GetDouble("energy"),printConfigs);
+          }
+          if (paramsConfig.IsMember("ProtonScoreConfig")) {
+            CVUniverse::SetProtonScoreConfig(paramsConfig.GetConfig("ProtonScoreConfig"),printConfigs);
+          }
+          if (paramsConfig.IsMember("ProtonKECut")) {
+            CVUniverse::SetProtonKECut(paramsConfig.GetConfig("ProtonKECut").GetDouble("energy"),printConfigs);
+          }
+          CVUniverse::SetAnalysisNeutrinoPDG(pdg,printConfigs);
+        }
 
   std::string cutsfilename = config.GetString("cutsFile");
   NuConfig cutsConfig;
