@@ -1,12 +1,7 @@
-
-
-
 int main(const int argc, const char *argv[] ) {
 
-
   gROOT->ProcessLine("gErrorIgnoreLevel = kWarning;");
-  //++++++++++++++++++=  Initialization +++++++++++++++++++++++++
-
+  //+++++++++++++++++++++++++++++  Initialization +++++++++++++++++++++++++++++
   std::string pl = "5A";
   if (argc > 1){
     pl = std::string(argv[1]);
@@ -75,9 +70,9 @@ int main(const int argc, const char *argv[] ) {
   //   useTuned = 0;
   // }
 
-  //=========================================S
+  //===========================================================================
   // MacroUtil (makes your anatuple chains)
-  //=========================================
+  //===========================================================================
 
   const std::string mc_file_list(config.GetString("mcIn"));
   std::string data_file_list;
@@ -131,9 +126,10 @@ int main(const int argc, const char *argv[] ) {
   PlotUtils::MinervaUniverse::SetMHRWeightElastics( config.GetInt("Geant4Elastics") );
   PlotUtils::MinervaUniverse::SetTreeName(reco_tree_name);
 
+  //===========================================================================
+  // MODELS TODO: needs a driver
+  //===========================================================================
 
-
-  //=== MODELS === needs a driver
   std::string modeltune="MnvTunev1";
   if(config.IsMember("MinervaModel")){ //TODO
     modeltune = config.GetString("MinervaModel");
@@ -159,19 +155,19 @@ int main(const int argc, const char *argv[] ) {
 
   PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTune));
 
-  //====================MC Reco tuning for bkg subtraction======================
+  //====================MC Reco tuning for bkg subtraction=====================
   // Initialize the rescale for tuning MC reco for background subtraction later
+  
   PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(config);
 
-  //=========================================
+  //===========================================================================
   // Systematics
   // GetStandardSystematics in Systematics.h
-  //=========================================
-  std::map<std::string, std::vector<CVUniverse*> > mc_error_bands =
-  systematics::GetStandardSystematics(util.m_mc,config);
+  //===========================================================================
 
-  std::map<std::string, std::vector<CVUniverse*> > truth_error_bands =
-  systematics::GetStandardSystematics(util.m_truth,config);
+  std::map<std::string, std::vector<CVUniverse *>> mc_error_bands = systematics::GetStandardSystematics(util.m_mc, config);
+
+  std::map<std::string, std::vector<CVUniverse*> > truth_error_bands = systematics::GetStandardSystematics(util.m_truth,config);
 
   std::cout << " mc error bands is " << mc_error_bands.size() << std::endl;
   std::cout << " truth error bands is " << truth_error_bands.size() << std::endl;
@@ -276,9 +272,11 @@ int main(const int argc, const char *argv[] ) {
                                                                   config_truth::GetCCQEPhaseSpaceFromConfig<CVUniverse>(phasespace));
     }
   }
-  //=========================================
+
+  //===========================================================================
   // Get variables and initialize their hists
-  //=========================================
+  //===========================================================================
+
   std::vector<std::string> selected_reco_tags; // bkg only needed for recontructed MC
   std::vector<std::string> selected_truth_tags;
   std::vector<std::string> datatags;
@@ -411,10 +409,11 @@ int main(const int argc, const char *argv[] ) {
   util.PrintMacroConfiguration("runEventLoop");
   // here we fill them
 
+  //===========================================================================
+  // Entry loop and fill
+  //===========================================================================
+
   for (auto tag:datatags){
-    //=========================================
-    // Entry loop and fill
-    //=========================================
     std::cout << "Loop and Fill Data for " << tag << "\n" ;
     LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale,closure);
     // LoopAndFillEventSelection2D(tag, util, data_error_bands, variables2D, kData, *selectionCriteria[tag]);
@@ -451,9 +450,11 @@ int main(const int argc, const char *argv[] ) {
   for (auto v : variables1D) v->SyncAllHists();
   for (auto v : variables2D) v->SyncAllHists();
   for (auto v : variablesHD) v->SyncAllHists();
-  //=========================================
+
+  //===========================================================================
   // Plot
-  //=========================================
+  //===========================================================================
+
   std::cout << "Done filling. Begin plotting.\n";
 
   std::string path(pl);
