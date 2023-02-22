@@ -410,17 +410,14 @@ int main(const int argc, const char *argv[] ) {
     variablesHD.push_back(v);
   }
 
-  // Check if sending events to csv file
-  bool mc_reco_to_csv = 0;
-  if (config.IsMember("mcRecoToCSV"))
-  {
-    mc_reco_to_csv = config.GetBool("mcRecoToCSV");
-  }
+        // Check if sending events to csv file
+        bool mc_reco_to_csv = 0;
+        if (config.IsMember("mcRecoToCSV")) {
+          mc_reco_to_csv = config.GetBool("mcRecoToCSV");
+        }
 
-  std::cout << " just before event loop" << std::endl;
-  util.PrintMacroConfiguration("runEventLoop");
-  std::cout << " just before event loop" << std::endl;
-  util.PrintMacroConfiguration("runEventLoop");
+        std::cout << " just before event loop" << std::endl;
+        util.PrintMacroConfiguration("runEventLoop");
   // here we fill them
 
   //===========================================================================
