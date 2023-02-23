@@ -330,10 +330,21 @@ namespace {
 		//std::cout << "tx " << px << " " << pz << std::endl;
 		return std::atan2(py,pz);
 	}
+  double CVUniverse::GetTrueThetamu() const {
+    TVector3 p3lep( GetVecElem("mc_primFSLepton",0), GetVecElem("mc_primFSLepton",1), GetVecElem("mc_primFSLepton",2) );
+    p3lep.RotateX(MinervaUnits::numi_beam_angle_rad);
+      return p3lep.Theta();  //HMS fix this after a question from Christian
+    
+  }
 
-	double CVUniverse::GetTrueThetamu() const { return GetThetalepTrue(); }
+	//double CVUniverse::GetTrueThetamu() const { return GetThetalepTrue(); }
 	double CVUniverse::GetThetamuDegrees() const { return GetThetamu()*180/M_PI; }
-	double CVUniverse::GetTrueThetamuDegrees() const { return GetThetalepTrue()*180/M_PI; }
+	double CVUniverse::GetTrueThetamuDegrees() const { return GetTrueThetamu()*180/M_PI; }
+
+  double CVUniverse::GetThetaXmuDegrees() const { return GetThetaXmu()*180/M_PI; }
+  double CVUniverse::GetTrueThetaXmuDegrees() const { return GetTrueThetaXmu()*180/M_PI; }
+  double CVUniverse::GetThetaYmuDegrees() const { return GetThetaYmu()*180/M_PI; }
+  double CVUniverse::GetTrueThetaYmuDegrees() const { return GetTrueThetaYmu()*180/M_PI; }
 
 	// ----------------------------- Proton Variables ----------------------------
 

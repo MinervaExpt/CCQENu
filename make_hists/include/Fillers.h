@@ -86,6 +86,21 @@ void FillMC(std::string tag, CVUniverse* univ, double weight,
   }
 }
 
+void FillResolution(std::string tag, CVUniverse* univ, double weight,
+            std::vector<CCQENu::VariableFromConfig*> variables,
+            std::vector<CCQENu::Variable2DFromConfig*> variables2D,
+            double scale=-1.) {
+  for (auto v : variables) {
+    if (v->hasResponse[tag]){
+      double reco_val = v->GetRecoValue(*univ, 0);
+      double true_val = v->GetTrueValue(*univ, 0);
+      // This will fill both tuned and untuned
+      v->FillResolution(tag,univ,reco_val,true_val,weight,scale);
+
+    }
+  }
+}
+
 void FillResponse(std::string tag, CVUniverse* univ, double weight,
             std::vector<CCQENu::VariableFromConfig*> variables,
             std::vector<CCQENu::Variable2DFromConfig*> variables2D,
