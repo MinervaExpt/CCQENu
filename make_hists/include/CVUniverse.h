@@ -159,6 +159,12 @@ public:
 
 	virtual double GetThetamuDegrees() const;
 	virtual double GetTrueThetamuDegrees() const;
+    
+  virtual double GetThetaXmuDegrees() const;
+  virtual double GetTrueThetaXmuDegrees() const;
+
+  virtual double GetThetaYmuDegrees() const;
+  virtual double GetTrueThetaYmuDegrees() const;
 
 
 	// ----------------------------- Hadron Variables ----------------------------

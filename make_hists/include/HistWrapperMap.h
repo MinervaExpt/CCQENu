@@ -77,34 +77,11 @@ public:
      std::string hist_name = "h___"+tag +"___"+ name;
      // std::string hist_name = name + "_" + tag;
       m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), nbins, xmin, xmax, univs);
+      m_hashist[tag] = true;
     }
     m_decoder = UniverseDecoder(univs);
 
   }
-//// special version for MC that can build a response
-//  inline  HistWrapperMap( const std::string name, const std::string title, const Int_t nbins, const double xmin,const double xmax, const Int_t nrecobins, const double xrecomin, const double xrecomax,  std::map< std::string,std::vector<T*>> univs, const std::vector<std::string> tags){
-//      // just store the config
-//      m_name = name;
-//      m_title = title;
-//      m_nbins = nbins;
-//      m_xmin = xmin;
-//      m_xmax = xmax;
-//      m_nrecobins = nrecobins;
-//      m_xrecomin = xrecomin;
-//      m_xrecomax = xrecomax;
-//      m_fixedbins = true;
-//      //    m_count = 0;
-//      m_univs = univs;
-//      m_tags = tags;
-//      for (auto tag : tags){
-//       std::string hist_name = "h___"+tag +"___"+ name;
-//       // std::string hist_name = name + "_" + tag;
-//          // this is special case, only MC should have both true and reconstructed binning in the signature.
-//        m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), nrecobins, xrecomin, xrecomax, univs);
-//      }
-//      m_decoder = UniverseDecoder(univs);
-//
-//    }
 
   // map that helps you find the index of a universe.
 
@@ -153,25 +130,12 @@ public:
    }
 
 
-  //  inline  std::vector<std::string> GetHistKeys(){
-  //    std::vector<std::string> retval;
-  //    for (auto  const& element : m_hists) {
-  //      retval.push_back(element.first);
-  //    }
-  //    return retval;
-  //  };
-
   //  can we make this smarter?
   inline void Fill(const std::string tag, const T* universe, const Double_t value, const Double_t weight=1.0){
     m_hists[tag].FillUniverse(universe, value, weight);
   }
 
-  // inline void FillResponse(const std::string tag, const T* univ, const double value, const double truth, const double weight=1.0){
-  //   std::string name = univ->ShortName();
-  //   int iuniv = m_decoder[univ];
-  //   //std::cout << " fillresponse " << name << " " << iuniv << std::endl;
-  //   m_response[tag]->Fill(value, truth, name, iuniv, weight);
-  // }
+  
 
   inline int GetNhists(){return m_hists.size();}
 

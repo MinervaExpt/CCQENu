@@ -181,6 +181,8 @@ public:
   // ResponseWrapperMap<CVUniverse> m_tuned_response;
   RM m_response;
   RM m_tuned_response;
+    HM m_resolution;
+    HM m_tuned_resolution;
 
   UniverseMap m_universes;
   std::string m_units;
@@ -264,6 +266,10 @@ public:
 
     m_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
     m_selected_mc_truth.AppendName("selected_truth",tags);
+    double range = bins[1]-bins[GetNBins()];
+    m_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName()+";"+m_xaxis_label+" reco-true").c_str(), 50,-range/10.,range/10., univs, tags);
+    m_resolution.AppendName("resolution",tags);
+    std::cout << " created m_resolution " << GetName() << std::endl;
   }
 
   template <typename T>
@@ -337,6 +343,11 @@ public:
     if (std::count(m_for.begin(), m_for.end(),"truth")>=1) { // use bins
       m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, truth_univs, tuned_tags);
       m_tuned_signal_mc_truth.AppendName("all_truth_tuned",tuned_tags);
+    }
+    if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) { // use bins
+        double range = bins[1]-bins[GetNBins()];
+        m_tuned_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName()+";"+m_xaxis_label+" reco-true").c_str(), 50,-range/10.,range/10., reco_univs, tuned_tags);
+        m_tuned_resolution.AppendName("resolution_tuned",tuned_tags);
     }
 
     if(std::count(m_for.begin(), m_for.end(),"response")>=1){
@@ -439,10 +450,17 @@ public:
         if(m_tunedmc!=1){
           std::cout << " write out selected truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
           m_selected_mc_truth.Write(tag);
+          std::cout << " write out resolution histogram " << m_resolution.GetHist(tag)->GetName() << std::endl;
+          m_resolution.Write(tag);
+            m_resolution.GetHist(tag)->Print("ALL");
         }
         if(hasTunedMC[tag]){
           m_tuned_selected_mc_truth.Write(tag);
+          m_tuned_resolution.Write(tag);
           std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
+          std::cout << " write out resolution histogram " << m_tuned_resolution.GetHist(tag)->GetName() << std::endl;
+            
+    
         }
       }
       if(hasTruth[tag]){
@@ -470,6 +488,7 @@ public:
         m_selected_data.Write(tag);
       }
     }
+    //f.ls();
   }
 
   //============================================================================
@@ -488,9 +507,11 @@ public:
       if(hasSelectedTruth[tag]){
         if(m_tunedmc!=1){
           m_selected_mc_truth.SyncCVHistos();
+          m_resolution.SyncCVHistos();
         }
         if(hasTunedMC[tag]){
           m_tuned_selected_mc_truth.SyncCVHistos();
+          m_tuned_resolution.SyncCVHistos();
         }
       }
       if(hasData[tag]){
@@ -532,6 +553,21 @@ public:
     //   m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight);
     // }
   }
+    
+    void FillResolution(std::string tag, CVUniverse* univ,
+                             const double value, const double truth,
+                             const double weight=1.0, const double scale=1.0){
+
+      std::string name = univ->ShortName();
+      // int iuniv = m_decoder[univ];
+
+      if(hasMC[tag] && m_tunedmc!=1){
+        m_resolution.Fill(tag,univ,value - truth, weight);
+      }
+      if(hasTunedMC[tag] && scale>=0.){
+        m_tuned_resolution.Fill(tag,univ,value - truth, weight*scale);
+      }
+    }
 
   // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.
 
