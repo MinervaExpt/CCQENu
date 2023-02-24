@@ -20,7 +20,9 @@
 //==============================================================================
 void FillData(std::string tag, CVUniverse* univ,
               std::vector<CCQENu::VariableFromConfig*> variables,
-              std::vector<CCQENu::Variable2DFromConfig*> variables2D) {
+              std::vector<CCQENu::Variable2DFromConfig*> variables2D,
+              std::vector<CCQENu::VariableHyperDFromConfig*> variablesHD) 
+{
   for (auto v : variables) {
     if (v->hasData[tag]){
       double fill_val = v->GetRecoValue(*univ, 0);
@@ -34,14 +36,22 @@ void FillData(std::string tag, CVUniverse* univ,
       v2->m_selected_data.Fill2D(tag, univ, fill_val_x, fill_val_y);
     }
   }
+  for (auto vHD : variablesHD)
+  {
+    if (vHD->hasData[tag])
+    {
+      double fill_val_lin = vHD->GetRecoValue(*univ,0);
+      vHD->m_selected_data.Fill(tag, univ, fill_val_lin); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+    }
+  }
 }
 
-
-
-void FillMC(std::string tag, CVUniverse* univ, double weight,
-            std::vector<CCQENu::VariableFromConfig*> variables,
-            std::vector<CCQENu::Variable2DFromConfig*> variables2D,
-            double scale = -1.) {
+void FillMC(std::string tag, CVUniverse *univ, double weight,
+            std::vector<CCQENu::VariableFromConfig *> variables,
+            std::vector<CCQENu::Variable2DFromConfig *> variables2D,
+            std::vector<CCQENu::VariableHyperDFromConfig *> variablesHD,
+            double scale = -1.)
+{
   for (auto v : variables) {
     if (v->hasMC[tag]){
       double fill_val = v->GetRecoValue(*univ, 0);
@@ -84,12 +94,41 @@ void FillMC(std::string tag, CVUniverse* univ, double weight,
       }
     }
   }
+  for (auto vHD : variablesHD)
+  {
+    if (vHD->hasMC[tag])
+    {
+      double fill_val_lin = vHD->GetRecoValue(*univ, 0);
+      if (vHD->m_tunedmc != 1) // TODO: still need to set up tuned stuff for HyperD
+      {
+        vHD->m_selected_mc_reco.Fill(tag, univ, fill_val_lin, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+      }
+      if (vHD->hasTunedMC[tag] && scale >= 0.)
+      {
+        vHD->m_tuned_selected_mc_reco.Fill(tag, univ, fill_val_lin, scale * weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+      }
+    }
+    if (vHD->hasSelectedTruth[tag])
+    {
+      double true_val_lin = vHD->GetTrueValue(*univ, 0);
+      if (vHD->m_tunedmc != 1)
+      {
+        vHD->m_selected_mc_truth.Fill(tag, univ, true_val_lin, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+      }
+      if (vHD->hasTunedMC[tag] && scale >= 0.)
+      {
+        vHD->m_tuned_selected_mc_truth.Fill(tag, univ, true_val_lin, scale * weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+      }
+    }
+  }
 }
 
-void FillResponse(std::string tag, CVUniverse* univ, double weight,
-            std::vector<CCQENu::VariableFromConfig*> variables,
-            std::vector<CCQENu::Variable2DFromConfig*> variables2D,
-            double scale=-1.) {
+void FillResponse(std::string tag, CVUniverse *univ, double weight,
+                  std::vector<CCQENu::VariableFromConfig *> variables,
+                  std::vector<CCQENu::Variable2DFromConfig *> variables2D,
+                  std::vector<CCQENu::VariableHyperDFromConfig *> variablesHD,
+                  double scale = -1.)
+{
   for (auto v : variables) {
     if (v->hasResponse[tag]){
       double reco_val = v->GetRecoValue(*univ, 0);
@@ -120,12 +159,24 @@ void FillResponse(std::string tag, CVUniverse* univ, double weight,
       // }
     }
   }
+  for (auto vHD : variablesHD) 
+  {
+    if (vHD->hasResponse[tag])
+    {
+      double reco_val_lin = vHD->GetRecoValue(*univ, 0);
+      double true_val_lin = vHD->GetTrueValue(*univ, 0);
+      // This will fill both tuned and untuned
+      vHD->FillResponse(tag, univ, reco_val_lin, true_val_lin, weight, scale); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+    }
+  }
 }
 
-void FillSignalTruth(std::string tag, CVUniverse* univ, double weight,
-               std::vector<CCQENu::VariableFromConfig*> variables,
-               std::vector<CCQENu::Variable2DFromConfig*> variables2D,
-               double scale=-1.) {
+void FillSignalTruth(std::string tag, CVUniverse *univ, double weight,
+                     std::vector<CCQENu::VariableFromConfig *> variables,
+                     std::vector<CCQENu::Variable2DFromConfig *> variables2D,
+                     std::vector<CCQENu::VariableHyperDFromConfig *> variablesHD,
+                     double scale = -1.)
+{
   int run = univ->GetTrueRun();
   int subrun = univ->GetTrueSubRun();
   int gate = univ->GetTrueGate();
@@ -154,6 +205,23 @@ void FillSignalTruth(std::string tag, CVUniverse* univ, double weight,
       if(v2->hasTunedMC[tag] && scale>=0.){
         double scaledweight = scale*weight;
         v2->m_tuned_signal_mc_truth.Fill2D(tag,univ, true_val_x, true_val_y, scaledweight);
+      }
+    }
+  }
+  for (auto vHD : variablesHD)
+  {
+    if (vHD->hasTruth[tag])
+    {
+      double true_val_lin = vHD->GetTrueValue(*univ, 0);
+      // if (univ->ShortName() == "cv" ) std::cout << v->GetName() << " " << univ->GetEventID() << " " << run << " " << subrun << " "  <<  " "  << true_val << " " << weight << std::endl;
+      if (vHD->m_tunedmc != 1)
+      {
+        vHD->m_signal_mc_truth.Fill(tag, univ, true_val_lin, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+      }
+      if (vHD->hasTunedMC[tag] && scale >= 0.)
+      {
+        double scaledweight = scale * weight;
+        vHD->m_tuned_signal_mc_truth.Fill(tag, univ, true_val_lin, scaledweight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
       }
     }
   }

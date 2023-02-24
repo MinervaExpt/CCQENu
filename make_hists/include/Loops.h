@@ -19,12 +19,13 @@ enum EDataMCTruth {kData, kMC, kTruth, kNDataMCTruthTypes};
 //==============================================================================
 // Loop and fill
 //==============================================================================
-ifndef __CINT__ //for PlotUtils::cuts_t<>
+#ifndef __CINT__ //for PlotUtils::cuts_t<>
 void LoopAndFillEventSelection(std::string tag,
                                const PlotUtils::MacroUtil& util,
                                std::map<std::string, std::vector<CVUniverse*> > error_bands,
                                std::vector<CCQENu::VariableFromConfig*>& variables,
                                std::vector<CCQENu::Variable2DFromConfig*>& variables2D,
+                               std::vector<CCQENu::VariableHyperDFromConfig*>& variablesHD,
                                EDataMCTruth data_mc_truth,
                                PlotUtils::Cutter<CVUniverse>& selection, 
                                PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model, 
@@ -167,10 +168,12 @@ void LoopAndFillEventSelection(std::string tag,
             const double q2qe = universe->GetQ2QEGeV();
             double scale = 1.0;
             if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
-        
-            FillMC(tag, universe, weight, variables, variables2D, scale);
-            FillResponse(tag,universe,weight,variables,variables2D, scale);
-            
+
+            // FillMC(tag, universe, weight, variables, variables2D, scale);
+            // FillResponse(tag, universe, weight, variables, variables2D, scale);
+            FillMC(tag, universe, weight, variables, variables2D, variablesHD, scale);
+            FillResponse(tag, universe, weight, variables, variables2D, variablesHD, scale);
+
             // Send MC Reco value to CSV here
             if (mc_reco_to_csv) {
 		          csvFile << i;
@@ -192,7 +195,8 @@ void LoopAndFillEventSelection(std::string tag,
             double scale = 1.0;
             if (!closure) scale =mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
             if (closure) scale = 1.0;
-            FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
+            // FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
+            FillSignalTruth(tag, universe, weight, variables, variables2D, variablesHD, scale);
           }
         }
         else{ //kData
@@ -202,7 +206,7 @@ void LoopAndFillEventSelection(std::string tag,
           }
 #endif
           if(selection.isDataSelected(*universe, event).all()) {
-            FillData(tag, universe, variables, variables2D);
+            FillData(tag, universe, variables, variables2D, variablesHD);
             
           }
         }

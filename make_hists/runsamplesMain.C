@@ -424,8 +424,8 @@ int main(const int argc, const char *argv[] ) {
     // Entry loop and fill
     //=========================================
     std::cout << "Loop and Fill Data for " << tag << "\n";
-    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale,closure,mc_reco_to_csv);
-
+    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, variablesHD, kData, *selectionCriteria[tag], model, mcRescale, closure, mc_reco_to_csv);
+    // LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag], model, mcRescale, closure, mc_reco_to_csv);
     // LoopAndFillEventSelection2D(tag, util, data_error_bands, variables2D, kData, *selectionCriteria[tag]);
 
     std::cout << "\nCut summary for Data:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
@@ -438,10 +438,11 @@ int main(const int argc, const char *argv[] ) {
     std::string sample(tag,0,loc-3);
     mcRescale.SetCat(cat);
     std::cout << "Loop and Fill MC Reco  for " <<  tag << "\n";
-    
-    LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag],model, mcRescale,closure,mc_reco_to_csv);
+
+    LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, variablesHD, kMC, *selectionCriteria[tag], model, mcRescale, closure, mc_reco_to_csv);
+    // LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag], model, mcRescale, closure, mc_reco_to_csv);
     // LoopAndFillEventSelection2D(tag, util, mc_error_bands, variables2D, kMC, *selectionCriteria[tag]);
-    
+
     std::cout << "\nCut summary for MC Reco:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
     selectionCriteria[tag]->resetStats();
   }
@@ -449,9 +450,10 @@ int main(const int argc, const char *argv[] ) {
   for (auto tag:truthtags){
     std::cout << "Loop and Fill MC Truth  for " <<  tag << "\n";
 
-    LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, kTruth, *selectionCriteria[tag],model,mcRescale,closure,mc_reco_to_csv);
+    LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, variablesHD, kTruth, *selectionCriteria[tag], model, mcRescale, closure, mc_reco_to_csv);
+    // LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, kTruth, *selectionCriteria[tag], model, mcRescale, closure, mc_reco_to_csv);
     // LoopAndFillEventSelection2D(tag, util, truth_error_bands, variables2D, kTruth, *selectionCriteria[tag]);
-    
+
     std::cout << "\nCut summary for MC Truth:" <<  tag << "\n";
     // this is a special overload to allow printing truth
     (*selectionCriteria[tag]).summarizeTruthWithStats(std::cout);
