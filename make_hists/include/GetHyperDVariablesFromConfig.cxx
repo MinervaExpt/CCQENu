@@ -5,7 +5,6 @@
 #include "CVUniverse.h"
 #include <cassert>
 
-// template <class CVUniverse> // TODO: This may be a hack that doesn't work. Need to tell a later VariableBase what template it is.
 std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, std::map<std::string, CCQENu::VariableFromConfig *> variablesmap, const std::vector<std::string> tags, const NuConfig configraw)
 // std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, std::map<std::string, PlotUtils::VariableBase<CVUniverse> *> variablesmap, const std::vector<std::string> tags, const NuConfig configraw)
 {
@@ -74,6 +73,7 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFrom
         std::vector<CCQENu::VariableFromConfig* > tmp_axisvars;
 
         // Loop over each axis
+        int i = 0; // TODO: Find a better thing than this hack?
         for (auto axisname : axisvarnamevec) {
           NuConfig axisvarconfig = config1D.GetValue(axisname);
           // Store the config
@@ -85,22 +85,24 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFrom
           // TODO: figure out the intersection of "fors" of all axes? For now just configuring it like a 1D variable to have its own set of "fors"
 
           // Find each variable in input map and store the ones you need to build the HyperD variable
-          int i = 0; //TODO: Find a better thing than this hack?
-          for( auto var:variablesmap) {
+          for (auto var : variablesmap)
+          {
             std::string varname = var.first;
             // Check that name of axis is a name of an input variable
-            if(axisname == varname){
+            if (axisname == varname)
+            {
               // Put that input variable into vector to feed VarHyperD constructor, emplace_back (vs push_back) is used because its smarter idfk
               tmp_axisvars.emplace_back(variablesmap[varname]);
-              foundvec[i]= true;
+              foundvec[i] = true;
               i += 1;
+              std::cout << " GetHyperDVariablesFromConfig: added 1D var " << varname << std::endl;
             }
           }
         }
         // Double check every axis got found. May not be necessary.
         for(int i = 0; i < dim; i++){
           if (foundvec[i] == false) {
-            std::cout << " GetHyperDVariablesFromConfig: Warning - have requested an unimplimented 1D variable." << std::endl;
+            std::cout << " GetHyperDVariablesFromConfig: Warning - have requested an unimplimented 1D variable " << axisvarnamevec[i] << std::endl;
             assert(0);
           }
         }
