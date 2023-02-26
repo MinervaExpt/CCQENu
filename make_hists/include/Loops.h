@@ -170,6 +170,7 @@ void LoopAndFillEventSelection(std::string tag,
         
             FillMC(tag, universe, weight, variables, variables2D, scale);
             FillResponse(tag,universe,weight,variables,variables2D, scale);
+            FillResolution(tag,universe,weight,variables,variables2D, scale);
             
             // Send MC Reco value to CSV here
             if (mc_reco_to_csv) {

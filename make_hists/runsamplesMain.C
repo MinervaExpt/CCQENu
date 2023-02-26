@@ -46,6 +46,12 @@ int main(const int argc, const char *argv[] ) {
     useTuned = config.GetBool("useTuned");
     std::cout << "runsamplesMain: useTuned configured in main config and set to " << useTuned << std::endl;
   }
+  
+  bool doresolution = false;
+  if (config.IsMember("DoResolution")){
+    doresolution = config.GetBool("DoResolution");
+    std::cout << " ask for resolutions" << std::endl;
+  }
   // int useTuned = 0;
   // if(config.IsMember("useTuned")){
   //   checkval = config.GetString("useTuned");
@@ -300,7 +306,7 @@ int main(const int argc, const char *argv[] ) {
   }
 
   // new way
-  std::map<std::string,CCQENu::VariableFromConfig*> variablesmap1D = GetVariablesFromConfig(vars1D,tags,configvar);
+  std::map<std::string,CCQENu::VariableFromConfig*> variablesmap1D = GetVariablesFromConfig(vars1D,tags,configvar,doresolution);
 
   std::map<std::string,CCQENu::Variable2DFromConfig*> variablesmap2D = Get2DVariablesFromConfig(vars2D,variablesmap1D,tags,configvar);
 
