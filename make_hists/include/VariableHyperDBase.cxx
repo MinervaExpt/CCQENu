@@ -2,6 +2,7 @@
 #define VARIABLEHYPERDBASE_CXX
 
 #include "VariableHyperDBase.h"
+// #include "utilities/HyperDimLinearizer.h"
 #include "PlotUtils/HyperDimLinearizer.h"
 
 using namespace PlotUtils;
@@ -36,7 +37,7 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(const std::vector<VariableBase<
 {
   m_vars_vec = d;
   m_analysis_type = k1D;
-  for (int i; i < d.size(); i++)
+  for (int i = 0;i < d.size(); i++)
   {
     if (d[i]->HasRecoBinning()) m_has_reco_binning = true;
   }
@@ -51,7 +52,7 @@ VariableHyperDBase<UNIVERSE>::VariableHyperDBase(std::string name, const std::ve
   m_name = name;
   m_vars_vec = d;
   m_analysis_type = k1D;
-  for (int i; i < d.size(); i++)
+  for (int i = 0; i < d.size(); i++)
   {
     if (d[i]->HasRecoBinning()) m_has_reco_binning = true;
   }
@@ -97,8 +98,9 @@ void VariableHyperDBase<UNIVERSE>::AddVariable(VariableBase<UNIVERSE> &var)
 {
   // Be sure new variable is base class, not derived. If using derived, you'll need to get all the info out beforehand.
   VariableBase<UNIVERSE>* newvar = new VariableBase<UNIVERSE>(var);
-  m_vars_vec.emplace_back(newvar);
-  if (newvar->HasRecoBinning()) m_has_reco_binning = true;
+  m_vars_vec.emplace_back(new VariableBase<UNIVERSE>(var));
+
+  if (var.HasRecoBinning()) m_has_reco_binning = true;
 
   // Reset everything given new vars.
   Setup();
@@ -118,18 +120,21 @@ void VariableHyperDBase<UNIVERSE>::Setup(const std::string i_name)
   std::vector<std::vector<double>> vars_reco_bins;
   int n_lin_reco_bins = 1;
 
-  for (int i; i < m_dimension; i++)
+  for (int i = 0; i < m_dimension; i++)
   {
     name += m_vars_vec[i]->GetName();
+    std::cout << name << std::endl;
     lin_axis_label += m_vars_vec[i]->GetAxisLabel();
     if (i < (m_dimension - 1))
     {
       name += "_";
       lin_axis_label += ", ";
     }
+
     // Make vector of binnings, count number of bins
     std::vector<double> var_binning = m_vars_vec[i]->GetBinVec();
     vars_bins.push_back(var_binning);
+
     // Need to add underflow and overflow bins (+2) and take out one from bin edges (-1) => var_binning.size()+1
     n_lin_bins *= (var_binning.size() + 1);
 
@@ -288,6 +293,22 @@ double VariableHyperDBase<UNIVERSE>::GetBinVolume(int lin_bin) const
   return ps_bin_vol;
 }
 
+template <class UNIVERSE>
+std::vector<int> PlotUtils::VariableHyperDBase<UNIVERSE>::GetUnderflow(int axis) const
+{
+  // TODO
+  std::cout << "WARNING: VariableHyperDBase::GetUnderflow() not set up yet... " << std::endl;
+  return std::vector<int>();
+}
+
+template <class UNIVERSE>
+std::vector<int> PlotUtils::VariableHyperDBase<UNIVERSE>::GetOverflow(int axis) const
+{
+  // TODO
+  std::cout << "WARNING: VariableHyperDBase::GetOverflow() not set up yet... " << std::endl;
+  return std::vector<int>();
+}
+
 //==============================================================================
 // Reco Getters
 //==============================================================================
@@ -401,6 +422,21 @@ double VariableHyperDBase<UNIVERSE>::GetRecoBinVolume(int lin_bin) const
   return ps_bin_vol;
 }
 
+template <class UNIVERSE>
+std::vector<int> PlotUtils::VariableHyperDBase<UNIVERSE>::GetRecoUnderflow(int axis) const
+{
+  // TODO
+  std::cout << "WARNING: VariableHyperDBase::GetRecoUnderflow() not set up yet... " << std::endl;
+  return std::vector<int>();
+}
+
+template <class UNIVERSE>
+std::vector<int> PlotUtils::VariableHyperDBase<UNIVERSE>::GetRecoOverflow(int axis) const
+{
+  // TODO
+  std::cout << "WARNING: VariableHyperDBase::GetRecoOverflow() not set up yet... " << std::endl;
+  return std::vector<int>();
+}
 
 //==============================================================================
 // GetValues
@@ -419,10 +455,10 @@ double VariableHyperDBase<UNIVERSE>::GetRecoValue(const UNIVERSE &universe,
   }
   if (!m_has_reco_binning)
   {
-    return m_hyperdim->GetBin(val_vec).first+0.0001; // 0.0001 offset to so value isn't exactly on a bin edge and fillers can put it in that bin
+    return (m_hyperdim->GetBin(val_vec).first) + 0.0001; // 0.0001 offset to so value isn't exactly on a bin edge and fillers can put it in that bin
   }
   else {
-    return m_reco_hyperdim->GetBin(val_vec).first+0.0001; // If there's reco binning, use that hyperdim
+    return (m_reco_hyperdim->GetBin(val_vec).first) + 0.0001; // If there's reco binning, use that hyperdim
   }
 }
 
@@ -437,7 +473,7 @@ double VariableHyperDBase<UNIVERSE>::GetTrueValue(const UNIVERSE &universe,
   {
     val_vec.push_back(m_vars_vec[i]->GetTrueValue(universe, idx1, idx2));
   }
-  return m_hyperdim->GetBin(val_vec).first + 0.0001; // 0.0001 offset to so fillers can put it in that bin
+  return (m_hyperdim->GetBin(val_vec).first) + 0.0001; // 0.0001 offset to so fillers can put it in that bin
 }
 
 // Return phase space value of a single component variable
@@ -467,7 +503,7 @@ std::vector<double> VariableHyperDBase<UNIVERSE>::GetRecoValueVec(const UNIVERSE
                                                                   const int idx2) const
 {
   std::vector<double> value_vec;
-  for (int i; i < m_dimension; i++) 
+  for (int i = 0; i < m_dimension; i++) 
   {
     value_vec.push_back(m_vars_vec[i]->GetRecoValue(universe, idx1, idx2));
   }
@@ -481,7 +517,7 @@ std::vector<double> VariableHyperDBase<UNIVERSE>::GetTrueValueVec(const UNIVERSE
                                                                   const int idx2) const
 {
   std::vector<double> value_vec;
-  for (int i; i < m_dimension; i++)
+  for (int i = 0;i < m_dimension; i++)
   {
     value_vec.push_back(m_vars_vec[i]->GetTrueValue(universe, idx1, idx2));
   }

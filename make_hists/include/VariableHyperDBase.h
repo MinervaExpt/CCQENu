@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "PlotUtils/VariableBase.h"
+// #include "utilities/HyperDimLinearizer.h"
 #include "PlotUtils/HyperDimLinearizer.h"
 
 namespace PlotUtils {
@@ -50,7 +51,9 @@ public:
   void PrintBinning() const;                                    // Print linearized binning
   void PrintBinning(int axis) const;                            // Print binning for one input variable
   PlotUtils::HyperDimLinearizer* GetHyperDimLinearizer() const; // Returns the hyperdim
-  double GetBinVolume(int lin_bin) const;                       // TODO: Maybe this belongs to hyperdimlinearizer?
+  double GetBinVolume(int lin_bin) const;                       // TODO: Maybe this belongs to HyperDimLinearizer?
+  std::vector<int> GetUnderflow(int axis) const;                // Gives indexes of underflow bins TODO: Maybe belongs to HyperDimLinearizer?
+  std::vector<int> GetOverflow(int axis) const;                 // Gives indexes of overflow bins TODO: Maybe belongs to HyperDimLinearizer?
 
   bool HasRecoBinning() const;                                      // Check if linearized space has reco binning (yes, if at least one input variable has reco binning, false otherwise)
   bool HasRecoBinning(int axis) const;                              // Check if given axis has reco binning
@@ -61,8 +64,9 @@ public:
   void PrintRecoBinning() const;                                    // Same but reco bins 
   void PrintRecoBinning(int axis) const;                            // Same but reco bins
   PlotUtils::HyperDimLinearizer* GetRecoHyperDimLinearizer() const; // Returns the reco bins hyperdim
-  double GetRecoBinVolume(int lin_recobin) const;                   // TODO: Maybe this belongs to hyperdimlinearizer?
-  
+  double GetRecoBinVolume(int lin_recobin) const;                   // TODO: Maybe this belongs to HyperDimLinearizer?
+  std::vector<int> GetRecoUnderflow(int axis) const;                // Gives indexes of underflow bins TODO: Maybe belongs to HyperDimLinearizer?
+  std::vector<int> GetRecoOverflow(int axis) const;                 // Gives indexes of overflow bins TODO: Maybe belongs to HyperDimLinearizer?
   //============================================================================
   // Get Value
   //============================================================================
@@ -105,6 +109,7 @@ private:
   PlotUtils::HyperDimLinearizer* m_reco_hyperdim;                  // Member HyperDim for reco bins
 
   std::vector<std::unique_ptr<VariableBase<UNIVERSE>>> m_vars_vec; // Vector of component variables
+  // std::vector<VariableBase<UNIVERSE>*> m_vars_vec; // Vector of component variables
 
   std::vector<std::vector<double>> m_vars_binnings;                // Vector of binnings each variable's binning in phase space
   std::vector<std::vector<double>> m_vars_reco_binnings;           // Vector of reco binnings each variable's binning in phase space
