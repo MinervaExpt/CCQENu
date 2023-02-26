@@ -26,9 +26,9 @@
 #include "include/CVFunctions.h"
 #ifndef __CINT__  // CINT doesn't know about std::function
 
-#include "PlotUtils/VariableHyperDBase.h"
-#endif  // __CINT__
-
+// #include "PlotUtils/VariableHyperDBase.h"
+#include "include/VariableHyperDBase.h"
+#endif // __CINT__
 
 namespace CCQENu {
 
@@ -67,6 +67,8 @@ public:
         tmp_tunedmc = vars[i]->GetTuned();
       }
     }
+    // std::cout << " VariableHyperDFromConfig: m_vars_vec has size " << m_vars_vec.size() << std::endl;
+    // Setup(name);
     m_tunedmc = tmp_tunedmc;
 
     // Fors isn't very sophisticated atm. Could be better.
