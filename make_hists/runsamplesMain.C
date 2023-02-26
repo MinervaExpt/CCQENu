@@ -358,8 +358,10 @@ int main(const int argc, const char *argv[] ) {
 
 
   // here we initialist ghem
+  std::cout << "Initializing 1D histograms..." << std::endl;
 
-  for (auto var1D : variablesmap1D) {
+  for (auto var1D : variablesmap1D) 
+  {
     CCQENu::VariableFromConfig* v = var1D.second;
     v->InitializeMCHistograms(mc_error_bands,selected_reco_tags);
     v->InitializeSelectedTruthHistograms(mc_error_bands,selected_truth_tags);
@@ -367,14 +369,17 @@ int main(const int argc, const char *argv[] ) {
     // v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands,truthtags);
     v->InitializeResponse(mc_error_bands,responsetags);
-    if(useTuned){
+    if(useTuned)
+    {
       v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
     variables1D.push_back(v);
   }
 
-  for (auto var2D : variablesmap2D ) {
-    std::string varname = var2D.first;
+  std::cout << "Initializing 2D histograms..." << std::endl;
+
+  for (auto var2D : variablesmap2D ) 
+  {
     CCQENu::Variable2DFromConfig* v = var2D.second;
     v->InitializeMCHistograms2D(mc_error_bands,selected_reco_tags);
     v->InitializeSelectedTruthHistograms2D(mc_error_bands,selected_truth_tags);
@@ -382,34 +387,46 @@ int main(const int argc, const char *argv[] ) {
     // v->AddMCResponse2D(responsetags);
     v->InitializeTruthHistograms2D(truth_error_bands,truthtags);
     v->InitializeResponse2D(mc_error_bands,responsetags);
-
-    if(useTuned){
+    if(useTuned)
+    {
       v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
     variables2D.push_back(v);
   }
 
+  std::cout << "Initializing HyperD histograms..." << std::endl;
+
   for (auto varHD : variablesmapHD)
   {
+    std::string varname = varHD.first;
     CCQENu::VariableHyperDFromConfig *v = varHD.second;
     v->InitializeMCHistograms(mc_error_bands, selected_reco_tags);
     v->InitializeSelectedTruthHistograms(mc_error_bands, selected_truth_tags);
     v->InitializeDataHistograms(data_error_bands, datatags);
     // v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands, truthtags);
-    v->InitializeResponse(mc_error_bands, responsetags);
+    std::cout << " Initialized all hists for HyperD var " << varname << ". About to initialize response... " << std::endl;
+
+    // v->InitializeResponse(mc_error_bands, responsetags);
+    std::cout << " Initialized response for HyperD var " << varname << std::endl;
+
     if (useTuned)
     {
       v->InitializeTunedMCHistograms(mc_error_bands, truth_error_bands, selected_reco_tags, responsetags);
     }
+    std::cout << " Initialized all hists for HyperD var " << varname << std::endl;
     variablesHD.push_back(v);
   }
+
+  std::cout << " Before mc_reco_to_csv... " << std::endl;
 
   // Check if sending events to csv file
   bool mc_reco_to_csv = 0;
   if (config.IsMember("mcRecoToCSV")) {
     mc_reco_to_csv = config.GetBool("mcRecoToCSV");
   }
+
+  std::cout << " After mc_reco_to_csv... " << std::endl;
 
   std::cout << " just before event loop" << std::endl;
   util.PrintMacroConfiguration("runEventLoop");
@@ -524,5 +541,7 @@ int main(const int argc, const char *argv[] ) {
   TVector2 *pot = new TVector2( util.m_data_pot,util.m_mc_pot/prescale);
   out->WriteTObject( pot, "pot" );
   out->Close();
+  
+  std::cout << "Written to file " << outname << std::endl;
   std::cout << "Success" << std::endl;
 }
