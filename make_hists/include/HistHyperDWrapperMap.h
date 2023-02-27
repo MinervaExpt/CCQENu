@@ -97,7 +97,7 @@ public:
     m_univs = univs;
     m_tags = tags;
     for (auto tag : tags){
-     std::string hist_name = "h___"+tag +"___"+ name;
+     std::string hist_name = "hHD___"+tag +"___"+ name;
      // std::string hist_name = name + "_" + tag;
       m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), nbins, xmin, xmax, univs);
       m_hashist[tag] = true;
@@ -120,7 +120,7 @@ public:
     m_tags = tags;
     for (auto tag : tags){
       //std::string hist_name = tag +"_"+ name;
-      std::string hist_name = "h___"+tag+"___"+name;
+      std::string hist_name = "hHD___"+tag+"___"+name;
       m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), nbins, bins, univs);
       m_hashist[tag] = true;
     }
