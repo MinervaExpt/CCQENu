@@ -44,18 +44,22 @@ void LoopAndFillEventSelection(std::string tag,
   PlotUtils::detail::empty event;
 
 	std::ofstream csvFile;
-  if ( variables.size() < 1) {
+  if ( variables.size() < 1 && variables2D.size() < 1 && variablesHD.size() < 1) 
+  {
     std::cout << " no variables to fill " << std::endl;
     return;  // don't bother if there are no variables.
   }
 
-  if (data_mc_truth == kData ){
+  if (data_mc_truth == kData )
+  {
     nentries = util.GetDataEntries();
   }
-  else if (data_mc_truth == kMC ){
+  else if (data_mc_truth == kMC )
+  {
     nentries = util.GetMCEntries();
   }
-  else{
+  else
+  {
     nentries = util.GetTruthEntries() ;
     MinervaUniverse::SetTruth(true);
   }
@@ -68,18 +72,19 @@ void LoopAndFillEventSelection(std::string tag,
   std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
   
   // If sending MC Reco values to CSV create file and add columns names
-  if (data_mc_truth == kMC && mc_reco_to_csv){
-
+  if (data_mc_truth == kMC && mc_reco_to_csv)
+  {
   	std::string csvFileName = "mc_reco_entries_"+sample+"_"+cat+".csv";
 	  csvFile.open(csvFileName);
 	  csvFile << "Entry";
-	  for (auto v : variables) {
-	  	if (v->hasMC[tag]){
+	  for (auto v : variables) 
+    {
+	  	if (v->hasMC[tag])
+      {
 	  		csvFile << ";" << v->GetName();
 	  	}
 	  }
 	  csvFile << std::endl;
-
   }
   
   // status bar stuff
@@ -90,33 +95,34 @@ void LoopAndFillEventSelection(std::string tag,
 	double progress = 0;
 	
 	// Begin entries loop
-  for (int i = 0; i < nentries; i++) {
-    if(data_mc_truth != kData) i+= prescale-1;
+  for (int i = 0; i < nentries; i++) 
+  {
+    if (data_mc_truth != kData) i+= prescale-1;
     
     //if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
     // status bar stuff
-    if( ((double)(i+1)/nentries)*100 >= progress+2.5 ) {
+    if (((double)(i+1)/nentries)*100 >= progress+2.5 ) {
 	  
 	  	progress+=2.5;
 			std::cout << '\r' << std::flush << "   |";
 			//std::cout << std::endl << "   |";
 		
-			for(int j=0;j<progress/2.5;j++) std::cout << "\e[0;31;47m \e[0m";
-			for(int j=40;j>progress/2.5;j--) std::cout << "_";
+			for (int j=0;j<progress/2.5;j++) std::cout << "\e[0;31;47m \e[0m";
+			for (int j=40;j>progress/2.5;j--) std::cout << "_";
 
 			std::cout << "|   [";
-			if(progress<10) std::cout << "_";
-			if(progress<100) std::cout << "_";
+			if (progress<10) std::cout << "_";
+			if (progress<100) std::cout << "_";
 			std::cout << progress;
-			if(((int)(0.5 + progress/2.5))%2==0) std::cout << ".0";
+			if (((int)(0.5 + progress/2.5))%2==0) std::cout << ".0";
 			std::cout << "%]";
 			std::cout << "   ( ";
-			for(int j=((int)log10(nentries)-(int)log10(i+1)); j>0; j--) {
+			for (int j=((int)log10(nentries)-(int)log10(i+1)); j>0; j--) {
 				std::cout << "_";
 			}
 			std::cout << i+1 << " / " << nentries << " )";
 
-			if(progress == 100) std::cout << std::endl << std::endl;
+			if (progress == 100) std::cout << std::endl << std::endl;
 		}
 		
     cvUniv->SetEntry(i);
@@ -154,14 +160,14 @@ void LoopAndFillEventSelection(std::string tag,
         // Fill
         //=========================================
         
-        if(data_mc_truth == kMC){
+        if (data_mc_truth == kMC){
 #ifdef CLOSUREDETAIL
-          if(closure && universe->ShortName() == "cv" && selection.isMCSelected(*universe, event, weight).all()){
+          if (closure && universe->ShortName() == "cv" && selection.isMCSelected(*universe, event, weight).all()){
             std::cout  << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all() << " " << tag  << selection.isSignal(*universe)  << " " << universe->ShortName() <<  std::endl;
               universe->Print();
           }
 #endif
-          if(selection.isMCSelected(*universe, event, weight).all()
+          if (selection.isMCSelected(*universe, event, weight).all()
              && selection.isSignal(*universe)) {
             
             //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
@@ -169,8 +175,6 @@ void LoopAndFillEventSelection(std::string tag,
             double scale = 1.0;
             if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
 
-            // FillMC(tag, universe, weight, variables, variables2D, scale);
-            // FillResponse(tag, universe, weight, variables, variables2D, scale);
             FillMC(tag, universe, weight, variables, variables2D, variablesHD, scale);
             FillResponse(tag, universe, weight, variables, variables2D, variablesHD, scale);
 
@@ -190,12 +194,11 @@ void LoopAndFillEventSelection(std::string tag,
         }
         else if (data_mc_truth == kTruth){
 
-          if(selection.isEfficiencyDenom(*universe, weight)){
+          if (selection.isEfficiencyDenom(*universe, weight)){
             const double q2qe = universe->GetTrueQ2QEGeV();
             double scale = 1.0;
             if (!closure) scale =mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
             if (closure) scale = 1.0;
-            // FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
             FillSignalTruth(tag, universe, weight, variables, variables2D, variablesHD, scale);
           }
         }
@@ -205,7 +208,7 @@ void LoopAndFillEventSelection(std::string tag,
             std::cout  << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all()  << "  " << tag  << "1" << " " << universe->ShortName() <<  std::endl;
           }
 #endif
-          if(selection.isDataSelected(*universe, event).all()) {
+          if (selection.isDataSelected(*universe, event).all()) {
             FillData(tag, universe, variables, variables2D, variablesHD);
             
           }
