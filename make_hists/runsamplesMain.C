@@ -366,7 +366,6 @@ int main(const int argc, const char *argv[] ) {
     v->InitializeMCHistograms(mc_error_bands,selected_reco_tags);
     v->InitializeSelectedTruthHistograms(mc_error_bands,selected_truth_tags);
     v->InitializeDataHistograms(data_error_bands,datatags);
-    // v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands,truthtags);
     v->InitializeResponse(mc_error_bands,responsetags);
     if(useTuned)
@@ -384,7 +383,6 @@ int main(const int argc, const char *argv[] ) {
     v->InitializeMCHistograms2D(mc_error_bands,selected_reco_tags);
     v->InitializeSelectedTruthHistograms2D(mc_error_bands,selected_truth_tags);
     v->InitializeDataHistograms2D(data_error_bands,datatags);
-    // v->AddMCResponse2D(responsetags);
     v->InitializeTruthHistograms2D(truth_error_bands,truthtags);
     v->InitializeResponse2D(mc_error_bands,responsetags);
     if(useTuned)
@@ -403,11 +401,10 @@ int main(const int argc, const char *argv[] ) {
     v->InitializeMCHistograms(mc_error_bands, selected_reco_tags);
     v->InitializeSelectedTruthHistograms(mc_error_bands, selected_truth_tags);
     v->InitializeDataHistograms(data_error_bands, datatags);
-    // v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands, truthtags);
     std::cout << " Initialized all hists for HyperD var " << varname << ". About to initialize response... " << std::endl;
 
-    // v->InitializeResponse(mc_error_bands, responsetags);
+    v->InitializeResponse(mc_error_bands, responsetags);
     std::cout << " Initialized response for HyperD var " << varname << std::endl;
 
     if (useTuned)
