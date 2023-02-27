@@ -26,8 +26,8 @@
 #include "include/CVFunctions.h"
 #ifndef __CINT__  // CINT doesn't know about std::function
 
-// #include "PlotUtils/VariableHyperDBase.h"
-#include "include/VariableHyperDBase.h"
+#include "PlotUtils/VariableHyperDBase.h"
+// #include "include/VariableHyperDBase.h"
 #endif // __CINT__
 
 namespace CCQENu {
