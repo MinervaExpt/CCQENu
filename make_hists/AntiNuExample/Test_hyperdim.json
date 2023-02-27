@@ -12,7 +12,7 @@
   "TuneCategories":["qelike","qelikenot"], // categories that have tunes
   "pdg":-14, // I'm anti-neutrino
   "cutsFile":"${CCQEMAT}/AntiNuExample/AntiNuCuts_v13.json", // describe the cuts, choose them in samples
-  "varsFile":"${CCQEMAT}/AntiNuExample/Variables_v14.json", // describe the variables, choose them below
+  "varsFile":"${CCQEMAT}/AntiNuExample/Variables_v14_course3Dbins.json", // describe the variables, choose them below
   "samplesFile":"${CCQEMAT}/AntiNuExample/AntiNuSamples_v13.json",  // describe the samples, cuts are chosen here
   "runsamples":["QElike"], // chose which samples to run can provide a list or chose 1 using the batch
   "outRoot":"HyperDTest_minvervame5A_MnvTunev1_QElike", // name for output files
