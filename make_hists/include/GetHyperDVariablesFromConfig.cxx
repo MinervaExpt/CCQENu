@@ -5,8 +5,9 @@
 #include "CVUniverse.h"
 #include <cassert>
 
-std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, std::map<std::string, CCQENu::VariableFromConfig *> variablesmap, const std::vector<std::string> tags, const NuConfig configraw)
-// std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, std::map<std::string, PlotUtils::VariableBase<CVUniverse> *> variablesmap, const std::vector<std::string> tags, const NuConfig configraw)
+// return a vector instead of a map (which is unneeded nowadays)
+// std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, std::map<std::string, CCQENu::VariableFromConfig *> variablesmap, const std::vector<std::string> tags, const NuConfig configraw)
+std::vector<CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, std::map<std::string, CCQENu::VariableFromConfig *> variablesmap, const std::vector<std::string> tags, const NuConfig configraw)
 {
   //=========================================
   // Constructor wants: name,
@@ -19,8 +20,10 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFrom
   // Might change what the constructor wants to just take in both that vector
   // and then the config.GetValue("AnalyzeHyperDVariables")
   //=========================================
+  
   // this is the HyperD set that actually gets returned
-  std::map<std::string, CCQENu::VariableHyperDFromConfig*> variablesHDmap; 
+  // std::map<std::string, CCQENu::VariableHyperDFromConfig *> variablesHDmap;
+  std::vector<CCQENu::VariableHyperDFromConfig *> variablesHDvector;
 
   // configraw.Print();
   // Get the configs for *all* hyperD variables in your Variables config
@@ -112,7 +115,8 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFrom
         varHDfromconfig->AddTags(tags);
         std::cout << "GetHyperDVariablesFromConfig: set up HyperDim variable " << nameHD << " of dimension " << dim << std::endl;
         // Add it to the map
-        variablesHDmap[nameHD] = varHDfromconfig;
+        // variablesHDmap[nameHD] = varHDfromconfig;
+        variablesHDvector.emplace_back(varHDfromconfig);
       }
     }
     // Check that your hyperD variable existed...
@@ -124,18 +128,20 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFrom
     
 // check that all requested variables are defined.
   for (auto v:varsHD){
-      bool found = false;
-      for (auto key:keys){
-          if (v == key){
-              found = true;
-              break;
-          }
-        }
-      if (!found){
-        std::cout << "GetHyperDVariablesFromConfig: Warning - have requested an unimplemented variable in GetHyperDVariablesFromConfig " << v << std::endl;
-          assert(0);
+    bool found = false;
+    for (auto key:keys){
+      if (v == key){
+        found = true;
+        break;
       }
+      }
+    if (!found)
+    {
+      std::cout << "GetHyperDVariablesFromConfig: Warning - have requested an unimplemented variable in GetHyperDVariablesFromConfig " << v << std::endl;
+      assert(0);
     }
+  }
 
-  return variablesHDmap;
+  // return variablesHDmap;
+  return variablesHDvector;
 }
