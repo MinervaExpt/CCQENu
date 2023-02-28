@@ -16,9 +16,9 @@
   "samplesFile":"${CCQEMAT}/AntiNuExample/AntiNuSamples_v13.json",  // describe the samples, cuts are chosen here
   "runsamples":["QElike"], // chose which samples to run can provide a list or chose 1 using the batch
   "outRoot":"HyperDTest_minvervame5A_MnvTunev1_QElike", // name for output files
-  "AnalyzeVariables":["pzmu","ptmu","Enu"], // choose the 1D variables
+  "AnalyzeVariables":["pzmu","ptmu","Log10recoil"], // choose the 1D variables
   "Analyze2DVariables":[],
-  "AnalyzeHyperDVariables":["pzmu_ptmu_Enu"], // choose HyperD variables, 1D variables must be chosen
+  "AnalyzeHyperDVariables":["pzmu_ptmu_Log10recoil"], // choose HyperD variables, 1D variables must be chosen
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"}, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
   "data":{"QElike":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
