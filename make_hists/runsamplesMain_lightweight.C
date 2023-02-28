@@ -315,23 +315,21 @@ int main(const int argc, const char *argv[] ) {
 
   // new way
   std::vector<std::string> vars1D = config.GetStringVector("AnalyzeVariables");
-  std::vector<CCQENu::VariableFromConfig *> variables1D;
-  std::map<std::string, CCQENu::VariableFromConfig *> variablesmap1D = GetVariablesFromConfig(vars1D, tags, configvar);
+  std::vector<CCQENu::VariableFromConfig *> variables1D = GetVariablesVecFromConfig(vars1D, tags, configvar);
 
   std::vector<std::string> vars2D = config.GetStringVector("Analyze2DVariables");
-  std::vector<CCQENu::Variable2DFromConfig *> variables2D;
-  std::map<std::string, CCQENu::Variable2DFromConfig *> variablesmap2D = Get2DVariablesFromConfig(vars2D, variablesmap1D, tags, configvar);
+  std::vector<CCQENu::Variable2DFromConfig *> variables2D = Get2DVariablesFromConfig(vars2D, variables1D, tags, configvar);
 
   std::vector<std::string> varsHD = config.GetStringVector("AnalyzeHyperDVariables");
-  std::vector<CCQENu::VariableHyperDFromConfig *> variablesHD;
-  std::map<std::string, CCQENu::VariableHyperDFromConfig *> variablesmapHD = GetHyperDVariablesFromConfig(varsHD, variablesmap1D, tags, configvar);
+  std::vector<CCQENu::VariableHyperDFromConfig *> variablesHD = GetHyperDVariablesFromConfig(varsHD, variables1D, tags, configvar); // Just make the vector outright. You can get everything else you need from the vars themselves
 
   // here we initialist ghem
 #ifdef HYPERDIMAND1D2D
   std::cout << "Initializing 1D histograms..." << std::endl;
-  for (auto var1D : variablesmap1D) 
+  // for (auto var1D : variablesmap1D)
+  for (auto v : variables1D) 
   {
-    CCQENu::VariableFromConfig* v = var1D.second;
+    // CCQENu::VariableFromConfig* v = var1D.second;
     v->InitializeMCHistograms(mc_error_bands,selected_reco_tags);
     v->InitializeSelectedTruthHistograms(mc_error_bands,selected_truth_tags);
     v->InitializeDataHistograms(data_error_bands,datatags);
@@ -341,13 +339,14 @@ int main(const int argc, const char *argv[] ) {
     {
       v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
-    variables1D.push_back(v);
+    // variables1D.push_back(v);
   }
 
   std::cout << "Initializing 2D histograms..." << std::endl;
-  for (auto var2D : variablesmap2D ) 
+  // for (auto var2D : variablesmap2D)
+  for (auto v : variables2D ) 
   {
-    CCQENu::Variable2DFromConfig* v = var2D.second;
+    // CCQENu::Variable2DFromConfig* v = var2D.second;
     v->InitializeMCHistograms2D(mc_error_bands,selected_reco_tags);
     v->InitializeSelectedTruthHistograms2D(mc_error_bands,selected_truth_tags);
     v->InitializeDataHistograms2D(data_error_bands,datatags);
@@ -357,27 +356,30 @@ int main(const int argc, const char *argv[] ) {
     {
       v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
-    variables2D.push_back(v);
+    // variables2D.push_back(v);
   }
 
 #endif
 
   std::cout << "Initializing HyperD histograms..." << std::endl;
-  for (auto varHD : variablesmapHD)
+  // for (auto varHD : variablesmapHD)
+  for (auto v : variablesHD)
   {
-    CCQENu::VariableHyperDFromConfig *v = varHD.second;
+    // CCQENu::VariableHyperDFromConfig *v = varHD.second;
     v->InitializeMCHistograms(mc_error_bands, selected_reco_tags);
     v->InitializeSelectedTruthHistograms(mc_error_bands, selected_truth_tags);
     v->InitializeDataHistograms(data_error_bands, datatags);
     v->InitializeTruthHistograms(truth_error_bands, truthtags);
-    std::cout << " Initialized all hists for HyperD var " << varHD.first << ". About to initialize response... " << std::endl;
+    std::cout << " Initialized all hists for HyperD var " << v->GetName() << ". About to initialize response... " << std::endl;
+    // std::cout << " Initialized all hists for HyperD var " << varHD.first << ". About to initialize response... " << std::endl;
     v->InitializeResponse(mc_error_bands, responsetags);
-    std::cout << " Initialized response for HyperD var " << varHD.first << std::endl;
+    std::cout << " Initialized response for HyperD var " << v->GetName() << std::endl;
+    // std::cout << " Initialized response for HyperD var " << varHD.first << std::endl;
     if (useTuned)
     {
       v->InitializeTunedMCHistograms(mc_error_bands, truth_error_bands, selected_reco_tags, responsetags);
     }
-    variablesHD.push_back(v);
+    // variablesHD.push_back(v);
   }
 
   // Check if sending events to csv file
