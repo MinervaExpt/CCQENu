@@ -160,13 +160,13 @@ std::map<std::string, CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(s
     return variables2Dmap;
 }
 
-std::vector<CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(std::vector<std::string> vars2D, std::vector<CCQENu::VariableFromConfig *> variablesvec, const std::vector<std::string> tags, const NuConfig configraw)
+std::vector<CCQENu::Variable2DFromConfig *> Get2DVariablesVecFromConfig(std::vector<std::string> vars2D, std::vector<CCQENu::VariableFromConfig *> variablesvec, const std::vector<std::string> tags, const NuConfig configraw)
 {
     //=========================================
     // Constructor wants: name,
     //                    x VariableFromConfig, y VariableFromConfig
     //
-    // variablesmap is the output of from GetMapOfVariables
+    // variablesvec is the output of from this
     // config is the whole config file since I need to loop over a vector of 2D
     // variables to analyze, which I need to pull from the config file
     // Might change what the constructor wants to just take in both that vector
@@ -245,7 +245,7 @@ std::vector<CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(std::vector
           // CCQENu::Variable2DFromConfig* var2Dfromconfig;
 
           // for (auto var : variablesmap)
-          for (int i = 0; i < variablesvec.size())
+          for (int i = 0; i < variablesvec.size(); i++)
           {
             // std::string varname = var.first;
             std::string varname = variablesvec[i]->GetName();
@@ -258,7 +258,7 @@ std::vector<CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(std::vector
             if (yvarname == varname)
             {
               // yvar = variablesmap[yvarname];
-              yvar = variablesmap[i];
+              yvar = variablesvec[i];
               foundy = true;
             }
           }
@@ -310,5 +310,6 @@ std::vector<CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(std::vector
       }
     }
 
-    return variables2Dmap;
+    // return variables2Dmap;
+    return variables2Dvec;
 }

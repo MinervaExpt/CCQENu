@@ -318,10 +318,10 @@ int main(const int argc, const char *argv[] ) {
   std::vector<CCQENu::VariableFromConfig *> variables1D = GetVariablesVecFromConfig(vars1D, tags, configvar);
 
   std::vector<std::string> vars2D = config.GetStringVector("Analyze2DVariables");
-  std::vector<CCQENu::Variable2DFromConfig *> variables2D = Get2DVariablesFromConfig(vars2D, variables1D, tags, configvar);
+  std::vector<CCQENu::Variable2DFromConfig *> variables2D = Get2DVariablesVecFromConfig(vars2D, variables1D, tags, configvar);
 
   std::vector<std::string> varsHD = config.GetStringVector("AnalyzeHyperDVariables");
-  std::vector<CCQENu::VariableHyperDFromConfig *> variablesHD = GetHyperDVariablesFromConfig(varsHD, variables1D, tags, configvar); // Just make the vector outright. You can get everything else you need from the vars themselves
+  std::vector<CCQENu::VariableHyperDFromConfig *> variablesHD = GetHyperDVariablesVecFromConfig(varsHD, variables1D, tags, configvar); // Just make the vector outright. You can get everything else you need from the vars themselves
 
   // here we initialist ghem
 #ifdef HYPERDIMAND1D2D

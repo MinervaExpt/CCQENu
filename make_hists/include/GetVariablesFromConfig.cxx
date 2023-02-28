@@ -149,7 +149,7 @@ std::vector<CCQENu::VariableFromConfig *> GetVariablesVecFromConfig(const std::v
         // allvariables[key] = new CCQENu::VariableFromConfig(config.GetValue(key));
         allvariables.emplace_back(new CCQENu::VariableFromConfig(config.GetValue(key)));
         // std::cout << "GetVariables: set up variable " << allvariables[key]->GetName() << std::endl;
-        std::cout << "GetVariables: set up variable " << allvariables[i]->GetName() << std::endl;
+        std::cout << "GetVariables: set up variable " << key << std::endl;
       }
     }
     if (!found)
@@ -177,8 +177,9 @@ std::vector<CCQENu::VariableFromConfig *> GetVariablesVecFromConfig(const std::v
     for (int j = 0; j < allvariables.size(); j++)
     {
       // std::cout << var << " check " << variable.first<< std::endl;
-      if (var == variable.first)
-      // if (vars[i] == allvariables[j]->GetName())
+      // if (var == variable.first)
+      if (var == allvariables[j]->GetName())
+
       {
         std::cout << "GetVariables: study 1D variable " << var << std::endl;
         // this is the point where you add the tags.  Saves space this way.
@@ -204,8 +205,11 @@ std::vector<CCQENu::VariableFromConfig *> GetVariablesVecFromConfig(const std::v
   // for (auto variable : allvariables)
   for (int i = 0; i < allvariables.size(); i++)
   {
-    if (amIused[variable.first]) continue;
-    std::cout << "GetVariables: remove unused variable " << allvariables[i] << std::endl;
+    // if (amIused[variable.first]) 
+    //   continue;
+    if (amIused[allvariables[i]->GetName()])
+      continue;
+    std::cout << "GetVariables: remove unused variable " << allvariables[i]->GetName() << std::endl;
   }
   return variablesvec;
 }
