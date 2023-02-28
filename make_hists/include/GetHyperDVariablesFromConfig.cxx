@@ -235,7 +235,7 @@ std::vector<CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesVecFromConfig(
           std::vector<std::string> axisfor = {};
           if (axisvarconfig.IsMember("for"))
           {
-            axisfor.push_back(axisvarconfig.GetString("for"));
+            axisfor.push_back(axisvarconfig.GetString("for")); // TODO: this isn't workign right
           }
           axisforsvec.push_back(axisfor);
           // TODO: figure out the intersection of "fors" of all axes? For now just configuring it like a 1D variable to have its own set of "fors"
