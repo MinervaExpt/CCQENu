@@ -19,6 +19,8 @@ gStyle.SetPaintTextFormat("4.0f")
 #gStyle.SetPaintTextSize(gStyle.GetPaintTextSize()*2.)
 gStyle.SetOptStat(000000)
 
+TH1.AddDirectory(0)
+
 NOREBIN=False
 
 NOSYS = True  # I think this means don't look at systematic errors individually
