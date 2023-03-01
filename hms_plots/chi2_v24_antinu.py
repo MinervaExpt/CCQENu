@@ -8,6 +8,8 @@ from PlotUtils import *
 
 from chi2utils import *
 
+TH1.AddDirectory(0)
+
 NOREBIN=False
 
 NOSYS = True  # I think this means don't look at systematic errors individually
@@ -721,7 +723,7 @@ print ("got here after reading input")
 onames = {}
   #for model in models:
 #ofile[model] = open(basemodel+var+"_"+model+".tex",'w')
-oname =  "chi2-%s-%s-%f_v23.tex"%(basemodel,var,norm)
+oname =  "chi2-%s-%s-%f_v24.tex"%(basemodel,var,norm)
 ofile["ALL"] = open(oname,'w')
 out = ofile["ALL"]
 top = "\\documentclass[12pt,landscape]{article}\n \\begin{document} \n"
@@ -906,7 +908,7 @@ for model in models:
   
 
       mcdraw[model].Write()
-      pname =  basemodel+"%s-%s-v23.pdf" %(var,model)
+      pname =  basemodel+"%s-%s-v24.pdf" %(var,model)
     #  c1[model].SaveAs(pname,"pdf")
       print (" Try to save ",pname)
     #mchist[model].Delete()

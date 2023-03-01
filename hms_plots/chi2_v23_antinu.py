@@ -8,7 +8,7 @@ from PlotUtils import *
 
 from chi2utils import *
 
-NOREBIN=True
+NOREBIN=False
 
 NOSYS = True  # I think this means don't look at systematic errors individually
 
