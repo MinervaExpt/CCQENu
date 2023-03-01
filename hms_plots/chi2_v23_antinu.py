@@ -10,6 +10,8 @@ from PlotUtils import *
 
 from chi2utils import *
 
+TH1.AddDirectory(0)
+
 NOREBIN=False
 
 NOSYS = True  # I think this means don't look at systematic errors individually
