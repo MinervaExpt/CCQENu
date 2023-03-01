@@ -275,17 +275,12 @@ public:
     m_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
     m_selected_mc_truth.AppendName("selected_truth",tags);
     double range = bins[1]-bins[GetNBins()];
-<<<<<<< HEAD
+
     if (m_doresolution){
       m_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName()+";"+m_xaxis_label+" reco-true").c_str(), 50,-range/10.,range/10., univs, tags);
       m_resolution.AppendName("resolution",tags);
       std::cout << " created m_resolution " << GetName() << std::endl;
     }
-=======
-    m_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName()+";"+m_xaxis_label+" reco-true").c_str(), 50,-range/10.,range/10., univs, tags);
-    m_resolution.AppendName("resolution",tags);
-    std::cout << " created m_resolution " << GetName() << std::endl;
->>>>>>> c9614d7afc1e2fcadf5852b095dc29dcdf28946f
   }
 
   template <typename T>
@@ -360,19 +355,13 @@ public:
       m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, truth_univs, tuned_tags);
       m_tuned_signal_mc_truth.AppendName("all_truth_tuned",tuned_tags);
     }
-<<<<<<< HEAD
+
     if (m_doresolution){
       if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) { // use bins
           double range = bins[1]-bins[GetNBins()];
           m_tuned_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName()+";"+m_xaxis_label+" reco-true").c_str(),   50,-range/10.,range/10., reco_univs, tuned_tags);
           m_tuned_resolution.AppendName("resolution_tuned",tuned_tags);
       }
-=======
-    if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) { // use bins
-        double range = bins[1]-bins[GetNBins()];
-        m_tuned_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName()+";"+m_xaxis_label+" reco-true").c_str(), 50,-range/10.,range/10., reco_univs, tuned_tags);
-        m_tuned_resolution.AppendName("resolution_tuned",tuned_tags);
->>>>>>> c9614d7afc1e2fcadf5852b095dc29dcdf28946f
     }
 
     if(std::count(m_for.begin(), m_for.end(),"response")>=1){
@@ -475,7 +464,7 @@ public:
         if(m_tunedmc!=1){
           std::cout << " write out selected truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
           m_selected_mc_truth.Write(tag);
-<<<<<<< HEAD
+
           if (m_doresolution){
             std::cout << " write out resolution histogram " << m_resolution.GetHist(tag)->GetName() << std::endl;
             m_resolution.Write(tag);
@@ -489,18 +478,6 @@ public:
             std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
             std::cout << " write out resolution histogram " << m_tuned_resolution.GetHist(tag)->GetName() << std::endl;
           }
-=======
-          std::cout << " write out resolution histogram " << m_resolution.GetHist(tag)->GetName() << std::endl;
-          m_resolution.Write(tag);
-            m_resolution.GetHist(tag)->Print("ALL");
-        }
-        if(hasTunedMC[tag]){
-          m_tuned_selected_mc_truth.Write(tag);
-          m_tuned_resolution.Write(tag);
-          std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
-          std::cout << " write out resolution histogram " << m_tuned_resolution.GetHist(tag)->GetName() << std::endl;
-            
->>>>>>> c9614d7afc1e2fcadf5852b095dc29dcdf28946f
     
         }
       }
@@ -548,19 +525,12 @@ public:
       if(hasSelectedTruth[tag]){
         if(m_tunedmc!=1){
           m_selected_mc_truth.SyncCVHistos();
-<<<<<<< HEAD
+
           if (m_doresolution) m_resolution.SyncCVHistos();
         }
         if(hasTunedMC[tag]){
           m_tuned_selected_mc_truth.SyncCVHistos();
           if (m_doresolution) m_tuned_resolution.SyncCVHistos();
-=======
-          m_resolution.SyncCVHistos();
-        }
-        if(hasTunedMC[tag]){
-          m_tuned_selected_mc_truth.SyncCVHistos();
-          m_tuned_resolution.SyncCVHistos();
->>>>>>> c9614d7afc1e2fcadf5852b095dc29dcdf28946f
         }
       }
       if(hasData[tag]){
@@ -606,11 +576,9 @@ public:
     void FillResolution(std::string tag, CVUniverse* univ,
                              const double value, const double truth,
                              const double weight=1.0, const double scale=1.0){
-<<<<<<< HEAD
-      if (!m_doresolution)return;
-=======
 
->>>>>>> c9614d7afc1e2fcadf5852b095dc29dcdf28946f
+      if (!m_doresolution)return;
+
       std::string name = univ->ShortName();
       // int iuniv = m_decoder[univ];
 
