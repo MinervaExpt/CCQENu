@@ -1,4 +1,5 @@
 from ROOT import *
+import numpy as np
 
 def Debinwidth(h_data):
   h_nobin=h_data.Clone()
@@ -173,10 +174,4 @@ def compressMatrix(v,e):
       vnew[i][j] = v[e[i]][e[j]]
   
   return vnew
-
-#if basemodel == "":
-#  dir = "/Users/schellma/Dropbox/ccqe/PAPER6/CCQENu_v21r1p1_Pub_Sep2019ntuples_YESNue_Nov11_CV"
-#else:
-#  dir = "/Users/schellma/Dropbox/ccqe/PAPER6/CCQENu_v21r1p1_Pub_Sep2019ntuples_YESNue_Nov11_CV_RPA_Res_MINOS"
-#
-#
+  
