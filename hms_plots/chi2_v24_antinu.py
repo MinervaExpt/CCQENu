@@ -1,12 +1,25 @@
 import sys,os,string
 import math
 
+# this code only works for Q2 2-27-2023
+
+
+import numpy as np
+
 # version 10 implement new low q2 error band from /minerva/data/users/drut1186/Mateus_Pub_Inputs/Modified_AddedLowQ2Suppression
 from ROOT import *
 
 from PlotUtils import *
 
-from chi2utils import *
+from chi2utils import Debinwidth, Debinwidth2
+from NPchi2utils import *
+
+TH1.AddDirectory(0)
+gStyle.SetPaintTextFormat("4.0f")
+#gStyle.SetPaintTextSize(gStyle.GetPaintTextSize()*2.)
+gStyle.SetOptStat(000000)
+
+TH1.AddDirectory(0)
 
 NOREBIN=False
 
@@ -363,7 +376,7 @@ if ("_" in var):
 if ("enu" in var):
     datahist.MnvH1DToCSV( (datahist.GetName()),"./full",1.,True,True,True,False)
     datahist.MnvH1DToCSV( (datahist.GetName()),"./fixed",FIXEDSCALE,False,True,True,False)
-datahist.Print("ALL")
+#datahist.Print("ALL")
 print ("var is ", var)
 #datadraw=datahist.GetCVHistoWithError()
 #datadraw.Scale(1.,"width")
@@ -371,41 +384,41 @@ rfile=TFile.Open(rname,"RECREATE")
 if proj == "_px":
  
   oneDhist = datahist.ProjectionX(datahist.GetName()+"_px",ymin,ymax)
-  datavals = readData1D(oneDhist)
-  matrix = readMatrix1D(oneDhist.GetTotalErrorMatrix(),oneDhist)
-  uncov = readMatrix(oneDhist.GetSysErrorMatrix("unfoldingCov"),oneDhist)
+  datavals = NPreadData1D(oneDhist)
+  matrix = NPreadMatrix1D(oneDhist.GetTotalErrorMatrix(),oneDhist)
+  uncov = NPreadMatrix(oneDhist.GetSysErrorMatrix("unfoldingCov"),oneDhist)
   #oneDhist.GetSysErrorMatrix("unfoldingCov").Print()
   #uncov.Print()
   if nounfold:
     matrix -=uncov
-  matrix.Print()
+  print ("matrix",matrix)
   #oneDhist.SetName("data"+oneDhist.GetName())
   oneDhist.Write()
   print ("check binning")
   #dobinwidth = (var != "enu?")
-  oneDhist.Print("ALL")
+  #oneDhist.Print("ALL")
   test = MnvH1D()
   test = oneDhist.Clone("test")
   test.Scale(1.,"width")
-  test.Print("ALL")
+  #test.Print("ALL")
   print ("checked binning")
   oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./full",1.,True,True,True,dobinwidth)
   oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./fixed",FIXEDSCALE,False,True,True,dobinwidth)
   datadraw=oneDhist.GetCVHistoWithError()
   
-  datadraw.Print("ALL")
+  #datadraw.Print("ALL")
   oneDhist.Delete()
 if proj == "_py":
   nx = datahist.GetXaxis().GetNbins()
   oneDhist = datahist.ProjectionY(datahist.GetName()+"_py",xmin,xmax)
-  datavals = readData1D(oneDhist)
-  oneDhist.Print("ALL")
-  matrix = readMatrix1D(oneDhist.GetTotalErrorMatrix(),oneDhist)
-  uncov = readMatrix(oneDhist.GetSysErrorMatrix("unfoldingCov"),oneDhist)
+  datavals = NPreadData1D(oneDhist)
+  #oneDhist.Print("ALL")
+  matrix = NPreadMatrix1D(oneDhist.GetTotalErrorMatrix(),oneDhist)
+  uncov = NPreadMatrix(oneDhist.GetSysErrorMatrix("unfoldingCov"),oneDhist)
   #uncov.Print()
   if nounfold:
     matrix -=uncov
-  matrix.Print()
+  print ("matrix",matrix)
   #oneDhist.SetName("data"+oneDhist.GetName())
   datadraw=oneDhist.GetCVHistoWithError()
   oneDhist.Write()
@@ -414,20 +427,20 @@ if proj == "_py":
   oneDhist.MnvH1DToCSV((oneDhist.GetName()),"./fixed",FIXEDSCALE,False,True,True,dobinwidth)
   oneDhist.Delete()
 if proj == "":
-  datavals = readData(datahist)
-  matrix = readMatrix(datahist.GetTotalErrorMatrix(),datahist)
+  datavals = NPreadData(datahist)
+  matrix = NPreadMatrix(datahist.GetTotalErrorMatrix(),datahist)
   datahist.Write()
 
 #datavals.Print()
 
 if Diagonal:
-  for  i in range(0,matrix.GetNrows()):
-    for  j in range(0,matrix.GetNrows()):
+  for  i in range(0,matrix.shape(0)):
+    for  j in range(0,matrix.shape(0)):
       if i == j:
         print ("error",datadraw.GetBinError(i+1),math.sqrt(matrix[i][j]))
         continue
       matrix[i][j] = 0.0
-  matrix.Print()
+  print ("matrix",matrix)
 
 
 #datavals.Print()
@@ -441,8 +454,9 @@ for i in range(0,len(datavals)):
 #print goodelements
 
 
-data = compressVector(datavals,goodelements)
-logdata = TVectorD(data)
+data = NPcompressVector(datavals,goodelements)
+print (data)
+logdata = data.copy()
 for i in range(0,len(goodelements)):
   if data[i] == 0:
     continue
@@ -617,8 +631,8 @@ for model in models:
       oneDhist.SetDirectory(0)
       mcdraw[model].SetDirectory(0)
 #mcdraw[model].Print("ALL")
-      mcvals = readData1D(oneDhist)
-      mcerrs = readErrors1D(oneDhist)
+      mcvals = NPreadData1D(oneDhist)
+      mcerrs = NPreadErrors1D(oneDhist)
       oneDhist.SetName((oneDhist.GetName()))
 
       
@@ -653,9 +667,9 @@ for model in models:
       oneDhist.SetBinContent(0,0)
       oneDhist.SetDirectory(0)
       oneDhist.SetName((oneDhist.GetName()))
-      mcvals = readData1D(oneDhist)
-      oneDhist.Print("ALL")
-      mcerrs = readErrors1D(oneDhist)
+      mcvals = NPreadData1D(oneDhist)
+      #oneDhist.Print("ALL")
+      mcerrs = NPreadErrors1D(oneDhist)
       
 #print mcvals
       #oneDhist.Print("ALL")
@@ -672,18 +686,18 @@ for model in models:
       print (" go here")
       if not model in extramodels and "enu" not in var:
         
-            mcvals = readData(mchist[model].GetCVHistoWithStatError())
-            mcerrs = readErrors(mchist[model].GetCVHistoWithStatError())
+            mcvals = NPreadData(mchist[model].GetCVHistoWithStatError())
+            mcerrs = NPreadErrors(mchist[model].GetCVHistoWithStatError())
       else:
-        mcvals = readData(mchist[model])
-        mcerrs = readErrors(mchist[model])
+        mcvals = NPreadData(mchist[model])
+        mcerrs = NPreadErrors(mchist[model])
       mchist[model].Write()
-      mchist[model].Print("ALL")
+      #mchist[model].Print("ALL")
       mcdraw[model]=mchist[model]
-    mc[model]=compressVector(mcvals,goodelements)
-    mcstat[model]=compressVector(mcerrs,goodelements)
-    logmc[model] = TVectorD(mc[model])
-    logmcstat[model]=TVectorD(mc[model])
+    mc[model]=NPcompressVector(mcvals,goodelements)
+    mcstat[model]=NPcompressVector(mcerrs,goodelements)
+    logmc[model] = mc[model].copy()
+    logmcstat[model]=mc[model].copy()
     for i in range(0,len(goodelements)):
       if mc[model][i] == 0:
         continue
@@ -721,7 +735,7 @@ print ("got here after reading input")
 onames = {}
   #for model in models:
 #ofile[model] = open(basemodel+var+"_"+model+".tex",'w')
-oname =  "chi2-%s-%s-%f_v23.tex"%(basemodel,var,norm)
+oname =  "chi2-%s-%s-%f_v24.tex"%(basemodel,var,norm)
 ofile["ALL"] = open(oname,'w')
 out = ofile["ALL"]
 top = "\\documentclass[12pt,landscape]{article}\n \\begin{document} \n"
@@ -749,10 +763,10 @@ logcovmx = {}
 
 for model in models:
 
-    covmx[model] = compressMatrix(matrix,goodelements)
-    
-    fullsysmat = readMatrix(datahist.GetTotalErrorMatrix(),datahist)
-    syscov[model] = compressMatrix(fullsysmat,goodelements)
+    covmx[model] = NPcompressMatrix(matrix,goodelements)
+    print (type(covmx[model]))
+    fullsysmat = NPreadMatrix(datahist.GetTotalErrorMatrix(),datahist)
+    syscov[model] = NPcompressMatrix(fullsysmat,goodelements)
     
   #
   #  if syst == "unfoldingCov":
@@ -767,7 +781,7 @@ for model in models:
     
       
     
-    logcovmx[model] = compressMatrix(matrix,goodelements)
+    logcovmx[model] = NPcompressMatrix(matrix,goodelements)
 
     for i in range(0,len(goodelements)):
       if data[i] == 0:
@@ -784,9 +798,14 @@ for model in models:
       logcovmx[model][i][i] += logmcstat[model][i]*logmcstat[model][i]
 
     
-    InvertedError=TDecompSVD(covmx[model]);
-    InvertedErrorMatrix[model]=TMatrixD(covmx[model]);
-    InvertedError.Invert(InvertedErrorMatrix[model])
+    #InvertedError=TDecompSVD(covmx[model]);
+    #InvertedErrorMatrix[model]=TMatrixD(covmx[model]);
+    #InvertedError.Invert(InvertedErrorMatrix[model])
+    InvertedErrorMatrix[model]=covmx[model].copy()
+    InvertedErrorMatrix[model]=np.linalg.inv(InvertedErrorMatrix[model])
+    print ("preinversion",covmx[model])
+    print ("postinversion",InvertedErrorMatrix[model])
+    print ('test',np.matmul(covmx[model],InvertedErrorMatrix[model]))
     
     for i in range(0,len(goodelements)):
         preinversion = math.sqrt(covmx[model][i][i])
@@ -794,16 +813,13 @@ for model in models:
         print ("inversion check ",i,model, preinversion,postinversion)
 
 
-    LogInvertedError=TDecompSVD(logcovmx[model]);
-    LogInvertedErrorMatrix[model]=TMatrixD(logcovmx[model]);
-    LogInvertedError.Invert(LogInvertedErrorMatrix[model])
+    LogInvertedErrorMatrix[model]=logcovmx[model].copy()
+    LogInvertedErrorMatrix[model]=np.linalg.inv(LogInvertedErrorMatrix[model])
+   
 
 
 
 
-test = TMatrixD(LogInvertedErrorMatrix["CV"])
-test.ResizeTo(5,5)
-test.Print()
 
 head = "%s &\t %s &\t %s  \\\\ \n"%("Model","$\chi^2$ - linear","$\chi^2$ - log")
 print (head)
@@ -835,23 +851,29 @@ if var in ["q2","ptmu","pzmu"]:
  
 ofile["ALL"].write(head)
 h_chi2cont = {}
-n  = covmx["CV"].GetNrows()
+print ("846",covmx["CV"].shape)
+n  = covmx["CV"].shape[0]
 counter = 0
 bfile = open(var+"_chi2list.py",'w')
 bfile.write("chi2vals={")
+can ={}
+gStyle.SetOptStat(000000)
+
 for model in models:
+  can[model] = TCanvas(model,model)
   counter += 1
-  h_chi2cont[model] = TH2D("cont"+model,"chi2 cont",n,1,n,n,1,n)
+  h_chi2cont[model] = TH2D("cont"+model,"chi2 cont"+model,n,0,n-1,n,0,n-1)
+  h_chi2cont[model].SetMarkerSize(2*h_chi2cont[model].GetMarkerSize())
   if var in ["q2","enu","ptmu","pzmu"]:
     mcdraw[model].SetDirectory(0)
-  chi2cont = TMatrixD(covmx[model])
-  chi2cont.Zero()
+  
+  chi2cont = np.zeros(shape=(n,n))
   for syst in sysnames:
     totchi2 = 0.0
     totlogchi2 = 0.0
     dof = 0
-    residual = TVectorD(data)
-    logresidual = TVectorD(residual)
+    residual = data.copy()
+    logresidual = residual.copy()
     for i in range(0,n):
       residual[i] = data[i]-mc[model][i]
       logresidual[i] = logdata[i] - logmc[model][i]
@@ -859,8 +881,8 @@ for model in models:
       #print ("compare",model,data[i],mc[model][i])
       #print i, data[i],mc[model][i],logdata[i],logmc[model][i]
       dof += 1
-    chi2diag = TVectorD(residual)
-    chi2diag.Zero()
+    chi2diag = np.zeros((n,n))
+    
     for i in range(minb,maxb):
       for j in range(minb,maxb):
         if (i == j):
@@ -870,19 +892,27 @@ for model in models:
         totchi2 += residual[i]*InvertedErrorMatrix[model][i][j]*residual[j]
         totlogchi2 += logresidual[i]*LogInvertedErrorMatrix[model][i][j]*logresidual[j]
         chi2cont[i][j] = residual[i]*InvertedErrorMatrix[model][i][j]*residual[j]
-        h_chi2cont[model].Fill(i,j,chi2cont[i][j])
+        h_chi2cont[model].SetBinContent(i+1,j+1,chi2cont[i][j])
         if i == j:
           chi2diag[i] = chi2cont[i][j]
     
     #print "chi2", model, syst, totchi2, dof, totlogchi2
     outs =  "%s &\t %10.1f &\t %10.1f \t \\\\%%(%s)\n"%(translate[model],totchi2, totlogchi2,model)
     bfile.write('\"%s\":[%5.1f,%d],'%(model,totchi2,dof))
-    print ("dump of contributions", model)
-    print (outs)
+    print ("dump of contributions", model,totchi2,dof)
+   
     #chi2diag.Print()
     #chi2cont.Print()
     ofile["ALL"].write(outs)
     h_chi2cont[model].Write()
+    h_chi2cont[model].SetMaximum(1000.)
+    h_chi2cont[model].SetTitle(model+";"+model+"   chi2 contribution by bin"+";chi2 contribution by bin")
+    if (maxb < 20):
+      h_chi2cont[model].Draw("TEXT COLZ")
+    else:
+      h_chi2cont[model].Draw("COLZ")
+    can[model].Draw()
+    can[model].Print(model+"_"+var+"_chi2cont.jpg")
     print (" before pdf ", syst,var, model)
     if var != "pzmu_ptmu" and syst == "ALL":
       title = "%s ; %s %6.0f"%(model,var,totchi2)
@@ -906,7 +936,7 @@ for model in models:
   
 
       mcdraw[model].Write()
-      pname =  basemodel+"%s-%s-v23.pdf" %(var,model)
+      pname =  basemodel+"%s-%s-v24.pdf" %(var,model)
     #  c1[model].SaveAs(pname,"pdf")
       print (" Try to save ",pname)
     #mchist[model].Delete()
