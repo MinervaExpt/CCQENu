@@ -84,5 +84,5 @@ namespace CCQENu {
 
 // This is just so all the headers aren't filling up space in the real script here
 
-// #include "runsamplesMain.C"
-#include "runsamplesMain_lightweight.C"
+#include "runsamplesMain.C"
+// #include "runsamplesMain_lightweight.C"
