@@ -82,11 +82,11 @@ void LoopAndFillEventSelection(std::string tag,
   }
   
   // status bar stuff
-  std::cout << std::endl;
-	std::cout << "  0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%" << std::endl;
-	std::cout << "   \\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\ " << std::endl;
-	std::cout << "   |________________________________________|   [__0.0%]";
-	double progress = 0;
+  // std::cout << std::endl;
+	// std::cout << "  0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%" << std::endl;
+	// std::cout << "   \\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\ " << std::endl;
+	// std::cout << "   |________________________________________|   [__0.0%]";
+	// double progress = 0;
 	
 	// Begin entries loop
   for (int i = 0; i < nentries; i++) {
@@ -94,29 +94,29 @@ void LoopAndFillEventSelection(std::string tag,
     
     //if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
     // status bar stuff
-    if( ((double)(i+1)/nentries)*100 >= progress+2.5 ) {
+    // if( ((double)(i+1)/nentries)*100 >= progress+2.5 ) {
 	  
-	  	progress+=2.5;
-			std::cout << '\r' << std::flush << "   |";
-			//std::cout << std::endl << "   |";
+	  // 	progress+=2.5;
+		// 	std::cout << '\r' << std::flush << "   |";
+		// 	//std::cout << std::endl << "   |";
 		
-			for(int j=0;j<progress/2.5;j++) std::cout << "\e[0;31;47m \e[0m";
-			for(int j=40;j>progress/2.5;j--) std::cout << "_";
+		// 	for(int j=0;j<progress/2.5;j++) std::cout << "\e[0;31;47m \e[0m";
+		// 	for(int j=40;j>progress/2.5;j--) std::cout << "_";
 
-			std::cout << "|   [";
-			if(progress<10) std::cout << "_";
-			if(progress<100) std::cout << "_";
-			std::cout << progress;
-			if(((int)(0.5 + progress/2.5))%2==0) std::cout << ".0";
-			std::cout << "%]";
-			std::cout << "   ( ";
-			for(int j=((int)log10(nentries)-(int)log10(i+1)); j>0; j--) {
-				std::cout << "_";
-			}
-			std::cout << i+1 << " / " << nentries << " )";
+		// 	std::cout << "|   [";
+		// 	if(progress<10) std::cout << "_";
+		// 	if(progress<100) std::cout << "_";
+		// 	std::cout << progress;
+		// 	if(((int)(0.5 + progress/2.5))%2==0) std::cout << ".0";
+		// 	std::cout << "%]";
+		// 	std::cout << "   ( ";
+		// 	for(int j=((int)log10(nentries)-(int)log10(i+1)); j>0; j--) {
+		// 		std::cout << "_";
+		// 	}
+		// 	std::cout << i+1 << " / " << nentries << " )";
 
-			if(progress == 100) std::cout << std::endl << std::endl;
-		}
+		// 	if(progress == 100) std::cout << std::endl << std::endl;
+		// }
 		
     cvUniv->SetEntry(i);
 
@@ -164,7 +164,7 @@ void LoopAndFillEventSelection(std::string tag,
              && selection.isSignal(*universe)) {
             
             //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
-            const double q2qe = universe->GetQ2QEGeV();
+            const double q2qe = universe->GetPperpMuGeV();
             double scale = 1.0;
             if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
         
@@ -189,7 +189,7 @@ void LoopAndFillEventSelection(std::string tag,
         else if (data_mc_truth == kTruth){
 
           if(selection.isEfficiencyDenom(*universe, weight)){
-            const double q2qe = universe->GetTrueQ2QEGeV();
+            const double q2qe = universe->GetTruePperpMuGeV();
             double scale = 1.0;
             if (!closure) scale =mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
             if (closure) scale = 1.0;

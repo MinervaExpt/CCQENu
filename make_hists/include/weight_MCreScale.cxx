@@ -53,18 +53,22 @@ weight_MCreScale::weight_MCreScale(const NuConfig config){
 
 void weight_MCreScale::read(TString filename){
 
-  m_f_Q2QEScaleFrac = TFile::Open(filename,"READ");
-  if(m_f_Q2QEScaleFrac){
+  m_f_ScaleFrac = TFile::Open(filename,"READ");
+  if (m_f_ScaleFrac)
+  {
     std::cout << "weight_MCreScale: I'm using this scale file " << filename << std::endl;
-    for (auto cat:m_categories){
-      std::string name = "h___Background___"+cat+"___Q2QE___scale";
-      m_mnvh_Scales[cat] = (MnvH1D*)m_f_Q2QEScaleFrac->Get(name.c_str());
-   }
+    for (auto cat:m_categories)
+    {
+      std::string name = "h___QElike___"+cat+"___ptmu___scale";
+      m_mnvh_Scales[cat] = (MnvH1D *)m_f_ScaleFrac->Get(name.c_str());
+    }
   }
-  else{
+  else
+  {
     std::cout << "weight_MCreScale: Bad file input for weight_MCreScale." << std::endl;
   }
-  if (m_mnvh_Scales.size() < 1){
+  if (m_mnvh_Scales.size() < 1)
+  {
     std::cout << "weight_MCreScale: failed to find signal or background scale fractions in "  << filename << std::endl;
     exit(1);
   }
@@ -92,9 +96,9 @@ void weight_MCreScale::SetCat(std::string cat){
 }
 
 
-double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_name, int iuniv){
+double weight_MCreScale::GetScaleInternal(const double ptmu, std::string uni_name, int iuniv){
   double retval = 1.;
-  double checkval = q2qe;
+  double checkval = ptmu;
   int xbin = -1;
 
   // See if signal or bkg, then set mnvh to be
@@ -110,11 +114,11 @@ double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_nam
     return 1.0;
   }
 
-  if(q2qe<0.){
-    std::cout << "weight_MCreScale: You have a q2qe passed less than 0. Non-physical. Returning 1.0"<< std::endl;
+  if(ptmu<0.){
+    std::cout << "weight_MCreScale: You have a ptmu passed less than 0. Non-physical. Returning 1.0"<< std::endl;
     return 1.0;
   }
-  else if(q2qe>=2.0){
+  else if(ptmu>=2.5){
     // Q2 is fit up to 2.0 GeV^2 (as of 7/11/22), but some events have higher values. -NHV
     checkval = 1.99;
   }
@@ -153,12 +157,12 @@ double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_nam
 }
 
 // Returns a scale factor. If it's not set up, it returns -1 (which isn't possible).
-double weight_MCreScale::GetScale(std::string cat, const double q2qe, std::string uni_name, int iuniv){
+double weight_MCreScale::GetScale(std::string cat, const double ptmu, std::string uni_name, int iuniv){
   // Default value, not physical. Checked so you can switch scaling on and off easier.
   double retval = -1.;
   if(m_useTuned){
     SetCat(cat);
-    retval = GetScaleInternal(q2qe, uni_name, iuniv);
+    retval = GetScaleInternal(ptmu, uni_name, iuniv);
   }
 
   return retval;
@@ -170,9 +174,9 @@ double weight_MCreScale::GetScale(std::string cat, const CVUniverse* univ, std::
   // Default value, not physical. Checked so you can switch scaling on and off easier.
   double retval = -1.;
   if(m_useTuned){
-    const double q2qe = univ->GetQ2QEGeV();
+    const double ptmu = univ->GetPperpMuGeV();
     SetCat(cat);
-    retval = GetScaleInternal(q2qe, uni_name, iuniv);
+    retval = GetScaleInternal(ptmu, uni_name, iuniv);
   }
 
   return retval;
