@@ -23,6 +23,7 @@ import sys,os
 import ROOT
 import datetime
 import socket
+import json
 
 # Will automatically be set to true if running on a minervagpvm
 fnal = False
@@ -38,6 +39,15 @@ if len(sys.argv) < 2:
 print '\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>TreeStripper.py<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
 print 'Stripping unneeded branches from your Trees'
 print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+
+#f = open(sys.argv[1])
+#config = json.load(f)
+#f.close()
+
+#goodbranchesfile = config["goodbranchesfile"]
+#oldplaylistfile = config["oldplaylistfile"]
+#newplaylistdirectory = config["newplaylistdirectory"]
+#newfiledirectory = config["newfiledirectory"]
 
 now = datetime.datetime.now()
 timestamp = '_'+str(now.strftime('%Y%m%d'))
@@ -86,24 +96,24 @@ if 'minervagpvm' in str(socket.gethostname()):
         print 'Found your data area:', datadir
         fnal = True
 
-oldfile = sys.argv[1]
+oldplaylistfile = sys.argv[1]
 infilelist = []
 # Opening a single .root file.
-if '.root' in str(oldfile):
+if '.root' in str(oldplaylistfile):
     playlist = False
     print 'Added one file'
-    infilelist.append(str(oldfile))
+    infilelist.append(str(oldplaylistfile))
     playlistfiledir=''
 # Adding the lines of a playlist to a list to open.
-elif '.txt' in str(oldfile):
+elif '.txt' in str(oldplaylistfile):
     playlist = True
     if not fnal:
-        outplaylistdir = os.path.join(cwd,'strippedplaylists')
+        newplaylistdirectory = os.path.join(cwd,'strippedplaylists')
     else:
-        outplaylistdir = os.path.join(datadir,'strippedplaylists')
-    if not os.path.exists(outplaylistdir):
-        os.makedirs(outplaylistdir)
-    with open(str(oldfile), 'r') as f:
+        newplaylistdirectory = os.path.join(datadir,'strippedplaylists')
+    if not os.path.exists(newplaylistdirectory):
+        os.makedirs(newplaylistdirectory)
+    with open(str(oldplaylistfile), 'r') as f:
         counter = 0
         for line in f:
             line = line.replace('\n','')
@@ -112,9 +122,9 @@ elif '.txt' in str(oldfile):
                 counter += 1
         print 'Added',counter, 'files\n'
         f.close()
-    oldbase = os.path.basename(oldfile)
+    oldbase = os.path.basename(oldplaylistfile)
     playlistfiledir = oldbase.replace('.txt','/')
-    newplaylistfile = os.path.join(outplaylistdir,oldbase.replace('.txt',datestriptxt))
+    newplaylistfile = os.path.join(newplaylistdirectory,oldbase.replace('.txt',datestriptxt))
     if os.path.exists(newplaylistfile):
         print 'WARNING: The playlist', os.path.basename(newplaylistfile),'already exists. It will be overwritten...'
         open('newplaylistfile', 'w').close()
