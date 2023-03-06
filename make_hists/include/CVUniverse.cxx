@@ -306,7 +306,7 @@ namespace {
 	// ------------------------------ Muon Variables -----------------------------
 
 	double CVUniverse::GetEmuGeV() const { return std::sqrt(GetPmu()*GetPmu() + pow( MinervaUnits::M_mu, 2 ))*MeVGeV; }
-	double CVUniverse::GetTrueEmuGeV() const { return GetElepTrue(); } // not sure if this is right
+	double CVUniverse::GetTrueEmuGeV() const { return GetElepTrue()*MeVGeV; } // not sure if this is right
 	double CVUniverse::GetPmuGeV() const { return GetPmu()*MeVGeV;	}
 	double CVUniverse::GetTruePmuGeV() const { return GetPlepTrue()*MeVGeV; }
 	double CVUniverse::GetPparMuGeV() const { return GetPmuGeV()*std::cos( GetThetamu() ); }
