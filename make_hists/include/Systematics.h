@@ -19,6 +19,7 @@
 #include "PlotUtils/AngleSystematics.h"
 #include "PlotUtils/MuonResolutionSystematics.h"
 #include "PlotUtils/GeantHadronSystematics.h"
+#include "PlotUtils/ResponseSystematics.h"
 #include "utils/NuConfig.h"
 
 namespace systematics {
@@ -196,6 +197,21 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
     UniverseMap lowQ2pi = PlotUtils::GetLowQ2PiSystematicsMap<CVUniverse>(chain);
     error_bands.insert(lowQ2pi.begin(),lowQ2pi.end());
     std::cout << " do low Q2 RES suppression (Part of MnvTune v2)" << std::endl;
+  }
+
+
+  // Response systematics (which also have recoil syst)
+  // Stole this from Andrew's code
+  if(std::find(flags.begin(), flags.end(), "response")!=flags.end()){
+    bool neutron = false;
+    bool part_response = false;
+    bool proton = false;
+    UniverseMap response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, neutron, part_response, proton); // Not totally sure what the args do here
+    error_bands.insert(response_systematics.begin(),response_systematics.end());
+    std::cout << " do make response systematics " << std::endl;
+  }
+  else{
+    std::cout << "Warning: response systematics are turned off" << std::endl;
   }
 
   // at the end

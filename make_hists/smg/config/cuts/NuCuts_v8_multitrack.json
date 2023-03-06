@@ -1,0 +1,103 @@
+{
+"QElike":[
+    {"name":"NBlobs","max":1,"variable":"NBlobs"},
+	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+    {"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
+    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
+    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"},
+    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+  ],
+  "MichelSideBand":[
+    {"name":"MichelCount","min":1,"variable":"ImprovedNMichel"},
+    {"name":"NBlobs","max":1,"variable":"NBlobs"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
+    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
+    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
+    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+  ],
+  "BlobSideBand":[
+	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
+    {"name":"NBlobs","min":2,"variable":"NBlobs"},
+    {"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
+    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
+    {"name":"HasMINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+  ],
+  "MicBlobSideBand":[
+    {"name":"MichelCount","min":1,"variable":"ImprovedNMichel"},
+    {"name":"NBlobs","min":2,"variable":"NBlobs"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
+    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
+    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
+    {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"}
+  ],
+  "phase_space":[
+    {"name":"ZVertex","min":5980,"max":8410,"variable":"TrueZVertex"},
+    {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
+    {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
+    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"TrueThetamuDegrees"}
+  ],
+  "ccqelike":[
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.},
+    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+  ],
+  "qelike":[
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.},
+    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+  ],
+  "1chargedpion":[
+    {"name":"TruthHasSingleChargedPion","equals":1,"variable":"TruthHasSingleChargedPion"},
+    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+  ],
+  "1neutralpion":[
+    {"name":"TruthHasSingleNeutralPion","equals":1,"variable":"TruthHasSingleNeutralPion"},
+    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+  ],
+  "multipion":[
+    {"name":"TruthHasMultiplePions","equals":1,"variable":"TruthHasMultiPion"},
+    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+  ],
+  "other":[
+    {"name":"TruthHasMultiplePions","equals":0,"variable":"TruthHasMultiPion"},
+    {"name":"TruthHasSingleChargedPion","equals":0,"variable":"TruthHasSingleChargedPion"},
+    {"name":"TruthHasSingleNeutralPion","equals":0,"variable":"TruthHasSingleNeutralPion"},
+    {"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike"},
+    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+  ],
+  "data":[] // data doesn't cut anything at truth level
+}
+

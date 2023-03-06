@@ -22,7 +22,7 @@
 #include <iostream>
 #include <vector>
 #include "utils/NuConfig.h"
-#include "utils/gitVersion.h"
+//#include "utils/gitVersion.h"
 #include "PlotUtils/MacroUtil.h"
 #include "include/CVUniverse.h"
 
@@ -57,7 +57,6 @@
 #include "weighters/RPAReweighter.h"
 #include "weighters/MINOSEfficiencyReweighter.h"
 #include "weighters/LowQ2PiReweighter.h"
-
 #endif
 #include "include/Fillers.h"
 #include "include/Sample.h"

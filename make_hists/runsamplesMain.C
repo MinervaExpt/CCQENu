@@ -35,10 +35,22 @@ int main(const int argc, const char *argv[] ) {
   if (config.IsMember("version")){
     version = config.GetInt("version");
   }
+  
+  bool closure = false;
+  if (config.IsMember("closure")){
+    closure = config.GetBool("closure");
+  }
+  
   bool useTuned=false;
   if(config.IsMember("useTuned")){
     useTuned = config.GetBool("useTuned");
     std::cout << "runsamplesMain: useTuned configured in main config and set to " << useTuned << std::endl;
+  }
+  
+  bool doresolution = false;
+  if (config.IsMember("DoResolution")){
+    doresolution = config.GetBool("DoResolution");
+    std::cout << " ask for resolutions" << std::endl;
   }
   // int useTuned = 0;
   // if(config.IsMember("useTuned")){
@@ -74,7 +86,15 @@ int main(const int argc, const char *argv[] ) {
   //=========================================
 
   const std::string mc_file_list(config.GetString("mcIn"));
-  const std::string data_file_list(config.GetString("dataIn"));
+  std::string data_file_list;
+  if (!closure){
+    data_file_list = config.GetString("dataIn");
+  }
+  else{
+    data_file_list = mc_file_list;
+  }
+  
+  
 
   const std::string plist_string(config.GetString("playlist"));
   const std::string reco_tree_name(config.GetString("recoName"));
@@ -97,9 +117,9 @@ int main(const int argc, const char *argv[] ) {
   // Setup systematics-related constants
   // TODO These should be handled by PU::MacroUtil
 
-  PlotUtils::MinervaUniverse::SetNonResPiReweight(config.GetInt("NonResPiReweight"));
+  //PlotUtils::MinervaUniverse::SetNonResPiReweight(config.GetInt("NonResPiReweight"));
 
-  PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune (config.GetInt("DeuteriumGeniePiTune"));
+  //PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune (config.GetInt("DeuteriumGeniePiTune"));
 
   PlotUtils::MinervaUniverse::SetNuEConstraint(config.GetInt("NuEConstraint")); //Needs to be on to match Dan's ME 2D inclusive analysis
 
@@ -120,19 +140,30 @@ int main(const int argc, const char *argv[] ) {
 
 
   //=== MODELS === needs a driver
+  std::string modeltune="MnvTunev1";
+  if(config.IsMember("MinervaModel")){ //TODO
+    modeltune = config.GetString("MinervaModel");
+    std::cout << "runsamplesMain: MinervaModel configured in main config and set to " << modeltune << std::endl;
+  }
+  else{
+    std::cout << "runsamplesMain: MinervaModel NOT configured or set in main config. Defaulting to MnvTunev1." << std::endl;
+    modeltune="MnvTunev1";
+  }
+  std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse,PlotUtils::detail::empty>>> MnvTune;
+  if(modeltune=="MnvTunev1" || modeltune=="MnvTunev2"){
+    MnvTune.emplace_back(new PlotUtils::FluxAndCVReweighter<CVUniverse, PlotUtils::detail::empty>());
+      bool NonResPiReweight = true;
+      bool DeuteriumGeniePiTune = false; // Deut should be 0? for v1?
+    MnvTune.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse,PlotUtils::detail::empty>(NonResPiReweight,DeuteriumGeniePiTune));  // Deut should be 0? for v1?
+    MnvTune.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
+    MnvTune.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
+    MnvTune.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
+  }
+  if(modeltune=="MnvTunev2"){
+    MnvTune.emplace_back(new PlotUtils::LowQ2PiReweighter<CVUniverse, PlotUtils::detail::empty>("JOINT"));
+  }
 
-
-
-  std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse,PlotUtils::detail::empty>>> MnvTunev1;
-  MnvTunev1.emplace_back(new PlotUtils::FluxAndCVReweighter<CVUniverse, PlotUtils::detail::empty>());
-  MnvTunev1.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse,PlotUtils::detail::empty>(true, false));
-  MnvTunev1.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
-  MnvTunev1.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
-  MnvTunev1.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
-
-  // MnvTunev1.emplace_back(new PlotUtils::LowQ2PiReweighter<CVUniverse, PlotUtils::detail::empty>("NUBARPI0"));
-
-  PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTunev1));
+  PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTune));
 
   //====================MC Reco tuning for bkg subtraction======================
   // Initialize the rescale for tuning MC reco for background subtraction later
@@ -151,7 +182,6 @@ int main(const int argc, const char *argv[] ) {
   std::cout << " mc error bands is " << mc_error_bands.size() << std::endl;
   std::cout << " truth error bands is " << truth_error_bands.size() << std::endl;
 
-
   // If we're doing data we need a single central value universe.
   // TODO Take care of this in PU::MacroUtil.
   CVUniverse* data_universe = new CVUniverse(util.m_data);
@@ -161,15 +191,37 @@ int main(const int argc, const char *argv[] ) {
   data_error_bands["cv"] = data_band;
 
   //Selection Criteria
+	if (config.IsMember("paramsFile")) {
+
+		std::cout << " configuring cvuniverse parameters" << std::endl;
+		std::string paramsfilename = config.GetString("paramsFile");
+		NuConfig paramsConfig;
+		paramsConfig.Read(paramsfilename);
+		// Print applicable configurables?
+		bool printConfigs = 0;
+		if (paramsConfig.IsMember("printConfigs")) printConfigs = paramsConfig.GetBool("printConfigs");
+		// Set applicable configurables
+		if (paramsConfig.IsMember("MinimumBlobZVtx")) {
+			CVUniverse::SetMinBlobZVtx(paramsConfig.GetConfig("MinimumBlobZVtx").GetDouble("min"),printConfigs);
+		}
+		if (paramsConfig.IsMember("PhotonEnergyCut")) {
+			CVUniverse::SetPhotonEnergyCut(paramsConfig.GetConfig("PhotonEnergyCut").GetDouble("energy"),printConfigs);
+		}
+		if (paramsConfig.IsMember("ProtonScoreConfig")) {
+			CVUniverse::SetProtonScoreConfig(paramsConfig.GetConfig("ProtonScoreConfig"),printConfigs);
+		}
+		if (paramsConfig.IsMember("ProtonKECut")) {
+			CVUniverse::SetProtonKECut(paramsConfig.GetConfig("ProtonKECut").GetDouble("energy"),printConfigs);
+		}
+		CVUniverse::SetAnalysisNeutrinoPDG(pdg,printConfigs);
+	}
 
   std::string cutsfilename = config.GetString("cutsFile");
   NuConfig cutsConfig;
   cutsConfig.Read(cutsfilename);
 
   std::string samplesfilename = config.GetString("samplesFile");
-
   NuConfig samplesConfig;
-
   //cutsConfig.Print();
   std::vector<string> samplesToDo=config.GetStringVector("runsamples"); // get the master list.
   samplesConfig.Read(samplesfilename);
@@ -196,10 +248,10 @@ int main(const int argc, const char *argv[] ) {
   std::vector<std::string> tags;
   std::string tag;
   for (auto sample:samples){
-    std::string name = sample.GetName();
+  	std::string name = sample.GetName();
     std::string tag = name+"___data";
     tags.push_back(tag);
-    std::cout << " load in cuts for samples" << name << std::endl;
+    std::cout << " load in cuts for sample " << name << std::endl;
     NuConfig recocuts = cutsConfig.GetValue(sample.GetReco());
     NuConfig phasespace = cutsConfig.GetValue(sample.GetPhaseSpace());
     NuConfig truecuts = cutsConfig.GetValue("data");
@@ -254,7 +306,7 @@ int main(const int argc, const char *argv[] ) {
   }
 
   // new way
-  std::map<std::string,CCQENu::VariableFromConfig*> variablesmap1D = GetVariablesFromConfig(vars1D,tags,configvar);
+  std::map<std::string,CCQENu::VariableFromConfig*> variablesmap1D = GetVariablesFromConfig(vars1D,tags,configvar,doresolution);
 
   std::map<std::string,CCQENu::Variable2DFromConfig*> variablesmap2D = Get2DVariablesFromConfig(vars2D,variablesmap1D,tags,configvar);
 
@@ -322,13 +374,15 @@ int main(const int argc, const char *argv[] ) {
     v->InitializeMCHistograms(mc_error_bands,selected_reco_tags);
     v->InitializeSelectedTruthHistograms(mc_error_bands,selected_truth_tags);
     v->InitializeDataHistograms(data_error_bands,datatags);
-    v->AddMCResponse(responsetags);
+    // v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands,truthtags);
+    v->InitializeResponse(mc_error_bands,responsetags);
     if(useTuned){
       v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
     variables1D.push_back(v);
   }
+
 
   for (auto var2D : variablesmap2D ) {
     std::string varname = var2D.first;
@@ -336,22 +390,34 @@ int main(const int argc, const char *argv[] ) {
     v->InitializeMCHistograms2D(mc_error_bands,selected_reco_tags);
     v->InitializeSelectedTruthHistograms2D(mc_error_bands,selected_truth_tags);
     v->InitializeDataHistograms2D(data_error_bands,datatags);
-    v->AddMCResponse2D(responsetags);
+    // v->AddMCResponse2D(responsetags);
     v->InitializeTruthHistograms2D(truth_error_bands,truthtags);
+    v->InitializeResponse2D(mc_error_bands,responsetags);
+
     if(useTuned){
       v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     }
     variables2D.push_back(v);
   }
 
+	// Check if sending events to csv file
+	bool mc_reco_to_csv = 0;
+	if (config.IsMember("mcRecoToCSV")) {
+		mc_reco_to_csv = config.GetBool("mcRecoToCSV");
+	}
+
+	std::cout << " just before event loop" << std::endl;
+	util.PrintMacroConfiguration("runEventLoop");
   // here we fill them
 
   for (auto tag:datatags){
     //=========================================
     // Entry loop and fill
     //=========================================
-    std::cout << "Loop and Fill Data for " << tag << "\n" ;
-    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale);
+    std::cout << "Loop and Fill Data for " << tag << "\n";
+    
+    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale,closure,mc_reco_to_csv);
+
     // LoopAndFillEventSelection2D(tag, util, data_error_bands, variables2D, kData, *selectionCriteria[tag]);
 
     std::cout << "\nCut summary for Data:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
@@ -359,19 +425,25 @@ int main(const int argc, const char *argv[] ) {
   }
 
   for (auto tag:selected_reco_tags){
-    mcRescale.SetTag(tag);
+    unsigned int loc = tag.find("___")+3;
+    std::string cat(tag,loc,string::npos);
+    std::string sample(tag,0,loc-3);
+    mcRescale.SetCat(cat);
     std::cout << "Loop and Fill MC Reco  for " <<  tag << "\n";
-    LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag],model, mcRescale);
+    
+    LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag],model, mcRescale,closure,mc_reco_to_csv);
     // LoopAndFillEventSelection2D(tag, util, mc_error_bands, variables2D, kMC, *selectionCriteria[tag]);
-
+    
     std::cout << "\nCut summary for MC Reco:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
     selectionCriteria[tag]->resetStats();
   }
 
   for (auto tag:truthtags){
     std::cout << "Loop and Fill MC Truth  for " <<  tag << "\n";
-    LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, kTruth, *selectionCriteria[tag],model,mcRescale);
+
+    LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, kTruth, *selectionCriteria[tag],model,mcRescale,closure,mc_reco_to_csv);
     // LoopAndFillEventSelection2D(tag, util, truth_error_bands, variables2D, kTruth, *selectionCriteria[tag]);
+    
     std::cout << "\nCut summary for MC Truth:" <<  tag << "\n";
     // this is a special overload to allow printing truth
     (*selectionCriteria[tag]).summarizeTruthWithStats(std::cout);
@@ -410,9 +482,9 @@ int main(const int argc, const char *argv[] ) {
   std::string sam = samplesConfig.ToString();
   TNamed samobj("samplesFile",cuts.c_str());
   samobj.Write();
-  std::string git = git::commitHash();
-  TNamed gitobj("gitVersion",git.c_str());
-  gitobj.Write();
+  //std::string git = git::commitHash();
+  //TNamed gitobj("gitVersion",git.c_str());
+  //gitobj.Write();
 
   for (auto v : variables1D){
     std::cout << "Writing 1D hist to file" << std::endl;

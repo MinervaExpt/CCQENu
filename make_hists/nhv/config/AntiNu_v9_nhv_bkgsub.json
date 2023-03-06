@@ -20,6 +20,7 @@
   "data":{"QElike":"data"},
   "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
     "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4","LowQ2Pi"],
+    "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4","response"],
   "fluxUniverses":100,
   "NuEConstraint":1,
   "DeuteriumGeniePiTune":1, // set to true?

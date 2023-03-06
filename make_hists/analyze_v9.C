@@ -127,7 +127,7 @@ int main(const int argc, const char *argv[] ) {
       allconfigs["main"]=theconfig;
     inputname = theconfig->GetString("outRoot")+"_"+inputtag+".root";
     f =  TFile::Open(inputname.c_str(),"READONLY");
-    f->ls();
+    //f->ls();
   }
     
   
@@ -181,7 +181,7 @@ int main(const int argc, const char *argv[] ) {
 
 
 
-  f->ls();
+  //f->ls();
 
   std::vector<std::string> keys;
 
@@ -257,13 +257,13 @@ int main(const int argc, const char *argv[] ) {
     // 1D hists
     if(key.find("h2D")==std::string::npos){
       // if response in name its a 2D so do a cast to MnvH2D
-      if(key.find("response")!=std::string::npos){
+      if(key.find("migration")!=std::string::npos){
         MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
         if (hist != 0){
           response1D[sample][variable][type][category] = hist->Clone();
          // response1D[sample][variable][type][category]->Print();
           response1D[sample][variable][type][category]->SetDirectory(0);
-          std::cout << " response " << sample << " " << variable << " " << type << " " << category << std::endl;
+          std::cout << " migration " << sample << " " << variable << " " << type << " " << category << std::endl;
           delete hist;
         }
         else{
@@ -294,11 +294,11 @@ int main(const int argc, const char *argv[] ) {
       MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
       // Check if response is in its name
       if (hist != 0){
-        if(key.find("response")!=std::string::npos){
+        if(key.find("migration")!=std::string::npos){
           response2D[sample][variable][type][category] = hist->Clone();
           response2D[sample][variable][type][category]->Print();
           response2D[sample][variable][type][category]->SetDirectory(0);
-          std::cout << " 2D response " << sample << " " << variable << " " << type << " " << category << std::endl;
+          std::cout << " 2D migration " << sample << " " << variable << " " << type << " " << category << std::endl;
           delete hist;
         }
         else{
@@ -311,7 +311,7 @@ int main(const int argc, const char *argv[] ) {
       }
       else{
         std::cout << "could not read " << key << std::endl;
-        if(key.find("response")!=std::string::npos){
+        if(key.find("migration")!=std::string::npos){
           response2D[sample][variable][type][category]=0;
         }
         else{
@@ -352,7 +352,28 @@ int main(const int argc, const char *argv[] ) {
   std::string pdfend2D = pdfname + "_2D.pdf)";
 
   o->cd();
-
+  for (auto s:hists1D){
+    auto sample=s.first;
+    for (auto v:hists1D[sample]){
+      auto variable=v.first;
+      for (auto t:hists1D[sample][variable]){
+        auto type = t.first;
+        for (auto c:hists1D[sample][variable][type]){
+          auto category = c.first;
+          std::cout << " write out " << hists1D[sample][variable][type][category]->GetName() << std::endl;
+          hists1D[sample][variable][type][category]->Write();
+        }
+      }
+    }
+  }
+ 
+  o->cd();
+  for (auto config:allconfigs){
+    std::cout << " write out config " << config.first << std::endl;
+    std::string obj = config.second->ToString();
+    TNamed object(config.first,obj.c_str());
+    object.Write();
+  }
   // Set up pdf for 1D plots.
   TCanvas canvas1D(pdffilename1D.c_str());
   canvas1D.SetLeftMargin(0.15);

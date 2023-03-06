@@ -1,11 +1,9 @@
-
 {
 "QElike":[
 	{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
     {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
     {"name":"MichelCount","equals":0,"variable":"MichelElectronCandidates"},
-    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
@@ -20,7 +18,6 @@
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
     {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
     {"name":"MichelCount","min":1,"variable":"MichelElectronCandidates"},
-    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
@@ -35,7 +32,6 @@
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
     {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
     {"name":"MichelCount","equals":0,"variable":"MichelElectronCandidates"},
-    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
@@ -50,7 +46,6 @@
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
     {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
     {"name":"MichelCount","min":1,"variable":"MichelElectronCandidates"},
-    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},

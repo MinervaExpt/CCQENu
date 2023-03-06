@@ -40,7 +40,7 @@
 
 typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
 
-std::map<std::string, CCQENu::VariableFromConfig*> GetVariablesFromConfig(const std::vector<std::string> vars, const std::vector<std::string> tags, NuConfig configraw) {
+std::map<std::string, CCQENu::VariableFromConfig*> GetVariablesFromConfig(const std::vector<std::string> vars, const std::vector<std::string> tags, NuConfig configraw, const bool doresolution) {
   //=========================================
   // Constructor wants: name, x-axis label,
   //                    binning,
@@ -50,17 +50,11 @@ std::map<std::string, CCQENu::VariableFromConfig*> GetVariablesFromConfig(const 
   std::map<std::string,  CCQENu::VariableFromConfig*> allvariables;  // set this internally to span the set of variables
   std::map<std::string, CCQENu::VariableFromConfig*> variablesmap; // this is the set that actually gets returned
 
-
-
-//  if (configfilename != "" ){
-//    // NuConfig config;
-//    // config.Read(configfilename);
-//    NuConfig configraw;
-//    configraw.Read(configfilename);
     NuConfig config;
     if(configraw.IsMember("1D")){
       config = configraw.GetValue("1D");
     } else config = configraw;
+  
     std::vector<std::string>  keys = config.GetKeys();
 
     for (auto key:keys){ // this is in the Variables json file so you can define them all
@@ -69,6 +63,7 @@ std::map<std::string, CCQENu::VariableFromConfig*> GetVariablesFromConfig(const 
         if ( v == key){
           found = true;
           allvariables[key] = new CCQENu::VariableFromConfig( config.GetValue(key));
+          allvariables[key]->SetDoResolution(doresolution);
           std::cout << "GetVariables: set up variable " << allvariables[key]->GetName() << std::endl;
         }
       }
@@ -90,7 +85,7 @@ std::map<std::string, CCQENu::VariableFromConfig*> GetVariablesFromConfig(const 
   for (auto var:vars){
     bool found = false;
     for (auto variable:allvariables){
-      //std::cout << var << " check " << variable.first<< std::endl;
+     // std::cout << var << " check " << variable.first<< std::endl;
       if(var == variable.first){
         std::cout << "GetVariables: study 1D variable " << var << std::endl;
         // this is the point where you add the tags.  Saves space this way.

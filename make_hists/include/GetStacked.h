@@ -53,17 +53,14 @@ template<class MnvHistoType>
     
     // Read in signal, background, and data names and colors
     NuConfig sigkey = config.GetConfig("signal");
-    std::cout << std::endl << "   Signal key:" << std::endl;
-    sigkey.Print();
+    std::cout << std::endl << "    Loading signal key" << std::endl;
     std::string sig = sigkey.GetString(sample);
     NuConfig bkgkey = config.GetConfig("background");
     std::vector<std::string> bkg = bkgkey.GetStringVector(sample);
-    std::cout << std::endl << "   Background key:" << std::endl;
-    bkgkey.Print();
+    std::cout << "    Loading background key:" << std::endl;
     NuConfig datkey = config.GetConfig("data");
     std::string dat = datkey.GetString(sample);
-    std::cout << std::endl << "   Data key:" << std::endl;
-    datkey.Print();
+    std::cout << "    Loading data key:" << std::endl;
     
     
     NuConfig sampleConfig = samplesConfig.GetConfig(sample);
@@ -118,7 +115,7 @@ template<class MnvHistoType>
         maxEntryLength =legendEntries.GetString(bkg[i]).length();
       }
     }
-    std::cout << std::endl << "   Max Legend Entry Length = " << maxEntryLength << std::endl;
+    std::cout << std::endl << "    Max Legend Entry Length = " << maxEntryLength << std::endl;
 
 	// Get variable titles
 	std::string title = sample + "_" + variable;
