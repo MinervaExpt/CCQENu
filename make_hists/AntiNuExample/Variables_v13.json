@@ -8,6 +8,7 @@
         "EnuCCQE_Enu":{"name":"EnuCCQE_Enu","xvar":"EnuCCQE","yvar":"Enu"},
         "EnuCCQE_Q2QE":{"name":"EnuCCQE_Q2QE","xvar":"EnuCCQE","yvar":"Q2QE"},
         "Q2QE_recoil":{"name":"Q2QE_recoil","xvar":"Q2QE","yvar":"recoil"},
+        "ptmu_recoil":{"name":"ptmu_recoil","xvar":"ptmu","yvar":"recoil"},
         "Q2QE_Log10recoil":{"name":"Q2QE_Log10recoil","xvar":"Q2QE","yvar":"Log10recoil"},
         "EnuCCQE_ThetamuDegrees":{"name":"EnuCCQE_ThetamuDegrees","xvar":"EnuCCQE","yvar":"ThetamuDegrees"},
         "pmu_ThetamuDegrees":{"name":"pmu_ThetamuDegrees","xvar":"pmu","yvar":"ThetamuDegrees"}

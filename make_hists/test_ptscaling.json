@@ -8,17 +8,16 @@
   "recoName":"CCQENu", // change if running on MAT tuples
   "useTuned":1, // uses the tunes if available
   "closure":0, // set to 1 if you want to do closure test, otherwise 0
-  "scalefileIn":"${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", // location of anti-nu background tuning
+  "scalefileIn":"${CCQEMAT}/data/lowpz_ptrecoilq2qe_mnvtunev1_fullstats_ptmu_recoil_Amitfit_OutVals_fix.root", // location of anti-nu background tuning
   "TuneCategories":["qelike","qelikenot"], // categories that have tunes
   "pdg":-14, // I'm anti-neutrino
   "cutsFile":"${CCQEMAT}/AntiNuExample/AntiNuCuts_v13.json", // describe the cuts, choose them in samples
-  "varsFile":"${CCQEMAT}/AntiNuExample/Variables_v14.json", // describe the variables, choose them below
-  "samplesFile":"${CCQEMAT}/AntiNuExample/AntiNuSamples_v13.json",  // describe the samples, cuts are chosen here
-  "runsamples":["QElike"], // chose which samples to run can provide a list or chose 1 using the batch
-  "outRoot":"CCQEAntiNu_pzpt_recoilQ2QE", // name for output files
-  "AnalyzeVariables":["pzmu","ptmu","Q2QE","recoil"], // choose the 1D variables
-  "Analyze2DVariables":["pzmu_ptmu","Q2QE_recoil"],
-  "AnalyzeHyperDVariables":[], // choose HyperD variables, 1D variables must be chosen
+  "varsFile":"${CCQEMAT}/AntiNuExample/Variables_v13.json", // describe the variables, choose them below
+  "samplesFile":"${CCQEMAT}/AntiNuExample/AntiNuSamples_v13_recoilcutbkg.json",  // describe the samples, cuts are chosen here
+  "runsamples":["Background"], // chose which samples to run can provide a list or chose 1 using the batch
+  "outRoot":"CCQENu", // name for output files
+  "AnalyzeVariables":["ptmu","Q2QE","recoil"], // choose the 1D variables
+  "Analyze2DVariables":["ptmu_recoil","Q2QE_recoil"],
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"}, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
   "data":{"QElike":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
