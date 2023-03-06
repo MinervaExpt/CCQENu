@@ -59,7 +59,7 @@ void weight_MCreScale::read(TString filename){
     std::cout << "weight_MCreScale: I'm using this scale file " << filename << std::endl;
     for (auto cat:m_categories)
     {
-      std::string name = "h___QElike___"+cat+"___ptmu___scale";
+      std::string name = "h___QELike___"+cat+"___ptmu___scale";
       m_mnvh_Scales[cat] = (MnvH1D *)m_f_ScaleFrac->Get(name.c_str());
     }
   }
