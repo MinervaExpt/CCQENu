@@ -1,0 +1,75 @@
+{ "Comments":["v9 - 2022-05-18 get rid of FULL","and add QElikeNot"],
+    "QElike":  // this one reproduces the older format
+   {"name":"QElike",
+    "reco":"QElike",
+    "phase_space":"phase_space",
+    "signal":["qelike"],
+    "background":["qelikenot"],
+    "categories":{
+      "qelike":{
+        "for":["selected_reco","selected_truth","truth","response"]
+        },
+      "qelikenot":{"for":["selected_reco"]
+        }
+      }
+   },
+   "QElikeNot":
+  {"name":"QElikeNot",
+   "reco":"QElikeNot",
+   "phase_space":"phase_space",
+   "signal":["qelike"],
+   "background":["qelikenot"],
+   "categories":{
+     "qelike":{
+       "for":["selected_reco"]
+       },
+     "qelikenot":{"for":["selected_reco"]
+       }
+     }
+  },
+   "Background":  // this one reproduces the older format
+      {"name":"Background",
+       // "reco":"NoRecoil",
+       "reco": "QElike",
+       "phase_space":"phase_space",
+       "signal":["qelike"],
+       "background":["qelikenot"],
+       "categories":{
+         "qelike":{
+           "for":["selected_reco"]
+           },
+         "qelikenot":{"for":["selected_reco"]
+           }
+         }
+      },
+  "QElikeNP":{
+     "name":"QElikeNP",
+     "reco":"QElike",
+     "phase_space":"phase_space",
+     "signal":["qelike_np"],
+     "background":["qelikenot_np"],
+     "categories":{
+       "qelike_np":{
+         "for":["selected_reco","selected_truth","truth","response"]
+        },
+       "qelikenot_np":{
+         "for":["selected_reco"]
+       }
+     }
+  },
+  "QElikeALLAngles":{
+     "name":"QElikeALLAngles",
+     "reco":"QElike",
+     "phase_space":"phase_space_all_angles",
+     "signal":["qelike_np"],
+     "background":["qelikenot_np"],
+     "categories":{
+       "qelike_np":{
+         "for":["selected_reco","selected_truth","truth","response"]
+        },
+       "qelikenot_np":{
+         "for":["selected_reco"]
+       }
+     }
+  }
+}
