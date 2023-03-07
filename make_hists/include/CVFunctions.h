@@ -96,7 +96,7 @@ public:
     truefunctions["TrueThetaXmu"] = &CVUNIVERSE::GetTrueThetaXmu;
 
     recofunctions["ThetaYmu"] = &CVUNIVERSE::GetThetaYmu;
-    truefunctions["TrueThetaYmu"] = &CVUNIVERSE::GetTrueThetaYmuDegrees;
+    truefunctions["TrueThetaYmu"] = &CVUNIVERSE::GetTrueThetaYmu;
 
 
 		recofunctions["DeadTime"] = &CVUNIVERSE::GetDeadTime;
