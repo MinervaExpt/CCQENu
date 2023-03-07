@@ -88,6 +88,16 @@ public:
 
 		recofunctions["ThetaYmuDegrees"] = &CVUNIVERSE::GetThetaYmuDegrees;
 		truefunctions["TrueThetaYmuDegrees"] = &CVUNIVERSE::GetTrueThetaYmuDegrees;
+    
+    recofunctions["Thetamu"] = &CVUNIVERSE::GetThetamu;
+    truefunctions["TrueThetamu"] = &CVUNIVERSE::GetTrueThetamu;
+    
+    recofunctions["ThetaXmu"] = &CVUNIVERSE::GetThetaXmu;
+    truefunctions["TrueThetaXmu"] = &CVUNIVERSE::GetTrueThetaXmu;
+
+    recofunctions["ThetaYmu"] = &CVUNIVERSE::GetThetaYmu;
+    truefunctions["TrueThetaYmu"] = &CVUNIVERSE::GetTrueThetaYmuDegrees;
+
 
 		recofunctions["DeadTime"] = &CVUNIVERSE::GetDeadTime;
 
