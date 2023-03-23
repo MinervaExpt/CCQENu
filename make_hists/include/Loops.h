@@ -48,10 +48,10 @@ void LoopAndFillEventSelection(std::string tag,
     return;  // don't bother if there are no variables.
   }
 
-  if (data_mc_truth == kData ){
+  if (data_mc_truth == kData){
     nentries = util.GetDataEntries();
   }
-  else if (data_mc_truth == kMC ){
+  else if (data_mc_truth == kMC){
     nentries = util.GetMCEntries();
   }
   else{
@@ -77,7 +77,12 @@ void LoopAndFillEventSelection(std::string tag,
 	  		csvFile << ";" << v->GetName();
 	  	}
 	  }
-	  csvFile << std::endl;
+		csvFile << ";Interaction;nFSPart";
+		std::vector<std::string> true_particle_counts = {"nFSChargedPion","nFSNeutralPion",
+		                                                 "nFSProton","nFSNeutron","nFSNegMuon",
+		                                                 "nFSGamma"};
+		for (auto v:true_particle_counts) { csvFile << ";" << v; }
+		csvFile << ";Arachne" << std::endl;
 
   }
   
@@ -87,7 +92,7 @@ void LoopAndFillEventSelection(std::string tag,
 	std::cout << "   \\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\ " << std::endl;
 	std::cout << "   |________________________________________|   [__0.0%]";
 	double progress = 0;
-	
+
 	// Begin entries loop
   for (int i = 0; i < nentries; i++) {
     if(data_mc_truth != kData) i+= prescale-1;
@@ -173,14 +178,62 @@ void LoopAndFillEventSelection(std::string tag,
             FillResolution(tag,universe,weight,variables,variables2D, scale);
             
             // Send MC Reco value to CSV here
-            if (mc_reco_to_csv) {
+            if(mc_reco_to_csv && universe->ShortName() == "cv") {
+
+            	
 		          csvFile << i;
 		          for (auto v : variables) {
-		          	if (v->hasMC[tag]){
+		          	if(v->hasMC[tag]){
 		          		csvFile << ";" << v->GetRecoValue(*universe, 0);
 		          	}
 		          }
-		          csvFile << std::endl;
+		          
+		          int mcinttype = universe->GetMCIntType();
+		          std::string interaction;
+		          switch(mcinttype) {
+				        case 1:
+				        	interaction = "QE";
+				        	break;
+				        case 2:
+				        	interaction = "RES";
+				        	break;
+				        case 3:
+				        	interaction = "DIS";
+				        	break;
+				        case 4:
+				        	interaction = "COH";
+				        	break;
+				        case 8:
+				        	interaction = "MEC";
+				        	break;
+				        default:
+				        	interaction = "NONE";
+		          }
+		          
+		          csvFile << ";" << interaction;
+		          csvFile << ";" << universe->GetTrueNumberOfFSParticles();
+		          
+		          std::map<int,int> true_counts_per_pdg = universe->GetTrueFSCountsPerPDG();
+		          //nFSChargedPion
+		          csvFile << ";" << true_counts_per_pdg[211] + true_counts_per_pdg[-211];
+		          // nFSNeutralPion
+		          csvFile << ";" << true_counts_per_pdg[111];
+		          // nFSProton
+							csvFile << ";" << true_counts_per_pdg[2212];
+							// nFSNeutron
+							csvFile << ";" << true_counts_per_pdg[2112];
+							// nFSNegMuon
+							csvFile << ";" << true_counts_per_pdg[13];
+							// nFSGamma
+							csvFile << ";" << true_counts_per_pdg[22];
+		          //csvFile << ";" << universe->GetTrueChargedPionCount();
+		          //csvFile << ";" << universe->GetTrueNeutralPionCount();
+		          //csvFile << ";" << universe->GetTrueProtonCount();
+		          //csvFile << ";" << universe->GetTrueNeutronCount();
+		          //csvFile << ";" << universe->GetTrueNegMuonCount();
+		          //csvFile << ";" << universe->GetTrueGammaCount();
+		          
+		          csvFile << ";" << universe->StringTrueArachneLink() << std::endl;
             }
             // Done Sending MC Reco value to CSV
 

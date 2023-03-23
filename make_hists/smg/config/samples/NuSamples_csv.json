@@ -1,11 +1,32 @@
-{"Basic":{
-		"name":"Basic",
-		"reco":"Basic",
+{
+	"Mult2p":{
+		"name":"Mult2p",
+		"reco":"Mult2p",
 		"phase_space":"phase_space",
-		"signal":["basic"],
-		"background":["basicnot"],
+		"signal":["NuCC"],
+		"background":["Nu_notCC","notNu_CC","notNu_notCC"],
 		"categories":{
-		     "basic":{"for":["selected_reco"]}
+			"NuCC":{"for":["selected_reco"]}
 		}
-	}
+	},
+	"Mult1":{
+		"name":"Mult1",
+		"reco":"Mult1",
+		"phase_space":"phase_space",
+		"signal":["NuCC"],
+		"background":["Nu_notCC","notNu_CC","notNu_notCC"],
+		"categories":{
+			"NuCC":{"for":["selected_reco"]}
+		}
+	},
+	"Mult1p":{
+		"name":"Mult1p",
+		"reco":"Mult1p",
+		"phase_space":"phase_space",
+		"signal":["NuCC"],
+		"background":["Nu_notCC","notNu_CC","notNu_notCC"],
+		"categories":{
+			"NuCC":{"for":["selected_reco"]}
+		}
+	},
 }
