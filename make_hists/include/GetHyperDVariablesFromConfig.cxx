@@ -56,21 +56,22 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFrom
         std::vector<std::string> axisvarnamevec = varconfig.GetStringVector("vars"); // Should each match names in 1D vars
         int dim = axisvarnamevec.size(); // The dimension of the hyperD variable is number of axes it has
         std::vector<std::string> fors = {}; // What you want to fill hists of (e.g. data, selected_reco), defaults to all<-TODO in VariableHyperDFromConfig
-        if(varconfig.IsMember("for")){
-          fors.push_back(varconfig.GetString("for"));}
+        
+        if(varconfig.IsMember("for"))
+          fors.push_back(varconfig.GetString("for"));
 
+        EAnalysisType analysis_type = k1D;
+        if(varconfig.IsMember("analysistype"))
+          analysis_type = (EAnalysisType)varconfig.GetInt("analysistype");
+        
         // Make a bool vector to use to check that you have the corresponding 1D variable configured for each axis
         std::map<int, bool> foundvec; 
-        for(int i = 0; i < dim ; i++){
+        for(int i = 0; i < dim ; i++)
           foundvec[dim]=false;
-        }
 
         // Initialize vectors containing  configs,"fors", and their VariableFromConfigs for each axis
         std::vector<NuConfig> axisvarconfigvec;
         std::vector<std::vector<std::string>> axisforsvec; //TODO
-        // This is the vector that gets passed to VariableHyperDim constructor, which needs somethign that looks like a vector of VariableBase.
-        // Unique pointers hopefully let you put in a VariableFromConfig without getting a conversion error or data slicing
-        // std::vector<std::unique_ptr<PlotUtils::VariableBase<CVUniverse>>> tmp_axisvars;
         std::vector<CCQENu::VariableFromConfig*> axisvars;
 
         // Loop over each axis
@@ -111,7 +112,7 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFrom
         }
         // const std::vector<CCQENu::VariableFromConfig*> axisvars = tmp_axisvars;
         // Initialize new hyper d variable and add the tags
-        CCQENu::VariableHyperDFromConfig *varHDfromconfig = new CCQENu::VariableHyperDFromConfig(nameHD, axisvars, fors);
+        CCQENu::VariableHyperDFromConfig *varHDfromconfig = new CCQENu::VariableHyperDFromConfig(nameHD, axisvars, fors, analysis_type);
         varHDfromconfig->AddTags(tags);
         std::cout << "GetHyperDVariablesFromConfig: set up HyperDim variable " << nameHD << " of dimension " << dim << std::endl;
         // Add it to the map
