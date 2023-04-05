@@ -231,9 +231,9 @@ public:
 
   inline std::string GetHistName(const std::string tag)
   {
-    if (m_analysis_type == k1D || m_analysis_type == k1D_lite)
+    if (m_has_hist[tag])
       return m_hists[tag].hist->GetName();
-    else if ((m_analysis_type == k2D || m_analysis_type == k2D_lite))
+    else if (m_has_hist_2d[tag])
       return m_hists_2d[tag].hist->GetName();
     return "";
   }
@@ -261,12 +261,12 @@ public:
 
   inline void Write(const std::string tag, Int_t option = 0){
     std::cout << " look at all tags " << tag << std::endl;
-    if (m_has_hist[tag] && (m_analysis_type == k1D || m_analysis_type == k1D_lite))
+    if (m_has_hist[tag])
     {
       std::cout << " try to write hist " << tag << " " << m_hists[tag].hist->GetName() <<  std::endl;
       m_hists[tag].hist->Write();
     }
-    if (m_has_hist_2d[tag] && (m_analysis_type == k2D || m_analysis_type == k2D_lite))
+    else if (m_has_hist_2d[tag])
     {
       std::cout << " try to write hist " << tag << " " << m_hists_2d[tag].hist->GetName() << std::endl;
       m_hists_2d[tag].hist->Write();
