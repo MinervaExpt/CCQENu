@@ -261,16 +261,18 @@ public:
 
   inline void Write(const std::string tag, Int_t option = 0){
     std::cout << " look at all tags " << tag << std::endl;
-    if (m_has_hist[tag])
+    if (m_has_hist[tag] && (m_analysis_type == k1D || m_analysis_type == k1D_lite))
     {
       std::cout << " try to write hist " << tag << " " << m_hists[tag].hist->GetName() <<  std::endl;
       m_hists[tag].hist->Write();
     }
-    else if (m_has_hist_2d[tag])
+    if (m_has_hist_2d[tag] && (m_analysis_type == k2D || m_analysis_type == k2D_lite))
     {
       std::cout << " try to write hist " << tag << " " << m_hists_2d[tag].hist->GetName() << std::endl;
       m_hists_2d[tag].hist->Write();
     }
+    else
+      std::cout << " HistHyperDWrapperMap: WARNING: Could not find hist " << tag << std::endl;
   }
 
   // voodoo you sometimes need
