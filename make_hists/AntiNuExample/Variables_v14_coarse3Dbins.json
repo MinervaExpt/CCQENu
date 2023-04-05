@@ -7,8 +7,25 @@
                 "7-5-2022 change to Amit's binning,Q2 and pzmu change",
                 "6-5-2022 change the zstart cut to include the start","add log10recoil"],
     "HyperD":{
-        "pzmu_ptmu_Log10recoil":{"name":"pzmu_ptmu_Log10recoil","vars":["pzmu","ptmu","Log10recoil"],"analysistype":0}
-    },
+        "pzmu_ptmu_Log10recoil": {
+          "name": "pzmu_ptmu_Log10recoil",
+          "vars": [
+            "pzmu",
+            "ptmu",
+            "Log10recoil"
+          ],
+          "analysistype": 0
+        }
+        "pzmu_ptmu_recoil": {
+          "name": "pzmu_ptmu_Log10recoil",
+          "vars": [
+            "pzmu",
+            "ptmu",
+            "recoil"
+          ],
+          "analysistype": 1
+        }
+      },
     "2D":{
         "pzmu_ptmu":{"name":"pzmu_ptmu","xvar":"pzmu","yvar":"ptmu"},
         "pzmu_Q2QE":{"name":"pzmu_Q2QE","xvar":"pzmu","yvar":"Q2QE"},
