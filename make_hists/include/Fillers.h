@@ -40,8 +40,15 @@ void FillData(std::string tag, CVUniverse* univ,
   {
     if (vHD->hasData[tag])
     {
-      double fill_val_lin = vHD->GetRecoValue(*univ,0);
-      vHD->m_selected_data.Fill(tag, univ, fill_val_lin); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+      double fill_val_lin_x = vHD->GetRecoValue(*univ, 0);
+      if (vHD->GetAnalysisType() == k1D)
+        vHD->m_selected_data.Fill(tag, univ, fill_val_lin_x); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+
+      else if (vHD->GetAnalysisType() == k2D)
+      {
+        double fill_val_y = vHD->GetRecoValue(1, *univ, 0);
+        vHD->m_selected_data.Fill(tag, univ, fill_val_lin_x, fill_val_y);
+      }
     }
   }
 }
@@ -98,26 +105,40 @@ void FillMC(std::string tag, CVUniverse *univ, double weight,
   {
     if (vHD->hasMC[tag])
     {
-      double fill_val_lin = vHD->GetRecoValue(*univ, 0);
-      if (vHD->m_tunedmc != 1) // TODO: still need to set up tuned stuff for HyperD
-      {
-        vHD->m_selected_mc_reco.Fill(tag, univ, fill_val_lin, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+      double fill_val_lin_x = vHD->GetRecoValue(*univ, 0);
+      if (vHD->GetAnalysisType() == k1D)
+      {        
+        if (vHD->m_tunedmc != 1) // TODO: still need to set up tuned stuff for HyperD
+          vHD->m_selected_mc_reco.Fill(tag, univ, fill_val_lin_x, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+        if (vHD->hasTunedMC[tag] && scale >= 0.)
+          vHD->m_tuned_selected_mc_reco.Fill(tag, univ, fill_val_lin_x, scale * weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
       }
-      if (vHD->hasTunedMC[tag] && scale >= 0.)
+      else if (vHD->GetAnalysisType() == k2D)
       {
-        vHD->m_tuned_selected_mc_reco.Fill(tag, univ, fill_val_lin, scale * weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+        double fill_val_y = vHD->GetRecoValue(1, *univ, 0);
+        if (vHD->m_tunedmc != 1) // TODO: still need to set up tuned stuff for HyperD
+          vHD->m_selected_mc_reco.Fill(tag, univ, fill_val_lin_x, fill_val_y, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+        if (vHD->hasTunedMC[tag] && scale >= 0.)
+          vHD->m_tuned_selected_mc_reco.Fill(tag, univ, fill_val_lin_x, fill_val_y, scale * weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
       }
     }
     if (vHD->hasSelectedTruth[tag])
     {
-      double true_val_lin = vHD->GetTrueValue(*univ, 0);
-      if (vHD->m_tunedmc != 1)
+      double true_val_lin_x = vHD->GetTrueValue(*univ, 0);
+      if (vHD->GetAnalysisType() == k1D)
       {
-        vHD->m_selected_mc_truth.Fill(tag, univ, true_val_lin, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+        if (vHD->m_tunedmc != 1)
+          vHD->m_selected_mc_truth.Fill(tag, univ, true_val_lin_x, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+        if (vHD->hasTunedMC[tag] && scale >= 0.)
+          vHD->m_tuned_selected_mc_truth.Fill(tag, univ, true_val_lin_x, scale * weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
       }
-      if (vHD->hasTunedMC[tag] && scale >= 0.)
+      else if (vHD->GetAnalysisType() == k2D)
       {
-        vHD->m_tuned_selected_mc_truth.Fill(tag, univ, true_val_lin, scale * weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+        double true_val_y = vHD->GetTrueValue(1, *univ, 0);
+        if (vHD->m_tunedmc != 1)
+          vHD->m_selected_mc_truth.Fill(tag, univ, true_val_lin_x, true_val_y, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+        if (vHD->hasTunedMC[tag] && scale >= 0.)
+          vHD->m_tuned_selected_mc_truth.Fill(tag, univ, true_val_lin_x, true_val_y, scale * weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
       }
     }
   }
@@ -163,11 +184,18 @@ void FillResponse(std::string tag, CVUniverse *univ, double weight,
   {
     if (vHD->hasResponse[tag])
     {
-      double reco_val_lin = vHD->GetRecoValue(*univ, 0);
-      double true_val_lin = vHD->GetTrueValue(*univ, 0);
-      // This will fill both tuned and untuned
-      vHD->FillResponse(tag, univ, reco_val_lin, true_val_lin, weight, scale); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+      double reco_val_lin_x = vHD->GetRecoValue(*univ, 0);
+      double true_val_lin_x = vHD->GetTrueValue(*univ, 0);
+      if (vHD->GetAnalysisType() == k1D)
+        vHD->FillResponse(tag, univ, reco_val_lin_x, true_val_lin_x, weight, scale); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+      else if (vHD->GetAnalysisType() == k2D)
+      {
+        double reco_val_y = vHD->GetRecoValue(1, *univ, 0);
+        double true_val_y = vHD->GetTrueValue(1, *univ, 0);
+        vHD->FillResponse(tag, univ, reco_val_lin_x, reco_val_y, true_val_lin_x, true_val_y, weight, scale);
+      }
     }
+    
   }
 }
 
@@ -189,8 +217,7 @@ void FillSignalTruth(std::string tag, CVUniverse *univ, double weight,
         v->m_signal_mc_truth.Fill(tag,univ, true_val, weight);
       }
       if(v->hasTunedMC[tag] && scale>=0.){
-        double scaledweight = scale*weight;
-        v->m_tuned_signal_mc_truth.Fill(tag, univ, true_val, scaledweight);
+        v->m_tuned_signal_mc_truth.Fill(tag, univ, true_val, scale * weight);
       }
     }
   }
@@ -203,8 +230,7 @@ void FillSignalTruth(std::string tag, CVUniverse *univ, double weight,
         v2->m_signal_mc_truth.Fill2D(tag,univ, true_val_x, true_val_y, weight);
       }
       if(v2->hasTunedMC[tag] && scale>=0.){
-        double scaledweight = scale*weight;
-        v2->m_tuned_signal_mc_truth.Fill2D(tag,univ, true_val_x, true_val_y, scaledweight);
+        v2->m_tuned_signal_mc_truth.Fill2D(tag, univ, true_val_x, true_val_y, scale * weight);
       }
     }
   }
@@ -214,14 +240,22 @@ void FillSignalTruth(std::string tag, CVUniverse *univ, double weight,
     {
       double true_val_lin = vHD->GetTrueValue(*univ, 0);
       // if (univ->ShortName() == "cv" ) std::cout << v->GetName() << " " << univ->GetEventID() << " " << run << " " << subrun << " "  <<  " "  << true_val << " " << weight << std::endl;
-      if (vHD->m_tunedmc != 1)
+      if(vHD->GetAnalysisType() == k1D)
       {
-        vHD->m_signal_mc_truth.Fill(tag, univ, true_val_lin, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+        if (vHD->m_tunedmc != 1)
+        {
+          vHD->m_signal_mc_truth.Fill(tag, univ, true_val_lin, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+        }
+        if (vHD->hasTunedMC[tag] && scale >= 0.)
+          vHD->m_tuned_signal_mc_truth.Fill(tag, univ, true_val_lin, scale * weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
       }
-      if (vHD->hasTunedMC[tag] && scale >= 0.)
+      else if (vHD->GetAnalysisType() == k2D)
       {
-        double scaledweight = scale * weight;
-        vHD->m_tuned_signal_mc_truth.Fill(tag, univ, true_val_lin, scaledweight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+        double true_val_y = vHD->GetTrueValue(1, *univ, 0);
+        if (vHD->m_tunedmc != 1)
+          vHD->m_signal_mc_truth.Fill(tag, univ, true_val_lin, true_val_y, weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
+        if (vHD->hasTunedMC[tag] && scale >= 0.)
+          vHD->m_tuned_signal_mc_truth.Fill(tag, univ, true_val_lin, true_val_y, scale * weight); // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
       }
     }
   }

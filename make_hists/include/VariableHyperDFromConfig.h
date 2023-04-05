@@ -15,10 +15,14 @@
 
 #include "CVUniverse.h"
 // #include "VariableFromConfig.h"
-#include "HistWrapperMap.h"
 #include "MinervaUnfold/MnvResponse.h"
-#include "HistWrapperMap.h"
-#include "include/ResponseWrapperMap.h"
+// #include "HistWrapperMap.h"
+// #include "Hist2DWrapperMap.h"
+// #include "include/ResponseWrapperMap.h"
+// #include "include/Response2DWrapperMap.h"
+
+#include "HistHyperDWrapperMap.h"
+#include "include/ResponseHyperDWrapperMap.h"
 #include "utils/NuConfig.h"
 // #include "utils/UniverseDecoder.h"
 
@@ -37,12 +41,16 @@ namespace CCQENu {
 class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse> {
 private:
   typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
-  typedef HistWrapperMap<CVUniverse> HM; // TODO: HyperDim HistWrapper? Map?
+  // typedef HistWrapperMap<CVUniverse> HM; // TODO: HyperDim HistWrapper? Map?
+  // typedef Hist2DWrapperMap<CVUniverse> HM2D; // TODO: HyperDim HistWrapper? Map?
+  // typedef ResponseWrapperMap<CVUniverse> RM;
+  // typedef Response2DWrapperMap<CVUniverse> RM2D;
 
-  typedef ResponseWrapperMap<CVUniverse> RM;
+  typedef HistHyperDWrapperMap<CVUniverse> HMHD; // TODO: HyperDim HistWrapper? Map?
+  typedef ResponseHyperDWrapperMap<CVUniverse> RMHD;
+
   // typedef PlotUtils::MnvH1D MH1D;
   //  typedef PlotUtils::HistFolio<PlotUtils::MnvH1D> FOLIO;
-
 
 public:
   //=======================================================================================
@@ -53,7 +61,8 @@ public:
 
   VariableHyperDFromConfig(const std::string name,
                            const std::vector<CCQENu::VariableFromConfig*> &vars,
-                           const std::vector<std::string> fors) : PlotUtils::VariableHyperDBase<CVUniverse>(name)
+                           const std::vector<std::string> fors,
+                           const EAnalysisType t2D_t1D = k1D) : PlotUtils::VariableHyperDBase<CVUniverse>(name, t2D_t1D)
   { // Right now GetVariables isn't clever on getting "fors". Either takes in some form Variable config file, or defaults to all of them
     int tmp_tunedmc = 0;
 
@@ -100,15 +109,36 @@ public:
   // Histwrappers -- selected mc, selected data
   // TODO: Need to do hyperdim hist/responsewrappersmaps?
 
-  HM m_selected_mc_reco;       // HM for normal MC hists - has special constructor to make response
-  HM m_tuned_selected_mc_reco; // HM for tuned MC hists used for background subtraction -NHV - has special constructor to make response
-  HM m_selected_mc_truth;
-  HM m_tuned_selected_mc_truth;
-  HM m_signal_mc_truth;
-  HM m_tuned_signal_mc_truth;
-  HM m_selected_data;
-  RM m_response;
-  RM m_tuned_response;
+  // HM m_selected_mc_reco;       // HM for normal MC hists - has special constructor to make response
+  // HM m_tuned_selected_mc_reco; // HM for tuned MC hists used for background subtraction -NHV - has special constructor to make response
+  // HM m_selected_mc_truth;
+  // HM m_tuned_selected_mc_truth;
+  // HM m_signal_mc_truth;
+  // HM m_tuned_signal_mc_truth;
+  // HM m_selected_data;
+  // RM m_response;
+  // RM m_tuned_response;
+
+  // // Temporary members for 2D "type 0" analysis
+  // HM2D m_selected_mc_reco_2d;       // HM for normal MC hists - has special constructor to make response
+  // HM2D m_tuned_selected_mc_reco_2d; // HM for tuned MC hists used for background subtraction -NHV - has special constructor to make response
+  // HM2D m_selected_mc_truth_2d;
+  // HM2D m_tuned_selected_mc_truth_2d;
+  // HM2D m_signal_mc_truth_2d;
+  // HM2D m_tuned_signal_mc_truth_2d;
+  // HM2D m_selected_data_2d;
+  // RM2D m_response_2d;
+  // RM2D m_tuned_response_2d;
+
+  HMHD m_selected_mc_reco;       // HM for normal MC hists - has special constructor to make response
+  HMHD m_tuned_selected_mc_reco; // HM for tuned MC hists used for background subtraction -NHV - has special constructor to make response
+  HMHD m_selected_mc_truth;
+  HMHD m_tuned_selected_mc_truth;
+  HMHD m_signal_mc_truth;
+  HMHD m_tuned_signal_mc_truth;
+  HMHD m_selected_data;
+  RMHD m_response;
+  RMHD m_tuned_response;
 
   UniverseMap m_universes;
   std::string m_units;
@@ -139,6 +169,8 @@ public:
     }
   };
 
+  EAnalysisType GetAnalysisType(){return m_analysis_type;}
+
   // all of the following could probably be the same code, sigh...
   template <typename T>
   void InitializeMCHistograms(T univs, const std::vector<std::string> tags)
@@ -162,11 +194,23 @@ public:
       std::cout << "VariableHyperDFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
       return;
     }
-
-    std::vector<double> bins = GetBinVec();
-    std::vector<double> recobins = GetRecoBinVec(); // TODO: set this up in VariableHyperDBase
-    // need reco level binning here:
-    m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), recobins, univs, tags);
+    std::vector<double> xrecolinbins = GetRecoBinVec(); // TODO: set this up in VariableHyperDBase
+    if (m_analysis_type == k1D || m_analysis_type == k1D_lite)
+    {  
+      // need reco level binning here:
+      // m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), xrecolinbins, univs, tags);
+      // m_selected_mc_reco.AppendName("reconstructed", tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+      m_selected_mc_reco = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), xrecolinbins, univs, tags);
+      // m_selected_mc_reco.AppendName("reconstructed", tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+    }
+    else if (m_analysis_type == k2D || m_analysis_type == k2D_lite)
+    {
+      std::vector<double> yrecobins = GetRecoBinVec(1);
+      // need reco level binning here:
+      // m_selected_mc_reco_2d = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xrecolinbins, yrecobins, univs, tags);
+      // m_selected_mc_reco_2d.AppendName("reconstructed", tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+      m_selected_mc_reco = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xrecolinbins, yrecobins, univs, tags);
+    }
     m_selected_mc_reco.AppendName("reconstructed", tags); // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
   }
 
@@ -193,9 +237,20 @@ public:
       return;
     }
 
-    std::vector<double> bins = GetBinVec();
-
-    m_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), bins, univs, tags);
+    std::vector<double> xlinbins = GetBinVec();
+    if (m_analysis_type == k1D || m_analysis_type == k1D_lite)
+    {
+      // m_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), xlinbins, univs, tags);
+      // m_selected_mc_truth.AppendName("selected_truth", tags);
+      m_selected_mc_truth = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), xlinbins, univs, tags);
+    }
+    else if (m_analysis_type == k2D || m_analysis_type == k2D_lite)
+    {
+      std::vector<double> ybins = GetBinVec(1);
+      // m_selected_mc_truth_2d = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xlinbins, ybins, univs, tags);
+      // m_selected_mc_truth_2d.AppendName("selected_truth", tags);
+      m_selected_mc_truth = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xlinbins, ybins, univs, tags);
+    }
     m_selected_mc_truth.AppendName("selected_truth", tags);
   }
 
@@ -222,9 +277,21 @@ public:
       return;
     }
 
-    std::vector<double> bins = GetBinVec();
+    std::vector<double> xlinbins = GetBinVec();
 
-    m_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), bins, univs, tags);
+    if (m_analysis_type == k1D || m_analysis_type == k1D_lite)
+    {
+      // m_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), xlinbins, univs, tags);
+      // m_signal_mc_truth.AppendName("all_truth", tags);
+      m_signal_mc_truth = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), xlinbins, univs, tags);
+    }
+    else if (m_analysis_type == k2D || m_analysis_type == k2D_lite)
+    {
+      std::vector<double> ybins = GetBinVec(1);
+      // m_signal_mc_truth_2d = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xlinbins, ybins, univs, tags);
+      // m_signal_mc_truth_2d.AppendName("all_truth", tags);
+      m_signal_mc_truth = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xlinbins, ybins, univs, tags);
+    }
     m_signal_mc_truth.AppendName("all_truth", tags);
   }
 
@@ -244,9 +311,21 @@ public:
     {
       hasData[tag] = true;
     }
-    std::vector<double> recobins = GetRecoBinVec();
+    std::vector<double> xrecolinbins = GetRecoBinVec();
+    if (m_analysis_type == k1D || m_analysis_type == k1D_lite)
+    {
+      // m_selected_data = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), xrecolinbins, univs, tags);
+      // m_selected_data.AppendName("reconstructed", tags);
+      m_selected_data = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), xrecolinbins, univs, tags);
 
-    m_selected_data = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), recobins, univs, tags);
+    }
+    else if (m_analysis_type == k2D || m_analysis_type == k2D_lite)
+    {
+      std::vector<double> yrecobins = GetRecoBinVec(1);
+      // m_selected_data_2d = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xrecolinbins, yrecobins, univs, tags);
+      // m_selected_data_2d.AppendName("reconstructed", tags);
+      m_selected_data = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xrecolinbins, yrecobins, univs, tags);
+    }
     m_selected_data.AppendName("reconstructed", tags);
   }
 
@@ -268,30 +347,75 @@ public:
       hasTunedMC[tag] = true;
     }
 
-    std::vector<double> bins = GetBinVec();
-    std::vector<double> recobins = GetRecoBinVec();
+    std::vector<double> xlinbins = GetBinVec();
+    std::vector<double> xrecolinbins = GetRecoBinVec();
+
+    // Only used if doing a 2D type 0 analysis
+    std::vector<double> ybins = GetBinVec(1);
+    std::vector<double> yrecobins = GetRecoBinVec(1);
+
 
     // Check which categories are configured and add a tuned version
     if (std::count(m_for.begin(), m_for.end(), "selected_reco") >= 1)
     { // use recobins
-      m_tuned_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), recobins, reco_univs, tuned_tags);
+      if (m_analysis_type == k1D || m_analysis_type == k1D_lite)
+      {
+        // m_tuned_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), xrecolinbins, reco_univs, tuned_tags);
+        // m_tuned_selected_mc_reco.AppendName("reconstructed_tuned", tuned_tags);
+        m_tuned_selected_mc_reco = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), xrecolinbins, reco_univs, tuned_tags);
+      }
+      else if (m_analysis_type == k2D || m_analysis_type == k2D_lite)
+      {
+        // m_tuned_selected_mc_reco_2d = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xrecolinbins, yrecobins, reco_univs, tuned_tags);
+        // m_tuned_selected_mc_reco_2d.AppendName("reconstructed_tuned", tuned_tags);
+        m_tuned_selected_mc_reco = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xrecolinbins, yrecobins, reco_univs, tuned_tags);
+      }
       m_tuned_selected_mc_reco.AppendName("reconstructed_tuned", tuned_tags);
     }
     if (std::count(m_for.begin(), m_for.end(), "selected_truth") >= 1)
     { // use bins
-      m_tuned_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), bins, reco_univs, tuned_tags);
+      if (m_analysis_type == k1D || m_analysis_type == k1D_lite)
+      {
+        // m_tuned_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), xlinbins, reco_univs, tuned_tags);
+        // m_tuned_selected_mc_truth.AppendName("selected_truth_tuned", tuned_tags);
+        m_tuned_selected_mc_truth = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), xlinbins, reco_univs, tuned_tags);
+      }
+      else if (m_analysis_type == k2D || m_analysis_type == k2D_lite)
+      {
+        // m_tuned_selected_mc_truth_2d = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xlinbins, ybins, reco_univs, tuned_tags);
+        // m_tuned_selected_mc_truth_2d.AppendName("selected_truth_tuned", tuned_tags);
+        m_tuned_selected_mc_truth = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xlinbins, ybins, reco_univs, tuned_tags);
+      }
       m_tuned_selected_mc_truth.AppendName("selected_truth_tuned", tuned_tags);
     }
     if (std::count(m_for.begin(), m_for.end(), "truth") >= 1)
     { // use bins
-      m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), bins, truth_univs, tuned_tags);
+      if (m_analysis_type == k1D || m_analysis_type == k1D_lite)
+      {
+        // m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), xlinbins, truth_univs, tuned_tags);
+        // m_tuned_signal_mc_truth.AppendName("all_truth_tuned", tuned_tags);
+        m_tuned_signal_mc_truth = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNBins(), xlinbins, truth_univs, tuned_tags);
+      }
+      else if (m_analysis_type == k2D || m_analysis_type == k2D_lite)
+      {
+        // m_tuned_signal_mc_truth_2d = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xlinbins, ybins, truth_univs, tuned_tags);
+        // m_tuned_signal_mc_truth_2d.AppendName("all_truth_tuned", tuned_tags);
+        m_tuned_signal_mc_truth = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xlinbins, ybins, truth_univs, tuned_tags);
+      }
       m_tuned_signal_mc_truth.AppendName("all_truth_tuned", tuned_tags);
     }
-
     if (std::count(m_for.begin(), m_for.end(), "response") >= 1)
     {
-      // m_response = RM(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
-      m_tuned_response = RM(Form("%s", GetName().c_str()), reco_univs, recobins, bins, response_tags, "_tuned");
+      if (m_analysis_type == k1D || m_analysis_type == k1D_lite)
+      {
+        // m_response = RM(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
+        m_tuned_response = RMHD(Form("%s", GetName().c_str()), reco_univs, xrecolinbins, xlinbins, response_tags, "_tuned");
+      }
+      else if (m_analysis_type == k2D || m_analysis_type == k2D_lite)
+      {
+        // m_response = RM(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
+        m_tuned_response = RMHD(Form("%s", GetName().c_str()), reco_univs, xrecolinbins, xlinbins, yrecobins, ybins, response_tags, "_tuned");
+      }
     }
   }
 
@@ -319,12 +443,20 @@ public:
       hasResponse[tag] = true;
     }
 
-    std::vector<double> bins = GetBinVec();
-    std::vector<double> recobins = GetRecoBinVec();
-
-    // m_response = RM(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
-
-    m_response = RM(Form("%s", GetName().c_str()), reco_univs, recobins, bins, tags, tail);
+    std::vector<double> xlinbins = GetBinVec();
+    std::vector<double> xrecolinbins = GetRecoBinVec();
+    if (m_analysis_type == k1D || m_analysis_type == k1D_lite)
+    {
+      // m_response = RM(Form("%s", GetName().c_str()),reco_univs, true_univs, recobins, bins, tags);
+      m_response = RMHD(Form("%s", GetName().c_str()), reco_univs, xrecolinbins, xlinbins, tags, tail);
+    }
+    else if (m_analysis_type == k2D || m_analysis_type == k2D_lite)
+    {
+      std::vector<double> ybins = GetBinVec(1);
+      std::vector<double> yrecobins = GetRecoBinVec(1);
+      // m_response_2d = RM2D(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
+      m_response = RMHD(Form("%s", GetName().c_str()), reco_univs, xrecolinbins, xlinbins, yrecobins, ybins, tags, tail);
+    }
   }
 
   //============================================================================
@@ -345,38 +477,38 @@ public:
         if (m_tunedmc != 1)
         {
           m_selected_mc_reco.Write(tag);
-          std::cout << " write out selected mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+          std::cout << " write out selected mc histogram " << m_selected_mc_reco.GetHistName(tag) << std::endl;
         }
         if (hasTunedMC[tag])
         {
           m_tuned_selected_mc_reco.Write(tag);
-          std::cout << " write out tuned selected mc histogram " << m_tuned_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+          std::cout << " write out tuned selected mc histogram " << m_tuned_selected_mc_reco.GetHistName(tag) << std::endl;
         }
       }
       if (hasSelectedTruth[tag])
       {
         if (m_tunedmc != 1)
         {
-          std::cout << " write out selected truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
+          std::cout << " write out selected truth histogram " << m_selected_mc_truth.GetHistName(tag) << std::endl;
           m_selected_mc_truth.Write(tag);
         }
         if (hasTunedMC[tag])
         {
           m_tuned_selected_mc_truth.Write(tag);
-          std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
+          std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_truth.GetHistName(tag) << std::endl;
         }
       }
       if (hasTruth[tag])
       {
         if (m_tunedmc != 1)
         {
-          std::cout << " write out truth histogram " << m_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
+          std::cout << " write out truth histogram " << m_signal_mc_truth.GetHistName(tag) << std::endl;
           m_signal_mc_truth.Write(tag);
         }
         if (hasTunedMC[tag])
         {
           m_tuned_signal_mc_truth.Write(tag);
-          std::cout << " write out tuned mc histogram " << m_tuned_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
+          std::cout << " write out tuned mc histogram " << m_tuned_signal_mc_truth.GetHistName(tag) << std::endl;
         }
       }
       if (hasResponse[tag])
@@ -394,74 +526,276 @@ public:
       }
       if (hasData[tag])
       {
-        std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
+        std::cout << " write out data histogram " << m_selected_data.GetHistName(tag) << std::endl;
         m_selected_data.Write(tag);
       }
     }
   }
+  
+  // void WriteAllHistogramsToFile(TFile & f)
+  // {
+  //   if (m_analysis_type != k1D) // skip if not 2D type 0 analysis
+  //   {
+  //     std::cout << "VariableHyperDFromConfig: WriteAllHistogramsToFile2D: Set to analysis type " << m_analysis_type << ". Will not write 1D HyperD hists." << std::endl;
+  //     return;
+  //   }
+
+  //   std::cout << "should only be called once " << std::endl;
+  //   f.cd();
+
+  //   for (auto tag : m_tags)
+  //   {
+  //     std::cout << " write out flags " << hasMC[tag] << hasSelectedTruth[tag] << hasTruth[tag] << hasData[tag] << hasTunedMC[tag] << std::endl;
+  //     if (hasMC[tag])
+  //     {
+  //       if (m_tunedmc != 1)
+  //       {
+  //         m_selected_mc_reco.Write(tag);
+  //         std::cout << " write out selected mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+  //       }
+  //       if (hasTunedMC[tag])
+  //       {
+  //         m_tuned_selected_mc_reco.Write(tag);
+  //         std::cout << " write out tuned selected mc histogram " << m_tuned_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+  //       }
+  //     }
+  //     if (hasSelectedTruth[tag])
+  //     {
+  //       if (m_tunedmc != 1)
+  //       {
+  //         std::cout << " write out selected truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
+  //         m_selected_mc_truth.Write(tag);
+  //       }
+  //       if (hasTunedMC[tag])
+  //       {
+  //         m_tuned_selected_mc_truth.Write(tag);
+  //         std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
+  //       }
+  //     }
+  //     if (hasTruth[tag])
+  //     {
+  //       if (m_tunedmc != 1)
+  //       {
+  //         std::cout << " write out truth histogram " << m_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
+  //         m_signal_mc_truth.Write(tag);
+  //       }
+  //       if (hasTunedMC[tag])
+  //       {
+  //         m_tuned_signal_mc_truth.Write(tag);
+  //         std::cout << " write out tuned mc histogram " << m_tuned_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
+  //       }
+  //     }
+  //     if (hasResponse[tag])
+  //     {
+  //       if (m_tunedmc != 1)
+  //       {
+  //         std::cout << " write out response histograms " << tag << std::endl;
+  //         m_response.Write(tag);
+  //       }
+  //       if (hasTunedMC[tag])
+  //       {
+  //         std::cout << " write out tuned response histograms " << tag << std::endl;
+  //         m_tuned_response.Write(tag);
+  //       }
+  //     }
+  //     if (hasData[tag])
+  //     {
+  //       std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
+  //       m_selected_data.Write(tag);
+  //     }
+  //   }
+  // }
+
+  // // TODO: Okay yeah will defo need a new histwrappermap class
+  // void WriteAllHistogramsToFile2D(TFile &f)
+  // {
+  //   if (m_analysis_type != k2D) // skip if not 1D type 1 analysis
+  //   {
+  //     std::cout << "VariableHyperDFromConfig: WriteAllHistogramsToFile2D: Set to analysis type " << m_analysis_type << ". Will not write 2D HyperD hists." << std::endl;
+  //     return;
+  //   }
+
+  //   std::cout << "should only be called once " << std::endl;
+  //   f.cd();
+
+  //   for (auto tag : m_tags)
+  //   {
+  //     std::cout << " write out flags " << hasMC[tag] << hasSelectedTruth[tag] << hasTruth[tag] << hasData[tag] << hasTunedMC[tag] << std::endl;
+  //     if (hasMC[tag])
+  //     {
+  //       if (m_tunedmc != 1)
+  //       {
+  //         m_selected_mc_reco_2d.Write(tag);
+  //         std::cout << " write out selected mc histogram " << m_selected_mc_reco_2d.GetHist(tag)->GetName() << std::endl;
+  //       }
+  //       if (hasTunedMC[tag])
+  //       {
+  //         m_tuned_selected_mc_reco_2d.Write(tag);
+  //         std::cout << " write out tuned selected mc histogram " << m_tuned_selected_mc_reco_2d.GetHist(tag)->GetName() << std::endl;
+  //       }
+  //     }
+  //     if (hasSelectedTruth[tag])
+  //     {
+  //       if (m_tunedmc != 1)
+  //       {
+  //         std::cout << " write out selected truth histogram " << m_selected_mc_truth_2d.GetHist(tag)->GetName() << std::endl;
+  //         m_selected_mc_truth_2d.Write(tag);
+  //       }
+  //       if (hasTunedMC[tag])
+  //       {
+  //         m_tuned_selected_mc_truth_2d.Write(tag);
+  //         std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_truth_2d.GetHist(tag)->GetName() << std::endl;
+  //       }
+  //     }
+  //     if (hasTruth[tag])
+  //     {
+  //       if (m_tunedmc != 1)
+  //       {
+  //         std::cout << " write out truth histogram " << m_signal_mc_truth_2d.GetHist(tag)->GetName() << std::endl;
+  //         m_signal_mc_truth_2d.Write(tag);
+  //       }
+  //       if (hasTunedMC[tag])
+  //       {
+  //         m_tuned_signal_mc_truth_2d.Write(tag);
+  //         std::cout << " write out tuned mc histogram " << m_tuned_signal_mc_truth_2d.GetHist(tag)->GetName() << std::endl;
+  //       }
+  //     }
+  //     if (hasResponse[tag])
+  //     {
+  //       if (m_tunedmc != 1)
+  //       {
+  //         std::cout << " write out response histograms " << tag << std::endl;
+  //         m_response_2d.Write(tag);
+  //       }
+  //       if (hasTunedMC[tag])
+  //       {
+  //         std::cout << " write out tuned response histograms " << tag << std::endl;
+  //         m_tuned_response_2d.Write(tag);
+  //       }
+  //     }
+  //     if (hasData[tag])
+  //     {
+  //       std::cout << " write out data histogram " << m_selected_data_2d.GetHist(tag)->GetName() << std::endl;
+  //       m_selected_data_2d.Write(tag);
+  //     }
+  //   }
+  // }
 
   //============================================================================
   // SYNC ALL HISTOGRAMS
   //============================================================================
+
   void SyncAllHists()
   {
+    // if (m_analysis_type != k1D) // skip if not 1D type 1 analysis
+    // {
+    //   std::cout << "VariableHyperDFromConfig: SyncAllHists2D: Set to analysis type " << m_analysis_type << ". Will not sync 1D HyperD hists." << std::endl;
+    //   return;
+    // }
+
     for (auto tag : m_tags)
     {
       if (hasMC[tag])
       {
         if (m_tunedmc != 1)
-        {
           m_selected_mc_reco.SyncCVHistos();
-        }
         if (hasTunedMC[tag])
-        {
           m_tuned_selected_mc_reco.SyncCVHistos();
-        }
       }
       if (hasSelectedTruth[tag])
       {
         if (m_tunedmc != 1)
-        {
           m_selected_mc_truth.SyncCVHistos();
-        }
         if (hasTunedMC[tag])
-        {
           m_tuned_selected_mc_truth.SyncCVHistos();
-        }
-      }
-      if (hasData[tag])
-      {
-        m_selected_data.SyncCVHistos();
       }
       if (hasTruth[tag])
       {
         if (m_tunedmc != 1)
-        {
           m_signal_mc_truth.SyncCVHistos();
-        }
         if (hasTunedMC[tag])
-        {
           m_tuned_signal_mc_truth.SyncCVHistos();
-        }
       }
+      if (hasData[tag])
+        m_selected_data.SyncCVHistos();
     }
   }
 
-  void FillResponse(std::string tag, CVUniverse * univ,
+  // void SyncAllHists2D()
+  // {
+  //   if (m_analysis_type != k2D) // skip if not 2D type 0 analysis
+  //   {
+  //     std::cout << "VariableHyperDFromConfig: SyncAllHists2D: Set to analysis type " << m_analysis_type << ". Will not sync 2D HyperD hists." << std::endl;
+  //     return;
+  //   }
+
+  //   for (auto tag : m_tags)
+  //   {
+  //     if (hasMC[tag])
+  //     {
+  //       if (m_tunedmc != 1)
+  //         m_selected_mc_reco_2d.SyncCVHistos();
+  //       if (hasTunedMC[tag])
+  //         m_tuned_selected_mc_reco_2d.SyncCVHistos();
+  //     }
+  //     if (hasSelectedTruth[tag])
+  //     {
+  //       if (m_tunedmc != 1)
+  //         m_selected_mc_truth_2d.SyncCVHistos();
+  //       if (hasTunedMC[tag])
+  //         m_tuned_selected_mc_truth_2d.SyncCVHistos();
+  //     }
+  //     if (hasTruth[tag])
+  //     {
+  //       if (m_tunedmc != 1)
+  //         m_signal_mc_truth_2d.SyncCVHistos();
+  //       if (hasTunedMC[tag])
+  //         m_tuned_signal_mc_truth_2d.SyncCVHistos();
+  //     }
+  //     if (hasData[tag])
+  //       m_selected_data_2d.SyncCVHistos();
+  //   }
+  // }
+
+  void FillResponse(std::string tag, CVUniverse *univ,
                     const double value, const double truth,
-                    const double weight = 1.0, const double scale = 1.0)
+                    const double weight, const double scale = 1.0)
   {
+    if (m_analysis_type != k1D) // skip if not 1D type 1 analysis
+    {
+      std::cout << "VariableHyperDFromConfig: FillResponse2D: Set to analysis type " << m_analysis_type << ". Will not fill response for 1D HyperD hists." << std::endl;
+      return;
+    }
+
     std::string name = univ->ShortName();
     // int iuniv = m_decoder[univ];
     if (hasMC[tag] && m_tunedmc != 1)
-    {
       m_response.Fill(tag, univ, value, truth, weight);
-    }
     if (hasTunedMC[tag] && scale >= 0.)
-    {
       m_tuned_response.Fill(tag, univ, value, truth, weight, scale);
-    }
   }
+
+  void FillResponse(const std::string tag, CVUniverse* univ, 
+                      const double x_value, const double y_value, 
+                      const double x_truth, const double y_truth, 
+                      const double weight, const double scale=1.0) //From Hist2DWrapperMap
+  {
+    if (m_analysis_type != k2D) // skip if not 2D type 0 analysis
+    {
+      std::cout << "VariableHyperDFromConfig: FillResponse: Set to analysis type " << m_analysis_type << ". Will not fill response for 2D HyperD hists." << std::endl;
+      return;
+    }
+
+    std::string name = univ->ShortName();
+    // int iuniv = m_decoder[univ];
+    if (hasMC[tag] && m_tunedmc != 1)
+      // m_response_2d.Fill2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
+      m_response.Fill(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
+    if (hasTunedMC[tag] && scale >= 0.)
+      // m_tuned_response_2d.Fill2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); // value here is reco
+      m_tuned_response.Fill(tag, univ, x_value, y_value, x_truth, y_truth, weight, scale); // value here is reco
+  }
+
 }; // end of class
 
 }  // namespace Ben

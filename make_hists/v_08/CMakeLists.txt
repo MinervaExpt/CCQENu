@@ -50,7 +50,6 @@ include/GetVariablesFromConfig.cxx
 include/GetHyperDVariablesFromConfig.cxx
 utils/SyncBands.cxx
 include/weight_MCreScale.cxx
-# include/VariableHyperDBase.cxx
 )
 
 # tell it about the header files
@@ -67,8 +66,10 @@ include/GetHyperDVariablesFromConfig.h
 # include/GetStacked.h
 include/Hist2DWrapperMap.h
 include/HistWrapperMap.h
+include/HistHyperDWrapperMap.h
 include/ResponseWrapperMap.h
 include/Response2DWrapperMap.h
+include/ResponseHyperDWrapperMap.h
 include/Systematics.h
 utils/SyncBands.h
 include/VariableHyperDFromConfig.h
