@@ -46,7 +46,8 @@ void FillData(std::string tag, CVUniverse* univ,
       else if (vHD->GetAnalysisType() == k2D)
       {
         double fill_val_y = vHD->GetRecoValue(1, *univ, 0);
-        vHD->m_selected_data.Fill(tag, univ, fill_val_lin_x, fill_val_y);
+        double weight = 1.0; // Needed for this method. Since data, weight is 1
+        vHD->m_selected_data.Fill(tag, univ, fill_val_lin_x, fill_val_y,weight);
       }
     }
   }
