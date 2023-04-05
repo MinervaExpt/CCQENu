@@ -99,31 +99,7 @@ void LoopAndFillEventSelection(std::string tag,
   {
     if (data_mc_truth != kData) i+= prescale-1;
     
-    //if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
-    // status bar stuff
-    if (((double)(i+1)/nentries)*100 >= progress+2.5 ) {
-	  
-	  	progress+=2.5;
-			std::cout << '\r' << std::flush << "   |";
-			//std::cout << std::endl << "   |";
-		
-			for (int j=0;j<progress/2.5;j++) std::cout << "\e[0;31;47m \e[0m";
-			for (int j=40;j>progress/2.5;j--) std::cout << "_";
 
-			std::cout << "|   [";
-			if (progress<10) std::cout << "_";
-			if (progress<100) std::cout << "_";
-			std::cout << progress;
-			if (((int)(0.5 + progress/2.5))%2==0) std::cout << ".0";
-			std::cout << "%]";
-			std::cout << "   ( ";
-			for (int j=((int)log10(nentries)-(int)log10(i+1)); j>0; j--) {
-				std::cout << "_";
-			}
-			std::cout << i+1 << " / " << nentries << " )";
-
-			if (progress == 100) std::cout << std::endl << std::endl;
-		}
 		
     cvUniv->SetEntry(i);
 
@@ -134,7 +110,40 @@ void LoopAndFillEventSelection(std::string tag,
     // TODO: Is this scaled cvWeight necessary?
     // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
 
-    
+    // if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
+    // status bar stuff
+    if (((double)(i + 1) / nentries) * 100 >= progress + 2.5)
+    {
+      progress += 2.5;
+      std::cout << '\r' << std::flush << "   |";
+      // std::cout << std::endl << "   |";
+
+      for (int j = 0; j < progress / 2.5; j++)
+        std::cout << "\e[0;31;47m \e[0m";
+      for (int j = 40; j > progress / 2.5; j--)
+        std::cout << "_";
+
+      std::cout << "|   [";
+      if (progress < 10)
+        std::cout << "_";
+      if (progress < 100)
+        std::cout << "_";
+      std::cout << progress;
+      if (((int)(0.5 + progress / 2.5)) % 2 == 0)
+        std::cout << ".0";
+      std::cout << "%]";
+      std::cout << "   ( ";
+      for (int j = ((int)log10(nentries) - (int)log10(i + 1)); j > 0; j--)
+      {
+        std::cout << "_";
+      }
+      std::cout << i + 1 << " / " << nentries << " )";
+
+      if (progress == 100)
+        std::cout << std::endl
+                  << std::endl;
+    }
+
     // Loop bands and universes
     for (auto band : error_bands) {
       std::vector<CVUniverse*> error_band_universes = band.second;
