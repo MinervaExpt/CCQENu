@@ -338,6 +338,9 @@ public:
 		recointfunctions["RecoTruthIsPrimaryPion"] = &CVUNIVERSE::GetRecoTruthIsPrimaryPion;
 		recointfunctions["RecoTruthIsPrimaryOther"] = &CVUNIVERSE::GetRecoTruthIsPrimaryOther;
 		
+    recofunctions["MaxProtonTrueKE"] = &CVUNIVERSE::GetMaxProtonTrueKE;
+    truefunctions["MaxProtonTrueKE"] = &CVUNIVERSE::GetMaxProtonTrueKE;
+    truefunctions["PrimaryProtonTrueKE"] = &CVUNIVERSE::GetPrimaryProtonTrueKE;
 		trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
 		truefunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
 

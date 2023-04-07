@@ -415,7 +415,8 @@ public:
 	virtual double GetSecProtonFractionEnergyInCone_5() const;
 	virtual double GetSecProtonFractionEnergyInCone_6() const;
 	
-	virtual double GetProtonTrueKE(int i) const;
+  virtual double GetMaxProtonTrueKE() const; // this does not require prong
+	virtual double GetProtonTrueKE(int i) const;  //index i is prong
 	virtual double GetPrimaryProtonTrueKE() const;
 	virtual double GetSecProtonTrueKE_1() const;
 	virtual double GetSecProtonTrueKE_2() const;

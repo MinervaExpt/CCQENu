@@ -4,6 +4,7 @@
         "6-5-2022 change the zstart cut to include the start","add log10recoil"],
     "2D":{
         "pzmu_ptmu":{"name":"pzmu_ptmu","xvar":"pzmu","yvar":"ptmu"},
+        "ptmu_pzmu":{"name":"ptmu_pzmu","xvar":"ptmu","yvar":"pzmu"},
         "pzmu_Q2QE":{"name":"pzmu_Q2QE","xvar":"pzmu","yvar":"Q2QE"},
         "EnuCCQE_Enu":{"name":"EnuCCQE_Enu","xvar":"EnuCCQE","yvar":"Enu"},
         "EnuCCQE_Q2QE":{"name":"EnuCCQE_Q2QE","xvar":"EnuCCQE","yvar":"Q2QE"},
@@ -52,7 +53,8 @@
         "ThetaYmuDegrees":{"reco":"ThetaYmuDegrees","true":"TrueThetaYmuDegrees","name":"ThetaYmuDegrees","title":"theta_mu_y (degrees)","nbins":40,"min":-40.,"max":40.,"fluxnorm":false},
         "ApothemX":{"reco":"ApothemX","true":"TrueApothemX", "name":"ApothemX","title":"ApothemX (mm)","nbins":50,"min":-1000.,"max":1000.},
         "ApothemY":{"reco":"ApothemY","true":"TrueApothemY", "name":"ApothemY","title":"ApothemY (mm)","nbins":50,"min":-1000.,"max":1000.},
-        "ZVertex":{"reco":"ZVertex","true":"TrueZVertex", "name":"ZVertex","title":"ZVertex (mm)","nbins":52,"min":5900,"max":8500.}
+        "ZVertex":{"reco":"ZVertex","true":"TrueZVertex", "name":"ZVertex","title":"ZVertex (mm)","nbins":52,"min":5900,"max":8500.},
+        "ProtonKE":{"reco":"MaxProtonTrueKE","true":"MaxProtonTrueKE","name":"MaxProtonTrueKE","title":"Maximum Proton KE, MeV","nbins":100,"min":0.0,"max":500.,"for":["selected_truth"]}
       
     }
 }
