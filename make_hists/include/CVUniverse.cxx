@@ -972,6 +972,23 @@ namespace {
 		else return 1;
 	}
 
+double CVUniverse::GetMaxProtonTrueKE() const{
+  
+  int mc_nFSPart = GetInt("mc_nFSPart");
+  std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+  std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
+  double KEmax = -1.0;
+  for(int i = 0; i < mc_nFSPart; i++){
+    int pdg =  mc_FSPartPDG[i];
+    if (pdg     != 2212 ) continue;
+    double energy = mc_FSPartE[i];
+    double KEp = energy - MinervaUnits::M_p;
+    if (KEp > KEmax) KEmax = KEp;
+
+  }
+  return KEmax;
+}
+
 	int CVUniverse::GetTruthIsCCQELike() const {  // cut hardwired for now
 		std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
 		std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
