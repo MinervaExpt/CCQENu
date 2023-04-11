@@ -531,10 +531,10 @@ namespace {
 			if(startZ < 0) return -1.;
 		}
 		else {
-			if(GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_startPointX_sz").c_str()) > i) return -1.;
 			startX = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_startPointX").c_str(),i-1);
 			startY = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_startPointY").c_str(),i-1);
 			startZ = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_startPointZ").c_str(),i-1);
+			if(startZ < 0) return -1.;
 		}
 		std::vector<double> vtx = GetVec<double>("vtx");
 
@@ -971,6 +971,23 @@ namespace {
 		    (!neutrinoMode && genie_n_antimuons == 0)   ) return 0;
 		else return 1;
 	}
+
+double CVUniverse::GetMaxProtonTrueKE() const{
+  
+  int mc_nFSPart = GetInt("mc_nFSPart");
+  std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+  std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
+  double KEmax = -1.0;
+  for(int i = 0; i < mc_nFSPart; i++){
+    int pdg =  mc_FSPartPDG[i];
+    if (pdg     != 2212 ) continue;
+    double energy = mc_FSPartE[i];
+    double KEp = energy - MinervaUnits::M_p;
+    if (KEp > KEmax) KEmax = KEp;
+
+  }
+  return KEmax;
+}
 
 	int CVUniverse::GetTruthIsCCQELike() const {  // cut hardwired for now
 		std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");

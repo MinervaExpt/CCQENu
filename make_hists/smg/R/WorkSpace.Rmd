@@ -1,0 +1,114 @@
+---
+title: "Work Space"
+author: "Sean Gilligan"
+output: pdf_document
+---
+
+```{r, message = F, warning = F, echo = F}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(GGally)
+
+events <- read.csv("mc_reco_entries_Mult2p_NuCC.csv", sep=";")
+events <- events %>% 
+  filter(PrimaryProtonScore1 >= 0) %>% 
+  mutate(Particle_0 = case_when(PrimaryProtonCandidatePDG == 2212 ~ "Proton",
+                                PrimaryProtonCandidatePDG %in% c(-211,211) ~ "Pion +/-",
+                                PrimaryProtonCandidatePDG == 111 ~ "Pion 0",
+                                PrimaryProtonCandidatePDG == 2112 ~ "Neutron",
+                                PrimaryProtonCandidatePDG == 3122 ~ "Lambda 0",
+                                PrimaryProtonCandidatePDG == 3212 ~ "Sigma 0",
+                                PrimaryProtonCandidatePDG == 311 ~ "Kaon 0",
+                                PrimaryProtonCandidatePDG == -311 ~ "Kaon-bar 0",
+                                PrimaryProtonCandidatePDG == 130 ~ "Kaon_L 0",
+                                PrimaryProtonCandidatePDG == 22 ~ "Gamma",
+                                PrimaryProtonCandidatePDG %in% c(13,-13) ~ "Muon +/-",
+                                PrimaryProtonCandidatePDG %in% c(11,-11) ~ "Electron +/-",
+                                PrimaryProtonCandidatePDG %in% c(321,-321) ~ "Kaon +/-",
+                                PrimaryProtonCandidatePDG %in% c(3222,3112) ~ "Sigma +/-",
+                                PrimaryProtonCandidatePDG %in% c(1114,2214,2224) ~ "Delta ++/+/-",
+                                PrimaryProtonCandidatePDG == -1 ~ "None",
+                                .default = "Other")) %>% 
+  mutate(Particle_1 = case_when(SecProtonCandidatePDG_1 == 2212 ~ "Proton",
+                                (SecProtonCandidatePDG_1 %in% c(-211,211)) ~ "Pion +/-",
+                                SecProtonCandidatePDG_1 == 111 ~ "Pion 0",
+                                SecProtonCandidatePDG_1 == 2112 ~ "Neutron",
+                                SecProtonCandidatePDG_1 == 3122 ~ "Lambda 0",
+                                SecProtonCandidatePDG_1 == 3212 ~ "Sigma 0",
+                                SecProtonCandidatePDG_1 == 311 ~ "Kaon 0",
+                                SecProtonCandidatePDG_1 == -311 ~ "Kaon-bar 0",
+                                SecProtonCandidatePDG_1 == 130 ~ "Kaon_L 0",
+                                SecProtonCandidatePDG_1 == 22 ~ "Gamma",
+                                SecProtonCandidatePDG_1 %in% c(13,-13) ~ "Muon +/-",
+                                SecProtonCandidatePDG_1 %in% c(11,-11) ~ "Electron +/-",
+                                SecProtonCandidatePDG_1 %in% c(321,-321) ~ "Kaon +/-",
+                                SecProtonCandidatePDG_1 %in% c(3222,3112) ~ "Sigma +/-",
+                                SecProtonCandidatePDG_1 %in% c(1114,2214,2224) ~ "Delta ++/+/-",
+                                SecProtonCandidatePDG_1 == -1 ~ "None",
+                                .default = "Other")) %>% 
+  mutate(Particle_2 = case_when(SecProtonCandidatePDG_2 == 2212 ~ "Proton",
+                                SecProtonCandidatePDG_2 %in% c(-211,211) ~ "Pion +/-",
+                                SecProtonCandidatePDG_2 == 111 ~ "Pion 0",
+                                SecProtonCandidatePDG_2 == 2112 ~ "Neutron",
+                                SecProtonCandidatePDG_2 == 3122 ~ "Lambda 0",
+                                SecProtonCandidatePDG_2 == 3212 ~ "Sigma 0",
+                                SecProtonCandidatePDG_2 == 311 ~ "Kaon 0",
+                                SecProtonCandidatePDG_2 == -311 ~ "Kaon-bar 0",
+                                SecProtonCandidatePDG_2 == 130 ~ "Kaon_L 0",
+                                SecProtonCandidatePDG_2 == 22 ~ "Gamma",
+                                SecProtonCandidatePDG_2 %in% c(13,-13) ~ "Muon +/-",
+                                SecProtonCandidatePDG_2 %in% c(11,-11) ~ "Electron +/-",
+                                SecProtonCandidatePDG_2 %in% c(321,-321) ~ "Kaon +/-",
+                                SecProtonCandidatePDG_2 %in% c(3222,3112) ~ "Sigma +/-",
+                                SecProtonCandidatePDG_2 %in% c(1114,2214,2224) ~ "Delta ++/+/-",
+                                SecProtonCandidatePDG_2 == -1 ~ "None",
+                                .default = "Other"))
+
+prong_table <- events %>% select(Particle_0,Particle_1,Particle_2) %>% gather("Candidate","Truth",Particle_0,Particle_1,Particle_2) %>%
+  group_by(Candidate,Truth) %>% count() %>% ungroup() %>% 
+  pivot_wider(names_from = Candidate, values_from = n, names_glue = "$n{str_remove(Candidate,'Particle')}$") %>%
+  arrange(desc(`$n_0$`))  %>% replace(is.na(.), 0)
+prong_table <- rbind(prong_table %>% filter(Truth != "Other",Truth != "None"), 
+                     prong_table %>% filter(Truth == "Other"),
+                     tibble(Truth = "Total",
+                            `$n_0$` = prong_table %>% filter(Truth != "None") %>% pull(`$n_0$`) %>% sum(),
+                            `$n_1$` = prong_table %>% filter(Truth != "None") %>% pull(`$n_1$`) %>% sum(),
+                            `$n_2$` = prong_table %>% filter(Truth != "None") %>% pull(`$n_2$`) %>% sum()),
+                     prong_table %>% filter(Truth == "None")) %>%
+  mutate(Truth = case_when(Truth == "Proton" ~ "$p$",
+                           Truth == "Pion +/-" ~ "$\\pi^{\\pm}$",
+                           Truth == "Pion 0" ~ "$\\pi^{0}$",
+                           Truth == "Neutron" ~ "$n$",
+                           Truth == "Kaon +/-" ~ "$K^{\\pm}$",
+                           Truth == "Muon +/-" ~ "$\\mu^{\\pm}$",
+                           Truth == "Lambda 0" ~ "$\\Lambda^{0}$",
+                           Truth == "Sigma +/-" ~ "$\\Sigma^{\\pm}$",
+                           Truth == "Gamma" ~ "$\\gamma$",
+                           Truth == "Kaon 0" ~ "$K^{0}$",
+                           Truth == "Kaon-bar 0" ~ "$\\bar{K}^{0}$",
+                           Truth == "Kaon_L 0" ~ "$K\\rlap{\textsuperscript{0}}\\textsubscript{L}$",
+                           Truth == "Electron +/-" ~ "$e^{\\pm}$",
+                           Truth == "Sigma 0" ~ "$\\Sigma^{0}$",
+                           .default = Truth))
+
+
+kable(prong_table, booktabs = TRUE, escape=FALSE) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  row_spec(c(13,14), hline_after = T)
+
+events %>% filter(Particle_0 == "Other") %>% count(PrimaryProtonCandidatePDG)
+```
+
+
+```{r, message = F, warning = F, echo = F}
+ggpairs(
+  events %>% 
+    select(ImprovedMichelCount,FittedMichelCount,MichelCount) %>%
+    filter(ImprovedMichelCount < 8,
+           FittedMichelCount < 8,
+           MichelCount < 8),
+  lower = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
+  upper = list(continuous = wrap("cor", size = 5.5)),
+  diag = list(continuous = wrap("barDiag")))
+```
