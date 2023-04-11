@@ -1,14 +1,14 @@
 /**
-* @file
-* @author  Heidi Schellman/Noah Vaughan/SeanGilligan
-* @version 1.0 *
-* @section LICENSE *
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License as
-* published by the Free Software Foundation; either version 2 of
-* the License, or (at your option) any later version. *
-* @section DESCRIPTION *
-* This implements a map of CVFunctions so you can configure them at run time
+ * @file
+ * @author  Heidi Schellman/Noah Vaughan/SeanGilligan
+ * @version 1.0 *
+ * @section LICENSE *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version. *
+ * @section DESCRIPTION *
+ * This implements a map of CVFunctions so you can configure them at run time
  */
 // ========================================================================
 // Place to put a map of CVUniverse functions
@@ -26,19 +26,20 @@
 #include <functional>
 #include <cassert>
 
-
 template <class CVUNIVERSE>
-class CVFunctions{
-  
-  typedef std::function<double(const CVUNIVERSE&)> PointerToCVUniverseFunction;
-  typedef std::function<int(const CVUNIVERSE&)> PointerToCVUniverseIntFunction;
-  std::map<const std::string, PointerToCVUniverseFunction> recofunctions;
-  std::map<const std::string, PointerToCVUniverseFunction> truefunctions;
-  std::map<const std::string, PointerToCVUniverseIntFunction> recointfunctions;
-  std::map<const std::string, PointerToCVUniverseIntFunction> trueintfunctions;
+class CVFunctions
+{
+
+	typedef std::function<double(const CVUNIVERSE &)> PointerToCVUniverseFunction;
+	typedef std::function<int(const CVUNIVERSE &)> PointerToCVUniverseIntFunction;
+	std::map<const std::string, PointerToCVUniverseFunction> recofunctions;
+	std::map<const std::string, PointerToCVUniverseFunction> truefunctions;
+	std::map<const std::string, PointerToCVUniverseIntFunction> recointfunctions;
+	std::map<const std::string, PointerToCVUniverseIntFunction> trueintfunctions;
 
 public:
-  CVFunctions(){
+	CVFunctions()
+	{
 		recofunctions["ZVertex"] = &CVUNIVERSE::GetZVertex;
 		truefunctions["TrueZVertex"] = &CVUNIVERSE::GetTrueZVertex;
 
@@ -88,16 +89,15 @@ public:
 
 		recofunctions["ThetaYmuDegrees"] = &CVUNIVERSE::GetThetaYmuDegrees;
 		truefunctions["TrueThetaYmuDegrees"] = &CVUNIVERSE::GetTrueThetaYmuDegrees;
-    
-    recofunctions["Thetamu"] = &CVUNIVERSE::GetThetamu;
-    truefunctions["TrueThetamu"] = &CVUNIVERSE::GetTrueThetamu;
-    
-    recofunctions["ThetaXmu"] = &CVUNIVERSE::GetThetaXmu;
-    truefunctions["TrueThetaXmu"] = &CVUNIVERSE::GetTrueThetaXmu;
 
-    recofunctions["ThetaYmu"] = &CVUNIVERSE::GetThetaYmu;
-    truefunctions["TrueThetaYmu"] = &CVUNIVERSE::GetTrueThetaYmu;
+		recofunctions["Thetamu"] = &CVUNIVERSE::GetThetamu;
+		truefunctions["TrueThetamu"] = &CVUNIVERSE::GetTrueThetamu;
 
+		recofunctions["ThetaXmu"] = &CVUNIVERSE::GetThetaXmu;
+		truefunctions["TrueThetaXmu"] = &CVUNIVERSE::GetTrueThetaXmu;
+
+		recofunctions["ThetaYmu"] = &CVUNIVERSE::GetThetaYmu;
+		truefunctions["TrueThetaYmu"] = &CVUNIVERSE::GetTrueThetaYmu;
 
 		recofunctions["DeadTime"] = &CVUNIVERSE::GetDeadTime;
 
@@ -121,9 +121,9 @@ public:
 
 		recofunctions["MCTargetNucleon"] = &CVUNIVERSE::GetMCTargetNucleon;
 
-		recofunctions["Dummy"]= &CVUNIVERSE::Dummy;
+		recofunctions["Dummy"] = &CVUNIVERSE::Dummy;
 
-		truefunctions["Dummy"]= &CVUNIVERSE::Dummy;
+		truefunctions["Dummy"] = &CVUNIVERSE::Dummy;
 
 		// integer functions for equals
 
@@ -161,10 +161,8 @@ public:
 
 		recointfunctions["MCTargetNucleon"] = &CVUNIVERSE::GetMCTargetNucleon;
 
-		recointfunctions["Dummy"]= &CVUNIVERSE::Dummy;
-		trueintfunctions["Dummy"]= &CVUNIVERSE::Dummy;
-
-
+		recointfunctions["Dummy"] = &CVUNIVERSE::Dummy;
+		trueintfunctions["Dummy"] = &CVUNIVERSE::Dummy;
 
 		// ----------------------- Sean Neutrino Functions ------------------------------------------
 
@@ -337,14 +335,11 @@ public:
 		recointfunctions["RecoTruthIsPrimaryProton"] = &CVUNIVERSE::GetRecoTruthIsPrimaryProton;
 		recointfunctions["RecoTruthIsPrimaryPion"] = &CVUNIVERSE::GetRecoTruthIsPrimaryPion;
 		recointfunctions["RecoTruthIsPrimaryOther"] = &CVUNIVERSE::GetRecoTruthIsPrimaryOther;
-<<<<<<< HEAD
-		
-    recofunctions["MaxProtonTrueKE"] = &CVUNIVERSE::GetMaxProtonTrueKE;
-    truefunctions["MaxProtonTrueKE"] = &CVUNIVERSE::GetMaxProtonTrueKE;
-    truefunctions["PrimaryProtonTrueKE"] = &CVUNIVERSE::GetPrimaryProtonTrueKE;
-=======
 
->>>>>>> main
+		recofunctions["MaxProtonTrueKE"] = &CVUNIVERSE::GetMaxProtonTrueKE;
+		truefunctions["MaxProtonTrueKE"] = &CVUNIVERSE::GetMaxProtonTrueKE;
+		truefunctions["PrimaryProtonTrueKE"] = &CVUNIVERSE::GetPrimaryProtonTrueKE;
+
 		trueintfunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
 		truefunctions["TruthHasSingleProton"] = &CVUNIVERSE::GetTruthHasSingleProton;
 
@@ -361,7 +356,6 @@ public:
 		recofunctions["ProtonCount1"] = &CVUNIVERSE::GetProtonCount1;
 
 		// Pions
-
 
 		recofunctions["PionScore"] = &CVUNIVERSE::GetPionScore;
 		recofunctions["PionScore1"] = &CVUNIVERSE::GetPionScore1;
@@ -408,52 +402,60 @@ public:
 
 		truefunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
 		trueintfunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
+	};
 
-  };
-  
-  std::vector<std::string> GetRecoKeys()const{
-    std::vector<std::string> keys;
-    for(auto key:recofunctions) {
-      keys.push_back(key.first);
-    }
-    return keys;
-  }
-  
-  std::vector<std::string> GetTrueKeys()const{
-    std::vector< std::string> keys;
-    for(auto key:truefunctions) {
-      keys.push_back(key.first);
-    }
-    return keys;
-  }
-    
-  const PointerToCVUniverseFunction GetRecoFunction(const std::string name) {
-    assert (recofunctions.count(name));
-    PointerToCVUniverseFunction  result = recofunctions[name];
-    return result ;
-  };
-  
-  PointerToCVUniverseFunction GetTrueFunction(const std::string name) {
-    // try a real function first
-    if (truefunctions.count(name)){
-      return truefunctions[name];
-    }
-    else{
-      assert(trueintfunctions.count(name));
-      return trueintfunctions[name];
-    }
-  };
-  
-  const PointerToCVUniverseIntFunction GetRecoIntFunction(const std::string name) {
-    assert (recointfunctions.count(name));
-    return recointfunctions[name];
-  };
-  
-  PointerToCVUniverseIntFunction GetTrueIntFunction(const std::string name) {
-    assert (trueintfunctions.count(name));
-    return trueintfunctions[name];
-  };
+	std::vector<std::string> GetRecoKeys() const
+	{
+		std::vector<std::string> keys;
+		for (auto key : recofunctions)
+		{
+			keys.push_back(key.first);
+		}
+		return keys;
+	}
+
+	std::vector<std::string> GetTrueKeys() const
+	{
+		std::vector<std::string> keys;
+		for (auto key : truefunctions)
+		{
+			keys.push_back(key.first);
+		}
+		return keys;
+	}
+
+	const PointerToCVUniverseFunction GetRecoFunction(const std::string name)
+	{
+		assert(recofunctions.count(name));
+		PointerToCVUniverseFunction result = recofunctions[name];
+		return result;
+	};
+
+	PointerToCVUniverseFunction GetTrueFunction(const std::string name)
+	{
+		// try a real function first
+		if (truefunctions.count(name))
+		{
+			return truefunctions[name];
+		}
+		else
+		{
+			assert(trueintfunctions.count(name));
+			return trueintfunctions[name];
+		}
+	};
+
+	const PointerToCVUniverseIntFunction GetRecoIntFunction(const std::string name)
+	{
+		assert(recointfunctions.count(name));
+		return recointfunctions[name];
+	};
+
+	PointerToCVUniverseIntFunction GetTrueIntFunction(const std::string name)
+	{
+		assert(trueintfunctions.count(name));
+		return trueintfunctions[name];
+	};
 };
-
 
 #endif
