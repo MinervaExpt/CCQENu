@@ -77,11 +77,13 @@ void LoopAndFillEventSelection(std::string tag,
 	  		csvFile << ";" << v->GetName();
 	  	}
 	  }
-		csvFile << ";Interaction;nFSPart";
+		csvFile << ";Interaction;nFSPart;FSPDGs;FSPartEs;";
+		/*
 		std::vector<std::string> true_particle_counts = {"nFSChargedPion","nFSNeutralPion",
 		                                                 "nFSProton","nFSNeutron","nFSNegMuon",
 		                                                 "nFSGamma"};
 		for (auto v:true_particle_counts) { csvFile << ";" << v; }
+		*/
 		csvFile << ";Arachne" << std::endl;
 
   }
@@ -189,54 +191,38 @@ void LoopAndFillEventSelection(std::string tag,
 		          }
 		          
 		          int mcinttype = universe->GetMCIntType();
-		          std::string interaction;
-		          switch(mcinttype) {
-				        case 1:
-				        	interaction = "QE";
-				        	break;
-				        case 2:
-				        	interaction = "RES";
-				        	break;
-				        case 3:
-				        	interaction = "DIS";
-				        	break;
-				        case 4:
-				        	interaction = "COH";
-				        	break;
-				        case 8:
-				        	interaction = "MEC";
-				        	break;
-				        default:
-				        	interaction = "NONE";
-		          }
+		          std::map<int,std::string> interaction;
+		          interaction[1] = "QE";
+		          interaction[2] = "RES";
+		          interaction[3] = "DIS";
+		          interaction[4] = "COH";
+		          interaction[8] = "MEC";
 		          
-		          csvFile << ";" << interaction;
+		          csvFile << ";" << interaction[mcinttype];
+		          int nFSParts = universe->GetTrueNumberOfFSParticles();
 		          csvFile << ";" << universe->GetTrueNumberOfFSParticles();
 		          
+		          std::vector<int> FSPartPDG = universe->GetVecInt("mc_FSPartPDG");
+		          std::vector<double> mc_FSPartE = universe->GetVecDouble("mc_FSPartPDG");
+		          csvFile << ";{";
+		          for (int i = 0; i < nFSParts-1; i++) csvFile << FSPartPDG[i] << ",";
+		          csvFile << FSPartPDG[nFSParts-1] << "};{";
+		          for (int i = 0; i < nFSParts-1; i++) csvFile << mc_FSPartE[i] << ",";
+		          csvFile << mc_FSPartE[nFSParts-1] << "}";
+		          
+		          /*
 		          std::map<int,int> true_counts_per_pdg = universe->GetTrueFSCountsPerPDG();
-		          //nFSChargedPion
-		          csvFile << ";" << true_counts_per_pdg[211] + true_counts_per_pdg[-211];
-		          // nFSNeutralPion
-		          csvFile << ";" << true_counts_per_pdg[111];
-		          // nFSProton
-							csvFile << ";" << true_counts_per_pdg[2212];
-							// nFSNeutron
-							csvFile << ";" << true_counts_per_pdg[2112];
-							// nFSNegMuon
-							csvFile << ";" << true_counts_per_pdg[13];
-							// nFSGamma
-							csvFile << ";" << true_counts_per_pdg[22];
-		          //csvFile << ";" << universe->GetTrueChargedPionCount();
-		          //csvFile << ";" << universe->GetTrueNeutralPionCount();
-		          //csvFile << ";" << universe->GetTrueProtonCount();
-		          //csvFile << ";" << universe->GetTrueNeutronCount();
-		          //csvFile << ";" << universe->GetTrueNegMuonCount();
-		          //csvFile << ";" << universe->GetTrueGammaCount();
+		          csvFile << ";" << true_counts_per_pdg[211] + true_counts_per_pdg[-211]; // nFSChargedPion
+		          csvFile << ";" << true_counts_per_pdg[111]; // nFSNeutralPion
+							csvFile << ";" << true_counts_per_pdg[2212]; // nFSProton
+							csvFile << ";" << true_counts_per_pdg[2112]; // nFSNeutron
+							csvFile << ";" << true_counts_per_pdg[13]; // nFSNegMuon
+							csvFile << ";" << true_counts_per_pdg[22]; // nFSGamma
+							*/
 		          
 		          csvFile << ";" << universe->StringTrueArachneLink() << std::endl;
             }
             // Done Sending MC Reco value to CSV
-
           }
         }
         else if (data_mc_truth == kTruth){

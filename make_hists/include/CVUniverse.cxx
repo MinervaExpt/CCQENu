@@ -531,10 +531,10 @@ namespace {
 			if(startZ < 0) return -1.;
 		}
 		else {
-			if(GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_startPointX_sz").c_str()) > i) return -1.;
 			startX = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_startPointX").c_str(),i-1);
 			startY = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_startPointY").c_str(),i-1);
 			startZ = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_startPointZ").c_str(),i-1);
+			if(startZ < 0) return -1.;
 		}
 		std::vector<double> vtx = GetVec<double>("vtx");
 
