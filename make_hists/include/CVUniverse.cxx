@@ -977,7 +977,7 @@ double CVUniverse::GetMaxProtonTrueKE() const{
   int mc_nFSPart = GetInt("mc_nFSPart");
   std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
   std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
-  double KEmax = 0.0;
+  double KEmax = -1.;
   for(int i = 0; i < mc_nFSPart; i++){
     int pdg =  mc_FSPartPDG[i];
     if (pdg     != 2212 ) continue;

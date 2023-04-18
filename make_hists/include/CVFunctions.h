@@ -104,6 +104,9 @@ public:
 		recofunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
 		recointfunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
 
+    truefunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+    trueintfunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+
 		recofunctions["EventID"] = &CVUNIVERSE::GetEventID;
 		truefunctions["EventID"] = &CVUNIVERSE::GetEventID;
 
@@ -146,8 +149,10 @@ public:
 		truefunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
 		recointfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
 		recofunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
-		recointfunctions["IntType"] = &CVUNIVERSE::GetIntType;
-		recofunctions["IntType"] = &CVUNIVERSE::GetIntType;
+		recointfunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+		recofunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+		trueintfunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+		truefunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
 
 		trueintfunctions["MCTargetA"] = &CVUNIVERSE::GetMCTargetA;
 

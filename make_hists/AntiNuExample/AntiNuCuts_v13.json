@@ -83,8 +83,8 @@
     {"name":"MCIntType","max":7,"variable":"MCIntType"}
   ],
  "qelike2p2h":[
-    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.},
     {"name":"MCIntType","equals":8,"variable":"MCIntType"}
   ],
