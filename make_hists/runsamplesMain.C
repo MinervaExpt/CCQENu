@@ -41,6 +41,14 @@ int main(const int argc, const char *argv[] ) {
     closure = config.GetBool("closure");
   }
   
+  std::string tunedmc = "both"; // can be set to "both", "tuned", or "untuned"
+  if(config.IsMember("tunedmc"))
+  {
+    tunedmc = config.GetString("tunedmc");
+    std::cout << "runsamplesMain: tunedmc configured in main config and set to " << tunedmc << std::endl;
+  }
+
+
   bool useTuned=false;
   if(config.IsMember("useTuned")){
     useTuned = config.GetBool("useTuned");
@@ -306,7 +314,7 @@ int main(const int argc, const char *argv[] ) {
   }
 
   // new way
-  std::map<std::string,CCQENu::VariableFromConfig*> variablesmap1D = GetVariablesFromConfig(vars1D,tags,configvar,doresolution);
+  std::map<std::string,CCQENu::VariableFromConfig*> variablesmap1D = GetVariablesFromConfig(vars1D,tags,configvar,doresolution,tunedmc);
 
   std::map<std::string,CCQENu::Variable2DFromConfig*> variablesmap2D = Get2DVariablesFromConfig(vars2D,variablesmap1D,tags,configvar);
 
@@ -377,9 +385,7 @@ int main(const int argc, const char *argv[] ) {
     // v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands,truthtags);
     v->InitializeResponse(mc_error_bands,responsetags);
-    if(useTuned){
-      v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
-    }
+    v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     variables1D.push_back(v);
   }
 
@@ -393,10 +399,7 @@ int main(const int argc, const char *argv[] ) {
     // v->AddMCResponse2D(responsetags);
     v->InitializeTruthHistograms2D(truth_error_bands,truthtags);
     v->InitializeResponse2D(mc_error_bands,responsetags);
-
-    if(useTuned){
-      v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
-    }
+    v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     variables2D.push_back(v);
   }
 
