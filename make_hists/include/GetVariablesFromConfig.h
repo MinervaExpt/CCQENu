@@ -10,7 +10,6 @@
 //  class VariableFromConfig;
 //}
 
-std::map<std::string, CCQENu::VariableFromConfig*> GetVariablesFromConfig(const std::vector<std::string> variables, const std::vector<std::string> tags, NuConfig , const bool doresolution=false);
-
+std::map<std::string, CCQENu::VariableFromConfig *> GetVariablesFromConfig(const std::vector<std::string> variables, const std::vector<std::string> tags, NuConfig, const bool doresolution = false, const std::string tunedmc="both");
 
 #endif

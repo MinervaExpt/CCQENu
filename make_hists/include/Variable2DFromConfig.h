@@ -100,24 +100,42 @@ public:
       }
     }
 
-    int x_tunedmc = x.m_tunedmc;
-    int y_tunedmc = y.m_tunedmc;
-    if(x_tunedmc==y_tunedmc){
-      m_tunedmc=x_tunedmc;
+    // int x_tunedmc = x.m_tunedmc;
+    // int y_tunedmc = y.m_tunedmc;
+    // if(x_tunedmc==y_tunedmc){
+    //   m_tunedmc=x_tunedmc;
+    // }
+    // else if(x_tunedmc!=2 && y_tunedmc!=2){
+    //   std::cout << "Variable2DFromConfig: Incompatible 'tunedmc' from input. Setting to run both tuned and untuned. " << std::endl;
+    //   m_tunedmc=2;
+    // }
+    // else if(x_tunedmc==1 || y_tunedmc==1){
+    //   m_tunedmc=1; //Should default be 2?
+    // }
+    // else if(x_tunedmc==0 || y_tunedmc==0){
+    //   m_tunedmc=0;
+    // }
+    // else{
+    //   m_tunedmc=2;
+    // }
+
+    m_tunedmc = "both"; // Default to "both" tuned and untuned
+    std::string x_tunedmc = x.m_tunedmc;
+    std::string y_tunedmc = y.m_tunedmc;
+    if (x_tunedmc == y_tunedmc) 
+      m_tunedmc = x_tunedmc; // If they're the same, set to that value
+    else if (x_tunedmc == "both" && y_tunedmc != "both")
+    { // If x is set to both, but y isn't => do what y does
+      std::cout << "Variable2DFromConfig: tunedmc for x and y incompatible. Defaulting to y tunedmc of " << y_tunedmc << std::endl;
+      m_tunedmc = y_tunedmc;
     }
-    else if(x_tunedmc!=2 && y_tunedmc!=2){
-      std::cout << "Variable2DFromConfig: Incompatible 'tunedmc' from input. Setting to run both tuned and untuned. " << std::endl;
-      m_tunedmc=2;
+    else if (x_tunedmc != "both" && y_tunedmc == "both")
+    { // If y is set to both, but x isn't => do what x does
+      std::cout << "Variable2DFromConfig: tunedmc for x and y incompatible. Defaulting to x tunedmc of " << x_tunedmc << std::endl;
+      m_tunedmc = x_tunedmc; 
     }
-    else if(x_tunedmc==1 || y_tunedmc==1){
-      m_tunedmc=1; //Should default be 2?
-    }
-    else if(x_tunedmc==0 || y_tunedmc==0){
-      m_tunedmc=0;
-    }
-    else{
-      m_tunedmc=2;
-    }
+    else
+      std::cout << "Variable2DFromConfig: tunedmc for x and y incompatible. Defaulting to both. " << std::endl;
   };
 
 
@@ -147,9 +165,10 @@ public:
   std::map<const std::string, bool> hasResponse;
   std::vector<std::string> m_tags;
   std::vector<std::string> m_for;
-  int m_tunedmc;
-  //RESPONSE* m_response;
-  // helpers for response
+  // int m_tunedmc;
+  std::string m_tunedmc = "both";
+  // RESPONSE* m_response;
+  //  helpers for response
 
   // std::map< CVUniverse* , int> m_map; // map to get name and index from Universe;
   // Histofolio to categorize MC by interaction channel
@@ -183,7 +202,8 @@ public:
       hasMC[tag] = true;
     }
 
-    if(m_tunedmc==1){
+    // if(m_tunedmc==1){
+    if(m_tunedmc=="tuned"){
       std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
       return;
     }
@@ -210,7 +230,8 @@ public:
       hasSelectedTruth[tag] = true;
     }
 
-    if(m_tunedmc==1){
+    // if(m_tunedmc==1){
+    if(m_tunedmc=="tuned"){
       std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
       return;
     }
@@ -236,7 +257,8 @@ public:
       hasTruth[tag] = true;
     }
 
-    if(m_tunedmc==1){
+    // if(m_tunedmc==1){
+    if(m_tunedmc=="tuned"){
       std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
       return;
     }
@@ -274,7 +296,8 @@ public:
 
   template <typename T>
   void InitializeTunedMCHistograms2D(T reco_univs, T truth_univs, const std::vector< std::string> tuned_tags, const std::vector< std::string> response_tags) {
-    if(m_tunedmc<1){
+    // if(m_tunedmc<1){
+    if(m_tunedmc=="untuned"){
       std::cout << "Variable2DFromConfig Warning: tunedmc is disabled for this variable " << GetName() << std::endl;
       for (auto tag:tuned_tags){
         hasTunedMC[tag] = false;
@@ -385,7 +408,8 @@ public:
     for (auto tag:m_tags){
       std::cout << " write out flags " << hasMC[tag] << hasTunedMC[tag] << hasTruth[tag] << hasData[tag] <<  std::endl;
       if(hasMC[tag]) {
-        if(m_tunedmc!=1){
+        // if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           m_selected_mc_reco.Write(tag);
           std::cout << " write out mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
         }
@@ -395,7 +419,8 @@ public:
         }
       }
       if(hasSelectedTruth[tag]){
-        if(m_tunedmc!=1){
+        // if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           m_selected_mc_truth.Write(tag);
           std::cout << " write out truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
         }
@@ -405,7 +430,8 @@ public:
         }
       }
       if(hasTruth[tag]){
-        if(m_tunedmc!=1){
+        // if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           m_signal_mc_truth.Write(tag);
           std::cout << " write out truth histogram " << m_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
         }
@@ -415,7 +441,8 @@ public:
         }
       }
       if(hasResponse[tag]){
-        if(m_tunedmc!=1){
+        // if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           std::cout << " write out response histograms " << tag << std::endl;
           m_response.Write(tag);
         }
@@ -437,7 +464,8 @@ public:
   void SyncAllHists() {
     for (auto tag:m_tags){
       if(hasMC[tag]){
-        if(m_tunedmc!=1){
+        // if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           m_selected_mc_reco.SyncCVHistos();
         }
         if(hasTunedMC[tag]){
@@ -445,7 +473,8 @@ public:
         }
       }
       if(hasSelectedTruth[tag]){
-        if(m_tunedmc!=1){
+        // if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           m_selected_mc_truth.SyncCVHistos();
         }
         if(hasTunedMC[tag]){
@@ -456,7 +485,8 @@ public:
         m_selected_data.SyncCVHistos();
       }
       if(hasTruth[tag]){
-        if(m_tunedmc!=1){
+        // if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           m_signal_mc_truth.SyncCVHistos();
         }
         if(hasTunedMC[tag]){
@@ -469,7 +499,8 @@ public:
 
 
   inline void FillResponse2D(const std::string tag, CVUniverse* univ, const double x_value, const double y_value, const double x_truth, const double y_truth, const double weight, const double scale=1.0){ //From Hist2DWrapperMap
-    if(hasMC[tag] && m_tunedmc!=1){
+    // if(hasMC[tag] && m_tunedmc!=1){
+    if(hasMC[tag] && m_tunedmc!="tuned"){
       m_response.Fill2D(tag, univ, x_value, y_value, x_truth, y_truth, weight); //value here is reco
     }
     if(hasTunedMC[tag] && scale>=0.){

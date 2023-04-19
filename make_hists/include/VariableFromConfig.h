@@ -60,7 +60,7 @@ public:
     return m_doresolution;
     
   }
-  
+
   VariableFromConfig(const NuConfig config){
     //config.Print();
 
@@ -113,34 +113,34 @@ public:
       }
     }
 
-    // Control at variable level whether to run tuned mc or not
-    if (config.IsMember("tunedmc")){
-      std::string checkval = config.GetString("tunedmc");
-      // "both" or 2 runs both tuned and untuned mc
-      if(checkval=="both" || checkval=="2"){
-        std::cout << "VariableFromConfig(config) set up both tuned and untuned MC." << std::endl;
-        m_tunedmc = 2;
-      }
-      // "only" or 1 runs only tuned mc (not untuned)
-      else if(checkval=="only" || checkval=="1"){
-        std::cout << "VariableFromConfig(config) set up only tuned MC." << std::endl;
-        m_tunedmc = 1;
-      }
-      // "none" or 0 runs only untunedmc
-      else if(checkval=="none" || checkval=="0"){
-        std::cout << "VariableFromConfig(config) set up only untuned MC." << std::endl;
-        m_tunedmc = 0;
-      }
-      else{
-        std::cout << "VariableFromConfig Warning: invalid 'tunedmc' configured. Defaulting to running both tuned and untuned MC. " << std::endl;
-        m_tunedmc = 2;
-      }
-    }
-    else{
-      // Default to running both tuned and untuned
-      std::cout << "VariableFromConfig: 'tunedmc' not configured. Defaulting to running both tuned and untuned MC. " << std::endl;
-      m_tunedmc = 2;
-    }
+    // // Control at variable level whether to run tuned mc or not
+    // if (config.IsMember("tunedmc")){
+    //   std::string checkval = config.GetString("tunedmc");
+    //   // "both" or 2 runs both tuned and untuned mc
+    //   if(checkval=="both" || checkval=="2"){
+    //     std::cout << "VariableFromConfig(config) set up both tuned and untuned MC." << std::endl;
+    //     m_tunedmc = 2;
+    //   }
+    //   // "only" or 1 runs only tuned mc (not untuned)
+    //   else if(checkval=="tuned" || checkval=="1"){
+    //     std::cout << "VariableFromConfig(config) set up only tuned MC." << std::endl;
+    //     m_tunedmc = 1;
+    //   }
+    //   // "none" or 0 runs only untunedmc
+    //   else if(checkval=="untuned" || checkval=="0"){
+    //     std::cout << "VariableFromConfig(config) set up only untuned MC." << std::endl;
+    //     m_tunedmc = 0;
+    //   }
+    //   else{
+    //     std::cout << "VariableFromConfig Warning: invalid 'tunedmc' configured. Defaulting to running both tuned and untuned MC. " << std::endl;
+    //     m_tunedmc = 2;
+    //   }
+    // }
+    // else{
+    //   // Default to running both tuned and untuned
+    //   std::cout << "VariableFromConfig: 'tunedmc' not configured. Defaulting to running both tuned and untuned MC. " << std::endl;
+    //   m_tunedmc = 2;
+    // }
 
     if (config.IsMember("bins")){
       PlotUtils::VariableBase<CVUniverse>::m_binning =  config.GetDoubleVector("bins");
@@ -202,7 +202,7 @@ public:
   std::map<const std::string, bool> hasTunedMC;
   std::vector<std::string> m_tags;
   std::vector<std::string> m_for;
-  int m_tunedmc;
+  std::string m_tunedmc; // Can be set to "both", "tuned", or "untuned"
   //RESPONSE* m_response;
   // helpers for response
 
@@ -214,7 +214,18 @@ public:
 
   inline virtual void SetUnits(std::string units){m_units=units;};
 
-  inline virtual int GetTuned(){return m_tunedmc;};
+  std::string GetTunedMC(){return m_tunedmc}
+
+  void SetTunedMC(std::string tunedmc)
+  {
+    if (tunedmc != "both" || tunedmc != "tuned" || tunedmc != "untuned")
+    {
+      std::cout << "VariableFromConfig::SetTunedMC: Warning: invalid value for \'tunedmc\' " << tunedmc << std::endl;
+      return;
+    }
+    m_tunedmc = tunedmc;
+  }
+
   //=======================================================================================
   // INITIALIZE ALL HISTOGRAMS
   //=======================================================================================
@@ -240,8 +251,8 @@ public:
       hasMC[tag] = true;
     }
 
-    if(m_tunedmc==1){
-      std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
+    if(m_tunedmc=="tuned"){
+      std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable" << GetName() << std::endl;
       return;
     }
 
@@ -265,8 +276,8 @@ public:
       hasSelectedTruth[tag] = true;
     }
 
-    if(m_tunedmc==1){
-      std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
+    if(m_tunedmc=="tuned"){
+      std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable" << GetName() << std::endl;
       return;
     }
 
@@ -296,8 +307,8 @@ public:
       hasTruth[tag] = true;
     }
 
-    if(m_tunedmc==1){
-      std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
+    if(m_tunedmc=="tuned"){
+      std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable" << GetName() << std::endl;
       return;
     }
 
@@ -327,7 +338,7 @@ public:
 
   template <typename T>
   void InitializeTunedMCHistograms(T reco_univs, T truth_univs, const std::vector< std::string> tuned_tags, const std::vector< std::string> response_tags) {
-    if(m_tunedmc<1){
+    if(m_tunedmc=="untuned"){
       std::cout << "VariableFromConfig Warning: tunedmc is disabled for this variable " << GetName() << std::endl;
       for(auto tag:tuned_tags){
         hasTunedMC[tag] = false;
@@ -451,7 +462,7 @@ public:
     for (auto tag:m_tags){
       std::cout << " write out flags " << hasMC[tag] << hasSelectedTruth[tag] << hasTruth[tag] << hasData[tag] << hasTunedMC[tag] <<  std::endl;
       if(hasMC[tag]){
-        if(m_tunedmc!=1){
+        if (m_tunedmc!="tuned") {
           m_selected_mc_reco.Write(tag);
           std::cout << " write out selected mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
         }
@@ -461,7 +472,7 @@ public:
         }
       }
       if(hasSelectedTruth[tag]){
-        if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           std::cout << " write out selected truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
           m_selected_mc_truth.Write(tag);
 
@@ -482,7 +493,7 @@ public:
         }
       }
       if(hasTruth[tag]){
-        if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           std::cout << " write out truth histogram " << m_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
           m_signal_mc_truth.Write(tag);
         }
@@ -492,7 +503,7 @@ public:
         }
       }
       if(hasResponse[tag]){
-        if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           std::cout << " write out response histograms " << tag << std::endl;
           m_response.Write(tag);
         }
@@ -515,7 +526,7 @@ public:
   void SyncAllHists() {
     for (auto tag:m_tags){
       if(hasMC[tag]){
-        if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           m_selected_mc_reco.SyncCVHistos();
         }
         if(hasTunedMC[tag]){
@@ -523,7 +534,7 @@ public:
         }
       }
       if(hasSelectedTruth[tag]){
-        if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           m_selected_mc_truth.SyncCVHistos();
 
           if (m_doresolution) m_resolution.SyncCVHistos();
@@ -537,7 +548,7 @@ public:
         m_selected_data.SyncCVHistos();
       }
       if(hasTruth[tag]){
-        if(m_tunedmc!=1){
+        if(m_tunedmc!="tuned"){
           m_signal_mc_truth.SyncCVHistos();
         }
         if(hasTunedMC[tag]){
@@ -559,7 +570,7 @@ public:
     std::string name = univ->ShortName();
     // int iuniv = m_decoder[univ];
 
-    if(hasMC[tag] && m_tunedmc!=1){
+    if(hasMC[tag] && m_tunedmc!="tuned"){
       m_response.Fill(tag,univ,value, truth, weight);
     }
     if(hasTunedMC[tag] && scale>=0.){
@@ -582,7 +593,7 @@ public:
       std::string name = univ->ShortName();
       // int iuniv = m_decoder[univ];
 
-      if(hasMC[tag] && m_tunedmc!=1){
+      if(hasMC[tag] && m_tunedmc!="tuned"){
         m_resolution.Fill(tag,univ,value - truth, weight);
       }
       if(hasTunedMC[tag] && scale>=0.){
