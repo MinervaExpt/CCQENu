@@ -21,7 +21,8 @@ using namespace PlotUtils;
 
 weight_MCreScale::weight_MCreScale(TString filename){
   read(filename);
-  m_useTuned=true;
+  // m_useTuned=true;
+  m_tunedmc="both";
 }
 
 weight_MCreScale::weight_MCreScale(const NuConfig config){
@@ -32,22 +33,26 @@ weight_MCreScale::weight_MCreScale(const NuConfig config){
   else{
     std::cout << "weight_MCreScale: 'scalefileIn' not configured in main. Setting to default (may cause issues if running outside of CCQENu/make_hists) " << std::endl;
   }
-  if(config.IsMember("useTuned")){
-    m_useTuned=config.GetBool("useTuned");
+  if(config.IsMember("tunedmc"))
+  {
+    m_tunedmc = config.GetString("tunedmc");
+    if(m_tunedmc != "untuned")
+      m_useTuned = true;
   }
-  else{
-    std::cout << "weight_MCreScale: 'useTuned' not configured in main. Setting to false." << std::endl;
-    m_useTuned = false;
-  }
+  if (config.IsMember("useTuned"))
+    m_useTuned = config.GetBool("useTuned");
+
   if(config.IsMember("TuneCategories")){
     m_categories = config.GetStringVector("TuneCategories");
   }
   else{
     m_categories = {"qelike","qelikenot"};
   }
+  
   if(m_useTuned){
     read(filename);
   }
+  
 }
 
 
@@ -62,7 +67,9 @@ void weight_MCreScale::read(TString filename){
    }
   }
   else{
-    std::cout << "weight_MCreScale: Bad file input for weight_MCreScale." << std::endl;
+    std::cout << "weight_MCreScale::read: WARNING: Cannot find input file for weight_MCreScale: " << filename << std::endl;
+    std::cout << "                                 Defaulting to no tuning." << std::endl;
+    m_useTuned = false;
   }
   if (m_mnvh_Scales.size() < 1){
     std::cout << "weight_MCreScale: failed to find signal or background scale fractions in "  << filename << std::endl;
@@ -114,7 +121,8 @@ double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_nam
     std::cout << "weight_MCreScale: You have a q2qe passed less than 0. Non-physical. Returning 1.0"<< std::endl;
     return 1.0;
   }
-  else if(q2qe>=2.0){
+  // else if(q2qe>=2.0){
+  else if(m_mnvh_Scale->FindFirstBinAbove(q2qe)<0){
     // Q2 is fit up to 2.0 GeV^2 (as of 7/11/22), but some events have higher values. -NHV
     checkval = 1.99;
   }

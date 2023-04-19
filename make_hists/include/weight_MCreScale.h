@@ -25,6 +25,7 @@ namespace PlotUtils{
     public:
       // Boolean set to switch on and off if want to use tuned hists
       bool m_useTuned=false;
+      std::string m_tunedmc = "both";
       // Boolean set based off Cat
 
       // std::map<
