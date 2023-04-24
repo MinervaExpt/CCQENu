@@ -189,8 +189,8 @@ public:
   // ResponseWrapperMap<CVUniverse> m_tuned_response;
   RM m_response;
   RM m_tuned_response;
-    HM m_resolution;
-    HM m_tuned_resolution;
+  HM m_resolution;
+  HM m_tuned_resolution;
 
   UniverseMap m_universes;
   std::string m_units;
@@ -214,17 +214,17 @@ public:
 
   inline virtual void SetUnits(std::string units){m_units=units;};
 
-  std::string GetTunedMC(){return m_tunedmc}
+  std::string GetTunedMC(){return m_tunedmc;};
 
   void SetTunedMC(std::string tunedmc)
   {
-    if (tunedmc != "both" || tunedmc != "tuned" || tunedmc != "untuned")
+    if (tunedmc != "both" && tunedmc != "tuned" && tunedmc != "untuned")
     {
       std::cout << "VariableFromConfig::SetTunedMC: Warning: invalid value for \'tunedmc\' " << tunedmc << std::endl;
       return;
     }
     m_tunedmc = tunedmc;
-  }
+  };
 
   //=======================================================================================
   // INITIALIZE ALL HISTOGRAMS
