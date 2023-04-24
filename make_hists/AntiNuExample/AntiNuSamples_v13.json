@@ -13,6 +13,7 @@
         }
       }
    },
+   
    "QElikeNot":
   {"name":"QElikeNot",
    "reco":"QElikeNot",
@@ -44,6 +45,21 @@
   "QElikeNP":{
      "name":"QElikeNP",
      "reco":"QElike",
+     "phase_space":"phase_space",
+     "signal":["qelike_np"],
+     "background":["qelikenot_np"],
+     "categories":{
+       "qelike_np":{
+         "for":["selected_reco","selected_truth","truth","response"]
+        },
+       "qelikenot_np":{
+         "for":["selected_reco"]
+       }
+     }
+  },
+  "QElikeNPAllN":{
+     "name":"QElikeNPAllN",
+     "reco":"QElikeAllN",
      "phase_space":"phase_space",
      "signal":["qelike_np"],
      "background":["qelikenot_np"],
