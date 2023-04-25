@@ -26,21 +26,28 @@ weight_MCreScale::weight_MCreScale(TString filename){
 }
 
 weight_MCreScale::weight_MCreScale(const NuConfig config){
-  std::string filename = "${CCQEMAT}/data/BkgStudy6A_BkgStudy_1_OutVals_fix.root";
-  if(config.IsMember("scalefileIn")){
-    filename=config.GetString("scalefileIn");
-  }
-  else{
-    std::cout << "weight_MCreScale: 'scalefileIn' not configured in main. Setting to default (may cause issues if running outside of CCQENu/make_hists) " << std::endl;
-  }
+  // std::string filename = "${CCQEMAT}/data/BkgStudy6A_BkgStudy_1_OutVals_fix.root";
+  std::string filename = "";
   if(config.IsMember("tunedmc"))
   {
     m_tunedmc = config.GetString("tunedmc");
-    if(m_tunedmc != "untuned")
-      m_useTuned = true;
+    // if(m_tunedmc != "untuned")
+    //   m_useTuned = true;
   }
-  if (config.IsMember("useTuned"))
-    m_useTuned = config.GetBool("useTuned");
+  else{
+    std::cout << "weight_MCreScale: \'tunedmc\' not set in main config. Defaulting to \'untuned\'." << std::endl;
+  }
+
+  if (config.IsMember("scalefileIn")) {
+    filename = config.GetString("scalefileIn");
+  } else {
+    // std::cout << "weight_MCreScale: 'scalefileIn' not configured in main. Setting to default (may cause issues if running outside of CCQENu/make_hists) " << std::endl;
+    std::cout << "weight_MCreScale: \'scalefileIn\' not configured in main. Will just run without tuning." << std::endl;
+    m_tunedmc = "untuned";
+    filename = "";
+  }
+  // if (config.IsMember("useTuned"))
+  //   m_useTuned = config.GetBool("useTuned");
 
   if(config.IsMember("TuneCategories")){
     m_categories = config.GetStringVector("TuneCategories");
@@ -48,10 +55,12 @@ weight_MCreScale::weight_MCreScale(const NuConfig config){
   else{
     m_categories = {"qelike","qelikenot"};
   }
-  
-  if(m_useTuned){
+  if(m_tunedmc == "tuned" || m_tunedmc == "both"){
     read(filename);
   }
+  // if(m_useTuned){
+  //   read(filename);
+  // }
   
 }
 
@@ -69,7 +78,8 @@ void weight_MCreScale::read(TString filename){
   else{
     std::cout << "weight_MCreScale::read: WARNING: Cannot find input file for weight_MCreScale: " << filename << std::endl;
     std::cout << "                                 Defaulting to no tuning." << std::endl;
-    m_useTuned = false;
+    // m_useTuned = false;
+    m_tunedmc = "untuned";
   }
   if (m_mnvh_Scales.size() < 1){
     std::cout << "weight_MCreScale: failed to find signal or background scale fractions in "  << filename << std::endl;
@@ -164,7 +174,8 @@ double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_nam
 double weight_MCreScale::GetScale(std::string cat, const double q2qe, std::string uni_name, int iuniv){
   // Default value, not physical. Checked so you can switch scaling on and off easier.
   double retval = -1.;
-  if(m_useTuned){
+  // if(m_useTuned){
+  if (m_tunedmc == "tuned" || m_tunedmc == "both"){
     SetCat(cat);
     retval = GetScaleInternal(q2qe, uni_name, iuniv);
   }
@@ -177,7 +188,8 @@ double weight_MCreScale::GetScale(std::string cat, const double q2qe, std::strin
 double weight_MCreScale::GetScale(std::string cat, const CVUniverse* univ, std::string uni_name, int iuniv){
   // Default value, not physical. Checked so you can switch scaling on and off easier.
   double retval = -1.;
-  if(m_useTuned){
+  // if(m_useTuned){
+  if (m_tunedmc == "tuned" || m_tunedmc == "both") {
     const double q2qe = univ->GetQ2QEGeV();
     SetCat(cat);
     retval = GetScaleInternal(q2qe, uni_name, iuniv);
