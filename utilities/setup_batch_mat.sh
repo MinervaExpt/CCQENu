@@ -7,10 +7,12 @@ export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
 # get the packages you need to run this
 setup cmake v3_14_3 -z /cvmfs/larsoft.opensciencegrid.org/products
-setup root v6_16_00 -q e17:prof -z /cvmfs/larsoft.opensciencegrid.org/products 
-setup boost v1_70_0 -q e19:prof -z /cvmfs/larsoft.opensciencegrid.org/products  # do we still need this? 
-setup python v3_7_2 -z /cvmfs/larsoft.opensciencegrid.org/products
-setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
+# update root version
+setup root v6_22_08d -q e20:p392:prof -z /cvmfs/larsoft.opensciencegrid.org/products
+# update python version
+setup python v3_9_2 -z /cvmfs/larsoft.opensciencegrid.org/products
+
+#setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
 setup ifdhc -z /cvmfs/fermilab.opensciencegrid.org/products/common/db
 export IFDH_CP_MAXRETRIES=0\0\0\0\0  # no retries
 # set up the MAT
@@ -32,4 +34,7 @@ export JSONCPP_DIR=$BASEDIR/jsoncpp-build # need to change this probably
 export LD_LIBRARY_PATH=$RUNDIR:$JSONCPP_DIR/lib:$LD_LIBRARY_PATH
 export PYTHONPATH=$RUNDIR/python:$BASEDIR/MAT-MINERvA/python:$BASEDIR/MAT-MINERvA/python/PlotUtils:$PYTHONPATH
 export DATALOC=remote
+echo "------------ CHECK THE VOMS PROXY and the X509"
+voms-proxy-info --all
+echo $X509_USER_PROXY
 env

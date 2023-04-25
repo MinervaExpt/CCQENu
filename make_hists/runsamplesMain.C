@@ -42,6 +42,40 @@ int main(const int argc, const char *argv[] ) {
     useTuned = config.GetBool("useTuned");
     std::cout << "runsamplesMain: useTuned configured in main config and set to " << useTuned << std::endl;
   }
+  
+  bool doresolution = false;
+  if (config.IsMember("DoResolution")){
+    doresolution = config.GetBool("DoResolution");
+    std::cout << " ask for resolutions" << std::endl;
+  }
+  // int useTuned = 0;
+  // if(config.IsMember("useTuned")){
+  //   checkval = config.GetString("useTuned");
+  //
+  //   if(checkval=="both" || checkval=="2"){
+  //     std::cout << "useTuned set to allow both tuned and untuned MC." << std::endl;
+  //     useTuned = 2;
+  //   }
+  //   // "only" or 1 runs only tuned mc (not untuned)
+  //   else if(checkval=="only" || checkval=="1"){
+  //     std::cout << "useTuned set to allow only tuned MC." << std::endl;
+  //     useTuned = 1;
+  //   }
+  //   // "none" or 0 runs only untunedmc
+  //   else if(checkval=="none" || checkval=="0"){
+  //     std::cout << "useTuned set to allow only untuned MC." << std::endl;
+  //     useTuned = 0;
+  //   }
+  //   else{
+  //     std::cout << "Warning: invalid 'useTuned' configured. Defaulting to allow both tuned and untuned MC. " << std::endl;
+  //     useTuned = 2;
+  //   }
+  // }
+  // else{
+  //   // Default to running both tuned and untuned
+  //   std::cout << "Warning: 'useTuned' not configured in main config. Defaulting to allow only untuned MC. " << std::endl;
+  //   useTuned = 0;
+  // }
 
   //===========================================================================
   // MacroUtil (makes your anatuple chains)

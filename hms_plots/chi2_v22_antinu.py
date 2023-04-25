@@ -8,7 +8,8 @@ from PlotUtils import *
 
 from chi2utils import *
 
-
+TH1.AddDirectory(0)
+gStyle.SetPaintTextFormat("4.0f")
 
 NOSYS = True  # I think this means don't look at systematic errors individually
 
@@ -768,7 +769,10 @@ for model in models:
     LogInvertedErrorMatrix[model]=TMatrixD(logcovmx[model]);
     LogInvertedError.Invert(LogInvertedErrorMatrix[model])
 
-
+#    for i in range(0,len(goodelements)):
+#        preinversion = math.sqrt(covmx[model][i][i])
+#        postinversion = 1./sqrt(InvertedErrorMatrix[model][i][i])
+#        print ("inversion check ",i,model, preinversion,postinversion)
 
 
 test = TMatrixD(LogInvertedErrorMatrix["CV"])
@@ -809,9 +813,15 @@ n  = covmx["CV"].GetNrows()
 counter = 0
 bfile = open(var+"_chi2list.py",'w')
 bfile.write("chi2vals={")
+
+can ={}
+gStyle.SetOptStat(000000)
 for model in models:
+  can[model] = TCanvas(model,model)
   counter += 1
-  h_chi2cont[model] = TH2D("cont"+model,"chi2 cont",n,1,n,n,1,n)
+  h_chi2cont[model] = TH2D("cont"+model,"chi2 cont",n,0,n-1,n,0,n-1)
+  h_chi2cont[model].SetMarkerSize(2*h_chi2cont[model].GetMarkerSize())
+  
   if var in ["q2","enu","ptmu","pzmu"]:
     mcdraw[model].SetDirectory(0)
   chi2cont = TMatrixD(covmx[model])
@@ -836,7 +846,7 @@ for model in models:
         totchi2 += residual[i]*InvertedErrorMatrix[model][i][j]*residual[j]
         totlogchi2 += logresidual[i]*LogInvertedErrorMatrix[model][i][j]*logresidual[j]
         chi2cont[i][j] = residual[i]*InvertedErrorMatrix[model][i][j]*residual[j]
-        h_chi2cont[model].Fill(i,j,chi2cont[i][j])
+        h_chi2cont[model].SetBinContent(i+1,j+1,chi2cont[i][j])
         if i == j:
           chi2diag[i] = chi2cont[i][j]
     
@@ -849,6 +859,15 @@ for model in models:
     #chi2cont.Print()
     ofile["ALL"].write(outs)
     h_chi2cont[model].Write()
+    
+    h_chi2cont[model].SetTitle(model+";"+model+"  "+var+"   chi2 contribution by bin"+";chi2 contribution by bin")
+    if (maxb < 20):
+      h_chi2cont[model].SetMaximum(1000.)
+      h_chi2cont[model].Draw("TEXT COLZ")
+    else:
+      h_chi2cont[model].Draw("COLZ")
+    can[model].Draw()
+    can[model].Print(model+"_"+var+"_chi2cont.jpg")
     print (" before pdf ", syst,var, model)
     if var != "pzmu_ptmu" and syst == "ALL":
       title = "%s ; %s %6.0f"%(model,var,totchi2)

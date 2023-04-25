@@ -50,46 +50,84 @@ void LoopAndFillEventSelection(std::string tag,
         return;  // don't bother if there are no variables.
     }
 
-    if (data_mc_truth == kData) {
-        nentries = util.GetDataEntries();
-    } else if (data_mc_truth == kMC) {
-        nentries = util.GetMCEntries();
-    } else {
-        nentries = util.GetTruthEntries();
-        MinervaUniverse::SetTruth(true);
-    }
+  if (data_mc_truth == kData){
+    nentries = util.GetDataEntries();
+  }
+  else if (data_mc_truth == kMC){
+    nentries = util.GetMCEntries();
+  }
+  else{
+    nentries = util.GetTruthEntries() ;
+    MinervaUniverse::SetTruth(true);
+  }
 
-    unsigned int loc = tag.find("___") + 3;
-    std::string cat(tag, loc, string::npos);
-    std::string sample(tag, 0, loc - 3);
-    std::cout << sample << " category " << cat << std::endl;
-    std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
 
-    // If sending MC Reco values to CSV create file and add columns names
-    if (data_mc_truth == kMC && mc_reco_to_csv) {
-        std::string csvFileName = "mc_reco_entries_" + sample + "_" + cat + ".csv";
-        csvFile.open(csvFileName);
-        csvFile << "Entry";
-        for (auto v : variables) {
-            if (v->hasMC[tag]) {
-                csvFile << ";" << v->GetName();
-            }
-        }
-        csvFile << std::endl;
-    }
+  unsigned int loc = tag.find("___")+3;
+  std::string cat(tag,loc,string::npos);
+  std::string sample(tag,0,loc-3);
+  std::cout << sample << " category " << cat << std::endl;
+  std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
+  
+  // If sending MC Reco values to CSV create file and add columns names
+  if (data_mc_truth == kMC && mc_reco_to_csv){
 
+  	std::string csvFileName = "mc_reco_entries_"+sample+"_"+cat+".csv";
+	  csvFile.open(csvFileName);
+	  csvFile << "Entry";
+	  for (auto v : variables) {
+	  	if (v->hasMC[tag]){
+	  		csvFile << ";" << v->GetName();
+	  	}
+	  }
+		csvFile << ";Interaction;nFSPart;FSPDGs;FSPartEs;";
+		/*
+		std::vector<std::string> true_particle_counts = {"nFSChargedPion","nFSNeutralPion",
+		                                                 "nFSProton","nFSNeutron","nFSNegMuon",
+		                                                 "nFSGamma"};
+		for (auto v:true_particle_counts) { csvFile << ";" << v; }
+		*/
+		csvFile << ";Arachne" << std::endl;
+
+  }
+  
+  // status bar stuff
+  std::cout << std::endl;
+	std::cout << "  0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%" << std::endl;
+	std::cout << "   \\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\ " << std::endl;
+	std::cout << "   |________________________________________|   [__0.0%]";
+	double progress = 0;
+
+	// Begin entries loop
+  for (int i = 0; i < nentries; i++) {
+    if(data_mc_truth != kData) i+= prescale-1;
+    
+    //if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
     // status bar stuff
-    std::cout << std::endl;
-    std::cout << "  0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%" << std::endl;
-    std::cout << "   \\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\ " << std::endl;
-    std::cout << "   |________________________________________|   [__0.0%]";
-    double progress = 0;
+    if( ((double)(i+1)/nentries)*100 >= progress+2.5 ) {
+	  
+	  	progress+=2.5;
+			std::cout << '\r' << std::flush << "   |";
+			//std::cout << std::endl << "   |";
+		
+			for(int j=0;j<progress/2.5;j++) std::cout << "\e[0;31;47m \e[0m";
+			for(int j=40;j>progress/2.5;j--) std::cout << "_";
 
-    // Begin entries loop
-    for (int i = 0; i < nentries; i++) {
-        if (data_mc_truth != kData) i += prescale - 1;
+			std::cout << "|   [";
+			if(progress<10) std::cout << "_";
+			if(progress<100) std::cout << "_";
+			std::cout << progress;
+			if(((int)(0.5 + progress/2.5))%2==0) std::cout << ".0";
+			std::cout << "%]";
+			std::cout << "   ( ";
+			for(int j=((int)log10(nentries)-(int)log10(i+1)); j>0; j--) {
+				std::cout << "_";
+			}
+			std::cout << i+1 << " / " << nentries << " )";
 
-        cvUniv->SetEntry(i);
+			if(progress == 100) std::cout << std::endl << std::endl;
+		}
+		
+    cvUniv->SetEntry(i);
 
         if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
@@ -159,36 +197,75 @@ void LoopAndFillEventSelection(std::string tag,
                         universe->Print();
                     }
 #endif
-                    if (selection.isMCSelected(*universe, event, weight).all() && selection.isSignal(*universe)) {
-                        // double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
-                        const double q2qe = universe->GetQ2QEGeV();
-                        double scale = 1.0;
-                        if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv);  // Only calculate the per-universe weight for events that will actually use it.
+          if(selection.isMCSelected(*universe, event, weight).all()
+             && selection.isSignal(*universe)) {
+            
+            //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
+            const double q2qe = universe->GetQ2QEGeV();
+            double scale = 1.0;
+            if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+        
+            FillMC(tag, universe, weight, variables, variables2D, scale);
+            FillResponse(tag,universe,weight,variables,variables2D, scale);
+            FillResolution(tag,universe,weight,variables,variables2D, scale);
+            
+            // Send MC Reco value to CSV here
+            if(mc_reco_to_csv && universe->ShortName() == "cv") {
 
-                        FillMC(tag, universe, weight, variables, variables2D, variablesHD, scale);
-                        FillResponse(tag, universe, weight, variables, variables2D, variablesHD, scale);
+            	
+		          csvFile << i;
+		          for (auto v : variables) {
+		          	if(v->hasMC[tag]){
+		          		csvFile << ";" << v->GetRecoValue(*universe, 0);
+		          	}
+		          }
+		          
+		          int mcinttype = universe->GetMCIntType();
+		          std::map<int,std::string> interaction;
+		          interaction[1] = "QE";
+		          interaction[2] = "RES";
+		          interaction[3] = "DIS";
+		          interaction[4] = "COH";
+		          interaction[8] = "MEC";
+		          
+		          csvFile << ";" << interaction[mcinttype];
+		          int nFSParts = universe->GetTrueNumberOfFSParticles();
+		          csvFile << ";" << universe->GetTrueNumberOfFSParticles();
+		          
+		          std::vector<int> FSPartPDG = universe->GetVecInt("mc_FSPartPDG");
+		          std::vector<double> mc_FSPartE = universe->GetVecDouble("mc_FSPartPDG");
+		          csvFile << ";{";
+		          for (int i = 0; i < nFSParts-1; i++) csvFile << FSPartPDG[i] << ",";
+		          csvFile << FSPartPDG[nFSParts-1] << "};{";
+		          for (int i = 0; i < nFSParts-1; i++) csvFile << mc_FSPartE[i] << ",";
+		          csvFile << mc_FSPartE[nFSParts-1] << "}";
+		          
+		          /*
+		          std::map<int,int> true_counts_per_pdg = universe->GetTrueFSCountsPerPDG();
+		          csvFile << ";" << true_counts_per_pdg[211] + true_counts_per_pdg[-211]; // nFSChargedPion
+		          csvFile << ";" << true_counts_per_pdg[111]; // nFSNeutralPion
+							csvFile << ";" << true_counts_per_pdg[2212]; // nFSProton
+							csvFile << ";" << true_counts_per_pdg[2112]; // nFSNeutron
+							csvFile << ";" << true_counts_per_pdg[13]; // nFSNegMuon
+							csvFile << ";" << true_counts_per_pdg[22]; // nFSGamma
+							*/
+		          
+		          csvFile << ";" << universe->StringTrueArachneLink() << std::endl;
+            }
+            // Done Sending MC Reco value to CSV
+          }
+        }
+        else if (data_mc_truth == kTruth){
 
-                        // Send MC Reco value to CSV here
-                        if (mc_reco_to_csv) {
-                            csvFile << i;
-                            for (auto v : variables) {
-                                if (v->hasMC[tag]) {
-                                    csvFile << ";" << v->GetRecoValue(*universe, 0);
-                                }
-                            }
-                            csvFile << std::endl;
-                        }
-                        // Done Sending MC Reco value to CSV
-                    }
-                } else if (data_mc_truth == kTruth) {
-                    if (selection.isEfficiencyDenom(*universe, weight)) {
-                        const double q2qe = universe->GetTrueQ2QEGeV();
-                        double scale = 1.0;
-                        if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv);  // Only calculate the per-universe weight for events that will actually use it.
-                        if (closure) scale = 1.0;
-                        FillSignalTruth(tag, universe, weight, variables, variables2D, variablesHD, scale);
-                    }
-                } else {  // kData
+          if(selection.isEfficiencyDenom(*universe, weight)){
+            const double q2qe = universe->GetTrueQ2QEGeV();
+            double scale = 1.0;
+            if (!closure) scale =mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+            if (closure) scale = 1.0;
+            FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
+          }
+        }
+        else{ //kData
 #ifdef CLOSUREDETAIL
                     if (closure && selection.isDataSelected(*universe, event).all()) {
                         std::cout << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all() << "  " << tag << "1"

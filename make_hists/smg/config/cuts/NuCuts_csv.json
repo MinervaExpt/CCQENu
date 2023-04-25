@@ -1,29 +1,60 @@
 {
-"Basic":[
-	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
-    {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
-    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
-    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
-    {"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"},
-    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-    {"name":"ApothemX","max":850,"variable":"ApothemX"},
-    {"name":"ApothemY","max":850,"variable":"ApothemY"},
-    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
-  ],
-  "phase_space":[
-    {"name":"ZVertex","min":5980,"max":8410,"variable":"TrueZVertex"},
-    {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
-    {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
-    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"TrueThetamuDegrees"}
-  ],
-  "basic":[
-    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
-    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
-  ],
-  "basicnot":[
-    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    {"name":"TruthIsCC","equals":0,"variable":"TruthIsCC"}
-  ],
-  "data":[] // data doesn't cut anything at truth level
+	"Mult2p":[
+		{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
+		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+		{"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"},
+		{"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+		{"name":"ApothemX","max":850,"variable":"ApothemX"},
+		{"name":"ApothemY","max":850,"variable":"ApothemY"},
+		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+	],
+	"Mult1":[
+		{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
+		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+		{"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"},
+		{"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+		{"name":"ApothemX","max":850,"variable":"ApothemX"},
+		{"name":"ApothemY","max":850,"variable":"ApothemY"},
+		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+	],
+	"Mult1p":[
+		{"name":"Multiplicity","min":1,"variable":"Multiplicity"},
+		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+		{"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"},
+		{"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+		{"name":"ApothemX","max":850,"variable":"ApothemX"},
+		{"name":"ApothemY","max":850,"variable":"ApothemY"},
+		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+	],
+	"phase_space":[
+		{"name":"ZVertex","min":5980,"max":8410,"variable":"TrueZVertex"},
+		{"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
+		{"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"TrueThetamuDegrees"}
+	],
+	"NuCC":[
+		{"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+		{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+	],
+	"notNu_CC":[
+		{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+		{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
+	],
+	"Nu_notCC":[
+		{"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+		{"name":"TruthIsCC","equals":-1,"variable":"TruthIsCC"}
+	],
+	"notNu_notCC":[
+		{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+		{"name":"TruthIsCC","equals":0,"variable":"TruthIsCC"}
+	],
+	"all":[],
+	"data":[] // data doesn't cut anything at truth level
 }
 

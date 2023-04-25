@@ -29,13 +29,14 @@
 namespace CCQENu {
 
 class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
-   private:
-    typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
-    typedef HistWrapperMap<CVUniverse> HM;
-    // typedef PlotUtils::HistWrapperMap<CVUniverse> HM;
-    typedef ResponseWrapperMap<CVUniverse> RM;
-    // typedef PlotUtils::MnvH1D MH1D;
-    //  typedef PlotUtils::HistFolio<PlotUtils::MnvH1D> FOLIO;
+private:
+  typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
+  typedef HistWrapperMap<CVUniverse> HM;
+  // typedef PlotUtils::HistWrapperMap<CVUniverse> HM;
+  typedef ResponseWrapperMap<CVUniverse> RM;
+  // typedef PlotUtils::MnvH1D MH1D;
+  //  typedef PlotUtils::HistFolio<PlotUtils::MnvH1D> FOLIO;
+  bool m_doresolution;
 
    public:
     //=======================================================================================
@@ -46,8 +47,17 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
     // HMS 2-13-202 replace the templated constructor with explicit ones so we can make a config version without introducing a dependency in the Base class.
 
-    VariableFromConfig(const NuConfig config) {
-        // config.Print();
+  void SetDoResolution(const bool doresolution){
+    m_doresolution = doresolution;
+  }
+
+  bool GetDoResolution(){
+    return m_doresolution;
+    
+  }
+  
+  VariableFromConfig(const NuConfig config){
+    //config.Print();
 
         CVFunctions<CVUniverse> fun;
         // fun.InitFunctionMaps();
@@ -155,15 +165,19 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     //=======================================================================================
     // Histwrappers -- selected mc, selected data
 
-    HM m_selected_mc_reco;        // HM for normal MC hists - has special constructor to make response
-    HM m_tuned_selected_mc_reco;  // HM for tuned MC hists used for background subtraction -NHV - has special constructor to make response
-    HM m_selected_mc_truth;
-    HM m_tuned_selected_mc_truth;
-    HM m_signal_mc_truth;
-    HM m_tuned_signal_mc_truth;
-    HM m_selected_data;
-    RM m_response;
-    RM m_tuned_response;
+  HM m_selected_mc_reco; // HM for normal MC hists - has special constructor to make response
+  HM m_tuned_selected_mc_reco; // HM for tuned MC hists used for background subtraction -NHV - has special constructor to make response
+  HM m_selected_mc_truth;
+  HM m_tuned_selected_mc_truth;
+  HM m_signal_mc_truth;
+  HM m_tuned_signal_mc_truth;
+  HM m_selected_data;
+  // ResponseWrapperMap<CVUniverse> m_response;
+  // ResponseWrapperMap<CVUniverse> m_tuned_response;
+  RM m_response;
+  RM m_tuned_response;
+    HM m_resolution;
+    HM m_tuned_resolution;
 
     UniverseMap m_universes;
     std::string m_units;
@@ -242,9 +256,16 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
         std::vector<double> bins = GetBinVec();
 
-        m_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
-        m_selected_mc_truth.AppendName("selected_truth", tags);
+    m_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
+    m_selected_mc_truth.AppendName("selected_truth",tags);
+    double range = bins[1]-bins[GetNBins()];
+
+    if (m_doresolution){
+      m_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName()+";"+m_xaxis_label+" reco-true").c_str(), 50,-range/10.,range/10., univs, tags);
+      m_resolution.AppendName("resolution",tags);
+      std::cout << " created m_resolution " << GetName() << std::endl;
     }
+  }
 
     template <typename T>
     void InitializeTruthHistograms(T univs, const std::vector<std::string> tags) {
@@ -305,19 +326,27 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         std::vector<double> bins = GetBinVec();
         std::vector<double> recobins = GetRecoBinVec();
 
-        // Check which categories are configured and add a tuned version
-        if (std::count(m_for.begin(), m_for.end(), "selected_reco") >= 1) {  // use recobins
-            m_tuned_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label).c_str(), GetNRecoBins(), recobins, reco_univs, tuned_tags);
-            m_tuned_selected_mc_reco.AppendName("reconstructed_tuned", tuned_tags);
-        }
-        if (std::count(m_for.begin(), m_for.end(), "selected_truth") >= 1) {  // use bins
-            m_tuned_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label).c_str(), GetNBins(), bins, reco_univs, tuned_tags);
-            m_tuned_selected_mc_truth.AppendName("selected_truth_tuned", tuned_tags);
-        }
-        if (std::count(m_for.begin(), m_for.end(), "truth") >= 1) {  // use bins
-            m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label).c_str(), GetNBins(), bins, truth_univs, tuned_tags);
-            m_tuned_signal_mc_truth.AppendName("all_truth_tuned", tuned_tags);
-        }
+    // Check which categories are configured and add a tuned version
+    if (std::count(m_for.begin(), m_for.end(),"selected_reco")>=1){  // use recobins
+      m_tuned_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(),GetNRecoBins(),recobins, reco_univs, tuned_tags);
+      m_tuned_selected_mc_reco.AppendName("reconstructed_tuned",tuned_tags);
+    }
+    if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) { // use bins
+      m_tuned_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, reco_univs, tuned_tags);
+      m_tuned_selected_mc_truth.AppendName("selected_truth_tuned",tuned_tags);
+    }
+    if (std::count(m_for.begin(), m_for.end(),"truth")>=1) { // use bins
+      m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName()+";"+m_xaxis_label).c_str(), GetNBins(), bins, truth_univs, tuned_tags);
+      m_tuned_signal_mc_truth.AppendName("all_truth_tuned",tuned_tags);
+    }
+
+    if (m_doresolution){
+      if (std::count(m_for.begin(), m_for.end(),"selected_truth")>=1) { // use bins
+          double range = bins[1]-bins[GetNBins()];
+          m_tuned_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName()+";"+m_xaxis_label+" reco-true").c_str(),   50,-range/10.,range/10., reco_univs, tuned_tags);
+          m_tuned_resolution.AppendName("resolution_tuned",tuned_tags);
+      }
+    }
 
         if (std::count(m_for.begin(), m_for.end(), "response") >= 1) {
             // m_response = RM(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
@@ -359,89 +388,109 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         std::cout << "should only be called once " << std::endl;
         f.cd();
 
-        for (auto tag : m_tags) {
-            std::cout << " write out flags " << hasMC[tag] << hasSelectedTruth[tag] << hasTruth[tag] << hasData[tag] << hasTunedMC[tag] << std::endl;
-            if (hasMC[tag]) {
-                if (m_tunedmc != 1) {
-                    m_selected_mc_reco.Write(tag);
-                    std::cout << " write out selected mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
-                }
-                if (hasTunedMC[tag]) {
-                    m_tuned_selected_mc_reco.Write(tag);
-                    std::cout << " write out tuned selected mc histogram " << m_tuned_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
-                }
-            }
-            if (hasSelectedTruth[tag]) {
-                if (m_tunedmc != 1) {
-                    std::cout << " write out selected truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
-                    m_selected_mc_truth.Write(tag);
-                }
-                if (hasTunedMC[tag]) {
-                    m_tuned_selected_mc_truth.Write(tag);
-                    std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
-                }
-            }
-            if (hasTruth[tag]) {
-                if (m_tunedmc != 1) {
-                    std::cout << " write out truth histogram " << m_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
-                    m_signal_mc_truth.Write(tag);
-                }
-                if (hasTunedMC[tag]) {
-                    m_tuned_signal_mc_truth.Write(tag);
-                    std::cout << " write out tuned mc histogram " << m_tuned_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
-                }
-            }
-            if (hasResponse[tag]) {
-                if (m_tunedmc != 1) {
-                    std::cout << " write out response histograms " << tag << std::endl;
-                    m_response.Write(tag);
-                }
-                if (hasTunedMC[tag]) {
-                    std::cout << " write out tuned response histograms " << tag << std::endl;
-                    m_tuned_response.Write(tag);
-                }
-            }
-            if (hasData[tag]) {
-                std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
-                m_selected_data.Write(tag);
-            }
+    for (auto tag:m_tags){
+      std::cout << " write out flags " << hasMC[tag] << hasSelectedTruth[tag] << hasTruth[tag] << hasData[tag] << hasTunedMC[tag] <<  std::endl;
+      if(hasMC[tag]){
+        if(m_tunedmc!=1){
+          m_selected_mc_reco.Write(tag);
+          std::cout << " write out selected mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
         }
-    }
+        if(hasTunedMC[tag]){
+          m_tuned_selected_mc_reco.Write(tag);
+          std::cout << " write out tuned selected mc histogram " << m_tuned_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+        }
+      }
+      if(hasSelectedTruth[tag]){
+        if(m_tunedmc!=1){
+          std::cout << " write out selected truth histogram " << m_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
+          m_selected_mc_truth.Write(tag);
 
-    //============================================================================
-    // SYNC ALL HISTOGRAMS
-    //============================================================================
-    void SyncAllHists() {
-        for (auto tag : m_tags) {
-            if (hasMC[tag]) {
-                if (m_tunedmc != 1) {
-                    m_selected_mc_reco.SyncCVHistos();
-                }
-                if (hasTunedMC[tag]) {
-                    m_tuned_selected_mc_reco.SyncCVHistos();
-                }
-            }
-            if (hasSelectedTruth[tag]) {
-                if (m_tunedmc != 1) {
-                    m_selected_mc_truth.SyncCVHistos();
-                }
-                if (hasTunedMC[tag]) {
-                    m_tuned_selected_mc_truth.SyncCVHistos();
-                }
-            }
-            if (hasData[tag]) {
-                m_selected_data.SyncCVHistos();
-            }
-            if (hasTruth[tag]) {
-                if (m_tunedmc != 1) {
-                    m_signal_mc_truth.SyncCVHistos();
-                }
-                if (hasTunedMC[tag]) {
-                    m_tuned_signal_mc_truth.SyncCVHistos();
-                }
-            }
+          if (m_doresolution){
+            std::cout << " write out resolution histogram " << m_resolution.GetHist(tag)->GetName() << std::endl;
+            m_resolution.Write(tag);
+            m_resolution.GetHist(tag)->Print("ALL");
+          }
         }
+        if(hasTunedMC[tag]){
+          m_tuned_selected_mc_truth.Write(tag);
+          if (m_doresolution){
+            m_tuned_resolution.Write(tag);
+            std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_truth.GetHist(tag)->GetName() << std::endl;
+            std::cout << " write out resolution histogram " << m_tuned_resolution.GetHist(tag)->GetName() << std::endl;
+          }
+    
+        }
+      }
+      if(hasTruth[tag]){
+        if(m_tunedmc!=1){
+          std::cout << " write out truth histogram " << m_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
+          m_signal_mc_truth.Write(tag);
+        }
+        if(hasTunedMC[tag]){
+          m_tuned_signal_mc_truth.Write(tag);
+          std::cout << " write out tuned mc histogram " << m_tuned_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
+        }
+      }
+      if(hasResponse[tag]){
+        if(m_tunedmc!=1){
+          std::cout << " write out response histograms " << tag << std::endl;
+          m_response.Write(tag);
+        }
+        if(hasTunedMC[tag]){
+          std::cout << " write out tuned response histograms " << tag << std::endl;
+          m_tuned_response.Write(tag);
+        }
+      }
+      if(hasData[tag]){
+        std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
+        m_selected_data.Write(tag);
+      }
     }
+    //f.ls();
+  }
+
+  //============================================================================
+  // SYNC ALL HISTOGRAMS
+  //============================================================================
+  void SyncAllHists() {
+    for (auto tag:m_tags){
+      if(hasMC[tag]){
+        if(m_tunedmc!=1){
+          m_selected_mc_reco.SyncCVHistos();
+        }
+        if(hasTunedMC[tag]){
+          m_tuned_selected_mc_reco.SyncCVHistos();
+        }
+      }
+      if(hasSelectedTruth[tag]){
+        if(m_tunedmc!=1){
+          m_selected_mc_truth.SyncCVHistos();
+
+          if (m_doresolution) m_resolution.SyncCVHistos();
+        }
+        if(hasTunedMC[tag]){
+          m_tuned_selected_mc_truth.SyncCVHistos();
+          if (m_doresolution) m_tuned_resolution.SyncCVHistos();
+        }
+      }
+      if(hasData[tag]){
+        m_selected_data.SyncCVHistos();
+      }
+      if(hasTruth[tag]){
+        if(m_tunedmc!=1){
+          m_signal_mc_truth.SyncCVHistos();
+        }
+        if(hasTunedMC[tag]){
+          m_tuned_signal_mc_truth.SyncCVHistos();
+        }
+      }
+      // if(hasTunedMC[tag]){
+      //   m_tuned_mc_reco.SyncCVHistos();
+      //   m_tuned_selected_mc_truth.SyncCVHistos();
+      //   m_tuned_signal_mc_truth.SyncCVHistos();
+      // }
+    }
+  }
 
     void FillResponse(std::string tag, CVUniverse* univ,
                       const double value, const double truth,
@@ -454,6 +503,30 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         if (hasTunedMC[tag] && scale >= 0.) {
             m_tuned_response.Fill(tag, univ, value, truth, weight, scale);
         }
+    }
+    // if(hasMC[tag] && m_tunedmc!=1){
+    //   m_selected_mc_reco.FillResponse(tag, univ, value, truth, weight);
+    // }
+    // if(hasTunedMC[tag]){
+    //   m_tuned_mc_reco.FillResponse(tag, univ, value, truth, weight);
+    // }
+  }
+    
+    void FillResolution(std::string tag, CVUniverse* univ,
+                             const double value, const double truth,
+                             const double weight=1.0, const double scale=1.0){
+
+      if (!m_doresolution)return;
+
+      std::string name = univ->ShortName();
+      // int iuniv = m_decoder[univ];
+
+      if(hasMC[tag] && m_tunedmc!=1){
+        m_resolution.Fill(tag,univ,value - truth, weight);
+      }
+      if(hasTunedMC[tag] && scale>=0.){
+        m_tuned_resolution.Fill(tag,univ,value - truth, weight*scale);
+      }
     }
 
 };  // end of class

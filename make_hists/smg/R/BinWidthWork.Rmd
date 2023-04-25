@@ -1,0 +1,436 @@
+---
+title: "Bin Width Work"
+author: "Sean Gilligan"
+output: pdf_document
+---
+
+```{r, message = F, warning = F, echo = F}
+library(tibble)
+library(tidyverse)
+library(psych)
+library(corrplot)
+library(knitr)
+library(kableExtra)
+library(reshape2)
+library(GGally)
+library(ggforce)
+library(scales)
+library(gbm)
+library(caret)
+library(ggpattern)
+library(ggpubr)
+library(grid)
+library(ipred)
+library(rpart)
+library(rpart.plot)
+events <- read.csv("mc_reco_entries_Mult2p_NuCC.csv", sep=";")
+events <- events %>% 
+  filter(PrimaryProtonScore1 >= 0) %>% 
+  mutate(Particle_0 = case_when(PrimaryProtonCandidatePDG == 2212 ~ "Proton",
+                              (PrimaryProtonCandidatePDG == 211 | 
+                                 PrimaryProtonCandidatePDG == -211) ~ "Pion +/-",
+                              PrimaryProtonCandidatePDG == 111 ~ "Pion 0",
+                              PrimaryProtonCandidatePDG == -1 ~ "None",
+                              (PrimaryProtonCandidatePDG != 2212 & 
+                                 PrimaryProtonCandidatePDG != 211 & 
+                                 PrimaryProtonCandidatePDG != -211 & 
+                                 PrimaryProtonCandidatePDG != 111 &
+                                 PrimaryProtonCandidatePDG != -1) ~ "Other")) %>% 
+  mutate(Particle_1 = case_when(SecProtonCandidatePDG_1 == 2212 ~ "Proton",
+                              (SecProtonCandidatePDG_1 == 211 | 
+                                 SecProtonCandidatePDG_1 == -211) ~ "Pion +/-",
+                              SecProtonCandidatePDG_1 == 111 ~ "Pion 0",
+                              SecProtonCandidatePDG_1 == -1 ~ "None",
+                              (SecProtonCandidatePDG_1 != 2212 & 
+                                 SecProtonCandidatePDG_1 != 211 & 
+                                 SecProtonCandidatePDG_1 != -211 & 
+                                 SecProtonCandidatePDG_1 != 111 &
+                                 SecProtonCandidatePDG_1 != -1) ~ "Other")) %>% 
+  mutate(Particle_2 = case_when(SecProtonCandidatePDG_2 == 2212 ~ "Proton",
+                              (SecProtonCandidatePDG_2 == 211 | 
+                                 SecProtonCandidatePDG_2 == -211) ~ "Pion +/-",
+                              SecProtonCandidatePDG_2 == 111 ~ "Pion 0",
+                              SecProtonCandidatePDG_2 == -1 ~ "None",
+                              (SecProtonCandidatePDG_2 != 2212 & 
+                                 SecProtonCandidatePDG_2 != 211 & 
+                                 SecProtonCandidatePDG_2 != -211 & 
+                                 SecProtonCandidatePDG_2 != 111 &
+                                 SecProtonCandidatePDG_2 != -1) ~ "Other"))
+
+colnames(events)
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=3.5, fig.width=10}
+
+ggplot(events %>% filter(Multiplicity > NumberOfProtonCandidates+1, 
+                         NumberOfProtonCandidates + BlobCount <= 8) %>%
+         mutate(`Multiplicity\n> Proton \nCandidate\nCount +1` = Multiplicity > NumberOfProtonCandidates+1)) +
+  geom_rect(data=tibble(Multiplicity=c(3,4,5,6)),
+                        aes(xmin=Multiplicity, xmax=Multiplicity+1,NULL,NULL), ymin=-Inf, ymax=Inf, fill = "black",alpha = 0.1) +
+  stat_bin(aes(x=NumberOfProtonCandidates + BlobCount + 1, y=..count.., color = Interaction),
+           breaks = c(1:10-0.5),position="identity",fill="transparent",geom="step") + 
+  geom_vline(mapping = aes(xintercept = Multiplicity)) +
+  geom_vline(mapping = aes(xintercept = Multiplicity+1)) +
+  xlab("NumberOfProtonCandidates + BlobCount + 1") +
+  scale_y_log10(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0), breaks = 0:9, limits = c(1,9)) +
+  theme_bw() + ggtitle("Multiplicity (\u2265 2)") +
+  facet_wrap(vars(Multiplicity))
+
+ggplot(events %>% filter(Multiplicity > NumberOfProtonCandidates+1, 
+                         NumberOfProtonCandidates + BlobCount <= 8) %>%
+         mutate(`Multiplicity\n> Proton \nCandidate\nCount +1` = Multiplicity > NumberOfProtonCandidates+1),
+       aes(x=NumberOfProtonCandidates + BlobCount + 1, y=..count../sum(..count..), fill = Interaction)) +
+  geom_histogram(breaks = 0:9,position = 'fill', alpha = 0.7) + 
+  geom_rect(data=tibble(Multiplicity=c(3,4,5,6)),
+                        aes(xmin=Multiplicity, xmax=Multiplicity+1,NULL,NULL), ymin=-Inf, ymax=Inf, fill = "black",alpha = 0.2) +
+  geom_vline(mapping = aes(xintercept = Multiplicity)) +
+  geom_vline(mapping = aes(xintercept = Multiplicity+1)) +
+  xlab("NumberOfProtonCandidates + BlobCount + 1") +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_continuous(expand = c(0,0), breaks = 0:9, limits = c(1,9)) +
+  theme_bw() + ggtitle('Multiplicity (\u2265 2)') +
+  facet_wrap(vars(Multiplicity))
+
+ggplot(events %>% filter(Interaction != "DIS") %>%
+         mutate(`Multiplicity\n> Proton \nCandidate\nCount +1` = Multiplicity > NumberOfProtonCandidates+1),
+       aes(x=Interaction, y=..count.., fill = `Multiplicity\n> Proton \nCandidate\nCount +1`)) +
+  geom_bar() + xlab("Vertex Interaction Type") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() + ggtitle("Primary Proton Candidate Truth (Multiplicity \u2265 2)") +
+  facet_wrap(vars(Particle_0))
+
+ggplot(events %>% filter(Interaction != "DIS") %>%
+         mutate(`Multiplicity\n> Proton \nCandidate\nCount +1` = Multiplicity > NumberOfProtonCandidates+1),
+       aes(x=Interaction, y=..count../sum(..count..), fill = `Multiplicity\n> Proton \nCandidate\nCount +1`)) +
+  geom_bar(position = 'fill') + xlab("Vertex Interaction Type") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() + ggtitle('Primary Proton Candidate Truth (Multiplicity \u2265 2)') +
+  facet_wrap(vars(Particle_0))
+
+ggplot(events %>% filter(Interaction != "DIS") %>%
+         mutate(`Multiplicity\n> Proton \nCandidate\nCount +1` = Multiplicity > NumberOfProtonCandidates+1),
+       aes(x=Particle_0, y=..count../sum(..count..), fill = `Multiplicity\n> Proton \nCandidate\nCount +1`)) +
+  geom_bar(position = 'fill') + xlab("Primary Proton Candidate Truth") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() + ggtitle('Vertex Interaction Type (Multiplicity \u2265 2)') +
+  facet_wrap(vars(Interaction))
+
+
+
+ggplot(events %>% filter(nFSNeutralPion+nFSChargedPion+nFSProton < 10), 
+       aes(nFSNeutralPion+nFSChargedPion+nFSProton, fill = Interaction)) +
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(expand = c(0,0), breaks = 0:10) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)))
+
+ggplot(events %>% filter(nFSNeutralPion+nFSChargedPion+nFSProton < 10), 
+       aes(nFSNeutralPion+nFSChargedPion+nFSProton, fill = Interaction)) +
+  geom_histogram(binwidth = 1,position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0), breaks = 0:10) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)))
+
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=3.5, fig.width=10}
+gap_max <- 300
+lbreaks <- seq(0,gap_max,length.out=16)[1:15]
+
+ggplot(tibble(TrackVtxGap = c(events$PrimaryProtonTrackVtxGap,events$SecProtonTrackVtxGap_1,events$SecProtonTrackVtxGap_2),
+              Candidate = rep(c("Primary","Secondary 1","Secondary 2"),each=nrow(events)),
+              Particle = c(events$Particle_0,events$Particle_1,events$Particle_2)) %>% 
+         filter(Particle != "None",TrackVtxGap < gap_max),
+       aes(TrackVtxGap, fill = Particle)) +
+  geom_histogram(bins = 30) +
+  facet_wrap(vars(Candidate))
+
+ggplot(tibble(TrackVtxGap = c(events$PrimaryProtonTrackVtxGap,events$SecProtonTrackVtxGap_1,events$SecProtonTrackVtxGap_2),
+              Candidate = rep(c("Primary","Secondary 1","Secondary 2"),each=nrow(events)),
+              Particle = c(events$Particle_0,events$Particle_1,events$Particle_2)) %>% 
+         filter(Particle != "None",TrackVtxGap < gap_max),
+       aes(TrackVtxGap, fill = Particle)) +
+  geom_histogram(bins = 30) +
+  facet_wrap(vars(Candidate), scales = "free_y")
+
+ggplot(tibble(TrackVtxGap = c(events$PrimaryProtonTrackVtxGap,events$SecProtonTrackVtxGap_1,events$SecProtonTrackVtxGap_2),
+              Candidate = rep(c("Primary","Secondary 1","Secondary 2"),each=nrow(events)),
+              Particle = c(events$Particle_0,events$Particle_1,events$Particle_2)) %>% 
+         filter(Particle != "None",TrackVtxGap < gap_max),
+       aes(TrackVtxGap, fill = Particle)) +
+  geom_histogram(bins = 30, position = 'fill', aes(y=..count../sum(..count..))) +
+  facet_wrap(vars(Candidate))
+
+frac_table <- tibble(Candidate = rep(c("Primary","Secondary 1","Secondary 2"),each=nrow(events)),
+                     `Track-Vertex Gap (mm)` = c(events$PrimaryProtonTrackVtxGap,events$SecProtonTrackVtxGap_1,events$SecProtonTrackVtxGap_2),
+                     Particle = c(events$Particle_0,events$Particle_1,events$Particle_2)) %>%
+  filter(Particle != "None",`Track-Vertex Gap (mm)` < gap_max, `Track-Vertex Gap (mm)` >= 0) %>%
+  mutate(Bin = t(c(lbreaks) <= t(matrix(rep(`Track-Vertex Gap (mm)`,length(lbreaks)),
+                                                     ncol=length(lbreaks))))%*% rep(1,length(lbreaks)) ) %>%
+  group_by(Candidate) %>%
+  add_count(Bin, name = "N") %>%
+  group_by(Candidate,Particle,Bin) %>%
+  add_count(Bin, name = "n") %>%
+  select(Candidate,Particle,n,N) %>% unique() %>% arrange(Candidate,Particle,Bin) %>%
+  mutate(`% Per Bin` = n/N) %>% 
+  arrange(Candidate,Particle,Bin) %>%
+  mutate(`Track-Vertex Gap (mm)` = lbreaks[Bin])
+frac_table <- rbind(frac_table,
+                    frac_table %>% filter(Bin == 15) %>% mutate(`Track-Vertex Gap (mm)` = gap_max))
+
+frac_table %>% ggplot(aes(`Track-Vertex Gap (mm)`,`% Per Bin`,color=Particle)) +
+  geom_step() + facet_wrap(vars(Candidate)) +
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,300,30)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), breaks = scales::pretty_breaks(n = 10)) +
+  theme_bw()
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=3.5, fig.width=10}
+
+nbins <- 15
+gap_max <- 300
+
+evt <- tibble(Candidate = rep(c("Primary","Secondary 1","Secondary 2"),each=nrow(events)),
+                  `Track-Vertex Gap (mm)` = c(events$PrimaryProtonTrackVtxGap,events$SecProtonTrackVtxGap_1,events$SecProtonTrackVtxGap_2),
+                  Particle = c(events$Particle_0,events$Particle_1,events$Particle_2)) %>%
+  filter(Particle != "None",`Track-Vertex Gap (mm)` <= gap_max, `Track-Vertex Gap (mm)` >= 0)
+
+lbp <- evt %>%
+  filter(Candidate == "Primary") %>%
+  select(`Track-Vertex Gap (mm)`,Particle) %>%
+  summarise(Quantile = scales::percent(seq(0,(nbins-1)/nbins,length.out=nbins)),
+            GapBreak = quantile(`Track-Vertex Gap (mm)`,seq(0,(nbins-1)/nbins,length.out=nbins))) %>%
+  pull(GapBreak)
+lb1 <- evt %>%
+  filter(Candidate == "Secondary 1") %>%
+  select(`Track-Vertex Gap (mm)`,Particle) %>%
+  summarise(Quantile = scales::percent(seq(0,(nbins-1)/nbins,length.out=nbins)),
+            GapBreak = quantile(`Track-Vertex Gap (mm)`,seq(0,(nbins-1)/nbins,length.out=nbins))) %>%
+  pull(GapBreak)
+lb2 <- evt %>%
+  filter(Candidate == "Secondary 2") %>%
+  select(`Track-Vertex Gap (mm)`,Particle) %>%
+  summarise(Quantile = scales::percent(seq(0,(nbins-1)/nbins,length.out=nbins)),
+            GapBreak = quantile(`Track-Vertex Gap (mm)`,seq(0,(nbins-1)/nbins,length.out=nbins))) %>%
+  pull(GapBreak)
+
+evt <- evt %>%
+  mutate(Bin = case_when(Candidate == "Primary" ~ t(c(lbp) <= t(matrix(rep(`Track-Vertex Gap (mm)`,length(lbp)),ncol=length(lbp))))%*% rep(1,length(lbp)),
+                         Candidate == "Secondary 1" ~ t(c(lb1) <= t(matrix(rep(`Track-Vertex Gap (mm)`,length(lb1)),ncol=length(lb1))))%*% rep(1,length(lb1)),
+                         Candidate == "Secondary 2" ~ t(c(lb2) <= t(matrix(rep(`Track-Vertex Gap (mm)`,length(lb2)),ncol=length(lb2))))%*% rep(1,length(lb2)))) %>%
+  mutate(w = case_when(Candidate == "Primary" ~ 1/(c(lbp[-1],gap_max)-lbp)[Bin],
+                       Candidate == "Secondary 1" ~ 1/(c(lb1[-1],gap_max)-lb1)[Bin],
+                       Candidate == "Secondary 2" ~ 1/(c(lb2[-1],gap_max)-lb2)[Bin]))
+
+ggplot() +
+  geom_histogram(data = evt %>% filter(Candidate == "Primary"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle),
+                 breaks = c(lbp,gap_max)) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 1"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle),
+                 breaks = c(lb1,gap_max)) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 2"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle),
+                 breaks = c(lb2,gap_max)) +
+  scale_x_continuous(expand = c(0,0), breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), breaks = scales::pretty_breaks(n = 10)) +
+  theme_bw() +
+  labs(title = "15 bins") +
+  facet_wrap(vars(Candidate), scales = "free_y")
+
+ggplot() +
+  geom_histogram(data = evt %>% filter(Candidate == "Primary"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle),
+                 breaks = round(c(lbp,gap_max))) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 1"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle),
+                 breaks = round(c(lb1,gap_max))) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 2"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle),
+                 breaks = round(c(lb2,gap_max))) +
+  scale_x_continuous(expand = c(0,0), breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), breaks = scales::pretty_breaks(n = 10)) +
+  theme_bw() +
+  labs(title = "15 bins (rounded to nearest integer)") +
+  facet_wrap(vars(Candidate), scales = "free_y")
+
+ggplot() +
+  geom_histogram(data = evt %>% filter(Candidate == "Primary"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle, weights = w),
+                 breaks = c(lbp,gap_max)) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 1"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle, weights = w),
+                 breaks = c(lb1,gap_max)) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 2"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle, weights = w),
+                 breaks = c(lb2,gap_max)) +
+  scale_x_continuous(expand = c(0,0), breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), breaks = scales::pretty_breaks(n = 10)) +
+  theme_bw() +
+  labs(title = "15 bins; bin width normalized",
+       x = "Counts / mm") +
+  facet_wrap(vars(Candidate), scales = "free_y")
+
+ggplot() +
+  geom_histogram(data = evt %>% filter(Candidate == "Primary"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle, weights = w),
+                 breaks = round(c(lbp,gap_max))) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 1"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle, weights = w),
+                 breaks = round(c(lb1,gap_max))) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 2"), 
+                 mapping = aes(`Track-Vertex Gap (mm)`, fill = Particle, weights = w),
+                 breaks = round(c(lb2,gap_max))) +
+  scale_x_continuous(expand = c(0,0), breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), breaks = scales::pretty_breaks(n = 10)) +
+  theme_bw() +
+  labs(title = "15 bins (rounded to nearest integer); bin width normalized",
+       x = "Counts / mm") +
+  facet_wrap(vars(Candidate), scales = "free_y")
+ 
+frac_table <- evt %>%
+  group_by(Candidate) %>%
+  add_count(Bin, name = "N") %>%
+  group_by(Candidate,Particle,Bin) %>%
+  add_count(Bin, name = "n") %>%
+  select(Candidate,Particle,n,N) %>% unique() %>% arrange(Candidate,Particle,Bin) %>%
+  mutate(`Rate Per Bin` = n/N) %>% 
+  arrange(Candidate,Particle,Bin) %>%
+  mutate(`Track-Vertex Gap (mm)` = case_when(Candidate == "Primary" ~ lbp[Bin],
+                                             Candidate == "Secondary 1" ~ lb1[Bin],
+                                             Candidate == "Secondary 2" ~ lb2[Bin]))
+frac_table <- rbind(frac_table,
+                    frac_table %>% filter(Bin == nbins) %>% mutate(`Track-Vertex Gap (mm)` = gap_max))
+
+frac_table %>% ggplot(aes(`Track-Vertex Gap (mm)`,`Rate Per Bin`,color=Particle)) +
+  geom_step() + facet_wrap(vars(Candidate)) +
+  scale_x_continuous(expand = c(0,0), breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), breaks = scales::pretty_breaks(n = 10)) +
+  theme_bw()
+
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=3.5, fig.width=10}
+
+nbins <- 15
+gap_max <- 1
+
+evt <- tibble(Candidate = rep(c("Primary","Secondary 1","Secondary 2"),each=nrow(events)),
+              `Proton Score 1` = c(events$PrimaryProtonScore1,events$SecondaryProtonScore1_1,events$SecondaryProtonScore1_2),
+              Particle = c(events$Particle_0,events$Particle_1,events$Particle_2)) %>%
+  filter(Particle != "None", `Proton Score 1` >= 0)
+
+lbp <- evt %>%
+  filter(Candidate == "Primary") %>%
+  select(`Proton Score 1`,Particle) %>%
+  summarise(Quantile = scales::percent(seq(0,(nbins-1)/nbins,length.out=nbins)),
+            GapBreak = quantile(`Proton Score 1`,seq(0,(nbins-1)/nbins,length.out=nbins))) %>%
+  pull(GapBreak)
+lb1 <- evt %>%
+  filter(Candidate == "Secondary 1") %>%
+  select(`Proton Score 1`,Particle) %>%
+  summarise(Quantile = scales::percent(seq(0,(nbins-1)/nbins,length.out=nbins)),
+            GapBreak = quantile(`Proton Score 1`,seq(0,(nbins-1)/nbins,length.out=nbins))) %>%
+  pull(GapBreak)
+lb2 <- evt %>%
+  filter(Candidate == "Secondary 2") %>%
+  select(`Proton Score 1`,Particle) %>%
+  summarise(Quantile = scales::percent(seq(0,(nbins-1)/nbins,length.out=nbins)),
+            GapBreak = quantile(`Proton Score 1`,seq(0,(nbins-1)/nbins,length.out=nbins))) %>%
+  pull(GapBreak)
+
+lb1[1] <- lb2[1] <- lbp[1] <- 0
+
+evt <- evt %>%
+  mutate(Bin = case_when(Candidate == "Primary" ~ t(c(lbp) <= t(matrix(rep(`Proton Score 1`,length(lbp)),ncol=length(lbp))))%*% rep(1,length(lbp)),
+                         Candidate == "Secondary 1" ~ t(c(lb1) <= t(matrix(rep(`Proton Score 1`,length(lb1)),ncol=length(lb1))))%*% rep(1,length(lb1)),
+                         Candidate == "Secondary 2" ~ t(c(lb2) <= t(matrix(rep(`Proton Score 1`,length(lb2)),ncol=length(lb2))))%*% rep(1,length(lb2)))) %>%
+  mutate(w = case_when(Candidate == "Primary" ~ 1/(c(lbp[-1],gap_max)-lbp)[Bin],
+                       Candidate == "Secondary 1" ~ 1/(c(lb1[-1],gap_max)-lb1)[Bin],
+                       Candidate == "Secondary 2" ~ 1/(c(lb2[-1],gap_max)-lb2)[Bin]))
+
+ggplot() +
+  geom_histogram(data = evt %>% filter(Candidate == "Primary"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle),
+                 breaks = c(lbp,gap_max)) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 1"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle),
+                 breaks = c(lb1,gap_max)) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 2"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle),
+                 breaks = c(lb2,gap_max)) +
+  scale_x_continuous(expand = c(0,0), breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), breaks = scales::pretty_breaks(n = 10)) +
+  theme_bw() +
+  labs(title = "15 bins") +
+  facet_wrap(vars(Candidate), scales = "free_y")
+
+ggplot() +
+  geom_histogram(data = evt %>% filter(Candidate == "Primary"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle),
+                 breaks = round(c(lbp,gap_max)*100)/100) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 1"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle),
+                 breaks = round(c(lb1,gap_max)*100)/100) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 2"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle),
+                 breaks = round(c(lb2,gap_max)*100)/100) +
+  scale_x_continuous(expand = c(0,0), breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), breaks = scales::pretty_breaks(n = 10)) +
+  theme_bw() +
+  labs(title = "15 bins (rounded to nearest integer)") +
+  facet_wrap(vars(Candidate), scales = "free_y")
+
+ggplot() +
+  geom_histogram(data = evt %>% filter(Candidate == "Primary"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle, weights = w),
+                 breaks = c(lbp,gap_max)) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 1"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle, weights = w),
+                 breaks = c(lb1,gap_max)) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 2"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle, weights = w),
+                 breaks = c(lb2,gap_max)) +
+  scale_x_continuous(expand = c(0,0), breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), breaks = scales::pretty_breaks(n = 10)) +
+  theme_bw() +
+  labs(title = "15 bins; bin width normalized",
+       x = "Counts / mm") +
+  facet_wrap(vars(Candidate), scales = "free_y")
+
+ggplot() +
+  geom_histogram(data = evt %>% filter(Candidate == "Primary"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle, weights = w),
+                 breaks = round(c(lbp,gap_max))) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 1"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle, weights = w),
+                 breaks = round(c(lb1,gap_max))) +
+  geom_histogram(data = evt %>% filter(Candidate == "Secondary 2"), 
+                 mapping = aes(`Proton Score 1`, fill = Particle, weights = w),
+                 breaks = round(c(lb2,gap_max))) +
+  scale_x_continuous(expand = c(0,0), breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), breaks = scales::pretty_breaks(n = 10)) +
+  theme_bw() +
+  labs(title = "15 bins (rounded to nearest integer); bin width normalized",
+       x = "Counts / mm") +
+  facet_wrap(vars(Candidate), scales = "free_y")
+ 
+frac_table <- evt %>%
+  group_by(Candidate) %>%
+  add_count(Bin, name = "N") %>%
+  group_by(Candidate,Particle,Bin) %>%
+  add_count(Bin, name = "n") %>%
+  select(Candidate,Particle,n,N) %>% unique() %>% arrange(Candidate,Particle,Bin) %>%
+  mutate(`Rate Per Bin` = n/N) %>% 
+  arrange(Candidate,Particle,Bin) %>%
+  mutate(`Proton Score 1` = case_when(Candidate == "Primary" ~ lbp[Bin],
+                                             Candidate == "Secondary 1" ~ lb1[Bin],
+                                             Candidate == "Secondary 2" ~ lb2[Bin]))
+frac_table <- rbind(frac_table,
+                    frac_table %>% filter(Bin == nbins) %>% mutate(`Proton Score 1` = gap_max))
+
+frac_table %>% ggplot(aes(`Proton Score 1`,`Rate Per Bin`,color=Particle)) +
+  geom_step() + facet_wrap(vars(Candidate)) +
+  scale_x_continuous(expand = c(0,0), breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), breaks = scales::pretty_breaks(n = 10)) +
+  theme_bw()
+```

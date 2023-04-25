@@ -14,5 +14,5 @@
 		"band3":{ "Q2QE_range":[0.2,0.75], "pass_proton_score_min":0.1 },
 		"band4":{ "Q2QE_min":0.75, "pass_proton_score_min":0.0 }
 	},
-	"allQ2QE_ProtonScoreConfig": { "pass_proton_score_min":0.15 }
+	"allQ2QE_ProtonScoreConfig": { "pass_proton_score_min":0.25 }
 }

@@ -1,6 +1,8 @@
 import sys,os,string
 import math
 
+# this code only works for Q2 2-27-2023
+
 # version 10 implement new low q2 error band from /minerva/data/users/drut1186/Mateus_Pub_Inputs/Modified_AddedLowQ2Suppression
 from ROOT import *
 
@@ -8,7 +10,9 @@ from PlotUtils import *
 
 from chi2utils import *
 
-NOREBIN=True
+TH1.AddDirectory(0)
+
+NOREBIN=False
 
 NOSYS = True  # I think this means don't look at systematic errors individually
 
@@ -783,9 +787,16 @@ for model in models:
       covmx[model][i][i] += mcstat[model][i]*mcstat[model][i]
       logcovmx[model][i][i] += logmcstat[model][i]*logmcstat[model][i]
 
+    
     InvertedError=TDecompSVD(covmx[model]);
     InvertedErrorMatrix[model]=TMatrixD(covmx[model]);
     InvertedError.Invert(InvertedErrorMatrix[model])
+    
+    for i in range(0,len(goodelements)):
+        preinversion = math.sqrt(covmx[model][i][i])
+        postinversion = 1./sqrt(InvertedErrorMatrix[model][i][i])
+        print ("inversion check ",i,model, preinversion,postinversion)
+
 
     LogInvertedError=TDecompSVD(logcovmx[model]);
     LogInvertedErrorMatrix[model]=TMatrixD(logcovmx[model]);
@@ -857,7 +868,9 @@ for model in models:
     for i in range(minb,maxb):
       for j in range(minb,maxb):
         if (i == j):
-            print ("residual", i,data[i],mc[model][i],model)
+            preinversion = math.sqrt(covmx[model][i][j])
+            diagonal = 1./math.sqrt(InvertedErrorMatrix[model][i][j])
+            print ("residual", i,data[i],mc[model][i],model,"diff = ", residual[i],"raw err",preinversion, " err= ", diagonal," chi2+= ",residual[i]*InvertedErrorMatrix[model][i][j]*residual[j])
         totchi2 += residual[i]*InvertedErrorMatrix[model][i][j]*residual[j]
         totlogchi2 += logresidual[i]*LogInvertedErrorMatrix[model][i][j]*logresidual[j]
         chi2cont[i][j] = residual[i]*InvertedErrorMatrix[model][i][j]*residual[j]

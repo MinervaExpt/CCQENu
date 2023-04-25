@@ -159,6 +159,12 @@ public:
 
 	virtual double GetThetamuDegrees() const;
 	virtual double GetTrueThetamuDegrees() const;
+	
+	virtual double GetThetaXmuDegrees() const;
+	virtual double GetTrueThetaXmuDegrees() const;
+
+	virtual double GetThetaYmuDegrees() const;
+	virtual double GetTrueThetaYmuDegrees() const;
 
 
 	// ----------------------------- Hadron Variables ----------------------------
@@ -188,6 +194,7 @@ public:
 	// ----------------------------- Other Variables -----------------------------
 
 	//  virtual double GetWgenie() const { return GetDouble("mc_w"); }
+	virtual int GetIntType() const;
 	virtual int GetMCIntType() const;
 
 	virtual int GetTruthNuPDG() const;
@@ -289,8 +296,13 @@ public:
 	virtual int GetTruthHasSingleChargedPion() const;
 	virtual int GetTruthHasSingleNeutralPion() const;
 	virtual int GetTruthHasMultiPion() const;
+	virtual double GetPionScore() const;
+	virtual double GetPionScore1() const;
+	virtual double GetPionScore2() const;
 
 	// Proton Score, Primary and Secondary Proton Tracks
+
+	virtual int GetNumberOfProtonCandidates() const;
 
 	virtual double GetProtonScore(int i) const;
 	virtual double GetProtonScore1(int i) const;
@@ -325,22 +337,104 @@ public:
 	virtual double GetPrimaryProtonScore2() const;
 
 	virtual int GetAreClustsFoundAtPrimaryProtonEnd() const;
+	
+	virtual int GetNumClustsProtonEnd(int i) const;
 	virtual int GetNumClustsPrimaryProtonEnd() const;
+	virtual int GetNumClustsSecProtonEnd_1() const;
+	virtual int GetNumClustsSecProtonEnd_2() const;
+	virtual int GetNumClustsSecProtonEnd_3() const;
+	virtual int GetNumClustsSecProtonEnd_4() const;
+	virtual int GetNumClustsSecProtonEnd_5() const;
+	virtual int GetNumClustsSecProtonEnd_6() const;
 
 	virtual double GetPrimaryProtonTrackLength() const;
 	virtual double GetPrimaryProtonTrackEndX() const;
 	virtual double GetPrimaryProtonTrackEndY() const;
 	virtual double GetPrimaryProtonTrackEndZ() const;
+	
+	virtual double GetProtonAngle(int i) const;
 	virtual double GetPrimaryProtonAngle() const;
+	virtual double GetSecProtonAngle_1() const;
+	virtual double GetSecProtonAngle_2() const;
+	virtual double GetSecProtonAngle_3() const;
+	virtual double GetSecProtonAngle_4() const;
+	virtual double GetSecProtonAngle_5() const;
+	virtual double GetSecProtonAngle_6() const;
+	
+	virtual double GetProtonTrackVtxGap(int i) const;
+	virtual double GetPrimaryProtonTrackVtxGap() const;
+	virtual double GetSecProtonTrackVtxGap_1() const;
+	virtual double GetSecProtonTrackVtxGap_2() const;
+	virtual double GetSecProtonTrackVtxGap_3() const;
+	virtual double GetSecProtonTrackVtxGap_4() const;
+	virtual double GetSecProtonTrackVtxGap_5() const;
+	virtual double GetSecProtonTrackVtxGap_6() const;
 
+	virtual double GetCalibEClustsProtonEnd(int i) const;
 	virtual double GetCalibEClustsPrimaryProtonEnd() const;
+	virtual double GetCalibEClustsSecProtonEnd_1() const;
+	virtual double GetCalibEClustsSecProtonEnd_2() const;
+	virtual double GetCalibEClustsSecProtonEnd_3() const;
+	virtual double GetCalibEClustsSecProtonEnd_4() const;
+	virtual double GetCalibEClustsSecProtonEnd_5() const;
+	virtual double GetCalibEClustsSecProtonEnd_6() const;
+	
+	virtual double GetVisEClustsProtonEnd(int i) const;
 	virtual double GetVisEClustsPrimaryProtonEnd() const;
+	virtual double GetVisEClustsSecProtonEnd_1() const;
+	virtual double GetVisEClustsSecProtonEnd_2() const;
+	virtual double GetVisEClustsSecProtonEnd_3() const;
+	virtual double GetVisEClustsSecProtonEnd_4() const;
+	virtual double GetVisEClustsSecProtonEnd_5() const;
+	virtual double GetVisEClustsSecProtonEnd_6() const;
+	
 	virtual double GetPrimaryProtonTfromdEdx() const;
-	virtual double GetTotalPrimaryProtonEnergydEdxAndClusters() const;
-	virtual double GetPrimaryProtonTrueKE() const;
-	virtual int GetPrimaryProtonCandidatePDG() const;
-	virtual double GetEnergyDiffTruedEdx() const;
+	virtual double GetSecProtonTfromdEdx(int i) const;
+	virtual double GetSecProtonTfromdEdx_1() const;
+	virtual double GetSecProtonTfromdEdx_2() const;
+	virtual double GetSecProtonTfromdEdx_3() const;
+	virtual double GetSecProtonTfromdEdx_4() const;
+	virtual double GetSecProtonTfromdEdx_5() const;
+	virtual double GetSecProtonTfromdEdx_6() const;
+	
+	virtual double GetTotalProtonEnergy(int i) const;
+	virtual double GetTotalPrimaryProtonEnergy() const;
+	virtual double GetTotalSecProtonEnergy_1() const;
+	virtual double GetTotalSecProtonEnergy_2() const;
+	virtual double GetTotalSecProtonEnergy_3() const;
+	virtual double GetTotalSecProtonEnergy_4() const;
+	virtual double GetTotalSecProtonEnergy_5() const;
+	virtual double GetTotalSecProtonEnergy_6() const;
+	
+	virtual double GetProtonFractionEnergyInCone(int i) const;
 	virtual double GetPrimaryProtonFractionEnergyInCone() const;
+	virtual double GetSecProtonFractionEnergyInCone_1() const;
+	virtual double GetSecProtonFractionEnergyInCone_2() const;
+	virtual double GetSecProtonFractionEnergyInCone_3() const;
+	virtual double GetSecProtonFractionEnergyInCone_4() const;
+	virtual double GetSecProtonFractionEnergyInCone_5() const;
+	virtual double GetSecProtonFractionEnergyInCone_6() const;
+	
+  virtual double GetMaxProtonTrueKE() const; // this does not require prong
+	virtual double GetProtonTrueKE(int i) const;  //index i is prong
+	virtual double GetPrimaryProtonTrueKE() const;
+	virtual double GetSecProtonTrueKE_1() const;
+	virtual double GetSecProtonTrueKE_2() const;
+	virtual double GetSecProtonTrueKE_3() const;
+	virtual double GetSecProtonTrueKE_4() const;
+	virtual double GetSecProtonTrueKE_5() const;
+	virtual double GetSecProtonTrueKE_6() const;
+	
+	virtual int GetProtonCandidatePDG(int i) const;
+	virtual int GetPrimaryProtonCandidatePDG() const;
+	virtual int GetSecProtonCandidatePDG_1() const;
+	virtual int GetSecProtonCandidatePDG_2() const;
+	virtual int GetSecProtonCandidatePDG_3() const;
+	virtual int GetSecProtonCandidatePDG_4() const;
+	virtual int GetSecProtonCandidatePDG_5() const;
+	virtual int GetSecProtonCandidatePDG_6() const;
+	
+	virtual double GetEnergyDiffTruedEdx() const;
 
 	virtual int GetRecoTruthIsPrimaryProton() const;
 	virtual int GetRecoTruthIsPrimaryPion() const;
@@ -368,6 +462,11 @@ public:
 	virtual int GetTrueStrangeMesonCount() const;
 	virtual int GetTrueCharmedBaryonCount() const;
 	virtual int GetTrueStrangeBaryonCount() const;
+	virtual int GetTrueNeutronCount() const;
+	virtual int GetTrueNegMuonCount() const;
+	virtual int GetTrueGammaCount() const;
+	
+	virtual std::map<int,int> GetTrueFSCountsPerPDG() const;
 
 	//
 
@@ -381,6 +480,8 @@ public:
 
 	virtual void PrintTrueArachneLink() const;
 	virtual void PrintDataArachneLink() const;
+	virtual std::string StringTrueArachneLink() const;
+	virtual std::string StringDataArachneLink() const;
 
 	//
 
