@@ -58,7 +58,7 @@ int main(const int argc, const char *argv[] ) {
   }
 
   // Deprecated but should be backwards compatible
-  bool useTuned=false;
+  bool useTuned;
   if(config.IsMember("useTuned")){
     useTuned = config.GetBool("useTuned");
     std::cout << "runsamplesMain: WARNING: useTuned deprecated. Use tunedmc instead. Setting tunedmc accordingly" << std::endl;
@@ -70,34 +70,6 @@ int main(const int argc, const char *argv[] ) {
     doresolution = config.GetBool("DoResolution");
     std::cout << " ask for resolutions" << std::endl;
   }
-  // int useTuned = 0;
-  // if(config.IsMember("useTuned")){
-  //   checkval = config.GetString("useTuned");
-  //
-  //   if(checkval=="both" || checkval=="2"){
-  //     std::cout << "useTuned set to allow both tuned and untuned MC." << std::endl;
-  //     useTuned = 2;
-  //   }
-  //   // "only" or 1 runs only tuned mc (not untuned)
-  //   else if(checkval=="only" || checkval=="1"){
-  //     std::cout << "useTuned set to allow only tuned MC." << std::endl;
-  //     useTuned = 1;
-  //   }
-  //   // "none" or 0 runs only untunedmc
-  //   else if(checkval=="none" || checkval=="0"){
-  //     std::cout << "useTuned set to allow only untuned MC." << std::endl;
-  //     useTuned = 0;
-  //   }
-  //   else{
-  //     std::cout << "Warning: invalid 'useTuned' configured. Defaulting to allow both tuned and untuned MC. " << std::endl;
-  //     useTuned = 2;
-  //   }
-  // }
-  // else{
-  //   // Default to running both tuned and untuned
-  //   std::cout << "Warning: 'useTuned' not configured in main config. Defaulting to allow only untuned MC. " << std::endl;
-  //   useTuned = 0;
-  // }
 
   //=========================================S
   // MacroUtil (makes your anatuple chains)
@@ -373,9 +345,6 @@ int main(const int argc, const char *argv[] ) {
       if(IsInVector<std::string>("truth",forlist )){
         truthtags.push_back(tag);
       }
-      // if (IsInVector<std::string>("tuned_mc",forlist)){
-      //   tuned_mc_tags.push_back(tag);
-      // }
       if(IsInVector<std::string>("response",forlist)){
         responsetags.push_back(tag);
       }
@@ -519,5 +488,6 @@ int main(const int argc, const char *argv[] ) {
   TVector2 *pot = new TVector2( util.m_data_pot,util.m_mc_pot/prescale);
   out->WriteTObject( pot, "pot" );
   out->Close();
-  std::cout << "Success" << std::endl;
+  std::cout << "Successfully wrote everything to file " << outname << std::endl;
+  std::cout << "Done" << std::endl;
 }
