@@ -205,7 +205,6 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
             return;
         }
 
-        // std::vector<double> bins = GetBinVec();
         std::vector<double> recobins = GetRecoBinVec();
         // need reco level binning here:
         m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label).c_str(), GetNRecoBins(), recobins, univs, tags);
@@ -325,7 +324,6 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         }
 
         if (std::count(m_for.begin(), m_for.end(), "response") >= 1) {
-            // m_response = RM(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
             m_tuned_response = RM(Form("%s", GetName().c_str()), reco_univs, recobins, bins, response_tags, "_tuned");
         }
     }
@@ -352,8 +350,6 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
         std::vector<double> bins = GetBinVec();
         std::vector<double> recobins = GetRecoBinVec();
-
-        // m_response = RM(Form("%s", GetName().c_str()),reco_univs,true_univs, recobins, bins, tags);
 
         m_response = RM(Form("%s", GetName().c_str()), reco_univs, recobins, bins, tags, tail);
     }

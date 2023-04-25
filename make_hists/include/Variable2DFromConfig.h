@@ -15,10 +15,8 @@
 #define VARIABLE2DFromConfig_H
 
 #include "include/CVUniverse.h"
-// #include "PlotUtils/HistFolio.h"
-// #include "include/HistWrapperMap.h"
 #include "MinervaUnfold/MnvResponse.h"
-#include "include/Hist2DWrapperMap.h"  //TODO: Need to make this to play wit Hist2DWrapper
+#include "include/Hist2DWrapperMap.h"  
 #include "include/Response2DWrapperMap.h"
 
 #ifndef __CINT__  // CINT doesn't know about std::function
@@ -32,11 +30,6 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     typedef PlotUtils::Hist2DWrapperMap<CVUniverse> HM2D;
 
     typedef PlotUtils::Response2DWrapperMap<CVUniverse> RM2D;
-
-    // typedef PlotUtils::MnvH1D MH1D;
-    // typedef PlotUtils::MnvH2D MH2D;
-    // typedef PlotUtils::HistFolio<PlotUtils::MnvH1D> FOLIO;
-    // typedef PlotUtils::HistFolio<PlotUtils::MnvH2D> FOLIO2D;
 
    public:
     //=======================================================================================
@@ -163,7 +156,6 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             hasMC[tag] = true;
         }
 
-        // if(m_tunedmc==1){
         if (m_tunedmc == "tuned") {
             std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
             return;
@@ -191,7 +183,6 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             hasSelectedTruth[tag] = true;
         }
 
-        // if(m_tunedmc==1){
         if (m_tunedmc == "tuned") {
             std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
             return;
@@ -217,7 +208,6 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             hasTruth[tag] = true;
         }
 
-        // if(m_tunedmc==1){
         if (m_tunedmc == "tuned") {
             std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
             return;
@@ -229,10 +219,6 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         m_signal_mc_truth = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins, ybins, univs, tags);
         m_signal_mc_truth.AppendName("all_truth", tags);
     }
-
-    //  void AddTruthWrapper(std::string tag){
-    //     m_signal_mc_truth.AddResponse(tag);
-    //  }
 
     template <typename T>
     void InitializeDataHistograms2D(T univs, const std::vector<std::string> tags) {
@@ -255,7 +241,6 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
 
     template <typename T>
     void InitializeTunedMCHistograms2D(T reco_univs, T truth_univs, const std::vector<std::string> tuned_tags, const std::vector<std::string> response_tags) {
-        // if(m_tunedmc<1){
         if (m_tunedmc == "untuned") {
             std::cout << "Variable2DFromConfig Warning: tunedmc is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tuned_tags) {
@@ -288,20 +273,6 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         if (std::count(m_for.begin(), m_for.end(), "response") >= 1) {
             m_tuned_response = RM2D(Form("%s", GetName().c_str()), reco_univs, xrecobins, xbins, yrecobins, ybins, response_tags, "_tuned");
         }
-        // // Now do response
-        // if (std::count(m_for.begin(), m_for.end(),"response")< 1) {
-        //   std::cout << "Variable2DFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
-        //   for (auto tag:response_tags){
-        //     hasResponse[tag] = false;
-        //   }
-        //   return;
-        // }
-        // for (auto tag:response_tags){
-        //   assert(hasTunedMC[tag]);
-        //   assert(hasSelectedTruth[tag]);
-        // }
-
-        // m_tuned_selected_mc_reco.AddResponse2D(response_tags,"_tuned");
     }
 
     // =========================== Initialize Response ===========================
@@ -328,32 +299,6 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
 
         m_response = RM2D(Form("%s", GetName().c_str()), reco_univs, xrecobins, xbins, yrecobins, ybins, tags, tail);
     }
-    //
-    // //========== Add Response =================
-    //
-    // void AddMCResponse2D(const std::vector<std::string>  tags) { //Does this take in True at all?
-    //   if (std::count(m_for.begin(), m_for.end(),"response")< 1) {
-    //     std::cout << "Variable2DFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
-    //     for (auto tag:tags){
-    //       hasResponse[tag] = false;
-    //     }
-    //     return;
-    //   }
-    //   for (auto tag:tags){
-    //     assert(hasMC[tag]);
-    //   }
-    //
-    //   if(m_tunedmc==1){
-    //     std::cout << "Variable2DFromConfig Warning: untuned MC disabled. Disabling untuned response for this variable " << GetName() << std::endl;
-    //     return;
-    //   }
-    //
-    //   m_selected_mc_reco.AddResponse2D(tags);
-    //   for (auto tag:tags){
-    //     hasResponse[tag] = true;
-    //   }
-    // }
-
     //=======================================================================================
     // WRITE ALL HISTOGRAMS
     //=======================================================================================
