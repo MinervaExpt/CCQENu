@@ -160,13 +160,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     std::vector<std::string> m_tags;
     std::vector<std::string> m_for;
     std::string m_tunedmc;  // Can be set to "both", "tuned", or "untuned"
-    // RESPONSE* m_response;
-    //  helpers for response
 
-    // std::map< CVUniverse* , int> m_map; // map to get name and index from Universe;
-    // Histofolio to categorize MC by interaction channel
-    // FOLIO m_selected_mc_by_channel;
-    // FOLIO m_selected_mc_truth_by_channel;
     inline virtual std::string GetUnits() { return m_units; };
 
     inline virtual void SetUnits(std::string units) { m_units = units; };
