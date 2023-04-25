@@ -73,7 +73,6 @@ std::map<std::string, CCQENu::Variable2DFromConfig*> Get2DVariablesFromConfig( s
 
         CCQENu::VariableFromConfig* xvar;
         CCQENu::VariableFromConfig* yvar;
-        // CCQENu::Variable2DFromConfig* var2Dfromconfig;
 
         for( auto var:variablesmap ){
           std::string varname = var.first;
@@ -87,8 +86,6 @@ std::map<std::string, CCQENu::Variable2DFromConfig*> Get2DVariablesFromConfig( s
           }
         }
         if ( foundx && foundy ){
-          // var2Dfromconfig = new CCQENu::Variable2DFromConfig(name2D,*xvar,*yvar,varconfig);
-          // var2Dfromconfig = new CCQENu::Variable2DFromConfig(name2D,*xvar,*yvar,fors);
           CCQENu::Variable2DFromConfig* var2Dfromconfig = new CCQENu::Variable2DFromConfig(name2D,*xvar,*yvar,fors);
           var2Dfromconfig->AddTags(tags);
           std::cout << "GetVariables2DFromConfig: set up 2D variable " << name2D << std::endl;
