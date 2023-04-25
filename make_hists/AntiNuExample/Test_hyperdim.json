@@ -1,12 +1,12 @@
 {
-  "version":13,  // Run major variables in batch, use v13 of cuts, add closure
+  "version":15,  // Run major variables in batch, use v13 of cuts, add closure
   "mcIn":"${CCQEMAT}/nhv/playlists/MC_5A_local.txt",
   "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
   "prescale":999,
   "playlist":"minervame5A",
   "MinervaModel":"MnvTunev1", // set this as an environmental to MnvTunev1 or MnvTunev2
   "recoName":"CCQENu", // change if running on MAT tuples
-  "useTuned":1, // uses the tunes if available
+  "tunedmc":"tuned", // set to "tuned", "untuned", or "both"
   "closure":0, // set to 1 if you want to do closure test, otherwise 0
   "scalefileIn":"${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", // location of anti-nu background tuning
   "TuneCategories":["qelike","qelikenot"], // categories that have tunes
