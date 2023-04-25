@@ -93,7 +93,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             }
         }
 
-        m_tunedmc = "both";  // Default to "both" tuned and untuned
+        m_tunedmc = "untuned";  // Default to "both" tuned and untuned
         std::string x_tunedmc = x.m_tunedmc;
         std::string y_tunedmc = y.m_tunedmc;
         if (x_tunedmc == y_tunedmc)  // If they're the same, set to that value
