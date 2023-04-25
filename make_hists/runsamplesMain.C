@@ -41,20 +41,30 @@ int main(const int argc, const char *argv[] ) {
     closure = config.GetBool("closure");
   }
   
-  std::string tunedmc = "both"; // can be set to "both", "tuned", or "untuned"
+  std::string tunedmc = "untuned"; // can be set to "both", "tuned", or "untuned"
   if(config.IsMember("tunedmc"))
   {
     tunedmc = config.GetString("tunedmc");
-    std::cout << "runsamplesMain: tunedmc configured in main config and set to " << tunedmc << std::endl;
+    std::cout << "runsamplesMain: \'tunedmc\' configured in main config and set to " << tunedmc << std::endl;
+  }
+  if (config.IsMember("scalefileIn")) { // check if you have a scalefile specified
+    if (config.GetString("scalefileIn") == "") {
+        tunedmc = "untuned";
+        std::cout << "runsamplesMain: WARNING: no \'scalefileIn\' specficied. Defaulting \'tunedmc\' to \'untuned\'." << std::endl;
+    }
+  } else {
+    tunedmc = "untuned";
+    std::cout << "runsamplesMain: WARNING: \'scalefileIn\' not found in main config. Defaulting \'tunedmc\' to \'untuned\'." << std::endl;
   }
 
-
+  // Deprecated but should be backwards compatible
   bool useTuned=false;
   if(config.IsMember("useTuned")){
     useTuned = config.GetBool("useTuned");
-    std::cout << "runsamplesMain: useTuned configured in main config and set to " << useTuned << std::endl;
+    std::cout << "runsamplesMain: WARNING: useTuned deprecated. Use tunedmc instead. Setting tunedmc accordingly" << std::endl;
+    useTuned == false ? tunedmc = "untuned" : tunedmc = "both";
   }
-  
+
   bool doresolution = false;
   if (config.IsMember("DoResolution")){
     doresolution = config.GetBool("DoResolution");
