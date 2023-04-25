@@ -23,20 +23,14 @@ namespace PlotUtils{
 // template <typename T>
   class weight_MCreScale{
     public:
-      // Boolean set to switch on and off if want to use tuned hists
-      // bool m_useTuned=false;
+      // tunedmc set from config. Can be "tuned", "untuned", or "both". Default to false to avoid issues if not tuning.
       std::string m_tunedmc = "untuned";
-      // Boolean set based off Cat
 
-      // std::map<
       // Member file with scale/fraction MnvH1Ds
       TFile* m_f_Q2QEScaleFrac;
       std::vector<std::string> m_categories;
       // Member MnvH1D's for each scale from the file (set at initialization)
-      // TODO: turn these into a map to allow for more bkg channels for Sean's analysis
       std::map<const std::string, MnvH1D*> m_mnvh_Scales;
-      //MnvH1D* mnvh_SigScale;
-      //MnvH1D* mnvh_BkgScale;
       // Member scale set to be sig or bkg (set at GetWeight)
       MnvH1D* m_mnvh_Scale;
       TH1D* m_h_scale;
