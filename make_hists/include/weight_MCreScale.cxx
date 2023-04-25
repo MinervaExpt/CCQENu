@@ -49,13 +49,12 @@ weight_MCreScale::weight_MCreScale(const NuConfig config){
   // if (config.IsMember("useTuned"))
   //   m_useTuned = config.GetBool("useTuned");
 
-  if(config.IsMember("TuneCategories")){
+  if (config.IsMember("TuneCategories")) {
     m_categories = config.GetStringVector("TuneCategories");
+  } else {
+    m_categories = {"qelike", "qelikenot"};
   }
-  else{
-    m_categories = {"qelike","qelikenot"};
-  }
-  if(m_tunedmc == "tuned" || m_tunedmc == "both"){
+  if (m_tunedmc != "untuned") {
     read(filename);
   }
   // if(m_useTuned){
@@ -175,7 +174,7 @@ double weight_MCreScale::GetScale(std::string cat, const double q2qe, std::strin
   // Default value, not physical. Checked so you can switch scaling on and off easier.
   double retval = -1.;
   // if(m_useTuned){
-  if (m_tunedmc == "tuned" || m_tunedmc == "both"){
+  if (m_tunedmc != "untuned") {
     SetCat(cat);
     retval = GetScaleInternal(q2qe, uni_name, iuniv);
   }
@@ -189,7 +188,7 @@ double weight_MCreScale::GetScale(std::string cat, const CVUniverse* univ, std::
   // Default value, not physical. Checked so you can switch scaling on and off easier.
   double retval = -1.;
   // if(m_useTuned){
-  if (m_tunedmc == "tuned" || m_tunedmc == "both") {
+  if (m_tunedmc != "untuned") {
     const double q2qe = univ->GetQ2QEGeV();
     SetCat(cat);
     retval = GetScaleInternal(q2qe, uni_name, iuniv);
