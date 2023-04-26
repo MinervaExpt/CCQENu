@@ -245,7 +245,6 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
                 m_tuned_selected_mc_reco = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label).c_str(), GetNRecoBins(), xrecolinbins, reco_univs, tuned_tags);
             else if (m_analysis_type == k2D || m_analysis_type == k2D_lite)
                 m_tuned_selected_mc_reco = HMHD(Form("%s", GetName().c_str()), (GetName() + ";" + m_lin_axis_label + ";" + m_y_axis_label).c_str(), xrecolinbins, yrecobins, reco_univs, tuned_tags);
-
             m_tuned_selected_mc_reco.AppendName("reconstructed_tuned", tuned_tags);
         }
         if (std::count(m_for.begin(), m_for.end(), "selected_truth") >= 1) {  // use bins
@@ -306,8 +305,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
     void FillResponse(std::string tag, CVUniverse *univ,
                       const double value, const double truth,
                       const double weight, const double scale = 1.0) {
-        if (m_analysis_type != k1D)  // skip if not 1D type 1 analysis
-        {
+        if (m_analysis_type != k1D) {  // skip if not 1D type 1 analysis
             std::cout << "VariableHyperDFromConfig: FillResponse2D: Set to analysis type " << m_analysis_type << ". Will not fill response for 1D HyperD hists." << std::endl;
             return;
         }
@@ -325,8 +323,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
                       const double x_truth, const double y_truth,
                       const double weight, const double scale = 1.0)  // From Hist2DWrapperMap
     {
-        if (m_analysis_type != k2D)  // skip if not 2D type 0 analysis
-        {
+        if (m_analysis_type != k2D) { // skip if not 2D type 0 analysis
             std::cout << "VariableHyperDFromConfig: FillResponse: Set to analysis type " << m_analysis_type << ". Will not fill response for 2D HyperD hists." << std::endl;
             return;
         }
