@@ -9,16 +9,6 @@
  * the License, or (at your option) any later version. *
  * @section DESCRIPTION *
  * Code to create Variables from Config file
- * @file
- * @author  Heidi Schellman/Noah Vaughan/SeanGilligan
- * @version 1.0 *
- * @section LICENSE *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version. *
- * @section DESCRIPTION *
- * Code to create Variables from Config file
  */
 #ifndef VARIABLEFromConfig_H
 #define VARIABLEFromConfig_H
@@ -44,10 +34,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
    private:
     typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
     typedef HistWrapperMap<CVUniverse> HM;
-    // typedef PlotUtils::HistWrapperMap<CVUniverse> HM;
     typedef ResponseWrapperMap<CVUniverse> RM;
-    // typedef PlotUtils::MnvH1D MH1D;
-    //  typedef PlotUtils::HistFolio<PlotUtils::MnvH1D> FOLIO;
     bool m_doresolution;
 
    public:
@@ -63,7 +50,6 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     // template <class... ARGS>
     // VariableFromConfig(ARGS... args) : PlotUtils::VariableBase<CVUniverse>(args...) {}
 
-    // HMS 2-13-202 replace the templated constructor with explicit ones so we can make a config version without introducing a dependency in the Base class.
     // HMS 2-13-202 replace the templated constructor with explicit ones so we can make a config version without introducing a dependency in the Base class.
 
     void SetDoResolution(const bool doresolution) {
@@ -88,17 +74,6 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 break;
             }
         }
-        CVFunctions<CVUniverse> fun;
-        // fun.InitFunctionMaps();
-        std::string recovar = config.GetString("reco");
-        bool good = false;
-        for (auto key : fun.GetRecoKeys()) {
-            if (recovar == key) {
-                std::cout << " reco function keys " << key << std::endl;
-                good = true;
-                break;
-            }
-        }
 
         if (!good) {
             std::cout << "VariableFromConfig(config) is asking for an unimplemented reco variable " << recovar << std::endl;
@@ -113,24 +88,6 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 break;
             }
         }
-        if (!good) {
-            std::cout << "VariableFromConfig(config) is asking for an unimplemented reco variable " << recovar << std::endl;
-            exit(1);
-        }
-        bool tgood = false;
-        std::string truevar = config.GetString("true");
-        for (auto key : fun.GetTrueKeys()) {
-            if (truevar == key) {
-                std::cout << " true function keys " << key << std::endl;
-                tgood = true;
-                break;
-            }
-        }
-
-        if (!tgood) {
-            std::cout << "VariableFromConfig(config) is asking for an unimplemented true variable " << truevar << std::endl;
-            exit(1);
-        }
         if (!tgood) {
             std::cout << "VariableFromConfig(config) is asking for an unimplemented true variable " << truevar << std::endl;
             exit(1);
@@ -138,22 +95,10 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
         PlotUtils::VariableBase<CVUniverse>::m_pointer_to_GetRecoValue = (fun.GetRecoFunction(recovar));
         PlotUtils::VariableBase<CVUniverse>::m_pointer_to_GetTrueValue = (fun.GetTrueFunction(truevar));
-        PlotUtils::VariableBase<CVUniverse>::m_pointer_to_GetRecoValue = (fun.GetRecoFunction(recovar));
-        PlotUtils::VariableBase<CVUniverse>::m_pointer_to_GetTrueValue = (fun.GetTrueFunction(truevar));
 
         PlotUtils::VariableBase<CVUniverse>::m_name = config.GetString("name");
         PlotUtils::VariableBase<CVUniverse>::m_xaxis_label = config.GetString("title");
-        PlotUtils::VariableBase<CVUniverse>::m_name = config.GetString("name");
-        PlotUtils::VariableBase<CVUniverse>::m_xaxis_label = config.GetString("title");
 
-        if (config.IsMember("for")) {
-            m_for = config.GetStringVector("for");
-        } else {  // turn them all on for now
-            std::vector<std::string> def = {"data", "selected_reco", "selected_truth", "response", "truth"};
-            for (auto s : def) {
-                m_for.push_back(s);
-            }
-        }
         if (config.IsMember("for")) {
             m_for = config.GetStringVector("for");
         } else {  // turn them all on for now
