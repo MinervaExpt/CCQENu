@@ -20,7 +20,9 @@ template <class MnvHistoType>
 XSec<MnvHistoType>::XSec(){}
 
 template <class MnvHistoType>
-XSec<MnvHistoType>::XSec(NuConfig* config) {}
+XSec<MnvHistoType>::XSec(NuConfig* config) {
+    
+}
 
 template <class MnvHistoType>
 void XSec<MnvHistoType>::SetNames(std::string basename, std::string sample, std::string variable) {
