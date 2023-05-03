@@ -92,36 +92,28 @@ std::map<std::string, CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(s
             fors = intersection(xfor, yfor);
           }
 
-          CCQENu::VariableFromConfig *xvar;
-          CCQENu::VariableFromConfig *yvar;
-          // CCQENu::Variable2DFromConfig* var2Dfromconfig;
+        CCQENu::VariableFromConfig* xvar;
+        CCQENu::VariableFromConfig* yvar;
 
-          for (auto var : variablesmap)
-          {
-            std::string varname = var.first;
-            if (xvarname == varname)
-            {
-              xvar = variablesmap[xvarname];
-              foundx = true;
-            }
-            if (yvarname == varname)
-            {
-              yvar = variablesmap[yvarname];
-              foundy = true;
-            }
+        for( auto var:variablesmap ){
+          std::string varname = var.first;
+          if( xvarname == varname ){
+            xvar = variablesmap[xvarname];
+            foundx = true;
           }
-          if (foundx && foundy)
-          {
-            // var2Dfromconfig = new CCQENu::Variable2DFromConfig(name2D,*xvar,*yvar,varconfig);
-            // var2Dfromconfig = new CCQENu::Variable2DFromConfig(name2D,*xvar,*yvar,fors);
-            CCQENu::Variable2DFromConfig *var2Dfromconfig = new CCQENu::Variable2DFromConfig(name2D, *xvar, *yvar, fors);
-            var2Dfromconfig->AddTags(tags);
-            std::cout << "GetVariables2DFromConfig: set up 2D variable " << name2D << std::endl;
-            variables2Dmap[name2D] = var2Dfromconfig;
+          if( yvarname == varname ){
+            yvar = variablesmap[yvarname];
+            foundy = true;
           }
-          else if (!foundx)
-          {
-            std::cout << " Warning - have requested an unimplemented 1D variable in Get2DVariablesFromConfig " << xvarname << std::endl;
+        }
+        if ( foundx && foundy ){
+          CCQENu::Variable2DFromConfig* var2Dfromconfig = new CCQENu::Variable2DFromConfig(name2D,*xvar,*yvar,fors);
+          var2Dfromconfig->AddTags(tags);
+          std::cout << "GetVariables2DFromConfig: set up 2D variable " << name2D << std::endl;
+          variables2Dmap[name2D] = var2Dfromconfig;
+        }
+        else if( !foundx ) {
+          std::cout << " Warning - have requested an unimplemented 1D variable in Get2DVariablesFromConfig " << xvarname << std::endl;
             assert(0);
           }
           else if (!foundy)
