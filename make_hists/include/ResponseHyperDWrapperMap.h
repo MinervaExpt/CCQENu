@@ -7,9 +7,10 @@
 #include <vector>
 
 #include "MinervaUnfold/MnvResponse.h"
+#include "PlotUtils/HyperDimLinearizer.h"
 #include "PlotUtils/MnvH1D.h"
 #include "PlotUtils/MnvH2D.h"
-#include "VariableHyperDBase.h"
+// #include "VariableHyperDBase.h"
 // #include "utils/UniverseDecoder.h"
 
 namespace PlotUtils {
