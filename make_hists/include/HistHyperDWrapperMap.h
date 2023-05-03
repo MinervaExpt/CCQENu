@@ -262,7 +262,7 @@ class HistHyperDWrapperMap : public T {
 
     //  can we make this smarter?
     // For linearized "value" input (basically which bin is it going in)
-    inline void Fill(const std::string tag, const T *universe, const Double_t value, const Double_t weight) {
+    inline void Fill(const std::string tag, const T *universe, const Double_t value, const Double_t weight = 1.0) {
         m_hists[tag].FillUniverse(universe, value, weight);
     }
 
