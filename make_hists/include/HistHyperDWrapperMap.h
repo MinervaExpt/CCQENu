@@ -20,7 +20,7 @@
 
 #include "PlotUtils/Hist2DWrapper.h"
 #include "PlotUtils/HistWrapper.h"
-#include "PlotUtils/VariableHyperDBase.h"
+#include "PlotUtils/HyperDimLinearizer.h"
 
 namespace PlotUtils {
 // enum EAnalysisType {k2D, k1D, k2D_lite, k1D_lite}
@@ -37,7 +37,7 @@ class HistHyperDWrapperMap : public T {
     std::map<std::string, std::vector<T *>> m_univs;
     std::string m_name = "NULL";
     std::string m_title = "NULL";
-    EAnalysisType m_analysis_type = k1D;
+    EAnalysisType m_analysis_type;
 
     bool m_fixedbins;
 
@@ -72,113 +72,180 @@ class HistHyperDWrapperMap : public T {
     HistHyperDWrapperMap(){};
 
     //===========================================================================
-    // Constuctors for 1D Type 1 analyses
+    // Generalized Constructors
     //===========================================================================
-    inline HistHyperDWrapperMap(const std::string name, const std::string title,
-                                const Int_t n_linx_bins, const double linx_min, const double linx_max,
-                                std::map<std::string, std::vector<T *>> univs, const std::vector<std::string> tags,
-                                const EAnalysisType analysis_type = k1D) {
-        m_name = name;
-        m_title = title;
-        m_univs = univs;
-        m_tags = tags;
-        m_analysis_type = analysis_type;
 
-        m_n_linx_bins = n_linx_bins;
-        m_linx_min = linx_min;
-        m_linx_max = linx_max;
-        m_fixedbins = true;
-
-        for (auto tag : tags) {
-            std::string hist_name = "hHD___" + tag + "___" + name;
-            // std::string hist_name = name + "_" + tag;
-            m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), n_linx_bins, linx_min, linx_max, univs);
-            m_has_hist[tag] = true;
-            m_has_hist_2d[tag] = false;
-        }
-
-        m_decoder = UniverseDecoder(univs);
-    }
-
-    inline HistHyperDWrapperMap(const std::string name, const std::string title,
-                                const Int_t n_linx_bins, const std::vector<double> linx_bins,
-                                std::map<std::string, std::vector<T *>> univs, std::vector<std::string> tags,
-                                const EAnalysisType analysis_type = k1D) {
-        m_name = name;
-        m_title = title;
-        m_univs = univs;
-        m_tags = tags;
-        m_analysis_type = analysis_type;
-
-        m_n_linx_bins = n_linx_bins;
-        m_linx_bins = linx_bins;
-        m_fixedbins = false;
-
-        for (auto tag : tags) {
-            std::string hist_name = "hHD___" + tag + "___" + name;
-            m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), n_linx_bins, linx_bins, univs);
-            m_has_hist[tag] = true;
-            m_has_hist_2d[tag] = false;
-        }
-
-        m_decoder = UniverseDecoder(univs);
-    }
-
-    //===========================================================================
-    // Constuctors for 2D Type 0 analyses
-    //===========================================================================
     inline HistHyperDWrapperMap(const std::string name, const std::string title,
                                 const Int_t n_linx_bins, const double linx_min, const double linx_max,
                                 const Int_t n_y_bins, const double y_min, const double y_max,
                                 std::map<std::string, std::vector<T *>> univs, const std::vector<std::string> tags,
-                                const EAnalysisType analysis_type = k2D) {
-        m_name = name;
-        m_title = title;
-        m_univs = univs;
-        m_tags = tags;
-        m_analysis_type = analysis_type;
+                                const EAnalysisType type)
+        : m_name(name), m_title(title), m_univs(univs), m_tags(tags), m_analysis_type(type) {
+        m_fixedbins = true;
 
         m_n_linx_bins = n_linx_bins;
         m_linx_min = linx_min;
         m_linx_max = linx_max;
-        m_n_y_bins = n_y_bins;
-        m_y_min = y_min;
-        m_y_max = y_max;
-        m_fixedbins = true;
 
-        for (auto tag : tags) {
-            std::string hist_name = "hHD_2D___" + tag + "___" + name;
-            m_hists_2d[tag] = PlotUtils::Hist2DWrapper<T>(hist_name.c_str(), title.c_str(), n_linx_bins, linx_min, linx_max, n_y_bins, y_min, y_max, univs);
-            m_has_hist_2d[tag] = true;
-            m_has_hist[tag] = false;
+        if (m_analysis_type == k2D || m_analysis_type == k2D_lite) {
+            m_n_y_bins = n_y_bins;
+            m_y_min = y_min;
+            m_y_max = y_max;
+
+            for (auto tag : tags) {
+                std::string hist_name = "hHD_2D___" + tag + "___" + name;
+                m_hists_2d[tag] = PlotUtils::Hist2DWrapper<T>(hist_name.c_str(), title.c_str(), n_linx_bins, linx_min, linx_max, n_y_bins, y_min, y_max, univs);
+                m_has_hist_2d[tag] = true;
+                m_has_hist[tag] = false;
+            }
+        } else {
+            for (auto tag : tags) {
+                std::string hist_name = "hHD___" + tag + "___" + name;
+                m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), n_linx_bins, linx_min, linx_max, univs);
+                m_has_hist[tag] = true;
+                m_has_hist_2d[tag] = false;
+            }
         }
-
         m_decoder = UniverseDecoder(univs);
-    }
+    };
 
     inline HistHyperDWrapperMap(const std::string name, const std::string title,
                                 const std::vector<double> linx_bins, const std::vector<double> y_bins,
-                                std::map<std::string, std::vector<T *>> univs, std::vector<std::string> tags,
-                                const EAnalysisType analysis_type = k1D) {
-        m_name = name;
-        m_title = title;
-        m_univs = univs;
-        m_tags = tags;
-        m_analysis_type = analysis_type;
-
-        m_linx_bins = linx_bins;
-        m_y_bins = y_bins;
+                                std::map<std::string, std::vector<T *>> univs, const std::vector<std::string> tags,
+                                const EAnalysisType type)
+        : m_name(name), m_title(title), m_univs(univs), m_tags(tags), m_analysis_type(type) {
         m_fixedbins = false;
 
-        for (auto tag : tags) {
-            std::string hist_name = "hHD_2D___" + tag + "___" + name;
-            m_hists_2d[tag] = PlotUtils::Hist2DWrapper<T>(hist_name.c_str(), title.c_str(), linx_bins, y_bins, univs);
-            m_has_hist_2d[tag] = true;
-            m_has_hist[tag] = false;
-        }
+        m_linx_bins = linx_bins;
 
+        if (m_analysis_type == k2D || m_analysis_type == k2D_lite){
+            m_y_bins = y_bins;
+            for (auto tag : tags) {
+                std::string hist_name = "hHD_2D___" + tag + "___" + name;
+                m_hists_2d[tag] = PlotUtils::Hist2DWrapper<T>(hist_name.c_str(), title.c_str(), linx_bins, y_bins, univs);
+                m_has_hist_2d[tag] = true;
+                m_has_hist[tag] = false;
+            }
+        } else {
+            int n_linx_bins = m_linx_bins.size() - 1;
+            for (auto tag : tags) {
+                std::string hist_name = "hHD___" + tag + "___" + name;
+                m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), n_linx_bins, linx_bins, univs);
+                m_has_hist[tag] = true;
+                m_has_hist_2d[tag] = false;
+            }
+        }
         m_decoder = UniverseDecoder(univs);
-    }
+    };
+
+    //     //===========================================================================
+    //     // Constuctors for 1D Type 1 analyses
+    //     //===========================================================================
+    //     inline HistHyperDWrapperMap(const std::string name, const std::string title,
+    //                                 const Int_t n_linx_bins, const double linx_min, const double linx_max,
+    //                                 std::map<std::string, std::vector<T *>> univs, const std::vector<std::string> tags,
+    //                                 const EAnalysisType type = k1D) {
+    //     m_name = name;
+    //     m_title = title;
+    //     m_univs = univs;
+    //     m_tags = tags;
+    //     m_analysis_type = type;
+
+    //     m_n_linx_bins = n_linx_bins;
+    //     m_linx_min = linx_min;
+    //     m_linx_max = linx_max;
+    //     m_fixedbins = true;
+
+    //     for (auto tag : tags) {
+    //         std::string hist_name = "hHD___" + tag + "___" + name;
+    //         // std::string hist_name = name + "_" + tag;
+    //         m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), n_linx_bins, linx_min, linx_max, univs);
+    //         m_has_hist[tag] = true;
+    //         m_has_hist_2d[tag] = false;
+    //     }
+
+    //     m_decoder = UniverseDecoder(univs);
+    // }
+
+    // inline HistHyperDWrapperMap(const std::string name, const std::string title,
+    //                             const Int_t n_linx_bins, const std::vector<double> linx_bins,
+    //                             std::map<std::string, std::vector<T *>> univs, std::vector<std::string> tags,
+    //                             const EAnalysisType type = k1D) {
+    //     m_name = name;
+    //     m_title = title;
+    //     m_univs = univs;
+    //     m_tags = tags;
+    //     m_analysis_type = type;
+
+    //     m_n_linx_bins = n_linx_bins;
+    //     m_linx_bins = linx_bins;
+    //     m_fixedbins = false;
+
+    //     for (auto tag : tags) {
+    //         std::string hist_name = "hHD___" + tag + "___" + name;
+    //         m_hists[tag] = PlotUtils::HistWrapper<T>(hist_name.c_str(), title.c_str(), n_linx_bins, linx_bins, univs);
+    //         m_has_hist[tag] = true;
+    //         m_has_hist_2d[tag] = false;
+    //     }
+
+    //     m_decoder = UniverseDecoder(univs);
+    // }
+
+    // //===========================================================================
+    // // Constuctors for 2D Type 0 analyses
+    // //===========================================================================
+    // inline HistHyperDWrapperMap(const std::string name, const std::string title,
+    //                             const Int_t n_linx_bins, const double linx_min, const double linx_max,
+    //                             const Int_t n_y_bins, const double y_min, const double y_max,
+    //                             std::map<std::string, std::vector<T *>> univs, const std::vector<std::string> tags,
+    //                             const EAnalysisType type = k2D) {
+    //     m_name = name;
+    //     m_title = title;
+    //     m_univs = univs;
+    //     m_tags = tags;
+    //     m_analysis_type = type;
+
+    //     m_n_linx_bins = n_linx_bins;
+    //     m_linx_min = linx_min;
+    //     m_linx_max = linx_max;
+    //     m_n_y_bins = n_y_bins;
+    //     m_y_min = y_min;
+    //     m_y_max = y_max;
+    //     m_fixedbins = true;
+
+    //     for (auto tag : tags) {
+    //         std::string hist_name = "hHD_2D___" + tag + "___" + name;
+    //         m_hists_2d[tag] = PlotUtils::Hist2DWrapper<T>(hist_name.c_str(), title.c_str(), n_linx_bins, linx_min, linx_max, n_y_bins, y_min, y_max, univs);
+    //         m_has_hist_2d[tag] = true;
+    //         m_has_hist[tag] = false;
+    //     }
+
+    //     m_decoder = UniverseDecoder(univs);
+    // }
+
+    // inline HistHyperDWrapperMap(const std::string name, const std::string title,
+    //                             const std::vector<double> linx_bins, const std::vector<double> y_bins,
+    //                             std::map<std::string, std::vector<T *>> univs, std::vector<std::string> tags,
+    //                             const EAnalysisType type = k1D) {
+    //     m_name = name;
+    //     m_title = title;
+    //     m_univs = univs;
+    //     m_tags = tags;
+    //     m_analysis_type = type;
+
+    //     m_linx_bins = linx_bins;
+    //     m_y_bins = y_bins;
+    //     m_fixedbins = false;
+
+    //     for (auto tag : tags) {
+    //         std::string hist_name = "hHD_2D___" + tag + "___" + name;
+    //         m_hists_2d[tag] = PlotUtils::Hist2DWrapper<T>(hist_name.c_str(), title.c_str(), linx_bins, y_bins, univs);
+    //         m_has_hist_2d[tag] = true;
+    //         m_has_hist[tag] = false;
+    //     }
+
+    //     m_decoder = UniverseDecoder(univs);
+    // }
 
     //===========================================================================
     // Methods
@@ -195,7 +262,7 @@ class HistHyperDWrapperMap : public T {
 
     //  can we make this smarter?
     // For linearized "value" input (basically which bin is it going in)
-    inline void Fill(const std::string tag, const T *universe, const Double_t value, const Double_t weight = 1.0) {
+    inline void Fill(const std::string tag, const T *universe, const Double_t value, const Double_t weight) {
         m_hists[tag].FillUniverse(universe, value, weight);
     }
 
@@ -206,7 +273,7 @@ class HistHyperDWrapperMap : public T {
     inline int GetNhists() {
         if (m_analysis_type == k1D || m_analysis_type == k1D_lite)
             return m_hists.size();
-        else if (m_analysis_type == k2D || m_analysis_type == k2D_lite)
+        else 
             return m_hists_2d.size();
     }
 
@@ -246,7 +313,7 @@ class HistHyperDWrapperMap : public T {
             std::cout << " try to write hist " << tag << " " << m_hists_2d[tag].hist->GetName() << std::endl;
             m_hists_2d[tag].hist->Write();
         } else
-            std::cout << " HistHyperDWrapperMap: WARNING: Could not find hist " << tag << std::endl;
+            std::cout << " HistHyperDWrapperMap::Write: WARNING Could not find hist " << tag << std::endl;
     }
 
     // voodoo you sometimes need
@@ -258,7 +325,6 @@ class HistHyperDWrapperMap : public T {
                 m_hists_2d[tag].SyncCVHistos();
         }
     }
-
 };     // Close class
 };     // namespace PlotUtils
 #endif /* HistWrapperMap_h */
