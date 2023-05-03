@@ -1,9 +1,165 @@
-/home/gilligas/gitMinerva/MAT-MINERvA/calculators/LowRecoilFunctions.h
+/home/sean/MinervaExpt/CCQENu/make_hists/analyze_v9.C
+
+    Analyze2DVariables
+    AnalyzeVariables
+    fluxUniverses
+    outRoot
+    playlist
+    runsamples
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/CVUniverse.cxx
+
+    hadron_track_length_area
+    pass_proton_score_min
+    Q2QE_max
+    Q2QE_range
+    tdead
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/Get2DVariablesFromConfig.cxx
+
+    1D
+    2D
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/GetStacked.h
+
+    F
+    p
+    title
+    units
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/GetVariablesFromConfig.cxx
+
+    1D
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/GetXSec.h
+
+    varsFile
+
+/home/sean/MinervaExpt/CCQENu/make_hists/include/GetXSec3.h
+
+    varsFile
+
+/home/sean/MinervaExpt/CCQENu/make_hists/runsamplesMain.C
+
+    data
+    energy
+    min
+    printConfigs
+
+/home/sean/MinervaExpt/CCQENu/make_hists/utils/RebinFlux.h
+
+    fluxUniverses
+    NuEConstraint
+    pdg
+    playlist
+
+/home/sean/MinervaExpt/opt/include/calculators/LowRecoilFunctions.h
 
     MasterAnaDev_recoil_E
 
-/home/gilligas/Minerva/Ana/PickledCCQENu/ana/make_hists/include/CVUniverse.h
+/home/sean/MinervaExpt/opt/include/PlotUtils/FluxReweighter.cxx
 
-    hadron_track_length_area
-    tdead
+    Flux
+    ratio
+    width
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/LowRecoilFunctions.h
+
+    MasterAnaDev_recoil_E
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvH1D.cxx
+
+    ,
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvH1DToCSV.cxx
+
+    \t
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvH2D.cxx
+
+    ,
+    x
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvH2DToCSV.cxx
+
+    \t
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MnvPlotter.cxx
+
+    Data
+    f
+    l
+    mnv_tmp_data_statonly
+    SAMEPE1
+    Simulation
+    width
+    XY
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/MuonSystematics.cxx
+
+    Muon_Energy_MINOS
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/NeutronInelasticReweighter.h
+
+    ColumnarDensity
+    FinalE
+    InelasticChildPDGs
+    InitialE
+    IntCodePerSegment
+    NInelasticChildren
+    NPaths
+    NTrajPointsSaved
+    Nuke
+    PosX
+    PosY
+    PosZ
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/ResponseSystematics.cxx
+
+    part_response_container_total_recoil_passive_id
+    part_response_total_recoil_passive_id
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/TargetMassSystematics.cxx
+
+    Target_Mass_C
+    Target_Mass_CH
+    Target_Mass_Fe
+    Target_Mass_H2O
+    Target_Mass_Pb
+
+/home/sean/MinervaExpt/opt/include/PlotUtils/weightZExp.cxx
+
+    zexpCov
+
+/home/sean/MinervaExpt/opt/include/universes/MuonSystematics.cxx
+
+    Muon_Energy_MINOS
+
+/home/sean/MinervaExpt/opt/include/universes/ResponseSystematics.cxx
+
+    part_response_container_total_recoil_passive_id
+    part_response_total_recoil_passive_id
+
+/home/sean/MinervaExpt/opt/include/universes/TargetMassSystematics.cxx
+
+    Target_Mass_C
+    Target_Mass_CH
+    Target_Mass_Fe
+    Target_Mass_H2O
+    Target_Mass_Pb
+
+/home/sean/MinervaExpt/opt/include/weighters/NeutronInelasticReweighter.h
+
+    ColumnarDensity
+    FinalE
+    InelasticChildPDGs
+    InitialE
+    IntCodePerSegment
+    NInelasticChildren
+    NPaths
+    NTrajPointsSaved
+    Nuke
+    PosX
+    PosY
+    PosZ
 

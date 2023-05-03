@@ -1,0 +1,2345 @@
+---
+title: "Proton Classification"
+author: "Sean Gilligan"
+date: "2023-01-12"
+output: pdf_document
+---
+
+# Variables in CSV File
+
+```{r, message = F, warning = F, echo = F}
+library(tibble)
+library(tidyverse)
+library(psych)
+library(corrplot)
+library(knitr)
+library(kableExtra)
+library(reshape2)
+library(GGally)
+library(ggforce)
+library(scales)
+library(gbm)
+library(caret)
+library(ggpattern)
+library(ggpubr)
+library(grid)
+library(ipred)
+library(rpart)
+library(rpart.plot)
+library(gam)
+events <- read.csv("mc_reco_entries_Mult2p_NuCC.csv", sep=";")
+events <- events %>% 
+  filter(PrimaryProtonScore1 >= 0) %>% 
+  mutate(Particle_0 = case_when(PrimaryProtonCandidatePDG == 2212 ~ "Proton",
+                              (PrimaryProtonCandidatePDG %in% c(-211,211)) ~ "Pion +/-",
+                              PrimaryProtonCandidatePDG == 111 ~ "Pion 0",
+                              (PrimaryProtonCandidatePDG %in% c(321,-321)) ~ "Kaon +/-",
+                              (PrimaryProtonCandidatePDG %in% c(1114,2214,2224)) ~ "Delta ++/+/-",
+                              PrimaryProtonCandidatePDG == -1 ~ "None",
+                              !(PrimaryProtonCandidatePDG %in% c(2212,211,-211,111,-1,321,-321,1114,2214,2224)) ~ "Other")) %>% 
+  mutate(Particle_1 = case_when(SecProtonCandidatePDG_1 == 2212 ~ "Proton",
+                              (SecProtonCandidatePDG_1 == 211 | 
+                                 SecProtonCandidatePDG_1 == -211) ~ "Pion +/-",
+                              SecProtonCandidatePDG_1 == 111 ~ "Pion 0",
+                              (SecProtonCandidatePDG_1 == 321 | 
+                                 SecProtonCandidatePDG_1 == -321) ~ "Kaon +/-",
+                              (SecProtonCandidatePDG_1 == 1114 | 
+                                 SecProtonCandidatePDG_1 == 2214 |
+                                 SecProtonCandidatePDG_1 == 2224) ~ "Delta ++/+/-",
+                              SecProtonCandidatePDG_1 == -1 ~ "None",
+                              (SecProtonCandidatePDG_1 != 2212 & 
+                                 SecProtonCandidatePDG_1 != 211 & 
+                                 SecProtonCandidatePDG_1 != -211 & 
+                                 SecProtonCandidatePDG_1 != 111 &
+                                 SecProtonCandidatePDG_1 != -1
+                                 SecProtonCandidatePDG_1 != 321 &
+                                 SecProtonCandidatePDG_1 != -321 &
+                                 SecProtonCandidatePDG_1 != 1114 &
+                                 SecProtonCandidatePDG_1 != 2214 &
+                                 SecProtonCandidatePDG_1 != 2224) ~ "Other")) %>% 
+  mutate(Particle_2 = case_when(SecProtonCandidatePDG_2 == 2212 ~ "Proton",
+                              (SecProtonCandidatePDG_2 == 211 | 
+                                 SecProtonCandidatePDG_2 == -211) ~ "Pion +/-",
+                              SecProtonCandidatePDG_2 == 111 ~ "Pion 0",
+                              (SecProtonCandidatePDG_2 == 321 | 
+                                 SecProtonCandidatePDG_2 == -321) ~ "Kaon +/-",
+                              (SecProtonCandidatePDG_2 == 1114 | 
+                                 SecProtonCandidatePDG_2 == 2214 |
+                                 SecProtonCandidatePDG_2 == 2224) ~ "Delta ++/+/-",
+                              SecProtonCandidatePDG_2 == -1 ~ "None",
+                              (SecProtonCandidatePDG_2 != 2212 & 
+                                 SecProtonCandidatePDG_2 != 211 & 
+                                 SecProtonCandidatePDG_2 != -211 & 
+                                 SecProtonCandidatePDG_2 != 111 &
+                                 SecProtonCandidatePDG_2 != -1
+                                 SecProtonCandidatePDG_2 != 321 &
+                                 SecProtonCandidatePDG_2 != -321 &
+                                 SecProtonCandidatePDG_2 != 1114 &
+                                 SecProtonCandidatePDG_2 != 2214 &
+                                 SecProtonCandidatePDG_2 != 2224) ~ "Other"))
+
+
+events <- events %>% filter(Particle_0 != "None") %>% mutate(Particle = Particle_0) %>% filter(TotalPrimaryProtonEnergy >= 0)
+
+colnames(events)
+
+!(4 %in% c(1,3,5,7))
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=3.5, fig.width=10}
+
+ggplot(events %>% filter(Multiplicity > NumberOfProtonCandidates+1, 
+                         NumberOfProtonCandidates + BlobCount <= 8) %>%
+         mutate(`Multiplicity\n> Proton \nCandidate\nCount +1` = Multiplicity > NumberOfProtonCandidates+1)) +
+  geom_rect(data=tibble(Multiplicity=c(3,4,5,6)),
+                        aes(xmin=Multiplicity, xmax=Multiplicity+1,NULL,NULL), ymin=-Inf, ymax=Inf, fill = "black",alpha = 0.1) +
+  stat_bin(aes(x=NumberOfProtonCandidates + BlobCount + 1, y=..count.., color = Interaction),
+           breaks = c(1:10-0.5),position="identity",fill="transparent",geom="step") + 
+  geom_vline(mapping = aes(xintercept = Multiplicity)) +
+  geom_vline(mapping = aes(xintercept = Multiplicity+1)) +
+  xlab("NumberOfProtonCandidates + BlobCount + 1") +
+  scale_y_log10(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0), breaks = 0:9, limits = c(1,9)) +
+  theme_bw() + ggtitle("Multiplicity (\u2265 2)") +
+  facet_wrap(vars(Multiplicity))
+
+ggplot(events %>% filter(Multiplicity > NumberOfProtonCandidates+1, 
+                         NumberOfProtonCandidates + BlobCount <= 8) %>%
+         mutate(`Multiplicity\n> Proton \nCandidate\nCount +1` = Multiplicity > NumberOfProtonCandidates+1),
+       aes(x=NumberOfProtonCandidates + BlobCount + 1, y=..count../sum(..count..), fill = Interaction)) +
+  geom_histogram(breaks = 0:9,position = 'fill', alpha = 0.7) + 
+  geom_rect(data=tibble(Multiplicity=c(3,4,5,6)),
+                        aes(xmin=Multiplicity, xmax=Multiplicity+1,NULL,NULL), ymin=-Inf, ymax=Inf, fill = "black",alpha = 0.2) +
+  geom_vline(mapping = aes(xintercept = Multiplicity)) +
+  geom_vline(mapping = aes(xintercept = Multiplicity+1)) +
+  xlab("NumberOfProtonCandidates + BlobCount + 1") +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_continuous(expand = c(0,0), breaks = 0:9, limits = c(1,9)) +
+  theme_bw() + ggtitle('Multiplicity (\u2265 2)') +
+  facet_wrap(vars(Multiplicity))
+
+ggplot(events %>% filter(Interaction != "DIS") %>%
+         mutate(`Multiplicity\n> Proton \nCandidate\nCount +1` = Multiplicity > NumberOfProtonCandidates+1),
+       aes(x=Interaction, y=..count.., fill = `Multiplicity\n> Proton \nCandidate\nCount +1`)) +
+  geom_bar() + xlab("Vertex Interaction Type") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() + ggtitle("Primary Proton Candidate Truth (Multiplicity \u2265 2)") +
+  facet_wrap(vars(Particle_0))
+
+ggplot(events %>% filter(Interaction != "DIS") %>%
+         mutate(`Multiplicity\n> Proton \nCandidate\nCount +1` = Multiplicity > NumberOfProtonCandidates+1),
+       aes(x=Interaction, y=..count../sum(..count..), fill = `Multiplicity\n> Proton \nCandidate\nCount +1`)) +
+  geom_bar(position = 'fill') + xlab("Vertex Interaction Type") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() + ggtitle('Primary Proton Candidate Truth (Multiplicity \u2265 2)') +
+  facet_wrap(vars(Particle_0))
+
+ggplot(events %>% filter(Interaction != "DIS") %>%
+         mutate(`Multiplicity\n> Proton \nCandidate\nCount +1` = Multiplicity > NumberOfProtonCandidates+1),
+       aes(x=Particle_0, y=..count../sum(..count..), fill = `Multiplicity\n> Proton \nCandidate\nCount +1`)) +
+  geom_bar(position = 'fill') + xlab("Primary Proton Candidate Truth") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw() + ggtitle('Vertex Interaction Type (Multiplicity \u2265 2)') +
+  facet_wrap(vars(Interaction))
+
+
+
+ggplot(events %>% filter(nFSNeutralPion+nFSChargedPion+nFSProton < 10), 
+       aes(nFSNeutralPion+nFSChargedPion+nFSProton, fill = Interaction)) +
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(expand = c(0,0), breaks = 0:10) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)))
+
+ggplot(events %>% filter(nFSNeutralPion+nFSChargedPion+nFSProton < 10), 
+       aes(nFSNeutralPion+nFSChargedPion+nFSProton, fill = Interaction)) +
+  geom_histogram(binwidth = 1,position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0), breaks = 0:10) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)))
+
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=3.5, fig.width=10}
+
+
+
+####
+ggplot(events, aes(BlobCount, fill = Interaction)) +
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,15.5), breaks = 0:15) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  geom_vline(xintercept = 1.5) +
+  ggtitle("DIS Included") +
+  theme_bw()
+
+ggplot(events %>% 
+         mutate(`Improved Michel Count` = case_when(ImprovedMichelCount == 0 ~ "0",
+                                                    ImprovedMichelCount == 1 ~ "1",
+                                                    ImprovedMichelCount == 2 ~ "2",
+                                                    ImprovedMichelCount >= 3 ~ "3+")), 
+       aes(BlobCount, fill = Interaction)) +
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,15.5), breaks = 0:15) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  geom_vline(xintercept = 1.5) +
+  ggtitle("Blob Count and Interaction Type for Improved Michel Count Values") +
+  theme_bw() +
+  facet_wrap(vars(`Improved Michel Count`))
+
+ggplot(events %>% 
+         mutate(`Improved Michel Count` = case_when(ImprovedMichelCount == 0 ~ "0",
+                                                    ImprovedMichelCount == 1 ~ "1",
+                                                    ImprovedMichelCount == 2 ~ "2",
+                                                    ImprovedMichelCount >= 3 ~ "3+")), 
+       aes(BlobCount, fill = Interaction)) +
+  geom_histogram(binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,15.5), breaks = 0:15) +
+  scale_y_continuous(expand = c(0,0)) +
+  geom_vline(xintercept = 1.5) +
+  ggtitle("Blob Count and Interaction Type for Improved Michel Count Values") +
+  theme_bw() +
+  facet_wrap(vars(`Improved Michel Count`))
+
+ggplot(events %>% 
+         mutate(`Improved Michel Count` = case_when(ImprovedMichelCount == 0 ~ "0",
+                                                    ImprovedMichelCount == 1 ~ "1",
+                                                    ImprovedMichelCount == 2 ~ "2",
+                                                    ImprovedMichelCount >= 3 ~ "3+")) %>%
+                  filter(Interaction != "DIS"), 
+       aes(BlobCount, fill = Interaction)) +
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,8.5), breaks = 0:15) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  geom_vline(xintercept = 1.5) +
+  ggtitle("Blob Count and Interaction Type for Improved Michel Count Values") +
+  theme_bw() +
+  facet_wrap(vars(`Improved Michel Count`), scale = "free_y")
+
+ggplot(events %>% 
+         mutate(`Improved Michel Count` = case_when(ImprovedMichelCount == 0 ~ "0",
+                                                    ImprovedMichelCount == 1 ~ "1",
+                                                    ImprovedMichelCount == 2 ~ "2",
+                                                    ImprovedMichelCount >= 3 ~ "3+")) %>%
+                  filter(Interaction != "DIS"), 
+       aes(BlobCount, fill = Interaction)) +
+  geom_histogram(binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,8.5), breaks = 0:15) +
+  scale_y_continuous(expand = c(0,0)) +
+  geom_vline(xintercept = 1.5) +
+  ggtitle("Blob Count and Interaction Type for Improved Michel Count Values") +
+  theme_bw() +
+  facet_wrap(vars(`Improved Michel Count`))
+
+ggplot(events %>% filter(Interaction != "DIS"), aes(BlobCount, fill = Interaction)) +
+  geom_histogram(binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,15.5), breaks = 0:15) +
+  scale_y_continuous(expand = c(0,0)) +
+  geom_vline(xintercept = 1.5) +
+  ggtitle("DIS Removed") +
+  theme_bw()
+
+## BlobCount
+
+ggplot(events %>% filter(Interaction == "QE"), 
+       aes(BlobCount, fill = Interaction)) +
+  geom_histogram(binwidth = 1,
+                 aes(y=cumsum(..count..)/sum(..count..))) +
+  scale_x_continuous(expand = c(0,0), breaks = 0:15) +
+  scale_y_continuous(expand = c(0,0), breaks = seq(0,1,0.1)) +
+  geom_vline(xintercept = 1.5) +
+  ggtitle("QE Cumulative") +
+  theme_bw()
+   
+ggplot(events, aes(BlobCount, fill = Interaction)) +
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,15.5), breaks = 0:15) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  geom_vline(xintercept = 1.5) +
+  ggtitle("DIS Included") +
+  theme_bw()
+
+### BlobCount <= 1
+
+ggplot(events %>% filter(BlobCount <= 1), aes(ImprovedMichelCount, fill = Interaction)) +
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,8.5), breaks = 0:8) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  geom_vline(xintercept = 0.5) +
+  ggtitle("DIS Included; BlobCount <= 1") +
+  theme_bw()
+
+ggplot(events %>% filter(BlobCount <= 1), aes(ImprovedMichelCount, fill = Interaction)) +
+  geom_histogram(binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,8.5), breaks = 0:8) +
+  scale_y_continuous(expand = c(0,0)) +
+  geom_vline(xintercept = 0.5) +
+  ggtitle("DIS Included; BlobCount <= 1") +
+  theme_bw()
+
+ggplot(events %>% filter(BlobCount <= 1), aes(ImprovedMichelCount, fill = Interaction)) +
+  geom_histogram(binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,5.5), breaks = 0:5) +
+  scale_y_continuous(expand = c(0,0)) +
+  geom_vline(xintercept = 0.5) +
+  ggtitle("DIS Removed; BlobCount <= 1") +
+  theme_bw()
+
+### ImprovedMichelCount == 0
+
+ggplot(events %>% filter(BlobCount <= 1), aes(ImprovedMichelCount, fill = as.factor(nFSChargedPion))) +
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,3.5), breaks = 0:3) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  geom_vline(xintercept = 0.5) +
+  ggtitle("DIS Included; Blob Count <= 1") +
+  theme_bw()
+
+ggplot(events %>% filter(BlobCount <= 1), aes(ImprovedMichelCount, fill = as.factor(nFSChargedPion))) +
+  geom_histogram(binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.5,3.5), breaks = 0:3) +
+  scale_y_continuous(expand = c(0,0)) +
+  geom_vline(xintercept = 0.5) +
+  ggtitle("DIS Included; Blob Count <= 1") +
+  theme_bw()
+
+
+#events <- events %>% filter(Interaction != "DIS")
+
+p1 <- ggplot(events,
+       aes(x=Interaction, fill = Particle)) +
+  geom_bar() + xlab("Vertex Interaction Type") +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  ggtitle("No Blob or Michel Cuts") +
+  theme_bw()
+
+p2 <- ggplot(events %>% filter(BlobCount <= 1, ImprovedMichelCount == 0),
+       aes(x=Interaction, fill = Particle)) +
+  geom_bar() + xlab("Vertex Interaction Type") +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  ggtitle("Blob Count <= 1; Improved Michel Count == 0") +
+  theme_bw()
+
+p3 <- ggplot(events,
+       aes(x=Interaction, y=..count../sum(..count..), fill = Particle)) +
+  geom_bar(position = 'fill') + xlab("Vertex Interaction Type") +
+  scale_y_continuous(expand = c(0,0)) +
+  ggtitle("No Blob or Michel Cuts") +
+  theme_bw() 
+
+p4 <- ggplot(events %>% filter(BlobCount <= 1, ImprovedMichelCount == 0),
+       aes(x=Interaction, y=..count../sum(..count..), fill = Particle)) +
+  geom_bar(position = 'fill') + xlab("Vertex Interaction Type") +
+  scale_y_continuous(expand = c(0,0)) +
+  ggtitle("Blob Count <= 1; Improved Michel Count == 0") +
+  theme_bw() 
+
+fig <- ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+fig
+#annotate_figure(fig, top = text_grob("", size=14))
+
+
+
+p1 <- ggplot(events,
+       aes(x=Particle, fill = Interaction)) +
+  geom_bar() + xlab("Vertex Interaction Type") +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  ggtitle("No Blob or Michel Cuts") +
+  theme_bw() 
+
+p2 <- ggplot(events %>% filter(BlobCount <= 1, ImprovedMichelCount == 0),
+       aes(x=Particle, fill = Interaction)) +
+  geom_bar() + xlab("Vertex Interaction Type") +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  ggtitle("Blob Count <= 1; Improved Michel Count == 0") +
+  theme_bw() 
+
+p3 <- ggplot(events,
+       aes(x=Particle, y=..count../sum(..count..), fill = Interaction)) +
+  geom_bar(position = 'fill') + xlab("Primary Proton Candidate Truth") +
+  scale_y_continuous(expand = c(0,0)) +
+  ggtitle("No Blob or Michel Cuts") +
+  theme_bw()
+
+p4 <- ggplot(events %>% filter(BlobCount <= 1, ImprovedMichelCount == 0),
+       aes(x=Particle, y=..count../sum(..count..), fill = Interaction)) +
+  geom_bar(position = 'fill') + xlab("Primary Proton Candidate Truth") +
+  scale_y_continuous(expand = c(0,0)) +
+  ggtitle("Blob Count <= 1; Improved Michel Count == 0") +
+  theme_bw()
+
+fig <- ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+fig
+rm(p1,p2,p3,p4,fig)
+```
+
+
+\newpage
+
+# Data Transformation 
+
+## PrimaryProtonScore1
+
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events, aes(x = PrimaryProtonScore1, color = Particle, fill=Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+p2 <- ggplot(events, aes(x = PrimaryProtonScore1, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, aes(x = PrimaryProtonScore1, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scales = "free_y")
+
+p4 <- ggplot(events, aes(x = PrimaryProtonScore1, color = Particle, fill=Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05), position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+
+Modeled as a Beta distribution, transformed as below to "standardize".
+$$\begin{aligned}X' &= \left[\log\left(\frac{1}{X+10^{-5}}\right)\right]^{1/3}\\X'' &= \frac{X'-\hat\mu_{X'}}{\hat\sigma_{X'}}\end{aligned}$$
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events, 
+             aes(x = scale((log(1/(PrimaryProtonScore1 + 0.00001)))^(1/3)), color = Particle, fill=Particle)) +
+  geom_histogram(breaks = seq(-2.6,2.4,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+p2 <- ggplot(events, 
+             aes(x = scale((log(1/(PrimaryProtonScore1 + 0.00001)))^(1/3)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2.6,2.4,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, 
+             aes(x = scale((log(1/(PrimaryProtonScore1 + 0.00001)))^(1/3)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2.6,2.4,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scales = "free_y")
+
+p4 <- ggplot(events, 
+             aes(x = scale((log(1/(PrimaryProtonScore1 + 0.00001)))^(1/3)), color = Particle, fill=Particle)) +
+  geom_histogram(position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+
+## PrimaryProtonTrackVtxGap
+
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+max_gap = 300
+
+p1 <- ggplot(events, aes(x = PrimaryProtonTrackVtxGap, fill = Particle)) +
+  geom_histogram(breaks = seq(0,max_gap,10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+p2 <- ggplot(events, aes(x = PrimaryProtonTrackVtxGap, fill = Particle)) +
+  geom_histogram(breaks = seq(0,max_gap,10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, aes(x = PrimaryProtonTrackVtxGap, fill = Particle)) +
+  geom_histogram(breaks = seq(0,max_gap,10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events, aes(x = PrimaryProtonTrackVtxGap, fill = Particle)) +
+  geom_histogram(breaks = seq(0,max_gap,10),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+Modeled as an Exponential distribution, standardized as below (minus $X'' = f(X')$ part)
+$$X' = \log\left(X+10^{-5}\right)$$
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+# NumClustsPrimaryProtonEnd == 0, Transformed
+p1 <- ggplot(events, 
+             aes(x = scale(log(PrimaryProtonTrackVtxGap + 0.00001)), fill = Particle)) +
+  geom_histogram(breaks = seq(-3.4,3,0.2)) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)))
+
+p2 <- ggplot(events, 
+             aes(x = scale(log(PrimaryProtonTrackVtxGap + 0.00001)), fill = Particle)) +
+  geom_histogram(breaks = seq(-3.4,3,0.2)) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, 
+             aes(x = scale(log(PrimaryProtonTrackVtxGap + 0.00001)), fill = Particle)) +
+  geom_histogram(breaks = seq(-3.4,3,0.2)) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events, 
+             aes(x = scale(log(PrimaryProtonTrackVtxGap + 0.00001)), fill = Particle)) +
+  geom_histogram(breaks = seq(-3.4,3,0.2),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)))
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+
+\newpage
+
+## zvtx
+
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events, aes(x = zvtx, fill = Particle)) +
+  geom_histogram(breaks = seq(5980,8410,162)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+p2 <- ggplot(events, aes(x = zvtx, fill = Particle)) +
+  geom_histogram(breaks = seq(5980,8410,162)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, aes(x = zvtx, fill = Particle)) +
+  geom_histogram(breaks = seq(5980,8410,162)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events, aes(x = zvtx, fill = Particle)) +
+  geom_histogram(breaks = seq(5980,8410,162),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+
+\newpage
+
+# recoil
+
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events, aes(x = recoil, fill = Particle)) +
+  geom_histogram(breaks = seq(0,3,0.2)) +
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,3,0.2)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  xlab("Reconstructed Recoil (GeV)") +
+  theme_bw()
+
+p2 <- ggplot(events, aes(x = recoil, fill = Particle)) +
+  geom_histogram(breaks = seq(0,3,0.2)) +
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,3,0.2)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  xlab("Reconstructed Recoil (GeV)") +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, aes(x = recoil, fill = Particle)) +
+  geom_histogram(breaks = seq(0,3,0.2)) +
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,3,0.2)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  xlab("Reconstructed Recoil (GeV)") +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events, aes(x = recoil, fill = Particle)) +
+  geom_histogram(breaks = seq(0,3,0.2),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,3,0.2)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  xlab("Reconstructed Recoil (GeV)") +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+Modeled as an Exponential distribution, standardized as below (minus $X'' = f(X')$ part)
+$$X' = \log\left(X+10^{-5}\right)$$
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events, 
+             aes(x = scale(log(recoil + 0.00001)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2,2,0.2)) +
+  scale_x_continuous(expand = c(0,0), breaks = seq(-2,2,0.2)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  xlab("scale(log(Reconstructed Recoil (GeV) + 0.00001))") +
+  theme_bw()
+
+p2 <- ggplot(events, 
+             aes(x = scale(log(recoil + 0.00001)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2,2,0.2)) +
+  scale_x_continuous(expand = c(0,0), breaks = seq(-2,2,0.4)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  xlab("scale(log(Reconstructed Recoil (GeV) + 0.00001))") +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, 
+             aes(x = scale(log(recoil + 0.00001)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2,2,0.2)) +
+  scale_x_continuous(expand = c(0,0), breaks = seq(-2,2,0.4)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  xlab("scale(log(Reconstructed Recoil (GeV) + 0.00001))") +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events, 
+             aes(x = scale(log(recoil + 0.00001)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2,2,0.2),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0), breaks = seq(-2,2,0.2)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  xlab("scale(log(Reconstructed Recoil (GeV) + 0.00001))") +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+
+\newpage
+
+
+# PrimaryProtonAngle
+
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events, aes(x = PrimaryProtonAngle, fill = Particle)) +
+  geom_histogram(breaks = seq(0,pi/2,pi/36)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+p2 <- ggplot(events, aes(x = PrimaryProtonAngle, fill = Particle)) +
+  geom_histogram(breaks = seq(0,pi/2,pi/36)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, aes(x = PrimaryProtonAngle, fill = Particle)) +
+  geom_histogram(breaks = seq(0,pi/2,pi/36)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events, aes(x = PrimaryProtonAngle, fill = Particle)) +
+  geom_histogram(breaks = seq(0,pi/2,pi/36),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+
+\newpage
+
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events, 
+             aes(x = scale(sqrt(PrimaryProtonAngle)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2,2,0.2)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+p2 <- ggplot(events, 
+             aes(x = scale(sqrt(PrimaryProtonAngle)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2,2,0.2)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, 
+             aes(x = scale(sqrt(PrimaryProtonAngle)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2,2,0.2)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events, 
+             aes(x = scale(sqrt(PrimaryProtonAngle)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2,2,0.2),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+fig <- ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+\newpage
+
+
+# TotalPrimaryProtonEnergydEdxAndClusters
+
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events, aes(x = TotalPrimaryProtonEnergy, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1200,50)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+p2 <- ggplot(events, aes(x = TotalPrimaryProtonEnergy, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1200,50)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, aes(x = TotalPrimaryProtonEnergy, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1200,50)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events, aes(x = TotalPrimaryProtonEnergy, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1200,50),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+Standardized as below (minus $X'' = f(X')$ part)
+$$X'=X^{1/3}$$
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events, 
+             aes(x = scale((TotalPrimaryProtonEnergy)^(1/3)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2.5,3.5,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+p2 <- ggplot(events, 
+             aes(x = scale((TotalPrimaryProtonEnergy)^(1/3)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2.5,3.5,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, 
+             aes(x = scale((TotalPrimaryProtonEnergy)^(1/3)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2.5,3.5,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events, 
+             aes(x = scale((TotalPrimaryProtonEnergy)^(1/3)), fill = Particle)) +
+  geom_histogram(breaks = seq(-2.5,3.5,0.1),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+
+\newpage
+
+# PrimaryProtonTrackLength/TotalPrimaryProtonEnergydEdxAndClusters; 
+
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events, aes(x = PrimaryProtonTrackLength/TotalPrimaryProtonEnergy, fill = Particle)) +
+  geom_histogram(breaks = seq(0,3.7,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+p2 <- ggplot(events, aes(x = PrimaryProtonTrackLength/TotalPrimaryProtonEnergy, fill = Particle)) +
+  geom_histogram(breaks = seq(0,3.7,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events, aes(x = PrimaryProtonTrackLength/TotalPrimaryProtonEnergy, fill = Particle)) +
+  geom_histogram(breaks = seq(0,3.7,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events, aes(x = PrimaryProtonTrackLength/TotalPrimaryProtonEnergy, fill = Particle)) +
+  geom_histogram(breaks = seq(0,3.7,0.1),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+Rescaled to produce
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events,
+             aes(x = scale(PrimaryProtonTrackLength/TotalPrimaryProtonEnergy), fill = Particle)) +
+  geom_histogram(breaks = seq(-3,3,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+p2 <- ggplot(events,
+             aes(x = scale(PrimaryProtonTrackLength/TotalPrimaryProtonEnergy), fill = Particle)) +
+  geom_histogram(breaks = seq(-3,3,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events,
+             aes(x = scale(PrimaryProtonTrackLength/TotalPrimaryProtonEnergy), fill = Particle)) +
+  geom_histogram(breaks = seq(-3,3,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events,
+             aes(x = scale(PrimaryProtonTrackLength/TotalPrimaryProtonEnergy), fill = Particle)) +
+  geom_histogram(breaks = seq(-3,3,0.1),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+
+# PrimaryProtonFractionEnergyInCone
+
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events %>% filter(PrimaryProtonFractionEnergyInCone > 0), 
+             aes(x = PrimaryProtonFractionEnergyInCone, fill = Particle)) +
+  geom_histogram(breaks = seq(0,0.2,0.01)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+p2 <- ggplot(events %>% filter(PrimaryProtonFractionEnergyInCone > 0),
+             aes(x = PrimaryProtonFractionEnergyInCone, fill = Particle)) +
+  geom_histogram(breaks = seq(0,0.2,0.01)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events %>% filter(PrimaryProtonFractionEnergyInCone > 0),
+             aes(x = PrimaryProtonFractionEnergyInCone, fill = Particle)) +
+  geom_histogram(breaks = seq(0,0.2,0.01)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events %>% filter(PrimaryProtonFractionEnergyInCone > 0), 
+             aes(x = PrimaryProtonFractionEnergyInCone, fill = Particle)) +
+  geom_histogram(breaks = seq(0,0.2,0.01),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1, p2, p3, p4)
+```
+Rescaled to produce
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events %>% filter(PrimaryProtonFractionEnergyInCone > 0),
+             aes(x = scale(log(PrimaryProtonFractionEnergyInCone)), fill = Particle)) +
+  geom_histogram(breaks = seq(-3,3,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+p2 <- ggplot(events %>% filter(PrimaryProtonFractionEnergyInCone > 0),
+             aes(x = scale(log(PrimaryProtonFractionEnergyInCone)), fill = Particle)) +
+  geom_histogram(breaks = seq(-3,3,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events %>% filter(PrimaryProtonFractionEnergyInCone > 0),
+             aes(x = scale(log(PrimaryProtonFractionEnergyInCone)), fill = Particle)) +
+  geom_histogram(breaks = seq(-3,3,0.1)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scale = "free_y")
+
+p4 <- ggplot(events %>% filter(PrimaryProtonFractionEnergyInCone > 0),
+             aes(x = scale(log(PrimaryProtonFractionEnergyInCone)), fill = Particle)) +
+  geom_histogram(breaks = seq(-3,3,0.1),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1, p2, p3, p4)
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+events <- events %>% mutate(id = 1:nrow(events))
+stdvar <- events %>% select(id,Entry,EventID,Arachne,Particle)
+
+stdvar$ProtonScore1 <- scale((log(1/(events$PrimaryProtonScore1 + 0.00001)))^(1/3))
+stdvar$PVGap <- scale(log(events$PrimaryProtonTrackVtxGap + 0.00001))
+stdvar$zvtx <- scale(events$zvtx)
+stdvar$recoil <- scale(log(events$recoil + 0.00001))
+stdvar$TotalE <- scale((events$TotalPrimaryProtonEnergy)^(1/3))
+stdvar$RatioLE <- scale(events$PrimaryProtonTrackLength/events$TotalPrimaryProtonEnergy)
+stdvar$Angle <- scale(sqrt(events$PrimaryProtonAngle))
+stdvar$Multiplicity <- events$Multiplicity
+
+```
+
+
+```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=12}
+DEBUG = F
+if(DEBUG) {
+ggplot(stdvar, aes(TotalE, recoil, color = Particle)) +
+    geom_point(pch = 21) +
+    scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,4)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,2.5))
+  ggplot(stdvar, aes(zvtx, recoil, color = Particle)) +
+    geom_point(pch = 21) +
+    scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2,2)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,2.5))
+  ggplot(stdvar, aes(PVGap, recoil, color = Particle)) +
+    geom_point(pch = 21) +
+    scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-4,3)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,2.5))
+  ggplot(stdvar, aes(ProtonScore1, recoil, color = Particle)) +
+    geom_point(pch = 21) +
+    scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.6,2.4)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,2.5))
+}
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=12}
+p1 <- ggplot(stdvar, aes(zvtx, recoil)) +
+  geom_bin2d() +
+  theme_bw() +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2,2)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,2.5)) +
+  facet_wrap(vars(Particle)) +
+  xlab("scale(zvtx)") +
+  ylab("scale(log(recoil + 10^-5))")
+p2 <- ggplot(stdvar, aes(PVGap, recoil)) +
+  geom_bin2d() +
+  theme_bw() +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-4,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,2.5)) +
+  facet_wrap(vars(Particle)) +
+  xlab("scale(log(PrimaryProtonTrackVtxGap + 10^-5))") +
+  ylab("scale(log(recoil + 10^-5))")
+ggarrange(p1, p2, ncol=2, nrow=1)
+rm(p1,p2)
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=12}
+p1 <- ggplot(stdvar, aes(ProtonScore1, recoil)) +
+  geom_bin2d() +
+  theme_bw() +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.6,2.4)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,2.5)) +
+  facet_wrap(vars(Particle)) +
+  xlab("scale(log(PrimaryProtonScore1 + 10^-5)^(1/3))") +
+  ylab("scale(log(recoil + 10^-5))")
+p2 <- ggplot(stdvar, aes(TotalE, recoil)) +
+  geom_bin2d() +
+  theme_bw() +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,4)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,2.5)) +
+  facet_wrap(vars(Particle)) +
+  xlab("scale(TotalPrimaryProtonEnergy^1/3)") +
+  ylab("scale(log(recoil + 10^-5))")
+
+ggarrange(p1, p2, ncol=2, nrow=1)
+rm(p1,p2)
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=12}
+p1 <- ggplot(stdvar, aes(RatioLE, recoil)) +
+  geom_bin2d() +
+  theme_bw() +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,2.5)) +
+  facet_wrap(vars(Particle)) +
+  xlab("scale(log(PrimaryProtonScore1 + 10^-5)^(1/3))") +
+  ylab("scale(log(recoil + 10^-5))")
+p2 <- ggplot(stdvar, aes(Angle, recoil)) +
+  geom_bin2d() +
+  theme_bw() +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2,2)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,2.5)) +
+  facet_wrap(vars(Particle)) +
+  xlab("scale((Primary Proton Angle (Radians))^1/2)") +
+  ylab("scale(log(recoil + 10^-5))")
+
+ggarrange(p1, p2, ncol=2, nrow=1)
+rm(p1,p2)
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=12}
+# RatioLE x TotalE
+p1 <- ggplot(stdvar, aes(RatioLE, TotalE)) +
+  geom_bin2d() +
+  theme_bw() +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-3,3)) +
+  facet_wrap(vars(Particle)) +
+  xlab("scale(PrimaryProtonTrackLength/TotalPrimaryProtonEnergy)") +
+  ylab("scale((TotalPrimaryProtonEnergy)^(1/3))")
+p2 <- ggplot(stdvar, aes(RatioLE, Angle)) +
+  geom_bin2d() +
+  theme_bw() +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2,2)) +
+  facet_wrap(vars(Particle)) +
+  ggtitle("NumClustsPrimaryProtonEnd > 0") +
+  xlab("scale((Primary Proton Angle (Radians))^1/2)") +
+  ylab("scale((TotalPrimaryProtonEnergy)^(1/3))")
+ggarrange(p1, p2, ncol=2, nrow=1)
+rm(p1,p2)
+
+
+```
+
+```{r, message = F, warning = F}
+if(DEBUG){
+  ggplot(stdvar, aes(TotalE, PVGap, color = Particle)) +
+    geom_point(pch = 21) +
+    scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,4)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-4,3))
+  ggplot(stdvar, aes(zvtx, PVGap, color = Particle)) +
+    geom_point(pch = 21) +
+    scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2,2)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-4,3))
+  ggplot(stdvar, aes(ProtonScore1, PVGap, color = Particle)) +
+    geom_point(pch = 21) +
+    scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.6,2.4)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-4,3))
+  ggplot(stdvar, aes(TrackLen, PVGap, color = Particle)) +
+    geom_point(pch = 21) +
+    scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.6,3.5)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-4,3))
+  
+  ggplot(stdvar, aes(TotalE, PVGap)) +
+    geom_bin2d() +
+    theme_bw() +
+    scale_fill_gradient(low = "lightgray", high = "black") +
+    scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.5,4)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-4,3))+
+    facet_wrap(vars(Particle))
+  ggplot(stdvar, aes(zvtx, PVGap)) +
+    geom_bin2d() +
+    theme_bw() +
+    scale_fill_gradient(low = "lightgray", high = "black") +
+    scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2,2)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-4,3)) +
+    facet_wrap(vars(Particle)) 
+  ggplot(stdvar, aes(ProtonScore1, PVGap)) +
+    geom_bin2d() +
+    theme_bw() +
+    scale_fill_gradient(low = "lightgray", high = "black") +
+    scale_x_continuous(expand = expansion(mult = c(0, .05)), limits = c(-2.6,2.4)) +
+    scale_y_continuous(expand = expansion(mult = c(0, .05)), limits = c(-4,3)) +
+    facet_wrap(vars(Particle)) 
+}
+
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=8, fig.width=12}
+
+stdvar <- stdvar %>% mutate("IsProton" = if_else(Particle=="Proton",1,0))
+stdvar <- na.omit(stdvar)
+index <- sample(1:nrow(stdvar),ceiling(nrow(stdvar)*0.8))
+
+library(mgcv)
+gam_0 <- gam(IsProton ~ 
+               s(ProtonScore1,bs = 'cr') + 
+               s(PVGap,bs = 'cr') + 
+               s(zvtx,bs = 'cr') +
+               s(recoil,bs = 'cr') + 
+               s(TotalE,bs = 'cr') + 
+               s(Angle,bs = 'cr') +
+               Multiplicity,
+             data = stdvar[index,],
+             family = binomial(link="logit"))
+pred_gam <- (predict(gam_0, newdata = stdvar[-index,], type="response") > 0.5)*1
+stdvar$pred_gam <- predict(gam_0, newdata = stdvar, type="response")
+cm_gam <- as.matrix(table(Actual=stdvar[-index,]$IsProton, Predicted=pred_gam > 0.5))
+rm(gam_0)
+
+p1 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(PrimaryProtonScore1, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p2 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(PrimaryProtonScore1, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,1,0.05),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p3 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Particle == "Proton") %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(PrimaryProtonScore1, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p4 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Particle == "Proton") %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(PrimaryProtonScore1, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,1,0.05),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p5 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Prediction == 1) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(PrimaryProtonScore1, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p6 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Prediction == 1) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(PrimaryProtonScore1, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,1,0.05),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, p5, p6, ncol=2, nrow=3, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4,p5,p6)
+
+p1 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(EnuCCQE, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,15,1)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p2 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(EnuCCQE, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,15,1),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p3 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Particle == "Proton") %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(EnuCCQE, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,15,1)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p4 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Particle == "Proton") %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(EnuCCQE, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,15,1),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p5 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Prediction == 1) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(EnuCCQE, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,15,1)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p6 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Prediction == 1) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(EnuCCQE, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,15,1),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, p5, p6, ncol=2, nrow=3, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4,p5,p6)
+
+p1 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(log(Q2QE+0.001), fill = Comparison)) +
+  geom_histogram(breaks = seq(-5,3,0.5)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p2 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(log(Q2QE+0.001), fill = Comparison)) +
+  geom_histogram(breaks = seq(-5,3,0.5),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p3 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Particle == "Proton") %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(log(Q2QE+0.001), fill = Comparison)) +
+  geom_histogram(breaks = seq(-5,3,0.5)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p4 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Particle == "Proton") %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(log(Q2QE+0.001), fill = Comparison)) +
+  geom_histogram(breaks = seq(-5,3,0.5),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p5 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Prediction == 1) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(log(Q2QE+0.001), fill = Comparison)) +
+  geom_histogram(breaks = seq(-5,3,0.5)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p6 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Prediction == 1) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(log(Q2QE+0.001), fill = Comparison)) +
+  geom_histogram(breaks = seq(-5,3,0.5),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, p5, p6, ncol=2, nrow=3, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4,p5,p6)
+
+p1 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(ptmu, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,2,0.1)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p2 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(ptmu, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,2,0.1),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p3 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Particle == "Proton") %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(ptmu, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,2,0.1)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p4 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Particle == "Proton") %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(ptmu, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,2,0.1),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p5 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Prediction == 1) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(ptmu, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,2,0.1)) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+p6 <- events[stdvar[-index,]$id,] %>% mutate(Prediction = (pred_gam > 0.5)*1) %>%
+  filter(!is.na(Prediction)) %>% filter(Prediction == 1) %>%
+  mutate(Comparison = paste0("t",(Particle == "Proton")*1,"_p",Prediction*1)) %>%
+  mutate(Comparison = factor(Comparison, levels = c("t0_p0","t0_p1","t1_p0","t1_p1"))) %>%
+  ggplot(aes(ptmu, fill = Comparison)) +
+  geom_histogram(breaks = seq(0,2,0.1),position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_fill_manual(values = c("t1_p1"="#0085ad","t0_p0"="#af272f","t0_p1"="#4c8c2b","t1_p0"="#eaaa00")) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, p5, p6, ncol=2, nrow=3, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4,p5,p6)
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=12}
+library(randomForest)
+
+stdvar$Particle <- as.factor(stdvar$Particle)
+events$Particle <- as.factor(events$Particle)
+
+rf1 <- randomForest(Particle ~ ., data = stdvar[index,] %>% select(Particle,ProtonScore1,PVGap,zvtx,recoil,TotalE,Angle,Multiplicity), ntree=20)
+
+confusionMatrix(predict(rf1, stdvar[index,] %>% select(Particle,ProtonScore1,PVGap,zvtx,recoil,TotalE,Angle,Multiplicity)), 
+                        stdvar[index,] %>% pull(Particle))
+confusionMatrix(predict(rf1, stdvar[-index,] %>% select(Particle,ProtonScore1,PVGap,zvtx,recoil,TotalE,Angle,Multiplicity)), 
+                        stdvar[-index,] %>% pull(Particle))
+
+varImpPlot(rf1, sort = T, n.var = 7, main = "Variable Importance")
+
+stdvar$pred_rf <- predict(rf1,stdvar %>% select(IsProton,ProtonScore1,PVGap,zvtx,recoil,TotalE,Angle,Multiplicity))
+stdvar <- stdvar %>% mutate(pred_rf = if_else(pred_rf == "Proton", 1, 0))
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=6}
+library(gbm)
+
+boost1 <- gbm(IsProton ~ ., data = stdvar[index,] %>% select(IsProton,ProtonScore1,PVGap,zvtx,recoil,TotalE,Angle,Multiplicity),
+              distribution = "gaussian", n.trees = 1000, shrinkage = 0.01, interaction.depth = 4)
+
+sum_boost1 <- summary(boost1)
+sum_boost1
+
+plot(boost1,i="ProtonScore1")
+plot(boost1,i="recoil")
+plot(boost1,i="TotalE")
+plot(boost1,i="PVGap")
+
+
+ntrees = seq(from=100 ,to=5000, by=100)
+predmatrix1<-predict(boost1,stdvar[-index,] %>% select(IsProton,ProtonScore1,PVGap,zvtx,recoil,TotalE,Angle,Multiplicity),n.trees = ntrees)
+
+test.error<-with(stdvar[-index,] %>% select(IsProton,ProtonScore1,PVGap,zvtx,recoil,TotalE,Angle,Multiplicity),apply((predmatrix1-IsProton)^2,2,mean))
+
+plot(ntrees , test.error , pch=19,col="blue",xlab="Number of Trees",ylab="Test Error", main = "Perfomance of Boosting on Test Set")
+
+stdvar$pred_bdt <- round(predict(boost1,stdvar %>% select(IsProton,ProtonScore1,PVGap,zvtx,recoil,TotalE,Angle,Multiplicity)))
+
+stdvar$Q2QE <- events$Q2QE[stdvar$id]
+stdvar$PrimaryVtxTrackGap <- events$PrimaryProtonTrackVtxGap[length(c(stdvar$id))]
+stdvar$PrimaryProtonScore1 <- events$PrimaryProtonScore1[length(c(stdvar$id))]
+
+stdvar <- stdvar %>% mutate(pred_mat = case_when((Q2QE <= 0.2 & PrimaryProtonScore1 >= 0.2) ~ 1,
+                                                 (Q2QE <= 0.2 & PrimaryProtonScore1 < 0.2) ~ 0,
+                                                 (Q2QE <= 0.6 & Q2QE > 0.2 & PrimaryProtonScore1 >= 0.1) ~ 1,
+                                                 (Q2QE <= 0.6 & Q2QE > 0.2 & PrimaryProtonScore1 < 0.1) ~ 0,
+                                                 (Q2QE > 0.6 & PrimaryProtonScore1 >= 0) ~ 1,
+                                                 (Q2QE > 0.6 & PrimaryProtonScore1 < 0) ~ 0))
+
+stdvar[-index,] %>% filter(IsProton == 1) %>% pull(pred_mat)
+```
+
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, eval = FALSE}
+debug = FALSE
+events.R <- events %>% 
+  mutate(NumClusters = NumClustsPrimaryProtonEnd,
+         FractionEnergyInCone = PrimaryProtonFractionEnergyInCone,
+         ProtonScore1 = PrimaryProtonScore1,
+         TfromdEdx = PrimaryProtonTfromdEdx,
+         TotalE = TotalPrimaryProtonEnergydEdxAndClusters,
+         TrackLength = PrimaryProtonTrackLength,
+         Angle = PrimaryProtonAngle*(360/(2*pi)),
+         TrueKE = PrimaryProtonTrueKE,
+         PDG = PrimaryProtonCandidatePDG,
+         logTrackVtxGap = log(PrimaryProtonTrackVtxGap+0.00001),
+         NumCandidates = NumberOfProtonCandidates) %>%
+  select(NumClusters,BlobCount,ImprovedMichelCount,Multiplicity,NumCandidates,FractionEnergyInCone,ProtonScore1,TfromdEdx,TrackLength,Angle,TrackVtxGap,recoil,
+         TotalE,Q2QE,TrueKE,PDG,EventID,Arachne) %>%
+  filter(TfromdEdx > 0) %>%
+  mutate(Particle = case_when(PDG == 2212 ~ "Proton",
+                              (PDG == 211 | PDG == -211) ~ "Pion +/-",
+                              PDG == 111 ~ "Pion 0",
+                              (PDG != 2212 & PDG != 211 & PDG != -211 & PDG != 111) ~ "Other"))
+cbind(colnames(events.R))
+```
+
+```{r, echo = F, message = F, warning = F, eval = FALSE}
+if(debug){
+ggpairs(events.R %>% filter(Multiplicity == 2, Q2QE <= 0.2), columns = c(2,3,7,6,9,10,11), aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.5)),
+        title = "Multiplicity == 2, Q2QE <= 0.2")
+
+ggpairs(events.R %>% filter(Multiplicity == 2, Q2QE > 0.2, Q2QE <= 0.6), columns = c(2,3,7,6,9,10,11), aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.5)),
+        title = "Multiplicity == 2, 0.2 < Q2QE <= 0.6")
+
+ggpairs(events.R %>% filter(Multiplicity == 2, Q2QE > 0.6), columns = c(2,3,7,6,9,10,11), aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.5)),
+        title = "Multiplicity == 2, Q2QE > 0.6")
+
+events.R %>% filter(Multiplicity == 2, Q2QE <= 0.2, ProtonScore1 >= 0.2) %>%
+  count(Particle) %>%
+  mutate("%" = signif(n/sum(n)*100,4))
+
+events.R %>% filter(Multiplicity == 2, Q2QE <= 0.2, ProtonScore1 < 0.2) %>%
+  count(Particle) %>%
+  mutate("%" = signif(n/sum(n)*100,4))
+
+events.R %>% filter(Multiplicity == 2, Q2QE > 0.2, Q2QE <= 0.6, ProtonScore1 >= 0.1) %>%
+  count(Particle) %>%
+  mutate("%" = signif(n/sum(n)*100,4))
+
+events.R %>% filter(Multiplicity == 2, Q2QE > 0.6, ProtonScore1 >= 0) %>%
+  count(Particle) %>%
+  mutate("%" = signif(n/sum(n)*100,4))
+}
+```
+
+```{r, echo = F, message = F, warning = F, eval = FALSE}
+if(debug){
+ggpairs(events.R %>% filter(Multiplicity > 2, Q2QE <= 0.2), columns = c(2,3,7,6,9,10,11), aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.5)),
+        title = "Multiplicity > 2, Q2QE <= 0.2")
+
+ggpairs(events.R %>% filter(Multiplicity > 2, Q2QE > 0.2, Q2QE <= 0.6), columns = c(2,3,7,6,9,10,11), aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.5)),
+        title = "Multiplicity > 2, 0.2 < Q2QE <= 0.6")
+
+ggpairs(events.R %>% filter(Multiplicity > 2, Q2QE > 0.6), columns = c(2,3,7,6,9,10,11), aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.5)),
+        title = "Multiplicity > 2, Q2QE > 0.6")
+}
+```
+
+```{r, echo = F, message = F, warning = F, eval = FALSE}
+if(debug){
+ggpairs(events.R %>% filter(ProtonScore1 >= 0.4, FractionEnergyInCone >= 0.5, TfromdEdx <= 750), 
+        columns = 1:10, aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.1)),
+        title = "ProtonScore1 >= 0.4, FractionEnergyInCone >= 0.5, TfromdEdx <= 750")
+
+#ggpairs(events.R %>% filter(ProtonScore1 >= 0.4, FractionEnergyInCone >= 0.5, TfromdEdx > 750), 
+#        columns = 1:8, aes(color = Particle, fill = Particle, alpha = 0.25),
+#        diag = list(continuous = wrap("barDiag")),
+#        upper = list(continuous = wrap("cor", size = 2.5)),
+#        lower = list(continuous = wrap("points", shape = 21, size = 0.1)),
+#        title = "ProtonScore1 >= 0.4, FractionEnergyInCone >= 0.5, TfromdEdx > 750")
+
+ggpairs(events.R %>% filter(ProtonScore1 >= 0.4, FractionEnergyInCone < 0.5, TfromdEdx <= 750, Angle > 90), 
+        columns = 1:8, aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.1)),
+        title = "ProtonScore1 >= 0.4, FractionEnergyInCone < 0.5, TfromdEdx <= 750, Angle > 90")
+
+if(debug) {
+ggpairs(events.R %>% filter(ProtonScore1 >= 0.4, FractionEnergyInCone < 0.5, TfromdEdx <= 750, Angle <= 90, 
+                            NumClusters > 0, recoil <= 2), 
+        columns = 1:8, aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.1)),
+        title = "ProtonScore1>=0.4, FractionEnergyInCone<0.5, TfromdEdx<=750, Angle<=90, NumClusters>0, recoil<=2")
+
+ggpairs(events.R %>% filter(ProtonScore1 >= 0.4, FractionEnergyInCone < 0.5, TfromdEdx <= 750, Angle <= 90, 
+                            NumClusters > 0, recoil > 2), 
+        columns = 1:8, aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.1)),
+        title = "ProtonScore1>=0.4, FractionEnergyInCone<0.5, TfromdEdx<=750, Angle<=90, NumClusters>0, recoil>2")
+
+ggpairs(events.R %>% filter(ProtonScore1 >= 0.4, FractionEnergyInCone < 0.5, TfromdEdx <= 750, Angle <= 90,
+                            NumClusters == 0), 
+        columns = 1:8, aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.1)),
+        title = "ProtonScore1>=0.4, FractionEnergyInCone<0.5, TfromdEdx<=750, Angle<=90, NumClusters==0")
+
+        
+
+ggpairs(events.R %>% filter(ProtonScore1 >= 0.4, FractionEnergyInCone < 0.5, TfromdEdx > 750), columns = 1:8, aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.1)),
+        title = "ProtonScore1 >= 0.4, FractionEnergyInCone < 0.5, TfromdEdx > 750")
+
+ggpairs(events.R %>% filter(ProtonScore1 < 0.4, FractionEnergyInCone >= 0.5, TfromdEdx <= 750), 
+        columns = 1:8, aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.1)),
+        title = "ProtonScore1 < 0.4, FractionEnergyInCone >= 0.5, TfromdEdx <= 750")
+
+ggpairs(events.R %>% filter(ProtonScore1 < 0.4, FractionEnergyInCone >= 0.5, TfromdEdx > 750), 
+        columns = 1:8, aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.1)),
+        title = "ProtonScore1 < 0.4, FractionEnergyInCone >= 0.5, TfromdEdx > 750")
+
+ggpairs(events.R %>% filter(ProtonScore1 < 0.4, FractionEnergyInCone < 0.5, TfromdEdx <= 750), 
+        columns = 1:8, aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.1)),
+        title = "ProtonScore1 < 0.4, FractionEnergyInCone < 0.5, TfromdEdx <= 750")
+
+ggpairs(events.R %>% filter(ProtonScore1 < 0.4, FractionEnergyInCone < 0.5, TfromdEdx > 750), 
+        columns = 1:8, aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("points", shape = 21, size = 0.1)),
+        title = "ProtonScore1 < 0.4, FractionEnergyInCone < 0.5, TfromdEdx > 750")
+
+######################
+
+ggpairs(events.R %>% filter(NumClusters > 0), columns = 1:8, 
+        aes(color = Particle, fill = Particle, alpha = 0.25),
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("density")),
+        title = "NumClusters > 0")
+
+ggpairs(events.R %>% filter(NumClusters > 0, Particle == "Pion 0"), columns = 1:8,
+        diag = list(continuous = wrap("barDiag")),
+        upper = list(continuous = wrap("cor", size = 2.5)),
+        lower = list(continuous = wrap("density")),
+        title = "NumClusters > 0, Particle == 'Pion 0'")
+}
+}
+```
+
+```{r, echo = F, eval = FALSE}
+events.R.eigen <- eigen(cor(stdvar[index,] %>% select(ProtonScore1,PVGap,zvtx,recoil,TotalE,Angle,Multiplicity)))
+events.R.1.eigen <- eigen(cor(stdvar[index,] %>% filter(IsProton == 1) %>% 
+                                 select(ProtonScore1,PVGap,zvtx,recoil,TotalE,Angle,Multiplicity)))
+events.R.0.eigen <- eigen(cor(stdvar[index,] %>% filter(IsProton == 0) %>% 
+                                 select(ProtonScore1,PVGap,zvtx,recoil,TotalE,Angle,Multiplicity)))
+vars <- c("ProtonScore1","PVGap","zvtx","recoil","TotalE","Angle","Multiplicity")
+
+events.pcs <- tibble("Principle Component" = c(rep(1:4,each=nrow(events.R.eigen$vectors)),
+                                               rep(1:4,each=nrow(events.R.1.eigen$vectors)),
+                                               rep(1:4,each=nrow(events.R.0.eigen$vectors))),
+                     Variable = c(rep(1:nrow(events.R.eigen$vectors),2),
+                                  rep(1:nrow(events.R.1.eigen$vectors),2),
+                                  rep(1:nrow(events.R.0.eigen$vectors),2)),
+                     Loading = c(c(events.R.eigen$vectors[,1:4]),
+                                 c(events.R.1.eigen$vectors[,1:4]),
+                                 c(events.R.0.eigen$vectors[,1:4])),
+                     Particle = c(rep("All",2*nrow(events.R.pr.eigen$vectors)),
+                                  rep("Proton",2*nrow(events.R.pr.eigen$vectors)),
+                                  rep("Not Proton",2*nrow(events.R.pc.eigen$vectors))))
+
+ggplot(events.pcs, aes(x = Variable, y = Loading, color = Particle, fill = Particle)) +
+  theme_bw() + geom_point(pch = 21, position = position_dodge(width = 0.9)) + 
+  geom_hline(yintercept = 0) + 
+  geom_bar(stat = "identity", width = 0.1, position = position_dodge(width = 0.9)) + 
+  geom_vline(xintercept = c(seq(1.5,6.5,1))) +
+  scale_x_continuous(breaks = 1:nrow(events.R.pr.eigen$vectors), limits = c(0.5,7.5), expand = c(0,0),
+                     labels = vars) +
+  scale_y_continuous(breaks = seq(-1,1,0.25)) +
+  theme(axis.text.x = element_text(angle = -30, size = 8, hjust = 0, vjust = 0.75)) +
+  scale_color_manual(values = c("All" = "#000000",
+                                "Proton" = "#0085ad",
+                                "Pion +/-" = "#af272f",
+                                "Pion 0" = "#4c8c2b",
+                                "Other" = "#eaaa00")) +
+  scale_fill_manual(values = c("All" = alpha("#000000",0.3),
+                               "Proton" = alpha("#0085ad",0.3),
+                               "Pion +/-" = alpha("#af272f",0.3),
+                               "Pion 0" = alpha("#4c8c2b",0.3),
+                               "Other" = alpha("#eaaa00",0.3))) +
+  facet_wrap(vars(`Principle Component`)) + labs(title = "Principle Component Loadings")
+```
+```{r, echo = F, eval = F}
+events.R.scree <- tibble(Variance = c(events.R.eigen$values,
+                                      events.R.pr.eigen$values,
+                                      events.R.pc.eigen$values,
+                                      events.R.pn.eigen$values,
+                                      events.R.ot.eigen$values),
+                         Component = c(1:length(events.R.eigen$values),
+                                       1:length(events.R.pr.eigen$values),
+                                       1:length(events.R.pc.eigen$values),
+                                       1:length(events.R.pn.eigen$values),
+                                       1:length(events.R.ot.eigen$values)),
+                         Particle = c(rep("All",nrow(events.R.pr.eigen$vectors)),
+                                      rep("Proton",nrow(events.R.pr.eigen$vectors)),
+                                      rep("Pion +/-",nrow(events.R.pc.eigen$vectors)),
+                                      rep("Pion 0",nrow(events.R.pn.eigen$vectors)),
+                                      rep("Other",nrow(events.R.ot.eigen$vectors))))
+
+ggplot(events.R.scree, aes(x = Component, y = Variance, color = Particle, fill = Particle)) +
+  geom_point(pch = 21) + geom_line() + theme_bw() + labs(title = "Scree Plot") +
+  scale_color_manual(values = c("All" = "#000000",
+                                "Proton" = "#0085ad",
+                                "Pion +/-" = "#af272f",
+                                "Pion 0" = "#4c8c2b",
+                                "Other" = "#eaaa00")) +
+  scale_fill_manual(values = c("All" = alpha("#000000",0.3),
+                               "Proton" = alpha("#0085ad",0.3),
+                               "Pion +/-" = alpha("#af272f",0.3),
+                               "Pion 0" = alpha("#4c8c2b",0.3),
+                               "Other" = alpha("#eaaa00",0.3))) +
+  scale_x_continuous(breaks = 1:nrow(events.R.pr.eigen$vectors))
+```
+```{r, echo = F, eval = F}
+if(debug){
+events.R.cve <- tibble(Component = c(1:length(events.R.eigen$values),
+                                     1:length(events.R.pr.eigen$values),
+                                     1:length(events.R.pc.eigen$values),
+                                     1:length(events.R.pn.eigen$values),
+                                     1:length(events.R.ot.eigen$values)),
+                       "Cumulative Variance Explained" = c(cumsum(events.R.eigen$values)/sum(events.R.eigen$values),
+                                                           cumsum(events.R.pr.eigen$values)/sum(events.R.pr.eigen$values),
+                                                           cumsum(events.R.pc.eigen$values)/sum(events.R.pc.eigen$values),
+                                                           cumsum(events.R.pn.eigen$values)/sum(events.R.pn.eigen$values),
+                                                           cumsum(events.R.ot.eigen$values)/sum(events.R.ot.eigen$values)),
+                       Particle = c(rep("All",nrow(events.R.pr.eigen$vectors)),
+                                    rep("Proton",nrow(events.R.pr.eigen$vectors)),
+                                    rep("Pion +/-",nrow(events.R.pc.eigen$vectors)),
+                                    rep("Pion 0",nrow(events.R.pn.eigen$vectors)),
+                                    rep("Other",nrow(events.R.ot.eigen$vectors))))
+
+ggplot(events.R.cve, aes(x = Component, y = `Cumulative Variance Explained`, color = Particle, fill = Particle)) +
+  geom_point(pch = 21) + geom_line() + theme_bw() + labs(title = "Cumulative Variance") +
+  scale_color_manual(values = c("All" = "#000000",
+                                "Proton" = "#0085ad",
+                                "Pion +/-" = "#af272f",
+                                "Pion 0" = "#4c8c2b",
+                                "Other" = "#eaaa00")) +
+  scale_fill_manual(values = c("All" = alpha("#000000",0.3),
+                               "Proton" = alpha("#0085ad",0.3),
+                               "Pion +/-" = alpha("#af272f",0.3),
+                               "Pion 0" = alpha("#4c8c2b",0.3),
+                               "Other" = alpha("#eaaa00",0.3))) +
+  scale_x_continuous(breaks = 1:nrow(events.R.pr.eigen$vectors))
+}
+gaps <- events.R %>% mutate(IsProton = if_else(Particle=="Proton",1,0)) %>% 
+  select(TrackVtxGap,IsProton) %>%
+  filter(TrackVtxGap <= 100)
+ggplot(gaps, aes(TrackVtxGap,fill=as.factor(IsProton))) +
+  geom_histogram()
+```
+```{r, echo = F, eval = F}
+list1 <- c("NumClusters", 
+           "ProtonScore1", 
+           "TrackLength", 
+           "TfromdEdx", 
+           "TotalE", 
+           "recoil")
+list2 <- c("NumClusters", 
+           "PrimaryProtonScore", 
+           "TrackLength", 
+           "TfromdEdx", 
+           "TotalE", 
+           "recoil")
+list3 <- c("X1", 
+           "X2", 
+           "X3", 
+           "X4",
+           "X5", 
+           "X6", 
+           "X7", 
+           "X8",
+           "X9")
+list4 <- c("NumClusters", 
+           "ProtonScore1", 
+           "TrackLength", 
+           "recoil")
+
+varlist <- list3
+
+events.R <- events.R %>%
+  mutate(X1 = scale(NumClusters),
+         X2 = scale(ProtonScore1),
+         X3 = scale(recoil),
+         X4 = scale(FractionEnergyInCone),
+         X5 = scale(Angle),
+         X6 = scale(TrackLength),
+         X7 = scale(TfromdEdx),
+         X8 = scale(TrackVtxGap))
+
+events.R <- events.R %>%
+  mutate(ratioLengthTotalE = TrackLength/TotalE,
+         ratioLengthTdEdX = TrackLength/TfromdEdx)
+
+events.R <- events.R %>%
+  mutate(X9 = scale(ratioLengthTotalE)) %>%
+  filter(TrackVtxGap <= 500)
+
+kable(tibble(Label = c("X1","X2","X3","X4","X5","X6","X7","X8","X9"),
+             "Scaled Variable" = c("NumClusters","ProtonScore1","recoil",
+                                   "FractionEnergyInCone","Angle",
+                                   "TfromdEdx","TrackLength",
+                                   "TrackVtxGap","ratioLengthTotalE")), 
+      booktabs = T) %>%
+  kable_styling(bootstrap_options = c("striped"))
+
+```
+
+```{r, echo = F, warning = F, message = F}
+varlist <- c("ProtonScore1","PVGap","zvtx","recoil","TotalE","Angle","Multiplicity")
+events0 <- stdvar[index,] %>%
+  filter(IsProton == 0) %>%
+  select(varlist)
+events1 <- stdvar[index,] %>%
+  filter(IsProton == 1) %>%
+  select(varlist)
+
+n0 <- nrow(events0)
+n1 <- nrow(events1)
+
+events0.cov <- cov(events0)
+events1.cov <- cov(events1)
+
+events0.means <- apply(events0, 2, mean)
+events1.means <- apply(events1, 2, mean)
+
+events.Sp <- ((n0-1)*events0.cov + (n1-1)*events1.cov)/(n0+n1-2)
+events.S <- cov(stdvar[index,] %>% select(varlist))
+
+aT <- t(events0.means - events1.means) %*% solve(events.Sp)
+aT <- aT/sqrt(aT %*% t(aT))[1]
+
+kable(t(signif(aT,4)), booktabs = T) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  add_header_above(c("Linear Combination Components" = 2))
+```
+```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=6}
+# Get transformations
+events0.y <- aT %*% t(events0)
+events1.y <- aT %*% t(events1)
+divider <- (aT %*% as.matrix(events0.means) + aT %*% as.matrix(events1.means))/2
+
+stdvar$lda_pred <- t((aT %*% t(stdvar %>% select(varlist))) < divider[1])*1
+#events.R$ld <- t(aT %*% t(stdvar %>% select(varlist)))
+
+events.plotter <- tibble("Particle Truth" = c(rep("Not Proton",n0),rep("Proton",n1)),
+                         "Fisher Discriminant" = c(events0.y,events1.y))
+
+# Plot
+ggplot(events.plotter, aes(x = `Fisher Discriminant`, fill = `Particle Truth`)) +
+  stat_bin(binwidth = 0.1) + theme_bw() + geom_vline(xintercept = divider) +
+  facet_wrap(vars(`Particle Truth`), nrow = 2)
+```
+```{r, message = F, warning = F, echo = F, fig.height=6, fig.width=8}
+
+p1 <- ggplot(tibble(Prediction = c(stdvar[-index,] %>% pull(pred_rf),
+                             stdvar[-index,] %>% pull(pred_bdt),
+                             stdvar[-index,] %>% pull(lda_pred)),
+              Predictor = rep(c("Random Forests","Boosted Decision Trees","LDA"),each=nrow(stdvar[-index,])),
+              Q2QE = rep(stdvar[-index,]$Q2QE,3), 
+              IsProton = rep(stdvar[-index,]$IsProton,3)) %>% filter(IsProton == 1),
+       mapping = aes(Q2QE, fill = as.factor(Prediction))) +
+  geom_histogram(breaks = seq(0,5,0.2)) +
+  facet_wrap(vars(Predictor))
+p2 <- ggplot(tibble(Prediction = c(stdvar[-index,] %>% pull(pred_rf),
+                             stdvar[-index,] %>% pull(pred_bdt),
+                             stdvar[-index,] %>% pull(lda_pred)),
+              Predictor = rep(c("Random Forests","Boosted Decision Trees","LDA"),each=nrow(stdvar[-index,])),
+              Q2QE = rep(stdvar[-index,]$Q2QE,3), 
+              IsProton = rep(stdvar[-index,]$IsProton,3)) %>% filter(IsProton == 1),
+       mapping = aes(Q2QE, fill = as.factor(Prediction))) +
+  geom_histogram(breaks = seq(0,5,0.2),position = 'fill', aes(y=..count../sum(..count..))) +
+  facet_wrap(vars(Predictor))
+
+ggarrange(p1, p2, ncol=1, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2)
+
+tibble(Prediction = c(stdvar[-index,] %>% pull(pred_rf),
+                             stdvar[-index,] %>% pull(pred_bdt),
+                             stdvar[-index,] %>% pull(lda_pred)),
+              Predictor = rep(c("Random Forests","Boosted Decision Trees","LDA"),each=nrow(stdvar[-index,])),
+              Q2QE = rep(stdvar[-index,]$Q2QE,3), 
+              IsProton = rep(stdvar[-index,]$IsProton,3)) %>% filter(IsProton == 1) %>%
+  group_by(Predictor,Prediction) %>% count() %>% mutate(`n/N` = n/sum((stdvar[-index,]$IsProton==1)))
+```
+
+
+```{r, echo = F, eval=F}
+kable(data.frame("True Group" = c("Not Proton", "Proton", "Total"),
+                 "Not Proton" = c(sum(events0.y > divider[1]), sum(events1.y > divider[1]), 
+                                  sum(c(events0.y, events1.y) > divider[1])),
+                 "Proton" = c(sum(events0.y < divider[1]), sum(events1.y < divider[1]),
+                              sum(c(events0.y, events1.y) < divider[1])),
+                 "Total" = c(length(events0.y), length(events1.y),
+                             length(c(events0.y, events1.y))),
+                 check.names = F),
+      booktabs = T) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  add_header_above(c(" " = 1, "Assigned Group" = 2, " " = 1)) %>%
+  add_header_above(c("Confusion Matrix" = 4)) %>%
+  row_spec(2, hline_after = T) %>%
+  column_spec(c(1,3), border_right = T)
+
+kable(data.frame("True Group" = c("Not Proton", "Proton", "Total"),
+                 "Not Proton" = c(signif(sum(events0.y > divider[1])/sum(c(events0.y, events1.y) > divider[1]),3), 
+                                  signif(sum(events1.y > divider[1])/sum(c(events0.y, events1.y) > divider[1]),3), 
+                                  sum(c(events0.y, events1.y) > divider[1])),
+                 "Proton" = c(signif(sum(events0.y < divider[1])/sum(c(events0.y, events1.y) < divider[1]),3),
+                              signif(sum(events1.y < divider[1])/sum(c(events0.y, events1.y) < divider[1]),3),
+                              sum(c(events0.y, events1.y) < divider[1])),
+                 check.names = F),
+      booktabs = T) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  add_header_above(c(" " = 1, "Assigned Group" = 2)) %>%
+  add_header_above(c("Confusion Matrix (% of Assigned Gp)" = 3)) %>%
+  row_spec(2, hline_after = T) %>%
+  column_spec(c(1), border_right = T)
+
+kable(data.frame("True Group" = c("Not Proton", "Proton"),
+                 "Not Proton" = c(signif(sum(events0.y > divider[1])/length(events0.y),3),
+                                  signif(sum(events1.y > divider[1])/length(events0.y),3)),
+                 "Proton" = c(signif(sum(events0.y < divider[1])/length(events0.y),3),
+                              signif(sum(events1.y < divider[1])/length(events1.y),3)),
+                 "Total" = c(length(events0.y), length(events1.y)),
+                 check.names = F),
+      booktabs = T) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  add_header_above(c(" " = 1, "Assigned Group" = 2, " " = 1)) %>%
+  add_header_above(c("Confusion Matrix (% of True Gp)" = 4)) %>%
+  row_spec(2, hline_after = T) %>%
+  column_spec(c(1,3), border_right = T)
+```
+
+```{r, echo = F, eval=F}
+signif((sum(events0.y < divider[1]) + sum(events1.y > divider[1]))/length(c(events0.y,events1.y)),4)
+```
+
+```{r, echo = F, eval=F}
+events.R <- events.R %>%
+  mutate(Truth = if_else(Particle=="Proton","Proton","Not Proton"))
+
+
+events.R <- events.R %>% 
+  mutate("Prior Prediction" = if_else(((Q2QE < 0.2 & ProtonScore1 > 0.2) |
+                                         (Q2QE >= 0.2 & Q2QE < 0.6 & ProtonScore1 > 0.1) |
+                                         (Q2QE >= 0.6 & ProtonScore1 > 0)), 
+                                      "Proton", "Not Proton")) %>%
+  mutate(q2qe_case = case_when(Truth == 1 & Q2QE < 0.2 ~ "Q2QE < 0.2, Proton",
+                               Truth == 0 & Q2QE < 0.2 ~ "Q2QE < 0.2, Not Proton",
+                               Truth == 1 & Q2QE >= 0.2 & Q2QE < 0.6 ~ "0.2 <= Q2QE < 0.6, Proton",
+                               Truth == 0 & Q2QE >= 0.2 & Q2QE < 0.6 ~ "0.2 <= Q2QE < 0.6, Not Proton",
+                               Truth == 1 & Q2QE >= 0.6 ~ "0.6 <= Q2QE, Proton",
+                               Truth == 0 & Q2QE >= 0.6 ~ "0.6 <= Q2QE, Not Proton")) %>%
+  mutate(q2qe_case = fct_relevel(q2qe_case,"Q2QE < 0.2, Proton", "Q2QE < 0.2, Not Proton",
+                                 "0.2 <= Q2QE < 0.6, Proton", "0.2 <= Q2QE < 0.6, Not Proton",
+                                 "0.6 <= Q2QE, Proton", "0.6 <= Q2QE, Not Proton"))
+
+events.R <- events.R %>%
+  mutate(Case = case_when(`Prior Prediction` == "Proton" & Particle == "Proton" ~ "Reco: Proton\nTruth: Proton",
+                             `Prior Prediction` == "Not Proton" & Particle == "Proton" ~ "Reco: Not Proton\nTruth: Proton",
+                             `Prior Prediction` == "Proton" & Particle != "Proton" ~ "Reco: Proton\nTruth: Not Proton",
+                             `Prior Prediction` == "Not Proton" & Particle != "Proton" ~ "Reco: Not Proton\nTruth: Not Proton")) %>%
+  mutate(q2qe_case = case_when(Q2QE < 0.2 ~ "Q2QE < 0.2",
+                               Q2QE < 0.4 & Q2QE >= 0.2 ~ "0.2 <= Q2QE < 0.4",
+                               Q2QE < 0.6 & Q2QE >= 0.4 ~ "0.4 <= Q2QE < 0.6",
+                               Q2QE < 1.0 & Q2QE >= 0.6 ~ "0.6 <= Q2QE < 1.0",
+                               Q2QE >= 1.0 ~ "1.0 <= Q2QE")) %>%
+  mutate(q2qe_case = fct_relevel(q2qe_case,"Q2QE < 0.2", "0.2 <= Q2QE < 0.4",
+                                 "0.4 <= Q2QE < 0.6", "0.6 <= Q2QE < 1.0", "1.0 <= Q2QE"))
+
+
+ggplot(events.R %>% filter(Multiplicity == 2), 
+       aes(x = ProtonScore1, fill = Truth, color = Truth,
+           pattern_color = `Prior Prediction`,
+           pattern_fill = `Prior Prediction`)) + 
+  theme_bw() +
+  geom_histogram_pattern(pattern = 'stripe', pattern_density = 0.2, 
+                         breaks = seq(0,1,0.05)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) + 
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,1,0.1)) +
+  facet_wrap(vars(q2qe_case), nrow = 3) +
+  ggtitle("Prior Prediction") +
+  scale_fill_manual(values = c("#af272f","#0085ad")) +
+  scale_color_manual(values = c("#af272f","#0085ad")) +
+  scale_pattern_fill_manual(values = c("#af272f","#0085ad")) +
+  scale_pattern_color_manual(values = c("#af272f","#0085ad"))
+
+```
+```{r, echo = F, eval=F}
+ggplot(events.R, 
+       aes(x = ProtonScore1, fill = as.factor(lda_pred))) + 
+  theme_bw() +
+  stat_bin(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(limits = c(0,31000), expand = c(0,0)) + 
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,1,0.1)) +
+  facet_wrap(vars(q2qe_case), nrow = 3)
+
+events.R <- stdvar[-index,] %>%
+  mutate(Case = case_when(lda_pred == 1 & Particle == "Proton" ~ "Pred: Proton\nTruth: Proton",
+                          lda_pred == 0 & Particle == "Proton" ~ "Pred: Not Proton\nTruth: Proton",
+                          lda_pred == 1 & Particle != "Proton" ~ "Pred: Proton\nTruth: Not Proton",
+                          lda_pred == 0 & Particle != "Proton" ~ "Pred: Not Proton\nTruth: Not Proton")) %>%
+  mutate(Case = fct_relevel(Case, 
+                            "Pred: Proton\nTruth: Proton",
+                            "Pred: Not Proton\nTruth: Proton",
+                            "Pred: Proton\nTruth: Not Proton",
+                            "Pred: Not Proton\nTruth: Not Proton"))
+
+ggplot(stdvar[-index,], 
+       aes(x = PrimaryProtonScore1, fill = Case)) + 
+  theme_bw() +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) + 
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,1,0.1)) +
+  facet_wrap(vars(q2qe_case), nrow = 3) +
+  ggtitle("LDA Prediction") +
+  scale_fill_manual(values = c("#0085ad","#af272f","#eaaa00","#4c8c2b")) +
+  theme(legend.spacing.y = unit(0.1, 'cm')) +
+  guides(fill = guide_legend(byrow = TRUE))
+
+events.R %>% filter(Multiplicity == 2, ImprovedMichelCount == 0,
+                    ProtonScore1 >= 0.5, BlobCount <= 1, NumCandidates == 1,
+                    Case == "Pred: Proton\nTruth: Proton")
+```
+```{r, echo = F, warning = F, eval=F}
+ggplot(events.R %>% filter(Multiplicity == 2), 
+       aes(x = TrackVtxGap, fill = as.factor(lda_pred))) + 
+  theme_bw() +
+  stat_bin(breaks = seq(0,350,25)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) + 
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,350,25)) +
+  facet_wrap(vars(q2qe_case), nrow = 3)
+
+ggplot(events.R %>% filter(Multiplicity == 2), 
+       aes(x = TrackVtxGap, fill = Case)) + 
+  theme_bw() +
+  stat_bin(breaks = seq(0,150,10)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) + 
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,150,10)) +
+  labs(title = "LDA Prediction", x = "Track - Vertex Gap (mm)") +
+  scale_fill_manual(values = c("#0085ad","#af272f","#eaaa00","#4c8c2b")) +
+  theme(legend.spacing.y = unit(0.1, 'cm')) +
+  guides(fill = guide_legend(byrow = TRUE)) +
+  facet_wrap(vars(q2qe_case), nrow = 3)
+```
+
+```{r, message = F, warning = F, eval=F}
+ggplot(events.R %>% filter(Multiplicity == 2,
+                           lda_pred == 1,
+                           Truth == 0), 
+       aes(x=ProtonScore1, y=TrackVtxGap)) +
+  geom_bin2d() +
+  theme_bw() +
+  facet_wrap(vars(q2qe_case)) +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  ggtitle("Truth: Not Proton, Prediction: Proton")
+
+ggplot(events.R %>% filter(Multiplicity == 2,
+                           lda_pred == 0,
+                           Truth == 1), 
+       aes(x=ProtonScore1, y=TrackVtxGap)) +
+  geom_bin2d() +
+  theme_bw() +
+  facet_wrap(vars(q2qe_case)) +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  ggtitle("Truth: Proton, Prediction: Not Proton")
+```
+
+```{r, eval=F}
+events.R %>% filter(lda_pred == 0, Truth == 1, TrackVtxGap <= 150)
+events.R %>% filter(lda_pred == 1, Truth == 0, TrackVtxGap <= 150)
+```
+```{r, echo = F, warning = F, message = F, eval=F}
+events0 <- events.R %>%
+  filter(Particle != "Proton") %>%
+  select(varlist[c(1:8)])
+events1 <- events.R %>%
+  filter(Particle == "Proton") %>%
+  select(varlist[c(1:8)])
+
+n0 <- nrow(events0)
+n1 <- nrow(events1)
+
+events0.cov <- cov(events0)
+events1.cov <- cov(events1)
+
+events0.means <- apply(events0, 2, mean)
+events1.means <- apply(events1, 2, mean)
+
+events.Sp <- ((n0-1)*events0.cov + (n1-1)*events1.cov)/(n0+n1-2)
+events.S <- cov(events.R %>% select(varlist[c(1:6,9)]))
+
+aT <- t(events0.means - events1.means) %*% solve(events.Sp)
+aT <- aT/sqrt(aT %*% t(aT))[1]
+
+kable(cbind(c("NumClusters","ProtonScore1","recoil","Multiplicity",
+              "FractionEnergyInCone","Angle","ratioLengthTdEdX"),
+            t(signif(aT,4))), 
+            booktabs = T) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  add_header_above(c("Linear Combination Components" = 3))
+```
+
+```{r, echo = F, eval=F}
+# Get transformations
+events0.y <- aT %*% t(events0)
+events1.y <- aT %*% t(events1)
+divider <- (aT %*% as.matrix(events0.means) + aT %*% as.matrix(events1.means))/2
+
+events.R$lda_pred <- t((aT %*% t(events.R %>% select(varlist[c(1:6,9)]))) < divider[1])
+events.R$ld <- t(aT %*% t(events.R %>% select(varlist[c(1:6,9)])))
+
+events.plotter <- tibble(Particle = c(rep("Not Proton",n0),rep("Proton",n1)),
+                         "Fisher Discriminant" = c(events0.y,events1.y))
+
+# Plot
+ggplot(events.plotter, aes(x = `Fisher Discriminant`, fill = Particle)) +
+  stat_bin(binwidth = 0.1) + theme_bw() + geom_vline(xintercept = divider) +
+  facet_wrap(vars(Particle), nrow = 2)
+```
+```{r, echo = F, eval=F}
+kable(data.frame("True Group" = c("Not Proton", "Proton", "Total"),
+                 "Not Proton" = c(sum(events0.y > divider[1]), sum(events1.y > divider[1]), 
+                                  sum(c(events0.y, events1.y) > divider[1])),
+                 "Proton" = c(sum(events0.y < divider[1]), sum(events1.y < divider[1]),
+                              sum(c(events0.y, events1.y) < divider[1])),
+                 "Total" = c(length(events0.y), length(events1.y),
+                             length(c(events0.y, events1.y))),
+                 check.names = F),
+      booktabs = T) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  add_header_above(c(" " = 1, "Assigned Group" = 2, " " = 1)) %>%
+  add_header_above(c("Confusion Matrix" = 4)) %>%
+  row_spec(2, hline_after = T) %>%
+  column_spec(c(1,3), border_right = T)
+
+kable(data.frame("True Group" = c("Not Proton", "Proton", "Total"),
+                 "Not Proton" = c(signif(sum(events0.y > divider[1])/sum(c(events0.y, events1.y) > divider[1]),3), 
+                                  signif(sum(events1.y > divider[1])/sum(c(events0.y, events1.y) > divider[1]),3), 
+                                  sum(c(events0.y, events1.y) > divider[1])),
+                 "Proton" = c(signif(sum(events0.y < divider[1])/sum(c(events0.y, events1.y) < divider[1]),3),
+                              signif(sum(events1.y < divider[1])/sum(c(events0.y, events1.y) < divider[1]),3),
+                              sum(c(events0.y, events1.y) < divider[1])),
+                 check.names = F),
+      booktabs = T) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  add_header_above(c(" " = 1, "Assigned Group" = 2)) %>%
+  add_header_above(c("Confusion Matrix (% of Assigned Gp)" = 3)) %>%
+  row_spec(2, hline_after = T) %>%
+  column_spec(c(1), border_right = T)
+
+kable(data.frame("True Group" = c("Not Proton", "Proton"),
+                 "Not Proton" = c(signif(sum(events0.y > divider[1])/length(events0.y),3),
+                                  signif(sum(events1.y > divider[1])/length(events0.y),3)),
+                 "Proton" = c(signif(sum(events0.y < divider[1])/length(events1.y),3),
+                              signif(sum(events1.y < divider[1])/length(events1.y),3)),
+                 "Total" = c(length(events0.y), length(events1.y)),
+                 check.names = F),
+      booktabs = T) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  add_header_above(c(" " = 1, "Assigned Group" = 2, " " = 1)) %>%
+  add_header_above(c("Confusion Matrix (% of True Gp)" = 4)) %>%
+  row_spec(2, hline_after = T) %>%
+  column_spec(c(1,3), border_right = T)
+```
+
+```{r, echo = F, eval=F}
+signif((sum(events0.y < divider[1]) + sum(events1.y > divider[1]))/length(c(events0.y,events1.y)),4)
+```
+```{r, echo = F, eval=F}
+events.R <- events.R %>% 
+  mutate(mateus_pred = if_else(((Q2QE < 0.2 & ProtonScore1 > 0.2) |
+                                 (Q2QE >= 0.2 & Q2QE < 0.6 & ProtonScore1 > 0.1) |
+                                 (Q2QE >= 0.6 & ProtonScore1 > 0)), 
+                               1, 0)) %>%
+  mutate(q2qe_case = case_when(Truth == 1 & Q2QE < 0.2 ~ "Q2QE < 0.2, Proton",
+                               Truth == 0 & Q2QE < 0.2 ~ "Q2QE < 0.2, Not Proton",
+                               Truth == 1 & Q2QE >= 0.2 & Q2QE < 0.6 ~ "0.2 <= Q2QE < 0.6, Proton",
+                               Truth == 0 & Q2QE >= 0.2 & Q2QE < 0.6 ~ "0.2 <= Q2QE < 0.6, Not Proton",
+                               Truth == 1 & Q2QE >= 0.6 ~ "0.6 <= Q2QE, Proton",
+                               Truth == 0 & Q2QE >= 0.6 ~ "0.6 <= Q2QE, Not Proton")) %>%
+  mutate(q2qe_case = fct_relevel(q2qe_case,"Q2QE < 0.2, Proton", "Q2QE < 0.2, Not Proton",
+                                 "0.2 <= Q2QE < 0.6, Proton", "0.2 <= Q2QE < 0.6, Not Proton",
+                                 "0.6 <= Q2QE, Proton", "0.6 <= Q2QE, Not Proton"))
+
+
+ggplot(events.R, 
+       aes(x = ProtonScore1, fill = as.factor(mateus_pred))) + 
+  theme_bw() +
+  stat_bin(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(limits = c(0,31000), expand = c(0,0)) + 
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,1,0.1)) +
+  facet_wrap(vars(q2qe_case), nrow = 3)
+
+```
+```{r, echo = F, eval=F}
+ggplot(events.R, 
+       aes(x = ProtonScore1, fill = as.factor(lda_pred))) + 
+  theme_bw() +
+  stat_bin(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(limits = c(0,31000), expand = c(0,0)) + 
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,1,0.1)) +
+  facet_wrap(vars(q2qe_case), nrow = 3)
+```
+```{r, echo = F, eval=F}
+ggplot(events.R, 
+       aes(x = TrackLength, fill = as.factor(lda_pred))) + 
+  theme_bw() +
+  stat_bin(breaks = seq(0,4000,200)) +
+  scale_y_continuous(limits = c(0,10000), expand = c(0,0)) + 
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,4000,1000)) +
+  facet_wrap(vars(q2qe_case), nrow = 3)
+```
+
+```{r, echo = F, eval=F}
+events.R <- events.R %>%
+  mutate(X1X1 = X1^2,
+         X1X2 = X1*X2,
+         X1X3 = X1*X3,
+         X1X4 = X1*X4,
+         X1X5 = X1*X5,
+         X1X6 = X1*X6,
+         X1X7 = X1*X7,
+         X1X8 = X1*X8,
+         X2X2 = X2^2,
+         X2X3 = X2*X3,
+         X2X4 = X2*X4,
+         X2X5 = X2*X5,
+         X2X6 = X2*X6,
+         X2X7 = X2*X7,
+         X2X8 = X2*X8,
+         X3X3 = X3^2,
+         X3X4 = X3*X4,
+         X3X5 = X3*X5,
+         X3X6 = X3*X6,
+         X3X7 = X3*X7,
+         X3X8 = X3*X8,
+         X4X4 = X4^2,
+         X4X5 = X4*X5,
+         X4X6 = X4*X6,
+         X4X7 = X4*X7,
+         X4X8 = X4*X8,
+         X5X5 = X5^2,
+         X5X6 = X5*X6,
+         X5X7 = X5*X7,
+         X5X8 = X5*X8,
+         X6X6 = X6^2,
+         X6X7 = X6*X7,
+         X6X8 = X6*X8,
+         X7X7 = X7^2,
+         X7X8 = X7*X8,
+         X8X8 = X8^2)
+
+varlist2 <- c(varlist[1:8],"X1X1","X1X2","X1X3","X1X4","X1X5","X1X6","X1X7","X1X8",
+              "X2X2","X2X3","X2X4","X2X5","X2X6","X2X7","X2X8",
+              "X3X3","X3X4","X3X5","X3X6","X3X7","X3X8",
+              "X4X4","X4X5","X4X6","X4X7","X4X8",
+              "X5X5","X5X6","X5X7","X5X8",
+              "X6X6","X6X7","X6X8",
+              "X7X7","X7X8",
+              "X8X8")
+
+events0 <- events.R %>%
+  filter(Truth == 0) %>%
+  select(varlist2)
+events1 <- events.R %>%
+  filter(Truth == 1) %>%
+  select(varlist2)
+
+n0 <- nrow(events0)
+n1 <- nrow(events1)
+
+events0.cov <- cov(events0)
+events1.cov <- cov(events1)
+
+events0.means <- apply(events0, 2, mean)
+events1.means <- apply(events1, 2, mean)
+
+events.Sp <- ((n0-1)*events0.cov + (n1-1)*events1.cov)/(n0+n1-2)
+events.S <- cov(events.R %>% select(varlist2))
+
+aT <- t(events0.means - events1.means) %*% solve(events.Sp)
+aT <- aT/sqrt(aT %*% t(aT))[1]
+
+kable(t(aT), booktabs = T) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  add_header_above(c("Quadratic Combination Components" = 2))
+```
+```{r, echo = F, eval=F}
+# Get transformations
+events0.y <- aT %*% t(events0)
+events1.y <- aT %*% t(events1)
+divider <- (aT %*% as.matrix(events0.means) + aT %*% as.matrix(events1.means))/2
+
+events.R$qda_pred <- t((aT %*% t(events.R %>% select(varlist2))) < divider[1])
+
+events.plotter <- tibble(IsProton = c(rep(0,n0),rep(1,n1)),
+                         "Quadratic Discriminant" = c(events0.y,events1.y))
+
+# Plot
+ggplot(events.plotter, 
+       aes(x = `Quadratic Discriminant`, fill = as.factor(IsProton))) +
+  stat_bin(binwidth = 0.1) + theme_bw() + 
+  geom_vline(xintercept = divider) +
+  scale_x_continuous(limits = c(-0.5,0.8)) +
+  facet_wrap(vars(IsProton), nrow = 2)
+```
+
+```{r, echo = F, eval=F}
+kable(data.frame("True Group" = c("Not Proton", "Proton", "Total"),
+                 "Not Proton" = c(sum(events0.y > divider[1]), sum(events1.y > divider[1]), 
+                                  sum(c(events0.y, events1.y) > divider[1])),
+                 "Proton" = c(sum(events0.y < divider[1]), sum(events1.y < divider[1]),
+                              sum(c(events0.y, events1.y) < divider[1])),
+                 "Total" = c(length(events0.y), length(events1.y),
+                             length(c(events0.y, events1.y))),
+                 check.names = F),
+      booktabs = T) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  add_header_above(c(" " = 1, "Assigned Group" = 2, " " = 1)) %>%
+  add_header_above(c("Confusion Matrix" = 4)) %>%
+  row_spec(2, hline_after = T) %>%
+  column_spec(c(1,3), border_right = T)
+```
+
+```{r, echo = F, eval=F}
+(sum(events0.y < divider[1]) + sum(events1.y > divider[1]))/length(c(events0.y,events1.y))
+```
+
+```{r, echo = F, eval=F}
+ggplot(events.R, 
+       aes(x = ProtonScore1, fill = as.factor(qda_pred))) + 
+  theme_bw() +
+  stat_bin(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(limits = c(0,31000), expand = c(0,0)) + 
+  scale_x_continuous(expand = c(0,0), breaks = seq(0,1,0.1)) +
+  facet_wrap(vars(q2qe_case), nrow = 3)
+```
+
+```{r, echo = F, eval=F}
+
+ggplot(events.R, aes(x=ratioLengthTotalE, fill=as.factor(IsProton))) +
+  stat_bin(bins = 30) + theme_bw() +
+  scale_x_continuous(limits = c(0,5))
+
+ggplot(events.R, aes(x=ratioLengthTdEdX, fill=as.factor(IsProton))) +
+  stat_bin(bins = 30) + theme_bw() +
+  scale_x_continuous(limits = c(0,5))
+
+ggplot(events.R %>% 
+         filter(TrueKE >= 0 & TrueKE < 1000 & Q2QE > 0.5 &
+                  TotalE < 1000) %>%
+         mutate(pscorecut = case_when(ProtonScore1 < 0.05 ~ "score < 0.05",
+                                      ProtonScore1 >= 0.05 ~ "score >= 0.05")), 
+       aes(x=TrueKE, y=TotalE)) +
+  geom_bin2d() +
+  theme_bw() +
+  facet_wrap(vars(pscorecut)) +
+  scale_fill_gradient(low = "lightgray", high = "black")
+```
+
+

@@ -1,0 +1,62 @@
+{
+    "Comments":["10-9-2022 reproduce PRD",
+      "7-5-2022 change to Amit's binning,Q2 and pzmu change",
+        "6-5-2022 change the zstart cut to include the start","add log10recoil"],
+    "2D":{
+        "pzmu_ptmu":{"name":"pzmu_ptmu","xvar":"pzmu","yvar":"ptmu"},
+        "ptmu_pzmu":{"name":"ptmu_pzmu","xvar":"ptmu","yvar":"pzmu"},
+        "pzmu_Q2QE":{"name":"pzmu_Q2QE","xvar":"pzmu","yvar":"Q2QE"},
+        "EnuCCQE_Enu":{"name":"EnuCCQE_Enu","xvar":"EnuCCQE","yvar":"Enu"},
+        "EnuCCQE_Q2QE":{"name":"EnuCCQE_Q2QE","xvar":"EnuCCQE","yvar":"Q2QE"},
+        "Q2QE_recoil":{"name":"Q2QE_recoil","xvar":"Q2QE","yvar":"recoil"},
+        "Q2QE_Log10recoil":{"name":"Q2QE_Log10recoil","xvar":"Q2QE","yvar":"Log10recoil"},
+        "EnuCCQE_ThetamuDegrees":{"name":"EnuCCQE_ThetamuDegrees","xvar":"EnuCCQE","yvar":"ThetamuDegrees"},
+        "pmu_ThetamuDegrees":{"name":"pmu_ThetamuDegrees","xvar":"pmu","yvar":"ThetamuDegrees"}
+    },
+    "1D":{
+        "EnuCCQE":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"EnuCCQE","title":"E_{#nu}_{QE} (GeV)","bins":[1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],"fluxnorm":1},
+        "Enu":{
+          "reco":"EnuCCQEGeV",
+          "true":"TrueEnuGeV",
+          "name":"Enu",
+          "title":"E_{#nu} (GeV)",
+          "bins":[1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],
+          "fluxnorm":1},
+        "EnuHad":{
+          "reco":"EnuHadGeV",
+          "true":"TrueEnuGeV",
+          "name":"EnuHad",
+          "title":"E_{#nu}_{hadronic} (GeV)",
+          "bins":[1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],
+          "fluxnorm":1},
+        "total":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"total","title":"total for Enu from 2 to 15 GeV","bins":[2.0,15.0],"fluxnorm":0},
+        "ptmu":{"reco":"PperpMuGeV",
+          "true":"TruePperpMuGeV",
+          "name":"ptmu",
+          "title":"muon p_{T} (GeV/c)",
+          "bins":[0,0.075,0.15,0.25,0.325,0.4,0.475,0.55,0.7,0.85,1,1.25,1.5,2.5],
+            "fluxnorm":false},
+        "pzmu":{"reco":"PparMuGeV","true":"TruePparMuGeV","name":"pzmu","title":"muon p_{||} (GeV/c)",
+          "bins":
+          [1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],
+          "fluxnorm":false},
+        "pmu":{"reco":"PmuGeV","true":"TruePmuGeV","name":"pmu","title":"muon p (GeV/c)","bins":[1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],
+          "fluxnorm":false},
+        "Q2QE":{"reco":"Q2QEGeV","true":"TrueQ2QEGeV","name":"Q2QE",
+          "title":"Q^{2} (QE)(GeV^{2})",
+          "bins":[0.001,0.0125,0.025,0.05,0.1,0.2,0.4,0.8,1.2,4.0],
+          "fluxnorm":false},
+        "recoil":{"reco":"RecoilEnergyGeV","true":"TrueRecoilEnergyGeV","name":"recoil","title":"Recoil in GeV","nbins":25,"min":0.0,"max":0.5,"for":["data","selected_reco"],"fluxnorm":false},
+        "Log10recoil":{"reco":"Log10RecoilEnergyGeV","true":"TrueLog10RecoilEnergyGeV","name":"Log10recoil","title":"Log10Recoil in GeV","nbins":24,"min":-3,"max":0.0,"for":["data","selected_reco"],"fluxnorm":false},
+        "ThetamuDegrees":{"reco":"ThetamuDegrees","true":"TrueThetamuDegrees","name":"ThetamuDegrees","title":"theta_mu (degrees)","nbins":20,"min":0.,"max":40.,"fluxnorm":false},
+        "ThetaXmuDegrees":{"reco":"ThetaXmuDegrees","true":"TrueThetaXmuDegrees","name":"ThetaXmuDegrees","title":"theta_mu_x (degrees)","nbins":40,"min":-40.,"max":40.,"fluxnorm":false},
+        "ThetaYmuDegrees":{"reco":"ThetaYmuDegrees","true":"TrueThetaYmuDegrees","name":"ThetaYmuDegrees","title":"theta_mu_y (degrees)","nbins":40,"min":-40.,"max":40.,"fluxnorm":false},
+        "ApothemX":{"reco":"ApothemX","true":"TrueApothemX", "name":"ApothemX","title":"ApothemX (mm)","nbins":50,"min":-1000.,"max":1000.},
+        "ApothemY":{"reco":"ApothemY","true":"TrueApothemY", "name":"ApothemY","title":"ApothemY (mm)","nbins":50,"min":-1000.,"max":1000.},
+        "ZVertex":{"reco":"ZVertex","true":"TrueZVertex", "name":"ZVertex","title":"ZVertex (mm)","nbins":52,"min":5900,"max":8500.},
+        "ProtonKE":{"reco":"MaxProtonTrueKE","true":"MaxProtonTrueKE","name":"MaxProtonTrueKE","title":"Maximum Proton KE, MeV","nbins":100,"min":0.0,"max":500.,"for":["selected_truth"]}
+      
+    }
+}
+
+

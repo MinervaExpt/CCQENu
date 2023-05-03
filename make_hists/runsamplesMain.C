@@ -35,46 +35,56 @@ int main(const int argc, const char *argv[] ) {
   if (config.IsMember("version")){
     version = config.GetInt("version");
   }
-  bool useTuned=false;
+  
+  bool closure = false;
+  if (config.IsMember("closure")){
+    closure = config.GetBool("closure");
+  }
+  
+  std::string tunedmc = "untuned"; // can be set to "both", "tuned", or "untuned"
+  if(config.IsMember("tunedmc"))
+  {
+    tunedmc = config.GetString("tunedmc");
+    std::cout << "runsamplesMain: \'tunedmc\' configured in main config and set to " << tunedmc << std::endl;
+  }
+  if (config.IsMember("scalefileIn")) { // check if you have a scalefile specified
+    if (config.GetString("scalefileIn") == "") {
+        tunedmc = "untuned";
+        std::cout << "runsamplesMain: WARNING: no \'scalefileIn\' specficied. Defaulting \'tunedmc\' to \'untuned\'." << std::endl;
+    }
+  } else {
+    tunedmc = "untuned";
+    std::cout << "runsamplesMain: WARNING: \'scalefileIn\' not found in main config. Defaulting \'tunedmc\' to \'untuned\'." << std::endl;
+  }
+
+  // Deprecated but should be backwards compatible
+  bool useTuned;
   if(config.IsMember("useTuned")){
     useTuned = config.GetBool("useTuned");
-    std::cout << "runsamplesMain: useTuned configured in main config and set to " << useTuned << std::endl;
+    std::cout << "runsamplesMain: WARNING: useTuned deprecated. Use tunedmc instead. Setting tunedmc accordingly" << std::endl;
+    useTuned == false ? tunedmc = "untuned" : tunedmc = "both";
   }
-  // int useTuned = 0;
-  // if(config.IsMember("useTuned")){
-  //   checkval = config.GetString("useTuned");
-  //
-  //   if(checkval=="both" || checkval=="2"){
-  //     std::cout << "useTuned set to allow both tuned and untuned MC." << std::endl;
-  //     useTuned = 2;
-  //   }
-  //   // "only" or 1 runs only tuned mc (not untuned)
-  //   else if(checkval=="only" || checkval=="1"){
-  //     std::cout << "useTuned set to allow only tuned MC." << std::endl;
-  //     useTuned = 1;
-  //   }
-  //   // "none" or 0 runs only untunedmc
-  //   else if(checkval=="none" || checkval=="0"){
-  //     std::cout << "useTuned set to allow only untuned MC." << std::endl;
-  //     useTuned = 0;
-  //   }
-  //   else{
-  //     std::cout << "Warning: invalid 'useTuned' configured. Defaulting to allow both tuned and untuned MC. " << std::endl;
-  //     useTuned = 2;
-  //   }
-  // }
-  // else{
-  //   // Default to running both tuned and untuned
-  //   std::cout << "Warning: 'useTuned' not configured in main config. Defaulting to allow only untuned MC. " << std::endl;
-  //   useTuned = 0;
-  // }
+
+  bool doresolution = false;
+  if (config.IsMember("DoResolution")){
+    doresolution = config.GetBool("DoResolution");
+    std::cout << " ask for resolutions" << std::endl;
+  }
 
   //=========================================S
   // MacroUtil (makes your anatuple chains)
   //=========================================
 
   const std::string mc_file_list(config.GetString("mcIn"));
-  const std::string data_file_list(config.GetString("dataIn"));
+  std::string data_file_list;
+  if (!closure){
+    data_file_list = config.GetString("dataIn");
+  }
+  else{
+    data_file_list = mc_file_list;
+  }
+  
+  
 
   const std::string plist_string(config.GetString("playlist"));
   const std::string reco_tree_name(config.GetString("recoName"));
@@ -171,29 +181,29 @@ int main(const int argc, const char *argv[] ) {
   data_error_bands["cv"] = data_band;
 
   //Selection Criteria
-	if (config.IsMember("universeFile")) {
+	if (config.IsMember("paramsFile")) {
 
-
-		std::cout << " setting universe configurables" << std::endl;
-		std::string universefilename = config.GetString("universeFile");
-		NuConfig universeConfig;
-		universeConfig.Read(universefilename);
+		std::cout << " configuring cvuniverse parameters" << std::endl;
+		std::string paramsfilename = config.GetString("paramsFile");
+		NuConfig paramsConfig;
+		paramsConfig.Read(paramsfilename);
 		// Print applicable configurables?
 		bool printConfigs = 0;
-		if (universeConfig.IsMember("printConfigs")) printConfigs = universeConfig.GetBool("printConfigs");
+		if (paramsConfig.IsMember("printConfigs")) printConfigs = paramsConfig.GetBool("printConfigs");
 		// Set applicable configurables
-		if (universeConfig.IsMember("MinimumBlobZVtx")) {
-			CVUniverse::SetMinBlobZVtx(universeConfig.GetConfig("MinimumBlobZVtx").GetDouble("min"),printConfigs);
+		if (paramsConfig.IsMember("MinimumBlobZVtx")) {
+			CVUniverse::SetMinBlobZVtx(paramsConfig.GetConfig("MinimumBlobZVtx").GetDouble("min"),printConfigs);
 		}
-		if (universeConfig.IsMember("PhotonEnergyCut")) {
-			CVUniverse::SetPhotonEnergyCut(universeConfig.GetConfig("PhotonEnergyCut").GetDouble("energy"),printConfigs);
+		if (paramsConfig.IsMember("PhotonEnergyCut")) {
+			CVUniverse::SetPhotonEnergyCut(paramsConfig.GetConfig("PhotonEnergyCut").GetDouble("energy"),printConfigs);
 		}
-		if (universeConfig.IsMember("ProtonScoreConfig")) {
-			CVUniverse::SetProtonScoreConfig(universeConfig.GetConfig("ProtonScoreConfig"),printConfigs);
+		if (paramsConfig.IsMember("ProtonScoreConfig")) {
+			CVUniverse::SetProtonScoreConfig(paramsConfig.GetConfig("ProtonScoreConfig"),printConfigs);
 		}
-		if (universeConfig.IsMember("ProtonKECut")) {
-			CVUniverse::SetProtonKECut(universeConfig.GetConfig("ProtonKECut").GetDouble("energy"),printConfigs);
+		if (paramsConfig.IsMember("ProtonKECut")) {
+			CVUniverse::SetProtonKECut(paramsConfig.GetConfig("ProtonKECut").GetDouble("energy"),printConfigs);
 		}
+		CVUniverse::SetAnalysisNeutrinoPDG(pdg,printConfigs);
 	}
 
   std::string cutsfilename = config.GetString("cutsFile");
@@ -286,7 +296,7 @@ int main(const int argc, const char *argv[] ) {
   }
 
   // new way
-  std::map<std::string,CCQENu::VariableFromConfig*> variablesmap1D = GetVariablesFromConfig(vars1D,tags,configvar);
+  std::map<std::string,CCQENu::VariableFromConfig*> variablesmap1D = GetVariablesFromConfig(vars1D,tags,configvar,doresolution,tunedmc);
 
   std::map<std::string,CCQENu::Variable2DFromConfig*> variablesmap2D = Get2DVariablesFromConfig(vars2D,variablesmap1D,tags,configvar);
 
@@ -335,9 +345,6 @@ int main(const int argc, const char *argv[] ) {
       if(IsInVector<std::string>("truth",forlist )){
         truthtags.push_back(tag);
       }
-      // if (IsInVector<std::string>("tuned_mc",forlist)){
-      //   tuned_mc_tags.push_back(tag);
-      // }
       if(IsInVector<std::string>("response",forlist)){
         responsetags.push_back(tag);
       }
@@ -357,9 +364,7 @@ int main(const int argc, const char *argv[] ) {
     // v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands,truthtags);
     v->InitializeResponse(mc_error_bands,responsetags);
-    if(useTuned){
-      v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
-    }
+    v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     variables1D.push_back(v);
   }
 
@@ -373,23 +378,28 @@ int main(const int argc, const char *argv[] ) {
     // v->AddMCResponse2D(responsetags);
     v->InitializeTruthHistograms2D(truth_error_bands,truthtags);
     v->InitializeResponse2D(mc_error_bands,responsetags);
-
-    if(useTuned){
-      v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
-    }
+    v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     variables2D.push_back(v);
   }
 
-    std::cout << " just before event loop" << std::endl;
-    util.PrintMacroConfiguration("runEventLoop");
+	// Check if sending events to csv file
+	bool mc_reco_to_csv = 0;
+	if (config.IsMember("mcRecoToCSV")) {
+		mc_reco_to_csv = config.GetBool("mcRecoToCSV");
+	}
+
+	std::cout << " just before event loop" << std::endl;
+	util.PrintMacroConfiguration("runEventLoop");
   // here we fill them
 
   for (auto tag:datatags){
     //=========================================
     // Entry loop and fill
     //=========================================
-    std::cout << "Loop and Fill Data for " << tag << "\n" ;
-    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale);
+    std::cout << "Loop and Fill Data for " << tag << "\n";
+    
+    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale,closure,mc_reco_to_csv);
+
     // LoopAndFillEventSelection2D(tag, util, data_error_bands, variables2D, kData, *selectionCriteria[tag]);
 
     std::cout << "\nCut summary for Data:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
@@ -402,16 +412,20 @@ int main(const int argc, const char *argv[] ) {
     std::string sample(tag,0,loc-3);
     mcRescale.SetCat(cat);
     std::cout << "Loop and Fill MC Reco  for " <<  tag << "\n";
-    LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag],model, mcRescale);
+    
+    LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag],model, mcRescale,closure,mc_reco_to_csv);
     // LoopAndFillEventSelection2D(tag, util, mc_error_bands, variables2D, kMC, *selectionCriteria[tag]);
+    
     std::cout << "\nCut summary for MC Reco:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
     selectionCriteria[tag]->resetStats();
   }
 
   for (auto tag:truthtags){
     std::cout << "Loop and Fill MC Truth  for " <<  tag << "\n";
-    LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, kTruth, *selectionCriteria[tag],model,mcRescale);
+
+    LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, kTruth, *selectionCriteria[tag],model,mcRescale,closure,mc_reco_to_csv);
     // LoopAndFillEventSelection2D(tag, util, truth_error_bands, variables2D, kTruth, *selectionCriteria[tag]);
+    
     std::cout << "\nCut summary for MC Truth:" <<  tag << "\n";
     // this is a special overload to allow printing truth
     (*selectionCriteria[tag]).summarizeTruthWithStats(std::cout);
@@ -474,5 +488,6 @@ int main(const int argc, const char *argv[] ) {
   TVector2 *pot = new TVector2( util.m_data_pot,util.m_mc_pot/prescale);
   out->WriteTObject( pot, "pot" );
   out->Close();
-  std::cout << "Success" << std::endl;
+  std::cout << "Successfully wrote everything to file " << outname << std::endl;
+  std::cout << "Done" << std::endl;
 }

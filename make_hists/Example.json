@@ -1,21 +1,22 @@
 {
-  "version":13,  // Run major variables in batch
+  "version":13,  // Run major variables in batch, use v13 of cuts, add closure
   "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
   "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
-  "MinervaModel":"MnvTunev1",
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
+  "MinervaModel":"${MYMODEL}", // set this as an environmental to MnvTunev1 or MnvTunev2
   "recoName":"CCQENu", // change if running on MAT tuples
   "useTuned":1, // uses the tunes if available
-  "scalefileIn":"${CCQEMAT}/data/BkgStudy6A_BkgStudy_1_OutVals_fix.root", // location of anti-nu background tuning
+  "closure":0, // set to 1 if you want to do closure test, otherwise 0
+  "scalefileIn":"${CCQEMAT}/data/FullSample_${MYMODEL}_Q2QErecoil.root", // location of anti-nu background tuning
   "TuneCategories":["qelike","qelikenot"], // categories that have tunes
   "pdg":-14, // I'm anti-neutrino
-  "cutsFile":"${CCQEMAT}/study/AntiNuCuts_v12_15GeV.json", // describe the cuts, choose them in samples
-  "varsFile":"${CCQEMAT}/study/Variables_v12check.json", // describe the variables, choose them below
-  "samplesFile":"${CCQEMAT}/hms/AntiNuSamples_v9.json",  // describe the samples, cuts are chosen here
+  "cutsFile":"${CCQEMAT}/AntiNuExample/AntiNuCuts_v13.json", // describe the cuts, choose them in samples
+  "varsFile":"${CCQEMAT}/AntiNuExample/Variables_v13.json", // describe the variables, choose them below
+  "samplesFile":"${CCQEMAT}/AntiNuExample/AntiNuSamples_v13.json",  // describe the samples, cuts are chosen here
   "runsamples":["${MYSAMPLE}"], // chose which samples to run can provide a list or chose 1 using the batch
-  "outRoot":"CCQENu_${MYPLAYLIST}_${MYSAMPLE}", // name for output files
-  "AnalyzeVariables":["Q2QE","pzmu","ptmu","Enu","EnuCCQE"], // choose the 1D variables
+  "outRoot":"CCQENu_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // name for output files
+  "AnalyzeVariables":["Q2QE","pzmu","ptmu","Enu","EnuCCQE","ThetamuDegrees"], // choose the 1D variables
   "Analyze2DVariables":["pzmu_ptmu"], // choose 2D variables, 1D variables must be chosen
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"}, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
