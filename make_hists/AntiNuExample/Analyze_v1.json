@@ -1,0 +1,39 @@
+{
+    "version": 1, // What version?
+    "mainFile": "${CCQEMAT}/Test_v14.json", // main config
+    "errorFile": "${CCQEMAT}/analyze_config/Errors_v1.json", // List of errors to plot (override main confg?)?
+    "tunedmc": "both", // Do tuning (override main config)?
+    "playlist": "${MYPLAYLIST}",
+    "MinervaModel": "${MYMODEL}", // set this as an environmental to MnvTunev1 or MnvTunev2
+    "steps": [ // What steps do you want to do?
+        "BackgroundSub",
+        "Unfolding",
+        "EfficiencyCorr",
+        "FluxNorm"
+    ],
+    "AnalyzeVariables": { // Variables to do analysis on (override main config)?
+        "1D": [
+            "pzmu",
+            "ptmu",
+            "recoil"
+        ],
+        "2D": [
+            "pzmu_ptmu"
+        ],
+        "HD": [
+            "pzmu_ptmu_recoil"
+        ]
+    },
+    "plotting": { // What do you want to plot?
+        "verbose": [ // At every step?
+            "CVwithError",
+            "ErrorSummary"
+        ],
+        "xseconly": [ // Only at cross section?
+            "CVwithError",
+            "PanelPlot", // Only for 2D and up
+            "ModelComparison"
+        ]
+    },
+    "iterations": 4, // Number of iterations for unfolding?
+}
