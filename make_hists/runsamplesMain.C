@@ -41,45 +41,35 @@ int main(const int argc, const char *argv[] ) {
     closure = config.GetBool("closure");
   }
   
-  bool useTuned=false;
+  std::string tunedmc = "untuned"; // can be set to "both", "tuned", or "untuned"
+  if(config.IsMember("tunedmc"))
+  {
+    tunedmc = config.GetString("tunedmc");
+    std::cout << "runsamplesMain: \'tunedmc\' configured in main config and set to " << tunedmc << std::endl;
+  }
+  if (config.IsMember("scalefileIn")) { // check if you have a scalefile specified
+    if (config.GetString("scalefileIn") == "") {
+        tunedmc = "untuned";
+        std::cout << "runsamplesMain: WARNING: no \'scalefileIn\' specficied. Defaulting \'tunedmc\' to \'untuned\'." << std::endl;
+    }
+  } else {
+    tunedmc = "untuned";
+    std::cout << "runsamplesMain: WARNING: \'scalefileIn\' not found in main config. Defaulting \'tunedmc\' to \'untuned\'." << std::endl;
+  }
+
+  // Deprecated but should be backwards compatible
+  bool useTuned;
   if(config.IsMember("useTuned")){
     useTuned = config.GetBool("useTuned");
-    std::cout << "runsamplesMain: useTuned configured in main config and set to " << useTuned << std::endl;
+    std::cout << "runsamplesMain: WARNING: useTuned deprecated. Use tunedmc instead. Setting tunedmc accordingly" << std::endl;
+    useTuned == false ? tunedmc = "untuned" : tunedmc = "both";
   }
-  
+
   bool doresolution = false;
   if (config.IsMember("DoResolution")){
     doresolution = config.GetBool("DoResolution");
     std::cout << " ask for resolutions" << std::endl;
   }
-  // int useTuned = 0;
-  // if(config.IsMember("useTuned")){
-  //   checkval = config.GetString("useTuned");
-  //
-  //   if(checkval=="both" || checkval=="2"){
-  //     std::cout << "useTuned set to allow both tuned and untuned MC." << std::endl;
-  //     useTuned = 2;
-  //   }
-  //   // "only" or 1 runs only tuned mc (not untuned)
-  //   else if(checkval=="only" || checkval=="1"){
-  //     std::cout << "useTuned set to allow only tuned MC." << std::endl;
-  //     useTuned = 1;
-  //   }
-  //   // "none" or 0 runs only untunedmc
-  //   else if(checkval=="none" || checkval=="0"){
-  //     std::cout << "useTuned set to allow only untuned MC." << std::endl;
-  //     useTuned = 0;
-  //   }
-  //   else{
-  //     std::cout << "Warning: invalid 'useTuned' configured. Defaulting to allow both tuned and untuned MC. " << std::endl;
-  //     useTuned = 2;
-  //   }
-  // }
-  // else{
-  //   // Default to running both tuned and untuned
-  //   std::cout << "Warning: 'useTuned' not configured in main config. Defaulting to allow only untuned MC. " << std::endl;
-  //   useTuned = 0;
-  // }
 
   //=========================================S
   // MacroUtil (makes your anatuple chains)
@@ -306,7 +296,7 @@ int main(const int argc, const char *argv[] ) {
   }
 
   // new way
-  std::map<std::string,CCQENu::VariableFromConfig*> variablesmap1D = GetVariablesFromConfig(vars1D,tags,configvar,doresolution);
+  std::map<std::string,CCQENu::VariableFromConfig*> variablesmap1D = GetVariablesFromConfig(vars1D,tags,configvar,doresolution,tunedmc);
 
   std::map<std::string,CCQENu::Variable2DFromConfig*> variablesmap2D = Get2DVariablesFromConfig(vars2D,variablesmap1D,tags,configvar);
 
@@ -355,9 +345,6 @@ int main(const int argc, const char *argv[] ) {
       if(IsInVector<std::string>("truth",forlist )){
         truthtags.push_back(tag);
       }
-      // if (IsInVector<std::string>("tuned_mc",forlist)){
-      //   tuned_mc_tags.push_back(tag);
-      // }
       if(IsInVector<std::string>("response",forlist)){
         responsetags.push_back(tag);
       }
@@ -377,9 +364,7 @@ int main(const int argc, const char *argv[] ) {
     // v->AddMCResponse(responsetags);
     v->InitializeTruthHistograms(truth_error_bands,truthtags);
     v->InitializeResponse(mc_error_bands,responsetags);
-    if(useTuned){
-      v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
-    }
+    v->InitializeTunedMCHistograms(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     variables1D.push_back(v);
   }
 
@@ -393,10 +378,7 @@ int main(const int argc, const char *argv[] ) {
     // v->AddMCResponse2D(responsetags);
     v->InitializeTruthHistograms2D(truth_error_bands,truthtags);
     v->InitializeResponse2D(mc_error_bands,responsetags);
-
-    if(useTuned){
-      v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
-    }
+    v->InitializeTunedMCHistograms2D(mc_error_bands,truth_error_bands,selected_reco_tags,responsetags);
     variables2D.push_back(v);
   }
 
@@ -506,5 +488,6 @@ int main(const int argc, const char *argv[] ) {
   TVector2 *pot = new TVector2( util.m_data_pot,util.m_mc_pot/prescale);
   out->WriteTObject( pot, "pot" );
   out->Close();
-  std::cout << "Success" << std::endl;
+  std::cout << "Successfully wrote everything to file " << outname << std::endl;
+  std::cout << "Done" << std::endl;
 }
