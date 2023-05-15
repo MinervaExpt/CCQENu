@@ -1,12 +1,12 @@
 {
-  "version":13,  // Run major variables in batch, use v13 of cuts, add closure
+  "version":14,  // Run major variables in batch, use v13 of cuts, add closure
   "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
   "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
   "MinervaModel":"${MYMODEL}", // set this as an environmental to MnvTunev1 or MnvTunev2
   "recoName":"CCQENu", // change if running on MAT tuples
-  "useTuned": 1, // uses the tunes if available
+  "tunedmc":"both", // set to "tuned", "untuned", or "both" to do event-by-event MC tuning
   "closure":0, // set to 1 if you want to do closure test, otherwise 0
   "scalefileIn":"${CCQEMAT}/data/FullSample_${MYMODEL}_Q2QErecoil.root", // location of anti-nu background tuning
   "TuneCategories":["qelike","qelikenot"], // categories that have tunes
