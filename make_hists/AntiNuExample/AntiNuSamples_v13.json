@@ -9,7 +9,7 @@
       "qelike":{
         "for":["selected_reco","selected_truth","truth","response"]
         },
-      "qelikenot":{"for":["selected_reco"]
+      "qelikenot":{"for":["selected_reco","selected_truth"]
         }
       }
    },
@@ -24,7 +24,7 @@
      "qelike":{
        "for":["selected_reco"]
        },
-     "qelikenot":{"for":["selected_reco"]
+     "qelikenot":{"for":["selected_reco","selected_truth"]
        }
      }
   },
@@ -53,7 +53,7 @@
          "for":["selected_reco","selected_truth","truth","response"]
         },
        "qelikenot_np":{
-         "for":["selected_reco"]
+         "for":["selected_reco","selected_truth","truth"]
        }
      }
   },
@@ -68,7 +68,7 @@
          "for":["selected_reco","selected_truth","truth","response"]
         },
        "qelikenot_np":{
-         "for":["selected_reco"]
+         "for":["selected_reco","selected_truth","truth"]
        }
      }
   },
