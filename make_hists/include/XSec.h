@@ -73,38 +73,42 @@ class XSec {
     std::string m_tunedmc;
 
    private:
+    // Data hists, from raw event rates to x-section
     MnvHistoType* m_data_hist;
     MnvHistoType* m_bkgsub_hist;
     MnvHistoType* m_unfolded_hist;
     MnvHistoType* m_effcorr_hist;
     MnvHistoType* m_sigma_hist;
 
+    // Reconstructed MC hists
     MnvHistoType* m_mc_sig_hist;
     MnvHistoType* m_mc_bkg_hist;
     MnvHistoType* m_mc_tot_hist;
 
+    // Truth MC hists, including x-section
     MnvHistoType* m_sel_truth_hist;
     MnvHistoType* m_all_truth_hist;
     MnvHistoType* m_sigma_mc;
 
+    // Response and unfolding objectects
     MnvH2D* m_response;
     MinervaUnfold::MnvUnfold m_unfold;
 
-
+    // Flux hists
     MnvH1D* m_flux_hist;
     MnvHistoType* m_flux_ebins;
     MnvHistoType* m_flux_varbins;
 
    public:
+    // Canvas things get printed to
     TCanvas& m_canvas;
 
+    // Methods
     void SetNames(std::string basename, std::string sample, std::string variable);
 
-    
     void SetDataMCTruthHists(MnvHistoType* data_hist, 
                              MnvHistoType* mc_bkg_hist, MnvHistoType* mc_sig_hist,
                              MnvHistoType* sel_truth_hist, MnvHistoType* all_truth_hist);
-
 
     void SetResponse(MnvH2D* response);
     void SetUnfold(MinervaUnfold::MnvUnfold unfold);
