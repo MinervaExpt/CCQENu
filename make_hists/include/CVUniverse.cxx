@@ -299,6 +299,30 @@ namespace {
 		return q2;
 	}
 
+	double CVUniverse::GetQ0QEGeV() const {
+		const double q2min = 0.001;
+		//int charge = GetAnalysisNuPDG() > 0? 1:-1;
+		if(CVUniverse::GetEnuCCQEGeV()<=0.0)return 0.0;
+		//std::cout<<"CVUniverse::GetQ2QE Cannot calculate neutrino energy "<<std::endl;
+		else{
+			double q0 = GetEnuCCQEGeV() - GetEmuGeV();
+			
+			return q0;
+		}
+		// return Q2;
+	}
+
+// fool it into not doing the complicated calculation
+	double CVUniverse::GetTrueQ0QEGeV() const {
+		double q0 =  GetTrueEnuCCQEGeV()-GetTrueEmuGeV(); 
+		return q0;
+	}
+
+	double CVUniverse::GetTrueQ0GeV() const {
+		double q0 = GetTrueEnuGeV()-GetTrueEmuGeV();
+		return q0;
+	}
+
 	double CVUniverse::GetLog10Q2QEGeV() const { return std::log10( CVUniverse::GetQ2QEGeV() ); }
 	double CVUniverse::GetTrueLog10Q2QEGeV() const { return std::log10( GetTrueQ2QEGeV() ); }
 
@@ -755,14 +779,15 @@ namespace {
 		// return CVUniverse::GetCalRecoilEnergy();
 		// std::cout << GetRecoilEnergy()*MeVGeV <<  " " << std::log10(GetRecoilEnergy()) << std::log10(GetRecoilEnergy())  - 3. << std::endl;
 
-	double CVUniverse::GetTrueQ0GeV() const {
-		static std::vector<double> mc_incomingPartVec;
-		static std::vector<double> mc_primFSLepton;
-		mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
-		mc_primFSLepton = GetVecDouble("mc_primFSLepton");
-		double q0 = mc_incomingPartVec[3] - mc_primFSLepton[3];
-	return q0*MeVGeV;
-	}
+	// double CVUniverse::GetOldTrueQ0GeV() const {
+	// 	static std::vector<double> mc_incomingPartVec;
+	// 	static std::vector<double> mc_primFSLepton;
+	// 	mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
+	// 	mc_primFSLepton = GetVecDouble("mc_primFSLepton");
+	// 	double q0 = mc_incomingPartVec[3] - mc_primFSLepton[3];
+	// return q0*MeVGeV;
+	// }
+
 	double CVUniverse::GetTrueQ3GeV() const {
 		static std::vector<double> mc_incomingPartVec;
 		static std::vector<double> mc_primFSLepton;
