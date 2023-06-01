@@ -9,6 +9,7 @@
         "EnuCCQE_Enu":{"name":"EnuCCQE_Enu","xvar":"EnuCCQE","yvar":"Enu"},
         "EnuCCQE_Q2QE":{"name":"EnuCCQE_Q2QE","xvar":"EnuCCQE","yvar":"Q2QE"},
         "Q2QE_recoil":{"name":"Q2QE_recoil","xvar":"Q2QE","yvar":"recoil"},
+        "Q0QE_recoil":{"name":"Q0QE_recoil","xvar":"Q0QE","yvar":"recoil"},
         "Q2QE_Log10recoil":{"name":"Q2QE_Log10recoil","xvar":"Q2QE","yvar":"Log10recoil"},
         "EnuCCQE_ThetamuDegrees":{"name":"EnuCCQE_ThetamuDegrees","xvar":"EnuCCQE","yvar":"ThetamuDegrees"},
         "pmu_ThetamuDegrees":{"name":"pmu_ThetamuDegrees","xvar":"pmu","yvar":"ThetamuDegrees"},
@@ -49,8 +50,8 @@
           "bins":[0.001,0.0125,0.025,0.05,0.1,0.2,0.4,0.8,1.2,4.0],
           "fluxnorm":false},
         "Q0QE":{"reco":"Q0QEGeV","true":"TrueQ0QEGeV","name":"Q0QE",
-          "title":"Q_0^{QE} (GeV)",
-          "nbins":55,
+          "title":"Q_{0}^{(QE)} (GeV)",
+          "nbins":22,
           "min":-0.1,
           "max":1.0,
           "fluxnorm":false},
@@ -66,7 +67,7 @@
         "Multiplicity":{"reco":"Multiplicity","true":"Multiplicity","name":"Multiplicity","title":"Multiplicity","nbins":20,"min":0,"max":20,"for":["selected_truth"]},
         "MCIntType":{"reco":"MCIntType","true":"IntType","name":"MCIntType","title":"MCIntType","nbins":20,"min":0,"max":20,"for":["selected_truth"]},
       
-    }
+        }
 }
 
 
