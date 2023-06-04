@@ -421,7 +421,7 @@ int main(const int argc, const char* argv[]) {
                     std::string category = c.first;
                     MnvH1D* h = (MnvH1D*)hists1D[sample][variable][restype][category]->Clone();
                     if (h->GetEntries() == 0) continue;
-                    std::string label = std::string("resolution_")+sample+"_"+variable+"_"+category;
+                    std::string label = std::string("resolution_")+sample+"_"+variable+"_"+restype+"_"+category;
                     PlotCVAndError(canvas1Dres, h, h, label, false, 0, true);
                 }
             }

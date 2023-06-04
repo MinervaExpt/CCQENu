@@ -32,7 +32,7 @@
     "recoil"
   ], // choose the 1D variables
   "Analyze2DVariables": [
-    "Q0QE_recoil"
+    "Q0QE_recoil","pzmu_ptmu"
   ], // choose 2D variables, 1D variables must be chosen
   "signal": {
     "QElike": "qelike",

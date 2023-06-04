@@ -329,6 +329,9 @@ public:
         m_hists[tag].hist->Write();
 
       }
+      else{
+        std::cout << " could not find " << " " << m_hashist[tag] << std::endl;
+      }
 
 
       // if(m_hasresponse[tag]){

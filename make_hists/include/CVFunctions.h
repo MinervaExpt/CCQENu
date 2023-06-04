@@ -71,9 +71,9 @@ public:
 		truefunctions["TrueQ2QEGeV"] = &CVUNIVERSE::GetTrueQ2QEGeV;
 		truefunctions["TrueQ2GeV"] = &CVUNIVERSE::GetTrueQ2GeV;
 
-		recofunctions["Q0QEGeV"] = &CVUNIVERSE::GetQ2QEGeV;
-		truefunctions["TrueQ0QEGeV"] = &CVUNIVERSE::GetTrueQ2QEGeV;
-		truefunctions["TrueQ0GeV"] = &CVUNIVERSE::GetTrueQ2GeV;
+		recofunctions["Q0QEGeV"] = &CVUNIVERSE::GetQ0QEGeV;
+		truefunctions["TrueQ0QEGeV"] = &CVUNIVERSE::GetTrueQ0QEGeV;
+		truefunctions["TrueQ0GeV"] = &CVUNIVERSE::GetTrueQ0GeV;
 
 		recofunctions["Curvature"] = &CVUNIVERSE::GetCurvature;
 		truefunctions["TrueCurvature"] = &CVUNIVERSE::GetTrueCurvature;
