@@ -309,16 +309,16 @@ void PlotCVAndError(TCanvas& cE, PlotUtils::MnvH1D* idatahist, PlotUtils::MnvH1D
     std::string plotname = Form("Title: %s_CV_w_err_%s", datahist->GetName(), label.c_str());
     t->Draw();
     cE.Print(cE.GetName(), plotname.c_str());
-
-    MnvH1D* d = (MnvH1D*)datahist->Clone();
-    d->SetDirectory(0);
-    MnvH1D* m = (MnvH1D*)hist->Clone();
-    m->SetDirectory(0);
-    if (d->GetXaxis()->GetNbins() != m->GetXaxis()->GetNbins()) {
-        std::cout << " data and mc bins don't agree" << d->GetName() << m->GetName() << std::endl;
-        return;
-    }
-    if (idatahist != ihist) {
+    if (idatahist != ihist) {     // don't plot ratio for identical hists.
+        MnvH1D* d = (MnvH1D*)datahist->Clone();
+        d->SetDirectory(0);
+        MnvH1D* m = (MnvH1D*)hist->Clone();
+        m->SetDirectory(0);
+        if (d->GetXaxis()->GetNbins() != m->GetXaxis()->GetNbins()) {
+            std::cout << " data and mc bins don't agree" << d->GetName() << m->GetName() << std::endl;
+            return;
+        }
+    
         MnvH1D* mc = (MnvH1D*)m->Clone();
         mc->SetDirectory(0);
         mc->ClearAllErrorBands();
