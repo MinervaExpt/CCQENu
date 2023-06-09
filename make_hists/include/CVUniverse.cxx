@@ -312,9 +312,11 @@ namespace {
 		// return Q2;
 	}
 
-// fool it into not doing the complicated calculation
+// This nucleon is not at rest so invert x = Q2/2Mnu with x=1;
 	double CVUniverse::GetTrueQ0QEGeV() const {
-		double q0 =  GetTrueEnuCCQEGeV()-GetTrueEmuGeV(); 
+//double q0 =  GetTrueEnuCCQEGeV()-GetTrueEmuGeV();
+        static double over_ptimes2=1/(2*.93827);
+        double q0 = GetTrueQ2GeV()*over_ptimes2;
 		return q0;
 	}
 
