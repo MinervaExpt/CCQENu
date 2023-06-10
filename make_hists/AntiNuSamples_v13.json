@@ -9,11 +9,10 @@
       "qelike":{
         "for":["selected_reco","selected_truth","truth","response"]
         },
-      "qelikenot":{"for":["selected_reco","selected_truth"]
+      "qelikenot":{"for":["selected_reco"]
         }
       }
    },
-   
    "QElikeNot":
   {"name":"QElikeNot",
    "reco":"QElikeNot",
@@ -24,7 +23,7 @@
      "qelike":{
        "for":["selected_reco"]
        },
-     "qelikenot":{"for":["selected_reco","selected_truth"]
+     "qelikenot":{"for":["selected_reco"]
        }
      }
   },
@@ -53,22 +52,7 @@
          "for":["selected_reco","selected_truth","truth","response"]
         },
        "qelikenot_np":{
-         "for":["selected_reco","selected_truth","truth"]
-       }
-     }
-  },
-  "QElikeNPAllN":{
-     "name":"QElikeNPAllN",
-     "reco":"QElikeAllN",
-     "phase_space":"phase_space",
-     "signal":["qelike_np"],
-     "background":["qelikenot_np"],
-     "categories":{
-       "qelike_np":{
-         "for":["selected_reco","selected_truth","truth","response"]
-        },
-       "qelikenot_np":{
-         "for":["selected_reco","selected_truth","truth"]
+         "for":["selected_reco"]
        }
      }
   },

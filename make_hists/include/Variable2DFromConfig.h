@@ -309,7 +309,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         // selected mc reco
 
         for (auto tag : m_tags) {
-            std::cout << " write out flags " << hasMC[tag] << hasTunedMC[tag] << hasTruth[tag] << hasData[tag] << std::endl;
+            std::cout << " write out flags "  << " " << hasMC[tag] << hasTunedMC[tag] << hasTruth[tag] << hasData[tag] << std::endl;
             if (hasMC[tag]) {
                 if (m_tunedmc != "tuned") {
                     m_selected_mc_reco.Write(tag);
