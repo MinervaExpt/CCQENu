@@ -52,15 +52,6 @@
         "Q0QE":{"reco":"Q0QEGeV","true":"TrueQ0QEGeV","name":"Q0QE",
           "title":"Q_{0}^{(QE)} (GeV)",
           "nbins":22,
-<<<<<<< HEAD
-          "min":-0.1,
-          "max":1.0,
-          "fluxnorm":false},
-        "Q0True":{"reco":"Q0QEGeV","true":"TrueQ0GeV","name":"Q0",
-          "title":"Parton level Q_{0}^{QE} (GeV)",
-          "nbins":22,
-=======
->>>>>>> 693d505e6f131019575207d48f37cfe3a6f98485
           "min":-0.1,
           "max":1.0,
           //"for":["data","selected_reco","selected_truth","all_truth"], //no response as 2d breaks
@@ -77,7 +68,7 @@
         "ZVertex":{"reco":"ZVertex","true":"TrueZVertex", "name":"ZVertex","title":"ZVertex (mm)","nbins":52,"min":5900,"max":8500.},
         "ProtonKE":{"reco":"MaxProtonTrueKE","true":"MaxProtonTrueKE","name":"MaxProtonTrueKE","title":"Maximum Proton KE, MeV","nbins":26,"min":-20,"max":500.,"for":["selected_truth","truth"]},
         "Multiplicity":{"reco":"Multiplicity","true":"Multiplicity","name":"Multiplicity","title":"Multiplicity","nbins":20,"min":0,"max":20,"for":["selected_truth"]},
-        "MCIntType":{"reco":"MCIntType","true":"IntType","name":"MCIntType","title":"MCIntType","nbins":20,"min":0,"max":20,"for":["selected_truth"]},
+        "MCIntType":{"reco":"MCIntType","true":"IntType","name":"MCIntType","title":"MCIntType","nbins":20,"min":0,"max":20,"for":["selected_truth"]}
       
         }
 }
