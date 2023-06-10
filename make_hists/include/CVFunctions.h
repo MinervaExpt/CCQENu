@@ -71,6 +71,10 @@ public:
 		truefunctions["TrueQ2QEGeV"] = &CVUNIVERSE::GetTrueQ2QEGeV;
 		truefunctions["TrueQ2GeV"] = &CVUNIVERSE::GetTrueQ2GeV;
 
+		recofunctions["Q0QEGeV"] = &CVUNIVERSE::GetQ0QEGeV;
+		truefunctions["TrueQ0QEGeV"] = &CVUNIVERSE::GetTrueQ0QEGeV;
+		truefunctions["TrueQ0GeV"] = &CVUNIVERSE::GetTrueQ0GeV;
+
 		recofunctions["Curvature"] = &CVUNIVERSE::GetCurvature;
 		truefunctions["TrueCurvature"] = &CVUNIVERSE::GetTrueCurvature;
 
@@ -103,6 +107,9 @@ public:
 
 		recofunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
 		recointfunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+
+    truefunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+    trueintfunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
 
 		recofunctions["EventID"] = &CVUNIVERSE::GetEventID;
 		truefunctions["EventID"] = &CVUNIVERSE::GetEventID;
@@ -146,8 +153,10 @@ public:
 		truefunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
 		recointfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
 		recofunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
-		recointfunctions["IntType"] = &CVUNIVERSE::GetIntType;
-		recofunctions["IntType"] = &CVUNIVERSE::GetIntType;
+		recointfunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+		recofunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+		trueintfunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+		truefunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
 
 		trueintfunctions["MCTargetA"] = &CVUNIVERSE::GetMCTargetA;
 

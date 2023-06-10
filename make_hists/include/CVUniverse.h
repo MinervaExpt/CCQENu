@@ -133,6 +133,8 @@ public:
 
 	virtual double GetQ2QEGeV() const;
 	virtual double GetTrueQ2QEGeV() const;
+	virtual double GetQ0QEGeV() const;
+	virtual double GetTrueQ0QEGeV() const;
 
 	virtual double GetLog10Q2QEGeV() const;
 	virtual double GetTrueLog10Q2QEGeV() const;
@@ -185,6 +187,7 @@ public:
 
 	virtual double GetLog10RecoilEnergyGeV() const;
 	virtual double GetTrueLog10RecoilEnergyGeV() const;
+
 
 	virtual double GetTrueQ0GeV() const;
 	virtual double GetTrueQ3GeV() const;

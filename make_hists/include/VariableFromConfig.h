@@ -233,12 +233,12 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
         m_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label).c_str(), GetNBins(), bins, univs, tags);
         m_selected_mc_truth.AppendName("selected_truth", tags);
-        double range = bins[1] - bins[GetNBins()];
+        double range = bins[GetNBins()]-bins[1];
 
         if (m_doresolution) {
             m_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName() + ";" + m_xaxis_label + " reco-true").c_str(), 50, -range / 10., range / 10., univs, tags);
             m_resolution.AppendName("resolution", tags);
-            std::cout << " created m_resolution " << GetName() << std::endl;
+            std::cout << " created m_resolution " << GetName() << " " << range << std::endl;
         }
     }
 
@@ -317,7 +317,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
         if (m_doresolution) {
             if (std::count(m_for.begin(), m_for.end(), "selected_truth") >= 1) {  // use bins
-                double range = bins[1] - bins[GetNBins()];
+                double range = bins[GetNBins()]-bins[1];
                 m_tuned_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName() + ";" + m_xaxis_label + " reco-true").c_str(), 50, -range / 10., range / 10., reco_univs, tuned_tags);
                 m_tuned_resolution.AppendName("resolution_tuned", tuned_tags);
             }

@@ -15,19 +15,6 @@
     {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
     {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
   ],
-    "QElikeAllN":[
-    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
-    {"name":"ApothemX","max":850,"variable":"ApothemX"},
-    {"name":"ApothemY","max":850,"variable":"ApothemY"},
-    {"name":"Z Vertex","min":5980,"max":8422,"variable":"ZVertex"},
-    {"name":"Has MINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
-    {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
-    {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
-    {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
-    {"name":"Max Multiplicity","max":100,"variable":"Multiplicity"},
-    {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
-  ],
     "QElikeNot":[
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
@@ -83,8 +70,8 @@
     {"name":"MCIntType","max":7,"variable":"MCIntType"}
   ],
  "qelike2p2h":[
-    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.},
     {"name":"MCIntType","equals":8,"variable":"MCIntType"}
   ],

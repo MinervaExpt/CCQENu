@@ -11,7 +11,7 @@
 * Code to fill histograms
  */
 
-
+//#define DEBUG=1
 #include <iostream>
 #include <string>
 #include "PlotUtils/MnvH1D.h"
@@ -677,7 +677,9 @@ template<class MnvHistoType>
       }
     }
     std::cout << "using background " << imcbkghist->GetName() << std::endl;
+    
     if (hasbkgsub) ibkgsubhist = histsND["fitted"]["bkgsub"];
+    if (DEBUG) std::cout << "test pointers " << ibkgsubhist << std::endl;
       MnvHistoType* iseltruhist;
     if (histsND.count("selected_truth_tuned") && usetune){
         iseltruhist = histsND["selected_truth_tuned"][sig];
@@ -686,6 +688,8 @@ template<class MnvHistoType>
     else{
         iseltruhist = histsND["selected_truth"][sig];
     }
+    
+    if (DEBUG) std::cout << "test pointers " << ibkgsubhist << " " << iseltruhist << std::endl;
     MnvHistoType* ialltruhist;
 
     if (histsND.count("all_truth_tuned") && usetune){
@@ -695,7 +699,7 @@ template<class MnvHistoType>
     else{
         ialltruhist = histsND["all_truth"][sig];
     }
-
+    if (DEBUG) std::cout << "test pointers " << sig << " " << iseltruhist->GetName() << ialltruhist << std::endl;
     MnvH2D* iresponse;
     MnvHistoType* iresponse_reco=imcsighist;
     MnvHistoType* iresponse_truth=iseltruhist;
@@ -729,7 +733,7 @@ template<class MnvHistoType>
     //imcsighist->Scale(POTScale);
     imcsighist->Print();
     imcsighist->Write();
-    // if (DEBUG) std::cout << " MC sig scaled by POT for " << variable << std::endl;
+    if (DEBUG) std::cout << " MC sig scaled by POT for " << variable << std::endl;
 
     if (imcbkghist == 0 && !hasbkgsub){
       std::cout << " no bkg for " << variable << std::endl;
@@ -741,7 +745,7 @@ template<class MnvHistoType>
       imcbkghist->Write();
     }
 
-    // if (DEBUG) std::cout << " MC bkg scaled by POT for " << variable << std::endl;
+    if (DEBUG) std::cout << " MC bkg scaled by POT for " << variable << std::endl;
 
 
 

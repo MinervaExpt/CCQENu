@@ -13,6 +13,7 @@
     {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
     {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
     {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
+    {"name":"EnuCCQE","max":6.0,"variable":"EnuCCQEGeV"},
     {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
   ],
     "QElikeAllN":[
@@ -25,6 +26,7 @@
     {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
     {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
     {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
+    {"name":"EnuCCQE","max":6.0,"variable":"EnuCCQEGeV"},
     {"name":"Max Multiplicity","max":100,"variable":"Multiplicity"},
     {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
   ],
@@ -38,6 +40,7 @@
     {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
     {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
     {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
+    {"name":"EnuCCQE","max":6.0,"variable":"EnuCCQEGeV"},
     {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
     {"name":"GoodRecoil","equals":0,"variable":"GoodRecoil"}
   ],
@@ -59,6 +62,7 @@
     {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
     {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"},
     {"name":"TrueMuonMomentumPar Min","min":1.5,"variable":"TruePparMuGeV"},
+    {"name":"TrueEnuGeV","max":6.0,"variable":"TrueEnuGeV"},
     {"name":"TrueMuonMomentumPar Max","max":15.0,"variable":"TruePparMuGeV"},
     {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"TrueThetamuDegrees"}
   ],
