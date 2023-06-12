@@ -54,18 +54,18 @@
   },
   // turn on/off systematics
   "systematics": [
-    "Flux",
-    "MuonMINOS",
-    "MuonResolution",
-    "MINOSEfficiency",
-    "Angle",
-    "GENIE",
-    "Flux",
-    "GenieRvx1pi",
-    "RPA",
-    "2p2h",
-    "MuonMinerva",
-    "geant4"
+    "Flux"
+    // "MuonMINOS",
+    // "MuonResolution",
+    // "MINOSEfficiency",
+    // "Angle",
+    // "GENIE",
+    // "Flux",
+    // "GenieRvx1pi",
+    // "RPA",
+    // "2p2h",
+    // "MuonMinerva",
+    // "geant4"
  //   "response"
   ],
   "fluxUniverses": 2, // # of flux universes set low to run fast!
