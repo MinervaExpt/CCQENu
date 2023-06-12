@@ -70,18 +70,11 @@
         "ApothemX":{"reco":"ApothemX","true":"TrueApothemX", "name":"ApothemX","title":"ApothemX (mm)","nbins":50,"min":-1000.,"max":1000.},
         "ApothemY":{"reco":"ApothemY","true":"TrueApothemY", "name":"ApothemY","title":"ApothemY (mm)","nbins":50,"min":-1000.,"max":1000.},
         "ZVertex":{"reco":"ZVertex","true":"TrueZVertex", "name":"ZVertex","title":"ZVertex (mm)","nbins":52,"min":5900,"max":8500.},
-<<<<<<< HEAD
-        "ProtonKE":{"reco":"MaxProtonTrueKE","true":"MaxProtonTrueKE","name":"MaxProtonTrueKE","title":"Maximum Proton KE, MeV","nbins":100,"min":0.0,"max":500.,"for":["selected_truth","truth"]},
-        "Multiplicity":{"reco":"Multiplicity","true":"Multiplicity","name":"Multiplicity","title":"Multiplicity","nbins":20,"min":0,"max":20,"for":["selected_truth"]},
-        "IntType":{"reco":"IntType","true":"IntType","name":"IntType","title":"IntType","nbins":20,"min":0,"max":20,"for":["selected_truth","truth"]},
-    }
-=======
         "ProtonKE":{"reco":"MaxProtonTrueKE","true":"MaxProtonTrueKE","name":"MaxProtonTrueKE","title":"Maximum Proton KE, MeV","nbins":26,"min":-20,"max":500.,"for":["selected_truth","truth"]},
         "Multiplicity":{"reco":"Multiplicity","true":"Multiplicity","name":"Multiplicity","title":"Multiplicity","nbins":20,"min":0,"max":20,"for":["selected_truth"]},
         "MCIntType":{"reco":"MCIntType","true":"IntType","name":"MCIntType","title":"MCIntType","nbins":20,"min":0,"max":20,"for":["selected_truth"]}
       
         }
->>>>>>> 859547b42e1a0d3f574b4aa629b9d83ffdcb87de
 }
 
 
