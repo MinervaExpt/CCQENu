@@ -390,10 +390,7 @@ int main(const int argc, const char *argv[] ) {
     std::cout << " Initialized all hists for HyperD var " << varHD.first << ". About to initialize response... " << std::endl;
     v->InitializeResponse(mc_error_bands, responsetags);
     std::cout << " Initialized response for HyperD var " << varHD.first << std::endl;
-    if (useTuned)
-    {
-      v->InitializeTunedMCHistograms(mc_error_bands, truth_error_bands, selected_reco_tags, responsetags);
-    }
+    v->InitializeTunedMCHistograms(mc_error_bands, truth_error_bands, selected_reco_tags, responsetags);
     variablesHD.push_back(v);
   }
 
