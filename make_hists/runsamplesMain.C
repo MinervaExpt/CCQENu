@@ -339,7 +339,7 @@ int main(const int argc, const char *argv[] ) {
   // new way
   std::vector<std::string> vars1D = config.GetStringVector("AnalyzeVariables");
   std::vector<CCQENu::VariableFromConfig *> variables1D;
-  std::map<std::string, CCQENu::VariableFromConfig *> variablesmap1D = GetVariablesFromConfig(vars1D, tags, configvar);
+  std::map<std::string, CCQENu::VariableFromConfig *> variablesmap1D = GetVariablesFromConfig(vars1D, tags, configvar, doresolution, tunedmc);
 
   std::vector<std::string> vars2D = config.GetStringVector("Analyze2DVariables");
   std::vector<CCQENu::Variable2DFromConfig *> variables2D;
