@@ -206,7 +206,7 @@ void FillSignalTruth(std::string tag, CVUniverse *univ, double weight,
         if (v->hasTruth[tag]) {
             double true_val = v->GetTrueValue(*univ, 0);
             // if (univ->ShortName() == "cv" ) std::cout << v->GetName() << " " << univ->GetEventID() << " " << run << " " << subrun << " "  <<  " "  << true_val << " " << weight << std::endl;
-            if (v->m_tunedmc != 1) {
+            if (v->m_tunedmc != "tuned") {
                 v->m_signal_mc_truth.Fill(tag, univ, true_val, weight);
             }
             if (v->hasTunedMC[tag] && scale >= 0.) {
@@ -219,7 +219,7 @@ void FillSignalTruth(std::string tag, CVUniverse *univ, double weight,
             double true_val_x = v2->GetTrueValueX(*univ, 0);
             double true_val_y = v2->GetTrueValueY(*univ, 0);
             // if (univ->ShortName() == "cv" ) std::cout << v->GetName() << " " << univ->GetEventID() << " " << run << " " << subrun << " "  <<  " "  << true_val << " " << weight << std::endl;
-            if (v2->m_tunedmc != 1) {
+            if (v2->m_tunedmc != "tuned") {
                 v2->m_signal_mc_truth.Fill2D(tag, univ, true_val_x, true_val_y, weight);
             }
             if (v2->hasTunedMC[tag] && scale >= 0.) {
@@ -232,13 +232,13 @@ void FillSignalTruth(std::string tag, CVUniverse *univ, double weight,
             double true_val_lin = vHD->GetTrueValue(*univ, 0);
             // if (univ->ShortName() == "cv" ) std::cout << v->GetName() << " " << univ->GetEventID() << " " << run << " " << subrun << " "  <<  " "  << true_val << " " << weight << std::endl;
             if (vHD->GetAnalysisType() == k1D || vHD->GetAnalysisType() == k1D_lite) {
-                if (vHD->m_tunedmc != 1)
+                if (vHD->m_tunedmc != "tuned")
                     vHD->m_signal_mc_truth.Fill(tag, univ, true_val_lin, weight);  // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
                 if (vHD->hasTunedMC[tag] && scale >= 0.)
                     vHD->m_tuned_signal_mc_truth.Fill(tag, univ, true_val_lin, scale * weight);  // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
             } else if (vHD->GetAnalysisType() == k2D || vHD->GetAnalysisType() == k2D_lite) {
                 double true_val_y = vHD->GetTrueValue(1, *univ, 0);
-                if (vHD->m_tunedmc != 1)
+                if (vHD->m_tunedmc != "tuned")
                     vHD->m_signal_mc_truth.Fill(tag, univ, true_val_lin, true_val_y, weight);  // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
                 if (vHD->hasTunedMC[tag] && scale >= 0.)
                     vHD->m_tuned_signal_mc_truth.Fill(tag, univ, true_val_lin, true_val_y, scale * weight);  // TODO: right now this is 1D HistWrapperMap method, may make HyperD it's own thing
