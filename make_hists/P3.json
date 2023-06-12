@@ -1,6 +1,6 @@
 {
   "version": 13, // Run major variables in batch, use v13 of cuts, add closure
-  "mcIn": "${CCQEMAT}/playlists/p3test/P3_${MYPLAYLIST}_MC_short.txt",
+  "mcIn": "${CCQEMAT}/playlists/p3test/P3_${MYPLAYLIST}_MC.txt",
   "dataIn": "${CCQEMAT}/playlists/p3test/P3_${MYPLAYLIST}_DATA.txt",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",

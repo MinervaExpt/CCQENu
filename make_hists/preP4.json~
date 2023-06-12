@@ -1,7 +1,7 @@
 {
   "version": 13, // Run major variables in batch, use v13 of cuts, add closure
-  "mcIn": "${CCQEMAT}/playlists/p4test/PreP4_${MYPLAYLIST}_MC.txt",
-  "dataIn": "${CCQEMAT}/playlists/p4test/PreP4_${MYPLAYLIST}_DATA.txt",
+  "mcIn": "${CCQEMAT}/playlists/p4test/P3_${MYPLAYLIST}_MC_short.txt",
+  "dataIn": "${CCQEMAT}/playlists/p4test/PreP4_${MYPLAYLIST}_DATA_short.txt",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
   "DoResolution": 1,
@@ -28,8 +28,8 @@
     "pzmu",
     "ptmu",
     "Enu",
-    "EnuCCQE",
-    "recoil"
+    "EnuCCQE"
+//    "recoil"
   ], // choose the 1D variables
   "Analyze2DVariables": [
     "pzmu_ptmu"
@@ -60,13 +60,13 @@
     "MINOSEfficiency",
     "Angle",
     "GENIE",
-    "Flux",
-    "GenieRvx1pi",
-    "RPA",
-    "2p2h",
-    "MuonMinerva",
-    "geant4"
- //   "response"
+//    "Flux",
+//    "GenieRvx1pi",
+//    "RPA",
+//    "2p2h",
+//    "MuonMinerva",
+//    "geant4"
+//    "response"
   ],
   "fluxUniverses": 2, // # of flux universes set low to run fast!
   "NuEConstraint": 1, // apply constraints to flux
