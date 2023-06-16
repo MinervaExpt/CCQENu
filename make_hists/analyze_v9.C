@@ -136,6 +136,7 @@ int main(const int argc, const char *argv[] ) {
     // code used to use config now use allconfigs["main"]
   std::vector<std::string> AnalyzeVariables = allconfigs["main"]->GetStringVector("AnalyzeVariables");
   std::vector<std::string> AnalyzeVariables2D = allconfigs["main"]->GetStringVector("Analyze2DVariables");
+  std::vector<std::string> AnalyzeVariablesHD = allconfigs["main"]->GetStringVector("AnalyzeHyperDVariables");
   std::vector<std::string> SampleRequest;
     
   // either get sample from command line or from the list in the config
@@ -179,7 +180,9 @@ int main(const int argc, const char *argv[] ) {
 
   std::map<std::string, std::map< std::string, std::map< std::string, std::map <std::string, MnvH2D*> > > > response2D;
 
+  std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH1D*> > > > histsHD;
 
+  std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH2D*> > > > responseHD;
 
   //f->ls();
 
@@ -255,7 +258,7 @@ int main(const int argc, const char *argv[] ) {
     std::cout << " Done with parsing" << std::endl;
 
     // 1D hists
-    if(key.find("h2D")==std::string::npos){
+    if(key.find("h2D")==std::string::npos && key.find("hHD")==std::string::npos){
       // if response in name its a 2D so do a cast to MnvH2D
       if(key.find("migration")!=std::string::npos){
         MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
@@ -272,7 +275,7 @@ int main(const int argc, const char *argv[] ) {
         }
       }
       // it's normal so it's a 1D.
-      else{
+      else {
         MnvH1D* temp = (MnvH1D*)(f->Get(key.c_str()));
         if (temp != 0){
           hists1D[sample][variable][type][category] = temp->Clone();
@@ -286,10 +289,10 @@ int main(const int argc, const char *argv[] ) {
           hists1D[sample][variable][type][category]=0;
         }
       }
-    }
+   }
 
     // 2D hists
-    else if(hNd == "h2D" || key.find("h2D") != std::string::npos){
+    else if(hNd == "h2D" || (key.find("h2D") != std::string::npos && (key.find("hHD") == std::string::npos) )){
       std::vector<std::string> partsof2D = split(variable,"_");
       MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
       // Check if response is in its name
@@ -316,6 +319,35 @@ int main(const int argc, const char *argv[] ) {
         }
         else{
           hists2D[sample][variable][type][category]=0;
+        }
+      }
+    } else if (hNd == "hHD") {
+      // if response in name its a 2D so do a cast to MnvH2D
+      if (key.find("migration") != std::string::npos) {
+        MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
+        if (hist != 0) {
+          responseHD[sample][variable][type][category] = hist->Clone();
+          // response1D[sample][variable][type][category]->Print();
+          responseHD[sample][variable][type][category]->SetDirectory(0);
+          std::cout << " migration " << sample << " " << variable << " " << type << " " << category << std::endl;
+          delete hist;
+        } else {
+          std::cout << "could not read " << key << std::endl;
+          responseHD[sample][variable][type][category] = 0;
+        }
+      }
+      // it's normal so it's a 1D.
+      else {
+        MnvH1D* temp = (MnvH1D*)(f->Get(key.c_str()));
+        if (temp != 0) {
+          histsHD[sample][variable][type][category] = temp->Clone();
+          histsHD[sample][variable][type][category]->Print();
+          histsHD[sample][variable][type][category]->SetDirectory(0);
+          std::cout << " hist 1D " << sample << " " << variable << " " << type << " " << category << " " << histsHD[sample][variable][type][category]->GetName() << std::endl;
+          delete temp;
+        } else {
+          std::cout << "could not read " << key << std::endl;
+          histsHD[sample][variable][type][category] = 0;
         }
       }
     }
@@ -347,9 +379,14 @@ int main(const int argc, const char *argv[] ) {
   std::string pdffilename1D = pdfname + "_1D.pdf";
   std::string pdfstart1D = pdfname + "_1D.pdf(";
   std::string pdfend1D = pdfname + "_1D.pdf)";
+
   std::string pdffilename2D = pdfname + "_2D.pdf";
   std::string pdfstart2D = pdfname + "_2D.pdf(";
   std::string pdfend2D = pdfname + "_2D.pdf)";
+
+  std::string pdffilenameHD = pdfname + "_HD.pdf";
+  std::string pdfstartHD = pdfname + "_HD.pdf(";
+  std::string pdfendHD = pdfname + "_HD.pdf)";
 
   o->cd();
   for (auto s:hists1D){
@@ -375,70 +412,101 @@ int main(const int argc, const char *argv[] ) {
     object.Write();
   }
   // Set up pdf for 1D plots.
-  TCanvas canvas1D(pdffilename1D.c_str());
-  canvas1D.SetLeftMargin(0.15);
-  canvas1D.SetRightMargin(0.15);
-  canvas1D.SetBottomMargin(0.15);
-  canvas1D.SetTopMargin(0.15);
-  canvas1D.Print(pdfstart1D.c_str(),"pdf");
+  // TCanvas canvas1D(pdffilename1D.c_str());
+  // canvas1D.SetLeftMargin(0.15);
+  // canvas1D.SetRightMargin(0.15);
+  // canvas1D.SetBottomMargin(0.15);
+  // canvas1D.SetTopMargin(0.15);
+  // canvas1D.Print(pdfstart1D.c_str(),"pdf");
 
-  // bool binwid = true;  // flag you need if MnvPlotter does not do binwid correction.  If it does not, you need to set this to true
+  // // bool binwid = true;  // flag you need if MnvPlotter does not do binwid correction.  If it does not, you need to set this to true
 
-  std::cout << " just before 1D loop" << std::endl;
-  for (auto samples:hists1D){
-    std::string sample=samples.first;
-    std::cout << " Sample: " << sample << std::endl;
-    for (auto variables:hists1D[sample]){  // only do this for a subset to save output time.
+  // std::cout << " just before 1D loop" << std::endl;
+  // for (auto samples:hists1D){
+  //   std::string sample=samples.first;
+  //   std::cout << " Sample: " << sample << std::endl;
+  //   for (auto variables:hists1D[sample]){  // only do this for a subset to save output time.
       
+  //     std::string variable = variables.first;
+  //       if(!checktag(AnalyzeVariables,variable)){
+  //           std::cout << " don't do this variable for now" << variable << std::endl;
+  //           continue;
+  //       }
+  //     std::cout << "  Variable: " << variable << std::endl;
+  //     std::string basename = "h_"+sample+"_"+variable;
+  //       if (singlesample){
+  //           basename = "h_"+variable;
+  //       }
+  //       std::cout << "basename is " << basename << std::endl;
+  //     int exit = GetCrossSection(sample,variable,basename,hists1D[sample][variable],response1D[sample][variable],allconfigs,canvas1D,norm,POTScale,h_flux_dewidthed,unfold,num_iter, DEBUG, hasbkgsub, usetune);
+  //     if (DEBUG) std::cout << exit << std::endl;
+  //   }
+  // }
+  // std::cout << " end of 1D loop" << std::endl;
+  // // Close pdf for 1D plots.
+  // canvas1D.Print(pdfend1D.c_str(),"pdf");
+
+  // // Set up pdf for 2D plots.
+  // TCanvas canvas2D(pdffilename2D.c_str());
+  // canvas2D.SetLeftMargin(0.15);
+  // canvas2D.SetRightMargin(0.15);
+  // canvas2D.SetBottomMargin(0.15);
+  // canvas2D.SetTopMargin(0.15);
+  // canvas2D.Print(pdfstart2D.c_str(),"pdf");
+
+  // std::cout << " just before 2D loop" << std::endl;
+  // for (auto samples:hists2D){
+  //   std::string sample=samples.first;
+
+  //   for (auto variables:hists2D[sample]){  // only do this for a subset to save output time.
+  //     std::string variable = variables.first;
+  //       if(!checktag(AnalyzeVariables2D,variable)){
+  //           std::cout << " don't do this variable for now" << variable << std::endl;
+  //           continue;
+  //       }
+  //     std::string basename = "h2D_"+sample+"_"+variable;
+  //       if (singlesample){
+  //           basename = "h_"+variable;
+  //       }
+  //     int exit = GetCrossSection(sample,variable,basename,hists2D[sample][variable],response2D[sample][variable],allconfigs,canvas2D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG,hasbkgsub, usetune);
+  //     if (DEBUG) std::cout << exit << std::endl;
+  //   }
+  // }
+  // std::cout << " end of 2D loop" << std::endl;
+  // canvas2D.Print(pdfend2D.c_str(),"pdf");
+  // // Close pdf for 2D plots.
+
+  TCanvas canvasHD(pdffilenameHD.c_str());
+  canvasHD.SetLeftMargin(0.15);
+  canvasHD.SetRightMargin(0.15);
+  canvasHD.SetBottomMargin(0.15);
+  canvasHD.SetTopMargin(0.15);
+  canvasHD.Print(pdfstartHD.c_str(), "pdf");
+
+  std::cout << " just before HyperD loop" << std::endl;
+  for (auto samples : histsHD) {
+    std::string sample = samples.first;
+    std::cout << " Sample: " << sample << std::endl;
+    for (auto variables : histsHD[sample]) {  // only do this for a subset to save output time.
+
       std::string variable = variables.first;
-        if(!checktag(AnalyzeVariables,variable)){
+      if (!checktag(AnalyzeVariablesHD, variable)) {
             std::cout << " don't do this variable for now" << variable << std::endl;
             continue;
-        }
+      }
       std::cout << "  Variable: " << variable << std::endl;
-      std::string basename = "h_"+sample+"_"+variable;
-        if (singlesample){
-            basename = "h_"+variable;
-        }
-        std::cout << "basename is " << basename << std::endl;
-      int exit = GetCrossSection(sample,variable,basename,hists1D[sample][variable],response1D[sample][variable],allconfigs,canvas1D,norm,POTScale,h_flux_dewidthed,unfold,num_iter, DEBUG, hasbkgsub, usetune);
+      std::string basename = "hHD_" + sample + "_" + variable;
+      if (singlesample) {
+            basename = "hHD_" + variable;
+      }
+      std::cout << "basename is " << basename << std::endl;
+      int exit = GetCrossSection(sample, variable, basename, histsHD[sample][variable], responseHD[sample][variable], allconfigs, canvasHD, norm, POTScale, h_flux_dewidthed, unfold, num_iter, DEBUG, hasbkgsub, usetune);
       if (DEBUG) std::cout << exit << std::endl;
     }
   }
-  std::cout << " end of 1D loop" << std::endl;
+  std::cout << " end of HyperD loop" << std::endl;
   // Close pdf for 1D plots.
-  canvas1D.Print(pdfend1D.c_str(),"pdf");
-
-  // Set up pdf for 2D plots.
-  TCanvas canvas2D(pdffilename2D.c_str());
-  canvas2D.SetLeftMargin(0.15);
-  canvas2D.SetRightMargin(0.15);
-  canvas2D.SetBottomMargin(0.15);
-  canvas2D.SetTopMargin(0.15);
-  canvas2D.Print(pdfstart2D.c_str(),"pdf");
-
-  std::cout << " just before 2D loop" << std::endl;
-  for (auto samples:hists2D){
-    std::string sample=samples.first;
-
-    for (auto variables:hists2D[sample]){  // only do this for a subset to save output time.
-      std::string variable = variables.first;
-        if(!checktag(AnalyzeVariables2D,variable)){
-            std::cout << " don't do this variable for now" << variable << std::endl;
-            continue;
-        }
-      std::string basename = "h2D_"+sample+"_"+variable;
-        if (singlesample){
-            basename = "h_"+variable;
-        }
-      int exit = GetCrossSection(sample,variable,basename,hists2D[sample][variable],response2D[sample][variable],allconfigs,canvas2D,norm,POTScale,h_flux_dewidthed,unfold,num_iter,DEBUG,hasbkgsub, usetune);
-      if (DEBUG) std::cout << exit << std::endl;
-    }
-  }
-  std::cout << " end of 2D loop" << std::endl;
-  canvas2D.Print(pdfend2D.c_str(),"pdf");
-  // Close pdf for 2D plots.
-  
+  canvasHD.Print(pdfendHD.c_str(), "pdf");
 
   o->Close();
   exit(0);
