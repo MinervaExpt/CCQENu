@@ -360,12 +360,14 @@ class CVFunctions {
         recofunctions["PionScore2"] = &CVUNIVERSE::GetPionScore2;
 
         // Genie Particle Counts
-
         trueintfunctions["TrueFSPartCount"] = &CVUNIVERSE::GetTrueNumberOfFSParticles;
         truefunctions["TrueFSPartCount"] = &CVUNIVERSE::GetTrueNumberOfFSParticles;
-
         trueintfunctions["TrueChargedPionCount"] = &CVUNIVERSE::GetTrueChargedPionCount;
         truefunctions["TrueChargedPionCount"] = &CVUNIVERSE::GetTrueChargedPionCount;
+        trueintfunctions["TruePositivePionCount"] = &CVUNIVERSE::GetTruePositivePionCount;
+        truefunctions["TruePositivePionCount"] = &CVUNIVERSE::GetTruePositivePionCount;
+        trueintfunctions["TrueNegativePionCount"] = &CVUNIVERSE::GetTrueNegativePionCount;
+        truefunctions["TrueNegativePionCount"] = &CVUNIVERSE::GetTrueNegativePionCount;
         trueintfunctions["TrueNeutralPionCount"] = &CVUNIVERSE::GetTrueNeutralPionCount;
         truefunctions["TrueNeutralPionCount"] = &CVUNIVERSE::GetTrueNeutralPionCount;
         trueintfunctions["TruePionCount"] = &CVUNIVERSE::GetTruePionCount;
@@ -395,6 +397,8 @@ class CVFunctions {
 
         trueintfunctions["TruthCCQELikeExceptForChargedPions"] = &CVUNIVERSE::GetTruthCCQELikeExceptForChargedPions;
         trueintfunctions["TruthHasSingleChargedPion"] = &CVUNIVERSE::GetTruthHasSingleChargedPion;
+        trueintfunctions["TruthHasSinglePositivePion"] = &CVUNIVERSE::GetTruthHasSinglePositivePion;
+        trueintfunctions["TruthHasSingleNegativePion"] = &CVUNIVERSE::GetTruthHasSingleNegativePion;
         trueintfunctions["TruthHasSingleNeutralPion"] = &CVUNIVERSE::GetTruthHasSingleNeutralPion;
         trueintfunctions["TruthHasMultiPion"] = &CVUNIVERSE::GetTruthHasMultiPion;
 
