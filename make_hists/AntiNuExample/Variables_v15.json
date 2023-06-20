@@ -8,7 +8,7 @@
     "add log10recoil"
   ],
   "HyperD": {
-    "pzmu_ptmu_Enu": {
+    "pzmu_ptmu_Log10Recoil": {
       "name": "pzmu_ptmu_Log10recoil",
       "vars": [
         "pzmu",
@@ -318,6 +318,15 @@
       "nbins": 52,
       "min": 5900,
       "max":8500.
+    },
+
+    "NBlobs": {
+      "reco" : "NBlobs",
+      "name": "NBlobs",
+      "title" : "Number of Blobs",
+      "nbins" : 10,
+      "min" : 0,
+      "max" : 10
     }
   }
 }
