@@ -9,9 +9,10 @@
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
     {"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"},
-    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, 
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
     {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
     {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"}
   ],
@@ -25,9 +26,10 @@
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
     {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
-    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"},
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
     {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
     {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"}
   ],
@@ -41,44 +43,44 @@
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
     {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
-    {"name":"HasMINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"HasMINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, 
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
     {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
     {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"}
   ],
-  //   "PiMinusSideband":[
-  //   {"name":"NBlobs","min":1,"variable":"NBlobs"},
-  //   {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
-  //   {"name":"MichelCount","min":0,"variable":"MichelElectronCandidates"},
-  //   {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
-  //   {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
-  //   {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
-  //   {"name":"ApothemX","max":850,"variable":"ApothemX"},
-  //   {"name":"ApothemY","max":850,"variable":"ApothemY"},
-  //   {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
-  //   {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-  //   {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
-  //   {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
-  //   {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
-  //   {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"}
-  // ],
-  //   "MultiPiSideband":[
-  //   {"name":"NBlobs","min":2,"variable":"NBlobs"},
-  //   {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
-  //   {"name":"MichelCount","min":1,"variable":"MichelElectronCandidates"},
-  //   {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
-  //   {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
-  //   {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
-  //   {"name":"ApothemX","max":850,"variable":"ApothemX"},
-  //   {"name":"ApothemY","max":850,"variable":"ApothemY"},
-  //   {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
-  //   {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-  //   {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
-  //   {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
-  //   {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
-  //   {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"}
-  // ],
+    "PiMinusSideband":[
+    {"name":"NBlobs","min":1,"variable":"NBlobs"},
+    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
+    {"name":"MichelCount","min":0,"variable":"MichelElectronCandidates"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
+    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, 
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  
+    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
+    {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"}
+  ],
+    "MultiPiSideband":[
+    {"name":"NBlobs","min":2,"variable":"NBlobs"},
+    {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
+    {"name":"MichelCount","min":1,"variable":"MichelElectronCandidates"},
+    {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+    {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
+    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, 
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"}, 
+    {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+    {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
+    {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"}
+  ],
   "MicBlobSideBand":[
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
     {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
@@ -89,8 +91,8 @@
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
     {"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"},
-    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, 
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
     {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
     {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"}
@@ -104,27 +106,37 @@
     {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"TrueThetamuDegrees"}
   ],
   "ccqelike":[
-    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
     {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
-    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.}
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120}
   ],
   "qelike":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
     {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
-    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.}
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120}
   ],
   "1chargedpion":[
-    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
     {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthHasSingleChargedPion","equals":1,"variable":"TruthHasSingleChargedPion"}
   ],
+  "1piplus":[
+    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthHasSinglePositivePion","equals":1,"variable":"TruthHasSinglePositivePion"}
+  ],
+  "1piminus":[
+    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthHasSingleNegativePion","equals":1,"variable":"TruthHasSingleNegativePion"}
+  ],
   "1neutralpion":[
-    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
     {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthHasSingleNeutralPion","equals":1,"variable":"TruthHasSingleNeutralPion"}
   ],
   "multipion":[
-    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
     {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthHasMultiplePions","equals":1,"variable":"TruthHasMultiPion"}
   ],
@@ -133,9 +145,9 @@
     {"name":"TruthHasSingleChargedPion","equals":0,"variable":"TruthHasSingleChargedPion"},
     {"name":"TruthHasSingleNeutralPion","equals":0,"variable":"TruthHasSingleNeutralPion"},
     {"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike"},
-    {"name":"PDG","equals":14,"variable":"TruthNuPDG"},
+    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
     {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"}
   ],
-  "data":[] // data doesn't cut anything at truth level
+  "data":[] 
 }
 

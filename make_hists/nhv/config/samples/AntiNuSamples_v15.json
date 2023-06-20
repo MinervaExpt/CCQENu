@@ -1,16 +1,13 @@
 {
     "Comments":[
-        "Borrowing Neutrino categories and samples"
+        "Borrowing Neutrino categories and samples -NHV 6/20/2023"
     ],
     "QElike": {
         "name": "QElike",
         "reco": "QElike",
         "phase_space": "phase_space",
-        "signal": [
-            "qelike"
-        ],
-        "background": 
-            ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
+        "signal": ["qelike"],
+        "background": ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -61,11 +58,8 @@
         "name": "MichelSideBand",
         "reco": "MichelSideBand",
         "phase_space": "phase_space",
-        "signal": [
-            "qelike"
-        ],
-        "background": 
-            ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
+        "signal": ["qelike"],
+        "background": ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -116,11 +110,8 @@
         "name": "BlobSideBand",
         "reco": "BlobSideBand",
         "phase_space": "phase_space",
-        "signal": [
-            "qelike"
-        ],
-        "background": 
-            ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
+        "signal": ["qelike"],
+        "background": ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -171,11 +162,8 @@
         "name": "PiMinusSideband",
         "reco": "PiMinusSideband",
         "phase_space": "phase_space",
-        "signal": [
-            "qelike"
-        ],
-        "background": 
-            ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
+        "signal": ["qelike"],
+        "background": ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -226,11 +214,8 @@
         "name": "MultiPiSideband",
         "reco": "MultiPiSideband",
         "phase_space": "phase_space",
-        "signal": [
-            "qelike"
-        ],
-        "background": 
-            ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
+        "signal": ["qelike"],
+        "background": ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -276,16 +261,13 @@
             "multipion": "N#pi in FS",
             "other": "Other"
         }
-    }
+    },
     "MicBlobSideBand": {
         "name": "MicBlobSideBand",
         "reco": "MicBlobSideBand",
         "phase_space": "phase_space",
-        "signal": [
-            "qelike"
-        ],
-        "background": 
-            ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
+        "signal": ["qelike"],
+        "background": ["1neutralpion", "1piplus", "1piminus", "multipion", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
