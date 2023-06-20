@@ -114,10 +114,10 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{P
 # Adding something we can run - Output name matches target name
 
 #add_executable(runsamples runsamples.C)
-#add_executable(sidebands_v2 sidebands_v2.C)
+add_executable(sidebands_v2 sidebands_v2.C)
 # add_executable(analyze_v8 analyze_v8.C)
 # add_executable(analyze_vSean smg/analyze_vSean.C)
-add_executable(analyze_v9 analyze_v9.C)
+# add_executable(analyze_v9 analyze_v9.C)
 
 
 
@@ -125,7 +125,7 @@ add_executable(analyze_v9 analyze_v9.C)
 # even flags, so linking a target that does not exist will not give a configure-time error.
 
 #target_link_libraries(runsamples  PRIVATE ${PROJEC_NAME} )
-#target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
 # target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
 # target_link_libraries(analyze_vSean  PRIVATE ${PROJECT_NAME} )
-target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )
+# target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )
