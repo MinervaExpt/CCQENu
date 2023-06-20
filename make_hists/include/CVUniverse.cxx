@@ -1197,8 +1197,12 @@ int CVUniverse::GetTruthHasSinglePositivePion() const {
 
     for (int i = 0; i < mc_nFSPart; i++) {
         int pdg = mc_FSPartPDG[i];
-        if (pdg == 111) return 0;  // Neutral pions
-        else if (pdg == 211) genie_n_pos_pion++;
+        if (pdg == 111)
+            return 0;  // Neutral pions
+        if (pdg == -211)
+            return 0;  // Negative pions
+        else if (pdg == 211)
+            genie_n_pos_pion++;
         // Intermediate check of charged pion count
         if (genie_n_pos_pion > 1) return 0;
     }
@@ -1227,6 +1231,8 @@ int CVUniverse::GetTruthHasSingleNegativePion() const {
         int pdg = mc_FSPartPDG[i];
         if (pdg == 111)
             return 0;  // Neutral pions
+        if (pdg == 211)
+            return 0;  // Positive pions
         else if (pdg == -211)
             genie_n_neg_pion++;
         // Intermediate check of charged pion count
