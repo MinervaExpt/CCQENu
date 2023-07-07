@@ -1,31 +1,75 @@
 {
-  "version":15,  // Run major variables in batch, use v13 of cuts, add closure
+  "version":15,  
   "mcIn":"${CCQEMAT}/nhv/playlists/MC_5A_local.txt",
   "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/cuts/AntiNuCuts_v15_SidebandProton.json", 
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
+  "samplesFile": "${CCQEMAT}/nhv/config/samples/AntiNuSamples_v15_SidebandProton.json", 
+  "outRoot": "AntiNu_5A_MnvTunev1_QElike_Sidebands", 
+  "scalefileIn": "${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", 
   "prescale":999,
   "playlist":"minervame5A",
-  "MinervaModel":"MnvTunev1", // set this as an environmental to MnvTunev1 or MnvTunev2
-  "recoName":"CCQENu", // change if running on MAT tuples
-  "tunedmc":"untuned", // set to "tuned", "untuned", or "both"
-  "closure":0, // set to 1 if you want to do closure test, otherwise 0
-  "scalefileIn":"${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", // location of anti-nu background tuning
-  "TuneCategories":["qelike","qelikenot"], // categories that have tunes
-  "pdg":-14, // I'm anti-neutrino
-  "cutsFile":"${CCQEMAT}/nhv/config/cuts/AntiNuCuts_v15.json", // describe the cuts, choose them in samples
-  "varsFile":"${CCQEMAT}/nhv/config/variables/Variables_v15.json", // describe the variables, choose them below
-  "samplesFile":"${CCQEMAT}/nhv/config/samples/AntiNuSamples_v15.json",  // describe the samples, cuts are chosen here
-  "runsamples":["QElike"], // chose which samples to run can provide a list or chose 1 using the batch
-  "outRoot":"CCQEMATAntiNuHyperD_minvervame5A_MnvTunev1_QElike", // name for output files
-  "AnalyzeVariables":["pzmu","ptmu","recoil","Q2QE"], // choose the 1D variables
-  "Analyze2DVariables":[],
-  "AnalyzeHyperDVariables":["pzmu_ptmu_recoil"], // choose HyperD variables, 1D variables must be chosen
-  "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"}, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
-  "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
-  "data":{"QElike":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
-  // turn on/off systematics
-  "systematics":["Flux","MuonMINOS","MuonResolution","MINOSEfficiency","Angle","GENIE","GenieRvx1pi","RPA","2p2h","MuonMinerva","geant4","response"],
-  "fluxUniverses":10, // # of flux universes
-  "NuEConstraint":1, // apply constraints to flux
-  "Geant4NeutronCV":1, // set true by default docdb 28556
-  "Geant4Elastics":1 // set to true by default
+  "MinervaModel":"MnvTunev1", 
+  "recoName":"CCQENu",
+  "tunedmc":"untuned", 
+  "closure":0,
+  "TuneCategories":["qelike", "qelikenot"], 
+  "pdg":-14,
+  "runsamples": [
+    "QElike",
+    "MichelSideband",
+    "BlobSideband",
+    "MultiplicitySideband",
+    "MicBlobMultipSideband",
+    "ProtonSideband"
+  ], 
+  "AnalyzeVariables": [
+    "pzmu",
+    "ptmu",
+    "recoil",
+    "Q2QE"
+  ], 
+  "Analyze2DVariables": [],
+  "AnalyzeHyperDVariables": [], 
+  "signal": {
+    "QElike": "qelike",
+    "MichelSideband": "qelike",
+    "BlobSideband": "qelike",
+    "MultiplicitySideband": "qelike",
+    "MicBlobMultipSideband": "qelike",
+    "ProtonSideband": "qelike"
+  }, 
+  "background": {
+    "QElike": ["positivepion", "negativepion", "neutralpion", "multipion", "other"],
+    "MichelSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "other"],
+    "BlobSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "other"],
+    "MultiplicitySideband": ["positivepion", "negativepion", "neutralpion", "multipion", "other"],
+    "MicBlobMultipSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "other"],
+    "ProtonSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "other"]
+  },
+  "data": {
+    "QElike": "data",
+    "MichelSideband": "data",
+    "BlobSideband": "data",
+    "MultiplicitySideband": "data",
+    "ProtonSideband": "data"
+  },
+  "systematics": [
+    "Flux",
+    "MuonMINOS",
+    "MuonResolution",
+    "MINOSEfficiency",
+    "Angle",
+    "GENIE",
+    "GenieRvx1pi",
+    "RPA",
+    "2p2h",
+    "MuonMinerva",
+    "geant4",
+    "response"
+  ],
+  "fluxUniverses":10,
+  "NuEConstraint":1, 
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1 
 }
