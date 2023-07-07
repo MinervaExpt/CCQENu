@@ -1437,6 +1437,20 @@ int CVUniverse::GetHasMichelOrNBlobs() const {
         return 0;
 }
 
+// int CVUniverse::GetHasMultiPion() const {
+//     // This is for antineutrino multipi sideband, checks for some combination of pi0, pi+, or pi- (so N_\pi >= 2)
+//     int picharged_count = 0;
+//     int pi0_count = 0;
+//     if ( CVUniverse::GetNBlobs() > 1)
+//         neutralpi_count += 1;
+//     if (GetInt("improved_michel_match_vec_sz") > 0)
+//         pi_count += 1;
+//     else if (GetMultiplicity() >= 2)
+//         return 1;
+//     else
+//         return 0;
+// }
+
 // Other particles
 
 int CVUniverse::GetTrueNumberOfFSParticles() const {
