@@ -277,8 +277,8 @@
       "name": "ThetamuDegrees",
       "title": "theta_mu (degrees)",
       "nbins": 20,
-      "min":0.,
-      "max":40.,
+      "min":0.0,
+      "max":40.0,
       "fluxnorm": false
     },
     "ThetaXmuDegrees": {
@@ -287,8 +287,8 @@
       "name": "ThetaXmuDegrees",
       "title": "theta_mu_x (degrees)",
       "nbins": 40,
-      "min":-40.,
-      "max":40.,
+      "min":-40.0,
+      "max":40.0,
       "fluxnorm": false
     },
     "ThetaYmuDegrees": {
@@ -297,8 +297,8 @@
       "name": "ThetaYmuDegrees",
       "title": "theta_mu_y (degrees)",
       "nbins": 40,
-      "min":-40.,
-      "max":40.,
+      "min":-40.0,
+      "max":40.0,
       "fluxnorm": false
     },
     "ApothemX": {
@@ -307,8 +307,8 @@
       "name": "ApothemX",
       "title": "ApothemX (mm)",
       "nbins": 50,
-      "min":-1000.,
-      "max":1000.
+      "min":-1000.0,
+      "max":1000.0
     },
     "ApothemY": {
       "reco": "ApothemY",
@@ -316,8 +316,8 @@
       "name": "ApothemY",
       "title": "ApothemY (mm)",
       "nbins": 50,
-      "min":-1000.,
-      "max":1000.
+      "min":-1000.0,
+      "max":1000.0
     },
     "ZVertex": {
       "reco": "ZVertex",
@@ -326,7 +326,7 @@
       "title": "ZVertex (mm)",
       "nbins": 52,
       "min": 5900,
-      "max":8500.
+      "max":8500.0
     },
 
     "NBlobs": {

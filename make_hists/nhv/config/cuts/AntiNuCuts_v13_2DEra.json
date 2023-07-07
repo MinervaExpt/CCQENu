@@ -53,7 +53,6 @@
       {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
       {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"}
     ],
-  // phase space definitions
   "phase_space":[
     {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
     {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
@@ -70,15 +69,10 @@
     {"name":"TrueMuonMomentumPar Max","max":15.0,"variable":"TruePparMuGeV"}
   ],
   
-  // signal definitions
  "qelike":[
-    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.}
   ],
  "qelike1p":[
-    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.},
     {"name":"MCIntType","max":7,"variable":"MCIntType"}
   ],
@@ -89,32 +83,24 @@
     {"name":"MCIntType","equals":8,"variable":"MCIntType"}
   ],
   "qelikenot":[
-    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike","protonKECutMeV":120.}
   ],
   "qelike_np":[
-  //  {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-  //  {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthIsCCQELikeAll","equals":1,"variable":"TruthIsCCQELikeAll"}
   ],
   "qelike1p_np":[
-   // {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-   // {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthIsCCQELikeAll","equals":1,"variable":"TruthIsCCQELikeAll"},
     {"name":"MCIntType","max":7,"variable":"MCIntType"}
   ],
   "qelike2p2h_np":[
-   // {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-   // {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+
     {"name":"TruthIsCCQELikeAll","equals":1,"variable":"TruthIsCCQELikeAll"},
     {"name":"MCIntType","equals":8,"variable":"MCIntType"}
   ],
   "qelikenot_np":[
-   // {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-   // {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+
     {"name":"TruthIsCCQELikeAll","equals":0,"variable":"TruthIsCCQELikeAll"}
   ],
-  "data":[] // data doesn't cut anything at truth level
+  "data":[] 
 }
 
