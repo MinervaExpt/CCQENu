@@ -141,7 +141,7 @@
     {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"},
-    {"name": "MaxProtonKE Min", "min": 120.0, "variable": "GetMaxProtonTrueKE"}
+    {"name": "MaxProtonKE Min", "min": 120.0, "variable": "MaxProtonTrueKE"}
   ],
   "qelikenot": [
     {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
