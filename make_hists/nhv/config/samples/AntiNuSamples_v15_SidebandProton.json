@@ -1,5 +1,6 @@
 {
     "Comments":[
+        "Added qelike_trackp background. Will need to check colors on pos/neg pion & qelike_trackp samples. 7/10/2023",
         "Added samples without proton KE constraint -NHV 7/7/2023",
         "Borrowing Neutrino categories and samples -NHV 6/20/2023"
     ],
@@ -8,7 +9,7 @@
         "reco": "QElike",
         "phase_space": "phase_space",
         "signal": ["qelike"],
-        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "other"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -25,6 +26,9 @@
             "multipion": {
                 "for": ["selected_reco"]
             },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
             "other": {
                 "for": ["selected_reco"]
             }
@@ -35,6 +39,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "line_colors": {
@@ -43,6 +48,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "legend_entries": {
@@ -52,6 +58,7 @@
             "positivepion": "Single #pi^{+} in FS",
             "negativepion": "Single #pi^{-} in FS",
             "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
             "other": "Other"
         }
     },
@@ -60,7 +67,7 @@
         "reco": "MichelSideband",
         "phase_space": "phase_space",
         "signal": ["qelike"],
-        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "other"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -77,6 +84,9 @@
             "multipion": {
                 "for": ["selected_reco"]
             },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
             "other": {
                 "for": ["selected_reco"]
             }
@@ -87,6 +97,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "line_colors": {
@@ -95,6 +106,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "legend_entries": {
@@ -104,6 +116,7 @@
             "positivepion": "Single #pi^{+} in FS",
             "negativepion": "Single #pi^{-} in FS",
             "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
             "other": "Other"
         }
     },
@@ -112,7 +125,7 @@
         "reco": "BlobSideband",
         "phase_space": "phase_space",
         "signal": ["qelike"],
-        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "other"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -129,6 +142,9 @@
             "multipion": {
                 "for": ["selected_reco"]
             },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
             "other": {
                 "for": ["selected_reco"]
             }
@@ -139,6 +155,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "line_colors": {
@@ -147,6 +164,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "legend_entries": {
@@ -156,6 +174,7 @@
             "positivepion": "Single #pi^{+} in FS",
             "negativepion": "Single #pi^{-} in FS",
             "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
             "other": "Other"
         }
     },
@@ -164,7 +183,7 @@
         "reco": "MultiplicitySideband",
         "phase_space": "phase_space",
         "signal": ["qelike"],
-        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "other"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -181,6 +200,9 @@
             "multipion": {
                 "for": ["selected_reco"]
             },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
             "other": {
                 "for": ["selected_reco"]
             }
@@ -191,6 +213,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "line_colors": {
@@ -199,6 +222,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "legend_entries": {
@@ -208,6 +232,7 @@
             "positivepion": "Single #pi^{+} in FS",
             "negativepion": "Single #pi^{-} in FS",
             "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
             "other": "Other"
         }
     }, 
@@ -216,7 +241,7 @@
         "reco": "MicBlobSideband",
         "phase_space": "phase_space",
         "signal": ["qelike"],
-        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "other"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -233,6 +258,9 @@
             "multipion": {
                 "for": ["selected_reco"]
             },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
             "other": {
                 "for": ["selected_reco"]
             }
@@ -243,6 +271,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "line_colors": {
@@ -251,6 +280,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "legend_entries": {
@@ -260,6 +290,7 @@
             "positivepion": "Single #pi^{+} in FS",
             "negativepion": "Single #pi^{-} in FS",
             "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
             "other": "Other"
         }
     },
@@ -268,7 +299,7 @@
         "reco": "MicBlobMultipSideband",
         "phase_space": "phase_space",
         "signal": ["qelike"],
-        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "other"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -285,6 +316,9 @@
             "multipion": {
                 "for": ["selected_reco"]
             },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
             "other": {
                 "for": ["selected_reco"]
             }
@@ -295,6 +329,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "line_colors": {
@@ -303,6 +338,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "legend_entries": {
@@ -312,6 +348,7 @@
             "positivepion": "Single #pi^{+} in FS",
             "negativepion": "Single #pi^{-} in FS",
             "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
             "other": "Other"
         }
     },
@@ -321,7 +358,7 @@
         "reco": "ProtonSideband",
         "phase_space": "phase_space",
         "signal": ["qelike"],
-        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "other"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
         "categories": {
             "qelike": {
                 "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -338,6 +375,9 @@
             "multipion": {
                 "for": ["selected_reco"]
             },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
             "other": {
                 "for": ["selected_reco"]
             }
@@ -348,6 +388,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "line_colors": {
@@ -356,6 +397,7 @@
             "positivepion": 593,
             "negativepion": 570,
             "multipion": 628,
+            "qelike_trackp": 649,
             "other": 1
         },
         "legend_entries": {
@@ -365,6 +407,7 @@
             "positivepion": "Single #pi^{+} in FS",
             "negativepion": "Single #pi^{-} in FS",
             "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
             "other": "Other"
         }
     }
