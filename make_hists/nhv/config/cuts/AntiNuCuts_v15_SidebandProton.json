@@ -1,5 +1,6 @@
 {
   "Comments": [
+    "Added qelike_trackp sig def that only allows protons > 120MeV. Maybe used in proton sideband. 7/10/2023",
     "Added 2p2h samples, qelikenot samples, & '_np' samples without proton KE constraint - NHV 7/7/2023",
     "v15 - make more similar to Neutrino cuts/sig def 6/20/2023",
     "v13 - make CCQELike a single cut so you can reverse it.",
@@ -9,7 +10,7 @@
 "QElike": [
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
     {"name": "Max Multiplicity", "max": 1, "variable": "Multiplicity"},
-    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichel"},
+    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
     {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
     {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
@@ -39,7 +40,7 @@
   ],
   "BlobSideband": [
     {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
-    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichel"},
+    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
     {"name": "Max Multiplicity", "max": 1, "variable": "Multiplicity"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
     {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
@@ -52,10 +53,10 @@
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
   ],
-  "PiMinusSideband": [
+  "MultiplicitySideband": [
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
-    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichel"},
-    {"name": "Multiplicity", "equals": 2, "variable": "Multiplicity"},
+    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
+    {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
     {"name": "No IsPrimaryProton", "equals": 0, "variable": "IsPrimaryProton"},
     {"name": "No AllExtraTracksProtons", "equals": 0, "variable": "AllExtraTracksProtons"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
@@ -72,7 +73,7 @@
   "MicBlobSideband": [
     {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
     {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
-    {"name": "HasImprovedMichel", "equals": 1, "variable": "HasImprovedMichel"},
+    {"name": "HasImprovedMichel", "equals": 1, "variable": "HasImprovedMichelElectron"},
     {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
     {"name": "AllExtraTracksProtons", "equals": 1, "variable": "AllExtraTracksProtons"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
@@ -85,7 +86,7 @@
   ],
   "MicBlobMultipSideband": [
     {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
-    {"name": "HasImprovedMichel", "equals": 1, "variable": "HasImprovedMichel"},
+    {"name": "HasImprovedMichel", "equals": 1, "variable": "HasImprovedMichelElectron"},
     {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
     {"name": "No IsPrimaryProton", "equals": 0, "variable": "IsPrimaryProton"},
     {"name": "No AllExtraTracksProtons", "equals": 0, "variable": "AllExtraTracksProtons"},
@@ -103,7 +104,7 @@
   "ProtonSideband": [
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
     {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
-    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichel"},
+    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
     {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
     {"name": "AllExtraTracksProtons", "equals": 1, "variable": "AllExtraTracksProtons"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
@@ -140,6 +141,12 @@
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"}
   ],
+  "qelike_trackp": [
+    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
+    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
+    {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"},
+    {"name": "MaxProtonKE", "min": 120.0, "variable": "GetMaxProtonTrueKE"}
+  ]
   "qelikenot": [
     {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
