@@ -1,8 +1,9 @@
 {
   "Comments": [
+    "Fixed 'other' category to use not passing TruthIsCCQELikeAll instead of TruthIsCCQELike. 7/10/2023",
     "Added qelike_trackp sig def that only allows protons > 120MeV. Maybe used in proton sideband. 7/10/2023",
     "Added 2p2h samples, qelikenot samples, & '_np' samples without proton KE constraint - NHV 7/7/2023",
-    "v15 - make more similar to Neutrino cuts/sig def 6/20/2023",
+    "v15 - make more similar to Neutrino cuts/sig def 6/20/2023", 
     "v13 - make CCQELike a single cut so you can reverse it.",
     "v9 - May 28, 2022, remove the FULL cuts and stick with all angles",
     "also add QElikeNot which is complement to QElike with recoil cut reversed"
@@ -126,11 +127,6 @@
     {"name": "TrueMuonMomentumPar Max", "max": 15.0, "variable": "TruePparMuGeV"},
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "TrueThetamuDegrees"}
   ],
-  "ccqelike": [
-    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
-    {"name": "TruthIsCCQELike", "equals": 1, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0}
-  ],
   "qelike": [
     {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
@@ -145,8 +141,8 @@
     {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"},
-    {"name": "MaxProtonKE", "min": 120.0, "variable": "GetMaxProtonTrueKE"}
-  ]
+    {"name": "MaxProtonKE Min", "min": 120.0, "variable": "GetMaxProtonTrueKE"}
+  ],
   "qelikenot": [
     {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
@@ -222,7 +218,8 @@
     {"name": "TruthHasMultiplePions", "equals": 0, "variable": "TruthHasMultiPion"},
     {"name": "TruthHasSingleChargedPion", "equals": 0, "variable": "TruthHasSingleChargedPion"},
     {"name": "TruthHasSingleNeutralPion", "equals": 0, "variable": "TruthHasSingleNeutralPion"},
-    {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike"},
+    // {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike"},
+    {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"},
     {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"}
   ],
