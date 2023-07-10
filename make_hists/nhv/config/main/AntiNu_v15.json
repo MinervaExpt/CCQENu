@@ -24,11 +24,8 @@
     "ProtonSideband"
   ], 
   "AnalyzeVariables": [
-    "pzmu",
-    "ptmu",
-    "recoil",
     "Q2QE"
-  ], 
+  ],
   "Analyze2DVariables": [],
   "AnalyzeHyperDVariables": [], 
   "signal": {
@@ -40,12 +37,12 @@
     "ProtonSideband": "qelike"
   }, 
   "background": {
-    "QElike": ["positivepion", "negativepion", "neutralpion", "multipion", "other"],
-    "MichelSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "other"],
-    "BlobSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "other"],
-    "MultiplicitySideband": ["positivepion", "negativepion", "neutralpion", "multipion", "other"],
-    // "MicBlobMultipSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "other"],
-    "ProtonSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "other"]
+    "QElike": ["positivepion", "negativepion", "neutralpion", "multipion", "qelike_trackp", "other"],
+    "MichelSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "qelike_trackp", "other"],
+    "BlobSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "qelike_trackp", "other"],
+    "MultiplicitySideband": ["positivepion", "negativepion", "neutralpion", "multipion", "qelike_trackp", "other"],
+    // "MicBlobMultipSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "qelike_trackp", "other"],
+    "ProtonSideband": ["positivepion", "negativepion", "neutralpion", "multipion", "qelike_trackp", "other"]
   },
   "data": {
     "QElike": "data",
