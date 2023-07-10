@@ -328,7 +328,6 @@
       "min": 5900,
       "max":8500.0
     },
-
     "NBlobs": {
       "reco" : "NBlobs",
       "name": "NBlobs",
@@ -336,7 +335,24 @@
       "nbins" : 10,
       "min" : 0,
       "max" : 10
-    }
+    },
+    "Multiplicity": {
+      "reco": "Multiplicity",
+      "name": "Multiplicity",
+      "title": "Multiplicity",
+      "nbins": 5,
+      "min": -0.5,
+      "max": 5.5
+    },
+    "NMichel": {
+      "reco": "ImprovedNMichel",
+      "name": "ImprovedNMichel",
+      "title": "N_{Michel}",
+      "nbins": 5,
+      "min": -0.5,
+      "max": 5.5
+    },
+    ""
   }
 }
 
