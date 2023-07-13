@@ -1,0 +1,413 @@
+{
+    "Comments":[
+        "Added qelike_trackp background. Will need to check colors on pos/neg pion & qelike_trackp samples. 7/10/2023",
+        "Added samples without proton KE constraint -NHV 7/7/2023",
+        "Borrowing Neutrino categories and samples -NHV 6/20/2023"
+    ],
+    "QElike": {
+        "name": "QElike",
+        "reco": "QElike",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+            },
+            "neutralpion": {
+                "for": ["selected_reco"]
+            },
+            "positivepion": {
+                "for": ["selected_reco"]
+            },
+            "negativepion": {
+                "for": ["selected_reco"]
+            },
+            "multipion": {
+                "for": ["selected_reco"]
+            },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
+            "other": {
+                "for": ["selected_reco"]
+            }
+        },
+        "fill_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "line_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "legend_entries": {
+            "data": "MINERvA Data",
+            "qelike": "QELike",
+            "neutralpion": "Single #pi^{0} in FS",
+            "positivepion": "Single #pi^{+} in FS",
+            "negativepion": "Single #pi^{-} in FS",
+            "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
+            "other": "Other"
+        }
+    },
+    "MichelSideband": {
+        "name": "MichelSideband",
+        "reco": "MichelSideband",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+            },
+            "neutralpion": {
+                "for": ["selected_reco"]
+            },
+            "positivepion": {
+                "for": ["selected_reco"]
+            },
+            "negativepion": {
+                "for": ["selected_reco"]
+            },
+            "multipion": {
+                "for": ["selected_reco"]
+            },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
+            "other": {
+                "for": ["selected_reco"]
+            }
+        },
+        "fill_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "line_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "legend_entries": {
+            "data": "MINERvA Data",
+            "qelike": "QELike",
+            "neutralpion": "Single #pi^{0} in FS",
+            "positivepion": "Single #pi^{+} in FS",
+            "negativepion": "Single #pi^{-} in FS",
+            "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
+            "other": "Other"
+        }
+    },
+    "BlobSideband": {
+        "name": "BlobSideband",
+        "reco": "BlobSideband",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+            },
+            "neutralpion": {
+                "for": ["selected_reco"]
+            },
+            "positivepion": {
+                "for": ["selected_reco"]
+            },
+            "negativepion": {
+                "for": ["selected_reco"]
+            },
+            "multipion": {
+                "for": ["selected_reco"]
+            },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
+            "other": {
+                "for": ["selected_reco"]
+            }
+        },
+        "fill_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "line_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "legend_entries": {
+            "data": "MINERvA Data",
+            "qelike": "QELike",
+            "neutralpion": "Single #pi^{0} in FS",
+            "positivepion": "Single #pi^{+} in FS",
+            "negativepion": "Single #pi^{-} in FS",
+            "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
+            "other": "Other"
+        }
+    },
+    "MultiplicitySideband": {
+        "name": "MultiplicitySideband",
+        "reco": "MultiplicitySideband",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+            },
+            "neutralpion": {
+                "for": ["selected_reco"]
+            },
+            "positivepion": {
+                "for": ["selected_reco"]
+            },
+            "negativepion": {
+                "for": ["selected_reco"]
+            },
+            "multipion": {
+                "for": ["selected_reco"]
+            },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
+            "other": {
+                "for": ["selected_reco"]
+            }
+        },
+        "fill_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "line_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "legend_entries": {
+            "data": "MINERvA Data",
+            "qelike": "QELike",
+            "neutralpion": "Single #pi^{0} in FS",
+            "positivepion": "Single #pi^{+} in FS",
+            "negativepion": "Single #pi^{-} in FS",
+            "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
+            "other": "Other"
+        }
+    }, 
+    "MicBlobSideband": {
+        "name": "MicBlobSideband",
+        "reco": "MicBlobSideband",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+            },
+            "neutralpion": {
+                "for": ["selected_reco"]
+            },
+            "positivepion": {
+                "for": ["selected_reco"]
+            },
+            "negativepion": {
+                "for": ["selected_reco"]
+            },
+            "multipion": {
+                "for": ["selected_reco"]
+            },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
+            "other": {
+                "for": ["selected_reco"]
+            }
+        },
+        "fill_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "line_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "legend_entries": {
+            "data": "MINERvA Data",
+            "qelike": "QELike",
+            "neutralpion": "Single #pi^{0} in FS",
+            "positivepion": "Single #pi^{+} in FS",
+            "negativepion": "Single #pi^{-} in FS",
+            "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
+            "other": "Other"
+        }
+    },
+    "MicBlobMultipSideband": {
+        "name": "MicBlobMultipSideband",
+        "reco": "MicBlobMultipSideband",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+            },
+            "neutralpion": {
+                "for": ["selected_reco"]
+            },
+            "positivepion": {
+                "for": ["selected_reco"]
+            },
+            "negativepion": {
+                "for": ["selected_reco"]
+            },
+            "multipion": {
+                "for": ["selected_reco"]
+            },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
+            "other": {
+                "for": ["selected_reco"]
+            }
+        },
+        "fill_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "line_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "legend_entries": {
+            "data": "MINERvA Data",
+            "qelike": "QELike",
+            "neutralpion": "Single #pi^{0} in FS",
+            "positivepion": "Single #pi^{+} in FS",
+            "negativepion": "Single #pi^{-} in FS",
+            "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
+            "other": "Other"
+        }
+    },
+    "ProtonSideband": {
+        "name": "ProtonSideband",
+        "reco": "ProtonSideband",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["neutralpion", "positivepion", "negativepion", "multipion", "qelike_trackp", "other"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+            },
+            "neutralpion": {
+                "for": ["selected_reco"]
+            },
+            "positivepion": {
+                "for": ["selected_reco"]
+            },
+            "negativepion": {
+                "for": ["selected_reco"]
+            },
+            "multipion": {
+                "for": ["selected_reco"]
+            },
+            "qelike_trackp": {
+                "for": ["selected_reco"]
+            },
+            "other": {
+                "for": ["selected_reco"]
+            }
+        },
+        "fill_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "line_colors": {
+            "qelike": 612,
+            "neutralpion": 413,
+            "positivepion": 593,
+            "negativepion": 570,
+            "multipion": 628,
+            "qelike_trackp": 649,
+            "other": 1
+        },
+        "legend_entries": {
+            "data": "MINERvA Data",
+            "qelike": "QELike",
+            "neutralpion": "Single #pi^{0} in FS",
+            "positivepion": "Single #pi^{+} in FS",
+            "negativepion": "Single #pi^{-} in FS",
+            "multipion": "N#pi in FS",
+            "qelike_trackp": "QElike w/ T_{p} > 120 MeV",
+            "other": "Other"
+        }
+    }
+}
