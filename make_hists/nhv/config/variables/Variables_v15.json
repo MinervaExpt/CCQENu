@@ -330,27 +330,40 @@
     },
     "NBlobs": {
       "reco" : "NBlobs",
+      "true": "TrueNeutralPionCount",
       "name": "NBlobs",
       "title" : "Number of Blobs",
-      "nbins" : 10,
-      "min" : 0,
-      "max" : 10
+      "nbins" : 11,
+      "min" : -0.5,
+      "max" : 10.5
     },
     "Multiplicity": {
       "reco": "Multiplicity",
+      "true": "TrueFSPartCount",
       "name": "Multiplicity",
       "title": "Multiplicity",
-      "nbins": 5,
+      "nbins": 7,
       "min": -0.5,
-      "max": 5.5
+      "max": 6.5
     },
     "NMichel": {
       "reco": "ImprovedNMichel",
+      "true": "TrueChargedPionCount",
       "name": "ImprovedNMichel",
       "title": "N_{Michel}",
-      "nbins": 5,
+      "nbins": 6,
       "min": -0.5,
       "max": 5.5
+    },
+    "PrimaryProtonScore": {
+      "reco": "PrimaryProtonScore",
+      "true": "TruthHasSingleProton",
+      "name": "PrimaryProtonScore",
+      "title": "Proton Score of Primary non-Muon Track",
+      "nbins": 20,
+      "min":0.0,
+      "max":1.0,
+      "fluxnorm": false
     }
   }
 }
