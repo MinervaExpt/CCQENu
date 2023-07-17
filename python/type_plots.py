@@ -17,7 +17,10 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
   leg.SetTextSize(0.03)
   return leg
   
-process=["data","QE","RES","DIS","Other","","","","2p2h","","background"]
+process=["data","QE","RES","DIS","Other","","","","2p2h",""]
+l = len(process)
+for x in range(0,l+1):
+    process.append(process[x]+"-not")
 colors = {
 0:ROOT.kBlack,
 1:ROOT.kBlue-6,
@@ -46,70 +49,89 @@ f = TFile.Open(filename,"READONLY")
 
 keys = f.GetListOfKeys()
 
-stacks = {}
-legs = {}
+groups = {}
+#groups = {}
+#legs = {}
 
+# find all the valid histogram and group by keywords
 for k in keys:
     name = k.GetName()
+    if "___" not in name:
+        continue
     parse = name.split("___")
     if len(parse) < 5: continue
     if not "type" in parse[4]: continue
-    if parse[0] not in stacks.keys():
-        stacks[parse[0]] = {}
-        legs[parse[0]] = {}
-    if parse[1] not in stacks[parse[0]].keys():
-        stacks[parse[0]][parse[1]] = {}
-        legs[parse[0]][parse[1]] = {}
-    if parse[2] not in stacks[parse[0]][parse[1]].keys():
-        stacks[parse[0]][parse[1]][parse[2]] = {}
-        legs[parse[0]][parse[1]][parse[2]] = {}
-    if parse[3] not in stacks[parse[0]][parse[1]][parse[2]].keys():
-        index = int(parse[4].replace("types_",""))
-        if index != 0: continue
-        s = THStack(name.replace("types","stack"),"")
-            
-        stacks[parse[0]][parse[1]][parse[2]][parse[3]] = s
-
-         
-        legs[parse[0]][parse[1]][parse[2]][parse[3]] = TLegend(0.5,0.7,0.9,0.9)
-         
+    d = parse[0]
+    s = parse[1]
+    c = parse[2]
+    v = parse[3]
+    # reorder so category is last
+    if d not in groups.keys():
+        groups[d] = {}
+        #legs[parse[0]] = {}
+    if s not in groups[d].keys():
+        groups[parse[0]][parse[1]] = {}
+        
+    if v not in groups[d][s].keys():
+        groups[d][s][v] = {}
+        
+    if c not in groups[d][s][v].keys():
+        groups[d][s][v][c] = []
+        
 
 for k in keys:
     name = k.GetName()
     parse = name.split("___")
     if len(parse) < 5: continue
+    d = parse[0]
+    s = parse[1]
+    c = parse[2]
+    v = parse[3]
     if not "type" in parse[4]: continue
     index = int(parse[4].replace("types_",""))
+    print ("check",index,name)
     h = f.Get(name)
-    print("title",h.GetTitle())
-    h.Scale(1.,"width")
-    stacks[parse[0]][parse[1]][parse[2]][parse[3]].SetTitle(h.GetTitle())
-    print ("xaxis",h.GetXaxis().GetTitle())
-    xaxis = h.GetXaxis().GetTitle()
-    
     if h.GetEntries() <= 0: continue
-    
-    print (index)
-    
-    
+    h.Scale(1.,"width")
     h.SetFillColor(colors[index])
     
-    stacks[parse[0]][parse[1]][parse[2]][parse[3]].Add(h)
-    legs[parse[0]][parse[1]][parse[2]][parse[3]].AddEntry(h,process[index],"f")
-    h.Print()
-    #stacks[parse[0]][parse[1]][parse[2]][parse[3]].Print()
+    if c == "qelikenot":  # make a better way to do this.
+        index += 10
+        h.SetFillStyle(3244)
+    groups[d][s][v][c].append([index,h])
+    print (groups[d][s][v][c])
+    
     
 template = "%s___%s___%s___%s"
-for a in stacks.keys():
-    for b in stacks[a].keys():
-        for c in stacks[a][b].keys():
-           for d in stacks[a][b][c].keys():
-                stacks[a][b][c][d].Print()
-                cc = CCQECanvas(template%(a,b,c,d),template%(a,b,c,d))
-                stacks[a][b][c][d].Draw("hist")
-                legs[a][b][c][d].Draw()
-                cc.Draw()
-                cc.Print(template%(a,b,c,d)+".png")
+for a in groups.keys():
+    for b in groups[a].keys():
+        for c in groups[a][b].keys():
+            for d in groups[a][b][c].keys():
+                name = template%(a,b,c,d)
+                if d == "qelike":
+                    stack = THStack(name.replace("types","stack"),"")
+                    leg = CCQELegend(0.5,0.7,0.9,0.9)
+                    cc = CCQECanvas(name,name)
+                
+                for g in groups[a][b][c][d]:
+                    #print (g)
+                    index = g[0]
+                    h = g[1]
+                    if d == "qelike":
+                        xaxis = h.GetXaxis().GetTitle()
+                        main = h.GetTitle()
+                    
+                    #if h.GetEntries()<=0.0:
+                        #continue
+                    #print ("g",a,b,c,d,g,index,h)
+                    stack.Add(h)
+                    leg.AddEntry(h,process[index],'f')
+                    
+            stack.SetTitle(b + "_" + c +";"+xaxis)
+            stack.Draw("hist")
+            leg.Draw()
+            cc.Draw()
+            cc.Print(a+"_" + b + "_" + c +".png")
             
     
 
