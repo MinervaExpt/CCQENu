@@ -49,10 +49,12 @@ f = TFile.Open(filename,"READONLY")
 
 keys = f.GetListOfKeys()
 
+h_pot = f.Get("POT_summary")
+dataPOT = h_pot.GetBinContent(1);
+mcPOTprescaled = h_pot.GetBinContent(3);
+POTScale = dataPOT / mcPOTprescaled;
+    
 groups = {}
-#groups = {}
-#legs = {}
-
 # find all the valid histogram and group by keywords
 for k in keys:
     name = k.GetName()
@@ -60,17 +62,19 @@ for k in keys:
         continue
     parse = name.split("___")
     if len(parse) < 5: continue
-    if not "type" in parse[4]: continue
+    print (parse)
+    if not "type" in parse[4] and not "data" in parse[2]: continue
     d = parse[0]
     s = parse[1]
     c = parse[2]
     v = parse[3]
     # reorder so category is last
+    if d == "h2D": continue
     if d not in groups.keys():
         groups[d] = {}
         #legs[parse[0]] = {}
     if s not in groups[d].keys():
-        groups[parse[0]][parse[1]] = {}
+        groups[d][s] = {}
         
     if v not in groups[d][s].keys():
         groups[d][s][v] = {}
@@ -84,51 +88,78 @@ for k in keys:
     parse = name.split("___")
     if len(parse) < 5: continue
     d = parse[0]
+    if d == "h2D": continue # only 1d
     s = parse[1]
     c = parse[2]
     v = parse[3]
-    if not "type" in parse[4]: continue
-    index = int(parse[4].replace("types_",""))
-    print ("check",index,name)
-    h = f.Get(name)
-    if h.GetEntries() <= 0: continue
-    h.Scale(1.,"width")
-    h.SetFillColor(colors[index])
+    if "type" in parse[4]:
+        index = int(parse[4].replace("types_",""))
+        print ("check",index,name)
+        h = f.Get(name)
+        if h.GetEntries() <= 0: continue
+        h.Scale(POTScale,"width") #scale to data
+        h.SetFillColor(colors[index])
+        
+        if c == "qelikenot":  # make a better way to do this, maybe code in the input file?
+            index += 10
+            h.SetFillStyle(3244)
+        groups[d][s][v][c].append([index,h])
+        print ("mc",groups[d][s][v][c])
+    if "data" in c:
+        index = 0
+        h = f.Get(name)
+        
+        if h.GetEntries() <= 0: continue
+        h.Scale(1.,"width")
+        h.SetMarkerStyle(20)
+        groups[d][s][v][c].append([index,h])
+        print ("data",groups[d][s][v][c])
+        
     
-    if c == "qelikenot":  # make a better way to do this.
-        index += 10
-        h.SetFillStyle(3244)
-    groups[d][s][v][c].append([index,h])
-    print (groups[d][s][v][c])
-    
-    
+# do the plotting
+
 template = "%s___%s___%s___%s"
 for a in groups.keys():
+    if a != "h": continue
+    print ("a is",a)
     for b in groups[a].keys():
         for c in groups[a][b].keys():
+            first = 0
+            leg = CCQELegend(0.5,0.7,0.9,0.9)
+            name = "%s_%s_%s"%(a,b,c)
+            cc = CCQECanvas(name,name)
+            data = TH1D()
+            if len(groups[a][b][c]["data"]) < 1:
+                print (" no data",a,b,c)
+                continue
+            data = TH1D(groups[a][b][c]["data"][0][1])
+            data.Draw("PE")
+            data.Print()
             for d in groups[a][b][c].keys():
-                name = template%(a,b,c,d)
-                if d == "qelike":
-                    stack = THStack(name.replace("types","stack"),"")
-                    leg = CCQELegend(0.5,0.7,0.9,0.9)
-                    cc = CCQECanvas(name,name)
+                if d == "data": continue
                 
-                for g in groups[a][b][c][d]:
-                    #print (g)
-                    index = g[0]
-                    h = g[1]
-                    if d == "qelike":
-                        xaxis = h.GetXaxis().GetTitle()
-                        main = h.GetTitle()
+                if first == 0:
+                    stack = THStack(name.replace("types","stack"),"")
                     
-                    #if h.GetEntries()<=0.0:
-                        #continue
-                    #print ("g",a,b,c,d,g,index,h)
+                first+=1
+                # do the MC
+                for g in groups[a][b][c][d]:
+                    
+                    index = g[0]
+                    g[1].Print()
+                    #print (g)
+                    if index == 0: continue
+                    h = g[1]
+                    #if d == "qelike":
+                    #    xaxis = h.GetXaxis().GetTitle()
+                    #    main = h.GetTitle()
+            
                     stack.Add(h)
                     leg.AddEntry(h,process[index],'f')
-                    
-            stack.SetTitle(b + "_" + c +";"+xaxis)
-            stack.Draw("hist")
+                # do the data, need to find it
+            #stack.SetTitle(b + "_" + c +";"+xaxis)
+            stack.Draw("hist same")
+            data.Draw("PE same")
             leg.Draw()
             cc.Draw()
             cc.Print(a+"_" + b + "_" + c +".png")
