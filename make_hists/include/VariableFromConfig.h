@@ -14,12 +14,11 @@
 #define VARIABLEFromConfig_H
 
 #include "CVUniverse.h"
-// #include "PlotUtils/HistFolio.h"  - gives annoying error messages
+//#include "PlotUtils/HistFolio.h" // - gives annoying error messages
 #include "HistWrapperMap.h"
 #include "MinervaUnfold/MnvResponse.h"
 #include "include/ResponseWrapperMap.h"
 #include "utils/NuConfig.h"
-// #include "utils/UniverseDecoder.h"
 
 #include "include/CVFunctions.h"
 #ifndef __CINT__  // CINT doesn't know about std::function
@@ -35,8 +34,10 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     // typedef PlotUtils::HistWrapperMap<CVUniverse> HM;
     typedef ResponseWrapperMap<CVUniverse> RM;
     // typedef PlotUtils::MnvH1D MH1D;
-    //  typedef PlotUtils::HistFolio<PlotUtils::MnvH1D> FOLIO;
+    
     bool m_doresolution;
+    bool m_dotypes = true; //HMS set true for now for testing
+
 
    public:
     //=======================================================================================
@@ -57,6 +58,8 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
     VariableFromConfig(const NuConfig config) {
         // config.Print();
+        
+        
 
         CVFunctions<CVUniverse> fun;
         // fun.InitFunctionMaps();
@@ -126,6 +129,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 PlotUtils::VariableBase<CVUniverse>::m_has_reco_binning = false;
             }
         }
+
         // std::cout << " Check Binning For" << config.GetString("name") << std::endl;
         // PrintBinning();
         // wPrintRecoBinning();
@@ -148,6 +152,10 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     RM m_tuned_response;
     HM m_resolution;
     HM m_tuned_resolution;
+    typedef   std::map<int, TH1D*> TYPES;
+    typedef   std::map<std::string,TYPES> TYPEMAP;
+    TYPEMAP m_types;
+    
 
     UniverseMap m_universes;
     std::string m_units;
@@ -157,6 +165,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     std::map<const std::string, bool> hasTruth;
     std::map<const std::string, bool> hasResponse;
     std::map<const std::string, bool> hasTunedMC;
+    std::map<const std::string, bool> hasType;
     std::vector<std::string> m_tags;
     std::vector<std::string> m_for;
     std::string m_tunedmc;  // Can be set to "both", "tuned", or "untuned"
@@ -207,8 +216,26 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
         std::vector<double> recobins = GetRecoBinVec();
         // need reco level binning here:
-        m_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label).c_str(), GetNRecoBins(), recobins, univs, tags);
+        std::string axislabel=(GetName() + ";" + m_xaxis_label+";counts/bin");
+        m_selected_mc_reco = HM(Form("%s", GetName().c_str()), axislabel.c_str(), GetNRecoBins(), recobins, univs, tags);
         m_selected_mc_reco.AppendName("reconstructed", tags);  // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+        if (m_dotypes){
+            for (auto tag:tags){
+              
+                for (int i = 0; i < 11;  i++){
+                    std::string myname = "h___"+tag +"___"+Form("%s", GetName().c_str())+Form("___types_%d",i);
+                    
+                    m_types[tag][i] = new TH1D(myname.c_str(),axislabel.c_str(),recobins.size()-1,recobins.data());
+                    m_types[tag][i]->SetTitle(axislabel.c_str());
+                }
+                
+                hasType[tag] = true;
+            }
+            
+        }
+//        for (int i=0; i<intypes.size(); i++){
+//            std::cout << i << " " << intypes[i] << std::endl;
+//        }
     }
 
     template <typename T>
@@ -369,6 +396,11 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                     m_selected_mc_reco.Write(tag);
                     std::cout << " write out selected mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
                 }
+                if (m_dotypes){
+                    for (auto h : m_types[tag]){
+                        ((TH1D*)h.second)->Write();
+                    }
+                }
                 if (hasTunedMC[tag]) {
                     m_tuned_selected_mc_reco.Write(tag);
                     std::cout << " write out tuned selected mc histogram " << m_tuned_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
@@ -488,6 +520,13 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         if (hasTunedMC[tag] && scale >= 0.) {
             m_tuned_resolution.Fill(tag, univ, value - truth, weight * scale);
         }
+    }
+    
+    void FillType(std::string tag, const int type, const double value, const double weight, const double scale){
+        // had to hack to get it to give back based on integer types.
+        
+        m_types[tag][type]->Fill(value, weight*scale);
+
     }
 
     // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.
