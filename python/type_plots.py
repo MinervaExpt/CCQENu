@@ -117,24 +117,32 @@ for k in keys:
         
     
 # do the plotting
-
+ROOT.gStyle.SetOptStat(0)
 template = "%s___%s___%s___%s"
 for a in groups.keys():
-    if a != "h": continue
+    if a != "h": continue # no 2D
     print ("a is",a)
     for b in groups[a].keys():
         for c in groups[a][b].keys():
             first = 0
             leg = CCQELegend(0.5,0.7,0.9,0.9)
+            leg.SetNColumns(2)
             name = "%s_%s_%s"%(a,b,c)
+            
+            # do the data first
             cc = CCQECanvas(name,name)
             data = TH1D()
             if len(groups[a][b][c]["data"]) < 1:
                 print (" no data",a,b,c)
                 continue
             data = TH1D(groups[a][b][c]["data"][0][1])
+            data.SetTitle(name)
             data.Draw("PE")
+            leg.AddEntry(data,"data","pe")
+            
             data.Print()
+            
+            # do the MC
             for d in groups[a][b][c].keys():
                 if d == "data": continue
                 
@@ -142,7 +150,7 @@ for a in groups.keys():
                     stack = THStack(name.replace("types","stack"),"")
                     
                 first+=1
-                # do the MC
+                
                 for g in groups[a][b][c][d]:
                     
                     index = g[0]
@@ -156,13 +164,12 @@ for a in groups.keys():
             
                     stack.Add(h)
                     leg.AddEntry(h,process[index],'f')
-                # do the data, need to find it
-            #stack.SetTitle(b + "_" + c +";"+xaxis)
+            
             stack.Draw("hist same")
             data.Draw("PE same")
             leg.Draw()
             cc.Draw()
-            cc.Print(a+"_" + b + "_" + c +".png")
+            cc.Print(name+".png")
             
     
 
