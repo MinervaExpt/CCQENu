@@ -80,7 +80,7 @@ for k in keys:
         groups[d][s][v] = {}
         
     if c not in groups[d][s][v].keys():
-        groups[d][s][v][c] = []
+        groups[d][s][v][c] = {}
         
 
 for k in keys:
@@ -103,7 +103,7 @@ for k in keys:
         if c == "qelikenot":  # make a better way to do this, maybe code in the input file?
             index += 10
             h.SetFillStyle(3244)
-        groups[d][s][v][c].append([index,h])
+        groups[d][s][v][c][index]=h
         print ("mc",groups[d][s][v][c])
     if "data" in c:
         index = 0
@@ -112,7 +112,7 @@ for k in keys:
         if h.GetEntries() <= 0: continue
         h.Scale(1.,"width")
         h.SetMarkerStyle(20)
-        groups[d][s][v][c].append([index,h])
+        groups[d][s][v][c][index]=h
         print ("data",groups[d][s][v][c])
         
     
@@ -135,7 +135,7 @@ for a in groups.keys():
             if len(groups[a][b][c]["data"]) < 1:
                 print (" no data",a,b,c)
                 continue
-            data = TH1D(groups[a][b][c]["data"][0][1])
+            data = TH1D(groups[a][b][c]["data"][0])
             data.SetTitle(name)
             data.Draw("PE")
             leg.AddEntry(data,"data","pe")
@@ -145,23 +145,12 @@ for a in groups.keys():
             # do the MC
             for d in groups[a][b][c].keys():
                 if d == "data": continue
-                
-                if first == 0:
+                if first == 0: # make a stack
                     stack = THStack(name.replace("types","stack"),"")
-                    
                 first+=1
-                
-                for g in groups[a][b][c][d]:
-                    
-                    index = g[0]
-                    g[1].Print()
-                    #print (g)
+                for index in groups[a][b][c][d].keys(): #fill the stack
                     if index == 0: continue
-                    h = g[1]
-                    #if d == "qelike":
-                    #    xaxis = h.GetXaxis().GetTitle()
-                    #    main = h.GetTitle()
-            
+                    h = groups[a][b][c][d][index]
                     stack.Add(h)
                     leg.AddEntry(h,process[index],'f')
             
