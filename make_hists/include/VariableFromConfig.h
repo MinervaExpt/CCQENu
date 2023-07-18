@@ -155,6 +155,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     typedef   std::map<int, TH1D*> TYPES;
     typedef   std::map<std::string,TYPES> TYPEMAP;
     TYPEMAP m_types;
+    TYPEMAP m_tuned_types;
     
 
     UniverseMap m_universes;
@@ -166,6 +167,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     std::map<const std::string, bool> hasResponse;
     std::map<const std::string, bool> hasTunedMC;
     std::map<const std::string, bool> hasType;
+    std::map<const std::string, bool> hasTunedType;
     std::vector<std::string> m_tags;
     std::vector<std::string> m_for;
     std::string m_tunedmc;  // Can be set to "both", "tuned", or "untuned"
@@ -349,6 +351,22 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 m_tuned_resolution.AppendName("resolution_tuned", tuned_tags);
             }
         }
+        std::string axislabel=(GetName() + ";" + m_xaxis_label+";counts/bin");
+        if (m_dotypes){
+            for (auto tag:tuned_tags){
+              
+                for (int i = 0; i < 11;  i++){
+                    std::string myname = "h___"+tag +"___"+Form("%s", GetName().c_str())+Form("___tuned_type_%d",i);
+                    
+                    
+                    m_tuned_types[tag][i] = new TH1D(myname.c_str(),axislabel.c_str(),recobins.size()-1,recobins.data());
+                    m_tuned_types[tag][i]->SetTitle(axislabel.c_str());
+                }
+                
+                hasTunedType[tag] = true;
+            }
+            
+        }
 
         if (std::count(m_for.begin(), m_for.end(), "response") >= 1) {
             m_tuned_response = RM(Form("%s", GetName().c_str()), reco_univs, recobins, bins, response_tags, "_tuned");
@@ -398,6 +416,9 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 }
                 if (m_dotypes){
                     for (auto h : m_types[tag]){
+                        ((TH1D*)h.second)->Write();
+                    }
+                    for (auto h : m_tuned_types[tag]){
                         ((TH1D*)h.second)->Write();
                     }
                 }
@@ -522,11 +543,15 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         }
     }
     
-    void FillType(std::string tag, const int type, const double value, const double weight, const double scale){
-        // had to hack to get it to give back based on integer types.
+    void FillType(std::string tag, const int type, const double value, const double weight, const double scale=1.0){
         
-        m_types[tag][type]->Fill(value, weight*scale);
-
+        if (hasMC[tag] && m_tunedmc != "tuned") {
+            m_types[tag][type]->Fill(value, weight);
+        }
+        if (hasTunedMC[tag] && scale >= 0.) {
+           // std::cout << " tuned fill" << tag << " " << type << " " << value << " " << scale << std::endl;
+            m_tuned_types[tag][type]->Fill(value, weight*scale);
+        }
     }
 
     // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.

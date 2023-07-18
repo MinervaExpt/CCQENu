@@ -108,7 +108,7 @@ void FillType(std::string tag, CVUniverse* univ, double weight,
   for (auto v : variables) {
     if (v->hasType[tag]){
       double reco_val = v->GetRecoValue(*univ, 0);
-        int type = univ->GetMCIntType();
+      int type = univ->GetMCIntType();
       // This will fill both tuned and untuned
       v->FillType(tag,type,reco_val,weight,scale);
 

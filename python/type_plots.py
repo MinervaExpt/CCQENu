@@ -43,7 +43,13 @@ colors = {
 18:ROOT.kGreen-6,
 19:ROOT.kTeal-6}
 
+if len(sys.argv) == 1:
+    print ("enter root file name and optional 2nd argument to get tuned version")
+flag = "types_"
 filename = sys.argv[1]
+if len(sys.argv)> 2:
+    flag = "tuned_type_"
+    
 
 f = TFile.Open(filename,"READONLY")
 
@@ -55,6 +61,8 @@ mcPOTprescaled = h_pot.GetBinContent(3);
 POTScale = dataPOT / mcPOTprescaled;
     
 groups = {}
+scaleX = ["Q2QE"]
+scaleY = ["recoil"]
 # find all the valid histogram and group by keywords
 for k in keys:
     name = k.GetName()
@@ -63,7 +71,7 @@ for k in keys:
     parse = name.split("___")
     if len(parse) < 5: continue
     print (parse)
-    if not "type" in parse[4] and not "data" in parse[2]: continue
+    if not flag in parse[4] and not "data" in parse[2]: continue
     d = parse[0]
     s = parse[1]
     c = parse[2]
@@ -92,8 +100,8 @@ for k in keys:
     s = parse[1]
     c = parse[2]
     v = parse[3]
-    if "type" in parse[4]:
-        index = int(parse[4].replace("types_",""))
+    if flag in parse[4]:
+        index = int(parse[4].replace(flag,""))
         print ("check",index,name)
         h = f.Get(name)
         if h.GetEntries() <= 0: continue
@@ -131,12 +139,18 @@ for a in groups.keys():
             
             # do the data first
             cc = CCQECanvas(name,name)
+            if c in scaleX:
+                cc.SetLogx()
+            if c in scaleY:
+                cc.SetLogy()
             data = TH1D()
             if len(groups[a][b][c]["data"]) < 1:
                 print (" no data",a,b,c)
                 continue
+            
             data = TH1D(groups[a][b][c]["data"][0])
             data.SetTitle(name)
+            
             data.Draw("PE")
             leg.AddEntry(data,"data","pe")
             
@@ -146,7 +160,7 @@ for a in groups.keys():
             for d in groups[a][b][c].keys():
                 if d == "data": continue
                 if first == 0: # make a stack
-                    stack = THStack(name.replace("types","stack"),"")
+                    stack = THStack(name.replace(flag,"stack"),"")
                 first+=1
                 for index in groups[a][b][c][d].keys(): #fill the stack
                     if index == 0: continue
@@ -158,7 +172,7 @@ for a in groups.keys():
             data.Draw("PE same")
             leg.Draw()
             cc.Draw()
-            cc.Print(name+".png")
+            cc.Print(name+"_"+flag+".png")
             
     
 
