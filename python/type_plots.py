@@ -18,8 +18,10 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
   return leg
   
 process=["data","QE","RES","DIS","Other","","","","2p2h",""]
-l = len(process)
-for x in range(0,l+1):
+
+nproc = len(process)
+
+for x in range(0,nproc+1):
     process.append(process[x]+"-not")
 colors = {
 0:ROOT.kBlack,
@@ -64,13 +66,14 @@ groups = {}
 scaleX = ["Q2QE"]
 scaleY = ["recoil"]
 # find all the valid histogram and group by keywords
+ncats = 0
 for k in keys:
     name = k.GetName()
     if "___" not in name:
         continue
     parse = name.split("___")
     if len(parse) < 5: continue
-    print (parse)
+    #print (parse)
     if not flag in parse[4] and not "data" in parse[2]: continue
     d = parse[0]
     s = parse[1]
@@ -89,7 +92,10 @@ for k in keys:
         
     if c not in groups[d][s][v].keys():
         groups[d][s][v][c] = {}
-        
+    # need to know the #of categories later
+    #print ("cats",groups[d][s][v].keys())
+    if len(groups[d][s][v].keys())-1 > ncats:
+        ncats = len(groups[d][s][v].keys())-1
 
 for k in keys:
     name = k.GetName()
@@ -102,7 +108,7 @@ for k in keys:
     v = parse[3]
     if flag in parse[4]:
         index = int(parse[4].replace(flag,""))
-        print ("check",index,name)
+        #print ("check",index,name)
         h = f.Get(name)
         if h.GetEntries() <= 0: continue
         h.Scale(POTScale,"width") #scale to data
@@ -112,7 +118,7 @@ for k in keys:
             index += 10
             h.SetFillStyle(3244)
         groups[d][s][v][c][index]=h
-        print ("mc",groups[d][s][v][c])
+        #print ("mc",groups[d][s][v][c])
     if "data" in c:
         index = 0
         h = f.Get(name)
@@ -121,15 +127,20 @@ for k in keys:
         h.Scale(1.,"width")
         h.SetMarkerStyle(20)
         groups[d][s][v][c][index]=h
-        print ("data",groups[d][s][v][c])
+        #print ("data",groups[d][s][v][c])
         
     
 # do the plotting
+
+
+# build an order which puts backgrounds below signal (assumes signal is first in list)
+bestorder = []
+
 ROOT.gStyle.SetOptStat(0)
 template = "%s___%s___%s___%s"
 for a in groups.keys():
     if a != "h": continue # no 2D
-    print ("a is",a)
+    #print ("a is",a)
     for b in groups[a].keys():
         for c in groups[a][b].keys():
             first = 0
@@ -157,13 +168,21 @@ for a in groups.keys():
             data.Print()
             
             # do the MC
-            for d in groups[a][b][c].keys():
+            
+            bestorder = list(groups[a][b][c].keys()).copy()
+            signal = bestorder[1]
+            bestorder = bestorder[2:]
+            bestorder.append(signal)
+            for d in bestorder:
                 if d == "data": continue
                 if first == 0: # make a stack
                     stack = THStack(name.replace(flag,"stack"),"")
                 first+=1
                 for index in groups[a][b][c][d].keys(): #fill the stack
+                    #print("index",index,bestorder,groups[a][b][c][d])
                     if index == 0: continue
+                    if index not in groups[a][b][c][d]: continue
+                    #print ("do this one ",  index,bestorder)
                     h = groups[a][b][c][d][index]
                     stack.Add(h)
                     leg.AddEntry(h,process[index],'f')
