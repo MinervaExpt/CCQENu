@@ -143,6 +143,7 @@ for a in groups.keys():
     #print ("a is",a)
     for b in groups[a].keys():
         for c in groups[a][b].keys():
+        
             first = 0
             leg = CCQELegend(0.5,0.7,0.9,0.9)
             leg.SetNColumns(2)
@@ -168,7 +169,7 @@ for a in groups.keys():
             data.Print()
             
             # do the MC
-            
+            # move the first category to the top of the plot
             bestorder = list(groups[a][b][c].keys()).copy()
             signal = bestorder[1]
             bestorder = bestorder[2:]
