@@ -147,8 +147,8 @@ for a in groups.keys():
             first = 0
             leg = CCQELegend(0.5,0.7,0.9,0.9)
             leg.SetNColumns(2)
-            name = "%s_%s_%s"%(a,b,c)
-            
+            thename = "%s_%s_%s"%(b,c,d)
+            thetitle = "%s %s %s"%(b,c,d)
             # do the data first
             cc = CCQECanvas(name,name)
             if c in scaleX:
@@ -161,7 +161,8 @@ for a in groups.keys():
                 continue
             
             data = TH1D(groups[a][b][c]["data"][0])
-            data.SetTitle(name)
+            data.SetTitle(thetitle)
+            data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
             
             data.Draw("PE")
             leg.AddEntry(data,"data","pe")
@@ -192,7 +193,7 @@ for a in groups.keys():
             data.Draw("PE same")
             leg.Draw()
             cc.Draw()
-            cc.Print(name+"_"+flag+".png")
+            cc.Print(thename+"_"+flag+".png")
             
     
 

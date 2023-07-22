@@ -624,12 +624,17 @@ template<class MnvHistoType>
 
     // Print out the "type" tag from analyze code (e.g. "reconstructed", "selected_truth", etc.)
     // Scale POT for all MC hists, except response (get segfault if done this way...) -NHV
+       
+      bool hasdata = false;
     std::cout << " starting on variable " << sample << " " << variable << std::endl;
     for(auto types : histsND){
       std::string type = types.first;
+        
       std::cout << "hists key " << type << std::endl;
       for(auto categories : histsND[type]){
         std::string category = categories.first;
+          std::cout << "category " << category << std::endl;
+          if (category == "data") hasdata = true;
         if (category.find(dat)==std::string::npos){
 
           if (histsND[type][category] != 0) {
@@ -640,6 +645,7 @@ template<class MnvHistoType>
         }
       }
     }
+      if (!hasdata)return hasdata;
     for(auto types : responseND){
       std::string type = types.first;
       std::cout << "response key " << type << std::endl;

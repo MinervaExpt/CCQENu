@@ -72,7 +72,9 @@
         "ZVertex":{"reco":"ZVertex","true":"TrueZVertex", "name":"ZVertex","title":"ZVertex (mm)","nbins":52,"min":5900,"max":8500.},
         "ProtonKE":{"reco":"MaxProtonTrueKE","true":"MaxProtonTrueKE","name":"MaxProtonTrueKE","title":"Maximum Proton KE, MeV","nbins":26,"min":-20,"max":500.,"for":["selected_truth","truth"]},
         "Multiplicity":{"reco":"Multiplicity","true":"Multiplicity","name":"Multiplicity","title":"Multiplicity","nbins":20,"min":0,"max":20,"for":["selected_truth"]},
-        "MCIntType":{"reco":"MCIntType","true":"IntType","name":"MCIntType","title":"MCIntType","nbins":20,"min":0,"max":20,"for":["selected_truth"]}
+        "MCIntType":{"reco":"MCIntType","true":"IntType","name":"MCIntType","title":"MCIntType","nbins":20,"min":0,"max":20,"for":["selected_truth","all_truth"]},
+        "TruthIsCC":{"reco":"TruthIsCC","true":"TruthIsCC","name":"TruthIsCC","title":"TruthIsCC","nbins":10,"min":-5,"max":5,"for":["selected_truth","all_truth"]},
+        "TruthNuPDG":{"reco":"TruthNuPDG","true":"TruthNuPDG","name":"TruthNuPDG","title":"TruthNuPDG","nbins":40,"min":-20,"max":20,"for":["selected_truth","all_truth"]}
       
         }
 }

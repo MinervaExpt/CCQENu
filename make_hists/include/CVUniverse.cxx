@@ -1023,9 +1023,10 @@ double CVUniverse::GetMaxProtonTrueKE() const{
 		int mc_nFSPart = GetInt("mc_nFSPart");
 		//int mc_incoming = GetInt("mc_incoming");
 		bool passes = 0; // Assume not CCQELike, if CC check 
-		if(GetInt("mc_current") == 1 && GetInt("mc_incoming") == m_analysis_neutrino_pdg) {
+		//if(GetInt("mc_current") == 1 && GetInt("mc_incoming") == m_analysis_neutrino_pdg) {
+        // this code needs to be implemented via cuts.
 			passes = ( CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, m_proton_ke_cut));
-		}
+		//}
 		
 
 		return passes;

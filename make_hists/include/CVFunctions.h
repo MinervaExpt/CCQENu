@@ -144,8 +144,14 @@ public:
 		trueintfunctions["TruthIsCCQELikeAll"] = &CVUNIVERSE::GetTruthIsCCQELikeAll;
 
 		trueintfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
+        truefunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
+        recofunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
+        recointfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
 
 		trueintfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
+        truefunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
+        recofunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
+        recointfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
 
 		trueintfunctions["TruthIsQELike"] = &CVUNIVERSE::GetTruthIsQELike;
 
