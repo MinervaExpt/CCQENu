@@ -215,6 +215,15 @@ int main(const int argc, const char* argv[]) {
         std::string category = parsekey[2];
         std::string variable = parsekey[3];
         std::string type = parsekey[4];
+        
+        if (type.find("type")!= string::npos) {
+            std::cout << " found a type" << type << std::endl;
+            continue;
+        }
+        
+        
+        
+         
 
         // build lists of all valid tags
         // only count sample that you requested
