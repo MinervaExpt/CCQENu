@@ -437,6 +437,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetRecoTruthIsPrimaryPion() const;
     virtual int GetRecoTruthIsPrimaryOther() const;
 
+    virtual int GetIsAllTracksProtons() const; // special for Antinu, assumes you have multiplicity cuts
+
     virtual int GetIsPrimaryProton() const;
     virtual int GetIsPrimaryProton1() const;
     virtual int GetTruthHasSingleProton() const;

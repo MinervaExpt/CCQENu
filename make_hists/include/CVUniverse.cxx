@@ -429,6 +429,24 @@ double CVUniverse::GetPrimaryProtonScore2() const {
     return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_score2").c_str());
 }
 
+int CVUniverse::GetIsAllTracksProtons() const {
+    // This assumes you have a multiplicity cut set up
+    double tree_Q2 = GetQ2QEGeV();
+    double proton_score = GetPrimaryProtonScore();
+    int prim_pass = GetPassProtonScoreCut(proton_score, tree_Q2);
+    if (prim_pass == 0)
+        return prim_pass; // If primary doesn't pass, don't really care about secondary
+
+    int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
+    if (n_sec_proton_scores == 0) 
+        return prim_pass;  // If no secondary candidates, just return primary
+
+    std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str());
+    int sec_pass = GetPassAllProtonScoreCuts(sec_proton_scores, tree_Q2);
+
+    return sec_pass; // Since we got primaries checked to get here, just need to return value for secondaries here
+}
+
 int CVUniverse::GetIsPrimaryProton() const {
     if (GetMultiplicity() < 2) return 1;  // NA when multiplicity is < 2
     // define and get applicable variables

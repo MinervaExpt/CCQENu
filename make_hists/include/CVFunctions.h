@@ -220,6 +220,8 @@ class CVFunctions {
         recointfunctions["PassScoreCutProton_8"] = &CVUNIVERSE::GetPassScoreCutProton_8;
         recointfunctions["PassScoreCutProton_9"] = &CVUNIVERSE::GetPassScoreCutProton_9;
 
+        recointfunctions["IsAllTracksProtons"] = &CVUNIVERSE::GetIsAllTracksProtons;
+        
         recointfunctions["IsPrimaryProton"] = &CVUNIVERSE::GetIsPrimaryProton;
         recointfunctions["IsPrimaryProton1"] = &CVUNIVERSE::GetIsPrimaryProton1;
         recofunctions["PrimaryProtonScore"] = &CVUNIVERSE::GetPrimaryProtonScore;
