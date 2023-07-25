@@ -1,0 +1,82 @@
+{
+  "version":15,  
+  "mcIn":"${CCQEMAT}/nhv/playlists/MC_5A_local.txt",
+  "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/cuts/AntiNuCuts_v15_SidebandProton.json", 
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
+  "samplesFile": "${CCQEMAT}/nhv/config/samples/AntiNuSamples_v15_SidebandProton_inttype_recoonly.json", 
+  "outRoot": "MCInttype_5A_MnvTunev1", 
+  "scalefileIn": "${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", 
+  "prescale":999,
+  "playlist":"minervame5A",
+  "MinervaModel":"MnvTunev1", 
+  "recoName":"CCQENu",
+  "tunedmc":"untuned", 
+  "closure":0,
+  "TuneCategories":["qelike", "qelikenot"], 
+  "pdg":-14,
+  "runsamples": [
+    "QElike",
+    "MichelSideband",
+    "BlobSideband",
+    "MultiplicitySideband",
+    // "MicBlobMultipSideband",
+    "ProtonSideband"
+  ], 
+  "AnalyzeVariables": [
+    "Multiplicity",
+    "NBlobs",
+    "NMichel",
+    "PrimaryProtonScore"
+  ],
+  "Analyze2DVariables": [],
+  "AnalyzeHyperDVariables": [], 
+  "signal": {
+    "QElike": "qelike_inttype",
+    "MichelSideband": "qelike_inttype",
+    "BlobSideband": "qelike_inttype",
+    "MultiplicitySideband": "qelike_inttype",
+    // "MicBlobMultipSideband": "qelike_inttype",
+    "ProtonSideband": "qelike_inttype"
+  }, 
+  "background": {
+    "QElike": 
+      ["res_inttype", "dis_inttype", "2p2h_inttype", "other_inttype"],
+    "MichelSideband": 
+      ["res_inttype", "dis_inttype", "2p2h_inttype", "other_inttype"],
+    "BlobSideband": 
+      ["res_inttype", "dis_inttype", "2p2h_inttype", "other_inttype"],
+    "MultiplicitySideband": 
+      ["res_inttype", "dis_inttype", "2p2h_inttype", "other_inttype"],
+    // "MicBlobMultipSideband": 
+    //  ["res_inttype", "dis_inttype", "2p2h_inttype", "other_inttype"],
+    "ProtonSideband": 
+      ["res_inttype", "dis_inttype", "2p2h_inttype", "other_inttype"]
+  },
+  "data": {
+    "QElike": "data",
+    "MichelSideband": "data",
+    "BlobSideband": "data",
+    "MultiplicitySideband": "data",
+    // "MicBlobMultipSideband": "data",
+    "ProtonSideband": "data"
+  },
+  "systematics": [
+    "Flux"//,
+    // "MuonMINOS",
+    // "MuonResolution",
+    // "MINOSEfficiency",
+    // "Angle",
+    // "GENIE",
+    // "GenieRvx1pi",
+    // "RPA",
+    // "2p2h",
+    // "MuonMinerva",
+    // "geant4",
+    // "response"
+  ],
+  "fluxUniverses": 2, //10,
+  "NuEConstraint":1, 
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1 
+}
