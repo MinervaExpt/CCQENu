@@ -178,6 +178,9 @@ void LoopAndFillEventSelection(std::string tag,
             FillMC(tag, universe, weight, variables, variables2D, scale);
             FillResponse(tag,universe,weight,variables,variables2D, scale);
             FillResolution(tag,universe,weight,variables,variables2D, scale);
+              if (universe->ShortName() == "cv"){
+                  FillType(tag,universe,weight,variables,variables2D,scale);  // only use cv and variables for now
+              }
             
             // Send MC Reco value to CSV here
             if(mc_reco_to_csv && universe->ShortName() == "cv") {
