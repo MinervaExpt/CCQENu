@@ -1,0 +1,13 @@
+{ 
+  "InputFile":"/minerva/data/users/gilligan/histfiles/SB_minervame1N_multitrack_mnv_v8_1.root",
+  "Sidebands":["QElike","MichelSideBand","BlobSideBand","MicBlobSideBand"],
+  "IncludeInFit":["MichelSideBand","BlobSideBand","MicBlobSideBand"],
+  "Categories":["qelike","1chargedpion","1neutralpion","multipion","other"],
+  "Backgrounds":["1chargedpion","1neutralpion","multipion","other"],
+  "Variable":"ptmu",
+  "FitType":"SlowChi2",
+  "OutputFile":"/minerva/data/users/gilligan/histfiles/Fitresult_me1N_multitrack_mnv_v8_1.root",
+  "LogPlot":false,
+  "Template":"h___%s___%s___%s___reconstructed",
+  "FitTemplate":"h___%s___%s___%s___fitted"
+}
