@@ -163,13 +163,13 @@
     {"name": "MaxProtonKE Min", "min": 120.0, "variable": "MaxProtonTrueKE"}
   ],
   "qelikenot": [
-    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
+    // {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"}, 
+    // {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0}
   ],
   "qelikenot_np": [
-    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
+    // {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
+    // {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"}
   ],
   "qelike1p": [
@@ -197,14 +197,14 @@
     {"name": "MCIntType", "equals": 8, "variable": "MCIntType"}
   ],
   "qelikenot1p": [
-    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
+    // {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
+    // {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELike", "equals":0, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0},
     {"name": "MCIntType", "max": 7, "variable": "MCIntType"}
   ],
   "qelikenot1p_np": [
-    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
+    // {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
+    // {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELikeAll", "equals":0, "variable": "TruthIsCCQELikeAll"},
     {"name": "MCIntType", "max": 7, "variable": "MCIntType"}
   ],

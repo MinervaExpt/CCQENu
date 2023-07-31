@@ -52,12 +52,13 @@ weight_MCreScale::weight_MCreScale(const NuConfig config) {
 }
 
 void weight_MCreScale::read(TString filename) {
-    m_f_Q2QEScaleFrac = TFile::Open(filename, "READ");
-    if (m_f_Q2QEScaleFrac) {
+    m_f_ScaleFrac = TFile::Open(filename, "READ");
+    if (m_f_ScaleFrac) {
         std::cout << "weight_MCreScale: I'm using this scale file " << filename << std::endl;
         for (auto cat : m_categories) {
             std::string name = "h___Background___" + cat + "___Q2QE___scale";
-            m_mnvh_Scales[cat] = (MnvH1D*)m_f_Q2QEScaleFrac->Get(name.c_str());
+            m_mnvh_Scales[cat] = (MnvH1D*)m_f_ScaleFrac->Get(name.c_str());
+            // m_scale_minmax[cat] = { m_mnvh_Scales[cat]->GetXaxis()->GetXmin}
         }
     } else {
         std::cout << "weight_MCreScale::read: WARNING: Cannot find input file for weight_MCreScale: " << filename << std::endl;
@@ -81,9 +82,9 @@ void weight_MCreScale::SetCat(std::string cat) {
     m_mnvh_Scale = m_mnvh_Scales[cat];
 }
 
-double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_name, int iuniv) {
+double weight_MCreScale::GetScaleInternal(const double checkval, std::string uni_name, int iuniv) {
     double retval = 1.;
-    double checkval = q2qe;
+    double xval = checkval;
     int xbin = -1;
 
     if (m_category == "None") {
@@ -91,17 +92,20 @@ double weight_MCreScale::GetScaleInternal(const double q2qe, std::string uni_nam
         return 1.0;
     }
 
-    if (q2qe < 0.) {
-        std::cout << "weight_MCreScale: You have a q2qe passed less than 0. Non-physical. Returning 1.0" << std::endl;
+    // if (xval < 0.) {
+    if (xval < m_mnvh_Scale->GetBinLowEdge(1)) {
+        std::cout << "weight_MCreScale: You have a check value less than minimum. Returning 1.0 since could be unphysical." << std::endl;
         return 1.0;
     }
     // else if(q2qe>=2.0){
-    else if (m_mnvh_Scale->FindFirstBinAbove(q2qe) < 0) {
+    else if (m_mnvh_Scale->FindFirstBinAbove(xval) < 0) {
         // Some scale files only go up to 2GeV^2 in Q2. This sets you in that highest bin if you give it a value higher than 2GeV^2
-        checkval = 1.99;
+        // checkval = 1.99;
+        // std::cout << "weight_MCreScale: You have a check value less than minimum. Returning 1.0" << std::endl;
+        xval = m_mnvh_Scale->GetBinContent(m_mnvh_Scale->GetMaximumBin());
     }
 
-    xbin = m_mnvh_Scale->GetXaxis()->FindBin(checkval);
+    xbin = m_mnvh_Scale->GetXaxis()->FindBin(xval);
     static int errcount = 0;
     TH1D* hcv = (TH1D*)m_mnvh_Scale;
     if (uni_name == "cv" || uni_name == "CV") {

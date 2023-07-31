@@ -28,10 +28,12 @@ class weight_MCreScale {
     std::string m_tunedmc = "untuned";
 
     // Member file with scale/fraction MnvH1Ds
-    TFile* m_f_Q2QEScaleFrac;
+    TFile* m_f_ScaleFrac;
     std::vector<std::string> m_categories;
     // Member MnvH1D's for each scale from the file (set at initialization)
     std::map<const std::string, MnvH1D*> m_mnvh_Scales;
+    // Map detailing all the minima and maxima for each category's scale hist to check
+    std::map<const std::string, std::vector<double>> m_scale_minmax;
     // Member scale set to be sig or bkg (set at GetWeight)
     MnvH1D* m_mnvh_Scale;
     TH1D* m_h_scale;
