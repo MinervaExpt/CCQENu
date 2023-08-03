@@ -785,30 +785,32 @@ double CVUniverse::GetLog10RecoilEnergyGeV() const { return std::log10(GetRecoil
 // return CVUniverse::GetCalRecoilEnergy();
 // std::cout << GetRecoilEnergy()*MeVGeV <<  " " << std::log10(GetRecoilEnergy()) << std::log10(GetRecoilEnergy())  - 3. << std::endl;
 
-double CVUniverse::GetTrueQ0GeV() const {
-    static std::vector<double> mc_incomingPartVec;
-    static std::vector<double> mc_primFSLepton;
-    mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
-    mc_primFSLepton = GetVecDouble("mc_primFSLepton");
-    double q0 = mc_incomingPartVec[3] - mc_primFSLepton[3];
-    return q0 * MeVGeV;
-}
-double CVUniverse::GetTrueQ3GeV() const {
-    static std::vector<double> mc_incomingPartVec;
-    static std::vector<double> mc_primFSLepton;
-    mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
-    mc_primFSLepton = GetVecDouble("mc_primFSLepton");
-    double px = mc_primFSLepton[0] - mc_incomingPartVec[0];
-    double py = mc_primFSLepton[1] - mc_incomingPartVec[1];
-    double pz = mc_primFSLepton[2] - mc_incomingPartVec[2];
-    double q3 = std::sqrt(px * px + py * py + pz * pz);
-    return q3 * MeVGeV;
-}
-double CVUniverse::GetTrueQ2GeV() const {
-    double q3 = CVUniverse::GetTrueQ3GeV();
-    double q0 = CVUniverse::GetTrueQ0GeV();
-    return q3 * q3 - q0 * q0;
-}
+	// double CVUniverse::GetOldTrueQ0GeV() const {
+	// 	static std::vector<double> mc_incomingPartVec;
+	// 	static std::vector<double> mc_primFSLepton;
+	// 	mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
+	// 	mc_primFSLepton = GetVecDouble("mc_primFSLepton");
+	// 	double q0 = mc_incomingPartVec[3] - mc_primFSLepton[3];
+	// return q0*MeVGeV;
+	// }
+
+	double CVUniverse::GetTrueQ3GeV() const {
+		static std::vector<double> mc_incomingPartVec;
+		static std::vector<double> mc_primFSLepton;
+		mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
+		mc_primFSLepton = GetVecDouble("mc_primFSLepton");
+		double px = mc_primFSLepton[0] - mc_incomingPartVec[0];
+		double py = mc_primFSLepton[1] - mc_incomingPartVec[1];
+		double pz = mc_primFSLepton[2] - mc_incomingPartVec[2];
+		double q3 = std::sqrt( px*px + py*py + pz*pz );
+		return q3*MeVGeV;
+	}
+	double CVUniverse::GetTrueQ2GeV() const {
+		double q3 = CVUniverse::GetTrueQ3GeV();
+		double q0 = CVUniverse::GetTrueQ0GeV();
+		return q3*q3 - q0*q0;
+	}
+
 
 // ----------------------------- Other Variables -----------------------------
 
@@ -1017,7 +1019,7 @@ double CVUniverse::GetMaxProtonTrueKE() const {
     int mc_nFSPart = GetInt("mc_nFSPart");
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
     std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
-    double KEmax = 0.0;
+    double KEmax = -1.;
     for (int i = 0; i < mc_nFSPart; i++) {
         int pdg = mc_FSPartPDG[i];
         if (pdg != 2212) continue;
@@ -1028,19 +1030,21 @@ double CVUniverse::GetMaxProtonTrueKE() const {
     return KEmax;
 }
 
-int CVUniverse::GetTruthIsCCQELike() const {  // cut hardwired for now
-    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
-    std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
-    bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
-    int mc_nFSPart = GetInt("mc_nFSPart");
-    // int mc_incoming = GetInt("mc_incoming");
-    bool passes = 0;  // Assume not CCQELike, if CC check
-    if (GetInt("mc_current") == 1 && GetInt("mc_incoming") == m_analysis_neutrino_pdg) {
-        passes = (CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, m_proton_ke_cut));
-    }
+	int CVUniverse::GetTruthIsCCQELike() const {  // cut hardwired for now
+		std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+		std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
+		bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
+		int mc_nFSPart = GetInt("mc_nFSPart");
+		//int mc_incoming = GetInt("mc_incoming");
+		bool passes = 0; // Assume not CCQELike, if CC check 
+		//if(GetInt("mc_current") == 1 && GetInt("mc_incoming") == m_analysis_neutrino_pdg) {
+        // this code needs to be implemented via cuts.
+			passes = ( CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, m_proton_ke_cut));
+		//}
+		
 
-    return passes;
-}
+		return passes;
+	}
 
 // all CCQElike without proton cut enabled
 

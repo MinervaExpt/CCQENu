@@ -1,0 +1,75 @@
+{
+  "version": 13, // Run major variables in batch, use v13 of cuts, add closure
+  "mcIn": "${CCQEMAT}/playlists/p4test/P3_${MYPLAYLIST}_MC_short.txt",
+  "dataIn": "${CCQEMAT}/playlists/p4test/PreP4_${MYPLAYLIST}_DATA_short.txt",
+  "prescale": 999,
+  "playlist": "${MYPLAYLIST}",
+  "DoResolution": 1,
+  "MinervaModel": "${MYMODEL}", // set this as an environmental to MnvTunev1 or MnvTunev2
+  "recoName": "MasterAnaDev", // change if running on MAT tuples
+  "tunedmc": "both", // uses the tunes if available
+  "closure": 0, // set to 1 if you want to do closure test, otherwise 0
+  "scalefileIn": "${CCQEMAT}/data/FullSample_${MYMODEL}_Q2QErecoil.root", // location of anti-nu background tuning
+  "TuneCategories": [
+    "qelike",
+    "qelikenot"
+  ], // categories that have tunes
+  "pdg": -14, // I'm anti-neutrino
+  "cutsFile": "${CCQEMAT}/AntiNuExample/AntiNuCuts_v13.json", // describe the cuts, choose them in samples
+  "varsFile": "${CCQEMAT}/AntiNuExample/Variables_v13.json", // describe the variables, choose them below
+  "samplesFile": "${CCQEMAT}/AntiNuExample/AntiNuSamples_v13.json", // describe the samples, cuts are chosen here
+  "runsamples": [
+    "${MYSAMPLE}"
+  ], // chose which samples to run can provide a list or chose 1 using the batch
+  "outRoot": "CCQENu_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // name for output files
+  "AnalyzeVariables": [
+    "Q2QE",
+    "Q0QE",
+    "pzmu",
+    "ptmu",
+    "Enu",
+    "EnuCCQE"
+//    "recoil"
+  ], // choose the 1D variables
+  "Analyze2DVariables": [
+    "pzmu_ptmu"
+  ], // choose 2D variables, 1D variables must be chosen
+  "signal": {
+    "QElike": "qelike",
+    "Background": "qelike",
+    "QElikeNP": "qelike_np",
+    "QElikeALLAngles": "qelike_np"
+  }, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
+  "background": {
+    "QElike": "qelikenot",
+    "Background": "qelikenot",
+    "QElikeNP": "qelikenot_np",
+    "QElikeALLAngles": "qelikenot_np"
+  },
+  "data": {
+    "QElike": "data",
+    "Background": "data",
+    "QElikeNP": "data",
+    "QElikeALLAngles": "data"
+  },
+  // turn on/off systematics
+  "systematics": [
+    "Flux",
+    "MuonMINOS",
+    "MuonResolution",
+    "MINOSEfficiency",
+    "Angle",
+    "GENIE",
+//    "Flux",
+//    "GenieRvx1pi",
+//    "RPA",
+//    "2p2h",
+//    "MuonMinerva",
+//    "geant4"
+//    "response"
+  ],
+  "fluxUniverses": 2, // # of flux universes set low to run fast!
+  "NuEConstraint": 1, // apply constraints to flux
+  "Geant4NeutronCV": 1, // set true by default docdb 28556
+  "Geant4Elastics": 1 // set to true by default
+}

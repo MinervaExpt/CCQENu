@@ -246,6 +246,30 @@ public:
         m_hists[tag].hist->Write();
 
       }
+      else{
+        std::cout << " could not find " << " " << m_hashist[tag] << std::endl;
+      }
+
+
+      // if(m_hasresponse[tag]){
+      //   std::cout << " try to write response " << tag << " " << m_hists[tag].hist->GetName()  << std::endl;
+      //   PlotUtils::MnvH2D* h_migration;
+      //   PlotUtils::MnvH2D* h_reco;
+      //   PlotUtils::MnvH2D* h_truth;
+      //   //        h_migration->SetDirectory(0);
+      //   //        h_reco->SetDirectory(0);
+      //   //        h_truth->SetDirectory(0);
+      //   std::cout << " GetMigrationObjects will now complain because I passed it pointers to uninitiated MnvH2D/1D to fill please ignore" << std::endl;
+      //   m_response[tag]->GetMigrationObjects( h_migration, h_reco, h_truth);
+      //   std::cout << h_migration << std::endl;
+      //   if (h_reco->GetEntries() > 0){
+      //     h_migration->Write();
+      //     h_reco->Write();
+      //     h_truth->Write();
+      //   }
+      //
+      // }
+
   };
 
 

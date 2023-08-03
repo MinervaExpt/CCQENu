@@ -130,8 +130,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetEnuCCQEGeV() const;      // both neutrino and antinu
     virtual double GetTrueEnuCCQEGeV() const;  // may be a better way to implement this
 
-    virtual double GetQ2QEGeV() const;
-    virtual double GetTrueQ2QEGeV() const;
+	virtual double GetQ2QEGeV() const;
+	virtual double GetTrueQ2QEGeV() const;
+	virtual double GetQ0QEGeV() const;
+	virtual double GetTrueQ0QEGeV() const;
 
     virtual double GetLog10Q2QEGeV() const;
     virtual double GetTrueLog10Q2QEGeV() const;
@@ -179,8 +181,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetRecoilEnergyGeV() const;
     virtual double GetTrueRecoilEnergyGeV() const;
 
-    virtual double GetLog10RecoilEnergyGeV() const;
-    virtual double GetTrueLog10RecoilEnergyGeV() const;
+	virtual double GetLog10RecoilEnergyGeV() const;
+	virtual double GetTrueLog10RecoilEnergyGeV() const;
+
 
     virtual double GetTrueQ0GeV() const;
     virtual double GetTrueQ3GeV() const;

@@ -16,14 +16,15 @@
   "samplesFile":"${CCQEMAT}/AntiNuExample/AntiNuSamples_v13.json",  // describe the samples, cuts are chosen here
   "runsamples":["QElikeNP","QElikeNPAllN"], // chose which samples to run can provide a list or chose 1 using the batch
   "outRoot":"CCQENu_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // name for output files
-  "AnalyzeVariables":["ProtonKE"], // choose the 1D variables
-  "Analyze2DVariables":[], // choose 2D variables, 1D variables must be chosen
+  "AnalyzeVariables":["ProtonKE","Multiplicity","MCIntType"], // choose the 1D variables
+  "Analyze2DVariables":["ProtonKE_Multiplicity","ProtonKE_MCIntType"], // choose 2D variables, 1D variables must be chosen
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"}, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
   "data":{"QElike":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
   // turn on/off systematics
-  "systematics":["Flux","MuonMINOS","MuonResolution","MINOSEfficiency","Angle","GENIE","GenieRvx1pi","RPA","2p2h","MuonMinerva","geant4","response"],
-  "fluxUniverses":10, // # of flux universes
+  "systematics":["Flux"],
+  //"Flux,MuonMINOS","MuonResolution","MINOSEfficiency","Angle","GENIE","GenieRvx1pi","RPA","2p2h","MuonMinerva","geant4","response"],
+  "fluxUniverses":2, // # of flux universes
   "NuEConstraint":1, // apply constraints to flux
   "Geant4NeutronCV":1, // set true by default docdb 28556
   "Geant4Elastics":1 // set to true by default

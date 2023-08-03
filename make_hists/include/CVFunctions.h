@@ -64,9 +64,13 @@ class CVFunctions {
         recofunctions["PperpMuGeV"] = &CVUNIVERSE::GetPperpMuGeV;
         truefunctions["TruePperpMuGeV"] = &CVUNIVERSE::GetTruePperpMuGeV;
 
-        recofunctions["Q2QEGeV"] = &CVUNIVERSE::GetQ2QEGeV;
-        truefunctions["TrueQ2QEGeV"] = &CVUNIVERSE::GetTrueQ2QEGeV;
-        truefunctions["TrueQ2GeV"] = &CVUNIVERSE::GetTrueQ2GeV;
+		recofunctions["Q2QEGeV"] = &CVUNIVERSE::GetQ2QEGeV;
+		truefunctions["TrueQ2QEGeV"] = &CVUNIVERSE::GetTrueQ2QEGeV;
+		truefunctions["TrueQ2GeV"] = &CVUNIVERSE::GetTrueQ2GeV;
+
+		recofunctions["Q0QEGeV"] = &CVUNIVERSE::GetQ0QEGeV;
+		truefunctions["TrueQ0QEGeV"] = &CVUNIVERSE::GetTrueQ0QEGeV;
+		truefunctions["TrueQ0GeV"] = &CVUNIVERSE::GetTrueQ0GeV;
 
         recofunctions["Curvature"] = &CVUNIVERSE::GetCurvature;
         truefunctions["TrueCurvature"] = &CVUNIVERSE::GetTrueCurvature;
@@ -98,8 +102,11 @@ class CVFunctions {
 
         recofunctions["DeadTime"] = &CVUNIVERSE::GetDeadTime;
 
-        recofunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
-        recointfunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+		recofunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+		recointfunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+
+        truefunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
+        trueintfunctions["Multiplicity"] = &CVUNIVERSE::GetMultiplicity;
 
         recofunctions["EventID"] = &CVUNIVERSE::GetEventID;
         truefunctions["EventID"] = &CVUNIVERSE::GetEventID;
@@ -133,18 +140,26 @@ class CVFunctions {
         trueintfunctions["TruthIsCCQELike"] = &CVUNIVERSE::GetTruthIsCCQELike;
         trueintfunctions["TruthIsCCQELikeAll"] = &CVUNIVERSE::GetTruthIsCCQELikeAll;
 
-        trueintfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
+		trueintfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
+        truefunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
+        recofunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
+        recointfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
 
-        trueintfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
+		trueintfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
+        truefunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
+        recofunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
+        recointfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
 
         trueintfunctions["TruthIsQELike"] = &CVUNIVERSE::GetTruthIsQELike;
 
-        trueintfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
-        truefunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
-        recointfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
-        recofunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
-        recointfunctions["IntType"] = &CVUNIVERSE::GetIntType;
-        recofunctions["IntType"] = &CVUNIVERSE::GetIntType;
+		trueintfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
+		truefunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
+		recointfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
+		recofunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
+		recointfunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+		recofunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+		trueintfunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+		truefunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
 
         trueintfunctions["MCTargetA"] = &CVUNIVERSE::GetMCTargetA;
 

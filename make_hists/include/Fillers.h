@@ -129,6 +129,7 @@ void FillMC(std::string tag, CVUniverse *univ, double weight,
     }
 }
 
+
 void FillResolution(std::string tag, CVUniverse *univ, double weight,
                     std::vector<CCQENu::VariableFromConfig *> variables,
                     std::vector<CCQENu::Variable2DFromConfig *> variables2D,
@@ -141,6 +142,36 @@ void FillResolution(std::string tag, CVUniverse *univ, double weight,
             v->FillResolution(tag, univ, reco_val, true_val, weight, scale);
         }
     }
+}
+
+void FillType(std::string tag, CVUniverse* univ, double weight,
+            std::vector<CCQENu::VariableFromConfig*> variables,
+            std::vector<CCQENu::Variable2DFromConfig*> variables2D,
+            double scale) {
+  for (auto v : variables) {
+    if (v->hasType[tag]){
+      double reco_val = v->GetRecoValue(*univ, 0);
+      int type = univ->GetMCIntType();
+      // This will fill both tuned and untuned
+      v->FillType(tag,type,reco_val,weight,scale);
+
+    }
+  }
+}
+
+void FillType(std::string tag, CVUniverse* univ, double weight,
+            std::vector<CCQENu::VariableFromConfig*> variables,
+            std::vector<CCQENu::Variable2DFromConfig*> variables2D,
+            double scale) {
+  for (auto v : variables) {
+    if (v->hasType[tag]){
+      double reco_val = v->GetRecoValue(*univ, 0);
+      int type = univ->GetMCIntType();
+      // This will fill both tuned and untuned
+      v->FillType(tag,type,reco_val,weight,scale);
+
+    }
+  }
 }
 
 void FillResponse(std::string tag, CVUniverse *univ, double weight,

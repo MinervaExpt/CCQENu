@@ -1,5 +1,6 @@
 { // reconstruction level definitions
-    "Comments":["v13 - make CCQELike a single cut so you can reverse it.",
+    "Comments":["v13 fix - Apply IsCC and pdg only to signal, not to background",
+        "v13 - make CCQELike a single cut so you can reverse it.",
       "v9 - May 28, 2022, remove the FULL cuts and stick with all angles",
     "also add QElikeNot which is complement to QElike with recoil cut reversed"],
     "QElike":[
@@ -72,8 +73,8 @@
   
   // signal definitions
  "qelike":[
-    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.}
   ],
  "qelike1p":[
@@ -83,8 +84,8 @@
     {"name":"MCIntType","max":7,"variable":"MCIntType"}
   ],
  "qelike2p2h":[
-    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
-    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.},
     {"name":"MCIntType","equals":8,"variable":"MCIntType"}
   ],

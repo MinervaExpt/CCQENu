@@ -9,9 +9,16 @@
         "EnuCCQE_Enu":{"name":"EnuCCQE_Enu","xvar":"EnuCCQE","yvar":"Enu"},
         "EnuCCQE_Q2QE":{"name":"EnuCCQE_Q2QE","xvar":"EnuCCQE","yvar":"Q2QE"},
         "Q2QE_recoil":{"name":"Q2QE_recoil","xvar":"Q2QE","yvar":"recoil"},
+        "Q0QE_recoil":{"name":"Q0QE_recoil","xvar":"Q0QE","yvar":"recoil"},
         "Q2QE_Log10recoil":{"name":"Q2QE_Log10recoil","xvar":"Q2QE","yvar":"Log10recoil"},
         "EnuCCQE_ThetamuDegrees":{"name":"EnuCCQE_ThetamuDegrees","xvar":"EnuCCQE","yvar":"ThetamuDegrees"},
-        "pmu_ThetamuDegrees":{"name":"pmu_ThetamuDegrees","xvar":"pmu","yvar":"ThetamuDegrees"}
+        "pmu_ThetamuDegrees":{"name":"pmu_ThetamuDegrees","xvar":"pmu","yvar":"ThetamuDegrees"},
+        "ProtonKE_Multiplicity":{"name":"ProtonKE_Multiplicity",
+          "xvar":"ProtonKE",
+          "yvar":"Multiplicity"},
+        "ProtonKE_IntType":{"name":"ProtonKE_IntType",
+          "xvar":"ProtonKE",
+          "yvar":"IntType"},
     },
     "1D":{
         "EnuCCQE":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"EnuCCQE","title":"E_{#nu}_{QE} (GeV)","bins":[1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],"fluxnorm":1},
@@ -46,7 +53,16 @@
           "title":"Q^{2} (QE)(GeV^{2})",
           "bins":[0.001,0.0125,0.025,0.05,0.1,0.2,0.4,0.8,1.2,4.0],
           "fluxnorm":false},
-        "recoil":{"reco":"RecoilEnergyGeV","true":"TrueRecoilEnergyGeV","name":"recoil","title":"Recoil in GeV","nbins":25,"min":0.0,"max":0.5,"for":["data","selected_reco"],"fluxnorm":false},
+        "Q0QE":{"reco":"Q0QEGeV","true":"TrueQ0QEGeV","name":"Q0QE",
+          "title":"Q_{0}^{(QE)} (GeV)",
+          "nbins":22,
+          "min":-0.1,
+          "max":1.0,
+          //"for":["data","selected_reco","selected_truth","all_truth"], //no response as 2d breaks
+          "fluxnorm":false},
+        "recoil":{"reco":"RecoilEnergyGeV","true":"TrueRecoilEnergyGeV","name":"recoil","title":"Recoil in GeV","nbins":25,"min":0.0,"max":0.5,
+          //"for":["data","selected_reco","selected_truth","all_truth"],
+          "fluxnorm":false},
         "Log10recoil":{"reco":"Log10RecoilEnergyGeV","true":"TrueLog10RecoilEnergyGeV","name":"Log10recoil","title":"Log10Recoil in GeV","nbins":24,"min":-3,"max":0.0,"for":["data","selected_reco"],"fluxnorm":false},
         "ThetamuDegrees":{"reco":"ThetamuDegrees","true":"TrueThetamuDegrees","name":"ThetamuDegrees","title":"theta_mu (degrees)","nbins":20,"min":0.,"max":40.,"fluxnorm":false},
         "ThetaXmuDegrees":{"reco":"ThetaXmuDegrees","true":"TrueThetaXmuDegrees","name":"ThetaXmuDegrees","title":"theta_mu_x (degrees)","nbins":40,"min":-40.,"max":40.,"fluxnorm":false},
@@ -54,9 +70,13 @@
         "ApothemX":{"reco":"ApothemX","true":"TrueApothemX", "name":"ApothemX","title":"ApothemX (mm)","nbins":50,"min":-1000.,"max":1000.},
         "ApothemY":{"reco":"ApothemY","true":"TrueApothemY", "name":"ApothemY","title":"ApothemY (mm)","nbins":50,"min":-1000.,"max":1000.},
         "ZVertex":{"reco":"ZVertex","true":"TrueZVertex", "name":"ZVertex","title":"ZVertex (mm)","nbins":52,"min":5900,"max":8500.},
-        "ProtonKE":{"reco":"MaxProtonTrueKE","true":"MaxProtonTrueKE","name":"MaxProtonTrueKE","title":"Maximum Proton KE, MeV","nbins":100,"min":0.0,"max":500.,"for":["selected_truth"]}
+        "ProtonKE":{"reco":"MaxProtonTrueKE","true":"MaxProtonTrueKE","name":"MaxProtonTrueKE","title":"Maximum Proton KE, MeV","nbins":26,"min":-20,"max":500.,"for":["selected_truth","truth"]},
+        "Multiplicity":{"reco":"Multiplicity","true":"Multiplicity","name":"Multiplicity","title":"Multiplicity","nbins":20,"min":0,"max":20,"for":["selected_truth"]},
+        "MCIntType":{"reco":"MCIntType","true":"IntType","name":"MCIntType","title":"MCIntType","nbins":20,"min":0,"max":20,"for":["selected_truth","all_truth"]},
+        "TruthIsCC":{"reco":"TruthIsCC","true":"TruthIsCC","name":"TruthIsCC","title":"TruthIsCC","nbins":10,"min":-5,"max":5,"for":["selected_truth","all_truth"]},
+        "TruthNuPDG":{"reco":"TruthNuPDG","true":"TruthNuPDG","name":"TruthNuPDG","title":"TruthNuPDG","nbins":40,"min":-20,"max":20,"for":["selected_truth","all_truth"]}
       
-    }
+        }
 }
 
 
