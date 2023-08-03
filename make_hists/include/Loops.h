@@ -17,7 +17,7 @@ enum EDataMCTruth { kData,
                     kNDataMCTruthTypes };
 
 // #define CLOSUREDETAIL
-//Here
+// Here
 //==============================================================================
 // Loop and fill
 //==============================================================================
@@ -192,78 +192,71 @@ void LoopAndFillEventSelection(std::string tag,
                         universe->Print();
                     }
 #endif
-          if(selection.isMCSelected(*universe, event, weight).all()
-             && selection.isSignal(*universe)) {
-            
-            //double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
-            const double q2qe = universe->GetQ2QEGeV();
-            double scale = 1.0;
-            if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
-        
-            FillMC(tag, universe, weight, variables, variables2D, scale);
-            FillResponse(tag,universe,weight,variables,variables2D, scale);
-            FillResolution(tag,universe,weight,variables,variables2D, scale);
-              if (universe->ShortName() == "cv"){
-                  FillType(tag,universe,weight,variables,variables2D,scale);  // only use cv and variables for now
-              }
-            
-            // Send MC Reco value to CSV here
-            if(mc_reco_to_csv && universe->ShortName() == "cv") {
+                    if (selection.isMCSelected(*universe, event, weight).all() && selection.isSignal(*universe)) {
+                        // double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
+                        const double q2qe = universe->GetQ2QEGeV();
+                        double scale = 1.0;
+                        if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv);  // Only calculate the per-universe weight for events that will actually use it.
 
-            	
-		          csvFile << i;
-		          for (auto v : variables) {
-		          	if(v->hasMC[tag]){
-		          		csvFile << ";" << v->GetRecoValue(*universe, 0);
-		          	}
-		          }
-		          
-		          int mcinttype = universe->GetMCIntType();
-		          std::map<int,std::string> interaction;
-		          interaction[1] = "QE";
-		          interaction[2] = "RES";
-		          interaction[3] = "DIS";
-		          interaction[4] = "COH";
-		          interaction[8] = "MEC";
-		          
-		          csvFile << ";" << interaction[mcinttype];
-		          int nFSParts = universe->GetTrueNumberOfFSParticles();
-		          csvFile << ";" << universe->GetTrueNumberOfFSParticles();
-		          
-		          std::vector<int> FSPartPDG = universe->GetVecInt("mc_FSPartPDG");
-		          std::vector<double> mc_FSPartE = universe->GetVecDouble("mc_FSPartPDG");
-		          csvFile << ";{";
-		          for (int i = 0; i < nFSParts-1; i++) csvFile << FSPartPDG[i] << ",";
-		          csvFile << FSPartPDG[nFSParts-1] << "};{";
-		          for (int i = 0; i < nFSParts-1; i++) csvFile << mc_FSPartE[i] << ",";
-		          csvFile << mc_FSPartE[nFSParts-1] << "}";
-		          
-		          /*
-		          std::map<int,int> true_counts_per_pdg = universe->GetTrueFSCountsPerPDG();
-		          csvFile << ";" << true_counts_per_pdg[211] + true_counts_per_pdg[-211]; // nFSChargedPion
-		          csvFile << ";" << true_counts_per_pdg[111]; // nFSNeutralPion
-							csvFile << ";" << true_counts_per_pdg[2212]; // nFSProton
-							csvFile << ";" << true_counts_per_pdg[2112]; // nFSNeutron
-							csvFile << ";" << true_counts_per_pdg[13]; // nFSNegMuon
-							csvFile << ";" << true_counts_per_pdg[22]; // nFSGamma
-							*/
-		          
-		          csvFile << ";" << universe->StringTrueArachneLink() << std::endl;
-            }
-            // Done Sending MC Reco value to CSV
-          }
-        }
-        else if (data_mc_truth == kTruth){
+                        FillMC(tag, universe, weight, variables, variables2D, scale);
+                        FillResponse(tag, universe, weight, variables, variables2D, scale);
+                        FillResolution(tag, universe, weight, variables, variables2D, scale);
+                        if (universe->ShortName() == "cv") {
+                            FillType(tag, universe, weight, variables, variables2D, scale);  // only use cv and variables for now
+                        }
 
-          if(selection.isEfficiencyDenom(*universe, weight)){
-            const double q2qe = universe->GetTrueQ2QEGeV();
-            double scale = 1.0;
-            if (!closure) scale =mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
-            if (closure) scale = 1.0;
-            FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
-          }
-        }
-        else{ //kData
+                        // Send MC Reco value to CSV here
+                        if (mc_reco_to_csv && universe->ShortName() == "cv") {
+                            csvFile << i;
+                            for (auto v : variables) {
+                                if (v->hasMC[tag]) {
+                                    csvFile << ";" << v->GetRecoValue(*universe, 0);
+                                }
+                            }
+
+                            int mcinttype = universe->GetMCIntType();
+                            std::map<int, std::string> interaction;
+                            interaction[1] = "QE";
+                            interaction[2] = "RES";
+                            interaction[3] = "DIS";
+                            interaction[4] = "COH";
+                            interaction[8] = "MEC";
+
+                            csvFile << ";" << interaction[mcinttype];
+                            int nFSParts = universe->GetTrueNumberOfFSParticles();
+                            csvFile << ";" << universe->GetTrueNumberOfFSParticles();
+
+                            std::vector<int> FSPartPDG = universe->GetVecInt("mc_FSPartPDG");
+                            std::vector<double> mc_FSPartE = universe->GetVecDouble("mc_FSPartPDG");
+                            csvFile << ";{";
+                            for (int i = 0; i < nFSParts - 1; i++) csvFile << FSPartPDG[i] << ",";
+                            csvFile << FSPartPDG[nFSParts - 1] << "};{";
+                            for (int i = 0; i < nFSParts - 1; i++) csvFile << mc_FSPartE[i] << ",";
+                            csvFile << mc_FSPartE[nFSParts - 1] << "}";
+
+                            /*
+                            std::map<int,int> true_counts_per_pdg = universe->GetTrueFSCountsPerPDG();
+                            csvFile << ";" << true_counts_per_pdg[211] + true_counts_per_pdg[-211]; // nFSChargedPion
+                            csvFile << ";" << true_counts_per_pdg[111]; // nFSNeutralPion
+                                                          csvFile << ";" << true_counts_per_pdg[2212]; // nFSProton
+                                                          csvFile << ";" << true_counts_per_pdg[2112]; // nFSNeutron
+                                                          csvFile << ";" << true_counts_per_pdg[13]; // nFSNegMuon
+                                                          csvFile << ";" << true_counts_per_pdg[22]; // nFSGamma
+                                                          */
+
+                            csvFile << ";" << universe->StringTrueArachneLink() << std::endl;
+                        }
+                        // Done Sending MC Reco value to CSV
+                    }
+                } else if (data_mc_truth == kTruth) {
+                    if (selection.isEfficiencyDenom(*universe, weight)) {
+                        const double q2qe = universe->GetTrueQ2QEGeV();
+                        double scale = 1.0;
+                        if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv);  // Only calculate the per-universe weight for events that will actually use it.
+                        if (closure) scale = 1.0;
+                        FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
+                    }
+                } else {  // kData
 #ifdef CLOSUREDETAIL
                     if (closure && selection.isDataSelected(*universe, event).all()) {
                         std::cout << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all() << "  " << tag << "1"
