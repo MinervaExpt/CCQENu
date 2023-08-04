@@ -129,7 +129,6 @@ void FillMC(std::string tag, CVUniverse *univ, double weight,
     }
 }
 
-
 void FillResolution(std::string tag, CVUniverse *univ, double weight,
                     std::vector<CCQENu::VariableFromConfig *> variables,
                     std::vector<CCQENu::Variable2DFromConfig *> variables2D,
@@ -144,34 +143,18 @@ void FillResolution(std::string tag, CVUniverse *univ, double weight,
     }
 }
 
-void FillType(std::string tag, CVUniverse* univ, double weight,
-            std::vector<CCQENu::VariableFromConfig*> variables,
-            std::vector<CCQENu::Variable2DFromConfig*> variables2D,
-            double scale) {
-  for (auto v : variables) {
-    if (v->hasType[tag]){
-      double reco_val = v->GetRecoValue(*univ, 0);
-      int type = univ->GetMCIntType();
-      // This will fill both tuned and untuned
-      v->FillType(tag,type,reco_val,weight,scale);
-
+void FillType(std::string tag, CVUniverse *univ, double weight,
+              std::vector<CCQENu::VariableFromConfig *> variables,
+              std::vector<CCQENu::Variable2DFromConfig *> variables2D,
+              double scale) {
+    for (auto v : variables) {
+        if (v->hasType[tag]) {
+            double reco_val = v->GetRecoValue(*univ, 0);
+            int type = univ->GetMCIntType();
+            // This will fill both tuned and untuned
+            v->FillType(tag, type, reco_val, weight, scale);
+        }
     }
-  }
-}
-
-void FillType(std::string tag, CVUniverse* univ, double weight,
-            std::vector<CCQENu::VariableFromConfig*> variables,
-            std::vector<CCQENu::Variable2DFromConfig*> variables2D,
-            double scale) {
-  for (auto v : variables) {
-    if (v->hasType[tag]){
-      double reco_val = v->GetRecoValue(*univ, 0);
-      int type = univ->GetMCIntType();
-      // This will fill both tuned and untuned
-      v->FillType(tag,type,reco_val,weight,scale);
-
-    }
-  }
 }
 
 void FillResponse(std::string tag, CVUniverse *univ, double weight,
@@ -185,13 +168,6 @@ void FillResponse(std::string tag, CVUniverse *univ, double weight,
             double true_val = v->GetTrueValue(*univ, 0);
             // This will fill both tuned and untuned
             v->FillResponse(tag, univ, reco_val, true_val, weight, scale);
-
-            // if(v->m_tunedmc!=1){
-            //   v->FillResponse(tag,univ,reco_val,true_val,weight);
-            // }
-            // if(v->hasTunedMC[tag] && scale>=0.){
-            //   v->FillResponse(tag,univ,reco_val,true_val,scale*weight);
-            // }
         }
     }
     for (auto v2 : variables2D) {
@@ -201,12 +177,6 @@ void FillResponse(std::string tag, CVUniverse *univ, double weight,
             double true_val_x = v2->GetTrueValueX(*univ, 0);
             double true_val_y = v2->GetTrueValueY(*univ, 0);
             v2->FillResponse2D(tag, univ, reco_val_x, reco_val_y, true_val_x, true_val_y, weight, scale);
-            // if(v2->m_tunedmc!=1){
-            //   v2->FillResponse2D(tag,univ,reco_val_x,reco_val_y,true_val_x,true_val_y,weight);
-            // }
-            // if(v2->hasTunedMC[tag] && scale>=0.){
-            //   v2->FillResponse2D(tag,univ,reco_val_x,reco_val_y,true_val_x,true_val_y,scale*weight);
-            // }
         }
     }
     for (auto vHD : variablesHD) {

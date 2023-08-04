@@ -296,6 +296,32 @@ double CVUniverse::GetTrueQ2QEGeV() const {
     return q2;
 }
 
+double CVUniverse::GetQ0QEGeV() const {
+    const double q2min = 0.001;
+    // int charge = GetAnalysisNuPDG() > 0? 1:-1;
+    if (CVUniverse::GetEnuCCQEGeV() <= 0.0) return 0.0;
+    // std::cout<<"CVUniverse::GetQ2QE Cannot calculate neutrino energy "<<std::endl;
+    else {
+        double q0 = GetEnuCCQEGeV() - GetEmuGeV();
+
+        return q0;
+    }
+    // return Q2;
+}
+
+// This nucleon is not at rest so invert x = Q2/2Mnu with x=1;
+double CVUniverse::GetTrueQ0QEGeV() const {
+    // double q0 =  GetTrueEnuCCQEGeV()-GetTrueEmuGeV();
+    static double over_ptimes2 = 1 / (2 * .93827);
+    double q0 = GetTrueQ2GeV() * over_ptimes2;
+    return q0;
+}
+
+double CVUniverse::GetTrueQ0GeV() const {
+    double q0 = GetTrueEnuGeV() - GetTrueEmuGeV();
+    return q0;
+}
+
 double CVUniverse::GetLog10Q2QEGeV() const { return std::log10(CVUniverse::GetQ2QEGeV()); }
 double CVUniverse::GetTrueLog10Q2QEGeV() const { return std::log10(GetTrueQ2QEGeV()); }
 
@@ -785,32 +811,31 @@ double CVUniverse::GetLog10RecoilEnergyGeV() const { return std::log10(GetRecoil
 // return CVUniverse::GetCalRecoilEnergy();
 // std::cout << GetRecoilEnergy()*MeVGeV <<  " " << std::log10(GetRecoilEnergy()) << std::log10(GetRecoilEnergy())  - 3. << std::endl;
 
-	// double CVUniverse::GetOldTrueQ0GeV() const {
-	// 	static std::vector<double> mc_incomingPartVec;
-	// 	static std::vector<double> mc_primFSLepton;
-	// 	mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
-	// 	mc_primFSLepton = GetVecDouble("mc_primFSLepton");
-	// 	double q0 = mc_incomingPartVec[3] - mc_primFSLepton[3];
-	// return q0*MeVGeV;
-	// }
+// double CVUniverse::GetOldTrueQ0GeV() const {
+// 	static std::vector<double> mc_incomingPartVec;
+// 	static std::vector<double> mc_primFSLepton;
+// 	mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
+// 	mc_primFSLepton = GetVecDouble("mc_primFSLepton");
+// 	double q0 = mc_incomingPartVec[3] - mc_primFSLepton[3];
+// return q0*MeVGeV;
+// }
 
-	double CVUniverse::GetTrueQ3GeV() const {
-		static std::vector<double> mc_incomingPartVec;
-		static std::vector<double> mc_primFSLepton;
-		mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
-		mc_primFSLepton = GetVecDouble("mc_primFSLepton");
-		double px = mc_primFSLepton[0] - mc_incomingPartVec[0];
-		double py = mc_primFSLepton[1] - mc_incomingPartVec[1];
-		double pz = mc_primFSLepton[2] - mc_incomingPartVec[2];
-		double q3 = std::sqrt( px*px + py*py + pz*pz );
-		return q3*MeVGeV;
-	}
-	double CVUniverse::GetTrueQ2GeV() const {
-		double q3 = CVUniverse::GetTrueQ3GeV();
-		double q0 = CVUniverse::GetTrueQ0GeV();
-		return q3*q3 - q0*q0;
-	}
-
+double CVUniverse::GetTrueQ3GeV() const {
+    static std::vector<double> mc_incomingPartVec;
+    static std::vector<double> mc_primFSLepton;
+    mc_incomingPartVec = GetVecDouble("mc_incomingPartVec");
+    mc_primFSLepton = GetVecDouble("mc_primFSLepton");
+    double px = mc_primFSLepton[0] - mc_incomingPartVec[0];
+    double py = mc_primFSLepton[1] - mc_incomingPartVec[1];
+    double pz = mc_primFSLepton[2] - mc_incomingPartVec[2];
+    double q3 = std::sqrt(px * px + py * py + pz * pz);
+    return q3 * MeVGeV;
+}
+double CVUniverse::GetTrueQ2GeV() const {
+    double q3 = CVUniverse::GetTrueQ3GeV();
+    double q0 = CVUniverse::GetTrueQ0GeV();
+    return q3 * q3 - q0 * q0;
+}
 
 // ----------------------------- Other Variables -----------------------------
 

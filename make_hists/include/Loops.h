@@ -198,8 +198,8 @@ void LoopAndFillEventSelection(std::string tag,
                         double scale = 1.0;
                         if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv);  // Only calculate the per-universe weight for events that will actually use it.
 
-                        FillMC(tag, universe, weight, variables, variables2D, scale);
-                        FillResponse(tag, universe, weight, variables, variables2D, scale);
+                        FillMC(tag, universe, weight, variables, variables2D, variablesHD, scale);
+                        FillResponse(tag, universe, weight, variables, variables2D, variablesHD, scale);
                         FillResolution(tag, universe, weight, variables, variables2D, scale);
                         if (universe->ShortName() == "cv") {
                             FillType(tag, universe, weight, variables, variables2D, scale);  // only use cv and variables for now
@@ -254,7 +254,7 @@ void LoopAndFillEventSelection(std::string tag,
                         double scale = 1.0;
                         if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv);  // Only calculate the per-universe weight for events that will actually use it.
                         if (closure) scale = 1.0;
-                        FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
+                        FillSignalTruth(tag, universe, weight, variables, variables2D, variablesHD, scale);
                     }
                 } else {  // kData
 #ifdef CLOSUREDETAIL
