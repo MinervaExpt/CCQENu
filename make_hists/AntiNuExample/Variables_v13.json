@@ -18,9 +18,13 @@
           "yvar":"Multiplicity"},
         "ProtonKE_IntType":{"name":"ProtonKE_IntType",
           "xvar":"ProtonKE",
-          "yvar":"IntType"},
+          "yvar":"IntType"}
     },
     "1D":{
+      "TrueEnuDiff":{"reco":"TrueEnuDiffGeV","true":"TrueEnuDiffGeV","name":"TrueEnuDiff","title":"True E_{#nu} - E_{#nu}_{QE} (GeV)","nbins":40,"min":-1, "max":1,"fluxnorm":1},
+      "TrueEnuRatio":{"reco":"TrueEnuRatio","true":"TrueEnuRatio","name":"TrueEnuRatio","title":"True E_{#nu}_{QE}/True E_{#nu}","nbins":40,"min":0.5, "max":1.5,"fluxnorm":1},
+      "RecoEnuRatio":{"reco":"RecoEnuRatio","true":"TrueEnuRatio","name":"RecoEnuRatio","title":"Reco E_{#nu}_{QE}/True E_{#nu}","nbins":40,"min":0.5, "max":1.5,"fluxnorm":1},
+      
         "EnuCCQE":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"EnuCCQE","title":"E_{#nu}_{QE} (GeV)","bins":[1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],"fluxnorm":1},
         "Enu":{
           "reco":"EnuCCQEGeV",

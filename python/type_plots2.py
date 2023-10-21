@@ -3,26 +3,31 @@
 # does tuned histograms if there is a 2nd argument - any second argument
 # hms 9-10-2023
 
+
+
+import sys,os
 import ROOT
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
 
 TEST=False
-import sys,os,string
+noData=True  # use this to plot MC only types
+sigtop=False # use this to place signal on top of background
+
 
 def CCQECanvas(name,title,xsize=750,ysize=750):
-  c2 = ROOT.TCanvas(name,title,xsize,ysize)
-  c2.SetLeftMargin(0.20);
-  c2.SetRightMargin(0.05);
-  c2.SetBottomMargin(0.15);
-  return c2
+    c2 = ROOT.TCanvas(name,title,xsize,ysize)
+    c2.SetLeftMargin(0.20)
+    c2.SetRightMargin(0.05)
+    c2.SetBottomMargin(0.15)
+    return c2
 
 def CCQELegend(xlow,ylow,xhigh,yhigh):
-  leg = ROOT.TLegend(xlow,ylow,xhigh,yhigh)
-  leg.SetFillStyle(0)
-  leg.SetBorderSize(0)
-  leg.SetTextSize(0.03)
-  return leg
-  
+    leg = ROOT.TLegend(xlow,ylow,xhigh,yhigh)
+    leg.SetFillStyle(0)
+    leg.SetBorderSize(0)
+    leg.SetTextSize(0.03)
+    return leg
+
 process=["data","QE","RES","DIS","Other","","","","2p2h",""]
 
 nproc = len(process)
@@ -57,16 +62,19 @@ flag = "types_"
 filename = sys.argv[1]
 if len(sys.argv)> 2:
     flag = "tuned_type_"
-    
+
 
 f = TFile.Open(filename,"READONLY")
+
+dirname = filename.replace(".root","_types")
+if not os.path.exists(dirname): os.mkdir(dirname)
 
 keys = f.GetListOfKeys()
 
 h_pot = f.Get("POT_summary")
-dataPOT = h_pot.GetBinContent(1);
-mcPOTprescaled = h_pot.GetBinContent(3);
-POTScale = dataPOT / mcPOTprescaled;
+dataPOT = h_pot.GetBinContent(1)
+mcPOTprescaled = h_pot.GetBinContent(3)
+POTScale = dataPOT / mcPOTprescaled
     
 groups = {}
 scaleX = ["Q2QE"]
@@ -153,6 +161,7 @@ bestorder = []
 
 ROOT.gStyle.SetOptStat(0)
 template = "%s___%s___%s___%s"
+
 for a_hist in groups.keys():
     if a_hist != "h": continue # no 2D
     #print ("a is",a)
@@ -180,19 +189,24 @@ for a_hist in groups.keys():
             data.SetTitle(thetitle)
             data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
             dmax = data.GetMaximum()
+            if noData:
+                dmax = 0.0
             #data.Draw("PE")
-            leg.AddEntry(data,"data","pe")
+            if not noData: leg.AddEntry(data,"data","pe")
             
             data.Print()
             
             # do the MC
             # move the first category to the top of the plot
-            bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
-            # assume data = type 0, signal is type 1, rest are after that
-            #print ("pre-bestorder",bestorder)
-            signal = bestorder[1]
-            bestorder = bestorder[2:]
-            bestorder.append(signal)
+            if sigtop:
+                bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
+                # assume data = type 0, signal is type 1, rest are after that
+                #print ("pre-bestorder",bestorder)
+                signal = bestorder[1]
+                bestorder = bestorder[2:]
+                bestorder.append(signal)
+            else:
+                bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
             #print ("bestorder",bestorder)
             for d_type in bestorder:
                 if d_type == "data": continue
@@ -210,13 +224,23 @@ for a_hist in groups.keys():
             smax = stack.GetMaximum()
             #print ("max",smax,dmax)
             if smax > dmax:
-                data.SetMaximum(smax*1.2)
-            data.Draw("PE")
-            stack.Draw("hist same")
-            data.Draw("PE same")
+                data.SetMaximum(smax*1.5)
+                stack.SetMaximum(smax*1.5)
+            else:
+                data.SetMaximum(dmax*1.5)
+                stack.SetMaximum(dmax*1.5)
+            if not noData: 
+                data.Draw("PE")
+                stack.Draw("hist same")
+            else:
+                data.Reset()
+                data.Draw("hist")  # need to this to get the axis titles from data
+                stack.Draw("hist same")
+            if not noData: 
+                data.Draw("PE same")
             leg.Draw()
             cc.Draw()
-            cc.Print(thename+"_"+flag+".png")
+            cc.Print(dirname+"/"+thename+"_"+flag+".png")
             
     
 
