@@ -102,7 +102,7 @@ Valid proton score configuration inputs are of the form:
 */
 
 bool CVUniverse::isMC() const {
-    std::cout << "check" << m_chw->IsValid("wgt") << std::endl;
+    //std::cout << "check" << m_chw->IsValid("wgt") << std::endl;
     return m_chw->IsValid("wgt");
 }
 
