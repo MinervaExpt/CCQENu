@@ -1,5 +1,9 @@
 #ifndef GETCCQECUTSFromConfig_H
 #define GETCCQECUTSFromConfig_H
+#include <map>
+#include <vector>
+#include <string>
+
 #include "PlotUtils/Cut.h"
 #include "CVUniverse.h"
 #include "CutFromConfig.h"

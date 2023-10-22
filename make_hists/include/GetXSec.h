@@ -14,6 +14,9 @@
 //#define DEBUG=1
 #include <iostream>
 #include <string>
+#include <vector>
+#include <map>
+
 #include "PlotUtils/MnvH1D.h"
 #include "PlotUtils/MnvH2D.h"
 #include "MinervaUnfold/MnvResponse.h"

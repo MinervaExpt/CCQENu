@@ -26,6 +26,9 @@
 #define CVUNIVERSE_H
 
 #include <iostream>
+#include <vector>
+#include <map>
+#include <string>
 
 #include "PlotUtils/ChainWrapper.h"
 #include "PlotUtils/GeantHadronSystematics.h"
@@ -53,17 +56,17 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static bool _is_proton_score_config_set;
 
    public:
-#ifndef HAZMAT
-#include "PlotUtils/SystCalcs/MuonFunctions.h"
-#include "PlotUtils/SystCalcs/RecoilEnergyFunctions.h"
-#include "PlotUtils/SystCalcs/TruthFunctions.h"
-#include "PlotUtils/SystCalcs/WeightFunctions.h"
-#else
+// #ifndef HAZMAT
+// #include "PlotUtils/SystCalcs/MuonFunctions.h"
+// #include "PlotUtils/SystCalcs/RecoilEnergyFunctions.h"
+// #include "PlotUtils/SystCalcs/TruthFunctions.h"
+// #include "PlotUtils/SystCalcs/WeightFunctions.h"
+// #else
 #include "PlotUtils/MuonFunctions.h"
 #include "PlotUtils/RecoilEnergyFunctions.h"
 #include "PlotUtils/TruthFunctions.h"
 #include "PlotUtils/WeightFunctions.h"
-#endif
+// #endif
 
     // ========================================================================
     // Constructor/Destructor
