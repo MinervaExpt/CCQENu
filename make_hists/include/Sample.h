@@ -1,12 +1,13 @@
 #ifndef SAMPLE_H
 #define SAMPLE_H
 
-#include "utils/NuConfig.h"
+
 #include <vector>
 #include <map>
 #include <string>
 #include <iostream>
-#include "TText.h"
+#include "utils/NuConfig.h"
+//#include "TText.h"
 
 bool IsInVector(const std::string  what, const std::vector<std::string>  &vec)
 {

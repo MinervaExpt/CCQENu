@@ -16,7 +16,7 @@ namespace config_reco {
 // shorthand for std::vector<std::unique_ptr<PlotUtils::Cut<UNIVERSE, EVENT>>>;
 //============================================================================
 template <class UNIVERSE, class EVENT = PlotUtils::detail::empty>
-PlotUtils::cuts_t<UNIVERSE> GetCCQECutsFromConfig(NuConfig & config )
+PlotUtils::cuts_t<UNIVERSE> GetCCQECutsFromConfig(const NuConfig & config )
 {
   typedef std::function<double(const UNIVERSE&)> PointerToCVUniverseFunction;
   PlotUtils::cuts_t<UNIVERSE, EVENT> ccqe_cuts;

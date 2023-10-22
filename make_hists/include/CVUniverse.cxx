@@ -10,9 +10,12 @@
 #ifndef CVUNIVERSE_cxx
 #define CVUNIVERSE_cxx
 
-#include "include/CVUniverse.h"
 
+#include <map>
+#include <string>
+#include <vector>
 #include <algorithm>
+#include "include/CVUniverse.h"
 
 using namespace PlotUtils;
 
