@@ -135,7 +135,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetTrueEnuDiffGeV() const;
     virtual double GetTrueEnuRatio() const;
-    virtual double GetRecoEnuRatio() const;
+    virtual double GetRecoTrueEnuRatio() const;
     virtual double GetQ2QEGeV() const;
     virtual double GetTrueQ2QEGeV() const;
     virtual double GetQ0QEGeV() const;
@@ -174,7 +174,11 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double Null() const { return 0.0; };
 
-    virtual bool isMC() const;
+    // remove as creates dependency on MAT
+
+    // virtual bool isMC() const;
+
+    // virtual bool isValid(const std::string & a ) const;
 
     // ----------------------------- Hadron Variables ----------------------------
 

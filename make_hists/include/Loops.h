@@ -39,11 +39,36 @@ void LoopAndFillEventSelection(std::string tag,
     // Prepare loop
     MinervaUniverse::SetTruth(false);
     int nentries = -1;
+    CVFunctions<CVUniverse> fund;
+
+    TFile * myFile;
+    TTree * mc_tree;
+    TTree * data_tree;
+
+
+    // future code to dump the outputs. 
+    // if (data_mc_truth == kData) {
+    //     myFile = TFile::Open("data.root", "RECREATE");
+    //     data_tree = new TTree("digest", "data tree");
+    //     fund->MakeTree(data_tree,1,0); 
+    // } 
+    // else {
+    //     if (data_mc_truth == kMC) {
+    //         myFile = TFile::Open("mc.root", "RECREATE");
+    //         mc_tree = new TTree("digest", "mc tree");
+    //     fund->MakeTree(data_tree,0,0); 
+    //     }
+    // }
+
+    
+
+
 
     // get ready for weights by finding cv universe pointer
 
     assert(!error_bands["cv"].empty() && "\"cv\" error band is empty!  Can't set Model weight.");
     auto& cvUniv = error_bands["cv"].front();
+
     // make a dummy event - may need to make fancier
     PlotUtils::detail::empty event;
 
@@ -126,7 +151,8 @@ void LoopAndFillEventSelection(std::string tag,
         }
 
         cvUniv->SetEntry(i);
-
+        fund.Dump(cvUniv,data_mc_truth==kData,data_mc_truth==kTruth);
+        
         if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
         const double cvWeight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*cvUniv, event);  // detail may be used for more complex things
