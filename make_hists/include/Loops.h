@@ -151,7 +151,7 @@ void LoopAndFillEventSelection(std::string tag,
         }
 
         cvUniv->SetEntry(i);
-        fund.Dump(cvUniv,data_mc_truth==kData,data_mc_truth==kTruth);
+        //HMS fund.Dump(cvUniv,data_mc_truth==kData,data_mc_truth==kTruth);
         
         if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
