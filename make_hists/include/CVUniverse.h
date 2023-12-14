@@ -130,10 +130,13 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetEnuCCQEGeV() const;      // both neutrino and antinu
     virtual double GetTrueEnuCCQEGeV() const;  // may be a better way to implement this
 
-	virtual double GetQ2QEGeV() const;
-	virtual double GetTrueQ2QEGeV() const;
-	virtual double GetQ0QEGeV() const;
-	virtual double GetTrueQ0QEGeV() const;
+    virtual double GetTrueEnuDiffGeV() const;
+    virtual double GetTrueEnuRatio() const;
+    virtual double GetRecoEnuRatio() const;
+    virtual double GetQ2QEGeV() const;
+    virtual double GetTrueQ2QEGeV() const;
+    virtual double GetQ0QEGeV() const;
+    virtual double GetTrueQ0QEGeV() const;
 
     virtual double GetLog10Q2QEGeV() const;
     virtual double GetTrueLog10Q2QEGeV() const;
@@ -165,6 +168,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetThetaYmuDegrees() const;
     virtual double GetTrueThetaYmuDegrees() const;
+
+    virtual double Null() const { return 0.0; };
+
+    virtual bool isMC() const;
 
     // ----------------------------- Hadron Variables ----------------------------
 

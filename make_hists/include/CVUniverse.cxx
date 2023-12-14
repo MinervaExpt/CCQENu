@@ -10,9 +10,12 @@
 #ifndef CVUNIVERSE_cxx
 #define CVUNIVERSE_cxx
 
-#include "include/CVUniverse.h"
 
+#include <map>
+#include <string>
+#include <vector>
 #include <algorithm>
+#include "include/CVUniverse.h"
 
 using namespace PlotUtils;
 
@@ -100,6 +103,11 @@ Valid proton score configuration inputs are of the form:
         "ProtonScoreConfig": { "pass_proton_score_min":pscore[0] },
 
 */
+
+bool CVUniverse::isMC() const {
+    //std::cout << "check" << m_chw->IsValid("wgt") << std::endl;
+    return m_chw->IsValid("wgt");
+}
 
 bool CVUniverse::_is_analysis_neutrino_pdg_set = false;
 bool CVUniverse::_is_min_blob_zvtx_set = false;
@@ -265,6 +273,27 @@ double CVUniverse::GetEnuCCQEGeV() const {
     // std::cout << " try to getEnuCCQE" << val << std::endl;
     return val * MeVGeV;
 }  // both neutrino and antinu
+
+double CVUniverse::GetTrueEnuDiffGeV() const {
+    if (isMC()) {
+        return GetTrueEnuGeV() - GetTrueEnuCCQEGeV();
+    }
+    return 0.;
+}
+
+double CVUniverse::GetTrueEnuRatio() const {
+    if (isMC()) {
+        return GetTrueEnuCCQEGeV() / GetTrueEnuGeV();
+    }
+    return 0.;
+}
+
+double CVUniverse::GetRecoEnuRatio() const {
+    if (isMC()) {
+        return GetEnuCCQEGeV() / GetTrueEnuGeV();
+    }
+    return 0.;
+}
 
 double CVUniverse::GetTrueEnuCCQEGeV() const {
     int charge = GetAnalysisNuPDG() > 0 ? 1 : -1;
@@ -1057,21 +1086,20 @@ double CVUniverse::GetMaxProtonTrueKE() const {
     return KEmax;
 }
 
-	int CVUniverse::GetTruthIsCCQELike() const {  // cut hardwired for now
-		std::vector<int>mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
-		std::vector<double>mc_FSPartE = GetVecDouble("mc_FSPartE");
-		bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
-		int mc_nFSPart = GetInt("mc_nFSPart");
-		//int mc_incoming = GetInt("mc_incoming");
-		bool passes = 0; // Assume not CCQELike, if CC check 
-		//if(GetInt("mc_current") == 1 && GetInt("mc_incoming") == m_analysis_neutrino_pdg) {
-        // this code needs to be implemented via cuts.
-			passes = ( CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, m_proton_ke_cut));
-		//}
-		
+int CVUniverse::GetTruthIsCCQELike() const {  // cut hardwired for now
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+    bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    // int mc_incoming = GetInt("mc_incoming");
+    bool passes = 0;  // Assume not CCQELike, if CC check
+                      // if(GetInt("mc_current") == 1 && GetInt("mc_incoming") == m_analysis_neutrino_pdg) {
+    // this code needs to be implemented via cuts.
+    passes = (CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, m_proton_ke_cut));
+    //}
 
-		return passes;
-	}
+    return passes;
+}
 
 // all CCQElike without proton cut enabled
 
