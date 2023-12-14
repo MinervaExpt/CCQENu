@@ -729,6 +729,7 @@ int CVUniverse::GetAllExtraTracksProtons() const {
     int passes = GetPassAllProtonScoreCuts(sec_proton_scores, tree_Q2);
     return passes;
 }
+
 int CVUniverse::GetAllExtraTracksProtons1() const {
     if (GetMultiplicity() < 2) return 1;  // NA when multiplicity is < 2
     int n_sec_proton_scores1 = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores1_sz").c_str());
@@ -805,6 +806,7 @@ double CVUniverse::GetCalRecoilEnergyGeV() const { return CVUniverse::GetCalReco
 double CVUniverse::GetNonCalRecoilEnergy() const { return 0; }  // not certain why I want to implement this but there ya go.
 double CVUniverse::GetNonCalRecoilEnergyGeV() const { return GetNonCalRecoilEnergy() * MeVGeV; }
 double CVUniverse::GetRecoilEnergyGeV() const { return GetRecoilEnergy() * MeVGeV; }                       // GetCalRecoilEnergy()?
+double CVUniverse::ApplyCaloTuning(double E) const{ return E;}
 double CVUniverse::GetTrueRecoilEnergyGeV() const { return CVUniverse::GetTrueQ0GeV(); }                   // need this?
 double CVUniverse::GetTrueLog10RecoilEnergyGeV() const { return std::log10(CVUniverse::GetTrueQ0GeV()); }  // need this?
 double CVUniverse::GetLog10RecoilEnergyGeV() const { return std::log10(GetRecoilEnergy()) - 3.; }

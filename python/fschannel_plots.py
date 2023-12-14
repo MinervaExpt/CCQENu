@@ -1,4 +1,5 @@
 import ROOT
+from PlotUtils import MnvH1D
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
 
 import sys,os,string
@@ -17,37 +18,48 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
   leg.SetTextSize(0.03)
   return leg
   
-process=["data","QE","RES","DIS","Other","","","","2p2h",""]
+process=["data","QElike","1\pi^{-}","1\pi{+}","1\pi^{0}","Multi-\pi","Other"]
+# process=["data","QE","RES","DIS","Other","","","","2p2h",""]
 
 nproc = len(process)
 
-for x in range(0,nproc+1):
-    process.append(process[x]+"-not")
+# for x in range(0,nproc+1):
+#     process.append(process[x]+"-not")
 colors = {
-0:ROOT.kBlack,
-1:ROOT.kBlue-6,
-2:ROOT.kMagenta-6,
-3:ROOT.kRed-6,
-4:ROOT.kYellow-6,
-5:ROOT.kWhite,
-6:ROOT.kWhite,
-7:ROOT.kWhite,
-8:ROOT.kGreen-6,
-9:ROOT.kTeal-6,
-10:ROOT.kBlue-1,
-11:ROOT.kBlue-10,
-12:ROOT.kMagenta-10,
-13:ROOT.kRed-10,
-14:ROOT.kYellow-10,
-15:ROOT.kGray,
-16:ROOT.kBlack,
-17:ROOT.kBlack,
-18:ROOT.kGreen-6,
-19:ROOT.kTeal-6}
+"data":ROOT.kBlack,
+"qelike":ROOT.kBlue-6,
+"negativepion":ROOT.kMagenta-6,
+"positivepion":ROOT.kRed-6,
+"neutralpion":ROOT.kYellow-6,
+"multipion":ROOT.kGreen-6,
+"other":ROOT.kTeal-6,
+}
+
+# colors = {
+# 0:ROOT.kBlack,
+# 1:ROOT.kBlue-6,
+# 2:ROOT.kMagenta-6,
+# 3:ROOT.kRed-6,
+# 4:ROOT.kYellow-6,
+# 5:ROOT.kWhite,
+# 6:ROOT.kWhite,
+# 7:ROOT.kWhite,
+# 8:ROOT.kGreen-6,
+# 9:ROOT.kTeal-6,
+# 10:ROOT.kBlue-1,
+# 11:ROOT.kBlue-10,
+# 12:ROOT.kMagenta-10,
+# 13:ROOT.kRed-10,
+# 14:ROOT.kYellow-10,
+# 15:ROOT.kGray,
+# 16:ROOT.kBlack,
+# 17:ROOT.kBlack,
+# 18:ROOT.kGreen-6,
+# 19:ROOT.kTeal-6}
 
 if len(sys.argv) == 1:
     print ("enter root file name and optional 2nd argument to get tuned version")
-flag = "types_"
+# flag = "types_"
 filename = sys.argv[1]
 if len(sys.argv)> 2:
     flag = "tuned_type_"
@@ -74,11 +86,13 @@ for k in keys:
     parse = name.split("___")
     if len(parse) < 5: continue
     #print (parse)
-    if not flag in parse[4] and not "data" in parse[2]: continue
+    # if not flag in parse[4] and not "data" in parse[2]: continue
     d = parse[0]
     s = parse[1]
     c = parse[2]
     v = parse[3]
+    rt = parse[4]
+    if rt not "reconstructed": continue
     # reorder so category is last
     if d == "h2D": continue
     if d not in groups.keys():
@@ -106,29 +120,42 @@ for k in keys:
     s = parse[1]
     c = parse[2]
     v = parse[3]
-    if flag in parse[4]:
-        index = int(parse[4].replace(flag,""))
-        #print ("check",index,name)
-        h = f.Get(name)
-        if h.GetEntries() <= 0: continue
-        h.Scale(POTScale,"width") #scale to data
-        # h.Scale(POTScale) #scale to data
-        h.SetFillColor(colors[index])
-        
-        if c in ["qelikenot","qelikenot_np"] :  # make a better way to do this, maybe code in the input file?
-            index += 10
-            h.SetFillStyle(3244)
-        groups[d][s][v][c][index]=h
-        #print ("mc",groups[d][s][v][c])
-    if "data" in c:
-        index = 0
-        h = f.Get(name)
-        
-        if h.GetEntries() <= 0: continue
-        h.Scale(1.,"width")
+    h = f.Get(name).GetCVHistoWithStatError()
+    if h.GetEntries() <= 0: continue
+    h.Scale(POTScale,"width") #scale to data
+    h.SetFillColor(colors[c])
+    if c not in ["qelike","qelike_np","data"]:
+    # if c == "qelikenot":  # make a better way to do this, maybe code in the input file?
+        index += 10
+        h.SetFillStyle(3244)
+    if c in ["data"]:
         h.SetMarkerStyle(20)
-        groups[d][s][v][c][index]=h
-        #print ("data",groups[d][s][v][c])
+
+    groups[d][s][v][c]["hist"]=h
+    
+    # if flag in parse[4]:
+    #     index = int(parse[4].replace(flag,""))
+    #     #print ("check",index,name)
+    #     h = f.Get(name)
+    #     if h.GetEntries() <= 0: continue
+    #     h.Scale(POTScale,"width") #scale to data
+    #     h.SetFillColor(colors[index])
+        
+    #     if c not in ["qelike","qelike_np"]:
+    #     # if c == "qelikenot":  # make a better way to do this, maybe code in the input file?
+    #         index += 10
+    #         h.SetFillStyle(3244)
+    #     groups[d][s][v][c][index]=h
+    #     #print ("mc",groups[d][s][v][c])
+    # if "data" in c:
+    #     index = 0
+    #     h = f.Get(name)
+        
+    #     if h.GetEntries() <= 0: continue
+    #     h.Scale(1.,"width")
+    #     h.SetMarkerStyle(20)
+    #     groups[d][s][v][c][index]=h
+    #     #print ("data",groups[d][s][v][c])
         
     
 # do the plotting

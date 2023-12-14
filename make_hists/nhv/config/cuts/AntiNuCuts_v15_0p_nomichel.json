@@ -1,104 +1,162 @@
 {
-  "Comments":  [
-    "Changed to include protons in signal samples 7/7/2023",
+  "Comments": [
+    "This one has a Multiplicity sideband that is agnostic to Michels"
+    "Adding mc_int_type sig defs. 7/14/2023",
+    "Changed Proton score cuts to avoid duplicated multiplicity cut. 7/13/2023",
+    "Fixed 'other' category to use not passing TruthIsCCQELikeAll instead of TruthIsCCQELike. 7/10/2023",
+    "Added qelike_trackp sig def that only allows protons > 120MeV. Maybe used in proton sideband. 7/10/2023",
     "Added 2p2h samples, qelikenot samples, & '_np' samples without proton KE constraint - NHV 7/7/2023",
-    "v15 - make more similar to Neutrino cuts/sig def 6/20/2023",
+    "v15 - make more similar to Neutrino cuts/sig def 6/20/2023", 
     "v13 - make CCQELike a single cut so you can reverse it.",
     "v9 - May 28, 2022, remove the FULL cuts and stick with all angles",
     "also add QElikeNot which is complement to QElike with recoil cut reversed"
   ],
-"QElikeNP": [
+  "QElike": [
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
-    {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
-    {"name": "AllExtraTracksProtons", "equals": 1, "variable": "AllExtraTracksProtons"},
-    {"name": "HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichel"},
+    {"name": "Max Multiplicity", "max": 1, "variable": "Multiplicity"},
+    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
     {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
     {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
     {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
     {"name": "ZVertex", "min": 5980, "max": 8410, "variable": "ZVertex"},
-    {"name": "HasMINOSMatch", "equals": -1, "variable": "IsMinosMatchTrack"}, 
+    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"}, 
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
   ],
-  "MichelSidebandNP": [
+  "QElikeOld":[
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"Z Vertex","min":5980,"max":8422,"variable":"ZVertex"},
+    {"name":"Has MINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
+    {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
+    {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
+    {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
+    {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
+  ],
+  "QElikeNP": [
+    {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
+    {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
+    {"name": "AllExtraTracksProtons", "equals": 1, "variable": "AllExtraTracksProtons"},
+    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
+    {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
+    {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
+    {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
+    {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
+    {"name": "ZVertex", "min": 5980, "max": 8410, "variable": "ZVertex"},
+    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"}, 
+    {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
+    {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
+    {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
+  ],
+  "QElikeOldNp":[
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"Z Vertex","min":5980,"max":8422,"variable":"ZVertex"},
+    {"name":"Has MINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
+    {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
+    {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
+    {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
+    {"name": "AllExtraTracksProtons", "equals": 1, "variable": "AllExtraTracksProtons"},
+    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
+    {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
+  ],
+  "MichelSideband": [
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
     {"name": "ImprovedNMichel", "equals": 1, "variable": "ImprovedNMichel"},
-    {"name": "No IsPrimaryProton", "equals": 0, "variable": "IsPrimaryProton"},
-    {"name": "No AllExtraTracksProtons", "equals": 0, "variable": "AllExtraTracksProtons"},
+    {"name": "No IsAllTracksProtons", "equals": 0, "variable": "IsAllTracksProtons"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
     {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
     {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
     {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
     {"name": "ZVertex", "min": 5980, "max": 8422, "variable": "ZVertex"},
-    {"name": "HasMINOSMatch", "equals": -1, "variable": "IsMinosMatchTrack"},
+    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"},
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
   ],
-  "BlobSidebandNP": [
+  "BlobSideband": [
     {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
-    {"name": "HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichel"},
-    {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
-    {"name": "AllExtraTracksProtons", "equals": 1, "variable": "AllExtraTracksProtons"},
+    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
+    {"name": "Max Multiplicity", "max": 1, "variable": "Multiplicity"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
     {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
     {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
     {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
     {"name": "ZVertex", "min": 5980, "max": 8422, "variable": "ZVertex"},
-    {"name": "HasMINOS Match", "equals": -1, "variable": "IsMinosMatchTrack"}, 
+    {"name": "HasMINOS Match", "equals":-1, "variable": "IsMinosMatchTrack"}, 
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
   ],
-  "PiMinusSidebandNP": [
+  "MultiplicitySideband": [
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
-    {"name": "HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichel"},
-    {"name": "Multiplicity", "equals": 2, "variable": "Multiplicity"},
-    {"name": "No IsPrimaryProton", "equals": 0, "variable": "IsPrimaryProton"},
-    {"name": "No AllExtraTracksProtons", "equals": 0, "variable": "AllExtraTracksProtons"},
+    {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
+    {"name": "No IsAllTracksProtons", "equals": 0, "variable": "IsAllTracksProtons"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
     {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
     {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
     {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
     {"name": "ZVertex", "min": 5980, "max": 8422, "variable": "ZVertex"},
-    {"name": "HasMINOSMatch", "equals": -1, "variable": "IsMinosMatchTrack"}, 
+    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"}, 
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
   ],
-  "MicBlobSidebandNP": [
+  "MicBlobSideband": [
     {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
     {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
-    {"name": "HasImprovedMichel", "equals": 1, "variable": "HasImprovedMichel"},
+    {"name": "HasImprovedMichel", "equals": 1, "variable": "HasImprovedMichelElectron"},
     {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
     {"name": "AllExtraTracksProtons", "equals": 1, "variable": "AllExtraTracksProtons"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
     {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
     {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
     {"name": "ZVertex", "min": 5980, "max": 8422, "variable": "ZVertex"},
-    {"name": "HasMINOSMatch", "equals": -1, "variable": "IsMinosMatchTrack"}, 
-    {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"}, 
+    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"}, 
+    {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"}
   ],
-  "MicBlobMultipSidebandNP": [
+  "MultipBlobSideband": [
     {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
-    {"name": "HasImprovedMichel", "equals": 1, "variable": "HasImprovedMichel"},
     {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
-    {"name": "No IsPrimaryProton", "equals": 0, "variable": "IsPrimaryProton"},
-    {"name": "No AllExtraTracksProtons", "equals": 0, "variable": "AllExtraTracksProtons"},
+    {"name": "No IsAllTracksProtons", "equals": 0, "variable": "IsAllTracksProtons"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
     {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
     {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
     {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
     {"name": "ZVertex", "min": 5980, "max": 8422, "variable": "ZVertex"},
-    {"name": "HasMINOSMatch", "equals": -1, "variable": "IsMinosMatchTrack"}, 
+    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"}, 
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"}, 
+    {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
+    {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
+  ],
+  "ProtonSideband": [
+    {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
+    {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
+    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
+    {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
+    {"name": "AllExtraTracksProtons", "equals": 1, "variable": "AllExtraTracksProtons"},
+    {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
+    {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
+    {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
+    {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
+    {"name": "ZVertex", "min": 5980, "max": 8410, "variable": "ZVertex"},
+    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"}, 
+    {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
@@ -111,99 +169,90 @@
     {"name": "TrueMuonMomentumPar Max", "max": 15.0, "variable": "TruePparMuGeV"},
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "TrueThetamuDegrees"}
   ],
-  "ccqelike": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
-    {"name": "TruthIsCCQELike", "equals": 1, "variable": "TruthIsCCQELike", "protonKECutMeV": 120}
-  ],
   "qelike": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
+    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
-    {"name": "TruthIsCCQELike", "equals": 1, "variable": "TruthIsCCQELike", "protonKECutMeV": 120}
+    {"name": "TruthIsCCQELike", "equals": 1, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0}
   ],
   "qelike_np": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
+    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"}
   ],
-  "qelikenot": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
+  "qelike_trackp": [ // This is for QElike events with higher T_p, useful for looking at proton samples
+    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
+    {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"},
+    {"name": "MaxProtonKE Min", "min": 120.0, "variable": "MaxProtonTrueKE"} // This is truth level, opposite of protonKECutMeV in TruthIsCCQELikeAll
+  ],
+  "qelikenot": [
     {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0}
   ],
   "qelikenot_np": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"}
   ],
+  "qelikenot_trackp": [ // This is for QElikenot events with higher T_p, useful for looking at proton samples
+    {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"},
+    {"name": "MaxProtonKE Min", "min": 120.0, "variable": "MaxProtonTrueKE"} // This is truth level, opposite of protonKECutMeV in TruthIsCCQELikeAll
+  ],
   "qelike1p": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
+    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELike", "equals": 1, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0},
     {"name": "MCIntType", "max": 7, "variable": "MCIntType"}
   ],
   "qelike1p_np": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
+    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"},
     {"name": "MCIntType", "max": 7, "variable": "MCIntType"}
   ],
   "qelike2p2h": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
+    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELike", "equals": 1, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0},
     {"name": "MCIntType", "equals": 8, "variable": "MCIntType"}
   ],
   "qelike2p2h_np": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
+    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"},
     {"name": "MCIntType", "equals": 8, "variable": "MCIntType"}
   ],
   "qelikenot1p": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
-    {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0},
+    {"name": "TruthIsCCQELike", "equals":0, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0},
     {"name": "MCIntType", "max": 7, "variable": "MCIntType"}
   ],
   "qelikenot1p_np": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
-    {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"},
+    {"name": "TruthIsCCQELikeAll", "equals":0, "variable": "TruthIsCCQELikeAll"},
     {"name": "MCIntType", "max": 7, "variable": "MCIntType"}
   ],
   "chargedpion": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthHasSingleChargedPion", "equals": 1, "variable": "TruthHasSingleChargedPion"}
   ],
   "positivepion": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthHasSinglePositivePion", "equals": 1, "variable": "TruthHasSinglePositivePion"}
   ],
   "negativepion": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthHasSingleNegativePion", "equals": 1, "variable": "TruthHasSingleNegativePion"}
   ],
   "neutralpion": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthHasSingleNeutralPion", "equals": 1, "variable": "TruthHasSingleNeutralPion"}
   ],
   "multipion": [
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthHasMultiplePions", "equals": 1, "variable": "TruthHasMultiPion"}
   ],
   "other": [
     {"name": "TruthHasMultiplePions", "equals": 0, "variable": "TruthHasMultiPion"},
     {"name": "TruthHasSingleChargedPion", "equals": 0, "variable": "TruthHasSingleChargedPion"},
     {"name": "TruthHasSingleNeutralPion", "equals": 0, "variable": "TruthHasSingleNeutralPion"},
-    {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike"},
-    {"name": "PDG", "equals": -14, "variable": "TruthNuPDG"},
-    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"}
+    {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0}
+  ],
+  "other_np": [
+    {"name": "TruthHasMultiplePions", "equals": 0, "variable": "TruthHasMultiPion"},
+    {"name": "TruthHasSingleChargedPion", "equals": 0, "variable": "TruthHasSingleChargedPion"},
+    {"name": "TruthHasSingleNeutralPion", "equals": 0, "variable": "TruthHasSingleNeutralPion"},
+    {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"}
   ],
   "data": [] 
 }

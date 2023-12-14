@@ -1,0 +1,78 @@
+{
+  "version":15,  
+  "mcIn":"${CCQEMAT}/nhv/playlists/MC_5A_local.txt",
+  "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/cuts/AntiNuCuts_v15_0p_nomichel.json", 
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
+  "samplesFile": "${CCQEMAT}/nhv/config/samples/AntiNuSamples_v15_Np_qelikenot.json", 
+  "outRoot": "Types_5A_Sidebands_NoMichel_Np", 
+  "scalefileIn": "${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", 
+  "prescale":999,
+  "playlist":"minervame5A",
+  "MinervaModel":"MnvTunev1", 
+  "recoName":"CCQENu",
+  "tunedmc":"untuned", 
+  "closure":0,
+  "TuneCategories":["qelike", "qelikenot"], 
+  "pdg":-14,
+  "runsamples": [
+    "QElikeNp",
+    "QElikeOldNp",
+    "MichelSidebandNp",
+    "BlobSidebandNp",
+    "MultiplicitySidebandNp",
+    "MultipBlobSidebandNp",
+    "ProtonSidebandNp"
+  ], 
+  "AnalyzeVariables": [
+    "Q2QE",
+    "Log10recoil"
+  ],
+  "Analyze2DVariables": [],
+  "AnalyzeHyperDVariables": [], 
+  "signal": {
+    "QElikeNp": "qelike_np",
+    "QElikeOldNp": "qelike_np",
+    "MichelSidebandNp": "qelike_np",
+    "BlobSidebandNp": "qelike_np",
+    "MultiplicitySidebandNp": "qelike_np",
+    "MultipBlobSidebandNp": "qelike_np",
+    "ProtonSidebandNp": "qelike_np"
+  }, 
+  "background": {
+    "QElikeNp": "qelikenot_np",
+    "QElikeOldNp": "qelikenot_np",
+    "MichelSidebandNp": "qelikenot_np",
+    "BlobSidebandNp": "qelikenot_np",
+    "MultiplicitySidebandNp": "qelikenot_np",
+    "MultipBlobSidebandNp": "qelikenot_np",
+    "ProtonSidebandNp": "qelikenot_np"
+  },
+  "data": {
+    "QElikeNP": "data",
+    "QElikeOld": "data",
+    "MichelSideband": "data",
+    "BlobSideband": "data",
+    "MultiplicitySideband": "data",
+    "MultipBlobSideband": "data",
+    "ProtonSideband": "data"
+  },
+  "systematics": [
+    "Flux"//,
+    // "MuonMINOS",
+    // "MuonResolution",
+    // "MINOSEfficiency",
+    // "Angle",
+    // "GENIE",
+    // "GenieRvx1pi",
+    // "RPA",
+    // "2p2h",
+    // "MuonMinerva",
+    // "geant4",
+    // "response"
+  ],
+  "fluxUniverses": 2, //10,
+  "NuEConstraint":1, 
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1 
+}

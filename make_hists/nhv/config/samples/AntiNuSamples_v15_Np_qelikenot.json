@@ -1,0 +1,128 @@
+{
+    "Comments":[
+        "Added qelike_trackp background. Will need to check colors on pos/neg pion & qelike_trackp samples. 7/10/2023",
+        "Added samples without proton KE constraint -NHV 7/7/2023",
+        "Borrowing Neutrino categories and samples -NHV 6/20/2023"
+    ],
+    "QElikeNp": {
+        "name": "QElikeNp",
+        "reco": "QElikeNP",
+        "phase_space": "phase_space",
+        "signal":["qelike_np"],
+        "background":["qelikenot_np"],
+        "categories":{
+            "qelike_np":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot_np":{
+                "for":["selected_reco"]
+            }
+        }
+    },
+    "QElikeOldNp": {
+        "name": "QElikeOldNp",
+        "reco": "QElikeOldNp",
+        "phase_space": "phase_space",
+        "signal":["qelike_np"],
+        "background":["qelikenot_np"],
+        "categories":{
+            "qelike_np":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot_np":{
+                "for":["selected_reco"]
+            }
+        }
+    },
+    "MichelSidebandNp": {
+        "name": "MichelSidebandNp",
+        "reco": "MichelSideband",
+        "phase_space": "phase_space",
+        "signal":["qelike_np"],
+        "background":["qelikenot_np"],
+        "categories":{
+            "qelike_np":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot_np":{
+                "for":["selected_reco"]
+            }
+        }
+    },
+    "BlobSidebandNp": {
+        "name": "BlobSidebandNp",
+        "reco": "BlobSideband",
+        "phase_space": "phase_space",
+        "phase_space": "phase_space",
+        "signal":["qelike_np"],
+        "background":["qelikenot_np"],
+        "categories":{
+            "qelike_np":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot_np":{
+                "for":["selected_reco"]
+            }
+        }    
+    },
+    "MultiplicitySidebandNp": {
+        "name": "MultiplicitySidebandNp",
+        "reco": "MultiplicitySideband",
+        "phase_space": "phase_space",
+        "signal":["qelike_np"],
+        "background":["qelikenot_np"],
+        "categories":{
+            "qelike_np":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot_np":{
+                "for":["selected_reco"]
+            }
+        }
+    }, 
+    "MicBlobSidebandNp": {
+        "name": "MicBlobSidebandNp",
+        "reco": "MicBlobSideband",
+        "phase_space": "phase_space",
+        "signal":["qelike_np"],
+        "background":["qelikenot_np"],
+        "categories":{
+            "qelike_np":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot_np":{
+                "for":["selected_reco"]
+            }
+        }
+    },
+    "MultipBlobSidebandNp": {
+        "name": "MultipBlobSidebandNp",
+        "reco": "MultipBlobSideband",
+        "phase_space": "phase_space",
+        "signal":["qelike_np"],
+        "background":["qelikenot_np"],
+        "categories":{
+            "qelike_np":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot_np":{
+                "for":["selected_reco"]
+            }
+        }
+    },
+    "ProtonSidebandNp": {
+        "name": "ProtonSidebandNp",
+        "reco": "ProtonSideband",
+        "phase_space": "phase_space",
+        "signal":["qelike_np"],
+        "background":["qelikenot_np"],
+        "categories":{
+            "qelike_np":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot_np":{
+                "for":["selected_reco"]
+            }
+        }
+    }
+}

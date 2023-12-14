@@ -1,0 +1,143 @@
+{
+    "Comments":[
+        "Added qelike_trackp background. Will need to check colors on pos/neg pion & qelike_trackp samples. 7/10/2023",
+        "Added samples without proton KE constraint -NHV 7/7/2023",
+        "Borrowing Neutrino categories and samples -NHV 6/20/2023"
+    ],
+    "QElike": {
+        "name": "QElike",
+        "reco": "QElike",
+        "phase_space": "phase_space",
+        "signal":["qelike"],
+        "background":["qelikenot"],
+        "categories":{
+            "qelike":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot":{
+                "for":["selected_reco"]
+            }
+        }
+    },
+    "QElikeNP": {
+        "name": "QElikeNP",
+        "reco": "QElikeNP",
+        "phase_space": "phase_space",
+        "signal":["qelike_np"],
+        "background":["qelikenot_np"],
+        "categories":{
+            "qelike_np":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot_np":{
+                "for":["selected_reco"]
+            }
+        }
+    },
+    "QElikeOld": {
+        "name": "QElikeOld",
+        "reco": "QElikeOld",
+        "phase_space": "phase_space",
+        "signal":["qelike"],
+        "background":["qelikenot"],
+        "categories":{
+            "qelike":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot":{
+                "for":["selected_reco"]
+            }
+        }
+    },
+    "MichelSideband": {
+        "name": "MichelSideband",
+        "reco": "MichelSideband",
+        "phase_space": "phase_space",
+        "signal":["qelike"],
+        "background":["qelikenot"],
+        "categories":{
+            "qelike":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot":{
+                "for":["selected_reco"]
+            }
+        }
+    },
+    "BlobSideband": {
+        "name": "BlobSideband",
+        "reco": "BlobSideband",
+        "phase_space": "phase_space",
+        "phase_space": "phase_space",
+        "signal":["qelike"],
+        "background":["qelikenot"],
+        "categories":{
+            "qelike":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot":{
+                "for":["selected_reco"]
+            }
+        }    
+    },
+    "MultiplicitySideband": {
+        "name": "MultiplicitySideband",
+        "reco": "MultiplicitySideband",
+        "phase_space": "phase_space",
+        "signal":["qelike"],
+        "background":["qelikenot"],
+        "categories":{
+            "qelike":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot":{
+                "for":["selected_reco"]
+            }
+        }
+    }, 
+    "MicBlobSideband": {
+        "name": "MicBlobSideband",
+        "reco": "MicBlobSideband",
+        "phase_space": "phase_space",
+        "signal":["qelike"],
+        "background":["qelikenot"],
+        "categories":{
+            "qelike":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot":{
+                "for":["selected_reco"]
+            }
+        }
+    },
+    "MultipBlobSideband": {
+        "name": "MultipBlobSideband",
+        "reco": "MultipBlobSideband",
+        "phase_space": "phase_space",
+        "signal":["qelike"],
+        "background":["qelikenot"],
+        "categories":{
+            "qelike":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot":{
+                "for":["selected_reco"]
+            }
+        }
+    },
+    "ProtonSideband": {
+        "name": "ProtonSideband",
+        "reco": "ProtonSideband",
+        "phase_space": "phase_space",
+        "signal":["qelike"],
+        "background":["qelikenot"],
+        "categories":{
+            "qelike":{
+                "for":["selected_reco","selected_truth","truth","response"]
+            },
+            "qelikenot":{
+                "for":["selected_reco"]
+            }
+        }
+    }
+}

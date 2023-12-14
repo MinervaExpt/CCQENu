@@ -8,8 +8,8 @@
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
     {"name":"ApothemY","max":850,"variable":"ApothemY"},
     {"name":"Z Vertex","min":5980,"max":8422,"variable":"ZVertex"},
-    {"name":"Has MINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
-    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"Has MINOS Match","equals":-1,"variable":"IsMinosMatchTrack"},
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  
     {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
     {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
     {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
