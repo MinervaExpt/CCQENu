@@ -56,6 +56,7 @@ include/weight_MCreScale.cxx
 
 set(H_FILES
 include/Sample.h
+include/CoherentPiReweighter.h
 include/CutFromConfig.h
 include/CVFunctions.h
 include/CVUniverse.h

@@ -247,6 +247,56 @@ double CVUniverse::GetWeight() const {
     return wgt_flux_and_cv * wgt_genie * wgt_2p2h * wgt_rpa * wgt_mueff * wgt_geant;
 }
 
+double CVUniverse::GetTruePionAngle() const {
+    int nFSpi = GetInt("mc_nFSPart");
+    double angle = -9999.;  // WRTbeam and in degrees
+    double pionKE = 0.0;
+    int idk = -9999;
+    for (int i = 0; i < nFSpi; i++) {
+        int pdg = GetVecElem("mc_FSPartPDG", i);
+        if (pdg != 211) continue;
+        double energy = GetVecElem("mc_FSPartE", i);
+        double mass = 139.569;
+        double tpi = energy - mass;
+        if (tpi >= pionKE) {
+            pionKE = tpi;
+            TVector3 pimomentumvec(GetVecElem("mc_FSPartPx", i), GetVecElem("mc_FSPartPz", i), GetVecElem("mc_FSPartPz", i));
+            double deg_wrtb = thetaWRTBeam(pimomentumvec.X(), pimomentumvec.Y(), pimomentumvec.Z());  // rad
+
+            angle = deg_wrtb;  //*180./M_PI;
+        }
+    }
+    // Making sure angle is only between 0 and pi
+    if (angle < 0.0) angle = -1.0 * angle;
+    if (angle > M_PI) angle = 2.0 * M_PI - angle;
+    return angle * 180. / M_PI;  // Degrees
+}
+
+double CVUniverse::GetCoherentPiWeight() const {
+    if (GetInt("mc_intType") != 4) return 1.0;
+    if (GetInt("mc_intType") == 4) {
+        int nFSpi = GetInt("mc_nFSPart");
+        double epi = -1.0;
+        double angle = -9999.;
+        double mass = 139.569;
+        for (int i = 0; i < nFSpi; i++) {
+            int pdg = GetVecElem("mc_FSPartPDG", i);
+            if (pdg != abs(211)) continue;
+            double epi = GetVecElem("mc_FSPartE", i)/1000.;
+            TVector3 p3pi(GetVecElem("mc_FSPartPx", i), GetVecElem("mc_FSPartPy", i), GetVecElem("mc_FSPartPz", i));
+            p3pi.RotateX(MinervaUnits::numi_beam_angle_rad);
+            angle = abs(p3pi.Theta())*180./M_PI;  //*180./M_PI;
+        }
+        if (epi < 0)
+            return 1.0;
+        else if (angle < 0)
+            return 1.0;
+        else {
+            return GetCoherentPiWeight(angle,epi);
+        }
+    } else
+        return 1.0;
+}
 // ========================================================================
 // Write a "Get" function for all quantities access by your analysis.
 // For composite quantities (e.g. Enu) use a calculator function.

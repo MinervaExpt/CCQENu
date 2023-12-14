@@ -90,6 +90,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetWeight() const;
 
+    virtual double GetCoherentPiWeight() const;
     // ========================================================================
     // Write a "Get" function for all quantities access by your analysis.
     // For composite quantities (e.g. Enu) use a calculator function.
