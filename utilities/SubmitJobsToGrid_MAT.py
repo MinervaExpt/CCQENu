@@ -96,7 +96,7 @@ def createTarball(tmpdir,tardir,tag,basedirname):
     found = os.path.isfile("%s/myareatar_%s.tar.gz"%(tardir,tag))
 
     if(not found):
-        #cmd = "tar -czf /minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
+        #cmd = "tar -czf /exp/minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
         print (" in directory",os.getcwd())
         tarpath = os.path.join(tmpdir,"myareatar_%s.tar.gz"%(tag))
         cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif,*.csv} -zcf  %s ./%s"%(tarpath,basedirname)
