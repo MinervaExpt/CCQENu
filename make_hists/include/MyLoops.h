@@ -1,5 +1,9 @@
 #define CLOSURE 1
 
+#include <map>
+#include <vector>
+#include <string>
+
 enum EDataMCTruth {kData, kMC, kTruth, kNDataMCTruthTypes};
 
 

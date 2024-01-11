@@ -186,7 +186,7 @@ for a_hist in groups.keys():
                 continue
             
             data = TH1D(groups[a_hist][b_sample][c_var]["data"][0])
-            data.SetTitle(thetitle)
+            data.SetTitle("MINERvA Preliminary")
             data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
             dmax = data.GetMaximum()
             if noData:
