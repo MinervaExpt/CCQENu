@@ -64,8 +64,13 @@ PlotUtils::cuts_t<UNIVERSE> GetCCQECutsFromConfig(NuConfig & config )
             ccqe_cuts.emplace_back( new MinimumFromConfigFunc<UNIVERSE>(cut,fun));
           }
           else{
-            std::cout << " asked for a cut without a valid type " << key << std::endl;
-            exit(8);
+          	if( cut.IsMember("notequal")){
+          		ccqe_cuts.emplace_back( new IsNotSameFromConfigFunc<UNIVERSE>(cut,fun));
+          	}
+          	else{
+            	std::cout << " asked for a cut without a valid type " << key << std::endl;
+            	exit(8);
+            }
           }
         }
       }
@@ -145,10 +150,15 @@ PlotUtils::constraints_t<UNIVERSE> GetCCQEPhaseSpaceFromConfig(NuConfig & config
             if( cut.IsMember("min")){
               signalDef.emplace_back( new MinimumConstraintFromConfigFunc<UNIVERSE>(cut,fun));
             }
-            else{
-              std::cout << " asked for a signalDef without a valid type " << key << std::endl;
-              exit(8);
-            }
+		        else{
+		        	if( cut.IsMember("notequal")){
+		        		signalDef.emplace_back( new IsNotSameConstraintFromConfigFunc<UNIVERSE>(cut,fun));
+		        	}
+		        	else{
+		          	std::cout << " asked for a signalDef without a valid type " << key << std::endl;
+		          	exit(8);
+		          }
+		        }
           }
         }
       }
@@ -190,10 +200,15 @@ PlotUtils::constraints_t<UNIVERSE> GetCCQESignalFromConfig(NuConfig & config)
             if( cut.IsMember("min")){
               signalDef.emplace_back( new MinimumConstraintFromConfigFunc<UNIVERSE>(cut,fun));
             }
-            else{
-              std::cout << " asked for a signalDef without a valid type " << key << std::endl;
-              exit(8);
-            }
+		        else{
+		        	if( cut.IsMember("notequal")){
+		        		signalDef.emplace_back( new IsNotSameConstraintFromConfigFunc<UNIVERSE>(cut,fun));
+		        	}
+		        	else{
+		          	std::cout << " asked for a signalDef without a valid type " << key << std::endl;
+		          	exit(8);
+		          }
+		        }
           }
         }
       }

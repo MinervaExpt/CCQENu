@@ -80,15 +80,18 @@ int main(const int argc, const char *argv[]) {
 	int argument = std::stoi(argv[1]);
 	
 	if(argument == 1 || argument == 2) {
-		std::vector<bool> binwidthnorm = { true,true,true,true,false };
-		std::vector<std::string> varnames = { "ptmu","pzmu","EnuCCQE","Q2QE","PrimaryProtonScore"};
-		std::vector<std::string> ytitles = { "Counts/GeV","Counts/GeV","Counts/GeV","Counts/GeV^2","Counts" };
-		std::vector<bool> dolog = { false,false,false,false,false };
+		/*std::vector<bool> binwidthnorm = { true,true,true,true,true,true,true,true };
+		std::vector<std::string> varnames = {"PrimaryProtonScore1","recoil","PrimaryProtonTrackVtxGap","BlobCount",
+                                         "PrimaryProtonFractionVisEnergyInCone","PrimaryProtonTfromdEdx",
+                                         "NumClustsPrimaryProtonEnd","ImprovedMichelCount"};
+		std::vector<std::string> ytitles = {"Counts","Counts/GeV","Counts/mm","Counts","Counts",
+		                                    "Counts/MeV","Counts","Counts"};
+		std::vector<bool> dolog = { false,false,false,false,false,false,false,false,false };
 		std::string sample;
 		std::string title;
 		if(argument == 1) {
-			sample = "QElike";
-			title = "QElike, 2+ tracks";
+			sample = "2track";
+			title = "2 tracks";
 		
 		}
 		else if(argument == 2) {
@@ -96,7 +99,23 @@ int main(const int argc, const char *argv[]) {
 			title = "QElike, No Protons Cut, 2+ tracks";
 		}
 		
-		std::string rootfilename = "SB_NuConfig_primaryproton_1.root";
+		std::string rootfilename = "SB_NuConfig_v8_2track_me1n_1.root";*/
+		
+		std::vector<bool> binwidthnorm = { true,true,false,false,false,false,false,true,true,false,false,false,false };
+		std::vector<std::string> varnames = {"Q2QE","EnuCCQE","bdtg1ChargedPion","bdtg1NeutralPion",
+                                         "bdtgMultiPion","bdtgOther","bdtgQELike","ptmu","pzmu",
+                                         "PrimaryProtonTrackVtxGap","PrimaryProtonScore1",
+                                         "ImprovedMichelCount","BlobCount"};
+		std::vector<std::string> ytitles = {"Counts/GeV^s","Counts/GeV","Counts","Counts","Counts",
+		                                    "Counts","Counts","Counts/GeV","Counts/GeV","Counts",
+		                                    "Counts","Counts","Counts"};
+		std::vector<bool> dolog = { true,false,false,false,false,false,false,false,false,false,false,false,false };
+		std::string sample;
+		std::string title;
+		sample = "Mult1p";
+		title = "Multiplicity 1+, in fiducial volume, muon in MINOS";
+		std::string rootfilename = "SB_NuConfig_mult1pBDTG_me1N_1.root";
+		
 		double yscale = 1.2;
 		
 		TFile *infile = new TFile(Form(rootfilename.c_str()));
@@ -168,7 +187,8 @@ int main(const int argc, const char *argv[]) {
 			data->GetYaxis()->SetTitle(ytitles[i].c_str());
 			data->GetXaxis()->SetTitleOffset(1.2);
 		  data->GetYaxis()->SetTitleOffset(1.3);
-			data->SetTitle(title.c_str());
+			//data->SetTitle(title.c_str());
+			data->SetTitle(varnames[i].c_str());
 			data->SetStats(0);
 			applyStyle(data);
 			
@@ -184,9 +204,10 @@ int main(const int argc, const char *argv[]) {
 			data->Draw("PE1");
 			hs->Draw("HISTSAME");
 			data->Draw("PE1SAME");
-			dolog[i]?data->GetYaxis()->SetRangeUser(0.1,yscale*data->GetBinContent(data->GetMaximumBin())):data->GetYaxis()->SetRangeUser(0,yscale*data->GetBinContent(data->GetMaximumBin()));
+			//dolog[i]?data->GetYaxis()->SetRangeUser(0.1,yscale*data->GetBinContent(data->GetMaximumBin())):data->GetYaxis()->SetRangeUser(0,yscale*data->GetBinContent(data->GetMaximumBin()));
 			leg->Draw("SAME");
-			if(dolog[i]) c1->SetLogy(true);
+			//if(dolog[i]) c1->SetLogy(true);
+			if(dolog[i]) c1->SetLogx(true);
 			gPad->RedrawAxis();
 			
 			c1->Print(Form("%s_%s.png",sample.c_str(),varnames[i].c_str()));

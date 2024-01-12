@@ -134,7 +134,19 @@ public:
 		recointfunctions["GoodRecoil"] = &CVUNIVERSE::GetGoodRecoil;
 
 		trueintfunctions["TruthIsCCQELike"] = &CVUNIVERSE::GetTruthIsCCQELike;
+		truefunctions["TruthIsCCQELike"] = &CVUNIVERSE::GetTruthIsCCQELike;
 		trueintfunctions["TruthIsCCQELikeAll"] = &CVUNIVERSE::GetTruthIsCCQELikeAll;
+		
+		trueintfunctions["TruthIsCCQELike_old"] = &CVUNIVERSE::GetTruthIsCCQELike_old;
+		trueintfunctions["TruthIs1ChargedPion_old"] = &CVUNIVERSE::GetTruthIs1ChargedPion_old;
+		trueintfunctions["TruthIs1NeutralPion_old"] = &CVUNIVERSE::GetTruthIs1NeutralPion_old;
+		trueintfunctions["TruthIsMultiPion_old"] = &CVUNIVERSE::GetTruthIsMultiPion_old;
+		trueintfunctions["TruthIsOther_old"] = &CVUNIVERSE::GetTruthIsOther_old;
+		
+		trueintfunctions["TruthIsCCQELike_new"] = &CVUNIVERSE::GetTruthIsCCQELike_new;
+		trueintfunctions["TruthIs1ChargedPion_new"] = &CVUNIVERSE::GetTruthIs1ChargedPion_new;
+		trueintfunctions["TruthIs1NeutralPion_new"] = &CVUNIVERSE::GetTruthIs1NeutralPion_new;
+		trueintfunctions["TruthIsMultiPion_new"] = &CVUNIVERSE::GetTruthIsMultiPion_new;
 
 		trueintfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
 
@@ -200,33 +212,52 @@ public:
 		recointfunctions["NumberOfProtonCandidates"] = &CVUNIVERSE::GetNumberOfProtonCandidates;
 		recofunctions["NumberOfProtonCandidates"] = &CVUNIVERSE::GetNumberOfProtonCandidates;
 
-		recofunctions["ProtonScore_0"] = &CVUNIVERSE::GetProtonScore_0;
-		recofunctions["ProtonScore_1"] = &CVUNIVERSE::GetProtonScore_1;
-		recofunctions["ProtonScore_2"] = &CVUNIVERSE::GetProtonScore_2;
-		recofunctions["ProtonScore_3"] = &CVUNIVERSE::GetProtonScore_3;
-		recofunctions["ProtonScore_4"] = &CVUNIVERSE::GetProtonScore_4;
-		recofunctions["ProtonScore_5"] = &CVUNIVERSE::GetProtonScore_5;
-		recofunctions["ProtonScore_6"] = &CVUNIVERSE::GetProtonScore_6;
-		recofunctions["ProtonScore_7"] = &CVUNIVERSE::GetProtonScore_7;
-		recofunctions["ProtonScore_8"] = &CVUNIVERSE::GetProtonScore_8;
-		recofunctions["ProtonScore_9"] = &CVUNIVERSE::GetProtonScore_9;
+		recofunctions["PrimaryProtonScore"] = &CVUNIVERSE::GetProtonScore_0;
+		recofunctions["SecProtonScore_1"] = &CVUNIVERSE::GetProtonScore_1;
+		recofunctions["SecProtonScore_2"] = &CVUNIVERSE::GetProtonScore_2;
+		recofunctions["SecProtonScore_3"] = &CVUNIVERSE::GetProtonScore_3;
+		recofunctions["SecProtonScore_4"] = &CVUNIVERSE::GetProtonScore_4;
+		recofunctions["SecProtonScore_5"] = &CVUNIVERSE::GetProtonScore_5;
+		recofunctions["SecProtonScore_6"] = &CVUNIVERSE::GetProtonScore_6;
+		recofunctions["SecProtonScore_7"] = &CVUNIVERSE::GetProtonScore_7;
+		recofunctions["SecProtonScore_8"] = &CVUNIVERSE::GetProtonScore_8;
+		recofunctions["SecProtonScore_9"] = &CVUNIVERSE::GetProtonScore_9;
+		
+		recofunctions["PrimaryProtonScore1"] = &CVUNIVERSE::GetProtonScore1_0;
+		recofunctions["SecProtonScore1_1"] = &CVUNIVERSE::GetProtonScore1_1;
+		recofunctions["SecProtonScore1_2"] = &CVUNIVERSE::GetProtonScore1_2;
+		recofunctions["SecProtonScore1_3"] = &CVUNIVERSE::GetProtonScore1_3;
+		recofunctions["SecProtonScore1_4"] = &CVUNIVERSE::GetProtonScore1_4;
+		recofunctions["SecProtonScore1_5"] = &CVUNIVERSE::GetProtonScore1_5;
+		recofunctions["SecProtonScore1_6"] = &CVUNIVERSE::GetProtonScore1_6;
+		recofunctions["SecProtonScore1_7"] = &CVUNIVERSE::GetProtonScore1_7;
+		recofunctions["SecProtonScore1_8"] = &CVUNIVERSE::GetProtonScore1_8;
+		recofunctions["SecProtonScore1_9"] = &CVUNIVERSE::GetProtonScore1_9;
+		
+		recofunctions["PrimaryProtonScore2"] = &CVUNIVERSE::GetProtonScore2_0;
+		recofunctions["SecProtonScore2_1"] = &CVUNIVERSE::GetProtonScore2_1;
+		recofunctions["SecProtonScore2_2"] = &CVUNIVERSE::GetProtonScore2_2;
+		recofunctions["SecProtonScore2_3"] = &CVUNIVERSE::GetProtonScore2_3;
+		recofunctions["SecProtonScore2_4"] = &CVUNIVERSE::GetProtonScore2_4;
+		recofunctions["SecProtonScore2_5"] = &CVUNIVERSE::GetProtonScore2_5;
+		recofunctions["SecProtonScore2_6"] = &CVUNIVERSE::GetProtonScore2_6;
+		recofunctions["SecProtonScore2_7"] = &CVUNIVERSE::GetProtonScore2_7;
+		recofunctions["SecProtonScore2_8"] = &CVUNIVERSE::GetProtonScore2_8;
+		recofunctions["SecProtonScore2_9"] = &CVUNIVERSE::GetProtonScore2_9;
 
-		recointfunctions["PassScoreCutProton_0"] = &CVUNIVERSE::GetPassScoreCutProton_0;
-		recointfunctions["PassScoreCutProton_1"] = &CVUNIVERSE::GetPassScoreCutProton_1;
-		recointfunctions["PassScoreCutProton_2"] = &CVUNIVERSE::GetPassScoreCutProton_2;
-		recointfunctions["PassScoreCutProton_3"] = &CVUNIVERSE::GetPassScoreCutProton_3;
-		recointfunctions["PassScoreCutProton_4"] = &CVUNIVERSE::GetPassScoreCutProton_4;
-		recointfunctions["PassScoreCutProton_5"] = &CVUNIVERSE::GetPassScoreCutProton_5;
-		recointfunctions["PassScoreCutProton_6"] = &CVUNIVERSE::GetPassScoreCutProton_6;
-		recointfunctions["PassScoreCutProton_7"] = &CVUNIVERSE::GetPassScoreCutProton_7;
-		recointfunctions["PassScoreCutProton_8"] = &CVUNIVERSE::GetPassScoreCutProton_8;
-		recointfunctions["PassScoreCutProton_9"] = &CVUNIVERSE::GetPassScoreCutProton_9;
+		recointfunctions["PassScoreCutProton1_0"] = &CVUNIVERSE::GetPassScoreCutProton1_0;
+		recointfunctions["PassScoreCutProton1_1"] = &CVUNIVERSE::GetPassScoreCutProton1_1;
+		recointfunctions["PassScoreCutProton1_2"] = &CVUNIVERSE::GetPassScoreCutProton1_2;
+		recointfunctions["PassScoreCutProton1_3"] = &CVUNIVERSE::GetPassScoreCutProton1_3;
+		recointfunctions["PassScoreCutProton1_4"] = &CVUNIVERSE::GetPassScoreCutProton1_4;
+		recointfunctions["PassScoreCutProton1_5"] = &CVUNIVERSE::GetPassScoreCutProton1_5;
+		recointfunctions["PassScoreCutProton1_6"] = &CVUNIVERSE::GetPassScoreCutProton1_6;
+		recointfunctions["PassScoreCutProton1_7"] = &CVUNIVERSE::GetPassScoreCutProton1_7;
+		recointfunctions["PassScoreCutProton1_8"] = &CVUNIVERSE::GetPassScoreCutProton1_8;
+		recointfunctions["PassScoreCutProton1_9"] = &CVUNIVERSE::GetPassScoreCutProton1_9;
 
 		recointfunctions["IsPrimaryProton"] = &CVUNIVERSE::GetIsPrimaryProton;
 		recointfunctions["IsPrimaryProton1"] = &CVUNIVERSE::GetIsPrimaryProton1;
-		recofunctions["PrimaryProtonScore"] = &CVUNIVERSE::GetPrimaryProtonScore;
-		recofunctions["PrimaryProtonScore1"] = &CVUNIVERSE::GetPrimaryProtonScore1;
-		recofunctions["PrimaryProtonScore2"] = &CVUNIVERSE::GetPrimaryProtonScore2;
 
 		recointfunctions["AreClustsFoundAtPrimaryProtonEnd"] = &CVUNIVERSE::GetAreClustsFoundAtPrimaryProtonEnd;
 		recofunctions["AreClustsFoundAtPrimaryProtonEnd"] = &CVUNIVERSE::GetAreClustsFoundAtPrimaryProtonEnd;
@@ -250,6 +281,14 @@ public:
 		recofunctions["PrimaryProtonTrackEndX"] = &CVUNIVERSE::GetPrimaryProtonTrackEndX;
 		recofunctions["PrimaryProtonTrackEndY"] = &CVUNIVERSE::GetPrimaryProtonTrackEndY;
 		recofunctions["PrimaryProtonTrackEndZ"] = &CVUNIVERSE::GetPrimaryProtonTrackEndZ;
+		
+		recofunctions["ProtonCandTrackLength_0"] = &CVUNIVERSE::GetProtonCandTrackLength_0;
+		recofunctions["ProtonCandTrackLength_1"] = &CVUNIVERSE::GetProtonCandTrackLength_1;
+		recofunctions["ProtonCandTrackLength_2"] = &CVUNIVERSE::GetProtonCandTrackLength_2;
+		recofunctions["ProtonCandTrackLength_3"] = &CVUNIVERSE::GetProtonCandTrackLength_3;
+		recofunctions["ProtonCandTrackLength_4"] = &CVUNIVERSE::GetProtonCandTrackLength_4;
+		recofunctions["ProtonCandTrackLength_5"] = &CVUNIVERSE::GetProtonCandTrackLength_5;
+		recofunctions["ProtonCandTrackLength_6"] = &CVUNIVERSE::GetProtonCandTrackLength_6;
 
 		recofunctions["PrimaryProtonAngle"] = &CVUNIVERSE::GetPrimaryProtonAngle;
 		recofunctions["SecProtonAngle_1"] = &CVUNIVERSE::GetSecProtonAngle_1;
@@ -258,6 +297,8 @@ public:
 		recofunctions["SecProtonAngle_4"] = &CVUNIVERSE::GetSecProtonAngle_4;
 		recofunctions["SecProtonAngle_5"] = &CVUNIVERSE::GetSecProtonAngle_5;
 		recofunctions["SecProtonAngle_6"] = &CVUNIVERSE::GetSecProtonAngle_6;
+		
+		recofunctions["MuonToPrimaryProtonAngle"] = &CVUNIVERSE::GetMuonToPrimaryProtonAngle;
 
 		recofunctions["PrimaryProtonTrackVtxGap"] = &CVUNIVERSE::GetPrimaryProtonTrackVtxGap;
 		recofunctions["SecProtonTrackVtxGap_1"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_1;
@@ -291,21 +332,21 @@ public:
 		recofunctions["SecProtonTfromdEdx_5"] = &CVUNIVERSE::GetSecProtonTfromdEdx_5;
 		recofunctions["SecProtonTfromdEdx_6"] = &CVUNIVERSE::GetSecProtonTfromdEdx_6;
 
-		recofunctions["TotalPrimaryProtonEnergy"] = &CVUNIVERSE::GetTotalPrimaryProtonEnergy;
-		recofunctions["TotalSecProtonEnergy_1"] = &CVUNIVERSE::GetTotalSecProtonEnergy_1;
-		recofunctions["TotalSecProtonEnergy_2"] = &CVUNIVERSE::GetTotalSecProtonEnergy_2;
-		recofunctions["TotalSecProtonEnergy_3"] = &CVUNIVERSE::GetTotalSecProtonEnergy_3;
-		recofunctions["TotalSecProtonEnergy_4"] = &CVUNIVERSE::GetTotalSecProtonEnergy_4;
-		recofunctions["TotalSecProtonEnergy_5"] = &CVUNIVERSE::GetTotalSecProtonEnergy_5;
-		recofunctions["TotalSecProtonEnergy_6"] = &CVUNIVERSE::GetTotalSecProtonEnergy_6;
+		recofunctions["TotalPrimaryProtonVisEnergy"] = &CVUNIVERSE::GetTotalPrimaryProtonVisEnergy;
+		recofunctions["TotalSecProtonVisEnergy_1"] = &CVUNIVERSE::GetTotalSecProtonVisEnergy_1;
+		recofunctions["TotalSecProtonVisEnergy_2"] = &CVUNIVERSE::GetTotalSecProtonVisEnergy_2;
+		recofunctions["TotalSecProtonVisEnergy_3"] = &CVUNIVERSE::GetTotalSecProtonVisEnergy_3;
+		recofunctions["TotalSecProtonVisEnergy_4"] = &CVUNIVERSE::GetTotalSecProtonVisEnergy_4;
+		recofunctions["TotalSecProtonVisEnergy_5"] = &CVUNIVERSE::GetTotalSecProtonVisEnergy_5;
+		recofunctions["TotalSecProtonVisEnergy_6"] = &CVUNIVERSE::GetTotalSecProtonVisEnergy_6;
 
-		recofunctions["PrimaryProtonFractionEnergyInCone"] = &CVUNIVERSE::GetPrimaryProtonFractionEnergyInCone;
-		recofunctions["SecProtonFractionEnergyInCone_1"] = &CVUNIVERSE::GetSecProtonFractionEnergyInCone_1;
-		recofunctions["SecProtonFractionEnergyInCone_2"] = &CVUNIVERSE::GetSecProtonFractionEnergyInCone_2;
-		recofunctions["SecProtonFractionEnergyInCone_3"] = &CVUNIVERSE::GetSecProtonFractionEnergyInCone_3;
-		recofunctions["SecProtonFractionEnergyInCone_4"] = &CVUNIVERSE::GetSecProtonFractionEnergyInCone_4;
-		recofunctions["SecProtonFractionEnergyInCone_5"] = &CVUNIVERSE::GetSecProtonFractionEnergyInCone_5;
-		recofunctions["SecProtonFractionEnergyInCone_6"] = &CVUNIVERSE::GetSecProtonFractionEnergyInCone_6;
+		recofunctions["PrimaryProtonFractionVisEnergyInCone"] = &CVUNIVERSE::GetPrimaryProtonFractionVisEnergyInCone;
+		recofunctions["SecProtonFractionVisEnergyInCone_1"] = &CVUNIVERSE::GetSecProtonFractionVisEnergyInCone_1;
+		recofunctions["SecProtonFractionVisEnergyInCone_2"] = &CVUNIVERSE::GetSecProtonFractionVisEnergyInCone_2;
+		recofunctions["SecProtonFractionVisEnergyInCone_3"] = &CVUNIVERSE::GetSecProtonFractionVisEnergyInCone_3;
+		recofunctions["SecProtonFractionVisEnergyInCone_4"] = &CVUNIVERSE::GetSecProtonFractionVisEnergyInCone_4;
+		recofunctions["SecProtonFractionVisEnergyInCone_5"] = &CVUNIVERSE::GetSecProtonFractionVisEnergyInCone_5;
+		recofunctions["SecProtonFractionVisEnergyInCone_6"] = &CVUNIVERSE::GetSecProtonFractionVisEnergyInCone_6;
 
 		recofunctions["PrimaryProtonTrueKE"] = &CVUNIVERSE::GetPrimaryProtonTrueKE;
 		recofunctions["SecProtonTrueKE_1"] = &CVUNIVERSE::GetSecProtonTrueKE_1;
@@ -315,7 +356,7 @@ public:
 		recofunctions["SecProtonTrueKE_5"] = &CVUNIVERSE::GetSecProtonTrueKE_5;
 		recofunctions["SecProtonTrueKE_6"] = &CVUNIVERSE::GetSecProtonTrueKE_6;
 
-		recofunctions["EnergyDiffTruedEdx"] = &CVUNIVERSE::GetEnergyDiffTruedEdx;
+		recofunctions["VisEnergyDiffTruedEdx"] = &CVUNIVERSE::GetVisEnergyDiffTruedEdx;
 
 		recointfunctions["PrimaryProtonCandidatePDG"] = &CVUNIVERSE::GetPrimaryProtonCandidatePDG;
 		recofunctions["PrimaryProtonCandidatePDG"] = &CVUNIVERSE::GetPrimaryProtonCandidatePDG;
@@ -331,6 +372,21 @@ public:
 		recofunctions["SecProtonCandidatePDG_5"] = &CVUNIVERSE::GetSecProtonCandidatePDG_5;
 		recointfunctions["SecProtonCandidatePDG_6"] = &CVUNIVERSE::GetSecProtonCandidatePDG_6;
 		recofunctions["SecProtonCandidatePDG_6"] = &CVUNIVERSE::GetSecProtonCandidatePDG_6;
+		
+		recointfunctions["PrimaryProtonCandidatePDG_abs"] = &CVUNIVERSE::GetPrimaryProtonCandidatePDG_abs;
+		recofunctions["PrimaryProtonCandidatePDG_abs"] = &CVUNIVERSE::GetPrimaryProtonCandidatePDG_abs;
+		recointfunctions["SecProtonCandidatePDG_abs_1"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_1;
+		recofunctions["SecProtonCandidatePDG_abs_1"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_1;
+		recointfunctions["SecProtonCandidatePDG_abs_2"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_2;
+		recofunctions["SecProtonCandidatePDG_abs_2"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_2;
+		recointfunctions["SecProtonCandidatePDG_abs_3"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_3;
+		recofunctions["SecProtonCandidatePDG_abs_3"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_3;
+		recointfunctions["SecProtonCandidatePDG_abs_4"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_4;
+		recofunctions["SecProtonCandidatePDG_abs_4"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_4;
+		recointfunctions["SecProtonCandidatePDG_abs_5"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_5;
+		recofunctions["SecProtonCandidatePDG_abs_5"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_5;
+		recointfunctions["SecProtonCandidatePDG_abs_6"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_6;
+		recofunctions["SecProtonCandidatePDG_abs_6"] = &CVUNIVERSE::GetSecProtonCandidatePDG_abs_6;
 
 		recointfunctions["RecoTruthIsPrimaryProton"] = &CVUNIVERSE::GetRecoTruthIsPrimaryProton;
 		recointfunctions["RecoTruthIsPrimaryPion"] = &CVUNIVERSE::GetRecoTruthIsPrimaryPion;
@@ -399,9 +455,24 @@ public:
 		trueintfunctions["TruthHasSingleChargedPion"] = &CVUNIVERSE::GetTruthHasSingleChargedPion;
 		trueintfunctions["TruthHasSingleNeutralPion"] = &CVUNIVERSE::GetTruthHasSingleNeutralPion;
 		trueintfunctions["TruthHasMultiPion"] = &CVUNIVERSE::GetTruthHasMultiPion;
+		trueintfunctions["TruthIsOther"] = &CVUNIVERSE::GetTruthIsOther;
+		
+		truefunctions["TruthCCQELikeExceptForChargedPions"] = &CVUNIVERSE::GetTruthCCQELikeExceptForChargedPions;
+		truefunctions["TruthHasSingleChargedPion"] = &CVUNIVERSE::GetTruthHasSingleChargedPion;
+		truefunctions["TruthHasSingleNeutralPion"] = &CVUNIVERSE::GetTruthHasSingleNeutralPion;
+		truefunctions["TruthHasMultiPion"] = &CVUNIVERSE::GetTruthHasMultiPion;
+		truefunctions["TruthIsOther"] = &CVUNIVERSE::GetTruthIsOther;
 
 		truefunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
 		trueintfunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
+		
+		// TMVA
+		recofunctions["bdtgQELike"] = &CVUNIVERSE::bdtgQELike;
+		recofunctions["bdtg1ChargedPion"] = &CVUNIVERSE::bdtg1ChargedPion;
+		recofunctions["bdtg1NeutralPion"] = &CVUNIVERSE::bdtg1NeutralPion;
+		recofunctions["bdtgMultiPion"] = &CVUNIVERSE::bdtgMultiPion;
+		recofunctions["bdtgOther"] = &CVUNIVERSE::bdtgOther;
+		
 	};
 
 	std::vector<std::string> GetRecoKeys() const

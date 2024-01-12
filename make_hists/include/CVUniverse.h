@@ -28,6 +28,8 @@
 #include <iostream>
 #include "utils/NuConfig.h"
 
+#include "TROOT.h"
+
 #include "PlotUtils/ChainWrapper.h"
 #include "PlotUtils/MinervaUniverse.h"
 #include "PlotUtils/PhysicsVariables.h"
@@ -44,6 +46,11 @@ protected:
 	static NuConfig m_proton_score_config;
 	static std::vector<double> m_proton_score_Q2QEs;
 	static std::vector<double> m_proton_score_mins;
+	static std::map<int,int> m_fs_pdg_counts;
+	static std::map<int,int> m_fs_pdg_counts_with_constraints;
+	static std::map<std::string,bool> m_passes_signal_cuts;
+	static std::map<std::string,bool> m_passes_signal_cuts_old;
+	static std::vector<float> m_response_vec;
 
 	// initially set to false
 	static bool _is_analysis_neutrino_pdg_set;
@@ -51,6 +58,11 @@ protected:
 	static bool _is_photon_energy_cut_set;
 	static bool _is_proton_ke_cut_set;
 	static bool _is_proton_score_config_set;
+	static bool _are_fs_pdgs_counted;
+	static bool _are_signal_truths_set;	
+	static bool _are_signal_truths_set_old;
+	static bool _is_tmva_model_loaded;
+	static bool _is_response_vec_filled;
 
 public:
 #ifndef HAZMAT
@@ -119,11 +131,30 @@ public:
 
 	static NuConfig GetProtonScoreConfig(bool print);
 	static bool SetProtonScoreConfig(NuConfig protonScoreConfig, bool print);
+	
+	virtual bool SetFSParticlePDGCounts() const;
+	static bool AreFSParticlePDGsCounted();
+	static int GetFSConstrainedParticleCount(int pdg);
+	static int GetFSParticleCount(int pdg);
+	static bool ResetFSParticlePDGCounts();
+	
+	virtual bool SetSignalTruths() const;
+	virtual bool SetSignalTruths_old() const;
+	static bool AreSignalTruthsSet();
+	static bool AreSignalTruthsSet_old();
+	static bool GetSignalTruth(std::string signal);
+	static bool GetSignalTruth_old(std::string signal);
+	static bool ResetSignalTruths();
+	
+	static bool SetVectorResponse(std::vector<float> response_vec);
+	static bool ResetVectorResponse();
+	static std::vector<float> GetVectorResponse();
+	
 
 	// ----------------------- Analysis-related Variables ------------------------
 
 
-	virtual int GetIsMinosMatchTrack()const;
+	virtual int GetIsMinosMatchTrack() const;
 
 	virtual double GetEnuHadGeV() const;
 	virtual double GetTrueEnuGeV() const;
@@ -260,6 +291,19 @@ public:
 	virtual int GetTruthIsCCQELikeAll() const;  // cut hardwired for now
 
 	virtual int GetTruthIsQELike() const;
+	
+	// Signal Truth Checks
+	
+	virtual bool GetTruthIsCCQELike_old() const;
+	virtual bool GetTruthIs1ChargedPion_old() const;
+	virtual bool GetTruthIs1NeutralPion_old() const;
+	virtual bool GetTruthIsMultiPion_old() const;
+	virtual bool GetTruthIsOther_old() const;
+	
+	virtual bool GetTruthIsCCQELike_new() const;
+	virtual bool GetTruthIs1ChargedPion_new() const;
+	virtual bool GetTruthIs1NeutralPion_new() const;
+	virtual bool GetTruthIsMultiPion_new() const;
 
 	// ----------------------- Sean Neutrino Functions ------------------------------------------
 
@@ -296,6 +340,7 @@ public:
 	virtual int GetTruthHasSingleChargedPion() const;
 	virtual int GetTruthHasSingleNeutralPion() const;
 	virtual int GetTruthHasMultiPion() const;
+	virtual int GetTruthIsOther() const;
 	virtual double GetPionScore() const;
 	virtual double GetPionScore1() const;
 	virtual double GetPionScore2() const;
@@ -306,6 +351,8 @@ public:
 
 	virtual double GetProtonScore(int i) const;
 	virtual double GetProtonScore1(int i) const;
+	virtual double GetProtonScore2(int i) const;
+	
 	virtual double GetProtonScore_0() const;
 	virtual double GetProtonScore_1() const;
 	virtual double GetProtonScore_2() const;
@@ -316,18 +363,40 @@ public:
 	virtual double GetProtonScore_7() const;
 	virtual double GetProtonScore_8() const;
 	virtual double GetProtonScore_9() const;
+	
+	virtual double GetProtonScore1_0() const;
+	virtual double GetProtonScore1_1() const;
+	virtual double GetProtonScore1_2() const;
+	virtual double GetProtonScore1_3() const;
+	virtual double GetProtonScore1_4() const;
+	virtual double GetProtonScore1_5() const;
+	virtual double GetProtonScore1_6() const;
+	virtual double GetProtonScore1_7() const;
+	virtual double GetProtonScore1_8() const;
+	virtual double GetProtonScore1_9() const;
+	
+	virtual double GetProtonScore2_0() const;
+	virtual double GetProtonScore2_1() const;
+	virtual double GetProtonScore2_2() const;
+	virtual double GetProtonScore2_3() const;
+	virtual double GetProtonScore2_4() const;
+	virtual double GetProtonScore2_5() const;
+	virtual double GetProtonScore2_6() const;
+	virtual double GetProtonScore2_7() const;
+	virtual double GetProtonScore2_8() const;
+	virtual double GetProtonScore2_9() const;
 
-	virtual int GetPassProtonScoreCut(double score, double tree_Q2) const;
-	virtual int GetPassScoreCutProton_0() const;
-	virtual int GetPassScoreCutProton_1() const;
-	virtual int GetPassScoreCutProton_2() const;
-	virtual int GetPassScoreCutProton_3() const;
-	virtual int GetPassScoreCutProton_4() const;
-	virtual int GetPassScoreCutProton_5() const;
-	virtual int GetPassScoreCutProton_6() const;
-	virtual int GetPassScoreCutProton_7() const;
-	virtual int GetPassScoreCutProton_8() const;
-	virtual int GetPassScoreCutProton_9() const;
+	virtual int GetPassProtonScoreCut(int method, int candidate, double tree_Q2) const;
+	virtual int GetPassScoreCutProton1_0() const;
+	virtual int GetPassScoreCutProton1_1() const;
+	virtual int GetPassScoreCutProton1_2() const;
+	virtual int GetPassScoreCutProton1_3() const;
+	virtual int GetPassScoreCutProton1_4() const;
+	virtual int GetPassScoreCutProton1_5() const;
+	virtual int GetPassScoreCutProton1_6() const;
+	virtual int GetPassScoreCutProton1_7() const;
+	virtual int GetPassScoreCutProton1_8() const;
+	virtual int GetPassScoreCutProton1_9() const;
 
 	virtual int GetSecondaryProtonCandidateCount() const;
 	virtual int GetSecondaryProtonCandidateCount1() const;
@@ -352,6 +421,15 @@ public:
 	virtual double GetPrimaryProtonTrackEndY() const;
 	virtual double GetPrimaryProtonTrackEndZ() const;
 	
+	virtual double GetProtonCandTrackLength(int i) const;
+	virtual double GetProtonCandTrackLength_0() const;
+	virtual double GetProtonCandTrackLength_1() const;
+	virtual double GetProtonCandTrackLength_2() const;
+	virtual double GetProtonCandTrackLength_3() const;
+	virtual double GetProtonCandTrackLength_4() const;
+	virtual double GetProtonCandTrackLength_5() const;
+	virtual double GetProtonCandTrackLength_6() const;
+	
 	virtual double GetProtonAngle(int i) const;
 	virtual double GetPrimaryProtonAngle() const;
 	virtual double GetSecProtonAngle_1() const;
@@ -360,6 +438,8 @@ public:
 	virtual double GetSecProtonAngle_4() const;
 	virtual double GetSecProtonAngle_5() const;
 	virtual double GetSecProtonAngle_6() const;
+	
+	virtual double GetMuonToPrimaryProtonAngle() const;
 	
 	virtual double GetProtonTrackVtxGap(int i) const;
 	virtual double GetPrimaryProtonTrackVtxGap() const;
@@ -397,23 +477,23 @@ public:
 	virtual double GetSecProtonTfromdEdx_5() const;
 	virtual double GetSecProtonTfromdEdx_6() const;
 	
-	virtual double GetTotalProtonEnergy(int i) const;
-	virtual double GetTotalPrimaryProtonEnergy() const;
-	virtual double GetTotalSecProtonEnergy_1() const;
-	virtual double GetTotalSecProtonEnergy_2() const;
-	virtual double GetTotalSecProtonEnergy_3() const;
-	virtual double GetTotalSecProtonEnergy_4() const;
-	virtual double GetTotalSecProtonEnergy_5() const;
-	virtual double GetTotalSecProtonEnergy_6() const;
+	virtual double GetTotalProtonVisEnergy(int i) const;
+	virtual double GetTotalPrimaryProtonVisEnergy() const;
+	virtual double GetTotalSecProtonVisEnergy_1() const;
+	virtual double GetTotalSecProtonVisEnergy_2() const;
+	virtual double GetTotalSecProtonVisEnergy_3() const;
+	virtual double GetTotalSecProtonVisEnergy_4() const;
+	virtual double GetTotalSecProtonVisEnergy_5() const;
+	virtual double GetTotalSecProtonVisEnergy_6() const;
 	
-	virtual double GetProtonFractionEnergyInCone(int i) const;
-	virtual double GetPrimaryProtonFractionEnergyInCone() const;
-	virtual double GetSecProtonFractionEnergyInCone_1() const;
-	virtual double GetSecProtonFractionEnergyInCone_2() const;
-	virtual double GetSecProtonFractionEnergyInCone_3() const;
-	virtual double GetSecProtonFractionEnergyInCone_4() const;
-	virtual double GetSecProtonFractionEnergyInCone_5() const;
-	virtual double GetSecProtonFractionEnergyInCone_6() const;
+	virtual double GetProtonFractionVisEnergyInCone(int i) const;
+	virtual double GetPrimaryProtonFractionVisEnergyInCone() const;
+	virtual double GetSecProtonFractionVisEnergyInCone_1() const;
+	virtual double GetSecProtonFractionVisEnergyInCone_2() const;
+	virtual double GetSecProtonFractionVisEnergyInCone_3() const;
+	virtual double GetSecProtonFractionVisEnergyInCone_4() const;
+	virtual double GetSecProtonFractionVisEnergyInCone_5() const;
+	virtual double GetSecProtonFractionVisEnergyInCone_6() const;
 	
   virtual double GetMaxProtonTrueKE() const; // this does not require prong
 	virtual double GetProtonTrueKE(int i) const;  //index i is prong
@@ -434,7 +514,15 @@ public:
 	virtual int GetSecProtonCandidatePDG_5() const;
 	virtual int GetSecProtonCandidatePDG_6() const;
 	
-	virtual double GetEnergyDiffTruedEdx() const;
+	virtual int GetPrimaryProtonCandidatePDG_abs() const;
+	virtual int GetSecProtonCandidatePDG_abs_1() const;
+	virtual int GetSecProtonCandidatePDG_abs_2() const;
+	virtual int GetSecProtonCandidatePDG_abs_3() const;
+	virtual int GetSecProtonCandidatePDG_abs_4() const;
+	virtual int GetSecProtonCandidatePDG_abs_5() const;
+	virtual int GetSecProtonCandidatePDG_abs_6() const;
+	
+	virtual double GetVisEnergyDiffTruedEdx() const;
 
 	virtual int GetRecoTruthIsPrimaryProton() const;
 	virtual int GetRecoTruthIsPrimaryPion() const;
@@ -444,7 +532,7 @@ public:
 	virtual int GetIsPrimaryProton1() const;
 	virtual int GetTruthHasSingleProton() const;
 
-	virtual int GetPassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const;
+	virtual int GetPassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2, int count) const;
 	virtual int GetAllExtraTracksProtons() const;
 	virtual int GetAllExtraTracksProtons1() const;
 	virtual int GetProtonCount() const;
@@ -475,6 +563,14 @@ public:
 	virtual int GetMCTargetZ() const;
 	virtual int GetMCTargetNucleon() const;
 	virtual int Dummy() const;
+	
+	// TMVA
+	
+	virtual double bdtgQELike() const;
+	virtual double bdtg1ChargedPion() const;
+	virtual double bdtg1NeutralPion() const;
+	virtual double bdtgMultiPion() const;
+	virtual double bdtgOther() const;
 
 	// Arachne
 

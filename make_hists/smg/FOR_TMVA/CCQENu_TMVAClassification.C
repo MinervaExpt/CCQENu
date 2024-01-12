@@ -84,8 +84,8 @@ int CCQENu_TMVAClassification(TString myMethodList = ""){
    // ---------------------------------------------------------------
 
    TFile *input(0);
-   TString fname = "./files/For_TMVA_small_1.root";
-   
+   //TString fname = "./files/For_TMVA_small_1.root";
+   TString fname = "files/For_TMVA_small_1.root";
    input = TFile::Open(fname);
 
    if(!input){

@@ -95,7 +95,7 @@ MESSAGE("ROOT_LIBRARIES:${ROOT_LIBRARIES} ")
 
 MESSAGE("PROJECT:${PROJECT_NAME}")
 
-target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT}  -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) 
+target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT} -lTMVA -lTMVAGui -lXMLIO -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) 
 #target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT} -lplotutils -L$ENV{UNFOLDUTILSROOT} -lunfoldutils -l$ENV{UNFOLDUTILSROOT} -lG__UnfoldUtilsDict.so)
 
 
@@ -115,15 +115,19 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{P
 
 #add_executable(runsamples runsamples.C)
 add_executable(sidebands_v2 sidebands_v2.C)
+add_executable(sidebands_bdtg ../smg/sidebands_bdtg.C)
+add_executable(aux_sidebands aux_sidebands.C)
 #add_executable(analyze_v8 analyze_v8.C)
 add_executable(analyze_v9 analyze_v9.C)
 add_executable(MnvFitDriver MnvFitDriver.cxx)
 add_executable(MnvMateusDriver MnvMateusDriver.cxx)
-#add_executable(stack_SignalBkgd smg/stack_SignalBkgd.C)
+add_executable(stack_SignalBkgd smg/stack_SignalBkgd.C)
 #add_executable(getCSVs ../utilities/getCSVs.C)
 #add_executable(getRatio ../utilities/getRatio.C)
-#add_executable(makeplots ../smg/makeplots.C)
+add_executable(makeplots ../smg/makeplots.C)
 #add_executable(getPDGs ../smg/getPDGs.C)
+add_executable(makeTMVAfile ../smg/makeTMVAfile.C)
+add_executable(TMVAMulticlass ../smg/TMVAMulticlass.C)
 
 
 
@@ -132,12 +136,16 @@ add_executable(MnvMateusDriver MnvMateusDriver.cxx)
 
 #target_link_libraries(runsamples  PRIVATE ${PROJEC_NAME} )
 target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(sidebands_bdtg  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(aux_sidebands  PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(MnvFitDriver PRIVATE ${PROJECT_NAME} )
 target_link_libraries(MnvMateusDriver PRIVATE ${PROJECT_NAME} )
-#target_link_libraries(stack_SignalBkgd  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(stack_SignalBkgd  PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(getCSVs PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(getRatio PRIVATE ${PROJECT_NAME} )
-#target_link_libraries(makeplots PRIVATE ${PROJECT_NAME} )
+target_link_libraries(makeplots PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(getPDGs PRIVATE ${PROJECT_NAME} )
+target_link_libraries(makeTMVAfile PRIVATE ${PROJECT_NAME} )
+target_link_libraries(TMVAMulticlass PRIVATE ${PROJECT_NAME} )

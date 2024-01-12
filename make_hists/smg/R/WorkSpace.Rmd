@@ -5,77 +5,148 @@ output: pdf_document
 ---
 
 ```{r, message = F, warning = F, echo = F}
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(stringr)
 library(knitr)
 library(kableExtra)
 library(GGally)
+library(viridis)
+library(fitdistrplus)
+library(purrr)
+library(ggforce)
+library(ggpattern)
+```
 
-events <- read.csv("mc_reco_entries_Mult2p_NuCC.csv", sep=";")
-events <- events %>% 
+```{r, message = F, warning = F, echo = F}
+percent <- function(x, digits = 2, format = "f", ...) {
+  paste0(formatC(x * 100, format = format, digits = digits, ...), "\\%")
+}
+```
+
+```{r, message = F, warning = F, echo = F}
+events <- read.csv("CSV_CCQENu_minervame1N_MC_Inextinguishable_merged_strip_20230713.csv", sep=";")
+#events <- read.csv("CSV_CCQENu_minervame1N_MC_Inextinguishable_merged_strip_20230713.csv", sep=";")
+
+
+#paste(strsplit(events$Arachne[402712],'[=&]')[[1]][c(6,8,10,12)],collapse = '.')
+#events <- events %>%
+#  mutate(rsgs = map_chr(1:nrow(events), 
+#                        ~ paste(strsplit(events$Arachne[.x],'[=&]')[[1]][c(6,8,10,12)],collapse = '.')))
+events %>% filter(Multiplicity < 4 & Truth == "None___1neutralpion") %>% dplyr::select(Arachne)
+names(events)
+events %>% count(Truth)
+mean(events$PrimaryProtonTrackVtxGap)
+```
+
+```{r, message = F, warning = F, echo = F}
+events %>% 
+  add_count(Multiplicity, name = "n_all") %>%
   filter(PrimaryProtonScore1 >= 0) %>% 
+  group_by(Multiplicity, n_all) %>%
+  count(name = "n_wpc") %>%
+  rbind(tibble(Multiplicity = 1, "n_all" = sum(events$Multiplicity == 1), n_wpc = 0)) %>%
+  arrange(Multiplicity) %>%
+  mutate(`n_wpc/n_all` = formatC(n_wpc/n_all, digits = 4, format = 'f'))
+
+events %>% 
+  filter(PrimaryProtonScore1 < 0, Multiplicity > 1) %>% 
+  add_count(name = "N_All") %>% add_count(Truth, name = "N_Truth") %>% 
+  group_by(Truth, Interaction, N_All, N_Truth) %>% count() %>% ungroup() %>% 
+  mutate(`n/N_Truth` = formatC(n/N_Truth, digits = 5, format = "f")) %>% 
+  mutate(`n/N_All` = formatC(n/N_All, digits = 5, format = "f")) %>% 
+  dplyr::select(Truth,Interaction,n,`n/N_Truth`,`n/N_All`) %>% 
+  mutate(Truth = gsub("None___","",Truth))
+
+events %>% 
+  filter(PrimaryProtonScore1 < 0, Multiplicity > 1) %>% 
+  add_count(name = "N_All") %>% add_count(Truth, name = "N_Truth") %>% 
+  group_by(Truth, Interaction, N_All, N_Truth) %>% count() %>% ungroup() %>% 
+  mutate(`n/N_Truth` = formatC(n/N_Truth, digits = 5, format = "f")) %>% 
+  mutate(`n/N_All` = formatC(n/N_All, digits = 5, format = "f")) %>% 
+  dplyr::select(Truth,Interaction,n,`n/N_Truth`,`n/N_All`) %>% 
+  mutate(Truth = gsub("None___","",Truth))
+```
+
+```{r, message = F, warning = F, echo = F}
+events <- events %>% 
   mutate(Particle_0 = case_when(PrimaryProtonCandidatePDG == 2212 ~ "Proton",
                                 PrimaryProtonCandidatePDG %in% c(-211,211) ~ "Pion +/-",
                                 PrimaryProtonCandidatePDG == 111 ~ "Pion 0",
                                 PrimaryProtonCandidatePDG == 2112 ~ "Neutron",
                                 PrimaryProtonCandidatePDG == 3122 ~ "Lambda 0",
+                                PrimaryProtonCandidatePDG == -3122 ~ "Lambda-bar 0",
                                 PrimaryProtonCandidatePDG == 3212 ~ "Sigma 0",
                                 PrimaryProtonCandidatePDG == 311 ~ "Kaon 0",
                                 PrimaryProtonCandidatePDG == -311 ~ "Kaon-bar 0",
-                                PrimaryProtonCandidatePDG == 130 ~ "Kaon_L 0",
+                                PrimaryProtonCandidatePDG == 130 ~ "Kaon\\_L 0",
                                 PrimaryProtonCandidatePDG == 22 ~ "Gamma",
                                 PrimaryProtonCandidatePDG %in% c(13,-13) ~ "Muon +/-",
                                 PrimaryProtonCandidatePDG %in% c(11,-11) ~ "Electron +/-",
                                 PrimaryProtonCandidatePDG %in% c(321,-321) ~ "Kaon +/-",
                                 PrimaryProtonCandidatePDG %in% c(3222,3112) ~ "Sigma +/-",
                                 PrimaryProtonCandidatePDG %in% c(1114,2214,2224) ~ "Delta ++/+/-",
-                                PrimaryProtonCandidatePDG == -1 ~ "None",
+                                PrimaryProtonCandidatePDG == -2212 ~ "Anti-Proton",
+                                PrimaryProtonCandidatePDG == -2112 ~ "Anti-Neutron",
+                                PrimaryProtonCandidatePDG == -1 ~ "No Particle",
                                 .default = "Other")) %>% 
   mutate(Particle_1 = case_when(SecProtonCandidatePDG_1 == 2212 ~ "Proton",
                                 (SecProtonCandidatePDG_1 %in% c(-211,211)) ~ "Pion +/-",
                                 SecProtonCandidatePDG_1 == 111 ~ "Pion 0",
                                 SecProtonCandidatePDG_1 == 2112 ~ "Neutron",
                                 SecProtonCandidatePDG_1 == 3122 ~ "Lambda 0",
+                                SecProtonCandidatePDG_1 == -3122 ~ "Lambda-bar 0",
                                 SecProtonCandidatePDG_1 == 3212 ~ "Sigma 0",
                                 SecProtonCandidatePDG_1 == 311 ~ "Kaon 0",
                                 SecProtonCandidatePDG_1 == -311 ~ "Kaon-bar 0",
-                                SecProtonCandidatePDG_1 == 130 ~ "Kaon_L 0",
+                                SecProtonCandidatePDG_1 == 130 ~ "Kaon\\_L 0",
                                 SecProtonCandidatePDG_1 == 22 ~ "Gamma",
                                 SecProtonCandidatePDG_1 %in% c(13,-13) ~ "Muon +/-",
                                 SecProtonCandidatePDG_1 %in% c(11,-11) ~ "Electron +/-",
                                 SecProtonCandidatePDG_1 %in% c(321,-321) ~ "Kaon +/-",
                                 SecProtonCandidatePDG_1 %in% c(3222,3112) ~ "Sigma +/-",
                                 SecProtonCandidatePDG_1 %in% c(1114,2214,2224) ~ "Delta ++/+/-",
-                                SecProtonCandidatePDG_1 == -1 ~ "None",
+                                SecProtonCandidatePDG_1 == -2212 ~ "Anti-Proton",
+                                SecProtonCandidatePDG_1 == -2112 ~ "Anti-Neutron",
+                                SecProtonCandidatePDG_1 == -1 ~ "No Particle",
                                 .default = "Other")) %>% 
   mutate(Particle_2 = case_when(SecProtonCandidatePDG_2 == 2212 ~ "Proton",
                                 SecProtonCandidatePDG_2 %in% c(-211,211) ~ "Pion +/-",
                                 SecProtonCandidatePDG_2 == 111 ~ "Pion 0",
                                 SecProtonCandidatePDG_2 == 2112 ~ "Neutron",
                                 SecProtonCandidatePDG_2 == 3122 ~ "Lambda 0",
+                                SecProtonCandidatePDG_2 == -3122 ~ "Lambda-bar 0",
                                 SecProtonCandidatePDG_2 == 3212 ~ "Sigma 0",
                                 SecProtonCandidatePDG_2 == 311 ~ "Kaon 0",
                                 SecProtonCandidatePDG_2 == -311 ~ "Kaon-bar 0",
-                                SecProtonCandidatePDG_2 == 130 ~ "Kaon_L 0",
+                                SecProtonCandidatePDG_2 == 130 ~ "Kaon\\_L 0",
                                 SecProtonCandidatePDG_2 == 22 ~ "Gamma",
                                 SecProtonCandidatePDG_2 %in% c(13,-13) ~ "Muon +/-",
                                 SecProtonCandidatePDG_2 %in% c(11,-11) ~ "Electron +/-",
                                 SecProtonCandidatePDG_2 %in% c(321,-321) ~ "Kaon +/-",
                                 SecProtonCandidatePDG_2 %in% c(3222,3112) ~ "Sigma +/-",
                                 SecProtonCandidatePDG_2 %in% c(1114,2214,2224) ~ "Delta ++/+/-",
-                                SecProtonCandidatePDG_2 == -1 ~ "None",
+                                SecProtonCandidatePDG_2 == -2212 ~ "Anti-Proton",
+                                SecProtonCandidatePDG_2 == -2112 ~ "Anti-Neutron",
+                                SecProtonCandidatePDG_2 == -1 ~ "No Particle",
                                 .default = "Other"))
 
-prong_table <- events %>% select(Particle_0,Particle_1,Particle_2) %>% gather("Candidate","Truth",Particle_0,Particle_1,Particle_2) %>%
+prong_table <- events %>% dplyr::select(Particle_0,Particle_1,Particle_2) %>% gather("Candidate","Truth",Particle_0,Particle_1,Particle_2) %>%
   group_by(Candidate,Truth) %>% count() %>% ungroup() %>% 
   pivot_wider(names_from = Candidate, values_from = n, names_glue = "$n{str_remove(Candidate,'Particle')}$") %>%
   arrange(desc(`$n_0$`))  %>% replace(is.na(.), 0)
-prong_table <- rbind(prong_table %>% filter(Truth != "Other",Truth != "None"), 
+prong_table <- rbind(prong_table %>% filter(Truth != "Other",Truth != "No Particle"), 
                      prong_table %>% filter(Truth == "Other"),
+                     tibble(Truth = "All Particles",
+                            `$n_0$` = prong_table %>% filter(Truth != "No Particle") %>% pull(`$n_0$`) %>% sum(),
+                            `$n_1$` = prong_table %>% filter(Truth != "No Particle") %>% pull(`$n_1$`) %>% sum(),
+                            `$n_2$` = prong_table %>% filter(Truth != "No Particle") %>% pull(`$n_2$`) %>% sum()),
+                     prong_table %>% filter(Truth == "No Particle"),
                      tibble(Truth = "Total",
-                            `$n_0$` = prong_table %>% filter(Truth != "None") %>% pull(`$n_0$`) %>% sum(),
-                            `$n_1$` = prong_table %>% filter(Truth != "None") %>% pull(`$n_1$`) %>% sum(),
-                            `$n_2$` = prong_table %>% filter(Truth != "None") %>% pull(`$n_2$`) %>% sum()),
-                     prong_table %>% filter(Truth == "None")) %>%
+                            `$n_0$` = prong_table %>% pull(`$n_0$`) %>% sum(),
+                            `$n_1$` = prong_table %>% pull(`$n_1$`) %>% sum(),
+                            `$n_2$` = prong_table %>% pull(`$n_2$`) %>% sum())) %>%
   mutate(Truth = case_when(Truth == "Proton" ~ "$p$",
                            Truth == "Pion +/-" ~ "$\\pi^{\\pm}$",
                            Truth == "Pion 0" ~ "$\\pi^{0}$",
@@ -83,32 +154,1083 @@ prong_table <- rbind(prong_table %>% filter(Truth != "Other",Truth != "None"),
                            Truth == "Kaon +/-" ~ "$K^{\\pm}$",
                            Truth == "Muon +/-" ~ "$\\mu^{\\pm}$",
                            Truth == "Lambda 0" ~ "$\\Lambda^{0}$",
+                           Truth == "Lambda-bar 0" ~ "$\\bar{\\Lambda}^{0}$",
                            Truth == "Sigma +/-" ~ "$\\Sigma^{\\pm}$",
                            Truth == "Gamma" ~ "$\\gamma$",
                            Truth == "Kaon 0" ~ "$K^{0}$",
                            Truth == "Kaon-bar 0" ~ "$\\bar{K}^{0}$",
-                           Truth == "Kaon_L 0" ~ "$K\\rlap{\textsuperscript{0}}\\textsubscript{L}$",
+                           Truth == "Kaon\\_L 0" ~ "$K^{0}_{L}$",
                            Truth == "Electron +/-" ~ "$e^{\\pm}$",
                            Truth == "Sigma 0" ~ "$\\Sigma^{0}$",
+                           Truth == "Anti-Proton" ~ "$\\bar{p}$",
+                           Truth == "Anti-Neutron" ~ "$\\bar{n}$",
                            .default = Truth))
+events <- events %>% 
+  mutate(RatioLength2TdEdX_0 = ProtonCandTrackLength_0/PrimaryProtonTfromdEdx) %>%
+  mutate(RatioLength2TdEdX_1 = ProtonCandTrackLength_1/SecProtonTfromdEdx_1) %>%
+  mutate(RatioLength2TdEdX_2 = ProtonCandTrackLength_2/SecProtonTfromdEdx_2)
+  
+prong_table <- cbind(prong_table,
+                     tibble(`Particle $\\%_0$` = percent(prong_table$`$n_0$`/(prong_table %>% filter(Truth == "All Particles") %>% pull(`$n_0$`))),
+                            `Particle $\\%_1$` = percent(prong_table$`$n_1$`/(prong_table %>% filter(Truth == "All Particles") %>% pull(`$n_1$`))),
+                            `Particle $\\%_2$` = percent(prong_table$`$n_2$`/(prong_table %>% filter(Truth == "All Particles") %>% pull(`$n_2$`))),
+                            `Total $\\%_0$` = percent(prong_table$`$n_0$`/(prong_table %>% filter(Truth == "Total") %>% pull(`$n_0$`))),
+                            `Total $\\%_1$` = percent(prong_table$`$n_1$`/(prong_table %>% filter(Truth == "Total") %>% pull(`$n_1$`))),
+                            `Total $\\%_2$` = percent(prong_table$`$n_2$`/(prong_table %>% filter(Truth == "Total") %>% pull(`$n_2$`)))))
 
 
-kable(prong_table, booktabs = TRUE, escape=FALSE) %>%
+
+kable(prong_table, booktabs = TRUE, escape=FALSE, align = c("crrrrrrrrr")) %>%
   kable_styling(bootstrap_options = c("striped")) %>%
-  row_spec(c(13,14), hline_after = T)
+  row_spec(c(17,18,19), hline_after = T) %>%
+  column_spec(c(1,4,7), border_right = T)
+```
 
-events %>% filter(Particle_0 == "Other") %>% count(PrimaryProtonCandidatePDG)
+```{r, message = F, warning = F, echo = F}
+#events$FSPDGs[282654]
+#as_tibble(strtoi(strsplit(gsub('[{}]','',events$FSPDGs[282654]),split=",",fixed=TRUE)[[1]])) %>% count(value)
+
+#system.time(map(1:nrow(events), ~ strtoi(strsplit(gsub('[{}]','',events$FSPDGs[.x]),split=",")[[1]])))
+#system.time(map(1:nrow(events), ~ strtoi(strsplit(events$FSPDGs[.x], split="[{,}]")[[1]][-1])))
+#fspdgs <- map(1:nrow(events), ~ strtoi(strsplit(gsub('[{}]','',events$FSPDGs[.x]),split=",")[[1]]))
+fspdgs <- map(1:nrow(events), ~ strtoi(strsplit(events$FSPDGs[.x], split="[{,}]")[[1]][-1]))
+fsEs <- map(1:nrow(events), ~ as.double(strsplit(events$FSPartEs[.x], split="[{,}]")[[1]][-1]))
+
+#system.time(rbindlist(map(1:nrow(events), ~ as_tibble(strtoi(strsplit(events$FSPDGs[.x], split="[{,}]")[[1]][-1])) %>% count(value) %>% mutate(Entry = .x))))
+
+library(data.table)
+#rbindlist(list(as_tibble(strtoi(strsplit(events$FSPDGs[282654], split="[{,}]")[[1]][-1])) %>% count(value) %>% mutate(Entry = 282654),
+#     as_tibble(strtoi(strsplit(events$FSPDGs[282655], split="[{,}]")[[1]][-1])) %>% count(value) %>% mutate(Entry = 282655)))
+
+
+#map(1:10, ~ strtoi(strsplit(events$FSPDGs[.x], split="[{,}]")[[1]][-1]))
+
+s2nv <- function(x) {
+  strtoi(strsplit(x, split="[{,}]")[[1]][-1])
+}
+
+#events[1:10,] %>% dplyr::select(Entry,FSPDGs) %>% count()
+
+#fspdgs
+
+
+entries_and_pdgs <- tibble(entry = unlist(map(1:nrow(events), ~ rep(events$Entry[.x],length(fspdgs[[.x]])))),
+                           pdg = unlist(fspdgs),
+                           E = unlist(fsEs))
+
+
+```
+
+```{r, message = F, warning = F, echo = F}
+pdg_presence_stats <- entries_and_pdgs %>% 
+  group_by(entry, pdg) %>% count() %>%
+  mutate(n = 1) %>%
+  pivot_wider(names_from = pdg, values_from = n, values_fill = 0) %>%
+  ungroup() %>% dplyr::select(!entry) %>%
+  summarize_each(funs(mean,var,sum)) %>%
+  pivot_longer(everything(),
+               names_to = c(".value", "fn"),
+               names_pattern = "(.+)_(.+)")
+
+pdg13_2p <- entries_and_pdgs %>% filter(pdg == 13) %>% group_by(entry, pdg) %>% count() %>% 
+  mutate(n = (n>1)) %>%
+  pivot_wider(names_from = pdg, values_from = n, values_fill = 0) %>%
+  ungroup() %>% dplyr::select(!entry) %>%
+  summarize_each(funs(mean,var,sum))
+
+pdg_presence_stats$`13` <- t(pdg13_2p[1,])
+
+pdg_presence_stats_tbl <- tibble(pdg = as.numeric(names(pdg_presence_stats[,-1])),
+       mean = percent(as.numeric(t(pdg_presence_stats[1,-1])), digits = 3, format = "f"),
+       variance = percent(as.numeric(t(pdg_presence_stats[2,-1])), digits = 3, format = "f"),
+       sum = t(pdg_presence_stats[3,-1])) %>% arrange(desc(sum)) %>%
+  mutate(name = case_when(pdg == 2212 ~ "Proton",
+                          pdg == -211 ~ "Pion -",
+                          pdg == 211 ~ "Pion +",
+                          pdg == 111 ~ "Pion 0",
+                          pdg == 2112 ~ "Neutron",
+                          pdg == 3122 ~ "Lambda 0",
+                          pdg == -3122 ~ "Lambda-bar 0",
+                          pdg == 3212 ~ "Sigma 0",
+                          pdg == 311 ~ "Kaon 0",
+                          pdg == -311 ~ "Kaon-bar 0",
+                          pdg == 130 ~ "Kaon\\_L 0",
+                          pdg == 22 ~ "Gamma",
+                          pdg == -13 ~ "Muon +",
+                          pdg == 13 ~ "(2+) Muon -",
+                          pdg == 11 ~ "Electron",
+                          pdg == -11 ~ "Positron",
+                          pdg == 321 ~ "Kaon +",
+                          pdg == -321 ~ "Kaon -",
+                          pdg == 3112 ~ "Sigma -",
+                          pdg == 3222 ~ "Sigma +",
+                          pdg == 1114 ~ "Delta -",
+                          pdg == 2214 ~ "Delta +",
+                          pdg == 2224 ~ "Delta ++",
+                          pdg == -2212 ~ "Anti-Proton",
+                          pdg == -2112 ~ "Anti-Neutron",
+                          pdg == 2000000101 ~ "Bindino",
+                          pdg == 1000060120 ~ "Carbon-12",
+                          pdg == 12 ~ "Electron Neutrino",
+                          pdg == 14 ~ "Muon Neutrino",
+                          pdg == -1 ~ "No Particle",
+                          pdg == 1000080160 ~ "Oxygen-16",
+                          pdg == 1000220480 ~ "Titanium-48",
+                          pdg == 1000130270 ~ "Aluminium-27",
+                          pdg == 1000140280 ~ "Silicon-28",
+                          pdg == 1000070140 ~ "Nitrogen-14",
+                          pdg == 1000260560 ~ "Iron-56",
+                          pdg == 1000822070 ~ "Lead-207",
+                          pdg == 16 ~ "Tau Neutrino",
+                          pdg == -16 ~ "Tau Anti-Neutrino",
+                          .default = "Other")) %>%
+    mutate(symbol = case_when(name == "Proton" ~ "$p$",
+                              name == "Pion +" ~ "$\\pi^{+}$",
+                              name == "Pion -" ~ "$\\pi^{+}$",
+                              name == "Pion 0" ~ "$\\pi^{0}$",
+                              name == "Neutron" ~ "$n$",
+                              name == "Kaon +" ~ "$K^{+}$",
+                              name == "Kaon -" ~ "$K^{-}$",
+                              name == "Muon +" ~ "$\\mu^{+}$",
+                              name == "(2+) Muon -" ~ "$\\mu^{-}$",
+                              name == "Lambda 0" ~ "$\\Lambda^{0}$",
+                              name == "Lambda-bar 0" ~ "$\\bar{\\Lambda}^{0}$",
+                              name == "Sigma +" ~ "$\\Sigma^{+}$",
+                              name == "Sigma -" ~ "$\\Sigma^{-}$",
+                              name == "Gamma" ~ "$\\gamma$",
+                              name == "Kaon 0" ~ "$K^{0}$",
+                              name == "Kaon-bar 0" ~ "$\\bar{K}^{0}$",
+                              name == "Kaon\\_L 0" ~ "$K^{0}_{L}$",
+                              name == "Electron" ~ "$e^{-}$",
+                              name == "Positron" ~ "$e^{+}$",
+                              name == "Sigma 0" ~ "$\\Sigma^{0}$",
+                              name == "Anti-Proton" ~ "$\\bar{p}$",
+                              name == "Anti-Neutron" ~ "$\\bar{n}$",
+                              name == "Delta -" ~ "$\\Delta^{-}$",
+                              name == "Delta +" ~ "$\\Delta^{+}$",
+                              name == "Delta ++" ~ "$\\Delta^{++}$",
+                              name == "Electron Neutrino" ~ "$\\nu_{e}$",
+                              name == "Muon Neutrino" ~ "$\\nu_{\\mu}$",
+                              name == "Tau Neutrino" ~ "$\\nu_{\\tau}$",
+                              name == "Tau Anti-Neutrino" ~ "$\\bar{\\nu}_{\\tau}$",
+                              name == "Oxygen-16" ~ "${}^{16}_{8}$O",
+                              name == "Titanium-48" ~ "${}^{48}_{22}$Ti",
+                              name == "Aluminium-27" ~ "${}^{27}_{13}$Al",
+                              name == "Silicon-28" ~ "${}^{28}_{14}$Si",
+                              name == "Nitrogen-14" ~ "${}^{14}_{7}$N",
+                              name == "Iron-56" ~ "${}^{56}_{26}$Fe",
+                              name == "Lead-207" ~ "${}^{207}_{82}$Pb",
+                              name == "Carbon-12" ~ "${}^{12}_{6}$C",
+                              name == "Bindino" ~ "NA",
+                              .default = "?")) %>%
+  dplyr::select(name,symbol,pdg,mean,variance,sum)
+
+kable(pdg_presence_stats_tbl, booktabs = TRUE, escape=FALSE, align = c("lcrrrr")) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  column_spec(c(3), border_right = T)
+
+```
+
+```{r, message = F, warning = F, echo = F}
+entries_and_pdgs %>% filter((pdg == 13) | (pdg == -13)) %>% 
+  group_by(entry, pdg) %>% count() %>% ungroup() %>%
+  pivot_wider(names_from = pdg, values_from = n, values_fill = 0) %>%
+  group_by(`13`, `-13`) %>% count()
+```
+
+```{r, message = F, warning = F, echo = F}
+pdg_stats <- entries_and_pdgs %>% 
+  group_by(entry, pdg) %>% count() %>% 
+  pivot_wider(names_from = pdg, values_from = n, values_fill = 0) %>% 
+  ungroup() %>% dplyr::select(!entry) %>%
+  summarize_each(funs(mean,var,sum)) %>%
+  pivot_longer(everything(),
+               names_to = c(".value", "fn"),
+               names_pattern = "(.+)_(.+)")
+
+pdg_stats <- tibble(pdg = as.numeric(names(pdg_stats[,-1])),
+                    mean = formatC(as.numeric(t(pdg_stats[1,-1])), digits = 5, format = "f"),
+                    variance = formatC(as.numeric(t(pdg_stats[2,-1])), digits = 5, format = "f"),
+                    sum = t(pdg_stats[3,-1]))
+
+pdg_stats_tbl <- pdg_stats %>% arrange(desc(mean)) %>%
+  mutate(name = case_when(pdg == 2212 ~ "Proton",
+                          pdg == -211 ~ "Pion -",
+                          pdg == 211 ~ "Pion +",
+                          pdg == 111 ~ "Pion 0",
+                          pdg == 2112 ~ "Neutron",
+                          pdg == 3122 ~ "Lambda 0",
+                          pdg == -3122 ~ "Lambda-bar 0",
+                          pdg == 3212 ~ "Sigma 0",
+                          pdg == 311 ~ "Kaon 0",
+                          pdg == -311 ~ "Kaon-bar 0",
+                          pdg == 130 ~ "Kaon\\_L 0",
+                          pdg == 22 ~ "Gamma",
+                          pdg == -13 ~ "Muon +",
+                          pdg == 13 ~ "Muon -",
+                          pdg == 11 ~ "Electron",
+                          pdg == -11 ~ "Positron",
+                          pdg == 321 ~ "Kaon +",
+                          pdg == -321 ~ "Kaon -",
+                          pdg == 3112 ~ "Sigma -",
+                          pdg == 3222 ~ "Sigma +",
+                          pdg == 1114 ~ "Delta -",
+                          pdg == 2214 ~ "Delta +",
+                          pdg == 2224 ~ "Delta ++",
+                          pdg == -2212 ~ "Anti-Proton",
+                          pdg == -2112 ~ "Anti-Neutron",
+                          pdg == 2000000101 ~ "Bindino",
+                          pdg == 1000060120 ~ "Carbon-12",
+                          pdg == 12 ~ "Electron Neutrino",
+                          pdg == 14 ~ "Muon Neutrino",
+                          pdg == -1 ~ "No Particle",
+                          pdg == 1000080160 ~ "Oxygen-16",
+                          pdg == 1000220480 ~ "Titanium-48",
+                          pdg == 1000130270 ~ "Aluminium-27",
+                          pdg == 1000140280 ~ "Silicon-28",
+                          pdg == 1000070140 ~ "Nitrogen-14",
+                          pdg == 1000260560 ~ "Iron-56",
+                          pdg == 1000822070 ~ "Lead-207",
+                          pdg == 16 ~ "Tau Neutrino",
+                          pdg == -16 ~ "Tau Anti-Neutrino",
+                          .default = "Other")) %>%
+    mutate(symbol = case_when(name == "Proton" ~ "$p$",
+                              name == "Pion +" ~ "$\\pi^{+}$",
+                              name == "Pion -" ~ "$\\pi^{+}$",
+                              name == "Pion 0" ~ "$\\pi^{0}$",
+                              name == "Neutron" ~ "$n$",
+                              name == "Kaon +" ~ "$K^{+}$",
+                              name == "Kaon -" ~ "$K^{-}$",
+                              name == "Muon +" ~ "$\\mu^{+}$",
+                              name == "Muon -" ~ "$\\mu^{-}$",
+                              name == "Lambda 0" ~ "$\\Lambda^{0}$",
+                              name == "Lambda-bar 0" ~ "$\\bar{\\Lambda}^{0}$",
+                              name == "Sigma +" ~ "$\\Sigma^{+}$",
+                              name == "Sigma -" ~ "$\\Sigma^{-}$",
+                              name == "Gamma" ~ "$\\gamma$",
+                              name == "Kaon 0" ~ "$K^{0}$",
+                              name == "Kaon-bar 0" ~ "$\\bar{K}^{0}$",
+                              name == "Kaon\\_L 0" ~ "$K^{0}_{L}$",
+                              name == "Electron" ~ "$e^{-}$",
+                              name == "Positron" ~ "$e^{+}$",
+                              name == "Sigma 0" ~ "$\\Sigma^{0}$",
+                              name == "Anti-Proton" ~ "$\\bar{p}$",
+                              name == "Anti-Neutron" ~ "$\\bar{n}$",
+                              name == "Delta -" ~ "$\\Delta^{-}$",
+                              name == "Delta +" ~ "$\\Delta^{+}$",
+                              name == "Delta ++" ~ "$\\Delta^{++}$",
+                              name == "Electron Neutrino" ~ "$\\nu_{e}$",
+                              name == "Muon Neutrino" ~ "$\\nu_{\\mu}$",
+                              name == "Tau Neutrino" ~ "$\\nu_{\\tau}$",
+                              name == "Tau Anti-Neutrino" ~ "$\\bar{\\nu}_{\\tau}$",
+                              name == "Oxygen-16" ~ "${}^{16}_{8}$O",
+                              name == "Titanium-48" ~ "${}^{48}_{22}$Ti",
+                              name == "Aluminium-27" ~ "${}^{27}_{13}$Al",
+                              name == "Silicon-28" ~ "${}^{28}_{14}$Si",
+                              name == "Nitrogen-14" ~ "${}^{14}_{7}$N",
+                              name == "Iron-56" ~ "${}^{56}_{26}$Fe",
+                              name == "Lead-207" ~ "${}^{207}_{82}$Pb",
+                              name == "Carbon-12" ~ "${}^{12}_{6}$C",
+                              name == "Bindino" ~ "NA",
+                              .default = "?")) %>%
+  dplyr::select(name,symbol,pdg,mean,variance,sum)
+
+kable(pdg_stats_tbl, booktabs = TRUE, escape=FALSE, align = c("lcrrrr")) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  column_spec(c(3), border_right = T)
+```
+
+```{r, message = F, warning = F, echo = F}
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(recoil,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black") +
+  scale_x_log10() + theme_bw() +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Interaction),scales="free_y")
+events %>%
+  ggplot(aes(Multiplicity,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  theme_bw() +
+  scale_x_continuous(breaks = 0:8) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Interaction),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(PrimaryProtonScore1,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black") +
+  theme_bw() +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Interaction),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(PrimaryProtonTrackVtxGap,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black") +
+  scale_x_log10() + theme_bw() +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Interaction),scales="free_y")
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  filter(RatioLength2TdEdX_0 >= 0) %>%
+  ggplot(aes(RatioLength2TdEdX_0,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black") +
+  theme_bw() +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Interaction),scales="free_y")
+```
+
+```{r, message = F, warning = F, echo = F}
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(PrimaryProtonScore1,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() +
+  facet_wrap(vars(Interaction))
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(PrimaryProtonTrackVtxGap,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_log10() + theme_bw() +
+  facet_wrap(vars(Interaction))
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(RatioLength2TdEdX_0,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() +
+  facet_wrap(vars(Interaction))
+```
+
+```{r, message = F, warning = F, echo = F}
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(recoil,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black") +
+  scale_x_log10() + theme_bw() +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Interaction),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(recoil,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_log10() + theme_bw() +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Interaction))
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(recoil,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black") +
+  scale_x_log10() + theme_bw() +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(recoil,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black", position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_x_log10() + theme_bw() +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Truth))
+```
+
+```{r, message = F, warning = F, echo = F}
+events %>%
+  ggplot(aes(Multiplicity,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  theme_bw() +
+  scale_x_continuous(breaks = 0:8) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Interaction),scales="free_y")
+events %>%
+  ggplot(aes(Multiplicity,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() + 
+  scale_x_continuous(breaks = 0:8) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Interaction))
+events %>%
+  ggplot(aes(Multiplicity,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  theme_bw() +
+  scale_x_continuous(breaks = 0:8) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth),scales="free_y")
+events %>%
+  ggplot(aes(Multiplicity,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black", binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() + 
+  scale_x_continuous(breaks = 0:8) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Truth))
+```
+
+```{r, message = F, warning = F, echo = F}
+# ImprovedMichelCount
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(ImprovedMichelCount,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  theme_bw() +
+  scale_x_continuous(breaks = 0:9) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Interaction),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(ImprovedMichelCount,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() + 
+  scale_x_continuous(breaks = 0:9) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Interaction))
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(ImprovedMichelCount,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  theme_bw() +
+  scale_x_continuous(breaks = 0:9) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(ImprovedMichelCount,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black", binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() + 
+  scale_x_continuous(breaks = 0:9) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Truth))
+```
+
+```{r, message = F, warning = F, echo = F}
+# MichelCount
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(MichelCount,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  theme_bw() +
+  scale_x_continuous(breaks = 0:16) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Interaction),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(MichelCount,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() + 
+  scale_x_continuous(breaks = 0:16) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Interaction))
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(MichelCount,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  theme_bw() +
+  scale_x_continuous(breaks = 0:16) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(MichelCount,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black", binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() + 
+  scale_x_continuous(breaks = 0:16) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Truth))
+```
+
+```{r, message = F, warning = F, echo = F}
+# FittedMichelCount
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(FittedMichelCount,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  theme_bw() +
+  scale_x_continuous(breaks = 0:16) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Interaction),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(FittedMichelCount,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() + 
+  scale_x_continuous(breaks = 0:16) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Interaction))
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(FittedMichelCount,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  theme_bw() +
+  scale_x_continuous(breaks = 0:16) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(FittedMichelCount,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black", binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() + 
+  scale_x_continuous(breaks = 0:16) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Truth))
+```
+
+```{r, message = F, warning = F, echo = F}
+# BlobCount
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(BlobCount,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(0,45,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Interaction),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(BlobCount,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() + 
+  scale_x_continuous(breaks = seq(0,45,3)) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Interaction))
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(BlobCount,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black", binwidth = 1) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(0,45,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth),scales="free_y")
+events %>%
+  filter(PrimaryProtonScore1 > -1) %>%
+  ggplot(aes(BlobCount,fill=Interaction,color=Interaction)) +
+  geom_histogram(colour = "black", binwidth = 1, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() + 
+  scale_x_continuous(breaks = seq(0,45,3)) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Truth))
+```
+
+```{r, message = F, warning = F, echo = F}
+# MichelCount
+mc_truth <- events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((MichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((MichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((MichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((MichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  group_by(Selection,Truth) %>% count()
+mc_truth$`n%` <- percent(mc_truth$n/sum(mc_truth$n))
+mc_truth
+
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((MichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((MichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((MichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((MichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  group_by(Selection,Truth) %>%
+  ggplot(aes(Selection,Truth)) +
+  geom_bin2d() +
+  stat_bin2d(geom = "text", aes(label = ..count..), color = 'red') +
+  theme_bw() +
+  scale_fill_viridis(direction = -1)
+
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((MichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((MichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((MichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((MichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  
+  ggplot(aes(PrimaryProtonScore1,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 0.05) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Selection),scales="free_y")
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((MichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((MichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((MichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((MichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  
+  ggplot(aes(PrimaryProtonScore1,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 0.05, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Selection))
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((MichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((MichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((MichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((MichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  
+  ggplot(aes(PrimaryProtonScore1,fill=Selection)) +
+  geom_histogram(colour = "black", binwidth = 0.05) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth),scales="free_y")
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((MichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((MichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((MichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((MichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  
+  ggplot(aes(PrimaryProtonScore1,fill=Selection,color=Selection)) +
+  geom_histogram(colour = "black", binwidth = 0.05, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth))
+```
+
+```{r, message = F, warning = F, echo = F}
+# ImprovedMichelCount
+mc_truth <- events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((ImprovedMichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((ImprovedMichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((ImprovedMichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((ImprovedMichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  group_by(Selection,Truth) %>% count()
+mc_truth$`n%` <- percent(mc_truth$n/sum(mc_truth$n))
+mc_truth
+
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((ImprovedMichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((ImprovedMichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((ImprovedMichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((ImprovedMichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  group_by(Selection,Truth) %>%
+  ggplot(aes(Selection,Truth)) +
+  geom_bin2d() +
+  stat_bin2d(geom = "text", aes(label = ..count..), color = 'red') +
+  theme_bw() +
+  scale_fill_viridis(direction = -1)
+
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((ImprovedMichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((ImprovedMichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((ImprovedMichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((ImprovedMichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  ggplot(aes(Selection,fill=Truth,color=Truth)) +
+  geom_bar(position = 'fill', aes(y=..count../sum(..count..)), color = 'black') +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_bw()
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((ImprovedMichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((ImprovedMichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((ImprovedMichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((ImprovedMichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  ggplot(aes(Selection,fill=Truth,color=Truth)) +
+  geom_bar(color = 'black') +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  theme_bw()
+
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((ImprovedMichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((ImprovedMichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((ImprovedMichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((ImprovedMichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  
+  ggplot(aes(PrimaryProtonScore1,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 0.05) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  facet_wrap(vars(Selection),scales="free_y")
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((ImprovedMichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((ImprovedMichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((ImprovedMichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((ImprovedMichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  
+  ggplot(aes(PrimaryProtonScore1,fill=Truth,color=Truth)) +
+  geom_histogram(colour = "black", binwidth = 0.05, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Selection))
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((ImprovedMichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((ImprovedMichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((ImprovedMichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((ImprovedMichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  
+  ggplot(aes(PrimaryProtonScore1,fill=Selection,color=Selection)) +
+  geom_histogram(colour = "black", binwidth = 0.05) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  facet_wrap(vars(Truth),scales="free_y")
+events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((ImprovedMichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((ImprovedMichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((ImprovedMichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((ImprovedMichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  
+  ggplot(aes(PrimaryProtonScore1,fill=Selection,color=Selection)) +
+  geom_histogram(colour = "black", binwidth = 0.05, position = 'fill', aes(y=..count../sum(..count..))) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Truth))
 ```
 
 
 ```{r, message = F, warning = F, echo = F}
+events <- events %>%
+  mutate(Particle_0 = case_when(PrimaryProtonCandidatePDG == 2212 ~ "Proton",
+                                PrimaryProtonCandidatePDG %in% c(-211,211) ~ "Pion +/-",
+                                PrimaryProtonCandidatePDG == 111 ~ "Pion 0",
+                                PrimaryProtonCandidatePDG == -1 ~ "No Particle",
+                                .default = "Other")) %>% 
+  mutate(Particle_1 = case_when(SecProtonCandidatePDG_1 == 2212 ~ "Proton",
+                                (SecProtonCandidatePDG_1 %in% c(-211,211)) ~ "Pion +/-",
+                                SecProtonCandidatePDG_1 == 111 ~ "Pion 0",
+                                SecProtonCandidatePDG_1 == -1 ~ "No Particle",
+                                .default = "Other")) %>% 
+  mutate(Particle_2 = case_when(SecProtonCandidatePDG_2 == 2212 ~ "Proton",
+                                SecProtonCandidatePDG_2 %in% c(-211,211) ~ "Pion +/-",
+                                SecProtonCandidatePDG_2 == 111 ~ "Pion 0",
+                                SecProtonCandidatePDG_2 == -1 ~ "No Particle",
+                                .default = "Other"))
+
+
+```
+
+
+```{r, message = F, warning = F, echo = F, eval = F}
 ggpairs(
   events %>% 
-    select(ImprovedMichelCount,FittedMichelCount,MichelCount) %>%
-    filter(ImprovedMichelCount < 8,
-           FittedMichelCount < 8,
-           MichelCount < 8),
-  lower = list(continuous = wrap("density", alpha = 0.5), combo = "box"),
-  upper = list(continuous = wrap("cor", size = 5.5)),
-  diag = list(continuous = wrap("barDiag")))
+    filter(PrimaryProtonScore1 > -1,
+           PrimaryProtonTfromdEdx > 0,
+           PrimaryProtonTrackVtxGap <= 250) %>%
+    mutate(logPrimaryProtonFractionVisEnergyInCone = log(PrimaryProtonFractionVisEnergyInCone)) %>%
+    dplyr::select(Particle_0,PrimaryProtonScore1,PrimaryProtonScore2,
+                  RatioLength2TdEdX_0,logPrimaryProtonFractionVisEnergyInCone,PrimaryProtonTrackVtxGap,
+                  MuonToPrimaryProtonAngle,recoil,Multiplicity),
+  columns = 2:9,
+  aes(color = Particle_0),
+  lower=list(continuous = GGally::wrap("points", size = 0.01)),
+  diag=list(continuous = GGally::wrap("barDiag", bins = 30)))
+```
+
+
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(PrimaryProtonScore1 > -1) %>% mutate(logRecoil = log(recoil+0.005)), 
+       aes(logRecoil, fill = Particle_0)) +
+  stat_bin() + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+ggplot(events %>% filter(recoil <= 10), aes(recoil, fill = Particle_0)) +
+  stat_bin() + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>% filter(recoil == 0) %>% count(Particle_0) %>% mutate(p = percent(n/(events %>% filter(recoil == 0) %>% count() %>% pull(n))))
+
+ggplot(events %>% filter(PrimaryProtonScore1 > -1, recoil == 0, Multiplicity == 4), 
+       aes(PrimaryProtonScore1, fill = Particle_0)) +
+  stat_bin() + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+ggplot(events %>% filter(PrimaryProtonScore1 > -1, recoil >= 0), 
+       aes(MuonToPrimaryProtonAngle, fill = Particle_0)) +
+  geom_histogram(position = 'fill', aes(y=..count../sum(..count..))) + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(as.factor(Multiplicity)), scales = "free")
+ggplot(events %>% filter(recoil >= 0), aes(MuonToPrimaryProtonAngle, fill = Particle_0)) +
+  geom_histogram() + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(as.factor(Multiplicity)), scales = "free")
+
+ggplot(events %>% filter(PrimaryProtonScore1 > -1, PrimaryProtonTfromdEdx > 0, PrimaryProtonTrackVtxGap < 250), 
+       aes(RatioLength2TdEdX_0, fill = Particle_0)) +
+  geom_histogram(position = 'fill', aes(y=..count../sum(..count..))) + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(as.factor(Multiplicity)), scales = "free")
+ggplot(events %>% filter(PrimaryProtonScore1 > -1, PrimaryProtonTfromdEdx > 0, PrimaryProtonTrackVtxGap < 250), 
+       aes(RatioLength2TdEdX_0, fill = Particle_0)) +
+  geom_histogram() + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(as.factor(Multiplicity)), scales = "free")
+```
+
+
+```{r, message = F, warning = F, echo = F, eval = F}
+# Multiplicity = 2
+
+ggpairs(
+  events %>% 
+    filter(PrimaryProtonScore1 > -1,
+           NumClustsPrimaryProtonEnd > 0,
+           PrimaryProtonTfromdEdx > 0,
+           PrimaryProtonTrackVtxGap > 0,
+           PrimaryProtonTrackVtxGap <= 200,
+           Multiplicity == 2) %>%
+    mutate(logPrimaryProtonFractionVisEnergyInCone = log(PrimaryProtonFractionVisEnergyInCone)) %>%
+    dplyr::select(Particle_0,PrimaryProtonScore1,PrimaryProtonScore2,RatioLength2TdEdX_0,
+                  logPrimaryProtonFractionVisEnergyInCone,PrimaryProtonTrackVtxGap),
+  columns = 2:6,
+  aes(color = Particle_0),
+  lower=list(continuous = GGally::wrap("points", size = 0.01)),
+  diag=list(continuous = GGally::wrap("barDiag", bins = 30)))
+
+ggpairs(
+  events %>% 
+    filter(PrimaryProtonScore1 > -1,
+           NumClustsPrimaryProtonEnd == 0,
+           PrimaryProtonTfromdEdx > 0,
+           PrimaryProtonTrackVtxGap > 0,
+           PrimaryProtonTrackVtxGap <= 200,
+           Multiplicity == 2) %>%
+    dplyr::select(Particle_0,PrimaryProtonScore1,PrimaryProtonScore2,RatioLength2TdEdX_0,
+                  PrimaryProtonTrackVtxGap),
+  columns = 2:5,
+  aes(color = Particle_0),
+  lower=list(continuous = GGally::wrap("points", size = 0.01)),
+  diag=list(continuous = GGally::wrap("barDiag", bins = 30)))
+
+
+
+
+ggpairs(
+  events %>% 
+    filter(PrimaryProtonScore1 > -1,
+           PrimaryProtonTfromdEdx > 0,
+           PrimaryProtonTrackVtxGap > 0,
+           PrimaryProtonTrackVtxGap <= 250,
+           PrimaryProtonCandidatePDG != -1) %>%
+    mutate(logPrimaryProtonFractionVisEnergyInCone = log(PrimaryProtonFractionVisEnergyInCone)) %>%
+    dplyr::select(Particle_0,PrimaryProtonScore1,PrimaryProtonScore2,RatioLength2TdEdX_0,
+                  logPrimaryProtonFractionVisEnergyInCone,PrimaryProtonTrackVtxGap,
+                  CCQENu_proton_score1_BetheBloch_biasDown,CCQENu_proton_score1_BetheBloch_biasUp,
+                  CCQENu_proton_score1_Birks_bias,CCQENu_proton_score1_MEU_biasDown,CCQENu_proton_score1_MEU_biasUp,
+                  CCQENu_proton_score1_Mass_biasDown,CCQENu_proton_score1_Mass_biasUp),
+  columns = c(3,7:12),
+  aes(color = Particle_0),
+  lower=list(continuous = GGally::wrap("points", size = 0.01)),
+  diag=list(continuous = GGally::wrap("barDiag", bins = 30)))
+```
+
+
+```{r, message = F, warning = F, echo = F, eval = F}
+ggplot(events %>% 
+    filter(PrimaryProtonScore1 > -1,
+           PrimaryProtonTfromdEdx > 0,
+           PrimaryProtonTrackVtxGap > 0,
+           PrimaryProtonTrackVtxGap <= 250,
+           PrimaryProtonCandidatePDG != -1,
+           Particle_0 == "Proton")) +
+  geom_point(size = 0.01) +
+  stat_bin() +
+  stat_bin2d(aes(x = .panel_x, y = .panel_y)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  scale_fill_viridis(direction = -1) +
+  facet_matrix(vars(PrimaryProtonScore1,CCQENu_proton_score1_BetheBloch_biasDown,CCQENu_proton_score1_BetheBloch_biasUp,
+                    CCQENu_proton_score1_Birks_bias), 
+               layer.lower = 1, layer.diag = 2,
+               layer.upper = 3)
+
+ggplot(events %>% 
+    filter(PrimaryProtonScore1 > -1,
+           PrimaryProtonTfromdEdx > 0,
+           PrimaryProtonTrackVtxGap > 0,
+           PrimaryProtonTrackVtxGap <= 250,
+           PrimaryProtonCandidatePDG != -1,
+           Particle_0 == "Proton")) +
+  stat_bin2d(aes(x = .panel_x, y = .panel_y)) +
+  geom_autodensity() +
+  geom_autopoint(size = 0.001) +
+  scale_fill_viridis(direction = -1) +
+  theme_dark() + ggtitle("Proton") +
+  facet_matrix(vars(PrimaryProtonScore1,CCQENu_proton_score1_BetheBloch_biasDown,CCQENu_proton_score1_BetheBloch_biasUp,
+                    CCQENu_proton_score1_Birks_bias,CCQENu_proton_score1_MEU_biasDown,CCQENu_proton_score1_MEU_biasUp,
+                    CCQENu_proton_score1_Mass_biasDown,CCQENu_proton_score1_Mass_biasUp), 
+               layer.diag = 2, layer.upper = 3)
+```
+
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(PrimaryProtonScore1 > -1), aes(PrimaryProtonScore1,PrimaryProtonScore2)) +
+  stat_bin_2d(binwidth = 0.05) + theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.051,1.001)) +
+  scale_y_continuous(expand = c(0,0), limits = c(-0.051,1.001)) +
+  scale_fill_viridis(direction = -1) + coord_fixed() +
+  ggtitle("Primary Proton Candidate") +
+  xlab("Proton Score 1") + ylab("Proton Score 2") +
+  facet_wrap(vars(Particle_0))
+
+ggplot(events %>% filter(SecProtonScore1_1 >= 0), aes(SecProtonScore1_1,SecProtonScore2_1)) +
+  stat_bin_2d(binwidth = 0.05) + theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.051,1.001)) +
+  scale_y_continuous(expand = c(0,0), limits = c(-0.051,1.001)) +
+  scale_fill_viridis(direction = -1) + coord_fixed() +
+  ggtitle("1st Secondary Proton Candidate") +
+  xlab("Proton Score 1") + ylab("Proton Score 2") +
+  facet_wrap(vars(Particle_1))
+
+ggplot(events %>% filter(SecProtonScore1_2 >= 0), aes(SecProtonScore1_2,SecProtonScore2_2)) +
+  stat_bin_2d(binwidth = 0.05) + theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(-0.051,1.001)) +
+  scale_y_continuous(expand = c(0,0), limits = c(-0.051,1.001)) +
+  scale_fill_viridis(direction = -1) + coord_fixed() +
+  ggtitle("2nd Secondary Proton Candidate") +
+  xlab("Proton Score 1") + ylab("Proton Score 2") +
+  facet_wrap(vars(Particle_2))
+
+descdist(events %>% filter(PrimaryProtonScore1 > -1) %>% pull(PrimaryProtonScore1))
+descdist(events %>% filter(SecProtonScore1_1 >= 0) %>% pull(SecProtonScore1_1))
+descdist(events %>% filter(SecProtonScore1_2 >= 0) %>% pull(SecProtonScore1_2))
+
+fitdist(events %>% filter(PrimaryProtonScore1 > -1) %>% pull(PrimaryProtonScore1), distr="beta", method="mge")
+```
+
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(PrimaryProtonScore1 > -1), aes(PrimaryProtonScore1, fill = Particle_0)) +
+  stat_bin(bins = 21, color = "black") + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  ggtitle("Primary Proton Candidate") +
+  xlab("Proton Score 1") 
+
+ggplot(events %>% filter(PrimaryProtonScore1 > -1), aes(PrimaryProtonScore2, fill = Particle_0)) +
+  stat_bin(bins = 21, color = "black") + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  ggtitle("Primary Proton Candidate") +
+  xlab("Proton Score 2") 
+
+ggplot(events %>% filter(PrimaryProtonScore1 > -1), aes(PrimaryProtonScore1,PrimaryProtonScore2)) +
+  stat_bin_2d(bins=21) + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_fill_viridis(direction = -1) + coord_fixed() +
+  ggtitle("Primary Proton Candidate") +
+  xlab("Proton Score 1") + ylab("Proton Score 2") +
+  facet_wrap(vars(Particle_0))
+```
+
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% 
+         filter(PrimaryProtonScore1 > -1) %>% 
+         filter(PrimaryProtonScore1 <= 0.2), 
+       aes(PrimaryProtonScore1, fill = Particle_0)) +
+  stat_bin(bins = 21, color = "black") + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  ggtitle("Primary Proton Candidate") +
+  xlab("Proton Score 1") 
+
+ggplot(events %>% 
+         filter(PrimaryProtonScore1 > -1) %>% 
+         filter(PrimaryProtonScore2 <= 0.2), 
+       aes(PrimaryProtonScore2, fill = Particle_0)) +
+  stat_bin(bins = 21, color = "black") + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  ggtitle("Primary Proton Candidate") +
+  xlab("Proton Score 2") 
+
+ggplot(events %>% 
+         filter(PrimaryProtonScore1 > -1) %>% 
+         filter(PrimaryProtonScore1 <= 0.2) %>% 
+         filter(PrimaryProtonScore2 <= 0.2), 
+       aes(PrimaryProtonScore1,PrimaryProtonScore2)) +
+  stat_bin_2d(bins=21) + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_fill_viridis(direction = -1) + coord_fixed() +
+  ggtitle("Primary Proton Candidate") +
+  xlab("Proton Score 1") + ylab("Proton Score 2") +
+  facet_wrap(vars(Particle_0))
+```
+
+```{r, message = F, warning = F, echo = F, eval = F}
+library(animation)
+
+ymax = 17
+dath <- tibble(person = rep(0,ymax*4)+0.5, dollars = c(seq(0.25,ymax,0.25)), 
+               x2 = rep(c(3,3,3,6),ymax)+0.5, y2 = c(seq(0.25,ymax,0.25)))
+datv <- tibble(person = 1:12+0.5, dollars = rep(0,12), 
+               x2 = 1:12+0.5, y2 = rep(ymax,12))
+datf <- tibble(person = c(rep(c(rep(0:2,4),3:5)+0.5,16),rep(0:2,4),3.5), 
+               x2 = c(rep(c(rep(1:3,4),4:6)+0.5,16),rep(1:3,4),4.5),
+               dollars = c(rep(seq(0,0.75,0.25),each = 3),rep(0,3),
+                           rep(seq(1,1.75,0.25),each = 3),rep(1,3),
+                           rep(seq(2,2.75,0.25),each = 3),rep(2,3),
+                           rep(seq(3,3.75,0.25),each = 3),rep(3,3),
+                           rep(seq(4,4.75,0.25),each = 3),rep(4,3),
+                           rep(seq(5,5.75,0.25),each = 3),rep(5,3),
+                           rep(seq(6,6.75,0.25),each = 3),rep(6,3),
+                           rep(seq(7,7.75,0.25),each = 3),rep(7,3),
+                           rep(seq(8,8.75,0.25),each = 3),rep(8,3),
+                           rep(seq(9,9.75,0.25),each = 3),rep(9,3),
+                           rep(seq(10,10.75,0.25),each = 3),rep(10,3),
+                           rep(seq(11,11.75,0.25),each = 3),rep(11,3),
+                           rep(seq(12,12.75,0.25),each = 3),rep(12,3),
+                           rep(seq(13,13.75,0.25),each = 3),rep(13,3),
+                           rep(seq(14,14.75,0.25),each = 3),rep(14,3),
+                           rep(seq(15,15.75,0.25),each = 3),rep(15,3),
+                           rep(seq(16,16.75,0.25),each = 3),16),
+               y2 = c(rep(seq(0.25,1,0.25),each = 3),rep(1,3),
+                      rep(seq(1.25,2,0.25),each = 3),rep(2,3),
+                      rep(seq(2.25,3,0.25),each = 3),rep(3,3),
+                      rep(seq(3.25,4,0.25),each = 3),rep(4,3),
+                      rep(seq(4.25,5,0.25),each = 3),rep(5,3),
+                      rep(seq(5.25,6,0.25),each = 3),rep(6,3),
+                      rep(seq(6.25,7,0.25),each = 3),rep(7,3),
+                      rep(seq(7.25,8,0.25),each = 3),rep(8,3),
+                      rep(seq(8.25,9,0.25),each = 3),rep(9,3),
+                      rep(seq(9.25,10,0.25),each = 3),rep(10,3),
+                      rep(seq(10.25,11,0.25),each = 3),rep(11,3),
+                      rep(seq(11.25,12,0.25),each = 3),rep(12,3),
+                      rep(seq(12.25,13,0.25),each = 3),rep(13,3),
+                      rep(seq(13.25,14,0.25),each = 3),rep(14,3),
+                      rep(seq(14.25,15,0.25),each = 3),rep(15,3),
+                      rep(seq(15.25,16,0.25),each = 3),rep(16,3),
+                      rep(seq(16.25,17,0.25),each = 3),17),
+               amount = cumsum(c(rep(c(rep(0.25,12),rep(1,3)),16),rep(0.25,12),1)))
+
+for(i in 0:nrow(datf)) {
+  pl <- ggplot() +
+    scale_x_continuous(expand = c(0,0), limits = c(0.5,12.5), breaks = 1:12) +
+    scale_y_continuous(expand = c(0,0), limits = c(0,ymax), breaks = 0:ymax) +
+    theme_bw() +
+    theme(axis.line = element_line(color='black'),
+      plot.background = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.border = element_blank())
+  
+    if(i > 0) {
+      pl <- pl + 
+        geom_rect(aes(xmin = person, ymin = dollars, xmax = x2, ymax = y2), data = datf[1:i,]) +
+        ggtitle(paste0("Amount = $",sprintf("%0.2f",datf$amount[i])))
+    } else {
+      pl <- pl + ggtitle("Amount = $0.00")
+    }
+  
+    pl <- pl + 
+      geom_segment(aes(x = person, y = dollars, xend = x2, yend = y2), colour = "black", data = dath, linewidth = 0.2) +
+      geom_segment(aes(x = person, y = dollars, xend = x2, yend = y2), colour = "black", data = datv, linewidth = 0.2)
+  
+  show(pl)
+}
+
 ```

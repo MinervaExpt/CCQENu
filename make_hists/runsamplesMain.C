@@ -382,10 +382,10 @@ int main(const int argc, const char *argv[] ) {
     variables2D.push_back(v);
   }
 
-	// Check if sending events to csv file
-	bool mc_reco_to_csv = 0;
-	if (config.IsMember("mcRecoToCSV")) {
-		mc_reco_to_csv = config.GetBool("mcRecoToCSV");
+	// Check if using progress bar during loops
+	bool use_prog_bar = 0;
+	if (config.IsMember("useProgressBar")) {
+		use_prog_bar = config.GetBool("useProgressBar");
 	}
 
 	std::cout << " just before event loop" << std::endl;
@@ -398,7 +398,7 @@ int main(const int argc, const char *argv[] ) {
     //=========================================
     std::cout << "Loop and Fill Data for " << tag << "\n";
     
-    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale,closure,mc_reco_to_csv);
+    LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag], model, mcRescale, closure, use_prog_bar);
 
     // LoopAndFillEventSelection2D(tag, util, data_error_bands, variables2D, kData, *selectionCriteria[tag]);
 
@@ -413,7 +413,13 @@ int main(const int argc, const char *argv[] ) {
     mcRescale.SetCat(cat);
     std::cout << "Loop and Fill MC Reco  for " <<  tag << "\n";
     
-    LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag],model, mcRescale,closure,mc_reco_to_csv);
+    if(cutsfilename.find("speedtest") != std::string::npos) {
+    	std::cout << "Doing speed test..." << std::endl;
+    	LoopAndFillEventSelection2(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag], model, mcRescale, closure, use_prog_bar);
+    }
+    else {
+    	LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, kMC, *selectionCriteria[tag], model, mcRescale, closure, use_prog_bar);
+    }
     // LoopAndFillEventSelection2D(tag, util, mc_error_bands, variables2D, kMC, *selectionCriteria[tag]);
     
     std::cout << "\nCut summary for MC Reco:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";
@@ -423,7 +429,13 @@ int main(const int argc, const char *argv[] ) {
   for (auto tag:truthtags){
     std::cout << "Loop and Fill MC Truth  for " <<  tag << "\n";
 
-    LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, kTruth, *selectionCriteria[tag],model,mcRescale,closure,mc_reco_to_csv);
+		if(cutsfilename.find("speedtest") != std::string::npos) {
+    	std::cout << "Doing speed test..." << std::endl;
+    	LoopAndFillEventSelection2(tag, util, truth_error_bands, variables1D, variables2D, kTruth, *selectionCriteria[tag], model, mcRescale, closure, use_prog_bar);
+    }
+    else {
+    	LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, kTruth, *selectionCriteria[tag], model, mcRescale, closure, use_prog_bar);
+    }
     // LoopAndFillEventSelection2D(tag, util, truth_error_bands, variables2D, kTruth, *selectionCriteria[tag]);
     
     std::cout << "\nCut summary for MC Truth:" <<  tag << "\n";
@@ -440,7 +452,7 @@ int main(const int argc, const char *argv[] ) {
   //=========================================
   // Plot
   //=========================================
-  std::cout << "Done filling. Begin plotting.\n";
+  std::cout << "\n\nDone filling. Begin plotting.\n";
 
   std::string path(pl);
 

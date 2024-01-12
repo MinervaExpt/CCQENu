@@ -1,0 +1,530 @@
+---
+title: "Tables"
+author: "Sean Gilligan"
+output: pdf_document
+---
+
+```{r, message = F, warning = F, echo = F}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(stringr)
+library(knitr)
+library(kableExtra)
+library(GGally)
+library(viridis)
+library(fitdistrplus)
+library(purrr)
+library(ggforce)
+library(ggpattern)
+```
+
+```{r, message = F, warning = F, echo = F}
+percent <- function(x, digits = 2, format = "f", ...) {
+  paste0(formatC(x * 100, format = format, digits = digits, ...), "\\%")
+}
+```
+
+```{r, message = F, warning = F, echo = F}
+events <- read.csv("CSV_CCQENu_minervame1N_MC_Inextinguishable_merged_strip_20230713.csv", sep=";")
+#events <- read.csv("CSV_CCQENu_minervame1N_MC_Inextinguishable_merged_strip_20230713.csv", sep=";")
+
+
+#paste(strsplit(events$Arachne[402712],'[=&]')[[1]][c(6,8,10,12)],collapse = '.')
+#events <- events %>%
+#  mutate(rsgs = map_chr(1:nrow(events), 
+#                        ~ paste(strsplit(events$Arachne[.x],'[=&]')[[1]][c(6,8,10,12)],collapse = '.')))
+
+mult_protoncand <- events %>% 
+  add_count(Multiplicity, name = "n\\_all") %>%
+  filter(PrimaryProtonScore1 >= 0) %>% 
+  group_by(Multiplicity, `n\\_all`) %>%
+  count(name = "n\\_wpc") %>%
+  rbind(tibble(Multiplicity = 1, "n\\_all" = sum(events$Multiplicity == 1), `n\\_wpc` = 0)) %>%
+  arrange(Multiplicity) %>%
+  mutate(`n\\_wpc/n\\_all` = formatC(`n\\_wpc`/`n\\_all`, digits = 4, format = 'f'))
+
+kable(mult_protoncand, booktabs = TRUE, escape=FALSE, align = c("rrrr"), 
+      linesep="") %>%
+  kable_styling(latex_options = c("striped")) %>%
+  column_spec(c(1), border_right = T)
+
+truth_v_interaction <- events %>%
+  add_count(name = "N\\_All") %>% add_count(Truth, name = "N\\_Truth") %>% 
+  group_by(Truth, Interaction, `N\\_All`, `N\\_Truth`) %>% count() %>% ungroup() %>% 
+  mutate(`\\% per Truth` = percent(n/`N\\_Truth`, digits = 3, format = "f")) %>% 
+  mutate(`\\% of All` = percent(n/`N\\_All`, digits = 3, format = "f")) %>% 
+  dplyr::select(Truth,Interaction,n,`\\% per Truth`,`\\% of All`) %>% 
+  mutate(Truth = gsub("None___","",Truth))
+
+kable(truth_v_interaction, booktabs = TRUE, escape=FALSE, align = c("llrrr"), 
+      linesep="") %>%
+  kable_styling(latex_options = c("striped")) %>%
+  column_spec(c(1,2), border_right = T) %>%
+  row_spec(c(5,9,13,16), hline_after = T)
+
+interaction_v_truth <- events %>%
+  add_count(name = "N\\_All") %>% add_count(Interaction, name = "N\\_Interaction") %>% 
+  group_by(Interaction, Truth, `N\\_All`, `N\\_Interaction`) %>% count() %>% ungroup() %>% 
+  mutate(`\\% per Interaction` = percent(n/`N\\_Interaction`, digits = 3, format = "f")) %>% 
+  mutate(`\\% of All` = percent(n/`N\\_All`, digits = 3, format = "f")) %>% 
+  dplyr::select(Interaction,Truth,n,`\\% per Interaction`,`\\% of All`) %>% 
+  mutate(Truth = gsub("None___","",Truth))
+
+kable(interaction_v_truth, booktabs = TRUE, escape=FALSE, align = c("llrrr"), 
+      linesep="") %>%
+  kable_styling(latex_options = c("striped")) %>%
+  column_spec(c(1,2), border_right = T) %>%
+  row_spec(c(4,5,10,11,16), hline_after = T)
+```
+
+```{r, message = F, warning = F, echo = F}
+events <- events %>% 
+  mutate(Particle_0 = case_when(PrimaryProtonCandidatePDG == 2212 ~ "Proton",
+                                PrimaryProtonCandidatePDG %in% c(-211,211) ~ "Pion +/-",
+                                PrimaryProtonCandidatePDG == 111 ~ "Pion 0",
+                                PrimaryProtonCandidatePDG == 2112 ~ "Neutron",
+                                PrimaryProtonCandidatePDG == 3122 ~ "Lambda 0",
+                                PrimaryProtonCandidatePDG == -3122 ~ "Lambda-bar 0",
+                                PrimaryProtonCandidatePDG == 3212 ~ "Sigma 0",
+                                PrimaryProtonCandidatePDG == 311 ~ "Kaon 0",
+                                PrimaryProtonCandidatePDG == -311 ~ "Kaon-bar 0",
+                                PrimaryProtonCandidatePDG == 130 ~ "Kaon\\_L 0",
+                                PrimaryProtonCandidatePDG == 22 ~ "Gamma",
+                                PrimaryProtonCandidatePDG %in% c(13,-13) ~ "Muon +/-",
+                                PrimaryProtonCandidatePDG %in% c(11,-11) ~ "Electron +/-",
+                                PrimaryProtonCandidatePDG %in% c(321,-321) ~ "Kaon +/-",
+                                PrimaryProtonCandidatePDG %in% c(3222,3112) ~ "Sigma +/-",
+                                PrimaryProtonCandidatePDG %in% c(1114,2214,2224) ~ "Delta ++/+/-",
+                                PrimaryProtonCandidatePDG == -2212 ~ "Anti-Proton",
+                                PrimaryProtonCandidatePDG == -2112 ~ "Anti-Neutron",
+                                PrimaryProtonCandidatePDG == -1 ~ "No Particle",
+                                .default = "Other")) %>% 
+  mutate(Particle_1 = case_when(SecProtonCandidatePDG_1 == 2212 ~ "Proton",
+                                SecProtonCandidatePDG_1 %in% c(-211,211) ~ "Pion +/-",
+                                SecProtonCandidatePDG_1 == 111 ~ "Pion 0",
+                                SecProtonCandidatePDG_1 == 2112 ~ "Neutron",
+                                SecProtonCandidatePDG_1 == 3122 ~ "Lambda 0",
+                                SecProtonCandidatePDG_1 == -3122 ~ "Lambda-bar 0",
+                                SecProtonCandidatePDG_1 == 3212 ~ "Sigma 0",
+                                SecProtonCandidatePDG_1 == 311 ~ "Kaon 0",
+                                SecProtonCandidatePDG_1 == -311 ~ "Kaon-bar 0",
+                                SecProtonCandidatePDG_1 == 130 ~ "Kaon\\_L 0",
+                                SecProtonCandidatePDG_1 == 22 ~ "Gamma",
+                                SecProtonCandidatePDG_1 %in% c(13,-13) ~ "Muon +/-",
+                                SecProtonCandidatePDG_1 %in% c(11,-11) ~ "Electron +/-",
+                                SecProtonCandidatePDG_1 %in% c(321,-321) ~ "Kaon +/-",
+                                SecProtonCandidatePDG_1 %in% c(3222,3112) ~ "Sigma +/-",
+                                SecProtonCandidatePDG_1 %in% c(1114,2214,2224) ~ "Delta ++/+/-",
+                                SecProtonCandidatePDG_1 == -2212 ~ "Anti-Proton",
+                                SecProtonCandidatePDG_1 == -2112 ~ "Anti-Neutron",
+                                SecProtonCandidatePDG_1 == -1 ~ "No Particle",
+                                .default = "Other")) %>% 
+  mutate(Particle_2 = case_when(SecProtonCandidatePDG_2 == 2212 ~ "Proton",
+                                SecProtonCandidatePDG_2 %in% c(-211,211) ~ "Pion +/-",
+                                SecProtonCandidatePDG_2 == 111 ~ "Pion 0",
+                                SecProtonCandidatePDG_2 == 2112 ~ "Neutron",
+                                SecProtonCandidatePDG_2 == 3122 ~ "Lambda 0",
+                                SecProtonCandidatePDG_2 == -3122 ~ "Lambda-bar 0",
+                                SecProtonCandidatePDG_2 == 3212 ~ "Sigma 0",
+                                SecProtonCandidatePDG_2 == 311 ~ "Kaon 0",
+                                SecProtonCandidatePDG_2 == -311 ~ "Kaon-bar 0",
+                                SecProtonCandidatePDG_2 == 130 ~ "Kaon\\_L 0",
+                                SecProtonCandidatePDG_2 == 22 ~ "Gamma",
+                                SecProtonCandidatePDG_2 %in% c(13,-13) ~ "Muon +/-",
+                                SecProtonCandidatePDG_2 %in% c(11,-11) ~ "Electron +/-",
+                                SecProtonCandidatePDG_2 %in% c(321,-321) ~ "Kaon +/-",
+                                SecProtonCandidatePDG_2 %in% c(3222,3112) ~ "Sigma +/-",
+                                SecProtonCandidatePDG_2 %in% c(1114,2214,2224) ~ "Delta ++/+/-",
+                                SecProtonCandidatePDG_2 == -2212 ~ "Anti-Proton",
+                                SecProtonCandidatePDG_2 == -2112 ~ "Anti-Neutron",
+                                SecProtonCandidatePDG_2 == -1 ~ "No Particle",
+                                .default = "Other"))
+
+prong_table <- events %>% dplyr::select(Particle_0,Particle_1,Particle_2) %>% gather("Candidate","Truth",Particle_0,Particle_1,Particle_2) %>%
+  group_by(Candidate,Truth) %>% count() %>% ungroup() %>% 
+  pivot_wider(names_from = Candidate, values_from = n, names_glue = "$n{str_remove(Candidate,'Particle')}$") %>%
+  arrange(desc(`$n_0$`))  %>% replace(is.na(.), 0)
+prong_table <- rbind(prong_table %>% filter(Truth != "Other",Truth != "No Particle"), 
+                     prong_table %>% filter(Truth == "Other"),
+                     tibble(Truth = "All Particles",
+                            `$n_0$` = prong_table %>% filter(Truth != "No Particle") %>% pull(`$n_0$`) %>% sum(),
+                            `$n_1$` = prong_table %>% filter(Truth != "No Particle") %>% pull(`$n_1$`) %>% sum(),
+                            `$n_2$` = prong_table %>% filter(Truth != "No Particle") %>% pull(`$n_2$`) %>% sum()),
+                     prong_table %>% filter(Truth == "No Particle"),
+                     tibble(Truth = "Total",
+                            `$n_0$` = prong_table %>% pull(`$n_0$`) %>% sum(),
+                            `$n_1$` = prong_table %>% pull(`$n_1$`) %>% sum(),
+                            `$n_2$` = prong_table %>% pull(`$n_2$`) %>% sum())) %>%
+  mutate(Truth = case_when(Truth == "Proton" ~ "$p$",
+                           Truth == "Pion +/-" ~ "$\\pi^{\\pm}$",
+                           Truth == "Pion 0" ~ "$\\pi^{0}$",
+                           Truth == "Neutron" ~ "$n$",
+                           Truth == "Kaon +/-" ~ "$K^{\\pm}$",
+                           Truth == "Muon +/-" ~ "$\\mu^{\\pm}$",
+                           Truth == "Lambda 0" ~ "$\\Lambda^{0}$",
+                           Truth == "Lambda-bar 0" ~ "$\\bar{\\Lambda}^{0}$",
+                           Truth == "Sigma +/-" ~ "$\\Sigma^{\\pm}$",
+                           Truth == "Gamma" ~ "$\\gamma$",
+                           Truth == "Kaon 0" ~ "$K^{0}$",
+                           Truth == "Kaon-bar 0" ~ "$\\bar{K}^{0}$",
+                           Truth == "Kaon\\_L 0" ~ "$K^{0}_{L}$",
+                           Truth == "Electron +/-" ~ "$e^{\\pm}$",
+                           Truth == "Sigma 0" ~ "$\\Sigma^{0}$",
+                           Truth == "Anti-Proton" ~ "$\\bar{p}$",
+                           Truth == "Anti-Neutron" ~ "$\\bar{n}$",
+                           .default = Truth))
+events <- events %>% 
+  mutate(RatioLength2TdEdX_0 = ProtonCandTrackLength_0/PrimaryProtonTfromdEdx) %>%
+  mutate(RatioLength2TdEdX_1 = ProtonCandTrackLength_1/SecProtonTfromdEdx_1) %>%
+  mutate(RatioLength2TdEdX_2 = ProtonCandTrackLength_2/SecProtonTfromdEdx_2)
+  
+prong_table <- cbind(prong_table,
+                     tibble(`Particle $\\%_0$` = percent(prong_table$`$n_0$`/(prong_table %>% filter(Truth == "All Particles") %>% pull(`$n_0$`))),
+                            `Particle $\\%_1$` = percent(prong_table$`$n_1$`/(prong_table %>% filter(Truth == "All Particles") %>% pull(`$n_1$`))),
+                            `Particle $\\%_2$` = percent(prong_table$`$n_2$`/(prong_table %>% filter(Truth == "All Particles") %>% pull(`$n_2$`))),
+                            `Total $\\%_0$` = percent(prong_table$`$n_0$`/(prong_table %>% filter(Truth == "Total") %>% pull(`$n_0$`))),
+                            `Total $\\%_1$` = percent(prong_table$`$n_1$`/(prong_table %>% filter(Truth == "Total") %>% pull(`$n_1$`))),
+                            `Total $\\%_2$` = percent(prong_table$`$n_2$`/(prong_table %>% filter(Truth == "Total") %>% pull(`$n_2$`)))))
+
+
+kable(prong_table, booktabs = TRUE, escape=FALSE, align = c("crrrrrrrrr"), 
+      linesep="", caption = "Proton Candidate Truths") %>%
+  kable_styling(latex_options = c("striped")) %>%
+  row_spec(c(17,18,19), hline_after = T) %>%
+  column_spec(c(1,4,7), border_right = T)
+
+
+```
+
+```{r, message = F, warning = F, echo = F}
+#events$FSPDGs[282654]
+#as_tibble(strtoi(strsplit(gsub('[{}]','',events$FSPDGs[282654]),split=",",fixed=TRUE)[[1]])) %>% count(value)
+
+#system.time(map(1:nrow(events), ~ strtoi(strsplit(gsub('[{}]','',events$FSPDGs[.x]),split=",")[[1]])))
+#system.time(map(1:nrow(events), ~ strtoi(strsplit(events$FSPDGs[.x], split="[{,}]")[[1]][-1])))
+#fspdgs <- map(1:nrow(events), ~ strtoi(strsplit(gsub('[{}]','',events$FSPDGs[.x]),split=",")[[1]]))
+fspdgs <- map(1:nrow(events), ~ strtoi(strsplit(events$FSPDGs[.x], split="[{,}]")[[1]][-1]))
+fsEs <- map(1:nrow(events), ~ as.double(strsplit(events$FSPartEs[.x], split="[{,}]")[[1]][-1]))
+
+#system.time(rbindlist(map(1:nrow(events), ~ as_tibble(strtoi(strsplit(events$FSPDGs[.x], split="[{,}]")[[1]][-1])) %>% count(value) %>% mutate(Entry = .x))))
+
+library(data.table)
+#rbindlist(list(as_tibble(strtoi(strsplit(events$FSPDGs[282654], split="[{,}]")[[1]][-1])) %>% count(value) %>% mutate(Entry = 282654),
+#     as_tibble(strtoi(strsplit(events$FSPDGs[282655], split="[{,}]")[[1]][-1])) %>% count(value) %>% mutate(Entry = 282655)))
+
+
+#map(1:10, ~ strtoi(strsplit(events$FSPDGs[.x], split="[{,}]")[[1]][-1]))
+
+s2nv <- function(x) {
+  strtoi(strsplit(x, split="[{,}]")[[1]][-1])
+}
+
+#events[1:10,] %>% dplyr::select(Entry,FSPDGs) %>% count()
+
+#fspdgs
+
+
+entries_and_pdgs <- tibble(entry = unlist(map(1:nrow(events), ~ rep(events$Entry[.x],length(fspdgs[[.x]])))),
+                           pdg = unlist(fspdgs),
+                           E = unlist(fsEs))
+
+
+```
+
+```{r, message = F, warning = F, echo = F}
+pdg_presence_stats <- entries_and_pdgs %>% 
+  group_by(entry, pdg) %>% count() %>%
+  mutate(n = 1) %>%
+  pivot_wider(names_from = pdg, values_from = n, values_fill = 0) %>%
+  ungroup() %>% dplyr::select(!entry) %>%
+  summarize_each(funs(mean,var,sum)) %>%
+  pivot_longer(everything(),
+               names_to = c(".value", "fn"),
+               names_pattern = "(.+)_(.+)")
+
+pdg13_2p <- entries_and_pdgs %>% filter(pdg == 13) %>% group_by(entry, pdg) %>% count() %>% 
+  mutate(n = (n>1)) %>%
+  pivot_wider(names_from = pdg, values_from = n, values_fill = 0) %>%
+  ungroup() %>% dplyr::select(!entry) %>%
+  summarize_each(funs(mean,var,sum))
+
+pdg_presence_stats$`13` <- t(pdg13_2p[1,])
+
+pdg_presence_stats_tbl <- tibble(pdg = as.numeric(names(pdg_presence_stats[,-1])),
+       mean = percent(as.numeric(t(pdg_presence_stats[1,-1])), digits = 3, format = "f"),
+       variance = percent(as.numeric(t(pdg_presence_stats[2,-1])), digits = 3, format = "f"),
+       sum = t(pdg_presence_stats[3,-1])) %>% arrange(desc(sum)) %>%
+  mutate(name = case_when(pdg == 2212 ~ "Proton",
+                          pdg == -211 ~ "Pion -",
+                          pdg == 211 ~ "Pion +",
+                          pdg == 111 ~ "Pion 0",
+                          pdg == 2112 ~ "Neutron",
+                          pdg == 3122 ~ "Lambda 0",
+                          pdg == -3122 ~ "Lambda-bar 0",
+                          pdg == 3212 ~ "Sigma 0",
+                          pdg == 311 ~ "Kaon 0",
+                          pdg == -311 ~ "Kaon-bar 0",
+                          pdg == 130 ~ "Kaon\\_L 0",
+                          pdg == 22 ~ "Gamma",
+                          pdg == -13 ~ "Muon +",
+                          pdg == 13 ~ "(2+) Muon -",
+                          pdg == 11 ~ "Electron",
+                          pdg == -11 ~ "Positron",
+                          pdg == 321 ~ "Kaon +",
+                          pdg == -321 ~ "Kaon -",
+                          pdg == 3112 ~ "Sigma -",
+                          pdg == 3222 ~ "Sigma +",
+                          pdg == 1114 ~ "Delta -",
+                          pdg == 2214 ~ "Delta +",
+                          pdg == 2224 ~ "Delta ++",
+                          pdg == -2212 ~ "Anti-Proton",
+                          pdg == -2112 ~ "Anti-Neutron",
+                          pdg == 2000000101 ~ "Bindino",
+                          pdg == 1000060120 ~ "Carbon-12",
+                          pdg == 12 ~ "Electron Neutrino",
+                          pdg == 14 ~ "Muon Neutrino",
+                          pdg == -1 ~ "No Particle",
+                          pdg == 1000080160 ~ "Oxygen-16",
+                          pdg == 1000220480 ~ "Titanium-48",
+                          pdg == 1000130270 ~ "Aluminium-27",
+                          pdg == 1000140280 ~ "Silicon-28",
+                          pdg == 1000070140 ~ "Nitrogen-14",
+                          pdg == 1000260560 ~ "Iron-56",
+                          pdg == 1000822070 ~ "Lead-207",
+                          pdg == 16 ~ "Tau Neutrino",
+                          pdg == -16 ~ "Tau Anti-Neutrino",
+                          .default = "Other")) %>%
+    mutate(symbol = case_when(name == "Proton" ~ "$p$",
+                              name == "Pion +" ~ "$\\pi^{+}$",
+                              name == "Pion -" ~ "$\\pi^{-}$",
+                              name == "Pion 0" ~ "$\\pi^{0}$",
+                              name == "Neutron" ~ "$n$",
+                              name == "Kaon +" ~ "$K^{+}$",
+                              name == "Kaon -" ~ "$K^{-}$",
+                              name == "Muon +" ~ "$\\mu^{+}$",
+                              name == "(2+) Muon -" ~ "$\\mu^{-}$",
+                              name == "Lambda 0" ~ "$\\Lambda^{0}$",
+                              name == "Lambda-bar 0" ~ "$\\bar{\\Lambda}^{0}$",
+                              name == "Sigma +" ~ "$\\Sigma^{+}$",
+                              name == "Sigma -" ~ "$\\Sigma^{-}$",
+                              name == "Gamma" ~ "$\\gamma$",
+                              name == "Kaon 0" ~ "$K^{0}$",
+                              name == "Kaon-bar 0" ~ "$\\bar{K}^{0}$",
+                              name == "Kaon\\_L 0" ~ "$K^{0}_{L}$",
+                              name == "Electron" ~ "$e^{-}$",
+                              name == "Positron" ~ "$e^{+}$",
+                              name == "Sigma 0" ~ "$\\Sigma^{0}$",
+                              name == "Anti-Proton" ~ "$\\bar{p}$",
+                              name == "Anti-Neutron" ~ "$\\bar{n}$",
+                              name == "Delta -" ~ "$\\Delta^{-}$",
+                              name == "Delta +" ~ "$\\Delta^{+}$",
+                              name == "Delta ++" ~ "$\\Delta^{++}$",
+                              name == "Electron Neutrino" ~ "$\\nu_{e}$",
+                              name == "Muon Neutrino" ~ "$\\nu_{\\mu}$",
+                              name == "Tau Neutrino" ~ "$\\nu_{\\tau}$",
+                              name == "Tau Anti-Neutrino" ~ "$\\bar{\\nu}_{\\tau}$",
+                              name == "Oxygen-16" ~ "${}^{16}_{8}$O",
+                              name == "Titanium-48" ~ "${}^{48}_{22}$Ti",
+                              name == "Aluminium-27" ~ "${}^{27}_{13}$Al",
+                              name == "Silicon-28" ~ "${}^{28}_{14}$Si",
+                              name == "Nitrogen-14" ~ "${}^{14}_{7}$N",
+                              name == "Iron-56" ~ "${}^{56}_{26}$Fe",
+                              name == "Lead-207" ~ "${}^{207}_{82}$Pb",
+                              name == "Carbon-12" ~ "${}^{12}_{6}$C",
+                              name == "Bindino" ~ "NA",
+                              .default = "?")) %>%
+  dplyr::select(name,symbol,pdg,mean,variance,sum)
+
+kable(pdg_presence_stats_tbl, booktabs = TRUE, escape=FALSE, align = c("lcrrrr"), 
+      linesep="", caption = "Event Presence Rate") %>%
+  kable_styling(latex_options = c("striped")) %>%
+  column_spec(c(3), border_right = T)
+
+```
+
+```{r, message = F, warning = F, echo = F}
+muon_counts <- entries_and_pdgs %>% filter((pdg == 13) | (pdg == -13)) %>% 
+  group_by(entry, pdg) %>% count() %>% ungroup() %>%
+  pivot_wider(names_from = pdg, values_from = n, values_fill = 0) %>%
+  group_by(`13`, `-13`) %>% count()
+
+kable(muon_counts, booktabs = TRUE, escape = FALSE) %>%
+  kable_styling(latex_options = c("striped")) %>%
+  column_spec(c(2), border_right = T)
+```
+
+```{r, message = F, warning = F, echo = F}
+pdg_stats <- entries_and_pdgs %>% 
+  group_by(entry, pdg) %>% count() %>% 
+  pivot_wider(names_from = pdg, values_from = n, values_fill = 0) %>% 
+  ungroup() %>% dplyr::select(!entry) %>%
+  summarize_each(funs(mean,var,sum)) %>%
+  pivot_longer(everything(),
+               names_to = c(".value", "fn"),
+               names_pattern = "(.+)_(.+)")
+
+pdg_stats <- tibble(pdg = as.numeric(names(pdg_stats[,-1])),
+                    mean = formatC(as.numeric(t(pdg_stats[1,-1])), digits = 5, format = "f"),
+                    variance = formatC(as.numeric(t(pdg_stats[2,-1])), digits = 5, format = "f"),
+                    sum = t(pdg_stats[3,-1]))
+
+pdg_stats_tbl <- pdg_stats %>% arrange(desc(mean)) %>%
+  mutate(name = case_when(pdg == 2212 ~ "Proton",
+                          pdg == -211 ~ "Pion -",
+                          pdg == 211 ~ "Pion +",
+                          pdg == 111 ~ "Pion 0",
+                          pdg == 2112 ~ "Neutron",
+                          pdg == 3122 ~ "Lambda 0",
+                          pdg == -3122 ~ "Lambda-bar 0",
+                          pdg == 3212 ~ "Sigma 0",
+                          pdg == 311 ~ "Kaon 0",
+                          pdg == -311 ~ "Kaon-bar 0",
+                          pdg == 130 ~ "Kaon\\_L 0",
+                          pdg == 22 ~ "Gamma",
+                          pdg == -13 ~ "Muon +",
+                          pdg == 13 ~ "Muon -",
+                          pdg == 11 ~ "Electron",
+                          pdg == -11 ~ "Positron",
+                          pdg == 321 ~ "Kaon +",
+                          pdg == -321 ~ "Kaon -",
+                          pdg == 3112 ~ "Sigma -",
+                          pdg == 3222 ~ "Sigma +",
+                          pdg == 1114 ~ "Delta -",
+                          pdg == 2214 ~ "Delta +",
+                          pdg == 2224 ~ "Delta ++",
+                          pdg == -2212 ~ "Anti-Proton",
+                          pdg == -2112 ~ "Anti-Neutron",
+                          pdg == 2000000101 ~ "Bindino",
+                          pdg == 1000060120 ~ "Carbon-12",
+                          pdg == 12 ~ "Electron Neutrino",
+                          pdg == 14 ~ "Muon Neutrino",
+                          pdg == -1 ~ "No Particle",
+                          pdg == 1000080160 ~ "Oxygen-16",
+                          pdg == 1000220480 ~ "Titanium-48",
+                          pdg == 1000130270 ~ "Aluminium-27",
+                          pdg == 1000140280 ~ "Silicon-28",
+                          pdg == 1000070140 ~ "Nitrogen-14",
+                          pdg == 1000260560 ~ "Iron-56",
+                          pdg == 1000822070 ~ "Lead-207",
+                          pdg == 16 ~ "Tau Neutrino",
+                          pdg == -16 ~ "Tau Anti-Neutrino",
+                          .default = "Other")) %>%
+    mutate(symbol = case_when(name == "Proton" ~ "$p$",
+                              name == "Pion +" ~ "$\\pi^{+}$",
+                              name == "Pion -" ~ "$\\pi^{-}$",
+                              name == "Pion 0" ~ "$\\pi^{0}$",
+                              name == "Neutron" ~ "$n$",
+                              name == "Kaon +" ~ "$K^{+}$",
+                              name == "Kaon -" ~ "$K^{-}$",
+                              name == "Muon +" ~ "$\\mu^{+}$",
+                              name == "Muon -" ~ "$\\mu^{-}$",
+                              name == "Lambda 0" ~ "$\\Lambda^{0}$",
+                              name == "Lambda-bar 0" ~ "$\\bar{\\Lambda}^{0}$",
+                              name == "Sigma +" ~ "$\\Sigma^{+}$",
+                              name == "Sigma -" ~ "$\\Sigma^{-}$",
+                              name == "Gamma" ~ "$\\gamma$",
+                              name == "Kaon 0" ~ "$K^{0}$",
+                              name == "Kaon-bar 0" ~ "$\\bar{K}^{0}$",
+                              name == "Kaon\\_L 0" ~ "$K^{0}_{L}$",
+                              name == "Electron" ~ "$e^{-}$",
+                              name == "Positron" ~ "$e^{+}$",
+                              name == "Sigma 0" ~ "$\\Sigma^{0}$",
+                              name == "Anti-Proton" ~ "$\\bar{p}$",
+                              name == "Anti-Neutron" ~ "$\\bar{n}$",
+                              name == "Delta -" ~ "$\\Delta^{-}$",
+                              name == "Delta +" ~ "$\\Delta^{+}$",
+                              name == "Delta ++" ~ "$\\Delta^{++}$",
+                              name == "Electron Neutrino" ~ "$\\nu_{e}$",
+                              name == "Muon Neutrino" ~ "$\\nu_{\\mu}$",
+                              name == "Tau Neutrino" ~ "$\\nu_{\\tau}$",
+                              name == "Tau Anti-Neutrino" ~ "$\\bar{\\nu}_{\\tau}$",
+                              name == "Oxygen-16" ~ "${}^{16}_{8}$O",
+                              name == "Titanium-48" ~ "${}^{48}_{22}$Ti",
+                              name == "Aluminium-27" ~ "${}^{27}_{13}$Al",
+                              name == "Silicon-28" ~ "${}^{28}_{14}$Si",
+                              name == "Nitrogen-14" ~ "${}^{14}_{7}$N",
+                              name == "Iron-56" ~ "${}^{56}_{26}$Fe",
+                              name == "Lead-207" ~ "${}^{207}_{82}$Pb",
+                              name == "Carbon-12" ~ "${}^{12}_{6}$C",
+                              name == "Bindino" ~ "NA",
+                              .default = "?")) %>%
+  dplyr::select(name,symbol,pdg,mean,variance,sum)
+
+kable(pdg_stats_tbl, booktabs = TRUE, escape=FALSE, align = c("lcrrrr"), 
+      linesep="", caption = "Number Per Event") %>%
+  kable_styling(latex_options = c("striped")) %>%
+  column_spec(c(3), border_right = T)
+```
+
+## Michel Count
+```{r, message = F, warning = F, echo = F}
+# MichelCount
+mc_truth <- events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((MichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((MichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((MichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((MichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  add_count(name = "N\\_All") %>% add_count(Selection, name = "N\\_Selection") %>% 
+  group_by(Selection, Truth, `N\\_All`, `N\\_Selection`) %>% count() %>% ungroup() %>% 
+  mutate(`\\% per Selection` = percent(n/`N\\_Selection`, digits = 3, format = "f")) %>% 
+  mutate(`\\% of All` = percent(n/`N\\_All`, digits = 3, format = "f")) %>% 
+  dplyr::select(Selection,Truth,n,`\\% per Selection`,`\\% of All`) %>% 
+  mutate(Truth = gsub("None___","",Truth))
+  
+
+kable(mc_truth, booktabs = TRUE, escape = FALSE, align = c("llrrr"), 
+      linesep = "", caption = "Using MichelCount") %>%
+  kable_styling(latex_options = c("striped")) %>%
+  column_spec(c(1,2), border_right = T) %>%
+  row_spec(c(5,10,15), hline_after = T)
+```
+
+## Improved Michel Count
+```{r, message = F, warning = F, echo = F}
+# ImprovedMichelCount
+mc_truth <- events %>% 
+  filter(PrimaryProtonScore1 > -1) %>%
+  mutate(Selection = case_when(((ImprovedMichelCount > 0) & (BlobCount > 1)) ~ "MicBlob",
+                               ((ImprovedMichelCount > 0) & (BlobCount <= 1)) ~ "Michel",
+                               ((ImprovedMichelCount == 0) & (BlobCount > 1)) ~ "Blob",
+                               ((ImprovedMichelCount == 0) & (BlobCount <= 1)) ~ "QELike")) %>%
+  add_count(name = "N\\_All") %>% add_count(Selection, name = "N\\_Selection") %>% 
+  group_by(Selection, Truth, `N\\_All`, `N\\_Selection`) %>% count() %>% ungroup() %>% 
+  mutate(`\\% per Selection` = percent(n/`N\\_Selection`, digits = 3, format = "f")) %>% 
+  mutate(`\\% of All` = percent(n/`N\\_All`, digits = 3, format = "f")) %>% 
+  dplyr::select(Selection,Truth,n,`\\% per Selection`,`\\% of All`) %>% 
+  mutate(Truth = gsub("None___","",Truth))
+  
+
+kable(mc_truth, booktabs = TRUE, escape = FALSE, align = c("llrrr"), 
+      linesep = "", caption = "Using ImprovedMichelCount") %>%
+  kable_styling(latex_options = c("striped")) %>%
+  column_spec(c(1,2), border_right = T) %>%
+  row_spec(c(5,10,15), hline_after = T)
+```
+
+
+```{r, message = F, warning = F, echo = F, eval = F}
+events <- events %>%
+  mutate(Particle_0 = case_when(PrimaryProtonCandidatePDG == 2212 ~ "Proton",
+                                PrimaryProtonCandidatePDG %in% c(-211,211) ~ "Pion +/-",
+                                PrimaryProtonCandidatePDG == 111 ~ "Pion 0",
+                                PrimaryProtonCandidatePDG == -1 ~ "No Particle",
+                                .default = "Other")) %>% 
+  mutate(Particle_1 = case_when(SecProtonCandidatePDG_1 == 2212 ~ "Proton",
+                                (SecProtonCandidatePDG_1 %in% c(-211,211)) ~ "Pion +/-",
+                                SecProtonCandidatePDG_1 == 111 ~ "Pion 0",
+                                SecProtonCandidatePDG_1 == -1 ~ "No Particle",
+                                .default = "Other")) %>% 
+  mutate(Particle_2 = case_when(SecProtonCandidatePDG_2 == 2212 ~ "Proton",
+                                SecProtonCandidatePDG_2 %in% c(-211,211) ~ "Pion +/-",
+                                SecProtonCandidatePDG_2 == 111 ~ "Pion 0",
+                                SecProtonCandidatePDG_2 == -1 ~ "No Particle",
+                                .default = "Other"))
+
+
+```
+
+

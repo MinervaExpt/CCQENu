@@ -1,0 +1,425 @@
+---
+title: "Proton Candidate ID"
+author: "Sean Gilligan"
+output: pdf_document
+---
+
+```{r libraries, message = F, warning = F, echo = F}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+```
+
+```{r get-data, message = F, warning = F, echo = F}
+#events <- read.csv("mc_reco_entries_Mult2p_NuCC.csv", sep=";")
+events <- read.csv("../CSV_NuConfig_csv_me1N.csv", sep=";")
+events <- events %>% 
+  filter(PrimaryProtonScore1 >= 0) %>% 
+  mutate(Particle_0 = case_when(PrimaryProtonCandidatePDG == 2212 ~ "Proton",
+                              (PrimaryProtonCandidatePDG == 211 | 
+                                 PrimaryProtonCandidatePDG == -211) ~ "Pion +/-",
+                              PrimaryProtonCandidatePDG == 111 ~ "Pion 0",
+                              PrimaryProtonCandidatePDG == -1 ~ "None",
+                              (PrimaryProtonCandidatePDG != 2212 & 
+                                 PrimaryProtonCandidatePDG != 211 & 
+                                 PrimaryProtonCandidatePDG != -211 & 
+                                 PrimaryProtonCandidatePDG != 111 &
+                                 PrimaryProtonCandidatePDG != -1) ~ "Other"))# %>% 
+  mutate(Particle_1 = case_when(SecProtonCandidatePDG_1 == 2212 ~ "Proton",
+                              (SecProtonCandidatePDG_1 == 211 | 
+                                 SecProtonCandidatePDG_1 == -211) ~ "Pion +/-",
+                              SecProtonCandidatePDG_1 == 111 ~ "Pion 0",
+                              SecProtonCandidatePDG_1 == -1 ~ "None",
+                              (SecProtonCandidatePDG_1 != 2212 & 
+                                 SecProtonCandidatePDG_1 != 211 & 
+                                 SecProtonCandidatePDG_1 != -211 & 
+                                 SecProtonCandidatePDG_1 != 111 &
+                                 SecProtonCandidatePDG_1 != -1) ~ "Other")) %>% 
+  mutate(Particle_2 = case_when(SecProtonCandidatePDG_2 == 2212 ~ "Proton",
+                              (SecProtonCandidatePDG_2 == 211 | 
+                                 SecProtonCandidatePDG_2 == -211) ~ "Pion +/-",
+                              SecProtonCandidatePDG_2 == 111 ~ "Pion 0",
+                              SecProtonCandidatePDG_2 == -1 ~ "None",
+                              (SecProtonCandidatePDG_2 != 2212 & 
+                                 SecProtonCandidatePDG_2 != 211 & 
+                                 SecProtonCandidatePDG_2 != -211 & 
+                                 SecProtonCandidatePDG_2 != 111 &
+                                 SecProtonCandidatePDG_2 != -1) ~ "Other"))
+
+
+#blobstarts <- as.double(unlist(strsplit(str_replace_all(events$nonvtx_isoblob_zstart, '[{}]',''),",")))
+#min(blobstarts)
+```
+
+```{r table-all, message = F, warning = F, echo = F}
+int_part_cand_table <- events %>%
+  mutate(Primary = Particle_0,
+         `Secondary 1` = Particle_1,
+         `Secondary 2` = Particle_2) %>%
+  select(Interaction,Primary,`Secondary 1`,`Secondary 2`) %>% 
+  pivot_longer(cols = c(Primary,`Secondary 1`,`Secondary 2`),
+               values_to = "Particle", names_to = "Candidate") %>% 
+  group_by(Interaction,Candidate) %>% count(Particle, name = "Count") %>%
+  pivot_wider(names_from = Candidate, values_from = Count) %>% 
+  replace(is.na(.), 0) %>% 
+  filter(Particle != "None") %>%
+  ungroup()
+
+int_part_cand_table_allsum <- int_part_cand_table %>%
+  rbind(tibble(Interaction = "All",
+               Particle = "All",
+               Primary = int_part_cand_table %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_part_cand_table %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_part_cand_table %>% pull(`Secondary 2`) %>% sum())) %>%
+  arrange(factor(Interaction, levels = c("QE","RES","COH","DIS","MEC","All")),
+          factor(Particle, levels = c("Proton","Pion +/-","Pion 0","Other","All")),
+          desc(Particle),desc(Interaction))
+
+int_part_cand_table_allperc <- int_part_cand_table_allsum %>%
+  mutate(Primary = paste0(format(round(100*(Primary/(int_part_cand_table %>% pull(Primary) %>% sum())),2),nsmall=2),"%"),
+         `Secondary 1` = paste0(format(round(100*`Secondary 1`/(int_part_cand_table %>% pull(`Secondary 1`) %>% sum()),2),nsmall=2),"%"),
+         `Secondary 2` = paste0(format(round(100*`Secondary 2`/(int_part_cand_table %>% pull(`Secondary 2`) %>% sum()),2),nsmall=2),"%")) %>%
+  arrange(factor(Interaction, levels = c("QE","RES","COH","DIS","MEC","All")),
+          factor(Particle, levels = c("Proton","Pion +/-","Pion 0","Other","All")),
+          desc(Particle),desc(Interaction))
+
+kable(int_part_cand_table_allsum, booktabs = T, 
+      align = c("l","l","r","r","r"), linesep = "") %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  row_spec(18, hline_after = T)
+
+kable(int_part_cand_table_allperc, booktabs = T, 
+      align = c("l","l","r","r","r"), linesep = "") %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  row_spec(18, hline_after = T)
+```
+
+\newpage
+
+```{r table-int-only, message = F, warning = F, echo = F}
+
+int_cand_table <- events %>%
+  mutate(Primary = Particle_0,
+         `Secondary 1` = Particle_1,
+         `Secondary 2` = Particle_2) %>%
+  select(Interaction,Primary,`Secondary 1`,`Secondary 2`) %>% 
+  pivot_longer(cols = c(Primary,`Secondary 1`,`Secondary 2`),
+               values_to = "Particle", names_to = "Candidate") %>% 
+  filter(Particle != "None") %>%
+  group_by(Interaction,Candidate) %>% count(name = "Count") %>%
+  pivot_wider(names_from = Candidate, values_from = Count) %>% 
+  replace(is.na(.), 0) %>% 
+  ungroup()
+
+int_cand_table_sum <- int_cand_table %>%
+  rbind(tibble(Interaction = "All",
+               Primary = int_cand_table %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_cand_table %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_cand_table %>% pull(`Secondary 2`) %>% sum())) %>%
+  arrange(factor(Interaction, levels = c("QE","RES","COH","DIS","MEC","All")),
+          desc(Interaction))
+
+int_cand_table_perc <- int_cand_table_sum %>%
+  mutate(Primary = paste0(format(round(100*(Primary/(int_cand_table %>% pull(Primary) %>% sum())),2),nsmall=2),"%"),
+         `Secondary 1` = paste0(format(round(100*`Secondary 1`/(int_cand_table %>% pull(`Secondary 1`) %>% sum()),2),nsmall=2),"%"),
+         `Secondary 2` = paste0(format(round(100*`Secondary 2`/(int_cand_table %>% pull(`Secondary 2`) %>% sum()),2),nsmall=2),"%")) %>%
+  arrange(factor(Interaction, levels = c("QE","RES","COH","DIS","MEC","All")),
+          desc(Interaction))
+
+int_cand_table_sum %>%
+  mutate(`Primary %` = int_cand_table_perc$Primary) %>%
+  mutate(`Secondary 1 %` = int_cand_table_perc$`Secondary 1`) %>%
+  mutate(`Secondary 2 %` = int_cand_table_perc$`Secondary 2`) %>%
+  select(Interaction,Primary,`Primary %`,`Secondary 1`,
+         `Secondary 1 %`,`Secondary 2`,`Secondary 2 %`) %>%
+  kable(booktabs = T,  align = c("lrrrrrr"), linesep = "",
+        col.names = c("Interaction","N","%","N","%","N","%")) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  row_spec(5, hline_after = T) %>%
+  add_header_above(c(" " = 1, "Primary" = 2, "Secondary 1" = 2, "Secondary 2" = 2)) %>%
+  column_spec(c(2,4,6), border_left = T) %>%
+  row_spec(0, align="c")
+```
+
+```{r table-part-only, message = F, warning = F, echo = F}
+
+int_part_table <- events %>%
+  mutate(Primary = Particle_0,
+         `Secondary 1` = Particle_1,
+         `Secondary 2` = Particle_2) %>%
+  select(Primary,`Secondary 1`,`Secondary 2`) %>% 
+  pivot_longer(cols = c(Primary,`Secondary 1`,`Secondary 2`),
+               values_to = "Particle", names_to = "Candidate") %>% 
+  filter(Particle != "None") %>%
+  group_by(Particle,Candidate) %>% count(name = "Count") %>%
+  pivot_wider(names_from = Candidate, values_from = Count) %>% 
+  replace(is.na(.), 0) %>% 
+  ungroup()
+
+int_part_table_sum <- int_part_table %>%
+  rbind(tibble(Particle = "All",
+               Primary = int_cand_table %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_cand_table %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_cand_table %>% pull(`Secondary 2`) %>% sum())) %>%
+  arrange(factor(Particle, levels = c("Proton","Pion +/-","Pion 0","Other","All")),
+          desc(Particle))
+
+int_part_table_perc <- int_part_table_sum %>%
+  mutate(Primary = paste0(format(round(100*(Primary/(int_part_table %>% pull(Primary) %>% sum())),2),nsmall=2),"%"),
+         `Secondary 1` = paste0(format(round(100*`Secondary 1`/(int_part_table %>% pull(`Secondary 1`) %>% sum()),2),nsmall=2),"%"),
+         `Secondary 2` = paste0(format(round(100*`Secondary 2`/(int_part_table %>% pull(`Secondary 2`) %>% sum()),2),nsmall=2),"%")) %>%
+  arrange(factor(Particle, levels = c("Proton","Pion +/-","Pion 0","Other","All")),
+          desc(Particle))
+
+int_part_table_sum %>%
+  mutate(`Primary %` = int_part_table_perc$Primary) %>%
+  mutate(`Secondary 1 %` = int_part_table_perc$`Secondary 1`) %>%
+  mutate(`Secondary 2 %` = int_part_table_perc$`Secondary 2`) %>%
+  select(Particle,Primary,`Primary %`,`Secondary 1`,
+         `Secondary 1 %`,`Secondary 2`,`Secondary 2 %`) %>%
+  kable(booktabs = T,  align = c("lrrrrrr"), linesep = "",
+        col.names = c("Particle","N","%","N","%","N","%")) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  row_spec(4, hline_after = T) %>%
+  add_header_above(c(" " = 1, "Primary" = 2, "Secondary 1" = 2, "Secondary 2" = 2)) %>%
+  column_spec(c(2,4,6), border_left = T) %>%
+  row_spec(0, align="c")
+```
+
+\newpage
+
+```{r by-interaction, message = F, warning = F, echo = F}
+int_part_cand_table_intsum <- int_part_cand_table %>%
+  rbind(tibble(Interaction = "All QE",
+               Particle = "All",
+               Primary = int_part_cand_table %>% filter(Interaction=="QE") %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_part_cand_table %>% filter(Interaction=="QE") %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_part_cand_table %>% filter(Interaction=="QE") %>% pull(`Secondary 2`) %>% sum())) %>%
+  rbind(tibble(Interaction = "All RES",
+               Particle = "All",
+               Primary = int_part_cand_table %>% filter(Interaction=="RES") %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_part_cand_table %>% filter(Interaction=="RES") %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_part_cand_table %>% filter(Interaction=="RES") %>% pull(`Secondary 2`) %>% sum())) %>%
+  rbind(tibble(Interaction = "All DIS",
+               Particle = "All",
+               Primary = int_part_cand_table %>% filter(Interaction=="DIS") %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_part_cand_table %>% filter(Interaction=="DIS") %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_part_cand_table %>% filter(Interaction=="DIS") %>% pull(`Secondary 2`) %>% sum())) %>%
+  rbind(tibble(Interaction = "All COH",
+               Particle = "All",
+               Primary = int_part_cand_table %>% filter(Interaction=="COH") %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_part_cand_table %>% filter(Interaction=="COH") %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_part_cand_table %>% filter(Interaction=="COH") %>% pull(`Secondary 2`) %>% sum())) %>%
+  rbind(tibble(Interaction = "All MEC",
+               Particle = "All",
+               Primary = int_part_cand_table %>% filter(Interaction=="MEC") %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_part_cand_table %>% filter(Interaction=="MEC") %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_part_cand_table %>% filter(Interaction=="MEC") %>% pull(`Secondary 2`) %>% sum())) %>%
+  arrange(factor(Interaction, levels = c("QE","All QE","RES","All RES",
+                                         "COH","All COH","DIS","All DIS",
+                                         "MEC","All MEC")),
+          factor(Particle, levels = c("Proton","Pion +/-","Pion 0","Other","All")),
+          desc(Particle),desc(Interaction))
+
+int_part_cand_table_intperc <- int_part_cand_table_intsum %>%
+  mutate(Primary = case_when((Interaction == "QE" | Interaction == "All QE") ~ 
+                               paste0(format(round(100*(Primary/(int_part_cand_table %>% 
+                                                                   filter(Interaction=="QE") %>% 
+                                                                   pull(Primary) %>% sum())),2),nsmall=2),"%"),
+                             (Interaction == "RES" | Interaction == "All RES") ~ 
+                               paste0(format(round(100*(Primary/(int_part_cand_table %>% 
+                                                                   filter(Interaction=="RES") %>% 
+                                                                   pull(Primary) %>% sum())),2),nsmall=2),"%"),
+                             (Interaction == "COH" | Interaction == "All COH") ~ 
+                               paste0(format(round(100*(Primary/(int_part_cand_table %>% 
+                                                                   filter(Interaction=="COH") %>% 
+                                                                   pull(Primary) %>% sum())),2),nsmall=2),"%"),
+                             (Interaction == "DIS" | Interaction == "All DIS") ~ 
+                               paste0(format(round(100*(Primary/(int_part_cand_table %>% 
+                                                                   filter(Interaction=="DIS") %>% 
+                                                                   pull(Primary) %>% sum())),2),nsmall=2),"%"),
+                             (Interaction == "MEC" | Interaction == "All MEC") ~ 
+                               paste0(format(round(100*(Primary/(int_part_cand_table %>% 
+                                                                   filter(Interaction=="MEC") %>% 
+                                                                   pull(Primary) %>% sum())),2),nsmall=2),"%"))) %>%
+  mutate(`Secondary 1` = case_when((Interaction == "QE" | Interaction == "All QE") ~
+                                     paste0(format(round(100*(`Secondary 1`/(int_part_cand_table %>% 
+                                                                               filter(Interaction=="QE") %>% 
+                                                                               pull(`Secondary 1`) %>% sum())),2),nsmall=2),"%"),
+                                   (Interaction == "RES" | Interaction == "All RES") ~ 
+                                     paste0(format(round(100*(`Secondary 1`/(int_part_cand_table %>% 
+                                                                               filter(Interaction=="RES") %>% 
+                                                                               pull(`Secondary 1`) %>% sum())),2),nsmall=2),"%"),
+                                   (Interaction == "COH" | Interaction == "All COH") ~ 
+                                     paste0(format(round(100*(`Secondary 1`/(int_part_cand_table %>% 
+                                                                               filter(Interaction=="COH") %>% 
+                                                                               pull(`Secondary 1`) %>% sum())),2),nsmall=2),"%"),
+                                   (Interaction == "DIS" | Interaction == "All DIS") ~ 
+                                     paste0(format(round(100*(`Secondary 1`/(int_part_cand_table %>% 
+                                                                               filter(Interaction=="DIS") %>% 
+                                                                               pull(`Secondary 1`) %>% sum())),2),nsmall=2),"%"),
+                                   (Interaction == "MEC" | Interaction == "All MEC") ~ 
+                                     paste0(format(round(100*(`Secondary 1`/(int_part_cand_table %>% 
+                                                                               filter(Interaction=="MEC") %>% 
+                                                                               pull(`Secondary 1`) %>% sum())),2),nsmall=2),"%"))) %>%
+  mutate(`Secondary 2` = case_when((Interaction == "QE" | Interaction == "All QE") ~
+                                     paste0(format(round(100*(`Secondary 2`/(int_part_cand_table %>% 
+                                                                               filter(Interaction=="QE") %>% 
+                                                                               pull(`Secondary 2`) %>% sum())),2),nsmall=2),"%"),
+                                   (Interaction == "RES" | Interaction == "All RES") ~ 
+                                     paste0(format(round(100*(`Secondary 2`/(int_part_cand_table %>% 
+                                                                               filter(Interaction=="RES") %>% 
+                                                                               pull(`Secondary 2`) %>% sum())),2),nsmall=2),"%"),
+                                   (Interaction == "COH" | Interaction == "All COH") ~ 
+                                     paste0(format(round(100*(`Secondary 2`/(int_part_cand_table %>% 
+                                                                               filter(Interaction=="COH") %>% 
+                                                                               pull(`Secondary 2`) %>% sum())),2),nsmall=2),"%"),
+                                   (Interaction == "DIS" | Interaction == "All DIS") ~ 
+                                     paste0(format(round(100*(`Secondary 2`/(int_part_cand_table %>% 
+                                                                               filter(Interaction=="DIS") %>% 
+                                                                               pull(`Secondary 2`) %>% sum())),2),nsmall=2),"%"),
+                                   (Interaction == "MEC" | Interaction == "All MEC") ~ 
+                                     paste0(format(round(100*(`Secondary 2`/(int_part_cand_table %>% 
+                                                                               filter(Interaction=="MEC") %>% 
+                                                                               pull(`Secondary 2`) %>% sum())),2),nsmall=2),"%"))) %>% 
+  arrange(factor(Interaction, levels = c("QE","All QE","RES","All RES",
+                                         "COH","All COH","DIS","All DIS",
+                                         "MEC","All MEC")),
+          factor(Particle, levels = c("Proton","Pion +/-","Pion 0","Other","All")),
+          desc(Particle),desc(Interaction))
+
+int_part_cand_table_intsum[c(5,10,13,18,23),1] <- int_part_cand_table_intsum[c(5,10,13,18,23)-1,1] 
+
+int_part_cand_table_intsum %>%
+  mutate(`Primary %` = int_part_cand_table_intperc$Primary) %>%
+  mutate(`Secondary 1 %` = int_part_cand_table_intperc$`Secondary 1`) %>%
+  mutate(`Secondary 2 %` = int_part_cand_table_intperc$`Secondary 2`) %>%
+  select(Interaction,Particle,Primary,`Primary %`,`Secondary 1`,
+         `Secondary 1 %`,`Secondary 2`,`Secondary 2 %`) %>%
+  kable(booktabs = T,  align = c("llrrrrrr"), linesep = "",
+        col.names = c("Interaction","Particle","N","%","N","%","N","%")) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  collapse_rows(columns = 1:2, valign = "top", latex_hline = "custom",custom_latex_hline = 1) %>%
+  row_spec(c(4,9,12,17,22), extra_latex_after = "\\cline{2-8}\\addlinespace") %>%
+  add_header_above(c(" " = 2, "Primary" = 2, "Secondary 1" = 2, "Secondary 2" = 2)) %>%
+  column_spec(c(2,3,5,7), border_left = T) %>%
+  row_spec(0, align="c")
+```
+
+```{r by-particle, message = F, warning = F, echo = F}
+int_part_cand_table_partsum <- int_part_cand_table  %>% 
+  select(Particle, Interaction, Primary, `Secondary 1`, `Secondary 2`) %>%
+  rbind(tibble(Interaction = "All",
+               Particle = "All Proton",
+               Primary = int_part_cand_table %>% filter(Particle=="Proton") %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_part_cand_table %>% filter(Particle=="Proton") %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_part_cand_table %>% filter(Particle=="Proton") %>% pull(`Secondary 2`) %>% sum())) %>%
+  rbind(tibble(Interaction = "All",
+               Particle = "All Pion +/-",
+               Primary = int_part_cand_table %>% filter(Particle=="Pion +/-") %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_part_cand_table %>% filter(Particle=="Pion +/-") %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_part_cand_table %>% filter(Particle=="Pion +/-") %>% pull(`Secondary 2`) %>% sum())) %>%
+  rbind(tibble(Interaction = "All",
+               Particle = "All Pion 0",
+               Primary = int_part_cand_table %>% filter(Particle=="Pion 0") %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_part_cand_table %>% filter(Particle=="Pion 0") %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_part_cand_table %>% filter(Particle=="Pion 0") %>% pull(`Secondary 2`) %>% sum())) %>%
+  rbind(tibble(Interaction = "All",
+               Particle = "All Other",
+               Primary = int_part_cand_table %>% filter(Particle=="Other") %>% pull(Primary) %>% sum(),
+               `Secondary 1` = int_part_cand_table %>% filter(Particle=="Other") %>% pull(`Secondary 1`) %>% sum(),
+               `Secondary 2` = int_part_cand_table %>% filter(Particle=="Other") %>% pull(`Secondary 2`) %>% sum())) %>%
+  arrange(factor(Particle, levels = c("Proton","All Proton","Pion +/-","All Pion +/-",
+                                      "Pion 0","All Pion 0","Other","All Other")),
+          factor(Interaction, levels = c("QE","RES","COH","DIS","MEC")),
+          desc(Interaction),desc(Particle))
+
+int_part_cand_table_partperc <- int_part_cand_table_partsum %>%
+  mutate(Primary = case_when((Particle == "Proton" | Particle == "All Proton") ~ 
+                               paste0(format(round(100*(Primary/(int_part_cand_table %>% 
+                                                                   filter(Particle=="Proton") %>% 
+                                                                   pull(Primary) %>% sum())),2),nsmall=2),"%"),
+                             (Particle == "Pion +/-" | Particle == "All Pion +/-") ~ 
+                               paste0(format(round(100*(Primary/(int_part_cand_table %>% 
+                                                                   filter(Particle=="Pion +/-") %>% 
+                                                                   pull(Primary) %>% sum())),2),nsmall=2),"%"),
+                             (Particle == "Pion 0" | Particle == "All Pion 0") ~ 
+                               paste0(format(round(100*(Primary/(int_part_cand_table %>% 
+                                                                   filter(Particle=="Pion 0") %>% 
+                                                                   pull(Primary) %>% sum())),2),nsmall=2),"%"),
+                             (Particle == "Other" | Particle == "All Other") ~ 
+                               paste0(format(round(100*(Primary/(int_part_cand_table %>% 
+                                                                   filter(Particle=="Other") %>% 
+                                                                   pull(Primary) %>% sum())),2),nsmall=2),"%"))) %>%
+  mutate(`Secondary 1` = case_when((Particle == "Proton" | Particle == "All Proton") ~
+                                     paste0(format(round(100*(`Secondary 1`/(int_part_cand_table %>% 
+                                                                               filter(Particle=="Proton") %>% 
+                                                                               pull(`Secondary 1`) %>% sum())),2),nsmall=2),"%"),
+                                   (Particle == "Pion +/-" | Particle == "All Pion +/-") ~ 
+                                     paste0(format(round(100*(`Secondary 1`/(int_part_cand_table %>% 
+                                                                               filter(Particle=="Pion +/-") %>% 
+                                                                               pull(`Secondary 1`) %>% sum())),2),nsmall=2),"%"),
+                                   (Particle == "Pion 0" | Particle == "All Pion 0") ~ 
+                                     paste0(format(round(100*(`Secondary 1`/(int_part_cand_table %>% 
+                                                                               filter(Particle=="Pion 0") %>% 
+                                                                               pull(`Secondary 1`) %>% sum())),2),nsmall=2),"%"),
+                                   (Particle == "Other" | Particle == "All Other") ~ 
+                                     paste0(format(round(100*(`Secondary 1`/(int_part_cand_table %>% 
+                                                                               filter(Particle=="Other") %>% 
+                                                                               pull(`Secondary 1`) %>% sum())),2),nsmall=2),"%"))) %>%
+  mutate(`Secondary 2` = case_when((Particle == "Proton" | Particle == "All Proton") ~
+                                     paste0(format(round(100*(`Secondary 2`/(int_part_cand_table %>% 
+                                                                               filter(Particle=="Proton") %>% 
+                                                                               pull(`Secondary 2`) %>% sum())),2),nsmall=2),"%"),
+                                   (Particle == "Pion +/-" | Particle == "All Pion +/-") ~ 
+                                     paste0(format(round(100*(`Secondary 2`/(int_part_cand_table %>% 
+                                                                               filter(Particle=="Pion +/-") %>% 
+                                                                               pull(`Secondary 2`) %>% sum())),2),nsmall=2),"%"),
+                                   (Particle == "Pion 0" | Particle == "All Pion 0") ~ 
+                                     paste0(format(round(100*(`Secondary 2`/(int_part_cand_table %>% 
+                                                                               filter(Particle=="Pion 0") %>% 
+                                                                               pull(`Secondary 2`) %>% sum())),2),nsmall=2),"%"),
+                                   (Particle == "Other" | Particle == "All Other") ~ 
+                                     paste0(format(round(100*(`Secondary 2`/(int_part_cand_table %>% 
+                                                                               filter(Particle=="Other") %>% 
+                                                                               pull(`Secondary 2`) %>% sum())),2),nsmall=2),"%"))) %>%
+  arrange(factor(Particle, levels = c("Proton","All Proton","Pion +/-","All Pion +/-",
+                                      "Pion 0","All Pion 0","Other","All Other")),
+          factor(Interaction, levels = c("QE","RES","COH","DIS","MEC")),
+          desc(Interaction),desc(Particle))
+
+int_part_cand_table_partsum[c(5,11,16,22),1] <- int_part_cand_table_partsum[c(5,11,16,22)-1,1] 
+
+int_part_cand_table_partsum %>%
+  mutate(`Primary %` = int_part_cand_table_partperc$Primary) %>%
+  mutate(`Secondary 1 %` = int_part_cand_table_partperc$`Secondary 1`) %>%
+  mutate(`Secondary 2 %` = int_part_cand_table_partperc$`Secondary 2`) %>%
+  select(Particle,Interaction,Primary,`Primary %`,`Secondary 1`,
+         `Secondary 1 %`,`Secondary 2`,`Secondary 2 %`) %>%
+  kable(booktabs = T,  align = c("llrrrrrr"), linesep = "",
+        col.names = c("Particle","Interaction","N","%","N","%","N","%")) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  collapse_rows(columns = 1:2, valign = "top", latex_hline = "custom",custom_latex_hline = 1) %>%
+  row_spec(c(4,10,15,21), extra_latex_after = "\\cline{2-8}\\addlinespace") %>%
+  add_header_above(c(" " = 2, "Primary" = 2, "Secondary 1" = 2, "Secondary 2" = 2)) %>%
+  column_spec(c(2,3,5,7), border_left = T) %>%
+  row_spec(0, align="c")
+
+kable(int_part_cand_table_partsum[,-1], booktabs = T, 
+      align = c("l","r","r","r"), linesep = "") %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  pack_rows("Proton",1,5) %>%
+  pack_rows("Pion +/-",6,11) %>%
+  pack_rows("Pion 0",12,16) %>%
+  pack_rows("Other",17,22) %>%
+  row_spec(c(4,5,10,11,15,16,21), hline_after = T)
+
+kable(int_part_cand_table_partperc[,-1], booktabs = T, 
+      align = c("l","r","r","r"), linesep = "") %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  pack_rows("Proton",1,5) %>%
+  pack_rows("Pion +/-",6,11) %>%
+  pack_rows("Pion 0",12,16) %>%
+  pack_rows("Other",17,22) %>%
+  row_spec(c(4,5,10,11,15,16,21), hline_after = T)
+```

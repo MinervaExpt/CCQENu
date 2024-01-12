@@ -1,0 +1,63 @@
+{
+	"Methods":{
+		"Cut_Optimization":{
+			"Cuts"   :1,
+			"CutsD"  :1,
+			"CutsPCA":0,
+			"CutsGA" :0,
+			"CutsSA" :0
+		},
+		"1D_Likelihood":{
+			"Likelihood"   :1,
+			"LikelihoodD"  :0, // the "D" extension indicates decorrelated input variables (see option strings)
+			"LikelihoodPCA":1, // the "PCA" extension indicates PCA-transformed input variables (see option strings)
+			"LikelihoodKDE":0,
+			"LikelihoodMIX":0
+		},
+		"MultiD_Likelihood_and_KNN":{
+			"PDERS"       :1,
+			"PDERSD"      :0,
+			"PDERSPCA"    :0,
+			"PDEFoam"     :1,
+			"PDEFoamBoost":0, // uses generalised MVA method boosting
+			"KNN"         :1  // k-nearest neighbour method
+		},
+		"Linear_Discriminant_Analysis":{
+			"LD"           :1, // Linear Discriminant identical to Fisher
+			"Fisher"       :0,
+			"FisherG"      :0,
+			"BoostedFisher":0, // uses generalised MVA method boosting
+			"HMatrix"      :0
+		},
+		"Function_Discriminant_Analysis":{
+			"FDA_GA"  :1, // minimisation of user-defined function using Genetics Algorithm
+			"FDA_SA"  :0,
+			"FDA_MC"  :0,
+			"FDA_MT"  :0,
+			"FDA_GAMT":0,
+			"FDA_MCMT":0
+		},
+		"Neural_Networks":{
+			"MLP"     :0, // Recommended ANN
+			"MLPBFGS" :0, // Recommended ANN with optional training method
+			"MLPBNN"  :1, // Recommended ANN with BFGS training method and bayesian regulator
+			"CFMlpANN":0, // Depreciated ANN from ALEPH
+			"TMlpANN" :0, // ROOT's own ANN
+			"DNN_GPU" :0, // CUDA-accelerated DNN training.
+			"DNN_CPU" :0  // Multi-core accelerated DNN.
+		},
+		"Support_Vector_Machines":{
+			"SVM":1
+		},
+		"Boosted_Decision_Trees":{
+			"BDT" :1, // uses Adaptive Boost
+			"BDTG":0, // uses Gradient Boost
+			"BDTB":0, // uses Bagging
+			"BDTD":0, // decorrelation + Adaptive Boost
+			"BDTF":0  // allow usage of fisher discriminant for node splitting
+		},
+		"Friedmans_RuleFit_Method":{ // ie, an optimised series of cuts ("rules")
+			"RuleFit":1
+		}
+	}
+}
