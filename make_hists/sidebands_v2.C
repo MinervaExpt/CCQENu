@@ -37,6 +37,7 @@
 #include "include/Variable2DFromConfig.h"
 #include "include/VariableHyperDFromConfig.h"
 #include "include/weight_MCreScale.h"
+#include "include/CoherentPiReweighter.h"
 //#include "include/plotting_pdf.h"
 #include "TROOT.h"
 #include "TStyle.h"

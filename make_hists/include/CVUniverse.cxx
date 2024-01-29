@@ -104,10 +104,10 @@ Valid proton score configuration inputs are of the form:
 
 */
 
-bool CVUniverse::isMC() const {
-    //std::cout << "check" << m_chw->IsValid("wgt") << std::endl;
-    return m_chw->IsValid("wgt");
-}
+// bool CVUniverse::isMC() const {
+//     //std::cout << "check" << m_chw->IsValid("wgt") << std::endl;
+//     return m_chw->IsValid("wgt");
+// }
 
 bool CVUniverse::_is_analysis_neutrino_pdg_set = false;
 bool CVUniverse::_is_min_blob_zvtx_set = false;
@@ -247,30 +247,7 @@ double CVUniverse::GetWeight() const {
     return wgt_flux_and_cv * wgt_genie * wgt_2p2h * wgt_rpa * wgt_mueff * wgt_geant;
 }
 
-double CVUniverse::GetTruePionAngle() const {
-    int nFSpi = GetInt("mc_nFSPart");
-    double angle = -9999.;  // WRTbeam and in degrees
-    double pionKE = 0.0;
-    int idk = -9999;
-    for (int i = 0; i < nFSpi; i++) {
-        int pdg = GetVecElem("mc_FSPartPDG", i);
-        if (pdg != 211) continue;
-        double energy = GetVecElem("mc_FSPartE", i);
-        double mass = 139.569;
-        double tpi = energy - mass;
-        if (tpi >= pionKE) {
-            pionKE = tpi;
-            TVector3 pimomentumvec(GetVecElem("mc_FSPartPx", i), GetVecElem("mc_FSPartPz", i), GetVecElem("mc_FSPartPz", i));
-            double deg_wrtb = thetaWRTBeam(pimomentumvec.X(), pimomentumvec.Y(), pimomentumvec.Z());  // rad
 
-            angle = deg_wrtb;  //*180./M_PI;
-        }
-    }
-    // Making sure angle is only between 0 and pi
-    if (angle < 0.0) angle = -1.0 * angle;
-    if (angle > M_PI) angle = 2.0 * M_PI - angle;
-    return angle * 180. / M_PI;  // Degrees
-}
 
 double CVUniverse::GetCoherentPiWeight() const {
     if (GetInt("mc_intType") != 4) return 1.0;
@@ -324,26 +301,26 @@ double CVUniverse::GetEnuCCQEGeV() const {
     return val * MeVGeV;
 }  // both neutrino and antinu
 
-double CVUniverse::GetTrueEnuDiffGeV() const {
-    if (isMC()) {
-        return GetTrueEnuGeV() - GetTrueEnuCCQEGeV();
-    }
-    return 0.;
-}
+// double CVUniverse::GetTrueEnuDiffGeV() const {
+//     if (isMC()) {
+//         return GetTrueEnuGeV() - GetTrueEnuCCQEGeV();
+//     }
+//     return 0.;
+// }
 
-double CVUniverse::GetTrueEnuRatio() const {
-    if (isMC()) {
-        return GetTrueEnuCCQEGeV() / GetTrueEnuGeV();
-    }
-    return 0.;
-}
+// double CVUniverse::GetTrueEnuRatio() const {
+//     if (isMC()) {
+//         return GetTrueEnuCCQEGeV() / GetTrueEnuGeV();
+//     }
+//     return 0.;
+// }
 
-double CVUniverse::GetRecoEnuRatio() const {
-    if (isMC()) {
-        return GetEnuCCQEGeV() / GetTrueEnuGeV();
-    }
-    return 0.;
-}
+// double CVUniverse::GetRecoEnuRatio() const {
+//     if (isMC()) {
+//         return GetEnuCCQEGeV() / GetTrueEnuGeV();
+//     }
+//     return 0.;
+// }
 
 double CVUniverse::GetTrueEnuCCQEGeV() const {
     int charge = GetAnalysisNuPDG() > 0 ? 1 : -1;
@@ -639,6 +616,9 @@ double CVUniverse::GetProtonAngle(int i) const {
     } else
         return -1.;
 }
+
+
+
 double CVUniverse::GetPrimaryProtonAngle() const { return GetProtonAngle(0); }
 double CVUniverse::GetSecProtonAngle_1() const { return GetProtonAngle(1); }
 double CVUniverse::GetSecProtonAngle_2() const { return GetProtonAngle(2); }
@@ -1378,6 +1358,29 @@ int CVUniverse::GetTrueNegativePionCount() const {
         if (mc_FSPartPDG[i] == -211) genie_n_neg_pion++;
 
     return genie_n_neg_pion;
+}
+
+double CVUniverse::GetTruePionAngle() const {
+    int std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    double angle = -9999;
+    for (int i = 0; i < mc_nFSPart; i++) {
+        if (mc_FSPartPDG[i] == -211) continue;
+        TVector3 pimomentumvec(GetVecElem("mc_FSPartPx", i), GetVecElem("mc_FSPartPy", i), GetVecElem("mc_FSPartPz", i));
+        double rad_wrtb = thetaWRTBeam(pimomentumvec.X(), pimomentumvec.Y(), pimomentumvec.Z());  // rad
+        continue;
+    }
+    angle = rad_wrtb*180./M_PI;
+    return angle;
+}
+
+double CVUniverse::GetExtraTrackAngle() const {
+    // 
+    double angle = -9999;
+    angle = rad_wrtb*180./M_PI;
+
+
+    return angle;
 }
 
 // Michel Electrons 

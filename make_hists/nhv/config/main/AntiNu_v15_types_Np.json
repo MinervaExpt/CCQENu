@@ -28,7 +28,7 @@
     "Q2QE",
     "Log10recoil"
   ],
-  "Analyze2DVariables": [],
+  "Analyze2DVariables": ["Q2QE_Log10recoil"],
   "AnalyzeHyperDVariables": [], 
   "signal": {
     "QElikeNp": "qelike_np",

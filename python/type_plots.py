@@ -63,7 +63,7 @@ mcPOTprescaled = h_pot.GetBinContent(3);
 POTScale = dataPOT / mcPOTprescaled;
     
 groups = {}
-scaleX = ["Q2QE"]
+scaleX = ["Q2QE","Log10Recoil"]
 scaleY = ["recoil"]
 # find all the valid histogram and group by keywords
 ncats = 0
@@ -164,7 +164,6 @@ for a in groups.keys():
             data = TH1D(groups[a][b][c]["data"][0])
             data.SetTitle(thetitle)
             data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
-            
             data.Draw("PE")
             leg.AddEntry(data,"data","pe")
             
@@ -190,11 +189,20 @@ for a in groups.keys():
                     stack.Add(h)
                     leg.AddEntry(h,process[index],'f')
             
+            max = (data.GetMaximum())*1.2
+            stack.SetMaximum(max)
             stack.Draw("hist same")
             data.Draw("PE same")
             leg.Draw()
             cc.Draw()
-            cc.Print(thename+"_"+flag+".png")
+            cc.Print(thename+"_"+flag+"v1_norecoilcut.png")
+            # cc.Print(thename+"_"+flag+"v1_recoilcut.png")
+            # cc.Print(thename+"_"+flag+"v12_norecoilcut.png")
+            # cc.Print(thename+"_"+flag+"v12_recoilcut.png")
             
     
+# flag = "types_v1_norecoilcut"
+# flag = "types_v1_recoilcut"
+# flag = "types_v12_norecoil"
+# flag = "types_v12_norecoilcut"
 

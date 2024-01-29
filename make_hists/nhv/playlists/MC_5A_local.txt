@@ -1,0 +1,10 @@
+/Users/vaughann/Data/5aData/MC/CCQENu_mc_AnaTuple_run00123000.root
+/Users/vaughann/Data/5aData/MC/CCQENu_mc_AnaTuple_run00123001.root
+/Users/vaughann/Data/5aData/MC/CCQENu_mc_AnaTuple_run00123002.root
+/Users/vaughann/Data/5aData/MC/CCQENu_mc_AnaTuple_run00123003.root
+/Users/vaughann/Data/5aData/MC/CCQENu_mc_AnaTuple_run00123004.root
+/Users/vaughann/Data/5aData/MC/CCQENu_mc_AnaTuple_run00123005.root
+/Users/vaughann/Data/5aData/MC/CCQENu_mc_AnaTuple_run00123006.root
+/Users/vaughann/Data/5aData/MC/CCQENu_mc_AnaTuple_run00123007.root
+/Users/vaughann/Data/5aData/MC/CCQENu_mc_AnaTuple_run00123008.root
+/Users/vaughann/Data/5aData/MC/CCQENu_mc_AnaTuple_run00123009.root

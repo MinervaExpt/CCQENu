@@ -51,14 +51,14 @@ class CVFunctions {
         recofunctions["EnuCCQEGeV"] = &CVUNIVERSE::GetEnuCCQEGeV;
         truefunctions["TrueEnuCCQEGeV"] = &CVUNIVERSE::GetTrueEnuCCQEGeV;
 
-        recofunctions["TrueEnuDiffGeV"] = &CVUNIVERSE::GetTrueEnuDiffGeV;
-        truefunctions["TrueEnuDiffGeV"] = &CVUNIVERSE::GetTrueEnuDiffGeV;
+        // recofunctions["TrueEnuDiffGeV"] = &CVUNIVERSE::GetTrueEnuDiffGeV;
+        // truefunctions["TrueEnuDiffGeV"] = &CVUNIVERSE::GetTrueEnuDiffGeV;
 
-        recofunctions["TrueEnuRatio"] = &CVUNIVERSE::GetTrueEnuRatio;
-        truefunctions["TrueEnuRatio"] = &CVUNIVERSE::GetTrueEnuRatio;
+        // recofunctions["TrueEnuRatio"] = &CVUNIVERSE::GetTrueEnuRatio;
+        // truefunctions["TrueEnuRatio"] = &CVUNIVERSE::GetTrueEnuRatio;
 
-        recofunctions["RecoEnuRatio"] = &CVUNIVERSE::GetRecoEnuRatio;
-        truefunctions["RecoEnuRatio"] = &CVUNIVERSE::GetTrueEnuRatio;
+        // recofunctions["RecoEnuRatio"] = &CVUNIVERSE::GetRecoEnuRatio;
+        // truefunctions["RecoEnuRatio"] = &CVUNIVERSE::GetTrueEnuRatio;
 
         recofunctions["EnuHadGeV"] = &CVUNIVERSE::GetEnuHadGeV;
         truefunctions["TrueEnuGeV"] = &CVUNIVERSE::GetTrueEnuGeV;

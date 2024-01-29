@@ -148,9 +148,9 @@ int main(const int argc, const char *argv[] ) {
   if (modeltune == "MnvTunev2") {
       MnvTune.emplace_back(new PlotUtils::LowQ2PiReweighter<CVUniverse, PlotUtils::detail::empty>("JOINT"));
   }
-  // if (modeltune == "MnvTunev1.2") {
-  //     MnvTune.emplace_back(new PlotUtils::)
-  // }
+  if (modeltune == "MnvTunev1.2" || modeltune == "MnvTunev2.2") {
+      MnvTune.emplace_back(new CoherentPiReweighter<CVUniverse, PlotUtils::detail::empty>);
+  }
 
   PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTune));
 

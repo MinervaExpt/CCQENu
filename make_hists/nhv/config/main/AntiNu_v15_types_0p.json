@@ -5,7 +5,7 @@
   "cutsFile": "${CCQEMAT}/nhv/config/cuts/AntiNuCuts_v15_0p_nomichel.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/samples/AntiNuSamples_v15_0p_qelikenot.json", 
-  "outRoot": "Types_5A_Sidebands_NoMichel_0p", 
+  "outRoot": "Types_5A_Sidebands_NoMichel_0p_v1_recoilcut", 
   "scalefileIn": "${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", 
   "prescale":999,
   "playlist":"minervame5A",
@@ -26,9 +26,9 @@
   ], 
   "AnalyzeVariables": [
     "Q2QE",
-    "Log10recoil"
+    "recoil"
   ],
-  "Analyze2DVariables": [],
+  "Analyze2DVariables": ["Q2QE_recoil"],
   "AnalyzeHyperDVariables": [], 
   "signal": {
     "QElike": "qelike",

@@ -131,9 +131,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetEnuCCQEGeV() const;      // both neutrino and antinu
     virtual double GetTrueEnuCCQEGeV() const;  // may be a better way to implement this
 
-    virtual double GetTrueEnuDiffGeV() const;
-    virtual double GetTrueEnuRatio() const;
-    virtual double GetRecoEnuRatio() const;
+    // virtual double GetTrueEnuDiffGeV() const;
+    // virtual double GetTrueEnuRatio() const;
+    // virtual double GetRecoEnuRatio() const;
     virtual double GetQ2QEGeV() const;
     virtual double GetTrueQ2QEGeV() const;
     virtual double GetQ0QEGeV() const;
@@ -172,7 +172,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double Null() const { return 0.0; };
 
-    virtual bool isMC() const;
+    // virtual bool isMC() const;
 
     // ----------------------------- Hadron Variables ----------------------------
 
@@ -309,6 +309,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetPionScore() const;
     virtual double GetPionScore1() const;
     virtual double GetPionScore2() const;
+
+    virtual double GetTruePionAngle();
+    virtual double GetExtraTrackAngle();
 
     // Proton Score, Primary and Secondary Proton Tracks
 

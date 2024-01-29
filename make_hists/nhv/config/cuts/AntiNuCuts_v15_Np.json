@@ -21,7 +21,8 @@
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
-    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
+    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"}
   ],
   "MichelSideband": [
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
@@ -37,7 +38,9 @@
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
-    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
+    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"}
+
   ],
   "BlobSideband": [
     {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
@@ -53,7 +56,8 @@
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
-    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
+    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"}
   ],
   "MultiplicitySideband": [
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
@@ -70,7 +74,8 @@
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
-    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
+    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"}
   ],
   "MicBlobSideband": [
     {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
@@ -84,7 +89,8 @@
     {"name": "ZVertex", "min": 5980, "max": 8422, "variable": "ZVertex"},
     {"name": "HasMINOSMatch", "equals": -1, "variable": "IsMinosMatchTrack"}, 
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"}, 
-    {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"}
+    {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
+    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"}
   ],
   "MultipBlobSideband": [
     {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
@@ -101,7 +107,8 @@
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"}, 
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
-    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
+    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"}
   ],
   "phase_space": [
     {"name": "TrueApothemX", "max": 850, "variable": "TrueApothemX"},

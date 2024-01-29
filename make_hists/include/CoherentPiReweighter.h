@@ -6,10 +6,10 @@
 #define PLOTUTILS_CoherentPiREWEIGHTER_H
 
 // PlotUtils includes
-#include "PlotUtils/calculators/WeightFunctions.h"
-
+// #include "PlotUtils/WeightFunctions.h"
+#include "CVUniverse.h"
 // Reweighter includes
-#include "PlotUtils/weighters/Reweighter.h"
+#include "PlotUtils/Reweighter.h"
 // #include "PlotUtils/weighters/weightCoherentPi.cxx"
 
 template <class UNIVERSE, class EVENT = PlotUtils::detail::empty>
@@ -33,7 +33,6 @@ class CoherentPiReweighter : public Reweighter<UNIVERSE, EVENT> {
     // virtual bool IsCompatible(const PionReweighter& /*other*/) const { return true; }
     // virtual std::vector<UNIVERSE*> GetRequiredUniverses() const { return std::vector<UNIVERSE*>{}; }
 };
-}
 
-#endif  // DIFFRACTIVE_REWEIGHTER_H
+
 #endif  // PLOTUTILS_CoherentPiREWEIGHTER_H
