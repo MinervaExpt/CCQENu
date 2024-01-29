@@ -3,7 +3,7 @@
 # some setup that I use to find common directories
 export BLUE=/minerva/data/users/$USER
 export SCRATCH=/pnfs/minerva/scratch/users/$USER
-export APP=/minerva/app/users/$USER
+export APP=/exp/minerva/app/users/$USER
 # example test batch job to run on minervagpvm01 to run CCQEMAT
 # other option (not tested yet) is the EventLoop from the tutorial
 

@@ -26,6 +26,9 @@
 #define CVUNIVERSE_H
 
 #include <iostream>
+#include <vector>
+#include <map>
+#include <string>
 
 #include "PlotUtils/ChainWrapper.h"
 #include "PlotUtils/GeantHadronSystematics.h"
@@ -53,17 +56,17 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static bool _is_proton_score_config_set;
 
    public:
-#ifndef HAZMAT
-#include "PlotUtils/SystCalcs/MuonFunctions.h"
-#include "PlotUtils/SystCalcs/RecoilEnergyFunctions.h"
-#include "PlotUtils/SystCalcs/TruthFunctions.h"
-#include "PlotUtils/SystCalcs/WeightFunctions.h"
-#else
+// #ifndef HAZMAT
+// #include "PlotUtils/SystCalcs/MuonFunctions.h"
+// #include "PlotUtils/SystCalcs/RecoilEnergyFunctions.h"
+// #include "PlotUtils/SystCalcs/TruthFunctions.h"
+// #include "PlotUtils/SystCalcs/WeightFunctions.h"
+// #else
 #include "PlotUtils/MuonFunctions.h"
 #include "PlotUtils/RecoilEnergyFunctions.h"
 #include "PlotUtils/TruthFunctions.h"
 #include "PlotUtils/WeightFunctions.h"
-#endif
+// #endif
 
     // ========================================================================
     // Constructor/Destructor
@@ -131,9 +134,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetEnuCCQEGeV() const;      // both neutrino and antinu
     virtual double GetTrueEnuCCQEGeV() const;  // may be a better way to implement this
 
-    // virtual double GetTrueEnuDiffGeV() const;
-    // virtual double GetTrueEnuRatio() const;
-    // virtual double GetRecoEnuRatio() const;
+    virtual double GetTrueEnuDiffGeV() const;
+    virtual double GetTrueEnuRatio() const;
+    virtual double GetRecoTrueEnuRatio() const;
     virtual double GetQ2QEGeV() const;
     virtual double GetTrueQ2QEGeV() const;
     virtual double GetQ0QEGeV() const;
@@ -172,7 +175,11 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double Null() const { return 0.0; };
 
+    // remove as creates dependency on MAT
+
     // virtual bool isMC() const;
+
+    // virtual bool isValid(const std::string & a ) const;
 
     // ----------------------------- Hadron Variables ----------------------------
 

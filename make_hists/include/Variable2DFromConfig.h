@@ -14,6 +14,10 @@
 #ifndef VARIABLE2DFromConfig_H
 #define VARIABLE2DFromConfig_H
 
+#include <map>
+#include <vector>
+#include <string>
+
 #include "include/CVUniverse.h"
 #include "MinervaUnfold/MnvResponse.h"
 #include "include/Hist2DWrapperMap.h"  

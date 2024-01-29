@@ -1,10 +1,15 @@
 
+#include <cassert>
+#include <vector>
+#include <map>
+#include <string>
+
 #include "utils/NuConfig.h"
 #include "GetVariablesFromConfig.h"
 #include "VariableFromConfig.h"
 #include "Variable2DFromConfig.h"
 #include "CVUniverse.h"
-#include <cassert>
+
 
 
 

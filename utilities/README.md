@@ -6,7 +6,7 @@ Your MAT distribution should be in the base directory ($BASEDIR) and the whole t
 
 On Unix, you need to (ONCE)
 
-```cp -r /minerva/app/users/schellma/NEWMAT/jsoncpp-build $BASEDIR # where BASEDIR is where MAT and MAT-MINERvA and CCQENu live```
+```cp -r /exp/minerva/app/users/schellma/NEWMAT/jsoncpp-build $BASEDIR # where BASEDIR is where MAT and MAT-MINERvA and CCQENu live```
 
 And at each session you need to 
 
@@ -22,7 +22,7 @@ My whole MAT setup is in $APP/NEWMAT so that needs to go into the tarball.
 The directory I run from is $APP/NEWMAT/CCQENu/make_hists so I set RUNDIR to that
 
 ```
-export APP=/minerva/app/users/$USER
+export APP=/exp/minerva/app/users/$USER
 export SCRATCH=/pnfs/minerva/scratch/users/$USER
 export BLUE=/minerva/data/users/$USER   
 

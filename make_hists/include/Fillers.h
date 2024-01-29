@@ -14,6 +14,14 @@
 
 // include at top of your loop code
 
+// includes just to keep lint happy
+#include <string>
+#include <map>
+#include <vector>
+#include "CVUniverse.h"
+
+
+
 //==============================================================================
 // Fill Data or MC histograms
 //==============================================================================

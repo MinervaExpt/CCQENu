@@ -8,6 +8,9 @@
 // * GetStandardSystematics function which get ALL of the generally applicable
 //   PU systematics
 //==============================================================================
+#include <map>
+#include <vector>
+#include <string>
 
 #include "CVUniverse.h"
 #include "PlotUtils/ChainWrapper.h"

@@ -51,14 +51,17 @@ class CVFunctions {
         recofunctions["EnuCCQEGeV"] = &CVUNIVERSE::GetEnuCCQEGeV;
         truefunctions["TrueEnuCCQEGeV"] = &CVUNIVERSE::GetTrueEnuCCQEGeV;
 
-        // recofunctions["TrueEnuDiffGeV"] = &CVUNIVERSE::GetTrueEnuDiffGeV;
-        // truefunctions["TrueEnuDiffGeV"] = &CVUNIVERSE::GetTrueEnuDiffGeV;
+       
+        recofunctions["TrueEnuDiffGeV"] = &CVUNIVERSE::GetTrueEnuDiffGeV;
+        truefunctions["TrueEnuDiffGeV"] = &CVUNIVERSE::GetTrueEnuDiffGeV;
 
-        // recofunctions["TrueEnuRatio"] = &CVUNIVERSE::GetTrueEnuRatio;
-        // truefunctions["TrueEnuRatio"] = &CVUNIVERSE::GetTrueEnuRatio;
+        
+        recofunctions["TrueEnuRatio"] = &CVUNIVERSE::GetTrueEnuRatio;
+        truefunctions["TrueEnuRatio"] = &CVUNIVERSE::GetTrueEnuRatio;
 
-        // recofunctions["RecoEnuRatio"] = &CVUNIVERSE::GetRecoEnuRatio;
-        // truefunctions["RecoEnuRatio"] = &CVUNIVERSE::GetTrueEnuRatio;
+       
+        recofunctions["RecoTrueEnuRatio"] = &CVUNIVERSE::GetRecoTrueEnuRatio;
+        truefunctions["RecoTrueEnuRatio"] = &CVUNIVERSE::GetRecoTrueEnuRatio;
 
         recofunctions["EnuHadGeV"] = &CVUNIVERSE::GetEnuHadGeV;
         truefunctions["TrueEnuGeV"] = &CVUNIVERSE::GetTrueEnuGeV;
@@ -153,24 +156,24 @@ class CVFunctions {
 
         trueintfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
         truefunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
-        recofunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
-        recointfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
+        //recofunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
+        //recointfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
 
         trueintfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
         truefunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
-        recofunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
-        recointfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
+        //recofunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
+        //recointfunctions["TruthNuPDG"] = &CVUNIVERSE::GetTruthNuPDG;
 
         trueintfunctions["TruthIsQELike"] = &CVUNIVERSE::GetTruthIsQELike;
 
         trueintfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
         truefunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
-        recointfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
-        recofunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
-        recointfunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
-        recofunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
-        trueintfunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
-        truefunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+        //recointfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
+        //recofunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
+        //recointfunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+        //recofunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+        //trueintfunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
+        //truefunctions["IntType"] = &CVUNIVERSE::GetMCIntType;
 
         trueintfunctions["MCTargetA"] = &CVUNIVERSE::GetMCTargetA;
 
@@ -178,11 +181,11 @@ class CVFunctions {
 
         trueintfunctions["MCTargetNucleon"] = &CVUNIVERSE::GetMCTargetNucleon;
 
-        recointfunctions["MCTargetA"] = &CVUNIVERSE::GetMCTargetA;
+        //recointfunctions["MCTargetA"] = &CVUNIVERSE::GetMCTargetA;
 
-        recointfunctions["MCTargetZ"] = &CVUNIVERSE::GetMCTargetZ;
+        //recointfunctions["MCTargetZ"] = &CVUNIVERSE::GetMCTargetZ;
 
-        recointfunctions["MCTargetNucleon"] = &CVUNIVERSE::GetMCTargetNucleon;
+        //recointfunctions["MCTargetNucleon"] = &CVUNIVERSE::GetMCTargetNucleon;
 
         recointfunctions["Dummy"] = &CVUNIVERSE::Dummy;
         trueintfunctions["Dummy"] = &CVUNIVERSE::Dummy;
@@ -278,20 +281,22 @@ class CVFunctions {
         recofunctions["PrimaryProtonTrackEndZ"] = &CVUNIVERSE::GetPrimaryProtonTrackEndZ;
 
         recofunctions["PrimaryProtonAngle"] = &CVUNIVERSE::GetPrimaryProtonAngle;
-        recofunctions["SecProtonAngle_1"] = &CVUNIVERSE::GetSecProtonAngle_1;
-        recofunctions["SecProtonAngle_2"] = &CVUNIVERSE::GetSecProtonAngle_2;
-        recofunctions["SecProtonAngle_3"] = &CVUNIVERSE::GetSecProtonAngle_3;
-        recofunctions["SecProtonAngle_4"] = &CVUNIVERSE::GetSecProtonAngle_4;
-        recofunctions["SecProtonAngle_5"] = &CVUNIVERSE::GetSecProtonAngle_5;
-        recofunctions["SecProtonAngle_6"] = &CVUNIVERSE::GetSecProtonAngle_6;
+
+        // these seem to be mc only 
+        // recofunctions["SecProtonAngle_1"] = &CVUNIVERSE::GetSecProtonAngle_1;
+        // recofunctions["SecProtonAngle_2"] = &CVUNIVERSE::GetSecProtonAngle_2;
+        // recofunctions["SecProtonAngle_3"] = &CVUNIVERSE::GetSecProtonAngle_3;
+        // recofunctions["SecProtonAngle_4"] = &CVUNIVERSE::GetSecProtonAngle_4;
+        // recofunctions["SecProtonAngle_5"] = &CVUNIVERSE::GetSecProtonAngle_5;
+        // recofunctions["SecProtonAngle_6"] = &CVUNIVERSE::GetSecProtonAngle_6;
 
         recofunctions["PrimaryProtonTrackVtxGap"] = &CVUNIVERSE::GetPrimaryProtonTrackVtxGap;
-        recofunctions["SecProtonTrackVtxGap_1"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_1;
-        recofunctions["SecProtonTrackVtxGap_2"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_2;
-        recofunctions["SecProtonTrackVtxGap_3"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_3;
-        recofunctions["SecProtonTrackVtxGap_4"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_4;
-        recofunctions["SecProtonTrackVtxGap_5"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_5;
-        recofunctions["SecProtonTrackVtxGap_6"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_6;
+        // recofunctions["SecProtonTrackVtxGap_1"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_1;
+        // recofunctions["SecProtonTrackVtxGap_2"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_2;
+        // recofunctions["SecProtonTrackVtxGap_3"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_3;
+        // recofunctions["SecProtonTrackVtxGap_4"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_4;
+        // recofunctions["SecProtonTrackVtxGap_5"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_5;
+        // recofunctions["SecProtonTrackVtxGap_6"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_6;
 
         recofunctions["CalibEClustsPrimaryProtonEnd"] = &CVUNIVERSE::GetCalibEClustsPrimaryProtonEnd;
         recofunctions["CalibEClustsSecProtonEnd_1"] = &CVUNIVERSE::GetCalibEClustsSecProtonEnd_1;
@@ -475,6 +480,157 @@ class CVFunctions {
         assert(trueintfunctions.count(name));
         return trueintfunctions[name];
     };
+
+    void Dump(const CVUniverse  * univ, const int isData, const int isTruth)const{
+        // dump out a record in json format. 
+        std::cout << "{";
+        std::string name;
+        double val;
+        
+        if (!isTruth){
+        
+          
+            for (auto x : recofunctions){
+                
+                
+                name = x.first;
+
+                // these are special cases of missing implemenations 
+                if (name.find("FittedNMichel") != std::string::npos) continue;
+                if (name.find("IntType") != std::string::npos) continue;
+                if (name.find("mc_") != std::string::npos) continue;
+                if (name.find("MC") != std::string::npos) continue;
+                if (name.find("RecoTrueEnuRatio") != std::string::npos) continue;
+                if (name.find("TrueEnuRatio") != std::string::npos) continue;
+                if (name.find("TrueEnuDiffGeV") != std::string::npos) continue;
+                if (name.find("MaxProtonTrueKE") != std::string::npos) continue;
+                if (name.find("SecProtonAngle_1") != std::string::npos) continue;
+                int i = 0;
+                std::cout << "\"" <<  name  << "\"" << ": ";
+                val = (x.second)(*univ);
+                
+                std::cout << val << ",";
+                
+                
+            }
+            //std::cout << "}" << std::endl;
+        }
+        if (!isData){
+           
+            for (auto x : truefunctions){
+                name = x.first;
+                if (name.find("FittedNMichel") != std::string::npos) continue;
+                if (name.find("MaxProtonTrueKE") != std::string::npos) continue;
+                std::cout << "\"" <<  name  << "\"" << ": ";
+                val = (x.second)(*univ);
+                    
+                    std::cout << val << ",";
+            }
+        }
+        std::cout << "}" << std::endl;
+    }
+    // void MakeTree(TTree* tree, const int isData, const int isTruth)const{
+    //     // dump out a record in json format. 
+    //     //std::cout << "{";
+    //     std::string name;
+    //     double val;
+    //     if (isTruth) return;
+        
+    //     if (!isTruth){
+        
+          
+    //         for (auto x : recofunctions){
+                
+                
+    //             name = x.first;
+
+    //             // these are special cases of missing implemenations 
+    //             if (name.find("FittedNMichel") != std::string::npos) continue;
+    //             if (name.find("IntType") != std::string::npos) continue;
+    //             if (name.find("mc_") != std::string::npos) continue;
+    //             if (name.find("MC") != std::string::npos) continue;
+    //             if (name.find("RecoTrueEnuRatio") != std::string::npos) continue;
+    //             if (name.find("TrueEnuRatio") != std::string::npos) continue;
+    //             if (name.find("TrueEnuDiffGeV") != std::string::npos) continue;
+    //             if (name.find("MaxProtonTrueKE") != std::string::npos) continue;
+    //             if (name.find("SecProtonAngle_1") != std::string::npos) continue;
+    //             tree->Branch(name,(x.second)(*univ));
+    //             // int i = 0;
+    //             // std::cout << "\"" <<  name  << "\"" << ": ";
+    //             // val = (x.second)(*univ);
+                
+    //             // std::cout << val << ",";
+                
+                
+    //         }
+    //         //std::cout << "}" << std::endl;
+    //     }
+    //     if (!isData){
+           
+    //         for (auto x : truefunctions){
+    //             name = x.first;
+    //             if (name.find("FittedNMichel") != std::string::npos) continue;
+    //             if (name.find("MaxProtonTrueKE") != std::string::npos) continue;
+    //             //std::cout << "\"" <<  name  << "\"" << ": ";
+    //             tree->Fill(name,(x.second)(*univ));
+    //             val = (x.second)(*univ);
+                    
+    //                 //std::cout << val << ",";
+    //         }
+    //     }
+    //    // std::cout << "}" << std::endl;
+    // }
+    // void FillTree(const CVUniverse  * univ, TTree* tree, const int isData, const int isTruth)const{
+    //     // dump out a record in json format. 
+    //     std::cout << "{";
+    //     std::string name;
+    //     double val;
+    //     if (isTruth) return;
+        
+    //     if (!isTruth){
+        
+          
+    //         for (auto x : recofunctions){
+                
+                
+    //             name = x.first;
+
+    //             // these are special cases of missing implemenations 
+    //             if (name.find("FittedNMichel") != std::string::npos) continue;
+    //             if (name.find("IntType") != std::string::npos) continue;
+    //             if (name.find("mc_") != std::string::npos) continue;
+    //             if (name.find("MC") != std::string::npos) continue;
+    //             if (name.find("RecoTrueEnuRatio") != std::string::npos) continue;
+    //             if (name.find("TrueEnuRatio") != std::string::npos) continue;
+    //             if (name.find("TrueEnuDiffGeV") != std::string::npos) continue;
+    //             if (name.find("MaxProtonTrueKE") != std::string::npos) continue;
+    //             if (name.find("SecProtonAngle_1") != std::string::npos) continue;
+    //             tree->Fill(name,(x.second)(*univ));
+    //             // int i = 0;
+    //             // std::cout << "\"" <<  name  << "\"" << ": ";
+    //             // val = (x.second)(*univ);
+                
+    //             // std::cout << val << ",";
+                
+                
+    //         }
+    //         //std::cout << "}" << std::endl;
+    //     }
+    //     if (!isData){
+           
+    //         for (auto x : truefunctions){
+    //             name = x.first;
+    //             if (name.find("FittedNMichel") != std::string::npos) continue;
+    //             if (name.find("MaxProtonTrueKE") != std::string::npos) continue;
+    //             //std::cout << "\"" <<  name  << "\"" << ": ";
+    //             tree->Fill(name,(x.second)(*univ));
+    //             val = (x.second)(*univ);
+                    
+    //                 //std::cout << val << ",";
+    //         }
+    //     }
+    //    // std::cout << "}" << std::endl;
+    // }
 };
 
 #endif

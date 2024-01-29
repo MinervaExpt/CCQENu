@@ -2,6 +2,9 @@
 #define plotting_functions_H
 // #define FULLDUMP  // dumps all syst error subgroups
 #include <iostream>
+#include <string>
+#include <map>
+#include <vector>
 
 #include "PlotUtils/HistogramUtils.h"
 #include "PlotUtils/MnvH1D.h"

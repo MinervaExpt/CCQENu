@@ -1,6 +1,13 @@
 #ifndef weight_mcrescale_h
 #define weight_mcrescale_h
 
+#include <fstream>  //ifstream
+#include <iostream> //cout
+#include <cmath>
+#include <cassert>
+#include <vector>
+#include <map>
+#include <string> 
 #include <TString.h>
 
 #include <fstream>   //ifstream
@@ -8,12 +15,7 @@
 // #include <TH3D.h>
 // #include <TH2D.h>
 #include <TFile.h>
-#include <TH1D.h>
 
-#include <cassert>
-#include <cmath>
-
-#include "include/CVUniverse.h"
 // #include <TF1.h>
 #include "PlotUtils/MnvH1D.h"
 #include "PlotUtils/MnvVertErrorBand.h"

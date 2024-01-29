@@ -9,7 +9,11 @@
  * the License, or (at your option) any later version. *
  * @section DESCRIPTION *
  * This implements a loop over the tuple that fills the histograms
- */
+ **/
+
+#include <vector>
+#include <map>
+#include <string>
 
 enum EDataMCTruth { kData,
                     kMC,
@@ -17,7 +21,7 @@ enum EDataMCTruth { kData,
                     kNDataMCTruthTypes };
 
 // #define CLOSUREDETAIL
-// Here
+
 //==============================================================================
 // Loop and fill
 //==============================================================================
@@ -36,11 +40,36 @@ void LoopAndFillEventSelection(std::string tag,
     // Prepare loop
     MinervaUniverse::SetTruth(false);
     int nentries = -1;
+    CVFunctions<CVUniverse> fund;
+
+    TFile * myFile;
+    TTree * mc_tree;
+    TTree * data_tree;
+
+
+    // future code to dump the outputs. 
+    // if (data_mc_truth == kData) {
+    //     myFile = TFile::Open("data.root", "RECREATE");
+    //     data_tree = new TTree("digest", "data tree");
+    //     fund->MakeTree(data_tree,1,0); 
+    // } 
+    // else {
+    //     if (data_mc_truth == kMC) {
+    //         myFile = TFile::Open("mc.root", "RECREATE");
+    //         mc_tree = new TTree("digest", "mc tree");
+    //     fund->MakeTree(data_tree,0,0); 
+    //     }
+    // }
+
+    
+
+
 
     // get ready for weights by finding cv universe pointer
 
     assert(!error_bands["cv"].empty() && "\"cv\" error band is empty!  Can't set Model weight.");
     auto& cvUniv = error_bands["cv"].front();
+
     // make a dummy event - may need to make fancier
     PlotUtils::detail::empty event;
 
@@ -123,44 +152,13 @@ void LoopAndFillEventSelection(std::string tag,
         }
 
         cvUniv->SetEntry(i);
-
+        //HMS fund.Dump(cvUniv,data_mc_truth==kData,data_mc_truth==kTruth);
+        
         if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
         const double cvWeight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*cvUniv, event);  // detail may be used for more complex things
         // TODO: Is this scaled cvWeight necessary?
         // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
-
-        // if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
-        // status bar stuff
-        if (((double)(i + 1) / nentries) * 100 >= progress + 2.5) {
-            progress += 2.5;
-            std::cout << '\r' << std::flush << "   |";
-            // std::cout << std::endl << "   |";
-
-            for (int j = 0; j < progress / 2.5; j++)
-                std::cout << "\e[0;31;47m \e[0m";
-            for (int j = 40; j > progress / 2.5; j--)
-                std::cout << "_";
-
-            std::cout << "|   [";
-            if (progress < 10)
-                std::cout << "_";
-            if (progress < 100)
-                std::cout << "_";
-            std::cout << progress;
-            if (((int)(0.5 + progress / 2.5)) % 2 == 0)
-                std::cout << ".0";
-            std::cout << "%]";
-            std::cout << "   ( ";
-            for (int j = ((int)log10(nentries) - (int)log10(i + 1)); j > 0; j--) {
-                std::cout << "_";
-            }
-            std::cout << i + 1 << " / " << nentries << " )";
-
-            if (progress == 100)
-                std::cout << std::endl
-                          << std::endl;
-        }
 
         // Loop bands and universes
         for (auto band : error_bands) {

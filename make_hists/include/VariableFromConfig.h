@@ -13,6 +13,10 @@
 #ifndef VARIABLEFromConfig_H
 #define VARIABLEFromConfig_H
 
+#include <map>
+#include <vector>
+#include <string>
+
 #include "CVUniverse.h"
 //#include "PlotUtils/HistFolio.h" // - gives annoying error messages
 #include "HistWrapperMap.h"

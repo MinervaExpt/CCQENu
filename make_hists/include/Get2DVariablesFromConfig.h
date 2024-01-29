@@ -1,6 +1,9 @@
 #ifndef GET2DVariablesFromConfig_H
 #define GET2DVariablesFromConfig_H
 #include <vector>
+#include <string>
+#include <map>
+
 #include "CVUniverse.h"
 #include "PlotUtils/PhysicsVariables.h"
 

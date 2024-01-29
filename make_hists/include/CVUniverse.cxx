@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+
 #include "include/CVUniverse.h"
 
 using namespace PlotUtils;
@@ -104,9 +105,15 @@ Valid proton score configuration inputs are of the form:
 
 */
 
+// Don't need these if I turn off data for MC only variables
 // bool CVUniverse::isMC() const {
 //     //std::cout << "check" << m_chw->IsValid("wgt") << std::endl;
 //     return m_chw->IsValid("wgt");
+// }
+
+// bool CVUniverse::isValid(const std::string & a) const {
+//     //std::cout << "check" << m_chw->IsValid("wgt") << std::endl;
+//     return m_chw->IsValid(a);
 // }
 
 bool CVUniverse::_is_analysis_neutrino_pdg_set = false;
@@ -301,26 +308,26 @@ double CVUniverse::GetEnuCCQEGeV() const {
     return val * MeVGeV;
 }  // both neutrino and antinu
 
-// double CVUniverse::GetTrueEnuDiffGeV() const {
-//     if (isMC()) {
-//         return GetTrueEnuGeV() - GetTrueEnuCCQEGeV();
-//     }
-//     return 0.;
-// }
+double CVUniverse::GetTrueEnuDiffGeV() const {
+   //
+        return GetTrueEnuGeV() - GetTrueEnuCCQEGeV();
+    //}
+    return 0.;
+}
 
-// double CVUniverse::GetTrueEnuRatio() const {
-//     if (isMC()) {
-//         return GetTrueEnuCCQEGeV() / GetTrueEnuGeV();
-//     }
-//     return 0.;
-// }
+double CVUniverse::GetTrueEnuRatio() const {
+    //if (isMC()) {
+        return GetTrueEnuCCQEGeV() / GetTrueEnuGeV();
+    //}
+    return 0.;
+}
 
-// double CVUniverse::GetRecoEnuRatio() const {
-//     if (isMC()) {
-//         return GetEnuCCQEGeV() / GetTrueEnuGeV();
-//     }
-//     return 0.;
-// }
+double CVUniverse::GetRecoTrueEnuRatio() const {
+   // if (isMC()) {
+        return GetEnuCCQEGeV() / GetTrueEnuGeV();
+   // }
+    return 0.;
+}
 
 double CVUniverse::GetTrueEnuCCQEGeV() const {
     int charge = GetAnalysisNuPDG() > 0 ? 1 : -1;
@@ -1111,6 +1118,7 @@ double CVUniverse::GetMaxProtonTrueKE() const {
         if (pdg != 2212) continue;
         double energy = mc_FSPartE[i];
         double KEp = energy - MinervaUnits::M_p;
+        //std::cout << "protonKE" << mc_nFSPart << " " << i << " "  << KEp << " " << KEmax << std::endl;
         if (KEp > KEmax) KEmax = KEp;
     }
     return KEmax;
@@ -1683,7 +1691,7 @@ void CVUniverse::PrintTrueArachneLink() const {
     int subrun = GetInt("mc_subrun");
     int gate = GetInt("mc_nthEvtInFile") + 1;
     int slice = GetVecElem("slice_numbers", 0);
-    sprintf(link,
+    snprintf(link,link_size,
             "https://minerva05.fnal.gov/Arachne/"
             "arachne.html\?det=SIM_minerva&recoVer=v21r1p1&run=%d&subrun=%d&gate="
             "%d&slice=%d",
@@ -1704,7 +1712,7 @@ std::string CVUniverse::StringTrueArachneLink() const {
     int subrun = GetInt("mc_subrun");
     int gate = GetInt("mc_nthEvtInFile") + 1;
     int slice = GetVecElem("slice_numbers", 0);
-    sprintf(link,
+    snprintf(link, link_size,
             "https://minerva05.fnal.gov/Arachne/"
             "arachne.html\?det=SIM_minerva&recoVer=v21r1p1&run=%d&subrun=%d&gate="
             "%d&slice=%d",
@@ -1719,7 +1727,7 @@ void CVUniverse::PrintDataArachneLink() const {
     int subrun = GetInt("ev_subrun");
     int gate = GetInt("ev_gate");
     int slice = GetVecElem("slice_numbers", 0);
-    sprintf(link,
+    snprintf(link, link_size,
             "https://minerva05.fnal.gov/Arachne/"
             "arachne.html\?det=MV&recoVer=v21r1p1&run=%d&subrun=%d&gate="
             "%d&slice=%d",
@@ -1735,7 +1743,7 @@ std::string CVUniverse::StringDataArachneLink() const {
     int subrun = GetInt("ev_subrun");
     int gate = GetInt("ev_gate");
     int slice = GetVecElem("slice_numbers", 0);
-    sprintf(link,
+    snprintf(link, link_size,
             "https://minerva05.fnal.gov/Arachne/"
             "arachne.html\?det=MV&recoVer=v21r1p1&run=%d&subrun=%d&gate="
             "%d&slice=%d",
