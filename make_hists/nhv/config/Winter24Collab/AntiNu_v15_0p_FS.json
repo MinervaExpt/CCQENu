@@ -2,14 +2,14 @@
   "version":15,  
   "mcIn":"${CCQEMAT}/nhv/playlists/MC_5A_local.txt",
   "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
-  "cutsFile": "${CCQEMAT}/nhv/config/cuts/AntiNuCuts_v15_0p_nomichel.json", 
+  "cutsFile": "${CCQEMAT}/nhv/config/Winter24Collab/AntiNuCuts_v15_0p.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
-  "samplesFile": "${CCQEMAT}/nhv/config/samples/AntiNuSamples_v15_0p.json", 
-  "outRoot": "FS_5A_Sidebands_0p",
+  "samplesFile": "${CCQEMAT}/nhv/config/Winter24Collab/AntiNuSamples_v15_recoonly.json", 
+  "outRoot": "FinalState_5A_${MYSAMPLE}",
   "scalefileIn": "${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", 
   "prescale":999,
   "playlist":"minervame5A",
-  "MinervaModel":"MnvTunev1", 
+  "MinervaModel":"${MYSAMPLE}", 
   "recoName":"CCQENu",
   "tunedmc":"untuned", 
   "closure":0,
@@ -33,10 +33,10 @@
     "MultipBlobSideband": "qelike"
   }, 
   "background": {
-    "QElike": ["1chargedepion", "1neutralpion", "multipi", "other"],
-    "MultiplicitySideband": ["1chargedepion", "1neutralpion", "multipi", "other"],
-    "BlobSideband": ["1chargedepion", "1neutralpion", "multipi", "other"],
-    "MultipBlobSideband": ["1chargedepion", "1neutralpion", "multipi", "other"]
+    "QElike": ["chargedepion", "neutralpion", "multipi", "other"],
+    "MultiplicitySideband": ["neutralpion", "chargedpion", "multipion", "other"],
+    "BlobSideband": ["neutralpion", "chargedpion", "multipion", "other"],
+    "MultipBlobSideband": ["neutralpion", "chargedpion", "multipion", "other"]
   },
   "data": {
     "QElike": "data",
