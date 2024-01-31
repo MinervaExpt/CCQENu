@@ -287,12 +287,6 @@ double CVUniverse::GetCoherentPiWeight() const {
 double CVUniverse::GetDiffractiveWeight() const {
     if (GetInt("mc_intType") != 4)
         return 1.;
-    // else if (PlotUtils::TargetUtils::Get().InCarbon3VolMC(GetVecElem("mc_vtx", 0),
-    //                                                       GetVecElem("mc_vtx", 1),
-    //                                                       GetVecElem("mc_vtx", 2)))
-    //     return 1.;
-    // else if (GetInt("mc_targetZ") != 6)
-    //     return 1.;
     if (!IsInPlastic() && !PlotUtils::TargetUtils::Get().InWaterTargetMC(GetVecElem("mc_vtx", 0),
                                                                          GetVecElem("mc_vtx", 1),
                                                                          GetVecElem("mc_vtx", 2), GetInt("mc_targetZ")))
