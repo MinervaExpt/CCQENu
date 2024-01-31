@@ -362,8 +362,8 @@
       "fluxnorm": false
     },
     "PionAngle":{
-      "reco": "GetExtraTrackAngle",
-      "true": "GetTruePionAngle",
+      "reco": "ExtraTrackAngle",
+      "true": "TruePionAngle",
       "name": "PionAngle",
       "title": "Pion Angle",
       "nbins": 20,
