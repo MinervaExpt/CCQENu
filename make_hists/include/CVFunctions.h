@@ -392,7 +392,7 @@ class CVFunctions {
         recofunctions["PionScore1"] = &CVUNIVERSE::GetPionScore1;
         recofunctions["PionScore2"] = &CVUNIVERSE::GetPionScore2;
         truefunctions["TruePionAngle"] = &CVUNIVERSE::GetTruePionAngle;
-        recofunctions["ExtraTrackAngle"] = &CVUniverse::GetExtraTrackAngle;
+        recofunctions["ExtraTrackAngle"] = &CVUNIVERSE::GetExtraTrackAngle;
 
         // Genie Particle Counts
         trueintfunctions["TrueFSPartCount"] = &CVUNIVERSE::GetTrueNumberOfFSParticles;
