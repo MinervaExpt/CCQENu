@@ -360,6 +360,16 @@
       "min":0.0,
       "max":1.0,
       "fluxnorm": false
+    },
+    "PionAngle":{
+      "reco": "GetExtraTrackAngle",
+      "true": "GetTruePionAngle",
+      "name": "PionAngle",
+      "title": "Pion Angle",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 90.0,
+      "fluxnorm":false
     }
   }
 }
