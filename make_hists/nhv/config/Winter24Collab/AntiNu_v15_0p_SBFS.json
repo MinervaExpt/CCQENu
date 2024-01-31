@@ -2,14 +2,14 @@
   "version":15,  
   "mcIn":"${CCQEMAT}/nhv/playlists/MC_5A_local.txt",
   "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
-  "cutsFile": "${CCQEMAT}/nhv/config/Winter24Collab/AntiNuCuts_v15_0p.json", 
+  "cutsFile": "${CCQEMAT}/nhv/config/Winter24Collab/AntiNuCuts_v15_0p_maxrecoil.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
-  "samplesFile": "${CCQEMAT}/nhv/config/Winter24Collab/AntiNuSamples_v15_recoonly.json", 
-  "outRoot": "FinalState_5A_${MYSAMPLE}",
+  "samplesFile": "${CCQEMAT}/nhv/config/Winter24Collab/AntiNuSamples_v15_FS_recoonly.json", 
+  "outRoot": "FinalState_5A_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", 
   "prescale":999,
   "playlist":"minervame5A",
-  "MinervaModel":"${MYSAMPLE}", 
+  "MinervaModel":"${MYMODEL}", 
   "recoName":"CCQENu",
   "tunedmc":"untuned", 
   "closure":0,
@@ -22,7 +22,7 @@
     "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "Q2QE", "Log10Recoil"
+    "Q2QE","pzmu","ptmu"
   ],
   "Analyze2DVariables": [],
   "AnalyzeHyperDVariables": [], 

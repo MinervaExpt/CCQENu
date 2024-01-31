@@ -27,6 +27,7 @@
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
     {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"}
   ],
+  
   "QElikeOld":[
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
