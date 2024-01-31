@@ -8,24 +8,24 @@
     "add log10recoil"
   ],
   "HyperD": {
-    "pzmu_ptmu_Log10Recoil": {
-      "name": "pzmu_ptmu_Log10recoil",
-      "vars": [
-        "pzmu",
-        "ptmu",
-        "Log10recoil"
-      ],
-      "analysistype": 0
-    },
-    "pzmu_ptmu_recoil_k2d": {
+    "pzmu_ptmu_recoil": {
       "name": "pzmu_ptmu_recoil",
       "vars": [
-        "pzmu",
-        "ptmu",
-        "recoil"
+        "pzmuHD",
+        "ptmuHD",
+        "recoilHD"
       ],
-      "analysistype": 0
-    }
+      "analysistype": 1
+    },
+    // "pzmu_ptmu_recoil_k2d": {
+    //   "name": "pzmu_ptmu_recoil",
+    //   "vars": [
+    //     "pzmu",
+    //     "ptmu",
+    //     "recoil"
+    //   ],
+    //   "analysistype": 0
+    // }
   },
   "2D": {
     "pzmu_ptmu": {
@@ -70,6 +70,36 @@
     }
   },
   "1D": {
+    "recoilHD": {
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueRecoilEnergyGeV",
+      "name": "recoilHD",
+      "title": "Recoil in GeV",
+      "nbins": 10,
+      "min": 0.0,
+      "max": 0.5,
+      "for": [
+        "data",
+        "selected_reco"
+      ],
+      "fluxnorm": false
+    },
+    "ptmuHD": {
+      "reco": "PperpMuGeV",
+      "true": "TruePperpMuGeV",
+      "name": "ptmuHD",
+      "title": "muon p_{T} (GeV/c)",
+      "bins":[0,0.25,0.7,1.25,2.5],
+      "fluxnorm": false
+    },
+    "pzmuHD": {
+      "reco": "PparMuGeV",
+      "true": "TruePparMuGeV",
+      "name": "pzmuHD",
+      "title": "muon p_{||} (GeV/c)",
+      "bins": [1.5, 4.5, 10, 15],
+      "fluxnorm": false
+    },
     "EnuCCQE": {
       "reco": "EnuCCQEGeV",
       "true": "TrueEnuCCQEGeV",
