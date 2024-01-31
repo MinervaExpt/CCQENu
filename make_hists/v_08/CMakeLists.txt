@@ -56,7 +56,6 @@ include/weight_MCreScale.cxx
 
 set(H_FILES
 include/Sample.h
-include/CoherentPiReweighter.h
 include/CutFromConfig.h
 include/CVFunctions.h
 include/CVUniverse.h
@@ -79,6 +78,8 @@ include/VariableFromConfig.h
 include/weight_MCreScale.h
 # include/plotting_pdf.h
 # include/VariableHyperDBase.h
+utils/CoherentPiReweighter.h
+utils/DiffractiveReweighter.h
 )
 
 include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils)
