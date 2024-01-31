@@ -285,7 +285,7 @@ double CVUniverse::GetCoherentPiWeight() const {
 }
 
 double CVUniverse::GetDiffractiveWeight() const {
-    if (GetInt("mc_intType") != 4))
+    if (GetInt("mc_intType") != 4)
         return 1.;
     else if (PlotUtils::TargetUtils::Get().InCarbon3VolMC(GetVecElem("mc_vtx", 0),
                                                           GetVecElem("mc_vtx", 1),
