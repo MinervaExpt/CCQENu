@@ -94,6 +94,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetWeight() const;
 
     virtual double GetCoherentPiWeight() const;
+    virtual double GetDiffractiveWeight() const;
     // ========================================================================
     // Write a "Get" function for all quantities access by your analysis.
     // For composite quantities (e.g. Enu) use a calculator function.
@@ -317,8 +318,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetPionScore1() const;
     virtual double GetPionScore2() const;
 
-    virtual double GetTruePionAngle();
-    virtual double GetExtraTrackAngle();
+    virtual double GetTruePionAngle() const;
+    virtual double GetExtraTrackAngle() const;
 
     // Proton Score, Primary and Secondary Proton Tracks
 

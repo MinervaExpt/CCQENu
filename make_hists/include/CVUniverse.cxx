@@ -17,6 +17,7 @@
 #include <algorithm>
 
 #include "include/CVUniverse.h"
+#include "CVUniverse.h"
 
 using namespace PlotUtils;
 
@@ -270,6 +271,7 @@ double CVUniverse::GetCoherentPiWeight() const {
             TVector3 p3pi(GetVecElem("mc_FSPartPx", i), GetVecElem("mc_FSPartPy", i), GetVecElem("mc_FSPartPz", i));
             p3pi.RotateX(MinervaUnits::numi_beam_angle_rad);
             angle = abs(p3pi.Theta())*180./M_PI;  //*180./M_PI;
+            break;
         }
         if (epi < 0)
             return 1.0;
@@ -281,6 +283,20 @@ double CVUniverse::GetCoherentPiWeight() const {
     } else
         return 1.0;
 }
+
+double CVUniverse::GetDiffractiveWeight() const {
+    if (GetInt("mc_intType" != 4))
+        return 1.;
+    else if (PlotUtils::TargetUtils::Get().InCarbon3VolMC(GetVecElem("mc_vtx", 0),
+                                                          GetVecElem("mc_vtx", 1),
+                                                          GetVecElem("mc_vtx", 2)))
+        return 1.;
+    else if (GetInt("mc_nucleiZ") != 6)
+        return 1.;
+    else
+        return 1.4368;
+}
+
 // ========================================================================
 // Write a "Get" function for all quantities access by your analysis.
 // For composite quantities (e.g. Enu) use a calculator function.
@@ -1198,6 +1214,7 @@ double CVUniverse::GetPionScore2() const {
     return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_pion_score2").c_str());
 }
 
+
 // Charged pions
 
 // One charged pion and charged pion count and CCQE except 1+ charged pions
@@ -1369,26 +1386,24 @@ int CVUniverse::GetTrueNegativePionCount() const {
 }
 
 double CVUniverse::GetTruePionAngle() const {
-    int std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
     int mc_nFSPart = GetInt("mc_nFSPart");
-    double angle = -9999;
+    double rad_wrtb = -9999;
     for (int i = 0; i < mc_nFSPart; i++) {
-        if (mc_FSPartPDG[i] == -211) continue;
-        TVector3 pimomentumvec(GetVecElem("mc_FSPartPx", i), GetVecElem("mc_FSPartPy", i), GetVecElem("mc_FSPartPz", i));
-        double rad_wrtb = thetaWRTBeam(pimomentumvec.X(), pimomentumvec.Y(), pimomentumvec.Z());  // rad
-        continue;
+        if (abs(mc_FSPartPDG[i]) != 211) continue;
+        TVector3 p3pi(GetVecElem("mc_FSPartPx", i), GetVecElem("mc_FSPartPy", i), GetVecElem("mc_FSPartPz", i));
+        p3pi.RotateX(MinervaUnits::numi_beam_angle_rad);
+        rad_wrtb = abs(p3pi.Theta());
+        break;
     }
-    angle = rad_wrtb*180./M_PI;
+    double angle = rad_wrtb * 180. / M_PI;
     return angle;
 }
 
 double CVUniverse::GetExtraTrackAngle() const {
-    // 
-    double angle = -9999;
-    angle = rad_wrtb*180./M_PI;
-
-
-    return angle;
+    // This is only intended for a sideband with only one proton candidate that failed proton score cuts (ie is a pion)
+    // This expects you to have a multiplicity of only 2, & a pionscore cut pass or protonscore cut fail
+    return GetPrimaryProtonAngle();
 }
 
 // Michel Electrons 
