@@ -1,146 +1,137 @@
-#include "utils/NuConfig.h"
 #include "GetHyperDVariablesFromConfig.h"
-#include "VariableFromConfig.h"
-#include "VariableHyperDFromConfig.h"
-#include "CVUniverse.h"
+
 #include <cassert>
 
+#include "CVUniverse.h"
+#include "VariableFromConfig.h"
+#include "VariableHyperDFromConfig.h"
+#include "utils/NuConfig.h"
+
 // return a vector instead of a map (which is unneeded nowadays)
-std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, std::map<std::string, CCQENu::VariableFromConfig *> variablesmap, const std::vector<std::string> tags, const NuConfig configraw)
-{
-  //=========================================
-  // Constructor wants: name,
-  //                    vector 1D VariableFromConfig's,
-  //                    fors
-  //
-  // variablesmap is the output of from GetMapOfVariables
-  // config is the whole config file since I need to loop over a vector of HyperDimensional
-  // variables to analyze, which I need to pull from the config file
-  // Might change what the constructor wants to just take in both that vector
-  // and then the config.GetValue("AnalyzeHyperDVariables")
-  //=========================================
-  
-  // this is the HyperD set that actually gets returned
-  std::map<std::string, CCQENu::VariableHyperDFromConfig *> variablesHDmap;
+std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, std::map<std::string, CCQENu::VariableFromConfig *> variablesmap, const std::vector<std::string> tags, const NuConfig configraw) {
+    //=========================================
+    // Constructor wants: name,
+    //                    vector 1D VariableFromConfig's,
+    //                    fors
+    //
+    // variablesmap is the output of from GetMapOfVariables
+    // config is the whole config file since I need to loop over a vector of HyperDimensional
+    // variables to analyze, which I need to pull from the config file
+    // Might change what the constructor wants to just take in both that vector
+    // and then the config.GetValue("AnalyzeHyperDVariables")
+    //=========================================
 
-  // configraw.Print();
-  // Get the configs for *all* hyperD variables in your Variables config
-  NuConfig config;
-  if(configraw.IsMember("HyperD")){
-    config = configraw.GetValue("HyperD");
-  } else{
-    std::cout << "GetHyperDVariablesFromConfig: Warning: No HyperD variables configured." << std::endl;
-    exit(1);
-  }
-  // Get the configs for all 1D variables in your Variables config (these likely contain more info than hyperD that you need)
-  NuConfig config1D;
-  if(configraw.IsMember("1D")){
-    config1D = configraw.GetValue("1D");
-  } else{
-    std::cout << "GetHyperDVariablesFromConfig: Warning: No 1D variables configured." << std::endl;
-  }
+    // this is the HyperD set that actually gets returned
+    std::map<std::string, CCQENu::VariableHyperDFromConfig *> variablesHDmap;
 
-  // Now loop over all the hyperD variables in your Variables config 
-  std::vector<std::string>  keys = config.GetKeys();
-  for (auto key:keys){ // keys here is the list labelled "HyperD" in the Variables json file so you can define them all
-    
-    bool found = false; // This is a bool to check that the variable you configured in your *Main* config are found
-    NuConfig varconfig; // This is the config for one HyperD variable from your Variable config
-    for ( auto v:varsHD){ // varsHD is the list from the Main config
-      if ( v == key){ // Only work on the vars configured in Variable config that are selected in your Main config
-        found = true; 
+    // configraw.Print();
+    // Get the configs for *all* hyperD variables in your Variables config
+    NuConfig config;
+    if (configraw.IsMember("HyperD")) {
+        config = configraw.GetValue("HyperD");
+    } else {
+        std::cout << "GetHyperDVariablesFromConfig: Warning: No HyperD variables configured." << std::endl;
+        exit(1);
+    }
+    // Get the configs for all 1D variables in your Variables config (these likely contain more info than hyperD that you need)
+    NuConfig config1D;
+    if (configraw.IsMember("1D")) {
+        config1D = configraw.GetValue("1D");
+    } else {
+        std::cout << "GetHyperDVariablesFromConfig: Warning: No 1D variables configured." << std::endl;
+    }
 
-        // Get the config for the hyperD variable and pull out various info about it
-        varconfig = config.GetValue(v);
-        std::string nameHD = varconfig.GetString("name"); // should be format xvar_yvar_zvar_..._dvar, matching names of vars in 1D
-        std::vector<std::string> axisvarnamevec = varconfig.GetStringVector("vars"); // Should each match names in 1D vars
-        int dim = axisvarnamevec.size(); // The dimension of the hyperD variable is number of axes it has
-        std::vector<std::string> fors = {}; // What you want to fill hists of (e.g. data, selected_reco), defaults to all<-TODO in VariableHyperDFromConfig
-        
-        if(varconfig.IsMember("for"))
-          fors.push_back(varconfig.GetString("for"));
+    // Now loop over all the hyperD variables in your Variables config
+    std::vector<std::string> keys = config.GetKeys();
+    for (auto key : keys) {  // keys here is the list labelled "HyperD" in the Variables json file so you can define them all
 
-        EAnalysisType analysis_type = k1D;
-        if(varconfig.IsMember("analysistype"))
-          analysis_type = (EAnalysisType)varconfig.GetInt("analysistype");
-        
-        // Make a bool vector to use to check that you have the corresponding 1D variable configured for each axis
-        std::map<int, bool> foundvec; 
-        for(int i = 0; i < dim ; i++)
-          foundvec[dim]=false;
+        bool found = false;      // This is a bool to check that the variable you configured in your *Main* config are found
+        NuConfig varconfig;      // This is the config for one HyperD variable from your Variable config
+        for (auto v : varsHD) {  // varsHD is the list from the Main config
+            if (v == key) {      // Only work on the vars configured in Variable config that are selected in your Main config
+                found = true;
 
-        // Initialize vectors containing  configs,"fors", and their VariableFromConfigs for each axis
-        std::vector<NuConfig> axisvarconfigvec;
-        std::vector<std::vector<std::string>> axisforsvec; //TODO
-        std::vector<CCQENu::VariableFromConfig*> axisvars;
+                // Get the config for the hyperD variable and pull out various info about it
+                varconfig = config.GetValue(v);
+                std::string nameHD = varconfig.GetString("name");                             // should be format xvar_yvar_zvar_..._dvar, matching names of vars in 1D
+                std::vector<std::string> axisvarnamevec = varconfig.GetStringVector("vars");  // Should each match names in 1D vars
+                int dim = axisvarnamevec.size();                                              // The dimension of the hyperD variable is number of axes it has
+                std::vector<std::string> fors = {};                                           // What you want to fill hists of (e.g. data, selected_reco), defaults to all<-TODO in VariableHyperDFromConfig
 
-        // Loop over each axis
-        int i = 0; // TODO: Find a better thing than this hack?
-        for (auto axisname : axisvarnamevec) {
-          NuConfig axisvarconfig = config1D.GetValue(axisname);
-          // Store the config
-          axisvarconfigvec.push_back(axisvarconfig);
-          // Initialize a vector to put the fors for this axis
-          std::vector<std::string> axisfor = {};
-          if(axisvarconfig.IsMember("for")){ axisfor.push_back(axisvarconfig.GetString("for"));}
-          axisforsvec.push_back(axisfor);
-          // TODO: figure out the intersection of "fors" of all axes? For now just configuring it like a 1D variable to have its own set of "fors"
+                if (varconfig.IsMember("for"))
+                    fors = varconfig.GetStringVector("for");
 
-          // Find each variable in input map and store the ones you need to build the HyperD variable
-          for (auto var : variablesmap)
-          {
-            std::string varname = var.first;
-            // Check that name of axis is a name of an input variable
-            if (axisname == varname)
-            {
-              // Put that input variable into vector to feed VarHyperD constructor, emplace_back (vs push_back) is used because its smarter idfk
-              // tmp_axisvars.emplace_back(variablesmap[varname]);
-              axisvars.emplace_back(variablesmap[varname]);
+                EAnalysisType analysis_type = k1D;
+                if (varconfig.IsMember("analysistype"))
+                    analysis_type = (EAnalysisType)varconfig.GetInt("analysistype");
 
-              foundvec[i] = true;
-              i += 1;
-              std::cout << " GetHyperDVariablesFromConfig: added 1D var " << varname << std::endl;
+                // Make a bool vector to use to check that you have the corresponding 1D variable configured for each axis
+                std::map<int, bool> foundvec;
+                for (int i = 0; i < dim; i++)
+                    foundvec[dim] = false;
+
+                // Initialize vectors containing  configs,"fors", and their VariableFromConfigs for each axis
+                std::vector<NuConfig> axisvarconfigvec;
+                // std::vector<std::vector<std::string>> axisforsvec;  // TODO
+                std::vector<CCQENu::VariableFromConfig *> axisvars;
+
+                // Loop over each axis
+                int i = 0;  // TODO: Find a better thing than this hack?
+                for (auto axisname : axisvarnamevec) {
+                    NuConfig axisvarconfig = config1D.GetValue(axisname);
+                    // Store the config
+                    axisvarconfigvec.push_back(axisvarconfig);
+                    // Find each variable in input map and store the ones you need to build the HyperD variable
+                    for (auto var : variablesmap) {
+                        std::string varname = var.first;
+                        // Check that name of axis is a name of an input variable
+                        if (axisname == varname) {
+                            // Put that input variable into vector to feed VarHyperD constructor, emplace_back (vs push_back) is used because its smarter idfk
+                            // tmp_axisvars.emplace_back(variablesmap[varname]);
+                            axisvars.emplace_back(variablesmap[varname]);
+
+                            foundvec[i] = true;
+                            i += 1;
+                            std::cout << " GetHyperDVariablesFromConfig: added 1D var " << varname << std::endl;
+                        }
+                    }
+                }
+                // Double check every axis got found. May not be necessary.
+                for (int i = 0; i < dim; i++) {
+                    if (foundvec[i] == false) {
+                        std::cout << " GetHyperDVariablesFromConfig: Warning - have requested an unimplimented 1D variable " << axisvarnamevec[i] << std::endl;
+                        assert(0);
+                    }
+                }
+                // const std::vector<CCQENu::VariableFromConfig*> axisvars = tmp_axisvars;
+                // Initialize new hyper d variable and add the tags
+                CCQENu::VariableHyperDFromConfig *varHDfromconfig = new CCQENu::VariableHyperDFromConfig(nameHD, axisvars, fors, analysis_type);
+                varHDfromconfig->AddTags(tags);
+                std::cout << "GetHyperDVariablesFromConfig: set up HyperDim variable " << nameHD << " of dimension " << dim << std::endl;
+                // Add it to the map
+                variablesHDmap[nameHD] = varHDfromconfig;
             }
-          }
         }
-        // Double check every axis got found. May not be necessary.
-        for(int i = 0; i < dim; i++){
-          if (foundvec[i] == false) {
-            std::cout << " GetHyperDVariablesFromConfig: Warning - have requested an unimplimented 1D variable " << axisvarnamevec[i] << std::endl;
-            assert(0);
-          }
+        // Check that your hyperD variable existed...
+        if (!found) {
+            std::cout << "GetHyperDVariablesFromConfig: HyperD variable " << key << " configured but not requested in main config" << std::endl;
         }
-        // const std::vector<CCQENu::VariableFromConfig*> axisvars = tmp_axisvars;
-        // Initialize new hyper d variable and add the tags
-        CCQENu::VariableHyperDFromConfig *varHDfromconfig = new CCQENu::VariableHyperDFromConfig(nameHD, axisvars, fors, analysis_type);
-        varHDfromconfig->AddTags(tags);
-        std::cout << "GetHyperDVariablesFromConfig: set up HyperDim variable " << nameHD << " of dimension " << dim << std::endl;
-        // Add it to the map
-        variablesHDmap[nameHD] = varHDfromconfig;
-      }
     }
-    // Check that your hyperD variable existed...
-    if(!found){
-      std::cout << "GetHyperDVariablesFromConfig: HyperD variable " << key << " configured but not requested in main config" << std::endl;
-        
-    }
-  }
-    
-// check that all requested variables are defined.
-  for (auto v:varsHD){
-    bool found = false;
-    for (auto key:keys){
-      if (v == key){
-        found = true;
-        break;
-      }
-      }
-    if (!found)
-    {
-      std::cout << "GetHyperDVariablesFromConfig: Warning - have requested an unimplemented variable in GetHyperDVariablesFromConfig " << v << std::endl;
-      assert(0);
-    }
-  }
 
-  return variablesHDmap;
+    // check that all requested variables are defined.
+    for (auto v : varsHD) {
+        bool found = false;
+        for (auto key : keys) {
+            if (v == key) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            std::cout << "GetHyperDVariablesFromConfig: Warning - have requested an unimplemented variable in GetHyperDVariablesFromConfig " << v << std::endl;
+            assert(0);
+        }
+    }
+
+    return variablesHDmap;
 }
