@@ -150,6 +150,7 @@ int main(const int argc, const char *argv[] ) {
   }
   if (modeltune == "MnvTunev1.2" || modeltune == "MnvTunev2.2") {
       MnvTune.emplace_back(new CoherentPiReweighter<CVUniverse, PlotUtils::detail::empty>);
+      MnvTune.emplace_back(new DiffractiveReweighter<CVUniverse, PlotUtils::detail::empty>)
   }
 
   PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTune));

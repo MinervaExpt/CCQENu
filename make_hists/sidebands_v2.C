@@ -30,15 +30,16 @@
 #ifndef __CINT__
 #include "PlotUtils/Cut.h"
 #include "PlotUtils/Cutter.h"
-#include "include/GetCCQECutsFromConfig.h"
-#include "include/GetVariablesFromConfig.h"
 #include "include/Get2DVariablesFromConfig.h"
+#include "include/GetCCQECutsFromConfig.h"
 #include "include/GetHyperDVariablesFromConfig.h"
+#include "include/GetVariablesFromConfig.h"
 #include "include/Variable2DFromConfig.h"
 #include "include/VariableHyperDFromConfig.h"
 #include "include/weight_MCreScale.h"
-#include "include/CoherentPiReweighter.h"
-//#include "include/plotting_pdf.h"
+#include "utils/CoherentPiReweighter.h"
+#include "utils/DiffractiveReweighter.h"
+// #include "include/plotting_pdf.h"
 #include "TROOT.h"
 #include "TStyle.h"
 #include "TError.h"
@@ -63,7 +64,7 @@
 #endif
 #include "include/Fillers.h"
 #include "include/Sample.h"
-//#include <filesystem>
+// #include <filesystem>
 
 // needs to be global
 int prescale;
