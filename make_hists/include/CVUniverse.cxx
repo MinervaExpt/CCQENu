@@ -287,16 +287,60 @@ double CVUniverse::GetCoherentPiWeight() const {
 double CVUniverse::GetDiffractiveWeight() const {
     if (GetInt("mc_intType") != 4)
         return 1.;
-    else if (PlotUtils::TargetUtils::Get().InCarbon3VolMC(GetVecElem("mc_vtx", 0),
-                                                          GetVecElem("mc_vtx", 1),
-                                                          GetVecElem("mc_vtx", 2)))
-        return 1.;
-    else if (GetInt("mc_nucleiZ") != 6)
+    // else if (PlotUtils::TargetUtils::Get().InCarbon3VolMC(GetVecElem("mc_vtx", 0),
+    //                                                       GetVecElem("mc_vtx", 1),
+    //                                                       GetVecElem("mc_vtx", 2)))
+    //     return 1.;
+    // else if (GetInt("mc_targetZ") != 6)
+    //     return 1.;
+    if (!IsInPlastic() && !PlotUtils::TargetUtils::Get().InWaterTargetMC(GetVecElem("mc_vtx", 0),
+                                                                         GetVecElem("mc_vtx", 1),
+                                                                         GetVecElem("mc_vtx", 2), GetInt("mc_targetZ")))
         return 1.;
     else
         return 1.4368;
 }
 
+bool CVUniverse::IsInPlastic() const {
+    if (!IsInHexagon(GetVecElem("mc_vtx", 0), GetVecElem("mc_vtx", 1), 1000.0))
+        return false;  // This is in the calorimeters
+
+    double mc_vtx_z = GetVecElem("mc_vtx", 2);
+    if (mc_vtx_z > 8467.0) return false;  // Ditto
+
+    int mc_nuclei = GetInt("mc_targetZ");
+    // In the carbon target?  The z is gotten from NukeBinningUtils
+    if (fabs(mc_vtx_z - 4945.92) <=
+            PlotUtils::TargetProp::ThicknessMC::Tgt3::C / 2 &&
+        mc_nuclei == 6)
+        return false;
+
+    // In the water target?
+    if (5200 < mc_vtx_z && mc_vtx_z < 5420 && (mc_nuclei == 8 || mc_nuclei == 1))
+        return false;
+
+    // Finally, do you have target material?  I'm going to say lead/iron isn't a
+    // big consideration elsewhere in the detector
+    if (mc_nuclei == 26 || mc_nuclei == 82) return false;
+
+    return true;
+}
+
+bool CVUniverse::IsInHexagon(double x, double y, double apothem) const {
+    double lenOfSide = apothem * (2 / sqrt(3));
+    double slope = (lenOfSide / 2.0) / apothem;
+    double xp = fabs(x);
+    double yp = fabs(y);
+
+    if ((xp * xp + yp * yp) < apothem * apothem)
+        return true;
+    else if (xp <= apothem && yp * yp < lenOfSide / 2.0)
+        return true;
+    else if (xp <= apothem && yp < lenOfSide - xp * slope)
+        return true;
+
+    return false;
+}
 // ========================================================================
 // Write a "Get" function for all quantities access by your analysis.
 // For composite quantities (e.g. Enu) use a calculator function.
