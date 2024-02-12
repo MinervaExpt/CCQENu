@@ -14,6 +14,7 @@
 #include "PlotUtils/FluxReweighter.h"
 #include <math.h>
 #include "TColor.h"
+#include <filesystem>
 
 #ifndef __CINT__
 #include "include/plotting_pdf.h"
@@ -76,9 +77,204 @@ void applyStyle(MnvH2D* myhist){
 
 
 int main(const int argc, const char *argv[]) {
-
-	int argument = std::stoi(argv[1]);
 	
+	std::string pl = std::string(argv[1]);
+	std::string configfilename(pl+".json");
+	NuConfig config;
+  config.Read(configfilename);
+  
+  std::string path(pl);
+  std::string prescale; 
+  //= config.GetDouble("prescale");
+  prescale = std::string(argv[2]);
+  std::string base = path.substr(path.find_last_of("/\\") + 1);
+  std::string rootfilename = Form("%s_%s_%s.root",config.GetString("outRoot").c_str(),base.c_str(),prescale.c_str());
+  std::cout << "\nroot file: " << rootfilename << std::endl;
+  std::string rootfolder = rootfilename.substr(0, rootfilename.size()-5);
+  //std::filesystem::create_directory(rootfolder);
+  //std::filesystem::create_directory(Form("%s/1D",rootfolder));
+  //std::filesystem::create_directory(Form("%s/2D",rootfolder));
+  
+  std::vector<std::string> vars1D = config.GetStringVector("AnalyzeVariables");
+  std::vector<std::string> vars2D = config.GetStringVector("Analyze2DVariables");
+  std::vector<std::string> samples = config.GetStringVector("runsamples");
+  
+  double yscale = 1.2;
+	
+	TFile *infile = new TFile(Form(rootfilename.c_str()));
+	
+	for (auto sample : samples) {
+		for ( int i=0; i<vars1D.size(); i++ ) {
+		
+			TCanvas *c1 = new TCanvas(vars1D[i].c_str(),vars1D[i].c_str());
+			c1->SetLeftMargin(0.15);
+			c1->SetRightMargin(0.1);
+			c1->SetBottomMargin(0.15);
+			c1->SetTopMargin(0.1);
+			
+			MnvH1D *qe = (MnvH1D*)infile->Get(Form("h___%s___qelike___%s___reconstructed",sample.c_str(),vars1D[i].c_str()));
+			MnvH1D *sch = (MnvH1D*)infile->Get(Form("h___%s___1chargedpion___%s___reconstructed",sample.c_str(),vars1D[i].c_str()));
+			MnvH1D *snu = (MnvH1D*)infile->Get(Form("h___%s___1neutralpion___%s___reconstructed",sample.c_str(),vars1D[i].c_str()));
+			MnvH1D *multi = (MnvH1D*)infile->Get(Form("h___%s___multipion___%s___reconstructed",sample.c_str(),vars1D[i].c_str()));
+			MnvH1D *other = (MnvH1D*)infile->Get(Form("h___%s___other___%s___reconstructed",sample.c_str(),vars1D[i].c_str()));
+			MnvH1D *data = (MnvH1D*)infile->Get(Form("h___%s___data___%s___reconstructed",sample.c_str(),vars1D[i].c_str()));
+			
+			qe->SetFillColor(TColor::GetColor(0,133,173));//kMagenta-4);
+			sch->SetFillColor(TColor::GetColor(175,39,47));//kBlue-7);
+			snu->SetFillColor(TColor::GetColor(76,140,43));//kGreen-3);
+			multi->SetFillColor(TColor::GetColor(234,170,0));//kRed-4);
+			other->SetFillColor(TColor::GetColor(82,37,6));//kBlack);
+			data->SetFillColor(TColor::GetColor(0,0,0));
+
+			qe->SetFillStyle(3001);
+			sch->SetFillStyle(3001);
+			snu->SetFillStyle(3001);
+			multi->SetFillStyle(3001);
+			other->SetFillStyle(3001);
+			
+			qe->SetLineColor(TColor::GetColor(0,133,173));//kMagenta-4);
+			sch->SetLineColor(TColor::GetColor(175,39,47));//Blue-7);
+			snu->SetLineColor(TColor::GetColor(76,140,43));//kGreen-3);
+			multi->SetLineColor(TColor::GetColor(234,170,0));//kRed-4);
+			other->SetLineColor(TColor::GetColor(82,37,6));//kBlack);
+			data->SetLineColor(TColor::GetColor(0,0,0));
+			
+			double data_integral = data->Integral();
+			double mc_integral = qe->Integral() + sch->Integral() + snu->Integral() +
+			                     multi->Integral() + other->Integral();
+			double integral_scale = data_integral/mc_integral;
+			
+			qe->Scale(integral_scale);
+			sch->Scale(integral_scale);
+			snu->Scale(integral_scale);
+			multi->Scale(integral_scale);
+			other->Scale(integral_scale);
+			
+			if(vars1D[i] == "ImprovedMichel_0_Views" ||
+			   vars1D[i] == "ImprovedMichel_1_Views" ||
+			   vars1D[i] == "ImprovedMichel_2_Views" ||
+			   vars1D[i] == "ImprovedMichel_Sum_Views"||
+			   vars1D[i] == "ImprovedMichel_Avg_Views") {
+			  int nbins = qe->GetNbinsX();
+				for( int i=0; i<=nbins; i++ ){
+				
+					double denom = qe->GetBinContent(i) +
+					               sch->GetBinContent(i) +
+					               snu->GetBinContent(i) +
+					               multi->GetBinContent(i) +
+					               other->GetBinContent(i);
+					if(denom == 0) denom = 1;
+					
+					double num_qe = qe->GetBinContent(i);
+					double num_sch = sch->GetBinContent(i);
+					double num_snu = snu->GetBinContent(i);
+					double num_multi = multi->GetBinContent(i);
+					double num_other = other->GetBinContent(i);
+					
+					qe->SetBinContent(i,num_qe/denom);
+					sch->SetBinContent(i,num_sch/denom);
+					snu->SetBinContent(i,num_snu/denom);
+					multi->SetBinContent(i,num_multi/denom);
+					other->SetBinContent(i,num_other/denom);
+				}
+				
+				THStack *hs = new THStack();
+				hs->Add(other);
+				hs->Add(multi);
+				hs->Add(snu);
+				hs->Add(sch);
+				hs->Add(qe);
+				
+				qe->GetYaxis()->SetTitle("Counts/Unit");
+				qe->GetXaxis()->SetTitleOffset(1.2);
+				qe->GetYaxis()->SetTitleOffset(1.3);
+				qe->SetTitle(vars1D[i].c_str());
+				qe->SetStats(0);
+				applyStyle(qe);
+				
+				TLegend *leg = new TLegend(0.62,0.2,0.89,0.49);
+				leg->SetFillColor(kWhite);
+				leg->AddEntry(data,"MINERvA Data","p");
+				leg->AddEntry(qe,"QELike","F");
+				leg->AddEntry(sch,"Single #pi^{+/-} in FS","F");
+				leg->AddEntry(snu,"Single #pi^{0} in FS","F");
+				leg->AddEntry(multi,"N#pi in FS","F");
+				leg->AddEntry(other,"Other","F");
+				
+				hs->Draw("HIST");
+				leg->Draw("SAME");
+				gPad->RedrawAxis();
+			}
+			
+			else {
+				qe->Scale(1.0,"width");
+				sch->Scale(1.0,"width");
+				snu->Scale(1.0,"width");
+				multi->Scale(1.0,"width");
+				other->Scale(1.0,"width");
+				data->Scale(1.0,"width");
+				
+				THStack *hs = new THStack();
+				hs->Add(new TH1D(other->GetCVHistoWithError()));
+				hs->Add(new TH1D(multi->GetCVHistoWithError()));
+				hs->Add(new TH1D(snu->GetCVHistoWithError()));
+				hs->Add(new TH1D(sch->GetCVHistoWithError()));
+				hs->Add(new TH1D(qe->GetCVHistoWithError()));
+				
+				data->GetYaxis()->SetTitle("Counts/Unit");
+				data->GetXaxis()->SetTitleOffset(1.2);
+				data->GetYaxis()->SetTitleOffset(1.3);
+				data->SetTitle(vars1D[i].c_str());
+				data->SetStats(0);
+				applyStyle(data);
+				
+				TLegend *leg = new TLegend(0.62,0.6,0.89,0.89);
+				leg->SetFillColor(kWhite);
+				leg->AddEntry(data,"MINERvA Data","p");
+				leg->AddEntry(qe,"QELike","F");
+				leg->AddEntry(sch,"Single #pi^{+/-} in FS","F");
+				leg->AddEntry(snu,"Single #pi^{0} in FS","F");
+				leg->AddEntry(multi,"N#pi in FS","F");
+				leg->AddEntry(other,"Other","F");
+				
+				data->Draw("PE1");
+				hs->Draw("HISTSAME");
+				data->Draw("PE1SAME");
+				//dolog[i]?data->GetYaxis()->SetRangeUser(0.1,yscale*data->GetBinContent(data->GetMaximumBin())):data->GetYaxis()->SetRangeUser(0,yscale*data->GetBinContent(data->GetMaximumBin()));
+				leg->Draw("SAME");
+				//if(dolog[i]) c1->SetLogy(true);
+				//if(dolog[i]) c1->SetLogx(true);
+				gPad->RedrawAxis();
+			}
+			
+			//c1->Print(Form("%s/1D/%s_%s.png",rootfolder.c_str(),sample.c_str(),vars1D[i].c_str()));
+			c1->Print(Form("%s.png",vars1D[i].c_str()));
+			
+		}
+		
+		/*for ( int i=0; i<vars2D.size(); i++ ) {
+		
+			std::vector<std::string> interactions = {"data","qelike","1chargedpion","1neutralpion","multipion","other"};
+			
+			for (auto iter : interactions) {
+				TCanvas *c1 = new TCanvas(vars2D[i].c_str(),vars2D[i].c_str());
+				c1->SetLeftMargin(0.15);
+				c1->SetRightMargin(0.1);
+				c1->SetBottomMargin(0.15);
+				c1->SetTopMargin(0.1);
+				
+				MnvH2D *h2D = (MnvH2D*)infile->Get(Form("h2D___%s___%s___%s___reconstructed",
+				                                        sample.c_str(),iter.c_str(),vars2D[i].c_str()));
+				                                        
+				c1->Print(Form("%s/2D/%s_%s_%s.png",rootfolder.c_str(),sample.c_str(),iter.c_str(),vars2D[i].c_str()));
+			}
+		}*/
+		
+	}
+  
+  /////////
+  //int argument = std::stoi(argv[1]);
+	int argument = 100;
 	if(argument == 1 || argument == 2) {
 		/*std::vector<bool> binwidthnorm = { true,true,true,true,true,true,true,true };
 		std::vector<std::string> varnames = {"PrimaryProtonScore1","recoil","PrimaryProtonTrackVtxGap","BlobCount",
@@ -155,7 +351,7 @@ int main(const int argc, const char *argv[]) {
 			other->SetLineColor(TColor::GetColor(82,37,6));//kBlack);
 			data->SetLineColor(TColor::GetColor(0,0,0));
 			
-			MnvH1D *h_pot = (MnvH1D*)infile->Get("POT_summary");
+			/*MnvH1D *h_pot = (MnvH1D*)infile->Get("POT_summary");
 			double dataPOT = h_pot->GetBinContent(1);
 			double mcPOTprescaled = h_pot->GetBinContent(3);
 			double POTScale = dataPOT/mcPOTprescaled;
@@ -165,7 +361,18 @@ int main(const int argc, const char *argv[]) {
 			sch->Scale(POTScale);
 			snu->Scale(POTScale);
 			multi->Scale(POTScale);
-			other->Scale(POTScale);
+			other->Scale(POTScale);*/
+			
+			double data_integral = data->Integral();
+			double mc_integral = qe->Integral() + sch->Integral() + snu->Integral() +
+			                     multi->Integral() + other->Integral();
+			double integral_scale = data_integral/mc_integral;
+			
+			qe->Scale(integral_scale);
+			sch->Scale(integral_scale);
+			snu->Scale(integral_scale);
+			multi->Scale(integral_scale);
+			other->Scale(integral_scale);
 			
 			if(binwidthnorm[i]){
 				qe->Scale(1.0,"width");

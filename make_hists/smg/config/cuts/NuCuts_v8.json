@@ -175,6 +175,77 @@
 		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
 		{"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"}
   ],
+  "QElike_Mult1p":[
+		{"name":"Multiplicity","min":1,"variable":"Multiplicity"},
+		{"name":"NBlobs","max":1,"variable":"NBlobs"},
+		{"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+		{"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
+		{"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
+		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+		{"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+		{"name":"ApothemX","max":850,"variable":"ApothemX"},
+		{"name":"ApothemY","max":850,"variable":"ApothemY"},
+		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
+		{"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"}
+	],
+	"MichelSideBand_Mult1p":[
+		{"name":"Multiplicity","min":1,"variable":"Multiplicity"},
+		{"name":"NBlobs","max":1,"variable":"NBlobs"},
+		{"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+		{"name":"MichelCount","min":1,"variable":"ImprovedNMichel"},
+		{"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
+		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+		{"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+		{"name":"ApothemX","max":850,"variable":"ApothemX"},
+		{"name":"ApothemY","max":850,"variable":"ApothemY"},
+		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
+		{"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"}
+	],
+	"BlobSideBand_Mult1p":[
+		{"name":"NBlobs","min":2,"variable":"NBlobs"},
+		{"name":"Multiplicity","min":1,"variable":"Multiplicity"},
+		{"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
+		{"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+		{"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
+		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+		{"name":"HasMINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+		{"name":"ApothemX","max":850,"variable":"ApothemX"},
+		{"name":"ApothemY","max":850,"variable":"ApothemY"},
+		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
+		{"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"}
+  ],
+	"MicBlobSideBand_Mult1p":[
+		{"name":"Multiplicity","min":1,"variable":"Multiplicity"},
+		{"name":"NBlobs","min":2,"variable":"NBlobs"},
+		{"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
+		{"name":"MichelCount","min":1,"variable":"ImprovedNMichel"},
+		{"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
+		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+		{"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+		{"name":"ApothemX","max":850,"variable":"ApothemX"},
+		{"name":"ApothemY","max":850,"variable":"ApothemY"},
+		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"},
+		{"name":"ZVertex","min":5980,"max":8422,"variable":"ZVertex"}
+  ],
+	"Mult1p":[
+		{"name":"Multiplicity","min":1,"variable":"Multiplicity"},
+		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+		{"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"},
+		{"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+		{"name":"ApothemX","max":850,"variable":"ApothemX"},
+		{"name":"ApothemY","max":850,"variable":"ApothemY"},
+		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+	],
   "phase_space":[
     {"name":"ZVertex","min":5980,"max":8410,"variable":"TrueZVertex"},
     {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},

@@ -202,6 +202,15 @@ public:
 		truefunctions["TruthHasImprovedMichel"] = &CVUNIVERSE::GetTruthHasImprovedMichel;
 		trueintfunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
 		truefunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
+		recointfunctions["ImprovedMichel_0_Views"] = &CVUNIVERSE::GetImprovedMichel_0_Views;
+		recofunctions["ImprovedMichel_0_Views"] = &CVUNIVERSE::GetImprovedMichel_0_Views;
+		recointfunctions["ImprovedMichel_1_Views"] = &CVUNIVERSE::GetImprovedMichel_1_Views;
+		recofunctions["ImprovedMichel_1_Views"] = &CVUNIVERSE::GetImprovedMichel_1_Views;
+		recointfunctions["ImprovedMichel_2_Views"] = &CVUNIVERSE::GetImprovedMichel_2_Views;
+		recofunctions["ImprovedMichel_2_Views"] = &CVUNIVERSE::GetImprovedMichel_2_Views;
+		recointfunctions["ImprovedMichel_Sum_Views"] = &CVUNIVERSE::GetImprovedMichel_Sum_Views;
+		recofunctions["ImprovedMichel_Sum_Views"] = &CVUNIVERSE::GetImprovedMichel_Sum_Views;
+		recofunctions["ImprovedMichel_Avg_Views"] = &CVUNIVERSE::GetImprovedMichel_Avg_Views;
 
 		// Both
 

@@ -1484,6 +1484,51 @@ namespace {
 
 	int CVUniverse::GetTruthHasMichel() const { return GetInt("truth_reco_has_michel_electron"); }
 	int CVUniverse::GetTruthHasImprovedMichel() const { return GetInt("truth_improved_michel_electron"); }
+	
+	int CVUniverse::GetImprovedMichel_0_Views() const {
+		if(GetInt("improved_michel_view_vec_sz") >= 1) {
+			std::vector<int> views_vec = GetVecInt("improved_michel_view_vec");
+			return int(views_vec[0]/10);
+		}
+		else return 0;
+	}
+	int CVUniverse::GetImprovedMichel_1_Views() const {
+		if(GetInt("improved_michel_view_vec_sz") >= 2) {
+			std::vector<int> views_vec = GetVecInt("improved_michel_view_vec");
+			return int(views_vec[1]/10);
+		}
+		else return 0;
+	}
+	int CVUniverse::GetImprovedMichel_2_Views() const {
+		if(GetInt("improved_michel_view_vec_sz") >= 3) {
+			std::vector<int> views_vec = GetVecInt("improved_michel_view_vec");
+			return int(views_vec[2]/10);
+		}
+		else return 0;
+	}
+	int CVUniverse::GetImprovedMichel_Sum_Views() const {
+		int michels = GetInt("improved_michel_view_vec_sz");
+		std::vector<int> views_vec = GetVecInt("improved_michel_view_vec");
+		int count = 0;
+		for(int i = 0; i < michels; i++) {
+			count += int(views_vec[i]/10);
+		}
+		return count;
+	}
+	double CVUniverse::GetImprovedMichel_Avg_Views() const {
+		int michels = GetInt("improved_michel_view_vec_sz");
+		std::vector<int> views_vec = GetVecInt("improved_michel_view_vec");
+		int count = 0;
+		for(int i = 0; i < michels; i++) {
+			count += int(views_vec[i]/10);
+		}
+		if(michels == 0) {
+			return 0.;
+		}
+		else {
+			return double(count)/double(michels);
+		}
+	}
 
 	int CVUniverse::GetTruthHasSingleNeutralPion() const {
 		int genie_n_neutral_pion = 0;

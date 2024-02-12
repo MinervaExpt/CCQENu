@@ -1,0 +1,31 @@
+{
+  "version":8,  // Dec 2021 large scale tests
+  "mcIn":"playlists/CCQENu_minervame1N_MC_Inextinguishable_merged.txt",
+  "dataIn":"playlists/CCQENu_minervame1N_DATA_Inextinguishable_merged.txt",
+  "prescale":1,
+  "playlist":"minervame1N",
+  "recoName":"CCQENu",
+  "pdg":14,
+  "useTuned":false,
+  "runsamples":["2track"],
+  "cutsFile":"config/cuts/NuCuts_tmva.json",
+  "paramsFile":"config/parameters/NuParams_v8.json",
+  "varsFile":"config/variables/NuVariables_primaryproton.json",
+  "samplesFile":"config/samples/NuSamples_v8.json",
+  "outRoot":"SB",
+  "AnalyzeVariables":["PrimaryProtonScore1","recoil","PrimaryProtonTrackVtxGap","BlobCount",
+                      "PrimaryProtonFractionVisEnergyInCone","PrimaryProtonTfromdEdx",
+                      "NumClustsPrimaryProtonEnd","ImprovedMichelCount"],
+  "Analyze2DVariables":[],
+  "signal":{"2track":"qelike"},
+  "background":{"2track":["1chargedpion","1neutralpion","multipion","other"]},
+  "data":{"2track":"data"},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+                 "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":2,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}

@@ -329,6 +329,11 @@ public:
 	virtual int GetTrueFittedNMichel() const;
 	virtual int GetTruthHasMichel() const;
 	virtual int GetTruthHasImprovedMichel() const;
+	virtual int GetImprovedMichel_0_Views() const;
+	virtual int GetImprovedMichel_1_Views() const;
+	virtual int GetImprovedMichel_2_Views() const;
+	virtual int GetImprovedMichel_Sum_Views() const;
+	virtual double GetImprovedMichel_Avg_Views() const;
 
 	// Both
 
