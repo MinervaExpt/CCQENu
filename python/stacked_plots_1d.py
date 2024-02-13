@@ -10,8 +10,8 @@ import ROOT
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
 
 TEST=False
-noData=True  # use this to plot MC only types
-sigtop=False # use this to place signal on top of background
+noData=False  # use this to plot MC only types
+sigtop=True # use this to place signal on top of background
 
 
 def CCQECanvas(name,title,xsize=750,ysize=750):
@@ -28,33 +28,21 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
     leg.SetTextSize(0.03)
     return leg
 
-process=["data","QElike","Single charged pi","Single neutral pi","Multi-pi","Other","","","2p2h",""]
 
-nproc = len(process)
-
-for x in range(0,nproc+1):
-    process.append(process[x]+"-not")
-colors = {
-0:ROOT.kBlack,
-1:ROOT.kBlue-6,
-2:ROOT.kMagenta-6,
-3:ROOT.kRed-6,
-4:ROOT.kYellow-6,
-5:ROOT.kWhite,
-6:ROOT.kWhite,
-7:ROOT.kWhite,
-8:ROOT.kGreen-6,
-9:ROOT.kTeal-6,
-10:ROOT.kBlue-1,
-11:ROOT.kBlue-10,
-12:ROOT.kMagenta-10,
-13:ROOT.kRed-10,
-14:ROOT.kYellow-10,
-15:ROOT.kGray,
-16:ROOT.kBlack,
-17:ROOT.kBlack,
-18:ROOT.kGreen-6,
-19:ROOT.kTeal-6}
+catsnames = {
+"data":"data", 
+"qelike":"QElike",
+"chargedpion":"1#pi^{+/-}",
+"neutralpion":"1#pi^{0}",
+"multipion":"N#pi",
+"other":"Other"}
+catscolors = {
+"data":ROOT.kBlack, 
+"qelike":ROOT.kBlue-6,
+"chargedpion":ROOT.kMagenta-6,
+"neutralpion":ROOT.kRed-6,
+"multipion":ROOT.kGreen-6,
+"other":ROOT.kYellow-6}
 
 if len(sys.argv) == 1:
     print ("enter root file name and optional 2nd argument to get tuned version")
@@ -66,16 +54,17 @@ if len(sys.argv)> 2:
 
 f = TFile.Open(filename,"READONLY")
 
-dirname = filename.replace(".root","_types")
+dirname = filename.replace(".root","_FinalStates")
 if not os.path.exists(dirname): os.mkdir(dirname)
 
 keys = f.GetListOfKeys()
 
 h_pot = f.Get("POT_summary")
 dataPOT = h_pot.GetBinContent(1)
-mcPOTprescaled = h_pot.GetBinContent(3)
-POTScale = dataPOT / mcPOTprescaled
-    
+mcPOTprescaled = h_pot.GetBinContent(2)
+POTScale = 4*dataPOT / mcPOTprescaled
+ 
+
 groups = {}
 scaleX = ["Q2QE"]
 scaleY = ["recoil"]
@@ -91,7 +80,8 @@ for k in keys:
     if len(parse) < 5: continue
     #print (parse)
     # names look like : hist___Sample___category__variable___types_0;
-    if not flag in parse[4] and not "data" in parse[2]: continue
+    # if not flag in parse[4] and not "data" in parse[2]: continue
+    if not "reconstructed" in parse[4]: continue
     hist = parse[0]
     sample = parse[1]
     cat = parse[2]
@@ -125,39 +115,28 @@ for k in keys:
     cat = parse[2]
     variable = parse[3]
     # these are stacked histos
-    if flag in parse[4]:
-        index = int(parse[4].replace(flag,""))
-        #print ("check",index,name)
-        h = f.Get(name)
-        if h.GetEntries() <= 0: continue
-        if TEST: h.Scale(2)
-        h.Scale(POTScale,"width") #scale to data
-        
-        h.SetFillColor(colors[index])
-        
-        # Make background processes hashed
-        if cat not in ["qelike","data"]:  # make a better way to do this, maybe code in the input file?
-            index +=10
-            h.SetFillStyle(3244)
+    h = f.Get(name).Clone()
+    if h.GetEntries() <= 0: continue
+    h.SetFillColor(catscolors[cat])
 
-        # if cat == "qelikenot":  # make a better way to do this, maybe code in the input file?
-        #     index += 10
-        #     h.SetFillStyle(3244)
-        groups[hist][sample][variable][cat][index]=h
-        #print ("mc",groups[hist][sample][variable][cat])
-    # this is data
     if "data" in cat:
         index = 0
         h = f.Get(name)
-        
         if h.GetEntries() <= 0: continue
         h.Scale(1.,"width")
         h.SetMarkerStyle(20)
-        groups[hist][sample][variable][cat][index]=h
+    if "data" not in cat:
+        print("scaling hist ",h.GetName())
+        # print("POTscale: ", POTScale)
+        h.Scale(POTScale,"width") #scale to data
+    # if cat in ["chargedpion", "neutralpion", "multipion", "other"]:
+    #     h.SetFillStyle(3244)
+    groups[hist][sample][variable][cat]=h
+
         #print ("data",groups[hist][sample][variable][c])
     
-        
-    
+# "h___MultiplicitySideband___qelike___pzmu___reconstructed"
+# h___MultipBlobSideband___other___pzmu___reconstructed
 # do the plotting
 
 
@@ -190,7 +169,7 @@ for a_hist in groups.keys():
                 print (" no data",a_hist,b_sample,c_var)
                 continue
             
-            data = TH1D(groups[a_hist][b_sample][c_var]["data"][0])
+            data = TH1D(groups[a_hist][b_sample][c_var]["data"])
             data.SetTitle("MINERvA Preliminary")
             data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
             dmax = data.GetMaximum()
@@ -203,29 +182,32 @@ for a_hist in groups.keys():
             
             # do the MC
             # move the first category to the top of the plot
-            if sigtop:
-                bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
-                # assume data = type 0, signal is type 1, rest are after that
-                #print ("pre-bestorder",bestorder)
-                signal = bestorder[1]
-                bestorder = bestorder[2:]
-                bestorder.append(signal)
-            else:
-                bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
-            #print ("bestorder",bestorder)
-            for d_type in bestorder:
-                if d_type == "data": continue
+
+            # if "QElike" not in b_sample:
+            #     sigtop = False
+            # else:
+            #     sigtop = True
+            # if sigtop:
+            #     bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
+            #     # assume data = type 0, signal is type 1, rest are after that
+            #     print ("pre-bestorder",bestorder)
+            #     signal = bestorder[1]
+            #     bestorder = bestorder[2:]
+            #     bestorder.append(signal)
+            # else:
+            #     bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
+            #     bestorder = bestorder[1:]
+            # print ("bestorder",bestorder)
+            bestorder = list(["other","multipion","neutralpion","chargedpion","qelike"])
+
+            for d_cat in bestorder:
+                if d_cat == "data": continue
                 if first == 0: # make a stack
-                    stack = THStack(name.replace(flag,"stack"),"")
+                    stack = THStack(name.replace("reconstructed","stack"),"")
                 first+=1
-                for index in groups[a_hist][b_sample][c_var][d_type].keys(): #fill the stack
-                    #print("index",index,bestorder,groups[a_hist][b_sample][c][d])
-                    if index == 0: continue
-                    if index not in groups[a_hist][b_sample][c_var][d_type]: continue
-                    #print ("do this one ",  index,bestorder)
-                    h = groups[a_hist][b_sample][c_var][d_type][index]
-                    stack.Add(h)
-                    leg.AddEntry(h,process[index],'f')
+                h = groups[a_hist][b_sample][c_var][d_cat]
+                stack.Add(h)
+                leg.AddEntry(h,catsnames[d_cat],"f")
             smax = stack.GetMaximum()
             #print ("max",smax,dmax)
             if smax > dmax:
@@ -245,7 +227,8 @@ for a_hist in groups.keys():
                 data.Draw("PE same")
             leg.Draw()
             cc.Draw()
-            cc.Print(dirname+"/"+thename+"_"+flag+".png")
+            cc.Print(dirname+"/"+thename+"_FinalStates"+".png")
             
     
+
 
