@@ -1441,7 +1441,7 @@ double CVUniverse::GetTruePionAngle() const {
 double CVUniverse::GetExtraTrackAngle() const {
     // This is only intended for a sideband with only one proton candidate that failed proton score cuts (ie is a pion)
     // This expects you to have a multiplicity of only 2, & a pionscore cut pass or protonscore cut fail
-    return GetPrimaryProtonAngle();
+    return abs(GetPrimaryProtonAngle() * 180. / M_PI);
 }
 
 // Michel Electrons 
