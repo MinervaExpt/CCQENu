@@ -10,8 +10,8 @@ import ROOT
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
 
 TEST=False
-noData=True  # use this to plot MC only types
-sigtop=False # use this to place signal on top of background
+noData=False  # use this to plot MC only types
+sigtop=True # use this to place signal on top of background
 
 
 def CCQECanvas(name,title,xsize=750,ysize=750):
@@ -73,7 +73,7 @@ keys = f.GetListOfKeys()
 
 h_pot = f.Get("POT_summary")
 dataPOT = h_pot.GetBinContent(1)
-mcPOTprescaled = h_pot.GetBinContent(3)
+mcPOTprescaled = h_pot.GetBinContent(2)
 POTScale = dataPOT / mcPOTprescaled
     
 groups = {}
@@ -134,7 +134,7 @@ for k in keys:
         h.Scale(POTScale,"width") #scale to data
         
         h.SetFillColor(colors[index])
-        
+        # h.SetLineColor(colors[index]+2)
         if cat == "qelikenot":  # make a better way to do this, maybe code in the input file?
             index += 10
             h.SetFillStyle(3244)
@@ -198,6 +198,11 @@ for a_hist in groups.keys():
             
             # do the MC
             # move the first category to the top of the plot
+
+            if "QElike" not in b_sample:
+                sigtop = False
+            else:
+                sigtop = True
             if sigtop:
                 bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
                 # assume data = type 0, signal is type 1, rest are after that
