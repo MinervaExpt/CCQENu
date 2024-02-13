@@ -17,6 +17,22 @@
       ],
       "analysistype": 1
     },
+    "recoil_ptmu_pzmu":{
+      "name": "recoil_ptmu_pzmu",
+      "vars": [
+        "recoilHD",
+        "ptmuHD",
+        "pzmuHD"
+      ]
+    },
+    "ptmu_pzmu_recoil": {
+      "name": "ptmu_pzmu_recoil",
+      "vars": [
+        "ptmuHD",
+        "pzmuHD",
+        "recoilHD"
+      ]
+    }
     // "pzmu_ptmu_recoil_k2d": {
     //   "name": "pzmu_ptmu_recoil",
     //   "vars": [
@@ -89,7 +105,7 @@
       "true": "TruePperpMuGeV",
       "name": "ptmuHD",
       "title": "muon p_{T} (GeV/c)",
-      "bins":[0,0.25,0.7,1.25,2.5],
+      "bins":[0,0.1,0.3,0.7,1.25,2.5],
       "fluxnorm": false
     },
     "pzmuHD": {
@@ -97,7 +113,7 @@
       "true": "TruePparMuGeV",
       "name": "pzmuHD",
       "title": "muon p_{||} (GeV/c)",
-      "bins": [1.5, 4.5, 10, 15],
+      "bins": [1.5, 3, 6, 10, 15],
       "fluxnorm": false
     },
     "EnuCCQE": {
@@ -244,9 +260,9 @@
       "true": "TrueRecoilEnergyGeV",
       "name": "recoil",
       "title": "Recoil in GeV",
-      "nbins": 25,
+      "nbins": 50,
       "min": 0.0,
-      "max": 0.5,
+      "max": 1.0,
       "for": [
         "data",
         "selected_reco"
@@ -366,7 +382,7 @@
       "true": "TruePionAngle",
       "name": "PionAngle",
       "title": "Pion Angle",
-      "nbins": 20,
+      "nbins": 10,
       "min": 0.0,
       "max": 90.0,
       "fluxnorm":false

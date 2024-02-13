@@ -2,7 +2,7 @@
   "version":15,  
   "mcIn":"${CCQEMAT}/nhv/playlists/MC_5A_local.txt",
   "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
-  "cutsFile": "${CCQEMAT}/nhv/config/Winter24Collab/AntiNuCuts_v15_0p_maxrecoil.json", 
+  "cutsFile": "${CCQEMAT}/nhv/config/Winter24Collab/AntiNuCuts_v15_0p_maxrecoil_thpicut.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/Winter24Collab/AntiNuSamples_v15_FS_recoonly.json", 
   "outRoot": "FinalState_5A_${MYMODEL}",
@@ -22,10 +22,12 @@
     "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "pzmuHD","ptmuHD","recoilHD"
+    "Q2QE",
+    "pzmu",
+    "PionAngle" //,"pzmu","ptmu","PionAngle"
   ],
   "Analyze2DVariables": [],
-  "AnalyzeHyperDVariables": ["recoil_ptmu_pzmu","pzmu_ptmu_recoil","ptmu_pzmu_recoil"], 
+  "AnalyzeHyperDVariables": [], 
   "signal": {
     "QElike": "qelike",
     "MultiplicitySideband": "qelike",

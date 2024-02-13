@@ -22,7 +22,7 @@
     "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "Q2QE","pzmu","ptmu","PionAngle"
+    "Q2QE","PionAngle" //,"pzmu","ptmu","PionAngle"
   ],
   "Analyze2DVariables": [],
   "AnalyzeHyperDVariables": [], 
