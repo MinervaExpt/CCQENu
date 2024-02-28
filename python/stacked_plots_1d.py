@@ -12,6 +12,7 @@ from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F
 TEST=False
 noData=False  # use this to plot MC only types
 sigtop=True # use this to place signal on top of background
+ROOT.TH1.AddDirectory(ROOT.kFALSE)
 
 
 def CCQECanvas(name,title,xsize=750,ysize=750):
@@ -61,9 +62,9 @@ keys = f.GetListOfKeys()
 
 h_pot = f.Get("POT_summary")
 dataPOT = h_pot.GetBinContent(1)
-mcPOTprescaled = h_pot.GetBinContent(2)
-POTScale = 4*dataPOT / mcPOTprescaled
- 
+mcPOTprescaled = h_pot.GetBinContent(3)
+POTScale = dataPOT / mcPOTprescaled
+print("POTScale: ",POTScale)
 
 groups = {}
 scaleX = ["Q2QE"]
@@ -81,7 +82,7 @@ for k in keys:
     #print (parse)
     # names look like : hist___Sample___category__variable___types_0;
     # if not flag in parse[4] and not "data" in parse[2]: continue
-    if not "reconstructed" in parse[4]: continue
+    if "reconstructed" not in parse[4]: continue
     hist = parse[0]
     sample = parse[1]
     cat = parse[2]
@@ -114,10 +115,13 @@ for k in keys:
     sample = parse[1]
     cat = parse[2]
     variable = parse[3]
+    if "reconstructed" not in parse[4]: continue
+
     # these are stacked histos
     h = f.Get(name).Clone()
     if h.GetEntries() <= 0: continue
     h.SetFillColor(catscolors[cat])
+
 
     if "data" in cat:
         index = 0
@@ -180,24 +184,6 @@ for a_hist in groups.keys():
             
             data.Print()
             
-            # do the MC
-            # move the first category to the top of the plot
-
-            # if "QElike" not in b_sample:
-            #     sigtop = False
-            # else:
-            #     sigtop = True
-            # if sigtop:
-            #     bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
-            #     # assume data = type 0, signal is type 1, rest are after that
-            #     print ("pre-bestorder",bestorder)
-            #     signal = bestorder[1]
-            #     bestorder = bestorder[2:]
-            #     bestorder.append(signal)
-            # else:
-            #     bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
-            #     bestorder = bestorder[1:]
-            # print ("bestorder",bestorder)
             bestorder = list(["other","multipion","neutralpion","chargedpion","qelike"])
 
             for d_cat in bestorder:
@@ -223,7 +209,9 @@ for a_hist in groups.keys():
                 data.Reset()
                 data.Draw("hist")  # need to this to get the axis titles from data
                 stack.Draw("hist same")
+                data.Draw("AXIS same")
             if not noData: 
+                data.Draw("AXIS same")
                 data.Draw("PE same")
             leg.Draw()
             cc.Draw()
