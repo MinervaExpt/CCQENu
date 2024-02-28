@@ -1,0 +1,67 @@
+{
+  "version":15,  
+  "mcIn":"${CCQEMAT}/nhv/playlists/MC_5A_local.txt",
+  "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/Ntrack/AntiNuCuts_v15_Ntrack.json", 
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
+  "samplesFile": "${CCQEMAT}/nhv/config/Ntrack/AntiNuSamples_v15_Ntrack_QELike_recoonly.json", 
+  "outRoot": "NTrack_QElike_5A_${MYMODEL}",
+  "scalefileIn": "${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", 
+  "prescale":999,
+  "playlist":"minervame5A",
+  "MinervaModel":"${MYMODEL}", 
+  "recoName":"CCQENu",
+  "tunedmc":"untuned", 
+  "closure":0,
+  "TuneCategories":["qelike", "qelikenot"], 
+  "pdg":-14,
+  "mcRecoToCSV": true,
+  "runsamples": [
+    "QElike",
+    "MultiplicitySideband",
+    "BlobSideband",
+    "MultipBlobSideband"
+  ],
+  "AnalyzeVariables": [
+    "Q2QE",
+    "recoil"
+  ],
+  "Analyze2DVariables": [],
+  "AnalyzeHyperDVariables": [],
+  "signal": {
+    "QElike": "qelike",
+    "MultiplicitySideband": "qelike",
+    "BlobSideband": "qelike",
+    "MultipBlobSideband": "qelike"
+  },
+  "background": {
+    "QElike": "qelikenot",
+    "MultiplicitySideband": "qelikenot",
+    "BlobSideband": "qelikenot",
+    "MultipBlobSideband": "qelikenot"
+  },
+  "data": {
+    "QElike": "data",
+    "MultiplicitySideband": "data",
+    "BlobSideband": "data",
+    "MultipBlobSideband": "data"
+  },
+  "systematics": [
+    "Flux"//,
+    // "MuonMINOS",
+    // "MuonResolution",
+    // "MINOSEfficiency",
+    // "Angle",
+    // "GENIE",
+    // "GenieRvx1pi",
+    // "RPA",
+    // "2p2h",
+    // "MuonMinerva",
+    // "geant4",
+    // "response"
+  ],
+  "fluxUniverses": 2, //10,
+  "NuEConstraint":1, 
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1 
+}
