@@ -573,7 +573,7 @@ double CVUniverse::GetPrimaryProtonScore2() const {
 }
 
 int CVUniverse::GetIsAllTracksProtons() const {
-    // This assumes you have a multiplicity cut set up
+    // This assumes you have a multiplicity cut set up to have 2 or more
     double tree_Q2 = GetQ2QEGeV();
     double proton_score = GetPrimaryProtonScore();
     int prim_pass = GetPassProtonScoreCut(proton_score, tree_Q2);
@@ -953,11 +953,43 @@ double CVUniverse::GetTrueQ3GeV() const {
     double q3 = std::sqrt(px * px + py * py + pz * pz);
     return q3 * MeVGeV;
 }
+
 double CVUniverse::GetTrueQ2GeV() const {
     double q3 = CVUniverse::GetTrueQ3GeV();
     double q0 = CVUniverse::GetTrueQ0GeV();
     return q3 * q3 - q0 * q0;
 }
+
+double CVUniverse::GetTrueEAvailGeV() const {
+    double Eavail = 0.0;
+    int pdgsize = GetInt("mc_nFSPart");
+    for (int i = 0; i < pdgsize; i++) {
+        int pdg = GetVecElem("mc_FSPartPDG", i);
+        double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
+        if (abs(pdg) > 1e9)
+            continue;  // ignore nuclear fragments
+        else if (abs(pdg) == 11 || abs(pdg) == 13)
+            continue;  // ignore leptons
+        else if (abs(pdg) == 211)
+            Eavail += energy - 139.5701;  // subtracting pion mass to get Kinetic energy
+        else if (pdg == 2212)
+            Eavail += energy - 938.27201;  // proton
+        else if (pdg == 2112)
+            continue;  // Skip neutrons
+        else if (pdg == 111)
+            Eavail += energy;  // pi0
+        else if (pdg == 22)
+            Eavail += energy;  // photons
+        else if (pdg >= 2000) //TODO: what is this?
+            Eavail += energy - 938.27201;
+        else if (pdg <= -2000)
+            Eavail += energy + 938.27201;
+        else
+            Eavail += energy;
+    }
+    return Eavail * MeVGeV;
+}
+
 
 // ----------------------------- Other Variables -----------------------------
 
@@ -1627,6 +1659,30 @@ int CVUniverse::GetHasMichelOrNBlobs() const {
     else
         return 0;
 }
+
+// int CVUniverse::GetNPionTracks() const {}
+// TODO
+// int CVUniverse::GetHasMultiPion() const {
+//     // This finds out if there are
+//     //  1. more than one charged pion signatures (ie 2 or more non-proton non-muon tracks)
+//     //  2. more than one neutral pion signatures (ie 4 or more blobs), or
+//     //  3. at least one charged pion signature AND one neutral pion signautre
+//     // To be used for the multipi sideband (for antinu) as a reconstruction cut
+
+//     int n_blobs = CVUniverse::GetNBlobs();
+//     if (n_blobs >= 4)  // This event has signature of 2 neutral pions, pass
+//         return 1;
+//     int multiplicity = CVUniverse::GetMultiplicity();
+//     if (n_blobs < 2 && multiplicity < 2)  // This event has no pion signatures, fail
+//         return 0; 
+//     int isAllTracksProtons = CVUniverse::GetIsAllTracksProtons(); // TODO: this fails if there's any pions, so some of these tracks could be protons
+//     if (multiplicity > 2 && isAllTracksProtons == 0) // This event has signature of 2 charged pions, pass
+//         return 1;
+//     if (multiplicity >= 2 && n_blobs >= 2 && isAllTracksProtons == 0) // this event has signature of at least 1 charged and 1 neutral pion, pass
+//         return 1;
+//     // else
+//     return 0;
+// }
 
 // int CVUniverse::GetHasMultiPion() const {
 //     // This is for antineutrino multipi sideband, checks for some combination of pi0, pi+, or pi- (so N_\pi >= 2)

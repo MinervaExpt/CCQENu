@@ -210,6 +210,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetTrueQ3GeV() const;
     virtual double GetTrueQ2GeV() const;
 
+    virtual double GetTrueEAvailGeV() const;
+
     // ----------------------------- Other Variables -----------------------------
 
     //  virtual double GetWgenie() const { return GetDouble("mc_w"); }
