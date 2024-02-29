@@ -11,9 +11,9 @@
  * This implements a loop over the tuple that fills the histograms
  **/
 
-#include <vector>
 #include <map>
 #include <string>
+#include <vector>
 
 enum EDataMCTruth { kData,
                     kMC,
@@ -42,28 +42,23 @@ void LoopAndFillEventSelection(std::string tag,
     int nentries = -1;
     CVFunctions<CVUniverse> fund;
 
-    TFile * myFile;
-    TTree * mc_tree;
-    TTree * data_tree;
+    TFile* myFile;
+    TTree* mc_tree;
+    TTree* data_tree;
 
-
-    // future code to dump the outputs. 
+    // future code to dump the outputs.
     // if (data_mc_truth == kData) {
     //     myFile = TFile::Open("data.root", "RECREATE");
     //     data_tree = new TTree("digest", "data tree");
-    //     fund->MakeTree(data_tree,1,0); 
-    // } 
+    //     fund->MakeTree(data_tree,1,0);
+    // }
     // else {
     //     if (data_mc_truth == kMC) {
     //         myFile = TFile::Open("mc.root", "RECREATE");
     //         mc_tree = new TTree("digest", "mc tree");
-    //     fund->MakeTree(data_tree,0,0); 
+    //     fund->MakeTree(data_tree,0,0);
     //     }
     // }
-
-    
-
-
 
     // get ready for weights by finding cv universe pointer
 
@@ -152,8 +147,8 @@ void LoopAndFillEventSelection(std::string tag,
         }
 
         cvUniv->SetEntry(i);
-        //HMS fund.Dump(cvUniv,data_mc_truth==kData,data_mc_truth==kTruth);
-        
+        // HMS fund.Dump(cvUniv,data_mc_truth==kData,data_mc_truth==kTruth);
+
         if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
         const double cvWeight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*cvUniv, event);  // detail may be used for more complex things
