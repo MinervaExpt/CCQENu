@@ -92,7 +92,7 @@
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
     {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"}
   ],
-  "MultiplicitySideband": [
+  "LoPionThetaSideband": [
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
     {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
     {"name": "No IsAllTracksProtons", "equals": 0, "variable": "IsAllTracksProtons"},
@@ -109,10 +109,44 @@
     {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
     {"name": "Min Pion Angle", "min": 40.0,"variable": "ExtraTrackAngle"} 
   ],
-  "MultipBlobSideband": [
-    {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
+  "HiPionThetaSideband": [
+    {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
     {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
     {"name": "No IsAllTracksProtons", "equals": 0, "variable": "IsAllTracksProtons"},
+    {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
+    {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
+    {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
+    {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
+    {"name": "ZVertex", "min": 5980, "max": 8422, "variable": "ZVertex"},
+    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"}, 
+    {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
+    {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
+    {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
+    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
+    {"name": "Max Pion Angle", "max": 40.0,"variable": "ExtraTrackAngle"} 
+  ],
+  "MultiplicitySideband": [
+    {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
+    {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
+    {"name": "No IsAllTracksProtons", "equals": 0, "variable": "IsAllTracksProtons"},
+    {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
+    {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
+    {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
+    {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
+    {"name": "ZVertex", "min": 5980, "max": 8422, "variable": "ZVertex"},
+    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"}, 
+    {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
+    {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
+    {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
+    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"}
+  ],
+  "MultipBlobSideband": [
+    // {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
+    // {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
+    // {"name": "No IsAllTracksProtons", "equals": 0, "variable": "IsAllTracksProtons"},
+    {"name": "Yes HasMultiPion", "equals": 1, "variable": "HasMultiPion"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
     {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
     {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
