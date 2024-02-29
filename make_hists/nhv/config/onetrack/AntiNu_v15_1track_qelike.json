@@ -15,7 +15,7 @@
   "closure":0,
   "TuneCategories":["qelike", "qelikenot"], 
   "pdg":-14,
-  "mcRecoToCSV": true,
+  "mcRecoToCSV": false,
   "runsamples": [
     "QElike",
     "MultiplicitySideband",

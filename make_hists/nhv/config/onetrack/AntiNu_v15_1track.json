@@ -5,7 +5,8 @@
   "cutsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuCuts_v15_1track.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_FS_recoonly.json", 
-  "outRoot": "${MYROOTOUTPUT}/FinalState_5A_1track_${MYMODEL}",
+  "outRoot": "FinalState_5A_1track_${MYMODEL}",
+  // "outRoot": "${MYROOTOUTPUT}/FinalState_5A_1track_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", 
   "prescale":999,
   "playlist":"minervame5A",
@@ -15,7 +16,7 @@
   "closure":0,
   "TuneCategories":["qelike", "qelikenot"], 
   "pdg":-14,
-  "mcRecoToCSV":true,
+  "mcRecoToCSV": false,
   "runsamples": [
     "QElike",
     "MultiplicitySideband",
