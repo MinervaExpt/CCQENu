@@ -165,8 +165,8 @@ for a_hist in groups.keys():
             cc = CCQECanvas(name,name)
             if c_var in scaleX:
                 cc.SetLogx()
-            if c_var in scaleY:
-                cc.SetLogy()
+            # if c_var in scaleY:
+            #     cc.SetLogy()
             
             data = TH1D()
             if len(groups[a_hist][b_sample][c_var]["data"]) < 1:
@@ -196,12 +196,16 @@ for a_hist in groups.keys():
                 leg.AddEntry(h,catsnames[d_cat],"f")
             smax = stack.GetMaximum()
             #print ("max",smax,dmax)
+            max_multiplier = 1.5
+
+            if c_var in scaleY:
+                max_multiplier = 1.05
             if smax > dmax:
-                data.SetMaximum(smax*1.5)
-                stack.SetMaximum(smax*1.5)
+                data.SetMaximum(smax*max_multiplier)
+                stack.SetMaximum(smax*max_multiplier)
             else:
-                data.SetMaximum(dmax*1.5)
-                stack.SetMaximum(dmax*1.5)
+                data.SetMaximum(dmax*max_multiplier)
+                stack.SetMaximum(dmax*max_multiplier)
             if not noData: 
                 data.Draw("PE")
                 stack.Draw("hist same")
