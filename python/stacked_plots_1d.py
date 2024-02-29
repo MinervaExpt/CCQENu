@@ -89,6 +89,7 @@ for k in keys:
     variable = parse[3]
     # reorder so category is last
     if hist == "h2D": continue
+    if cat == "qelikenot": continue
     if hist not in groups.keys():
         groups[hist] = {}
         #legs[parse[0]] = {}
@@ -114,6 +115,8 @@ for k in keys:
     if hist == "h2D": continue # only 1d
     sample = parse[1]
     cat = parse[2]
+    if cat == "qelikenot": continue
+
     variable = parse[3]
     if "reconstructed" not in parse[4]: continue
 
@@ -122,7 +125,7 @@ for k in keys:
     if h.GetEntries() <= 0: continue
     h.SetFillColor(catscolors[cat])
 
-
+    
     if "data" in cat:
         index = 0
         h = f.Get(name)
