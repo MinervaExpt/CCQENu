@@ -308,6 +308,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // Both
 
     virtual int GetHasMichelOrNBlobs() const;
+    virtual int GetNPionTracks() const;
+    virtual int GetTruthHasMultiPion() const;
 
     // Charged and Neutral Pions
 
@@ -318,7 +320,6 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetTruthHasSingleNegativePion() const;
     virtual int GetTruthHasSingleNeutralPion() const;
 
-    virtual int GetTruthHasMultiPion() const;
     virtual double GetPionScore() const;
     virtual double GetPionScore1() const;
     virtual double GetPionScore2() const;
@@ -477,6 +478,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetAllExtraTracksProtons1() const;
     virtual int GetProtonCount() const;
     virtual int GetProtonCount1() const;
+
+    virtual int GetHasMultiPion() const;
 
     // GENIE Particle Counts
 

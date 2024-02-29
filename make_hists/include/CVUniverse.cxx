@@ -1234,7 +1234,7 @@ int CVUniverse::GetTruthIsCCQELikeAll() const {  // cut hardwired for now
     int mc_nFSPart = GetInt("mc_nFSPart");
     // int mc_incoming = GetInt("mc_incoming");
     // int mc_current = GetInt("mc_current");
-    bool passes = (CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, 10000.));
+    bool passes = (CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, 1000000.));
 
     return passes;
 }
@@ -1660,43 +1660,50 @@ int CVUniverse::GetHasMichelOrNBlobs() const {
         return 0;
 }
 
-// int CVUniverse::GetNPionTracks() const {}
-// TODO
-// int CVUniverse::GetHasMultiPion() const {
-//     // This finds out if there are
-//     //  1. more than one charged pion signatures (ie 2 or more non-proton non-muon tracks)
-//     //  2. more than one neutral pion signatures (ie 4 or more blobs), or
-//     //  3. at least one charged pion signature AND one neutral pion signautre
-//     // To be used for the multipi sideband (for antinu) as a reconstruction cut
+int CVUniverse::GetNPionTracks() const {
+    int n_pions = 0;
+    // Check that there are actually tracks to look at
+    if (CVUniverse::GetMultiplicity() < 2)
+        return n_pions;  // Since no non-muon tracks, there can't be any pions
 
-//     int n_blobs = CVUniverse::GetNBlobs();
-//     if (n_blobs >= 4)  // This event has signature of 2 neutral pions, pass
-//         return 1;
-//     int multiplicity = CVUniverse::GetMultiplicity();
-//     if (n_blobs < 2 && multiplicity < 2)  // This event has no pion signatures, fail
-//         return 0; 
-//     int isAllTracksProtons = CVUniverse::GetIsAllTracksProtons(); // TODO: this fails if there's any pions, so some of these tracks could be protons
-//     if (multiplicity > 2 && isAllTracksProtons == 0) // This event has signature of 2 charged pions, pass
-//         return 1;
-//     if (multiplicity >= 2 && n_blobs >= 2 && isAllTracksProtons == 0) // this event has signature of at least 1 charged and 1 neutral pion, pass
-//         return 1;
-//     // else
-//     return 0;
-// }
+    double tree_Q2 = GetQ2QEGeV();
 
-// int CVUniverse::GetHasMultiPion() const {
-//     // This is for antineutrino multipi sideband, checks for some combination of pi0, pi+, or pi- (so N_\pi >= 2)
-//     int picharged_count = 0;
-//     int pi0_count = 0;
-//     if ( CVUniverse::GetNBlobs() > 1)
-//         neutralpi_count += 1;
-//     if (GetInt("improved_michel_match_vec_sz") > 0)
-//         pi_count += 1;
-//     else if (GetMultiplicity() >= 2)
-//         return 1;
-//     else
-//         return 0;
-// }
+    // First check primary proton candidates
+    double prim_proton_score = GetPrimaryProtonScore();
+    int prim_is_proton = GetPassProtonScoreCut(prim_proton_score, tree_Q2);
+    if (prim_is_proton == 0)
+        n_pions += 1;  // if it fails, that's a proton, so add to count
+
+    // Next check secondary proton candidates
+    int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
+    if (n_sec_proton_scores == 0)
+        return n_pions;  // If no secondary candidates, just return value from the first one
+
+    std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str());
+    for (auto score : scores) { // Loop over the scores
+        if (GetPassProtonScoreCut(score, tree_Q2) == 0)
+            n_pions += 1; // If that doesn't pass the score cut, then it's a pion so add to count
+    }
+
+    return n_pions;  // Return how many pions there are
+}
+
+int CVUniverse::GetHasMultiPion() const {
+    // This finds out if there are
+    //  1. more than one charged pion signatures (ie 2 or more non-proton non-muon tracks)
+    //  2. more than one neutral pion signatures (ie 4 or more blobs), or
+    //  3. at least one charged pion signature AND one neutral pion signautre
+    // To be used for the multipi sideband (for antinu) as a reconstruction cut
+
+    int n_blobs = CVUniverse::GetNBlobs();
+    if (n_blobs >= 4)  // This event has signature of 2 neutral pions, pass
+        return 1;
+    int n_pion_tracks = CVUniverse::GetNPionTracks(); // This counts how many tracks pass pion score
+    if (n_blobs/2 + n_pion_tracks >= 2) // If there's (at least 1 neutral pion & 1 charged pion) OR (at least 2 charged pions) then pass 
+        return 1;
+    // else
+    return 0;
+}
 
 // Other particles
 

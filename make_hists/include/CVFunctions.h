@@ -219,10 +219,15 @@ class CVFunctions {
         truefunctions["TruthHasImprovedMichel"] = &CVUNIVERSE::GetTruthHasImprovedMichel;
         trueintfunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
         truefunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
+        recointfunctions["NPionTracks"] = &CVUNIVERSE::GetNPionTracks;
+        recofunctions["NPionTracks"] = &CVUNIVERSE::GetNPionTracks;
 
         // Both
 
         recointfunctions["HasMichelOrNBlobs"] = &CVUNIVERSE::GetHasMichelOrNBlobs;
+        
+        recointfunctions["HasMultiPion"] = &CVUNIVERSE::GetHasMultiPion;
+        recofunctions["HasMultiPion"] = &CVUNIVERSE::GetHasMultiPion;
 
         // Protons
 
