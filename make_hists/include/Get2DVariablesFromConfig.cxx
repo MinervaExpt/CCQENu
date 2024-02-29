@@ -103,9 +103,9 @@ std::map<std::string, CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(s
                 }
             }
         }
-        if (!found) {
-            std::cout << "Get2DVariablesFromConfig: 2D variable " << key << " configured but not requested in main config" << std::endl;
-        }
+        // if (!found) {
+        //     std::cout << "Get2DVariablesFromConfig: 2D variable " << key << " configured but not requested in main config" << std::endl;
+        // }
     }
 
     // check that all requested variables are defined.
@@ -226,9 +226,9 @@ std::map<std::string, CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(s
 //                 }
 //             }
 //         }
-//         if (!found) {
-//             std::cout << "Get2DVariablesFromConfig: 2D variable " << key << " configured but not requested in main config" << std::endl;
-//         }
+//         // if (!found) {
+//         //     std::cout << "Get2DVariablesFromConfig: 2D variable " << key << " configured but not requested in main config" << std::endl;
+//         // }
 //     }
 
 //     // check that all requested variables are defined.

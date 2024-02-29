@@ -113,9 +113,9 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFrom
             }
         }
         // Check that your hyperD variable existed...
-        if (!found) {
-            std::cout << "GetHyperDVariablesFromConfig: HyperD variable " << key << " configured but not requested in main config" << std::endl;
-        }
+        // if (!found) {
+        //     std::cout << "GetHyperDVariablesFromConfig: HyperD variable " << key << " configured but not requested in main config" << std::endl;
+        // }
     }
 
     // check that all requested variables are defined.
