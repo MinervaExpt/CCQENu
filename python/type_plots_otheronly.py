@@ -35,7 +35,7 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
     leg.SetTextSize(0.03)
     return leg
 
-process=["data","QE","RES","DIS","Other","","","","2p2h",""]
+process=["data","QE","RES","DIS","COH","","","","2p2h",""]
 
 nproc = len(process)
 
