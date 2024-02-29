@@ -1680,7 +1680,7 @@ int CVUniverse::GetNPionTracks() const {
         return n_pions;  // If no secondary candidates, just return value from the first one
 
     std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str());
-    for (auto score : scores) { // Loop over the scores
+    for (auto score : sec_proton_scores) {  // Loop over the scores
         if (GetPassProtonScoreCut(score, tree_Q2) == 0)
             n_pions += 1; // If that doesn't pass the score cut, then it's a pion so add to count
     }
