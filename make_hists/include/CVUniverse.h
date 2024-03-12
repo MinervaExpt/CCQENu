@@ -205,12 +205,20 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 	virtual double GetLog10RecoilEnergyGeV() const;
 	virtual double GetTrueLog10RecoilEnergyGeV() const;
 
+    virtual double GetRecoilEnergyMinusNeutBlobsGeV() const;
+
 
     virtual double GetTrueQ0GeV() const;
     virtual double GetTrueQ3GeV() const;
     virtual double GetTrueQ2GeV() const;
 
     virtual double GetTrueEAvailGeV() const;
+
+    virtual double GetTrueEAvailWithNeutronsGeV() const;
+
+    virtual double GetEAvailResolutionGeV() const;
+
+    virtual double GetEAvailWithNeutronsResolutionGeV() const;
 
     // ----------------------------- Other Variables -----------------------------
 
@@ -289,6 +297,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // Isolated Blobs
 
     virtual int GetNBlobs() const;
+    virtual int GetNNeutBlobs() const;
+    virtual double GetNNeutBlobsRatio() const;
     virtual int GetTrueNBlobs() const;  // This is just N_pi0*2
 
     // Michel Electrons

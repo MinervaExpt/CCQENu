@@ -922,6 +922,8 @@ double CVUniverse::GetCalRecoilEnergy() const {
     }
 }
 
+
+
 double CVUniverse::GetCalRecoilEnergyGeV() const { return CVUniverse::GetCalRecoilEnergy() * MeVGeV; }
 double CVUniverse::GetNonCalRecoilEnergy() const { return 0; }  // not certain why I want to implement this but there ya go.
 double CVUniverse::GetNonCalRecoilEnergyGeV() const { return GetNonCalRecoilEnergy() * MeVGeV; }
@@ -941,6 +943,18 @@ double CVUniverse::GetLog10RecoilEnergyGeV() const { return std::log10(GetRecoil
 // 	double q0 = mc_incomingPartVec[3] - mc_primFSLepton[3];
 // return q0*MeVGeV;
 // }
+
+double CVUniverse::GetRecoilEnergyMinusNeutBlobsGeV() const {
+    // this takes recoil and removes the energy from 3D blobs, which are more likely to be neutrons
+    double recoil = GetRecoilEnergyGeV(); // regular recoil def
+    double nblobs = CVUniverse::GetNNeutBlobs(); // number of 3d blobs
+    if (nblobs > 0) { // if there aren't any blobs, just return the recoil as is
+        std::vector<double> blob_energy_vec = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_BlobTotalE").c_str()); // TODO: this might not be just 3d blobs???
+        for (int i = 0; i < nblobs; i++) 
+            recoil += -blob_energy_vec[i]; // remove the energy of each blob
+    }
+    return recoil;
+}
 
 double CVUniverse::GetTrueQ3GeV() const {
     static std::vector<double> mc_incomingPartVec;
@@ -966,7 +980,9 @@ double CVUniverse::GetTrueEAvailGeV() const {
     for (int i = 0; i < pdgsize; i++) {
         int pdg = GetVecElem("mc_FSPartPDG", i);
         double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
-        if (abs(pdg) > 1e9)
+        if (pdg == 2112)
+            continue;  // Skip neutrons
+        else if (abs(pdg) > 1e9)
             continue;  // ignore nuclear fragments
         else if (abs(pdg) == 11 || abs(pdg) == 13)
             continue;  // ignore leptons
@@ -974,22 +990,59 @@ double CVUniverse::GetTrueEAvailGeV() const {
             Eavail += energy - 139.5701;  // subtracting pion mass to get Kinetic energy
         else if (pdg == 2212)
             Eavail += energy - 938.27201;  // proton
-        else if (pdg == 2112)
-            continue;  // Skip neutrons
         else if (pdg == 111)
             Eavail += energy;  // pi0
         else if (pdg == 22)
             Eavail += energy;  // photons
-        else if (pdg >= 2000) //TODO: what is this?
+        else if (pdg >= 2000)  // TODO: what is this?
             Eavail += energy - 938.27201;
         else if (pdg <= -2000)
             Eavail += energy + 938.27201;
         else
             Eavail += energy;
     }
+    // return std::max(0.0, Eavail * MeVGeV);
     return Eavail * MeVGeV;
 }
 
+double CVUniverse::GetTrueEAvailWithNeutronsGeV() const {
+    double Eavail = 0.0;
+    int pdgsize = GetInt("mc_nFSPart");
+    for (int i = 0; i < pdgsize; i++) {
+        int pdg = GetVecElem("mc_FSPartPDG", i);
+        double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
+        if (pdg == 2112)
+            Eavail += (energy - 939.5654)*0.75;  // Skip neutrons
+        else if (abs(pdg) > 1e9)
+            continue;  // ignore nuclear fragments
+        else if (abs(pdg) == 11 || abs(pdg) == 13)
+            continue;  // ignore leptons
+        else if (abs(pdg) == 211)
+            Eavail += energy - 139.5701;  // subtracting pion mass to get Kinetic energy
+        else if (pdg == 2212)
+            Eavail += energy - 938.27201;  // proton
+        else if (pdg == 111)
+            Eavail += energy;  // pi0
+        else if (pdg == 22)
+            Eavail += energy;  // photons
+        else if (pdg >= 2000)  // TODO: what is this?
+            Eavail += energy - 938.27201;
+        else if (pdg <= -2000)
+            Eavail += energy + 938.27201;
+        else
+            Eavail += energy;
+    }
+    // return std::max(0.0, Eavail * MeVGeV);
+    return Eavail * MeVGeV;
+}
+
+double CVUniverse::GetEAvailResolutionGeV() const { // Hard coding to double check issues 
+    return (CVUniverse::GetRecoilEnergyGeV() - CVUniverse::GetTrueEAvailGeV());
+}
+
+double CVUniverse::GetEAvailWithNeutronsResolutionGeV() const {  // Hard coding to double check issues
+    return (CVUniverse::GetRecoilEnergyGeV() - CVUniverse::GetTrueEAvailWithNeutronsGeV());
+}
 
 // ----------------------------- Other Variables -----------------------------
 
@@ -1266,6 +1319,17 @@ int CVUniverse::GetNBlobs() const {
         if (blob_z_starts[k] > m_min_blob_zvtx) n_blobs++;
     }
     return n_blobs;
+}
+
+int CVUniverse::GetNNeutBlobs() const {
+    return GetInt((MinervaUniverse::GetTreeName() + "_BlobIs3D_sz").c_str());
+}
+
+double CVUniverse::GetNNeutBlobsRatio() const {
+    double n_3d_blobs = (double)CVUniverse::GetNNeutBlobs();
+    double n_neutrons = (double)CVUniverse::GetTrueNeutronCount();
+    if (n_3d_blobs == 0.) return 9999.;
+    return n_neutrons/n_3d_blobs;
 }
 
 int CVUniverse::GetTrueNBlobs() const {  // This is just messing around... -NHV 6/20/23
@@ -1877,6 +1941,8 @@ void CVUniverse::Print() const {
         << GetTruthIsCC() << ","
         << GetTruthIsCCQELike() << ", "
         << GetIsMinosMatchTrack() << ", "
+        << CVUniverse::GetRecoilEnergyGeV() << ", "
+        << CVUniverse::GetTrueEAvailGeV() << ", "
         << std::endl;
 }
 

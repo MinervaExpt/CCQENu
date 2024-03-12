@@ -92,7 +92,16 @@ class CVFunctions {
         recofunctions["RecoilEnergyGeV"] = &CVUNIVERSE::GetRecoilEnergyGeV;
         truefunctions["TrueRecoilEnergyGeV"] = &CVUNIVERSE::GetTrueRecoilEnergyGeV;
 
-        truefunctions["TrueEAvailableGeV"] = &CVUNIVERSE::GetTrueEAvailGeV;
+        recofunctions["RecoilEnergyMinusNeutBlobsGeV"] = &CVUNIVERSE::GetRecoilEnergyMinusNeutBlobsGeV;
+
+        truefunctions["TrueEAvailGeV"] = &CVUNIVERSE::GetTrueEAvailGeV;
+        truefunctions["TrueEAvailWithNeutronsGeV"] = &CVUNIVERSE::GetTrueEAvailWithNeutronsGeV;
+
+        recofunctions["EAvailResolutionGeV"] = &CVUNIVERSE::GetEAvailResolutionGeV;
+        truefunctions["EAvailResolutionGeV"] = &CVUNIVERSE::GetEAvailResolutionGeV;
+
+        recofunctions["EAvailWithNeutronsResolutionGeV"] = &CVUNIVERSE::GetEAvailWithNeutronsResolutionGeV;
+        truefunctions["EAvailWithNeutronsResolutionGeV"] = &CVUNIVERSE::GetEAvailWithNeutronsResolutionGeV;
 
         recofunctions["Log10RecoilEnergyGeV"] = &CVUNIVERSE::GetLog10RecoilEnergyGeV;
         truefunctions["TrueLog10RecoilEnergyGeV"] = &CVUNIVERSE::GetTrueLog10RecoilEnergyGeV;
@@ -201,7 +210,14 @@ class CVFunctions {
         // Isolated Blobs
 
         recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
+        recointfunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
         truefunctions["TrueNBlobs"] = &CVUNIVERSE::GetTrueNBlobs;
+
+        recofunctions["NNeutBlobs"] = &CVUNIVERSE::GetNNeutBlobs;
+        recointfunctions["NNeutBlobs"] = &CVUNIVERSE::GetNNeutBlobs;
+
+        recofunctions["NeutBlobsRatio"] = &CVUNIVERSE::GetNNeutBlobsRatio;
+        truefunctions["NeutBlobsRatio"] = &CVUNIVERSE::GetNNeutBlobsRatio;
 
         // Michel Electrons
 
