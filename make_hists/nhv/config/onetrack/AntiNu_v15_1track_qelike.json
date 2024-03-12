@@ -26,26 +26,6 @@
     "Q2QE",
     "recoil"
   ],
-  "Analyze2DVariables": [],
-  "AnalyzeHyperDVariables": [],
-  "signal": {
-    "QElike": "qelike",
-    "MultiplicitySideband": "qelike",
-    "BlobSideband": "qelike",
-    "MultipBlobSideband": "qelike"
-  },
-  "background": {
-    "QElike": "qelikenot",
-    "MultiplicitySideband": "qelikenot",
-    "BlobSideband": "qelikenot",
-    "MultipBlobSideband": "qelikenot"
-  },
-  "data": {
-    "QElike": "data",
-    "MultiplicitySideband": "data",
-    "BlobSideband": "data",
-    "MultipBlobSideband": "data"
-  },
   "systematics": [
     "Flux"//,
     // "MuonMINOS",

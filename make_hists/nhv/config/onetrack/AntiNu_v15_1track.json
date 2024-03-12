@@ -4,8 +4,8 @@
   "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuCuts_v15_1track.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
-  "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_FS_recoonly.json", 
-  "outRoot": "FinalState_5A_1track_${MYMODEL}",
+  "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_QELike_recoonly.json",
+  "outRoot": "RecoilBinningStudy_equalcontentbinning_QElike_${MYMODEL}",
   // "outRoot": "${MYROOTOUTPUT}/FinalState_5A_1track_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", 
   "prescale":999,
@@ -15,38 +15,28 @@
   "tunedmc":"untuned", 
   "closure":0,
   "TuneCategories":["qelike", "qelikenot"], 
+  "DoResolution": true,
   "pdg":-14,
-  "mcRecoToCSV": false,
+  "mcRecoToCSV": true,
   "runsamples": [
-    "QElike",
-    "MultiplicitySideband",
-    "BlobSideband",
-    "MultipBlobSideband"
+    "QElike"//,
+    // "LoPionThetaSideband",
+    // "HiPionThetaSideband",
+    // "BlobSideband",
+    // "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "Q2QE",
-    "recoil"
+    "recoilNoBlobs",
+    // "Q2QE",
+    "EAvail",
+    "EAvailWithNeutrons"
+    // "resEAvailWithNeutrons",
+    // // "recoil"
+    // "NNeutBlobs"
+    // "NeutBlobsRatio"
   ],
   "Analyze2DVariables": [],
   "AnalyzeHyperDVariables": [], 
-  "signal": {
-    "QElike": "qelike",
-    "MultiplicitySideband": "qelike",
-    "BlobSideband": "qelike",
-    "MultipBlobSideband": "qelike"
-  }, 
-  "background": {
-    "QElike": ["chargedepion", "neutralpion", "multipi", "other"],
-    "MultiplicitySideband": ["neutralpion", "chargedpion", "multipion", "other"],
-    "BlobSideband": ["neutralpion", "chargedpion", "multipion", "other"],
-    "MultipBlobSideband": ["neutralpion", "chargedpion", "multipion", "other"]
-  },
-  "data": {
-    "QElike": "data",
-    "MultiplicitySideband": "data",
-    "BlobSideband": "data",
-    "MultipBlobSideband": "data"
-  },
   "systematics": [
     "Flux"//,
     // "MuonMINOS",
