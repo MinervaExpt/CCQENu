@@ -96,7 +96,7 @@ void LoopAndFillEventSelection(std::string tag,
         csvFile << "Entry";
         for (auto v : variables) {
             if (v->hasMC[tag]) {
-                csvFile << ";" << v->GetName();
+                csvFile << ";" << v->GetName() << ";TrueValue";
             }
         }
         csvFile << ";Interaction;nFSPart;FSPDGs;FSPartEs;";
@@ -203,7 +203,8 @@ void LoopAndFillEventSelection(std::string tag,
                             csvFile << i;
                             for (auto v : variables) {
                                 if (v->hasMC[tag]) {
-                                    csvFile << ";" << v->GetRecoValue(*universe, 0);
+                                    csvFile << ";" << v->GetRecoValue(*universe, 0) << ";" << v->GetTrueValue(*universe,0);
+
                                 }
                             }
 
