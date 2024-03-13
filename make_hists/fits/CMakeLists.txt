@@ -46,6 +46,7 @@ set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
 set(SRC_FILES
 include/Get2DVariablesFromConfig.cxx
 include/GetVariablesFromConfig.cxx
+include/GetHyperDVariablesFromConfig.cxx
 include/CVUniverse.cxx
 include/weight_MCreScale.cxx
 fits/ScaleFactors.cpp
@@ -65,19 +66,27 @@ include/CVUniverse.h
 include/GetCCQECutsFromConfig.h
 include/GetVariablesFromConfig.h
 include/Get2DVariablesFromConfig.h
+include/GetHyperDVariablesFromConfig.h
 include/GetStacked.h
+include/HistHyperDWrapperMap.h
 include/Hist2DWrapperMap.h
 include/HistWrapperMap.h
+include/ResponseWrapperMap.h
+include/Response2DWrapperMap.h
+include/ResponseHyperDWrapperMap.h
 include/Systematics.h
+include/VariableHyperDFromConfig.h
 include/Variable2DFromConfig.h
 include/VariableFromConfig.h
-include/plotting_pdf.h
+# include/plotting_pdf.h
 include/weight_MCreScale.h
 fits/ScaleFactors.h
 fits/MultiScaleFactors.h
 fits/DoTheFit.h
 fits/DoTheFitBinByBin.h
 utils/SyncBands.h
+utils/CoherentPiReweighter.h
+utils/DiffractiveReweighter.h
 )
 
 include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils)
@@ -116,7 +125,7 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{P
 #add_executable(runsamples runsamples.C)
 add_executable(sidebands_v2 sidebands_v2.C)
 #add_executable(analyze_v8 analyze_v8.C)
-add_executable(analyze_v9 analyze_v9.C)
+# add_executable(analyze_v9 analyze_v9.C)
 add_executable(MnvFitDriver MnvFitDriver.cxx)
 add_executable(MnvMateusDriver MnvMateusDriver.cxx)
 #add_executable(stack_SignalBkgd smg/stack_SignalBkgd.C)
@@ -133,7 +142,7 @@ add_executable(MnvMateusDriver MnvMateusDriver.cxx)
 #target_link_libraries(runsamples  PRIVATE ${PROJEC_NAME} )
 target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
-target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )
+# target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(MnvFitDriver PRIVATE ${PROJECT_NAME} )
 target_link_libraries(MnvMateusDriver PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(stack_SignalBkgd  PRIVATE ${PROJECT_NAME} )
