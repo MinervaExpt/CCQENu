@@ -67,6 +67,11 @@ int main(const int argc, const char *argv[] ) {
     std::cout << " ask for resolutions" << std::endl;
   }
 
+  bool dotypes = false;
+  if (config.IsMember("DoTypes")){
+    dotypes = config.GetBool("DoTypes");
+    std::cout << " Will fill MC int types for all variables" << std::endl;
+  }
   //===========================================================================
   // MacroUtil (makes your anatuple chains)
   //===========================================================================
@@ -342,7 +347,7 @@ int main(const int argc, const char *argv[] ) {
   // new way
   std::vector<std::string> vars1D = config.GetStringVector("AnalyzeVariables");
   std::vector<CCQENu::VariableFromConfig *> variables1D;
-  std::map<std::string, CCQENu::VariableFromConfig *> variablesmap1D = GetVariablesFromConfig(vars1D, tags, configvar, doresolution, tunedmc);
+  std::map<std::string, CCQENu::VariableFromConfig *> variablesmap1D = GetVariablesFromConfig(vars1D, tags, configvar, doresolution, dotypes, tunedmc);
 
   std::vector<std::string> vars2D = config.GetStringVector("Analyze2DVariables");
   std::vector<CCQENu::Variable2DFromConfig *> variables2D;

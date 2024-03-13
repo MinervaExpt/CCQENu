@@ -39,7 +39,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     // typedef PlotUtils::MnvH1D MH1D;
     
     bool m_doresolution;
-    bool m_dotypes = true; //HMS set true for now for testing
+    bool m_dotypes; 
 
 
    public:
@@ -63,6 +63,14 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
     bool GetDoResolution() {
         return m_doresolution;
+    }
+
+    void SetDoTypes(const bool dotypes) {
+        m_dotypes = dotypes;
+    }
+
+    bool GetDoTypes() {
+        return m_dotypes;
     }
 
     VariableFromConfig(const NuConfig config) {

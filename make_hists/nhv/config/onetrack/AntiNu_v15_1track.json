@@ -16,6 +16,7 @@
   "closure":0,
   "TuneCategories":["qelike", "qelikenot"], 
   "DoResolution": true,
+  "DoTypes": true,
   "pdg":-14,
   "mcRecoToCSV": true,
   "runsamples": [
