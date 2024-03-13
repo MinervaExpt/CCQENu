@@ -68,6 +68,9 @@ int main(const int argc, const char *argv[]) {
         dotypes = config.GetBool("DoTypes");
         std::cout << " Will fill MC int types for all variables" << std::endl;
     }
+    if (dotypes)
+        std::cout << " Will fill MC int types for all variables" << std::endl;
+
     //===========================================================================
     // MacroUtil (makes your anatuple chains)
     //===========================================================================
