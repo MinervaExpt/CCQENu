@@ -4,8 +4,8 @@
   "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuCuts_v15_1track.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
-  "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_QELike_recoonly.json",
-  "outRoot": "RecoilBinningStudy_equalcontentbinning_QElike_${MYMODEL}",
+  "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_FS_recoonly.json",
+  "outRoot": "SidebandsTest_FinalStates_${MYMODEL}",
   // "outRoot": "${MYROOTOUTPUT}/FinalState_5A_1track_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/FullSample_MnvTunev1_Q2QErecoil.root", 
   "prescale":999,
@@ -15,22 +15,22 @@
   "tunedmc":"untuned", 
   "closure":0,
   "TuneCategories":["qelike", "qelikenot"], 
-  "DoResolution": true,
+  "DoResolution": false,
   "DoTypes": true,
   "pdg":-14,
   "mcRecoToCSV": true,
   "runsamples": [
-    "QElike"//,
-    // "LoPionThetaSideband",
-    // "HiPionThetaSideband",
-    // "BlobSideband",
-    // "MultipBlobSideband"
+    "QElike",
+    "LoPionThetaSideband",
+    "HiPionThetaSideband",
+    "BlobSideband",
+    "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "recoilNoBlobs",
+    // "recoilNoBlobs",
     // "Q2QE",
-    "EAvail",
-    "EAvailWithNeutrons"
+    "EAvail"//,
+    // "EAvailWithNeutrons"
     // "resEAvailWithNeutrons",
     // // "recoil"
     // "NNeutBlobs"
