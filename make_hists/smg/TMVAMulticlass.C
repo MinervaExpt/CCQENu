@@ -271,6 +271,7 @@ int main( int argc, char** argv )
 
 	// Launch the GUI for the root macros
 	if (!gROOT->IsBatch()) TMVAMultiClassGui( outfileName );
+	TMVAMultiClassGui( outfileName );
 
 	return 0;
 }

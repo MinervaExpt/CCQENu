@@ -399,7 +399,7 @@ int main(const int argc, const char *argv[] ) {
 		//=========================================
 		// Entry loop and fill
 		//=========================================
-		std::cout << "Loop and Fill ..." << tag << "\n";
+		std::cout << "Loop and Fill ... " << tag << "\n";
 		int nentries = util.GetMCEntries();
 		
 		if (tmva_trees) {

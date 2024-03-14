@@ -105,6 +105,7 @@ namespace {
 	std::map<std::string,bool> CVUniverse::m_passes_signal_cuts = std::map<std::string,bool>();
 	std::map<std::string,bool> CVUniverse::m_passes_signal_cuts_old = std::map<std::string,bool>();
 	std::vector<float> CVUniverse::m_response_vec = {};
+	std::vector<float> CVUniverse::m_xgboost_response_vec = {};
 	
 	bool CVUniverse::_is_analysis_neutrino_pdg_set = false;
 	bool CVUniverse::_is_min_blob_zvtx_set = false;
@@ -115,6 +116,7 @@ namespace {
 	bool CVUniverse::_are_signal_truths_set = false;
 	bool CVUniverse::_are_signal_truths_set_old = false;
 	bool CVUniverse::_is_response_vec_filled = false;
+	bool CVUniverse::_is_xgboost_response_vec_filled = false;
 	
 	///////////////// Incoming Neutrino PDG /////////////////
 	int CVUniverse::GetAnalysisNeutrinoPDG() { return m_analysis_neutrino_pdg; }
@@ -364,6 +366,21 @@ namespace {
 		return m_response_vec;
 	}
 	
+	//////// xgboost Models /////////
+	bool CVUniverse::SetXgboostVectorResponse(std::vector<float> response_vec) {
+		m_xgboost_response_vec = response_vec;
+		_is_xgboost_response_vec_filled = true;
+		return 1;
+	}
+	bool CVUniverse::ResetXgboostVectorResponse() {
+		m_xgboost_response_vec = {};
+		_is_xgboost_response_vec_filled = false;
+		return 1;
+	}
+	std::vector<float> CVUniverse::GetXgboostVectorResponse() {
+		return m_xgboost_response_vec;
+	}
+	
 	
 
 	// ========================================================================
@@ -506,6 +523,21 @@ namespace {
 		if (GetPrimaryProtonScore1() >= 0) count++;
 		count += GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
 		return count;
+	}
+	
+	double CVUniverse::GetMinProtonScore1() const {
+		double primary_score = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str());
+		if (primary_score < 0) {
+			return -9999.;
+		} 
+		else if (GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str()) == 0) {
+			return primary_score;
+		} 
+		else {
+			std::vector<double> scores = GetVec<double>(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1").c_str());
+			scores.push_back(primary_score);
+			return *min_element(std::begin(scores), std::end(scores));
+		}
 	}
 	
 	double CVUniverse::GetProtonScore(int i) const {
@@ -733,6 +765,30 @@ namespace {
 	double CVUniverse::GetSecProtonAngle_5() const { return GetProtonAngle(5); }
 	double CVUniverse::GetSecProtonAngle_6() const { return GetProtonAngle(6); }
 	
+	double CVUniverse::GetThetaProton(int i) const { /* radians w.r.t. incident nu dirn */
+		if (i==0 && GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str())>=0) {
+			double thetaX = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_thetaX").c_str());
+			double thetaY = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_thetaY").c_str());
+			return theta3D(thetaX,thetaY)*180/M_PI;
+		}
+		else if (i<=GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_thetaX_sz").c_str())) {
+			double thetaX = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_thetaX").c_str(),i-1);
+			double thetaY = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_thetaY").c_str(),i-1);
+			return theta3D(thetaX,thetaY)*180/M_PI;
+		}
+		else {
+			return -9999.;
+		}
+	}
+	double CVUniverse::GetThetaProton0() const { return GetThetaProton(0); }
+	double CVUniverse::GetThetaProton1() const { return GetThetaProton(1); }
+	double CVUniverse::GetThetaProton2() const { return GetThetaProton(2); }
+	double CVUniverse::GetThetaProton3() const { return GetThetaProton(3); }
+	double CVUniverse::GetThetaProton4() const { return GetThetaProton(4); }
+	double CVUniverse::GetThetaProton5() const { return GetThetaProton(5); }
+	double CVUniverse::GetThetaProton6() const { return GetThetaProton(6); }
+	
+	
 	double CVUniverse::GetMuonToPrimaryProtonAngle() const {
 		if (GetProtonScore1_0() < 0) return -9999.;
 		double theta1 = GetThetamu();
@@ -743,6 +799,82 @@ namespace {
 		                         std::sin(theta1)*std::sin(phi1)*std::sin(theta2)*std::sin(phi2) +
 		                         std::cos(theta1)*std::cos(theta2));
 		                         return theta*180/M_PI;
+	}
+	
+	// Proton P (from dEdx)
+	double CVUniverse::GetPProton(int i) const { 
+		if (i==0) {
+			return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_P_fromdEdx").c_str());
+		}
+		else if (i<=GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_P_fromdEdx_sz").c_str())) {
+			return GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_P_fromdEdx").c_str(),i-1);
+		}
+		else {
+			return -9999.;
+		}
+	}
+	double CVUniverse::GetPProtonGeV0() const { return GetPProton(0)*MeVGeV; }
+	double CVUniverse::GetPProtonGeV1() const { return GetPProton(1)*MeVGeV; }
+	double CVUniverse::GetPProtonGeV2() const { return GetPProton(2)*MeVGeV; }
+	double CVUniverse::GetPProtonGeV3() const { return GetPProton(3)*MeVGeV; }
+	double CVUniverse::GetPProtonGeV4() const { return GetPProton(4)*MeVGeV; }
+	double CVUniverse::GetPProtonGeV5() const { return GetPProton(5)*MeVGeV; }
+	double CVUniverse::GetPProtonGeV6() const { return GetPProton(6)*MeVGeV; }
+	
+	// Proton Pt
+	double CVUniverse::GetPperpProton(int i) const { 
+		double theta = GetThetaProton(i);
+		if (theta<-1000) {
+			return -9999.;
+		}
+		else {
+			return GetPProton(i)*std::sin(theta); 
+		}
+	}
+	double CVUniverse::GetPperpProtonGeV0() const { return GetPperpProton(0)*MeVGeV; }
+	double CVUniverse::GetPperpProtonGeV1() const { return GetPperpProton(1)*MeVGeV; }
+	double CVUniverse::GetPperpProtonGeV2() const { return GetPperpProton(2)*MeVGeV; }
+	double CVUniverse::GetPperpProtonGeV3() const { return GetPperpProton(3)*MeVGeV; }
+	double CVUniverse::GetPperpProtonGeV4() const { return GetPperpProton(4)*MeVGeV; }
+	double CVUniverse::GetPperpProtonGeV5() const { return GetPperpProton(5)*MeVGeV; }
+	double CVUniverse::GetPperpProtonGeV6() const { return GetPperpProton(6)*MeVGeV; }
+	
+	// Transverse Momentum Imbalance
+	double CVUniverse::GetPtImbalance() const {
+		if (GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_score1").c_str()) < 0 ||
+		    GetDouble(std::string(MinervaUniverse::GetTreeName()+"_muon_score").c_str()) < 0) {
+			return -9999.;
+		}
+		else {
+			double muonP = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_muon_P").c_str());
+			double muonPx = muonP*std::sin(GetDouble("muon_thetaX"));
+			double muonPy = muonP*std::sin(GetDouble("muon_thetaY"));
+			double protonP = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_P_fromdEdx").c_str());
+			double protonPx = protonP*std::sin(GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_P_thetaX").c_str()));
+			double protonPy = protonP*std::sin(GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_P_thetaY").c_str()));
+			double totalPx = muonPx + protonPx;
+			double totalPy = muonPy + protonPy;
+			
+			for (int i=0; i<GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_P_fromdEdx_sz").c_str()); i++) {
+				double P = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_P_fromdEdx").c_str(),i);
+				double thetaX = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_thetaX").c_str(),i);
+				double thetaY = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_thetaY").c_str(),i);
+				double Px = protonP*std::sin(thetaX);
+				double Py = protonP*std::sin(thetaY);
+				totalPx += Px;
+				totalPy += Py;
+			}
+			return sqrt(pow(totalPx,2)+pow(totalPy,2));
+		}
+	}
+	double CVUniverse::GetPtImbalanceGeV() const {
+		double imbalanceMeV = GetPtImbalance();
+		if (imbalanceMeV < 0) {
+			return -9999.;
+		}
+		else {
+			return imbalance*MeVGeV;
+		}
 	}
 	
 	// Gap between interaction vertex and start of proton candidate track (mm)
@@ -1529,6 +1661,23 @@ namespace {
 			return double(count)/double(michels);
 		}
 	}
+	
+	int CVUniverse::GetMaxImprovedMichelViews() const {
+		int michels = GetInt("improved_michel_view_vec_sz");
+		if(michels == 0) {
+			return 0.;
+		}
+		else {
+			std::vector<int> views_vec = GetVecInt("improved_michel_view_vec");
+			int views = int(views_vec[0]/10);
+			for(int i = 1; i < michels; i++){
+				if( int(views_vec[i]/10) > views ) {
+					views = int(views_vec[i]/10);
+				}
+			}
+			return views;
+		}
+	}
 
 	int CVUniverse::GetTruthHasSingleNeutralPion() const {
 		int genie_n_neutral_pion = 0;
@@ -1876,6 +2025,59 @@ namespace {
 	double CVUniverse::bdtgOther() const {
 		if (_is_response_vec_filled) {
 			double response = m_response_vec[4];
+			return response;
+		}
+		else {
+			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
+			return 0.;
+		}
+	}
+	
+	// xgboost
+	
+	double CVUniverse::xgboostQELike() const {
+		if (_is_response_vec_filled) {
+			double response = m_xgboost_response_vec[4];
+			return response;
+		}
+		else {
+			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
+			return 0.;
+		}
+	}
+	double CVUniverse::xgboost1ChargedPion() const {
+		if (_is_response_vec_filled) {
+			double response = m_xgboost_response_vec[3];
+			return response;
+		}
+		else {
+			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
+			return 0.;
+		}
+	}
+	double CVUniverse::xgboost1NeutralPion() const {
+		if (_is_response_vec_filled) {
+			double response = m_xgboost_response_vec[2];
+			return response;
+		}
+		else {
+			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
+			return 0.;
+		}
+	}
+	double CVUniverse::xgboostMultiPion() const {
+		if (_is_response_vec_filled) {
+			double response = m_xgboost_response_vec[1];
+			return response;
+		}
+		else {
+			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
+			return 0.;
+		}
+	}
+	double CVUniverse::xgboostOther() const {
+		if (_is_response_vec_filled) {
+			double response = m_xgboost_response_vec[0];
 			return response;
 		}
 		else {

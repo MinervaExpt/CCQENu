@@ -150,102 +150,44 @@ int main(const int argc, const char *argv[]) {
 			multi->Scale(integral_scale);
 			other->Scale(integral_scale);
 			
-			if(vars1D[i] == "ImprovedMichel_0_Views" ||
-			   vars1D[i] == "ImprovedMichel_1_Views" ||
-			   vars1D[i] == "ImprovedMichel_2_Views" ||
-			   vars1D[i] == "ImprovedMichel_Sum_Views"||
-			   vars1D[i] == "ImprovedMichel_Avg_Views") {
-			  int nbins = qe->GetNbinsX();
-				for( int i=0; i<=nbins; i++ ){
-				
-					double denom = qe->GetBinContent(i) +
-					               sch->GetBinContent(i) +
-					               snu->GetBinContent(i) +
-					               multi->GetBinContent(i) +
-					               other->GetBinContent(i);
-					if(denom == 0) denom = 1;
-					
-					double num_qe = qe->GetBinContent(i);
-					double num_sch = sch->GetBinContent(i);
-					double num_snu = snu->GetBinContent(i);
-					double num_multi = multi->GetBinContent(i);
-					double num_other = other->GetBinContent(i);
-					
-					qe->SetBinContent(i,num_qe/denom);
-					sch->SetBinContent(i,num_sch/denom);
-					snu->SetBinContent(i,num_snu/denom);
-					multi->SetBinContent(i,num_multi/denom);
-					other->SetBinContent(i,num_other/denom);
-				}
-				
-				THStack *hs = new THStack();
-				hs->Add(other);
-				hs->Add(multi);
-				hs->Add(snu);
-				hs->Add(sch);
-				hs->Add(qe);
-				
-				qe->GetYaxis()->SetTitle("Counts/Unit");
-				qe->GetXaxis()->SetTitleOffset(1.2);
-				qe->GetYaxis()->SetTitleOffset(1.3);
-				qe->SetTitle(vars1D[i].c_str());
-				qe->SetStats(0);
-				applyStyle(qe);
-				
-				TLegend *leg = new TLegend(0.62,0.2,0.89,0.49);
-				leg->SetFillColor(kWhite);
-				leg->AddEntry(data,"MINERvA Data","p");
-				leg->AddEntry(qe,"QELike","F");
-				leg->AddEntry(sch,"Single #pi^{+/-} in FS","F");
-				leg->AddEntry(snu,"Single #pi^{0} in FS","F");
-				leg->AddEntry(multi,"N#pi in FS","F");
-				leg->AddEntry(other,"Other","F");
-				
-				hs->Draw("HIST");
-				leg->Draw("SAME");
-				gPad->RedrawAxis();
-			}
+			qe->Scale(1.0,"width");
+			sch->Scale(1.0,"width");
+			snu->Scale(1.0,"width");
+			multi->Scale(1.0,"width");
+			other->Scale(1.0,"width");
+			data->Scale(1.0,"width");
 			
-			else {
-				qe->Scale(1.0,"width");
-				sch->Scale(1.0,"width");
-				snu->Scale(1.0,"width");
-				multi->Scale(1.0,"width");
-				other->Scale(1.0,"width");
-				data->Scale(1.0,"width");
-				
-				THStack *hs = new THStack();
-				hs->Add(new TH1D(other->GetCVHistoWithError()));
-				hs->Add(new TH1D(multi->GetCVHistoWithError()));
-				hs->Add(new TH1D(snu->GetCVHistoWithError()));
-				hs->Add(new TH1D(sch->GetCVHistoWithError()));
-				hs->Add(new TH1D(qe->GetCVHistoWithError()));
-				
-				data->GetYaxis()->SetTitle("Counts/Unit");
-				data->GetXaxis()->SetTitleOffset(1.2);
-				data->GetYaxis()->SetTitleOffset(1.3);
-				data->SetTitle(vars1D[i].c_str());
-				data->SetStats(0);
-				applyStyle(data);
-				
-				TLegend *leg = new TLegend(0.62,0.6,0.89,0.89);
-				leg->SetFillColor(kWhite);
-				leg->AddEntry(data,"MINERvA Data","p");
-				leg->AddEntry(qe,"QELike","F");
-				leg->AddEntry(sch,"Single #pi^{+/-} in FS","F");
-				leg->AddEntry(snu,"Single #pi^{0} in FS","F");
-				leg->AddEntry(multi,"N#pi in FS","F");
-				leg->AddEntry(other,"Other","F");
-				
-				data->Draw("PE1");
-				hs->Draw("HISTSAME");
-				data->Draw("PE1SAME");
-				//dolog[i]?data->GetYaxis()->SetRangeUser(0.1,yscale*data->GetBinContent(data->GetMaximumBin())):data->GetYaxis()->SetRangeUser(0,yscale*data->GetBinContent(data->GetMaximumBin()));
-				leg->Draw("SAME");
-				//if(dolog[i]) c1->SetLogy(true);
-				//if(dolog[i]) c1->SetLogx(true);
-				gPad->RedrawAxis();
-			}
+			THStack *hs = new THStack();
+			hs->Add(new TH1D(other->GetCVHistoWithError()));
+			hs->Add(new TH1D(multi->GetCVHistoWithError()));
+			hs->Add(new TH1D(snu->GetCVHistoWithError()));
+			hs->Add(new TH1D(sch->GetCVHistoWithError()));
+			hs->Add(new TH1D(qe->GetCVHistoWithError()));
+			
+			data->GetYaxis()->SetTitle("Counts/Unit");
+			data->GetXaxis()->SetTitleOffset(1.2);
+			data->GetYaxis()->SetTitleOffset(1.3);
+			data->SetTitle(vars1D[i].c_str());
+			data->SetStats(0);
+			applyStyle(data);
+			
+			TLegend *leg = new TLegend(0.62,0.6,0.89,0.89);
+			leg->SetFillColor(kWhite);
+			leg->AddEntry(data,"MINERvA Data","p");
+			leg->AddEntry(qe,"QELike","F");
+			leg->AddEntry(sch,"Single #pi^{+/-} in FS","F");
+			leg->AddEntry(snu,"Single #pi^{0} in FS","F");
+			leg->AddEntry(multi,"N#pi in FS","F");
+			leg->AddEntry(other,"Other","F");
+			
+			data->Draw("PE1");
+			hs->Draw("HISTSAME");
+			data->Draw("PE1SAME");
+			//dolog[i]?data->GetYaxis()->SetRangeUser(0.1,yscale*data->GetBinContent(data->GetMaximumBin())):data->GetYaxis()->SetRangeUser(0,yscale*data->GetBinContent(data->GetMaximumBin()));
+			leg->Draw("SAME");
+			//if(dolog[i]) c1->SetLogy(true);
+			//if(dolog[i]) c1->SetLogx(true);
+			gPad->RedrawAxis();
 			
 			//c1->Print(Form("%s/1D/%s_%s.png",rootfolder.c_str(),sample.c_str(),vars1D[i].c_str()));
 			c1->Print(Form("%s.png",vars1D[i].c_str()));

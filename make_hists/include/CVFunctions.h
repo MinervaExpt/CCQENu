@@ -202,6 +202,7 @@ public:
 		truefunctions["TruthHasImprovedMichel"] = &CVUNIVERSE::GetTruthHasImprovedMichel;
 		trueintfunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
 		truefunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
+		
 		recointfunctions["ImprovedMichel_0_Views"] = &CVUNIVERSE::GetImprovedMichel_0_Views;
 		recofunctions["ImprovedMichel_0_Views"] = &CVUNIVERSE::GetImprovedMichel_0_Views;
 		recointfunctions["ImprovedMichel_1_Views"] = &CVUNIVERSE::GetImprovedMichel_1_Views;
@@ -211,6 +212,8 @@ public:
 		recointfunctions["ImprovedMichel_Sum_Views"] = &CVUNIVERSE::GetImprovedMichel_Sum_Views;
 		recofunctions["ImprovedMichel_Sum_Views"] = &CVUNIVERSE::GetImprovedMichel_Sum_Views;
 		recofunctions["ImprovedMichel_Avg_Views"] = &CVUNIVERSE::GetImprovedMichel_Avg_Views;
+		recointfunctions["MaxImprovedMichelViews"] = &CVUNIVERSE::GetMaxImprovedMichelViews;
+		recofunctions["MaxImprovedMichelViews"] = &CVUNIVERSE::GetMaxImprovedMichelViews;
 
 		// Both
 
@@ -220,6 +223,8 @@ public:
 
 		recointfunctions["NumberOfProtonCandidates"] = &CVUNIVERSE::GetNumberOfProtonCandidates;
 		recofunctions["NumberOfProtonCandidates"] = &CVUNIVERSE::GetNumberOfProtonCandidates;
+		
+		recofunctions["MinProtonScore1"] = &CVUNIVERSE::GetMinProtonScore1;
 
 		recofunctions["PrimaryProtonScore"] = &CVUNIVERSE::GetProtonScore_0;
 		recofunctions["SecProtonScore_1"] = &CVUNIVERSE::GetProtonScore_1;
@@ -307,7 +312,26 @@ public:
 		recofunctions["SecProtonAngle_5"] = &CVUNIVERSE::GetSecProtonAngle_5;
 		recofunctions["SecProtonAngle_6"] = &CVUNIVERSE::GetSecProtonAngle_6;
 		
+		recofunctions["ThetaProton0"] = &CVUNIVERSE::GetThetaProton0;
+		recofunctions["ThetaProton1"] = &CVUNIVERSE::GetThetaProton1;
+		recofunctions["ThetaProton2"] = &CVUNIVERSE::GetThetaProton2;
+		recofunctions["ThetaProton3"] = &CVUNIVERSE::GetThetaProton3;
+		recofunctions["ThetaProton4"] = &CVUNIVERSE::GetThetaProton4;
+		recofunctions["ThetaProton5"] = &CVUNIVERSE::GetThetaProton5;
+		recofunctions["ThetaProton6"] = &CVUNIVERSE::GetThetaProton6;
+		
 		recofunctions["MuonToPrimaryProtonAngle"] = &CVUNIVERSE::GetMuonToPrimaryProtonAngle;
+		
+		recofunctions["PperpProtonGeV0"] = &CVUNIVERSE::GetPperpProtonGeV0;
+		recofunctions["PperpProtonGeV1"] = &CVUNIVERSE::GetPperpProtonGeV1;
+		recofunctions["PperpProtonGeV2"] = &CVUNIVERSE::GetPperpProtonGeV2;
+		recofunctions["PperpProtonGeV3"] = &CVUNIVERSE::GetPperpProtonGeV3;
+		recofunctions["PperpProtonGeV4"] = &CVUNIVERSE::GetPperpProtonGeV4;
+		recofunctions["PperpProtonGeV5"] = &CVUNIVERSE::GetPperpProtonGeV5;
+		recofunctions["PperpProtonGeV6"] = &CVUNIVERSE::GetPperpProtonGeV6;
+		
+		recofunctions["PtImbalance"] = &CVUNIVERSE::GetPtImbalance;
+		recofunctions["PtImbalanceGeV"] = &CVUNIVERSE::GetPtImbalanceGeV;
 
 		recofunctions["PrimaryProtonTrackVtxGap"] = &CVUNIVERSE::GetPrimaryProtonTrackVtxGap;
 		recofunctions["SecProtonTrackVtxGap_1"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_1;
@@ -481,6 +505,13 @@ public:
 		recofunctions["bdtg1NeutralPion"] = &CVUNIVERSE::bdtg1NeutralPion;
 		recofunctions["bdtgMultiPion"] = &CVUNIVERSE::bdtgMultiPion;
 		recofunctions["bdtgOther"] = &CVUNIVERSE::bdtgOther;
+		
+		// TMVA
+		recofunctions["xgboostQELike"] = &CVUNIVERSE::xgboostQELike;
+		recofunctions["xgboost1ChargedPion"] = &CVUNIVERSE::xgboost1ChargedPion;
+		recofunctions["xgboost1NeutralPion"] = &CVUNIVERSE::xgboost1NeutralPion;
+		recofunctions["xgboostMultiPion"] = &CVUNIVERSE::xgboostMultiPion;
+		recofunctions["xgboostOther"] = &CVUNIVERSE::xgboostOther;
 		
 	};
 

@@ -51,6 +51,7 @@ protected:
 	static std::map<std::string,bool> m_passes_signal_cuts;
 	static std::map<std::string,bool> m_passes_signal_cuts_old;
 	static std::vector<float> m_response_vec;
+	static std::vector<float> m_xgboost_response_vec;
 
 	// initially set to false
 	static bool _is_analysis_neutrino_pdg_set;
@@ -63,6 +64,7 @@ protected:
 	static bool _are_signal_truths_set_old;
 	static bool _is_tmva_model_loaded;
 	static bool _is_response_vec_filled;
+	static bool _is_xgboost_response_vec_filled;
 
 public:
 #ifndef HAZMAT
@@ -149,6 +151,10 @@ public:
 	static bool SetVectorResponse(std::vector<float> response_vec);
 	static bool ResetVectorResponse();
 	static std::vector<float> GetVectorResponse();
+	
+	static bool SetXgboostVectorResponse(std::vector<float> response_vec);
+	static bool ResetXgboostVectorResponse();
+	static std::vector<float> GetXgboostVectorResponse();
 	
 
 	// ----------------------- Analysis-related Variables ------------------------
@@ -329,11 +335,13 @@ public:
 	virtual int GetTrueFittedNMichel() const;
 	virtual int GetTruthHasMichel() const;
 	virtual int GetTruthHasImprovedMichel() const;
+	
 	virtual int GetImprovedMichel_0_Views() const;
 	virtual int GetImprovedMichel_1_Views() const;
 	virtual int GetImprovedMichel_2_Views() const;
 	virtual int GetImprovedMichel_Sum_Views() const;
 	virtual double GetImprovedMichel_Avg_Views() const;
+	virtual int GetMaxImprovedMichelViews() const;
 
 	// Both
 
@@ -353,6 +361,8 @@ public:
 	// Proton Score, Primary and Secondary Proton Tracks
 
 	virtual int GetNumberOfProtonCandidates() const;
+	
+	virtual double GetMinProtonScore1() const;
 
 	virtual double GetProtonScore(int i) const;
 	virtual double GetProtonScore1(int i) const;
@@ -444,7 +454,37 @@ public:
 	virtual double GetSecProtonAngle_5() const;
 	virtual double GetSecProtonAngle_6() const;
 	
+	virtual double GetThetaProton(int i) const;
+	virtual double GetThetaProton0() const;
+	virtual double GetThetaProton1() const;
+	virtual double GetThetaProton2() const;
+	virtual double GetThetaProton3() const;
+	virtual double GetThetaProton4() const;
+	virtual double GetThetaProton5() const;
+	virtual double GetThetaProton6() const;
+	
 	virtual double GetMuonToPrimaryProtonAngle() const;
+	
+	virtual double GetPProton(int i) const;
+	virtual double GetPProtonGeV0() const;
+	virtual double GetPProtonGeV1() const;
+	virtual double GetPProtonGeV2() const;
+	virtual double GetPProtonGeV3() const;
+	virtual double GetPProtonGeV4() const;
+	virtual double GetPProtonGeV5() const;
+	virtual double GetPProtonGeV6() const;
+	
+	virtual double GetPperpProton(int i) const;
+	virtual double GetPperpProtonGeV0() const;
+	virtual double GetPperpProtonGeV1() const;
+	virtual double GetPperpProtonGeV2() const;
+	virtual double GetPperpProtonGeV3() const;
+	virtual double GetPperpProtonGeV4() const;
+	virtual double GetPperpProtonGeV5() const;
+	virtual double GetPperpProtonGeV6() const;
+	
+	virtual double GetPtImbalance() const;
+	virtual double GetPtImbalanceGeV() const;
 	
 	virtual double GetProtonTrackVtxGap(int i) const;
 	virtual double GetPrimaryProtonTrackVtxGap() const;
@@ -576,6 +616,14 @@ public:
 	virtual double bdtg1NeutralPion() const;
 	virtual double bdtgMultiPion() const;
 	virtual double bdtgOther() const;
+	
+	// xgboost
+	
+	virtual double xgboostQELike() const;
+	virtual double xgboost1ChargedPion() const;
+	virtual double xgboost1NeutralPion() const;
+	virtual double xgboostMultiPion() const;
+	virtual double xgboostOther() const;
 
 	// Arachne
 
