@@ -850,8 +850,8 @@ namespace {
 			double muonPx = muonP*std::sin(GetDouble("muon_thetaX"));
 			double muonPy = muonP*std::sin(GetDouble("muon_thetaY"));
 			double protonP = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_P_fromdEdx").c_str());
-			double protonPx = protonP*std::sin(GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_P_thetaX").c_str()));
-			double protonPy = protonP*std::sin(GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_P_thetaY").c_str()));
+			double protonPx = protonP*std::sin(GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_thetaX").c_str()));
+			double protonPy = protonP*std::sin(GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_thetaY").c_str()));
 			double totalPx = muonPx + protonPx;
 			double totalPy = muonPy + protonPy;
 			
@@ -873,7 +873,7 @@ namespace {
 			return -9999.;
 		}
 		else {
-			return imbalance*MeVGeV;
+			return imbalanceMeV*MeVGeV;
 		}
 	}
 	
