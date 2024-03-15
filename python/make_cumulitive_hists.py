@@ -5,14 +5,14 @@ from PlotUtils import MnvH1D, MnvH2D
 import ROOT
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas,TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
 
-target_n_bins = 26
+target_n_bins = 10
 
 def GetEqualBinning(hist, n_bins):
     """ 
     Function to return binning from cumulitive histogram hist, with target number of bins n_bins
     """
     i_n_bins = hist.GetNbinsX()
-
+    # print("i_n_bins: ",i_n_bins)
     total = hist.GetBinContent(i_n_bins)
     # print(hist.GetName())
     # print(total)
@@ -20,15 +20,18 @@ def GetEqualBinning(hist, n_bins):
     # print("target_bincont: ",base_target_bincont)
     binning = [hist.GetXaxis().GetBinLowEdge(1)] # binning to be returned, with lowest edge put in already
     target_bincont = base_target_bincont
-    for bin in range(1,i_n_bins+1): # loop over all the bins
+    for bin in range(1,i_n_bins): # loop over all the bins
         bincont = hist.GetBinContent(bin)
         if bincont < target_bincont: # if it's less than the target, keep going
-            print("here, bincont, ",bincont,"\ttarget bincont. ",target_bincont)
+            # print("here, bincont, ",bincont,"\ttarget bincont. ",target_bincont)
             continue
         # if it's not less than the target, record the bin edges
         else:
             binning.append(round(hist.GetXaxis().GetBinUpEdge(bin),5))
             target_bincont += base_target_bincont
+    if len(binning)>n_bins: #sometimes it makes things one longer if the last bin is really close to the max
+        del binning[-1]
+    binning.append(0.5) # tack on the maximum (hardcoded for now for recoil with a 0.5gev max cut)
     return binning
 
 def main():
@@ -100,16 +103,16 @@ def main():
         if parse[4]=="reconstructed_cumulative":
             cat_key = key.replace("reconstructed_cumulative","selected_truth_cumulative")
             avg_binning = []
-            print("len reco: ",len(binning_dict[key]))
-            print("len true: ",len(binning_dict[cat_key]))
 
+            print("len reco: ",len(binning_dict[key]))
+            print("Binning for reco hist ", key)
+            print(binning_dict[key])
+            print("len true: ",len(binning_dict[cat_key]))
+            print("Binning for selected true hist ", cat_key)
+            print(binning_dict[cat_key])
             for bin in range(len(binning_dict[key])):
                 avg = round(((binning_dict[key][bin] + binning_dict[cat_key][bin]) / 2.), 5)
                 avg_binning.append(avg)
-            print("Binning for reco hist ", key)
-            print(binning_dict[key])
-            print("Binning for selected true hist ", cat_key)
-            print(binning_dict[cat_key])
             print("Binning for average ")
             print(avg_binning)
             
