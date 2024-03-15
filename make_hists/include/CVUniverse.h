@@ -205,6 +205,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 	virtual double GetLog10RecoilEnergyGeV() const;
 	virtual double GetTrueLog10RecoilEnergyGeV() const;
 
+    virtual double GetOffsetRecoilEnergyGeV() const;
+
     virtual double GetRecoilEnergyMinusNeutBlobsGeV() const;
 
 

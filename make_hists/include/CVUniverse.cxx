@@ -944,6 +944,9 @@ double CVUniverse::GetLog10RecoilEnergyGeV() const { return std::log10(GetRecoil
 // return q0*MeVGeV;
 // }
 
+//Trying weird offset recoil
+double CVUniverse::GetOffsetRecoilEnergyGeV() const { return CVUniverse::GetRecoilEnergyGeV() - 0.025; }
+
 double CVUniverse::GetRecoilEnergyMinusNeutBlobsGeV() const {
     // this takes recoil and removes the energy from 3D blobs, which are more likely to be neutrons
     double recoil = GetRecoilEnergyGeV(); // regular recoil def
