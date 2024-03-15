@@ -144,11 +144,11 @@ int main(int argc, char* argv[]) {
     string ConfigName = "test.json";
     // Pass an input file name to this script now
     if (argc == 1) {
-        cout << "using default" << ConfigName << endl;
+        std::cout << "using default" << ConfigName << std::endl;
     }
     if (argc == 2) {
         ConfigName = argv[1];
-        cout << "using" << ConfigName << endl;
+        std::cout << "using" << ConfigName << std::endl;
     }
 
     // read in the configuration
@@ -198,7 +198,7 @@ int main(int argc, char* argv[]) {
     // double POTscale = dataPOT->GetVal()/mcPOT->GetVal();
     double POTscale = potinfo[0] / potinfo[1];
 
-    cout << "POT scale factor: " << POTscale << endl;
+    std::cout << "POT scale factor: " << POTscale << std::endl;
 
     // make and fill maps that contain pointers to the histograms you want to fit  uses CCQEMAT template
 
@@ -237,6 +237,7 @@ int main(int argc, char* argv[]) {
             fitHists[side][i]->SetNormBinWidth(1.0);
         }*/
     }
+    // inputFile->Close(); // this didn't work
 
     std::cout << "have extracted the inputs" << std::endl;
 
@@ -397,11 +398,11 @@ int main(int argc, char* argv[]) {
         mnvPlotter.DrawDataStackedMC(bkgsub[side], combmcout, 1.0, "TR");
         cF.Print(TString(side + "_" + fitType + "_bkgsub_combined.png").Data());
     }
-
+    std::cout << " > after drawstack loop, before closign files" << std::endl;
     inputFile->Close();
     outputfile->Close();
-    cout << "Closing Output File... Does this solve the issue of seg fault." << endl;
+    std::cout << "Closing Output File... Does this solve the issue of seg fault." << std::endl;
 
-    cout << "HEY YOU DID IT!!!" << endl;
+    std::cout << "HEY YOU DID IT!!!" << std::endl;
     return 0;
 }
