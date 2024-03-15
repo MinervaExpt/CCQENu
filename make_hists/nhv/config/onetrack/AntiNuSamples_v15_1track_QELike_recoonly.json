@@ -24,6 +24,28 @@
             "qelikenot": "QELikeNot",
         }
     },
+    "QElikeNeutrons": {
+        "name": "QElikeNeutrons",
+        "reco": "QElikeNeutrons",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["qelikenot"],
+        "categories": {
+            "qelike": {
+                // "for": ["selected_reco"]
+                "for": ["selected_reco", "selected_truth", "truth", "response"]
+             },
+            "qelikenot": {
+                // "for": ["selected_reco"]
+                "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
     "QElikeNP": {
         "name": "QElikeNP",
         "reco": "QElikeNP",

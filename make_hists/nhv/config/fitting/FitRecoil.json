@@ -1,4 +1,4 @@
-{ "InputFile": "${CCQEMAT}/SidebandsTest_FinalStates_MnvTunev1_AntiNu_v15_1track_1.root",
+{ "InputFile": "${CCQEMAT}/BackgroundFitsTest_FinalStates_MnvTunev1_AntiNu_v15_1track_1.root",
   "Sidebands": [
     "QElike",
     "LoPionThetaSideband",
@@ -26,7 +26,7 @@
   ],
   "Variable": "EAvail",
   "FitType": "FastChi2",
-  "OutputFile": "fits_SidebandsTest_FinalStates_MnvTunev1_AntiNu_v15_1track_1.root",
+  "OutputFile": "out_fits/fits_BackgroundFitsTest_FinalStates_MnvTunev1_AntiNu_v15_1track_1.root",
   "LogPlot": false,
   "Template": "h___%s___%s___%s___reconstructed",
   "FitTemplate": "h___%s___%s___%s___reconstructed_fitted"

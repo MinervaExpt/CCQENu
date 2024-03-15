@@ -30,6 +30,23 @@
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
   ],
+    "QElikeNeutrons": [
+    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
+    {"name": "NNeutBlobs", "min": 1, "variable": "NNeutBlobs"},
+    {"name": "Max Multiplicity", "max": 2, "variable": "Multiplicity"},
+    {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
+    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
+    {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
+    {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
+    {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
+    {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
+    {"name": "ZVertex", "min": 5980, "max": 8410, "variable": "ZVertex"},
+    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"}, 
+    {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
+    {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
+    {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
+  ],
   "QElikeOld":[
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
     {"name":"ApothemX","max":850,"variable":"ApothemX"},
