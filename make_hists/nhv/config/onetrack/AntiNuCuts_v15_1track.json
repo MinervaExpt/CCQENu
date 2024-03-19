@@ -30,7 +30,7 @@
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
   ],
-    "QElikeNeutrons": [
+  "QElikeNeutrons": [
     {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
     {"name": "NNeutBlobs", "min": 1, "variable": "NNeutBlobs"},
     {"name": "Max Multiplicity", "max": 2, "variable": "Multiplicity"},
@@ -128,7 +128,7 @@
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
-    {"name": "Max Pion Angle", "max": 40.0,"variable": "ExtraTrackAngle"} 
+    {"name": "Max Pion Angle", "max": 40.0,"variable": "ChargedPionAngle"} 
   ],
   "HiPionThetaSideband": [
     {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
@@ -147,7 +147,7 @@
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
-    {"name": "Min Pion Angle", "min": 40.0,"variable": "ExtraTrackAngle"} 
+    {"name": "Min Pion Angle", "min": 40.0,"variable": "ChargedPionAngle"} 
   ],
   "MultiplicitySideband": [
     {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
