@@ -95,6 +95,8 @@
   "BlobSideband": [
     {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
     {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
+    {"name": "NBlobs", "max": 3, "variable": "NBlobs"},
+    // {"name": "NBlobs", "equals": 2, "variable": "NBlobs"},
     {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
     {"name": "Max Multiplicity", "max": 2, "variable": "Multiplicity"},
     {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
