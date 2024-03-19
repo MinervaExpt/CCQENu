@@ -463,6 +463,7 @@ class CVFunctions {
         trueintfunctions["TruthHasSingleNegativePion"] = &CVUNIVERSE::GetTruthHasSingleNegativePion;
         trueintfunctions["TruthHasSingleNeutralPion"] = &CVUNIVERSE::GetTruthHasSingleNeutralPion;
         trueintfunctions["TruthHasMultiPion"] = &CVUNIVERSE::GetTruthHasMultiPion;
+        truefunctions["TruthHasMultiPion"] = &CVUNIVERSE::GetTruthHasMultiPion;
 
         truefunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
         trueintfunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
