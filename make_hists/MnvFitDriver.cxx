@@ -156,7 +156,9 @@ int main(int argc, char* argv[]) {
     config.Read(ConfigName);
     config.Print();
     std::string inputFileName = config.GetString("InputFile");
+    std::string outputDir = config.GetString("OutputDir");
     std::string outputFileName = config.GetString("OutputFile");
+    outputFileName=(outputDir+"/"+outputFileName).c_str();
     bool logPlot = config.GetBool("LogPlot");
     std::vector<std::string> sidebands = config.GetStringVector("Sidebands");
     std::vector<std::string> categories = config.GetStringVector("Categories");
@@ -242,6 +244,7 @@ int main(int argc, char* argv[]) {
     std::cout << "have extracted the inputs" << std::endl;
 
     // now have made a common map for all histograms
+    bool binbybin = false;
     int lowBin = 1;
     int hiBin = dataHist[include[0]]->GetXaxis()->GetNbins();
     fit::fit_type type;
@@ -252,7 +255,7 @@ int main(int argc, char* argv[]) {
     std::cout << " Try to write it out " << std::endl;
 
     outputfile->cd();
-    int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit, categories, type, lowBin, hiBin);
+    int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit, categories, type, lowBin, hiBin, binbybin, outputDir);
 
     // set up for plots
 
@@ -280,7 +283,7 @@ int main(int argc, char* argv[]) {
                 tot[side]->Add(fitHists[side][i]);
             }
         }
-        tot[side]->MnvH1DToCSV(tot[side]->GetName(), "./csv/", 1., false);
+        tot[side]->MnvH1DToCSV(tot[side]->GetName(), outputDir + "/csv/", 1., false);
         tot[side]->Print();
         tot[side]->Write();
     }
@@ -297,7 +300,7 @@ int main(int argc, char* argv[]) {
         }
         pre[side]->Print();
         pre[side]->Write();
-        pre[side]->MnvH1DToCSV(pre[side]->GetName(), "./csv/", 1., false);
+        pre[side]->MnvH1DToCSV(pre[side]->GetName(), outputDir + "/csv/", 1., false);
     }
     // this loops over, finds the categories that are in the backgrounds and sums those to get a background
     // uses this whole counter thing to avoid having to figure out how to do string searches in a list in C++
@@ -320,7 +323,7 @@ int main(int argc, char* argv[]) {
             if (count > 0) {
                 bkg[side]->Print();
                 bkg[side]->Write();
-                bkg[side]->MnvH1DToCSV(bkg[side]->GetName(), "./csv/", 1., false);
+                bkg[side]->MnvH1DToCSV(bkg[side]->GetName(), outputDir + "/csv/", 1., false);
             }
         }
     }
@@ -330,8 +333,8 @@ int main(int argc, char* argv[]) {
         bkgsub[side]->AddMissingErrorBandsAndFillWithCV(*(fitHists[side][0]));
         bkgsub[side]->Add(bkg[side], -1);
         bkgsub[side]->Write();
-        dataHist[side]->MnvH1DToCSV(dataHist[side]->GetName(), "./csv/", 1., false);
-        bkgsub[side]->MnvH1DToCSV(bkgsub[side]->GetName(), "./csv/", 1., false);
+        dataHist[side]->MnvH1DToCSV(dataHist[side]->GetName(),  outputDir + "/csv/", 1., false);
+        bkgsub[side]->MnvH1DToCSV(bkgsub[side]->GetName(),  outputDir + "/csv/", 1., false);
     }
     std::cout << "wrote the inputs and outputs " << std::endl;
 
@@ -351,13 +354,13 @@ int main(int argc, char* argv[]) {
 
     for (auto side : sidebands) {
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot[side], 1., "TR");
-        cF.Print(TString(side + "_postfit_compare.png").Data());
+        cF.Print(TString(outputDir + "/png/" + side + "_postfit_compare.png").Data());
 
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre[side], 1., "TR");
-        cF.Print(TString(side + "_prefit_compare.png").Data());
+        cF.Print(TString(outputDir + "/png/" + side + "_prefit_compare.png").Data());
 
         mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side], fitHists[side][0], 1., "TR");
-        cF.Print(TString(side + "_bkgsub_compare.png").Data());
+        cF.Print(TString(outputDir + "/png/" + side + "_bkgsub_compare.png").Data());
     }
 
     TObjArray* combmcin;
@@ -379,7 +382,7 @@ int main(int argc, char* argv[]) {
 
         mnvPlotter.DrawDataStackedMC(data, combmcin, 1.0, "TR");
         t.Draw("same");
-        cF.Print(TString(side + "_prefit_combined.png").Data());
+        cF.Print(TString(outputDir + "/png/" + side + "_prefit_combined.png").Data());
         label = side + " " + varName + " After fit";
         TText t2(.3, .95, label.c_str());
         t2.SetTitle(label.c_str());
@@ -387,7 +390,7 @@ int main(int argc, char* argv[]) {
         t2.SetTextSize(.03);
         t2.SetTitle(label.c_str());
         mnvPlotter.DrawDataStackedMC(data, combmcout, 1.0, "TR");
-        cF.Print(TString(side + "_" + fitType + "_postfit_combined.png").Data());
+        cF.Print(TString(outputDir + "/png/" + side + "_" + fitType + "_postfit_combined.png").Data());
         label = side + " " + varName + "Background Subtracted";
 
         t2.SetTitle(label.c_str());
@@ -396,7 +399,7 @@ int main(int argc, char* argv[]) {
         t2.SetTitle(label.c_str());
         bkgsub[side]->SetTitle("bkgsub");
         mnvPlotter.DrawDataStackedMC(bkgsub[side], combmcout, 1.0, "TR");
-        cF.Print(TString(side + "_" + fitType + "_bkgsub_combined.png").Data());
+        cF.Print(TString(outputDir + "/png/" + side + "_" + fitType + "_bkgsub_combined.png").Data());
     }
     std::cout << " > after drawstack loop, before closign files" << std::endl;
     inputFile->Close();

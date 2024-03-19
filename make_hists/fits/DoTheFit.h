@@ -14,7 +14,8 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
              const std::map<const std::string, bool> includeInFit,
              const std::vector<std::string> categories,
              const fit_type type = kML,
-             const int lowBin = 1, const int hiBin = -1, 
-             const bool binbybin = false);
+             const int lowBin = 1, const int hiBin = -1,
+             const bool binbybin = false,
+             const std::string outputDir = ".");
 };
 #endif
