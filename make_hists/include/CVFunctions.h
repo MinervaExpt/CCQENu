@@ -240,7 +240,7 @@ class CVFunctions {
         truefunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
         recointfunctions["NPionTracks"] = &CVUNIVERSE::GetNPionTracks;
         recofunctions["NPionTracks"] = &CVUNIVERSE::GetNPionTracks;
-        recofunctions["ChargedPionAngle"] = &CVUniverse::GetChargedPionAngle;  // This is just the leading pion candidate
+        recofunctions["ChargedPionAngle"] = &CVUNIVERSE::GetChargedPionAngle;  // This is just the leading pion candidate
 
         // Both
 
