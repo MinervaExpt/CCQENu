@@ -672,13 +672,11 @@ double CVUniverse::GetPrimaryProtonTrackEndZ() const { return GetDouble("proton_
 double CVUniverse::GetProtonAngle(int i) const {
     if (i == 0) {
         return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_theta").c_str());
-    } else if (GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_theta_sz").c_str()) >= i) {
-        return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_theta").c_str(), i - 1);
+    } else if (GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_theta_fromdEdx_sz").c_str()) >= i) {
+        return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_theta_fromdEdx").c_str(), i - 1);
     } else
         return -9999.;
 }
-
-
 
 double CVUniverse::GetPrimaryProtonAngle() const { return GetProtonAngle(0); }
 double CVUniverse::GetSecProtonAngle_1() const { return GetProtonAngle(1); }
@@ -1763,18 +1761,19 @@ int CVUniverse::GetHasMichelOrNBlobs() const {
 double CVUniverse::GetChargedPionAngle() const {
     // Returns the leading pion angle, use as a cut assuming you will only have on charged pion candidate (but possibly a proton candidate too)
     double angle = -9999.;  // In degrees
-
+    if (CVUniverse::GetMultiplicity() < 2)
+        return angle;
     if (GetIsPrimaryProton() == 0)                          // No pass on this means the primary proton candidate is a pion,
         return abs(GetPrimaryProtonAngle() * 180. / M_PI);  // so get it's angle and return
-    if (GetMultiplicity() < 3)                              // No other tracks to check
-        return angle;                                       // return default, which will go to underflow, you should not get this for a pion sideband
-
+    int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
+    if (n_sec_proton_scores == 0) 
+        return angle;  // If no secondary candidates, just return value from the first one
     double tree_Q2 = GetQ2QEGeV();  // used to test proton score
     std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str());
     for (int i = 0; i < sec_proton_scores.size(); i++) {
         if (GetPassProtonScoreCut(sec_proton_scores[i], tree_Q2) == 0) {
             double tmp_angle = GetProtonAngle(i);
-            if (tmp_angle < 0.0)  // if the protonangle fails, it returns -9999. also (as of 3/19/24)
+            if (tmp_angle < -2* M_PI)  // if the protonangle fails, it returns -9999. also (as of 3/19/24)
                 return tmp_angle;
             return abs(tmp_angle * 180. / M_PI);  // Otherewise, angle is good, spit it out
         }
