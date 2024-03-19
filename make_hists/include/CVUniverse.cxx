@@ -1772,8 +1772,8 @@ double CVUniverse::GetChargedPionAngle() const {
     double tree_Q2 = GetQ2QEGeV();  // used to test proton score
     std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str());
     for (int i = 0; i < sec_proton_scores.size(); i++) {
-        if (GetPassProtonScoreCut(score, tree_Q2) == 0) {
-            tmp_angle = GetProtonAngle(i);
+        if (GetPassProtonScoreCut(sec_proton_scores[i], tree_Q2) == 0) {
+            double tmp_angle = GetProtonAngle(i);
             if (tmp_angle < 0.0)  // if the protonangle fails, it returns -9999. also (as of 3/19/24)
                 return tmp_angle;
             return abs(tmp_angle * 180. / M_PI);  // Otherewise, angle is good, spit it out
