@@ -35,6 +35,7 @@
 #include "PlotUtils/MinervaUniverse.h"
 #include "PlotUtils/PhysicsVariables.h"
 #include "TVector3.h"
+#include "TMath.h"
 #include "utils/NuConfig.h"
 
 class CVUniverse : public PlotUtils::MinervaUniverse {
@@ -218,6 +219,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetTrueEAvailWithNeutronsGeV() const;
 
+    virtual double GetTrueEAvailWiggledGeV() const;
+
     virtual double GetEAvailResolutionGeV() const;
 
     virtual double GetEAvailWithNeutronsResolutionGeV() const;
@@ -320,8 +323,12 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // Both
 
     virtual int GetHasMichelOrNBlobs() const;
+
+    // charged pion stuff based off their tracks
+    virtual double GetChargedPionAngle() const;
     virtual int GetNPionTracks() const;
     virtual int GetTruthHasMultiPion() const;
+    virtual double GetExtraTrackAngle() const; // This just does the leading/primary proton candidate
 
     // Charged and Neutral Pions
 
@@ -337,7 +344,6 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetPionScore2() const;
 
     virtual double GetTruePionAngle() const;
-    virtual double GetExtraTrackAngle() const;
 
     // Proton Score, Primary and Secondary Proton Tracks
 

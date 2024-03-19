@@ -675,7 +675,7 @@ double CVUniverse::GetProtonAngle(int i) const {
     } else if (GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_theta_sz").c_str()) >= i) {
         return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_theta").c_str(), i - 1);
     } else
-        return -1.;
+        return -9999.;
 }
 
 
@@ -1035,6 +1035,39 @@ double CVUniverse::GetTrueEAvailWithNeutronsGeV() const {
         else
             Eavail += energy;
     }
+    // return std::max(0.0, Eavail * MeVGeV);
+    return Eavail * MeVGeV;
+}
+
+double CVUniverse::GetTrueEAvailWiggledGeV() const {
+    double Eavail = 0.0;
+    int pdgsize = GetInt("mc_nFSPart");
+    for (int i = 0; i < pdgsize; i++) {
+        int pdg = GetVecElem("mc_FSPartPDG", i);
+        double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
+        if (pdg == 2112)
+            continue;  // Skip neutrons
+        else if (abs(pdg) > 1e9)
+            continue;  // ignore nuclear fragments
+        else if (abs(pdg) == 11 || abs(pdg) == 13)
+            continue;  // ignore leptons
+        else if (abs(pdg) == 211)
+            Eavail += energy - 139.5701;  // subtracting pion mass to get Kinetic energy
+        else if (pdg == 2212)
+            Eavail += energy - 938.27201;  // proton
+        else if (pdg == 111)
+            Eavail += energy;  // pi0
+        else if (pdg == 22)
+            Eavail += energy;  // photons
+        else if (pdg >= 2000)  // TODO: what is this?
+            Eavail += energy - 938.27201;
+        else if (pdg <= -2000)
+            Eavail += energy + 938.27201;
+        else
+            Eavail += energy;
+    }
+    if (Eavail<=0)
+        Eavail += abs(TMath::Gaus(0.0, 50.0));
     // return std::max(0.0, Eavail * MeVGeV);
     return Eavail * MeVGeV;
 }
@@ -1727,6 +1760,28 @@ int CVUniverse::GetHasMichelOrNBlobs() const {
         return 0;
 }
 
+double CVUniverse::GetChargedPionAngle() const {
+    // Returns the leading pion angle, use as a cut assuming you will only have on charged pion candidate (but possibly a proton candidate too)
+    double angle = -9999.;  // In degrees
+
+    if (GetIsPrimaryProton() == 0)                          // No pass on this means the primary proton candidate is a pion,
+        return abs(GetPrimaryProtonAngle() * 180. / M_PI);  // so get it's angle and return
+    if (GetMultiplicity() < 3)                              // No other tracks to check
+        return angle;                                       // return default, which will go to underflow, you should not get this for a pion sideband
+
+    double tree_Q2 = GetQ2QEGeV();  // used to test proton score
+    std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str());
+    for (int i = 0; i < sec_proton_scores.size(); i++) {
+        if (GetPassProtonScoreCut(score, tree_Q2) == 0) {
+            tmp_angle = GetProtonAngle(i);
+            if (tmp_angle < 0.0)  // if the protonangle fails, it returns -9999. also (as of 3/19/24)
+                return tmp_angle;
+            return abs(tmp_angle * 180. / M_PI);  // Otherewise, angle is good, spit it out
+        }
+    }
+    return angle;
+}
+
 int CVUniverse::GetNPionTracks() const {
     int n_pions = 0;
     // Check that there are actually tracks to look at
@@ -1739,7 +1794,7 @@ int CVUniverse::GetNPionTracks() const {
     double prim_proton_score = GetPrimaryProtonScore();
     int prim_is_proton = GetPassProtonScoreCut(prim_proton_score, tree_Q2);
     if (prim_is_proton == 0)
-        n_pions += 1;  // if it fails, that's a proton, so add to count
+        n_pions += 1;  // if it fails, that's a pion, so add to count
 
     // Next check secondary proton candidates
     int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());

@@ -98,6 +98,7 @@ class CVFunctions {
 
         truefunctions["TrueEAvailGeV"] = &CVUNIVERSE::GetTrueEAvailGeV;
         truefunctions["TrueEAvailWithNeutronsGeV"] = &CVUNIVERSE::GetTrueEAvailWithNeutronsGeV;
+        truefunctions["TrueEAvailWiggledGeV"] = &CVUNIVERSE::GetTrueEAvailWiggledGeV;
 
         recofunctions["EAvailResolutionGeV"] = &CVUNIVERSE::GetEAvailResolutionGeV;
         truefunctions["EAvailResolutionGeV"] = &CVUNIVERSE::GetEAvailResolutionGeV;
@@ -239,6 +240,7 @@ class CVFunctions {
         truefunctions["TrueFittedNMichel"] = &CVUNIVERSE::GetTrueFittedNMichel;
         recointfunctions["NPionTracks"] = &CVUNIVERSE::GetNPionTracks;
         recofunctions["NPionTracks"] = &CVUNIVERSE::GetNPionTracks;
+        recofunctions["ChargedPionAngle"] = &CVUniverse::GetChargedPionAngle;  // This is just the leading pion candidate
 
         // Both
 
