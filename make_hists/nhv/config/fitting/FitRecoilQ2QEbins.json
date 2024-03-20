@@ -1,4 +1,4 @@
-{ "InputFile": "${CCQEMAT}/Test_Fits_MnvTunev1_AntiNu_v15_1track_1.root",
+{ "InputFile": "${CCQEMAT}/Test_2Dfits_MnvTunev1_AntiNu_v15_1track_1.root",
   "Sidebands": [
     "QElike",
     "LoPionThetaSideband",
@@ -24,11 +24,13 @@
     "multipion",
     "other"
   ],
-  "Variable": "recoil",
+  "FitVariable": "recoil",
+  "ProjectionVariable": "Q2QE",
+  "Variable2D": "Q2QE_recoil",
   "FitType": "FastChi2",
-  "OutputDir": "${CCQEMAT}/out_fits/nobinloop",
-  "OutputFile": "fits_removebinloop_Test_Fits_MnvTunev1_AntiNu_v15_1track_1.root",
+  "OutputDir": "${CCQEMAT}/out_fits/fit2d_paramstest/",
+  "OutputFile": "fits_Test_2Dfits_MnvTunev1_AntiNu_v15_1track_1.root",
   "LogPlot": false,
-  "Template": "h___%s___%s___%s___reconstructed",
-  "FitTemplate": "h___%s___%s___%s___reconstructed_fitted"
+  "Template": "h2D___%s___%s___%s___reconstructed",
+  "FitTemplate": "h2D___%s___%s___%s___reconstructed_fitted"
 }

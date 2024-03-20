@@ -1820,7 +1820,7 @@ int CVUniverse::GetHasMultiPion() const {
     if (n_blobs >= 4)  // This event has signature of 2 neutral pions, pass
         return 1;
     int n_pion_tracks = CVUniverse::GetNPionTracks(); // This counts how many tracks pass pion score
-    if (n_blobs/2 + n_pion_tracks >= 2) // If there's (at least 1 neutral pion & 1 charged pion) OR (at least 2 charged pions) then pass 
+    if (n_blobs + 2*n_pion_tracks >= 4) // If there's (at least 1 neutral pion & 1 charged pion) OR (at least 2 charged pions) then pass 
         return 1;
     // else
     return 0;

@@ -241,16 +241,28 @@
       "true": "TrueQ2QEGeV",
       "name": "Q2QE",
       "title": "Q^{2} (QE)(GeV^{2})",
+      // "bins": [
+      //   0.001,
+      //   0.0125,
+      //   0.025,
+      //   0.05,
+      //   0.1,
+      //   0.2,
+      //   0.4,
+      //   0.8,
+      //   1.6,
+      //   4.0
+      // ],
       "bins": [
         0.001,
-        0.0125,
+        // 0.0125,
         0.025,
-        0.05,
+        // 0.05,
         0.1,
-        0.2,
+        // 0.2,
         0.4,
-        0.8,
-        1.2,
+        // 0.8,
+        1.6,
         4.0
       ],
       "fluxnorm": false
@@ -258,7 +270,7 @@
     "recoil": {
       "reco": "RecoilEnergyGeV",
       "true": "TrueRecoilEnergyGeV",
-      "name": "recoil, true q0",
+      "name": "recoil",
       "title": "Recoil in GeV",
       "nbins": 25,
       "min": 0.0,
@@ -311,21 +323,21 @@
       "true": "TrueEAvailGeV",
       "name": "EAvail",
       "title": "E_{Available} in GeV",
-      // "nbins": 208,
-      // "min": -0.02,
-      // "max": 0.5,
-      "bins": [
-        0.0,
-        // 0.0000000000001,
-        0.002,
-        0.005,
-        0.0125,
-        0.031,
-        0.075,
-        0.2,
-        0.16,
-        0.5
-      ],
+      "nbins": 26,
+      "min": -0.02,
+      "max": 0.5,
+      // "bins": [
+      //   0.0,
+      //   // 0.0000000000001,
+      //   0.002,
+      //   0.005,
+      //   0.0125,
+      //   0.031,
+      //   0.075,
+      //   0.2,
+      //   0.16,
+      //   0.5
+      // ],
       "fluxnorm": false
     },
     "EAvailOffset": {
@@ -372,6 +384,28 @@
         0.38,
         0.5
       ],
+      "fluxnorm": false
+    },
+    "EAvailWiggled": {
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueEAvailWiggledGeV",
+      "name": "EAvailWiggled",
+      "title": "E_{Available} or recoil in GeV",
+      "nbins": 26,
+      "min": -0.02,
+      "max": 0.5,
+      // "bins": [
+      //   0.0,
+      //   // 0.0000000000001,
+      //   0.002,
+      //   0.005,
+      //   0.0125,
+      //   0.031,
+      //   0.075,
+      //   0.2,
+      //   0.16,
+      //   0.5
+      // ],
       "fluxnorm": false
     },
     "resEAvail": {
@@ -530,14 +564,32 @@
       "fluxnorm": false
     },
     "PionAngle":{
-      "reco": "ExtraTrackAngle",
+      "reco": "ChargedPionAngle",
       "true": "TruePionAngle",
       "name": "PionAngle",
       "title": "Pion Angle",
-      "nbins": 10,
+      "nbins": 18,
       "min": 0.0,
       "max": 90.0,
       "fluxnorm":false
+    },
+    "NChargedPions":{
+      "reco": "NPionTracks",
+      "true": "TrueChargedPionCount",
+      "name": "NChargedPions",
+      "title": "N_{#pi^{#pm}}",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "HasMultiPion":{
+      "reco": "HasMultiPion",
+      "true": "TruthHasMultiPion",
+      "name": "HasMultiPion",
+      "title": "Has multipion?",
+      "nbins": 5,
+      "min": -1.5,
+      "max": 3.5
     }
   }
 }
