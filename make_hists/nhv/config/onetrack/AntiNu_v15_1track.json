@@ -1,7 +1,7 @@
 {
   "version":15,  
-  "mcIn":"${CCQEMAT}/nhv/playlists/MC_5A_local.txt",
-  "dataIn":"${CCQEMAT}/nhv/playlists/DATA_5A_local.txt",
+  "mcIn":"${PLAYLISTROOT}/MC_5A_local.txt",
+  "dataIn":"${PLAYLISTROOT}/DATA_5A_local.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuCuts_v15_1track.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_FS_recoonly.json",
