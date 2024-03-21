@@ -507,7 +507,8 @@ int main(int argc, char* argv[]) {
                 }
                 for (int iuniv = 0; iuniv < nunivs; iuniv++) {
                     if (univ == "CV") {
-                        // std::cout << "bin content being set " << param_mnvh->GetBinContent(cat + 1) << std::endl;
+                        std::cout << "bin content being set " << param_mnvh->GetBinContent(cat + 1) << std::endl;
+                        std::cout << "bin error being set   " << param_mnvh->GetBinError(cat + 1) << std::endl;
                         catscales->SetBinContent(fitbin, param_mnvh->GetBinContent(cat + 1));
                         catscales->SetBinError(fitbin, param_mnvh->GetBinError(cat + 1));
                     } else {

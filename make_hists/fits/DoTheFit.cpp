@@ -440,6 +440,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                 fcn.SetBinContent(1, mini2->MinValue());
                 for (int i = 0; i < func2.NDim(); i++) {
                     parameters->SetBinContent(i + 1, combScaleResults[i]);
+                    parameters->SetBinError(i + 1, mini2->CovMatrix(i, i));
                     for (int j = 0; j < func2.NDim(); j++) {
                         covariance.SetBinContent(i + 1, j + 1, mini2->CovMatrix(i, j));
                     }
