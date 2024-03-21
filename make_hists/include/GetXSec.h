@@ -151,24 +151,24 @@ template MnvH2D* MakeMC<MnvH2D>(std::string basename, MnvH2D* imcsighist, MnvH2D
 
 // New to handle multiple backgrounds TODO: old overload above may be deprecated
 template <class MnvHistoType>
-MnvHistoType* MakeMC(std::string basename, MnvHistoType* imcsighist, std::map<MnvHistoType*> imcbkghistmap) {
+MnvHistoType* MakeMC(std::string basename, MnvHistoType* imcsighist, std::map<std::string, MnvHistoType*> imcbkghistmap) {
     std::string mcname = basename + "_mc_tot";
     MnvHistoType* mc = (MnvHistoType*)imcsighist->Clone(mcname.c_str());
     mc->SetDirectory(0);
     for (auto imcbkg : imcbkghistmap){
-        MnvHistoType* imcbkghist = imcbkg.second
+        MnvHistoType* imcbkghist = imcbkg.second;
         mc->Add(imcbkghist);
     }
     SyncBands(mc);
 
     return mc;
 }
-template MnvH1D* MakeMC<MnvH1D>(std::string basename, MnvH1D* imcsighist, std::map<MnvH1D*> imcbkghistmap);
-template MnvH2D* MakeMC<MnvH2D>(std::string basename, MnvH2D* imcsighist, std::map<MnvH2D*> imcbkghistmap);
+template MnvH1D* MakeMC<MnvH1D>(std::string basename, MnvH1D* imcsighist, std::map<std::string, MnvH1D*> imcbkghistmap);
+template MnvH2D* MakeMC<MnvH2D>(std::string basename, MnvH2D* imcsighist, std::map<std::string, MnvH2D*> imcbkghistmap);
 
 // Function to make a total background hist
 template <class MnvHistoType>
-MnvHistoType* MakeTotalMCBackground(std::string basename, std::map<MnvHistoType*> imcbkghistmap) {
+MnvHistoType* MakeTotalMCBackground(std::string basename, std::map<std::string, MnvHistoType*> imcbkghistmap) {
     std::string mcname = basename + "_mc_bkg_tot";
     // MnvHistoType* mc = (MnvHistoType*)imcsighist->Clone(mcname.c_str());
     MnvHistoType* mcbkgtot;
@@ -176,7 +176,7 @@ MnvHistoType* MakeTotalMCBackground(std::string basename, std::map<MnvHistoType*
     for (auto imcbkg : imcbkghistmap) {
         MnvHistoType* imcbkghist = imcbkg.second;
         if (start) {
-            mcbkgtot = (MnvHistoType*)imcbkghist.Clone(mcname.c_str());
+            mcbkgtot = (MnvHistoType*)imcbkghist->Clone(mcname.c_str());
             mcbkgtot->SetDirectory(0);
             start = false;
         } else
@@ -186,8 +186,8 @@ MnvHistoType* MakeTotalMCBackground(std::string basename, std::map<MnvHistoType*
 
     return mcbkgtot;
 }
-template MnvH1D* MakeTotalMCBackground<MnvH1D>(std::string basename, std::map<MnvH1D*> imcbkghistmap);
-template MnvH2D* MakeTotalMCBackground<MnvH2D>(std::string basename, std::map<MnvH2D*> imcbkghistmap);
+template MnvH1D* MakeTotalMCBackground<MnvH1D>(std::string basename, std::map<std::string, MnvH1D*> imcbkghistmap);
+template MnvH2D* MakeTotalMCBackground<MnvH2D>(std::string basename, std::map<std::string, MnvH2D*> imcbkghistmap);
 
 //============================== Signal Fraction ===============================
 // Gets signal fraction of MC signal over MC total
@@ -253,8 +253,8 @@ MnvHistoType* DoBkgSubtraction(std::string basename, MnvHistoType* idatahist, Mn
 
     databkg->Multiply(bkgsub, bkgFraction);
 
-    bkgsub->Add(databkg, -1.)
-        SyncBands(bkgsub);
+    bkgsub->Add(databkg, -1.);
+    SyncBands(bkgsub);
 
     return bkgsub;
 }
@@ -630,14 +630,18 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     std::string sig = sigkey.GetString(sample);
     std::cout << " got sig " << sig << std::endl;
     NuConfig bkgkey;
-    std::vector<std::string> bkg;
+    std::vector<std::string> bkglist;
     if (!hasbkgsub) {
         // this likely needs to be fixed
         bkgkey = configs["main"]->GetConfig("background");
         // bkgkey.Print();
         std::cout << bkgkey.CheckMember(sample) << std::endl;
-        bkg = bkgkey.GetStringVector(sample);
-        std::cout << " got bkg " << bkg << std::endl;
+        bkglist = bkgkey.GetStringVector(sample);
+        std::cout << " got bkg ";
+         for (auto bkg : bkglist) {
+            std::cout << bkg;
+        }
+        std::cout << std::endl;
     }
     NuConfig datkey = configs["main"]->GetConfig("data");
     std::string dat = datkey.GetString(sample);
@@ -719,11 +723,11 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     std::map<std::string,MnvHistoType*> imcbkghistmap;
     MnvHistoType* ibkgsubhist;  // TODO: does this need a map?
     if (!hasbkgsub) {
-        for (auto bkg : bkgkey) {
+        for (auto bkg : bkglist) {
             imcbkghistmap[bkg] = histsND["reconstructed"][bkg];
             if (histsND.count("reconstructed_tuned") && usetune) {
                 imcbkghistmap[bkg] = histsND["reconstructed_tuned"][bkg];
-                std::cout << " using " << imcbkghist->GetName() << std::endl;
+                std::cout << " using " << imcbkghistmap[bkg]->GetName() << std::endl;
             }
         }
     }
@@ -798,9 +802,9 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
 
     // TODO: this replaces the commented out lines below to accomodate maps
     if (!hasbkgsub) {
-        for (auto bkg : bkgkey) {
+        for (auto bkg : bkglist) {
             if (imcbkghistmap[bkg] == 0) {
-                std::cout << " no bkg type " << bkg << " for " << variable << std::endl;
+                std::cout << " no bkg cat " << bkg << " for " << variable << std::endl;
                 return 1;
             }
             imcbkghistmap[bkg]->Print();
