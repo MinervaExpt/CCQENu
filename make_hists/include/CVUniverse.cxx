@@ -1763,19 +1763,22 @@ double CVUniverse::GetChargedPionAngle() const {
     double angle = -9999.;  // In degrees
     if (CVUniverse::GetMultiplicity() < 2)
         return angle;
-    if (GetIsPrimaryProton() == 0)                          // No pass on this means the primary proton candidate is a pion,
-        return abs(GetPrimaryProtonAngle() * 180. / M_PI);  // so get it's angle and return
+    double tree_Q2 = GetQ2QEGeV();  // used to test proton score
+
+    double prim_proton_score = GetPrimaryProtonScore();
+    if (GetPassProtonScoreCut(prim_proton_score, tree_Q2) == 0)  // No pass on this means the primary proton candidate is a pion,
+        return GetPrimaryProtonAngle() * 180. / M_PI;  // so get it's angle and return
+    
     int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
     if (n_sec_proton_scores == 0) 
         return angle;  // If no secondary candidates, just return value from the first one
-    double tree_Q2 = GetQ2QEGeV();  // used to test proton score
     std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str());
     for (int i = 0; i < sec_proton_scores.size(); i++) {
         if (GetPassProtonScoreCut(sec_proton_scores[i], tree_Q2) == 0) {
-            double tmp_angle = GetProtonAngle(i);
-            if (tmp_angle < -2* M_PI)  // if the protonangle fails, it returns -9999. also (as of 3/19/24)
-                return tmp_angle;
-            return abs(tmp_angle * 180. / M_PI);  // Otherewise, angle is good, spit it out
+            angle = GetProtonAngle(i);
+            // if (tmp_angle < -2* M_PI)  // if the protonangle fails, it returns -9999. also (as of 3/19/24)
+            //     return tmp_angle;
+            return angle * 180. / M_PI;  // Otherewise, angle is good, spit it out
         }
     }
     return angle;
