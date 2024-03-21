@@ -568,9 +568,9 @@
       "true": "TruePionAngle",
       "name": "PionAngle",
       "title": "Pion Angle",
-      "nbins": 18,
+      "nbins": 36,
       "min": 0.0,
-      "max": 90.0,
+      "max": 180.0,
       "fluxnorm":false
     },
     "NChargedPions":{
