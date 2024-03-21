@@ -64,5 +64,6 @@
   "fluxUniverses": 2, //10,
   "NuEConstraint":1, 
   "Geant4NeutronCV":1,
-  "Geant4Elastics":1 
+  "Geant4Elastics":1//,
+  //"RPAMaterials":0 
 }
