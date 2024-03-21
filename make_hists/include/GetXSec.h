@@ -136,7 +136,7 @@ std::map<std::string, bool> CheckFluxNorm(NuConfig* configvar, std::string varia
 //================================= Make MC ====================================
 // Makes a total MC hist from MC signal + MC background
 template <class MnvHistoType>
-MnvHistoType* MakeMC(std::string basename, MnvHistoType* imcsighist, MnvHistoType* imcbkghist) {
+MnvHistoType* MakeMC(std::string basename, MnvHistoType* imcsighist, MnvHistoType* imcbkghist) { // TODO: May be deprecated
     std::string mcname = basename + "_mc_tot";
     MnvHistoType* mc = (MnvHistoType*)imcsighist->Clone(mcname.c_str());
     mc->SetDirectory(0);
@@ -148,6 +148,46 @@ MnvHistoType* MakeMC(std::string basename, MnvHistoType* imcsighist, MnvHistoTyp
 }
 template MnvH1D* MakeMC<MnvH1D>(std::string basename, MnvH1D* imcsighist, MnvH1D* imcbkghist);
 template MnvH2D* MakeMC<MnvH2D>(std::string basename, MnvH2D* imcsighist, MnvH2D* imcbkghist);
+
+// New to handle multiple backgrounds TODO: old overload above may be deprecated
+template <class MnvHistoType>
+MnvHistoType* MakeMC(std::string basename, MnvHistoType* imcsighist, std::map<MnvHistoType*> imcbkghistmap) {
+    std::string mcname = basename + "_mc_tot";
+    MnvHistoType* mc = (MnvHistoType*)imcsighist->Clone(mcname.c_str());
+    mc->SetDirectory(0);
+    for (auto imcbkg : imcbkghistmap){
+        MnvHistoType* imcbkghist = imcbkg.second
+        mc->Add(imcbkghist);
+    }
+    SyncBands(mc);
+
+    return mc;
+}
+template MnvH1D* MakeMC<MnvH1D>(std::string basename, MnvH1D* imcsighist, std::map<MnvH1D*> imcbkghistmap);
+template MnvH2D* MakeMC<MnvH2D>(std::string basename, MnvH2D* imcsighist, std::map<MnvH2D*> imcbkghistmap);
+
+// Function to make a total background hist
+template <class MnvHistoType>
+MnvHistoType* MakeTotalMCBackground(std::string basename, std::map<MnvHistoType*> imcbkghistmap) {
+    std::string mcname = basename + "_mc_bkg_tot";
+    // MnvHistoType* mc = (MnvHistoType*)imcsighist->Clone(mcname.c_str());
+    MnvHistoType* mcbkgtot;
+    bool start = true;
+    for (auto imcbkg : imcbkghistmap) {
+        MnvHistoType* imcbkghist = imcbkg.second;
+        if (start) {
+            mcbkgtot = (MnvHistoType*)imcbkghist.Clone(mcname.c_str());
+            mcbkgtot->SetDirectory(0);
+            start = false;
+        } else
+            mcbkgtot->Add(imcbkghist);
+    }
+    SyncBands(mcbkgtot);
+
+    return mcbkgtot;
+}
+template MnvH1D* MakeTotalMCBackground<MnvH1D>(std::string basename, std::map<MnvH1D*> imcbkghistmap);
+template MnvH2D* MakeTotalMCBackground<MnvH2D>(std::string basename, std::map<MnvH2D*> imcbkghistmap);
 
 //============================== Signal Fraction ===============================
 // Gets signal fraction of MC signal over MC total
@@ -181,20 +221,45 @@ template MnvH2D* GetBkgFraction<MnvH2D>(std::string basename, MnvH2D* imcbkghist
 
 //========================== Background Subtraction ============================
 // Rough background subtraction using input signal fraction
+// TODO: deprecate after testing new version
+// template <class MnvHistoType>
+// MnvHistoType* DoBkgSubtraction(std::string basename, MnvHistoType* idatahist, MnvHistoType* mc, MnvHistoType* signalFraction) {
+//     std::string bkgsubname = basename + "_bkgsub";
+//     MnvHistoType* bkgsub = (MnvHistoType*)idatahist->Clone(bkgsubname.c_str());
+//     bkgsub->SetDirectory(0);
+
+//     bkgsub->AddMissingErrorBandsAndFillWithCV(*mc);
+//     bkgsub->Multiply(bkgsub, signalFraction);
+//     SyncBands(bkgsub);
+
+//     return bkgsub;
+// }
+// template MnvH1D* DoBkgSubtraction<MnvH1D>(std::string basename, MnvH1D* idatahist, MnvH1D* mc, MnvH1D* signalFraction);
+// template MnvH2D* DoBkgSubtraction<MnvH2D>(std::string basename, MnvH2D* idatahist, MnvH2D* mc, MnvH2D* signalFraction);
+
+// This follows Cheryl's method, doesn't rely as much on model of the signal and avoids double counting stat error
 template <class MnvHistoType>
-MnvHistoType* DoBkgSubtraction(std::string basename, MnvHistoType* idatahist, MnvHistoType* mc, MnvHistoType* signalFraction) {
+MnvHistoType* DoBkgSubtraction(std::string basename, MnvHistoType* idatahist, MnvHistoType* mc, MnvHistoType* bkgFraction) {
     std::string bkgsubname = basename + "_bkgsub";
+    // bkgsub is the returned background subtracted data hist
     MnvHistoType* bkgsub = (MnvHistoType*)idatahist->Clone(bkgsubname.c_str());
     bkgsub->SetDirectory(0);
+    // databkg is a tmp hist of the predicted bkg in the data
+    MnvHistoType* databkg = (MnvHistoType*)idatahist->Clone(bkgsubname.c_str());
+    databkg->SetDirectory(0);
 
     bkgsub->AddMissingErrorBandsAndFillWithCV(*mc);
-    bkgsub->Multiply(bkgsub, signalFraction);
-    SyncBands(bkgsub);
+    databkg->AddMissingErrorBandsAndFillWithCV(*mc);
+
+    databkg->Multiply(bkgsub, bkgFraction);
+
+    bkgsub->Add(databkg, -1.)
+        SyncBands(bkgsub);
 
     return bkgsub;
 }
-template MnvH1D* DoBkgSubtraction<MnvH1D>(std::string basename, MnvH1D* idatahist, MnvH1D* mc, MnvH1D* signalFraction);
-template MnvH2D* DoBkgSubtraction<MnvH2D>(std::string basename, MnvH2D* idatahist, MnvH2D* mc, MnvH2D* signalFraction);
+template MnvH1D* DoBkgSubtraction<MnvH1D>(std::string basename, MnvH1D* idatahist, MnvH1D* mc, MnvH1D* bkgFraction);
+template MnvH2D* DoBkgSubtraction<MnvH2D>(std::string basename, MnvH2D* idatahist, MnvH2D* mc, MnvH2D* bkgFraction);
 
 //================================ Unfolding ===================================
 
@@ -565,13 +630,13 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     std::string sig = sigkey.GetString(sample);
     std::cout << " got sig " << sig << std::endl;
     NuConfig bkgkey;
-    std::string bkg;
+    std::vector<std::string> bkg;
     if (!hasbkgsub) {
         // this likely needs to be fixed
         bkgkey = configs["main"]->GetConfig("background");
         // bkgkey.Print();
         std::cout << bkgkey.CheckMember(sample) << std::endl;
-        bkg = bkgkey.GetString(sample);
+        bkg = bkgkey.GetStringVector(sample);
         std::cout << " got bkg " << bkg << std::endl;
     }
     NuConfig datkey = configs["main"]->GetConfig("data");
@@ -650,18 +715,35 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
         std::cout << " using " << imcsighist->GetName() << std::endl;
     }
     // std::cout << "using signal " << imcsighist->GetName() << std::endl;
-    MnvHistoType* imcbkghist;
-    MnvHistoType* ibkgsubhist;
+    //  Backgrounds come from several channels, so need to loop over them
+    std::map<std::string,MnvHistoType*> imcbkghistmap;
+    MnvHistoType* ibkgsubhist;  // TODO: does this need a map?
     if (!hasbkgsub) {
-        imcbkghist = histsND["reconstructed"][bkg];
-        if (histsND.count("reconstructed_tuned") && usetune) {
-            imcbkghist = histsND["reconstructed_tuned"][bkg];
-            std::cout << " using " << imcbkghist->GetName() << std::endl;
+        for (auto bkg : bkgkey) {
+            imcbkghistmap[bkg] = histsND["reconstructed"][bkg];
+            if (histsND.count("reconstructed_tuned") && usetune) {
+                imcbkghistmap[bkg] = histsND["reconstructed_tuned"][bkg];
+                std::cout << " using " << imcbkghist->GetName() << std::endl;
+            }
         }
     }
-    std::cout << "using background " << imcbkghist->GetName() << std::endl;
+    if (hasbkgsub)
+        ibkgsubhist = histsND["fitted"]["bkgsub"];  // TOOD: Figure out where this comes from
 
-    if (hasbkgsub) ibkgsubhist = histsND["fitted"]["bkgsub"];
+    // TODO: old way of doing it, with several backgrounds
+    // MnvHistoType* imcbkghist;
+    // MnvHistoType* ibkgsubhist;
+    // if (!hasbkgsub){
+    //   imcbkghist = histsND["reconstructed"][bkg];
+    //   if (histsND.count("reconstructed_tuned")&& usetune){
+    //     imcbkghist = histsND["reconstructed_tuned"][bkg];
+    //     std::cout << " using " << imcbkghist->GetName() << std::endl;
+    //   }
+    // }
+    // std::cout << "using background " << imcbkghist->GetName() << std::endl;
+
+    // if (hasbkgsub) ibkgsubhist = histsND["fitted"]["bkgsub"];
+
     if (DEBUG) std::cout << "test pointers " << ibkgsubhist << std::endl;
     MnvHistoType* iseltruhist;
     if (histsND.count("selected_truth_tuned") && usetune) {
@@ -714,15 +796,27 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     imcsighist->Write();
     if (DEBUG) std::cout << " MC sig scaled by POT for " << variable << std::endl;
 
-    if (imcbkghist == 0 && !hasbkgsub) {
-        std::cout << " no bkg for " << variable << std::endl;
-        return 1;
-    }
-    // imcbkghist->Scale(POTScale);
+    // TODO: this replaces the commented out lines below to accomodate maps
     if (!hasbkgsub) {
-        imcbkghist->Print();
-        imcbkghist->Write();
-    }
+        for (auto bkg : bkgkey) {
+            if (imcbkghistmap[bkg] == 0) {
+                std::cout << " no bkg type " << bkg << " for " << variable << std::endl;
+                return 1;
+            }
+            imcbkghistmap[bkg]->Print();
+            imcbkghistmap[bkg]->Write();
+        }
+    }  // TODO: POT scaling???
+
+    // if (imcbkghist == 0 && !hasbkgsub){
+    //   std::cout << " no bkg for " << variable << std::endl;
+    //   return 1;
+    // }
+    // // imcbkghist->Scale(POTScale);
+    // if (!hasbkgsub){
+    //   imcbkghist->Print();
+    //   imcbkghist->Write();
+    // }
 
     if (DEBUG) std::cout << " MC bkg scaled by POT for " << variable << std::endl;
 
@@ -732,40 +826,77 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     //  if (DEBUG) std::cout << " HACK? response scaled by " << fix << " for " << iresponse->GetName() << "POTScale would be "<< POTScale<< std::endl;
 
     //==================================Make MC=====================================
-    MnvHistoType* mc;
-    MnvHistoType* signalFraction;
+    MnvHistoType* mc;              // Tthe total mc reco, signal and bkg unless not doing bkg subtraction
+    MnvHistoType* mcbkgtothist;    // The total mc reco background
+    MnvHistoType* signalFraction;  // The fraction of signal from mc reco (ie sig/total)
+    MnvHistoType* bkgFraction;
 
     if (!hasbkgsub) {
         if (DEBUG) std::cout << " Start MakeMC... " << std::endl;
-        // std::string mcname = basename+"_mc_tot";
-        if (DEBUG) {
-            std::cout << " basename is " << basename << std::endl;
-            imcsighist->Print();
-            imcbkghist->Print();
-        }
-        mc = MakeMC(basename, imcsighist, imcbkghist);
-        if (DEBUG) mc->Print();
+        mc = MakeMC(basename, imcsighist, imcbkghistmap);
         mc->Write();
+        // std::string mcname = basename+"_mc_tot";
+        if (DEBUG) std::cout << " Start MakeTotalMCBackground... " << std::endl;
+        mcbkgtothist = MakeTotalMCBackground(basename, imcbkghistmap);
+        mcbkgtothist->Write();
 
         PlotCVAndError(canvas, idatahist, mc, stuned + sample + "_" + "DATA_vs_MC", true, logscale, binwid);
         PlotErrorSummary(canvas, mc, sample + "_" + "Raw MC Systematics", logscale);
+        PlotErrorSummary(canvas, mcbkgtothist, sample + "_" + "Raw MC Background Systematics", logscale);
 
-        //================================Signal Fraction===========================
-
-        if (DEBUG) std::cout << " Start signal fraction... " << std::endl;
-        // std::string fracname = basename+"_signalfraction";
+        if (DEBUG) std::cout << " Start GetSignalFraction... " << std::endl;
         signalFraction = GetSignalFraction(basename, imcsighist, mc);
-        MnvHistoType* bkgFraction = GetBkgFraction(basename, imcbkghist, mc);
         if (DEBUG) signalFraction->Print();
+
+        if (DEBUG) std::cout << " Start GetBkgFraction... " << std::endl;
+        bkgFraction = GetBkgFraction(basename, mcbkgtothist, mc);
+        if (DEBUG) bkgFraction->Print();
+
         signalFraction->Write();
         bkgFraction->Write();
         Plot2DFraction(canvas, signalFraction, bkgFraction, stuned + sample + "_fractions", logscale);
 
         PlotCVAndError(canvas, signalFraction, signalFraction, stuned + sample + "_" + "Signal Fraction", true, logscale, false);
         PlotErrorSummary(canvas, signalFraction, stuned + sample + " Signal Fraction Systematics", 0);
+        PlotCVAndError(canvas, bkgFraction, bkgFraction, stuned + sample + "_" + "Background Fraction", true, logscale, false);
+        PlotErrorSummary(canvas, bkgFraction, stuned + sample + " Background Fraction Systematics", 0);
     } else {
         mc = (MnvHistoType*)imcsighist->Clone();
     }
+
+    // if (!hasbkgsub) {
+    //     if (DEBUG) std::cout << " Start MakeMC... " << std::endl;
+    //     // std::string mcname = basename+"_mc_tot";
+    //     if (DEBUG) std::cout << " Start by making the total background... " << std::endl;
+
+    //     if (DEBUG) {
+    //         std::cout << " basename is " << basename << std::endl;
+    //         imcsighist->Print();
+    //         imcbkghist->Print();
+    //     }
+    //     mc = MakeMC(basename, imcsighist, imcbkghist);
+    //     if (DEBUG) mc->Print();
+    //     mc->Write();
+
+    //     PlotCVAndError(canvas, idatahist, mc, stuned + sample + "_" + "DATA_vs_MC", true, logscale, binwid);
+    //     PlotErrorSummary(canvas, mc, sample + "_" + "Raw MC Systematics", logscale);
+
+    //     //================================Signal Fraction===========================
+
+    //     if (DEBUG) std::cout << " Start signal fraction... " << std::endl;
+    //     // std::string fracname = basename+"_signalfraction";
+    //     signalFraction = GetSignalFraction(basename, imcsighist, mc);
+    //     MnvHistoType* bkgFraction = GetBkgFraction(basename, imcbkghist, mc);
+    //     if (DEBUG) signalFraction->Print();
+    //     signalFraction->Write();
+    //     bkgFraction->Write();
+    //     Plot2DFraction(canvas, signalFraction, bkgFraction, stuned + sample + "_fractions", logscale);
+
+    //     PlotCVAndError(canvas, signalFraction, signalFraction, stuned + sample + "_" + "Signal Fraction", true, logscale, false);
+    //     PlotErrorSummary(canvas, signalFraction, stuned + sample + " Signal Fraction Systematics", 0);
+    // } else {
+    //     mc = (MnvHistoType*)imcsighist->Clone();
+    // }
 
     //============================Background Subtraction========================
 
