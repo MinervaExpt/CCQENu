@@ -1,0 +1,117 @@
+{
+  "version":15,  
+  "mcIn": "${PLAYLISTROOT}/minervame6A_MC.txt",
+  "dataIn": "${PLAYLISTROOT}/minervame6A_Data.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuCuts_v15_1track.json", 
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
+  "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_FS_recoonly.json",
+  "outRoot": "TuneTest_pzmuptmu_${MYPLAYLIST}_${MYMODEL}",
+  // "outRoot": "${MYROOTOUTPUT}/FinalState_5A_1track_${MYMODEL}",
+  "scalefileIn": "${CCQEMAT}/data/ME6A_MnvTunev1_Q2QErecoil_FinalStates.root", 
+  "prescale":999,
+  "playlist":"${MYPLAYLIST}",
+  "MinervaModel":"${MYMODEL}", 
+  "recoName":"CCQENu",
+  "tunedmc":"tuned", 
+  "closure":0,
+  "TuneCategories":["qelike", "chargedepion", "neutralpion", "multipion", "other"], 
+  "DoResolution": false,
+  "DoTypes": false,
+  "pdg":-14,
+  "mcRecoToCSV": false,
+  "runsamples": [
+    "QElike",
+    // "QElikeNeutrons"//,
+    // "MultiplicitySideband",
+    // "LoPionThetaSideband",
+    // "HiPionThetaSideband",
+    // "BlobSideband",
+    // "MultipBlobSideband"
+  ], 
+  "AnalyzeVariables": [
+    // "NBlobs",
+    // "Multiplicity",
+    // "PionAngle"
+    // "NChargedPions",
+    // "HasMultiPion"
+    // "recoilNoBlobs",
+    // "Q2QE",
+    // "EAvail",
+    // "EAvailWiggled"
+    // "EAvailWithNeutrons",
+    // "resEAvailWithNeutrons"
+    // "recoil"
+    // "recoilQE"
+    // "NNeutBlobs"
+    // "NeutBlobsRatio"
+    "pzmu",
+    "ptmu"
+  ],
+  "Analyze2DVariables": ["pzmu_ptmu"], //["Q2QE_recoil"],
+  "AnalyzeHyperDVariables": [], 
+    "signal": {
+      "QElike": "qelike",
+      "LoPionThetaSideband": "qelike",
+      "HiPionThetaSideband": "qelike",
+      "BlobSideband": "qelike",
+      "MultipBlobSideband": "qelike"
+    },
+    "background": {
+      "QElike": [
+        "chargedepion",
+        "neutralpion",
+        "multipi",
+        "other"
+      ],
+      "LoPionThetaSideband": [
+        "neutralpion",
+        "chargedpion",
+        "multipion",
+        "other"
+      ],
+      "HiPionThetaSideband": [
+        "neutralpion",
+        "chargedpion",
+        "multipion",
+        "other"
+      ],
+      "BlobSideband": [
+        "neutralpion",
+        "chargedpion",
+        "multipion",
+        "other"
+      ],
+      "MultipBlobSideband": [
+        "neutralpion",
+        "chargedpion",
+        "multipion",
+        "other"
+      ]
+    },
+    "data": {
+      "QElike": "data",
+      "LoPionThetaSideband": "data",
+      "HiPionThetaSideband": "data",
+      "BlobSideband": "data",
+      "MultipBlobSideband": "data"
+    },
+  "systematics": [
+    "Flux",
+    "MuonMINOS",
+    "MuonResolution",
+    "MINOSEfficiency",
+    "Angle",
+    "GENIE",
+    "GenieRvx1pi",
+    "RPA",
+    "2p2h",
+    "MuonMinerva",
+    "geant4",
+    "response"
+  ],
+  "fluxUniverses": 100, //10,
+  "NuEConstraint":1, 
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1//,
+  //"RPAMaterials":0 
+}
