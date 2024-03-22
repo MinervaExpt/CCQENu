@@ -66,7 +66,6 @@ int main(const int argc, const char *argv[]) {
     bool dotypes = false;
     if (config.IsMember("DoTypes")) {
         dotypes = config.GetBool("DoTypes");
-        std::cout << " Will fill MC int types for all variables" << std::endl;
     }
     if (dotypes)
         std::cout << " Will fill MC int types for all variables" << std::endl;
@@ -123,9 +122,9 @@ int main(const int argc, const char *argv[]) {
     PlotUtils::MinervaUniverse::SetMHRWeightElastics(config.GetInt("Geant4Elastics"));
     PlotUtils::MinervaUniverse::SetTreeName(reco_tree_name);
 
-    if (config.IsMember("RPAMaterials")){
-        PlotUtils::MinervaUniverse::RPAMaterials(config.GetInt("RPAMaterials"));
-    }
+    // if (config.IsMember("RPAMaterials")){
+    //     PlotUtils::MinervaUniverse::RPAMaterials(config.GetInt("RPAMaterials"));
+    // }
 
     //===========================================================================
     // MODELS TODO: needs a driver
