@@ -926,7 +926,7 @@ double CVUniverse::GetCalRecoilEnergyGeV() const { return CVUniverse::GetCalReco
 double CVUniverse::GetNonCalRecoilEnergy() const { return 0; }  // not certain why I want to implement this but there ya go.
 double CVUniverse::GetNonCalRecoilEnergyGeV() const { return GetNonCalRecoilEnergy() * MeVGeV; }
 double CVUniverse::GetRecoilEnergyGeV() const { return GetRecoilEnergy() * MeVGeV; }                       // GetCalRecoilEnergy()?
-double CVUniverse::ApplyCaloTuning(double E) const{ return E;}
+double CVUniverse::ApplyCaloTuning(double E) const { return E; }
 double CVUniverse::GetTrueRecoilEnergyGeV() const { return CVUniverse::GetTrueQ0GeV(); }                   // need this?
 double CVUniverse::GetTrueLog10RecoilEnergyGeV() const { return std::log10(CVUniverse::GetTrueQ0GeV()); }  // need this?
 double CVUniverse::GetLog10RecoilEnergyGeV() const { return std::log10(GetRecoilEnergy()) - 3.; }
