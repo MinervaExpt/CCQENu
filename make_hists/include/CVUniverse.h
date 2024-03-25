@@ -201,8 +201,6 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetRecoilEnergyGeV() const;
     virtual double GetTrueRecoilEnergyGeV() const;
     
-    virtual double ApplyCaloTuning(double) const;
-
     virtual double ApplyCaloTuning(double ) const;
 
 	virtual double GetLog10RecoilEnergyGeV() const;

@@ -174,21 +174,22 @@ int main(int argc, char* argv[]) {
             if (s == i) includeInFit[s] = true;
         }
     }
-    std::string fitvarName = config.GetString("FitVariable");
-    std::string projvarName = config.GetString("ProjectionVariable");
-    std::string varName2d = config.GetString("Variable2D");
+    std::string fitvarName = config.GetString("FitVariable");         // Which axis variable do you want to fit over (does not actually select, just sets names))
+    std::string projvarName = config.GetString("ProjectionVariable"); // Which axis variable do you want to have scale factors in (does not actually select, just sets names)
+    std::string varName2d = config.GetString("Variable2D"); // Whats the name of the 2D variable
     std::string fitType = config.GetString("FitType");
     std::string h_template = config.GetString("Template");
+    std::string tuned_template = config.GetString("TunedTemplate");
     std::string f_template = config.GetString("FitTemplate");
 
     // read in the data and parse it
 
     TFile* inputFile = TFile::Open(inputFileName.c_str(), "READ");
-    TFile* outputFile = TFile::Open(outputFileName.c_str(), "RECREATE");
-    // loop on all entries of this directory
+    // TFile* outputFile = TFile::Open(outputFileName.c_str(), "RECREATE");
+    // // loop on all entries of this directory
 
-    outputFile->cd();
-    CopyDir(inputFile, outputFile);
+    // outputFile->cd();
+    // CopyDir(inputFile, outputFile);
 
     // std::vector<TString> tags = {""};
     TH1F* pot_summary = (TH1F*)inputFile->Get("POT_summary");
@@ -235,18 +236,18 @@ int main(int argc, char* argv[]) {
         // dataHist[side]->SetNormBinWidth(1.0);
         // dataHist[sidename] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
         for (auto cat : categories) {
-            std::snprintf(cname, sizeof(cname), h_template.c_str(), side.c_str(), cat.c_str(), varName2d.c_str()); // unfit hist name
+            std::snprintf(cname, sizeof(cname), tuned_template.c_str(), side.c_str(), cat.c_str(), varName2d.c_str()); // unfit hist name
             std::snprintf(fname, sizeof(fname), f_template.c_str(), side.c_str(), cat.c_str(), varName2d.c_str());  // fitted hist name
             name = TString(cname);
             std::cout << " look for " << cname << std::endl;
-            MnvH2D* newhist = (PlotUtils::MnvH2D*)inputFile->Get(cname)->Clone();
+            MnvH2D* newhist = (PlotUtils::MnvH2D*)inputFile->Get(cname);//->Clone();
             if (!newhist) {
                 std::cout << " no " << cname << std::endl;
             }
             newhist->Print();
             newhist->Scale(POTscale);
             newhist->Print();
-            unfitHists2D[side].push_back(newhist);
+            unfitHists2D[side].push_back((PlotUtils::MnvH2D*)newhist->Clone(TString(fname)));
             fitHists2D[side].push_back((PlotUtils::MnvH2D*)newhist->Clone(TString(fname)));
         }
         /*for (int i = 0; i < categories.size(); i++){
@@ -254,12 +255,19 @@ int main(int argc, char* argv[]) {
             fitHists[side][i]->SetNormBinWidth(1.0);
         }*/
     }
+    TFile* outputFile = TFile::Open(outputFileName.c_str(), "RECREATE");
+    // loop on all entries of this directory
 
-    std::vector<std::map<const std::string, PlotUtils::MnvH1D*>> dataHist1D;
-    std::vector<std::map<const std::string, std::vector<PlotUtils::MnvH1D*>>> fitHists1D;
-    std::vector<std::map<const std::string, std::vector<PlotUtils::MnvH1D*>>> unfitHists1D;
+    outputFile->cd();
+    // CopyDir(inputFile, outputFile);
+    // inputFile->Close();
+
+    // std::vector<std::map<const std::string, PlotUtils::MnvH1D*>> dataHist1D;
+    // std::vector<std::map<const std::string, std::vector<PlotUtils::MnvH1D*>>> fitHists1D;
+    // std::vector<std::map<const std::string, std::vector<PlotUtils::MnvH1D*>>> unfitHists1D;
     PlotUtils::MnvH1D* dummy_xproj_hist;
     firstdata = true;
+    std::vector<MnvH1D*> parameters_list;
 
     std::string h1d_template = "h___%s___%s___%s_%02d___reconstructed";
     std::string fh1d_template = "h___%s___%s___%s_%02d___reconstructed_fitted";
@@ -273,7 +281,9 @@ int main(int argc, char* argv[]) {
             // std::string dataname1d = ("h___" + side.c_str() + "___data___" + varName.c_str() + "_" + std::to_string(fitbin) + "___reconstructed").c_str();
             // MnvH1D* tmp_data1d = (MnvH1D*)dataHist2D[side]->ProjectionY(dataname1d, fitbin, fitbin, "e");
             std::string cat = "data";
+
             std::snprintf(cname1d, sizeof(cname1d), h1d_template.c_str(), side.c_str(), cat.c_str(), fitvarName.c_str(), fitbin);  // This is the data hist name
+            std::cout << " projecting " << cname1d << " in fitbin " << fitbin << std::endl;
             MnvH1D* tmp_data1d = (MnvH1D*)dataHist2D[side]->ProjectionY(cname1d, fitbin, fitbin, "e");
             if (firstdata) {
                 dummy_xproj_hist = (MnvH1D*)dataHist2D[side]->ProjectionX("dummy_xproj", fitbin, fitbin, "e");
@@ -290,35 +300,39 @@ int main(int argc, char* argv[]) {
                 // MnvH1D* tmp_fitcat1d = (MnvH1D*)fitHists2D[side][cat]->ProjectionY(catname1d, fitbin, fitbin, "e");
                 std::snprintf(cname1d, sizeof(cname1d), h1d_template.c_str(), side.c_str(), categories[cat].c_str(), fitvarName.c_str(), fitbin);  // This is the data hist name
                 std::snprintf(fname1d, sizeof(fname1d), fh1d_template.c_str(), side.c_str(), categories[cat].c_str(), fitvarName.c_str(), fitbin);  // This is the data hist name
+                std::cout << " projecting " << cname1d << " in fitbin " << fitbin << std::endl;
 
-                MnvH1D* tmp_unfitcat1d = (MnvH1D*)unfitHists2D[side][cat]->ProjectionY(cname1d, fitbin, fitbin, "e");
-                MnvH1D* tmp_fitcat1d = (MnvH1D*)fitHists2D[side][cat]->ProjectionY(fname1d, fitbin, fitbin, "e");
-                tmp_unfitcatlist1d.push_back(tmp_unfitcat1d);
-                tmp_fitcatlist1d.push_back(tmp_fitcat1d);
+                MnvH1D* tmp_hist = (MnvH1D*)unfitHists2D[side][cat]->ProjectionY(cname1d, fitbin, fitbin, "e");
+                // MnvH1D* tmp_unfitcat1d = tmp_hist->Clone(cname1d);
+                // MnvH1D* tmp_fitcat1d = tmp_hist->Clone(fname1d);
+                tmp_unfitcatlist1d.push_back(tmp_hist);
+                tmp_fitcatlist1d.push_back((MnvH1D*)tmp_hist->Clone(fname1d));
             }
             tmp_unfitMap1d[side] = tmp_unfitcatlist1d;
             tmp_fitMap1d[side] = tmp_fitcatlist1d;
         }
-        dataHist1D.push_back(tmp_dataMap1d);
-        fitHists1D.push_back(tmp_fitMap1d);
-        unfitHists1D.push_back(tmp_unfitMap1d);
-    }
+        std::cout << " finished projecting hists " << std::endl;
+    //     dataHist1D.push_back(tmp_dataMap1d);
+    //     fitHists1D.push_back(tmp_fitMap1d);
+    //     unfitHists1D.push_back(tmp_unfitMap1d);
+    // }
 
-    std::cout << "have extracted the inputs" << std::endl;
-    outputFile->cd();
+    // std::cout << "have extracted the inputs" << std::endl;
+    // outputFile->cd();
 
-    std::vector<MnvH1D*> parameters_list;
+    // std::vector<MnvH1D*> parameters_list;
 
-    // for (auto dataHist : dataHist1D) {
-    for (int fitbin = 0; fitbin < n_fitbins; fitbin++) {
-        std::map<const std::string, PlotUtils::MnvH1D*> dataHist = dataHist1D[fitbin];
-        std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists = fitHists1D[fitbin];
-        std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists = unfitHists1D[fitbin];
-        
+    // // for (auto dataHist : dataHist1D) {
+    // for (int fitbin = 0; fitbin < n_fitbins; fitbin++) {
+        // std::map<const std::string, PlotUtils::MnvH1D*> dataHist = dataHist1D[fitbin];
+        // std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists = fitHists1D[fitbin];
+        // std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists = unfitHists1D[fitbin];
+
         // now have made a common map for all histograms
         bool binbybin = false;
         int lowBin = 1;
-        int hiBin = dataHist[include[0]]->GetXaxis()->GetNbins();  // TODO: how to deal with this
+        // int hiBin = dataHist[include[0]]->GetXaxis()->GetNbins();  // TODO: how to deal with this
+        int hiBin = tmp_dataMap1d[include[0]]->GetXaxis()->GetNbins();  // TODO: how to deal with this
         fit::fit_type type;
         type = fit::kFastChi2;
         if (fitType == "FastChi2") type = fit::kFastChi2;
@@ -326,9 +340,11 @@ int main(int argc, char* argv[]) {
         if (fitType == "ML") type = fit::kML;
         std::cout << " Try to write it out " << std::endl;
         char paramname[1000];
-        std::snprintf(paramname, sizeof(paramname), h1d_template.c_str(), "QElike", "fit_paramters", fitvarName.c_str(), fitbin + 1);  // This is the data hist name
+        std::snprintf(paramname, sizeof(paramname), h1d_template.c_str(), "QElike", "fit_paramters", fitvarName.c_str(), fitbin);  // This is the data hist name
         PlotUtils::MnvH1D* parameters = new PlotUtils::MnvH1D(paramname, "fit parameters", categories.size(), 0.0, double(categories.size()));
-        int ret = fit::DoTheFit(fitHists, parameters, unfitHists, dataHist, includeInFit, categories, type, lowBin, hiBin, binbybin, outputDir, fitbin + 1);
+        // int ret = fit::DoTheFit(fitHists, parameters, unfitHists, dataHist, includeInFit, categories, type, lowBin, hiBin, binbybin, outputDir, fitbin + 1);
+        int ret = fit::DoTheFit(tmp_fitMap1d, parameters, tmp_unfitMap1d, tmp_dataMap1d, includeInFit, categories, type, lowBin, hiBin, binbybin, outputDir, fitbin);
+        std::cout << " Done with do the fit for fitbin " << fitbin << ", storing parameters " << std::endl;
         parameters_list.push_back(parameters);
         // int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit, categories, type, lowBin, hiBin, binbybin, outputDir, fitbin+1);
 

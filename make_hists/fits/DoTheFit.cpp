@@ -337,6 +337,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             // make a local TH1F map unfitHistsCV that the fitter expects
             std::map<const std::string, std::vector<TH1D*>> unfitHistsCV;
             if (univ == "CV") {
+                // std::cout << " after if CV " << std::endl;
                 for (auto sample : unfitHists) {
                     for (int i = 0; i < ncat; i++) {
                         TString name = unfitHists.at(sample.first).at(i)->GetName() + TString("_" + univ);
@@ -345,18 +346,28 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                     }
                 }
             } else {
+                std::cout << " after else from if CV " << std::endl;
                 for (auto sample : unfitHists) {
+                    std::cout << " looking at hist in sample " << sample.first << std::endl;
+
                     for (int i = 0; i < ncat; i++) {
+                        // std::cout << " start of loop over cats " << i << std::endl;
                         PlotUtils::MnvVertErrorBand* errorband = unfitHists.at(sample.first).at(i)->GetVertErrorBand(univ);
                         if (errorband == 0) {
                             std::cout << " no such band " << std::endl;
                         }
+                        // std::cout << " after making error band in cat " << i << std::endl;
+
                         TString name = errorband->GetName();
                         name += TString("_" + univ);
                         TH1D* hist = (TH1D*)errorband->GetHist(iuniv)->Clone(name);
+                        // std::cout << " after clone band in cat " << i << std::endl;
+
                         unfitHistsCV[sample.first].push_back(hist);
+                        // std::cout << " end of loop over cats " << i << std::endl;
                     }
                 }
+                // std::cout << " end of else " << std::endl;
             }
             std::cout << " have made the local samples for this universe" << std::endl;
 
@@ -367,8 +378,21 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             int nextPar = 0;
             for (unsigned int i = 0; i < func2.NDim(); ++i) {
                 std::string name = categories[i];
-                std::cout << " set parameter " << i << " " << name << std::endl;
-                mini2->SetLowerLimitedVariable(i, name, 1.0, 0.1, 0.0);
+                if (name=="other") {
+                    std::cout << " fixing parameter " << i << " " << name << std::endl;
+                    mini2->SetFixedVariable(i, name, 1.0);
+                    nextPar++;
+                    continue;
+                }
+                double lower_limit = 0.0;
+                // double upper_limit = 2.0;
+                // if (name=="qelike") {
+                //     double lower_limit = 0.5;
+                // }
+                std::cout << " set lower limit "<< lower_limit << " for parameter " << i << " " << name << std::endl;
+                mini2->SetLowerLimitedVariable(i, name, 1.0, 0.1, lower_limit);
+                // std::cout << " set upper limit " << upper_limit << " for parameter " << i << " " << name << std::endl;
+
                 nextPar++;
             }
 
@@ -494,13 +518,15 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
     SyncBands(&fcn);
     SyncBands(parameters);
     SyncBands(&covariance);
-
+    std::cout << "before write" << std::endl;
     fcn.MnvH1DToCSV("fcn", (outputDir + "/csv/").c_str());
     fcn.Write();
     parameters->MnvH1DToCSV("parameters", (outputDir + "/csv/").c_str());
     covariance.MnvH2DToCSV("parameters", (outputDir + "/csv/").c_str());
-    parameters->Write();
+    // parameters->Write();
     covariance.Write();
+    std::cout << "after write" << std::endl;
+
     return 0;
 }
 // //TODO: paramters etc need to have all errorbands set up

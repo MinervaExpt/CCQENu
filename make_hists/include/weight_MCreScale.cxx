@@ -73,7 +73,7 @@ void weight_MCreScale::read(TString filename) {
 
 void weight_MCreScale::SetCat(std::string cat) {
     if (std::find(m_categories.begin(), m_categories.end(), cat) == m_categories.end()) {
-        // std::cout << " can't find this category for mcrescale " << cat << std::endl;
+        // std::cout << " can't find this category for mcrescale in scale file " << cat << std::endl;
         m_category = "None";
         return;
     }
@@ -88,24 +88,28 @@ double weight_MCreScale::GetScaleInternal(const double checkval, std::string uni
     int xbin = -1;
 
     if (m_category == "None") {
-        std::cout << "weight_MCreScale: This variable is not recognized as qelike or qelikenot. Returning 1.0." << std::endl;
+        // std::cout << "weight_MCreScale: This variable is not recognized as category. Returning 1.0." << std::endl;
         return 1.0;
     }
 
     // if (xval < 0.) {
     if (xval < m_mnvh_Scale->GetBinLowEdge(1)) {
-        std::cout << "weight_MCreScale: You have a check value less than minimum. Returning 1.0 since could be unphysical." << std::endl;
-        return 1.0;
+        // std::cout << "weight_MCreScale: You have a check value less than minimum. Returning 1.0 since could be unphysical." << std::endl;
+        // std::cout << "                  xval = " << xval << std::endl;
+        // return 1.0;
+        xbin = 1;
     }
     // else if(q2qe>=2.0){
     else if (m_mnvh_Scale->FindFirstBinAbove(xval) < 0) {
         // Some scale files only go up to 2GeV^2 in Q2. This sets you in that highest bin if you give it a value higher than 2GeV^2
         // checkval = 1.99;
         // std::cout << "weight_MCreScale: You have a check value less than minimum. Returning 1.0" << std::endl;
-        xval = m_mnvh_Scale->GetBinContent(m_mnvh_Scale->GetMaximumBin());
+        // xval = m_mnvh_Scale->GetBinContent(m_mnvh_Scale->GetMaximumBin());
+        xbin = m_mnvh_Scale->GetMaximumBin();
+    } else {
+        xbin = m_mnvh_Scale->GetXaxis()->FindBin(xval);
     }
 
-    xbin = m_mnvh_Scale->GetXaxis()->FindBin(xval);
     static int errcount = 0;
     TH1D* hcv = (TH1D*)m_mnvh_Scale;
     if (uni_name == "cv" || uni_name == "CV") {
