@@ -186,6 +186,14 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // ----------------------------- Recoil Variables ----------------------------
 
+    //virtual double GetRecoilEnergy() const;
+
+    // dummy to try to avoid redefinition errors in 
+    inline virtual double ApplyCaloTuning(const double energy) const {
+        return energy;
+    } ;
+    
+
     virtual double GetCalRecoilEnergy() const;
     virtual double GetCalRecoilEnergyGeV() const;
 
