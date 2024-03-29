@@ -7,6 +7,8 @@ int main(const int argc, const char *argv[] ) {
   gROOT->ProcessLine("gErrorIgnoreLevel = kWarning;");
   //++++++++++++++++++=  Initialization +++++++++++++++++++++++++
 
+
+  
   std::string pl = "5A";
   if (argc > 1){
     pl = std::string(argv[1]);
@@ -111,7 +113,10 @@ int main(const int argc, const char *argv[] ) {
 
   //PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune (config.GetInt("DeuteriumGeniePiTune"));
 
-  PlotUtils::MinervaUniverse::SetNuEConstraint(config.GetInt("NuEConstraint")); //Needs to be on to match Dan's ME 2D inclusive analysis
+  // this is new as of ~2024
+  PlotUtils::MinervaUniverse::RPAMaterials(true);
+
+  PlotUtils::MinervaUniverse::SetNuEConstraint(config.GetInt("NuEConstraint"));  // Needs to be on to match Dan's ME 2D inclusive analysis
 
   PlotUtils::MinervaUniverse::SetNFluxUniverses(config.GetInt("fluxUniverses"));
 
