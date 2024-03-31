@@ -306,6 +306,9 @@ print (cmd+"\n")
 
 if not opts.debug:
     sf = open(wrapper_name.replace(".sh",".log"),'w')
+    jg = open(wrapper_name.replace(".sh",".job"),'w')
+    jg.write(cmd)
+    jg.close()
     sf.write(cmd)
     #os.system(cmd)
     answer="failed"
