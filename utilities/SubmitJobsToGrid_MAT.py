@@ -2,6 +2,7 @@ import os,sys,time,datetime
 from optparse import OptionParser
 import datetime
 
+import platform
 ###########################################################
 #  Script: JobSubmission python script for submitting
 #          analysis jobs to the grid
@@ -291,7 +292,10 @@ if opts.mail:
 #cmd += "--subgroup=Nightly " #This is only for high priority jobs
 cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC " # remove OFFSITE
 # make a very complicated thing to tell it to use a singularity image
-cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
+ostype = platform.platform()
+if "el7" in ostype:
+    #cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
+    cmd += " --singularity-image /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest "
 cmd += " --role=Analysis "
 #cmd += " --disk=10GB " # comment out for test
 cmd += " --expected-lifetime  " + opts.lifetime
