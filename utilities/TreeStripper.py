@@ -88,7 +88,7 @@ cwd = os.getcwd()
 # Sets up so it will write to data if on a minerva gpvm
 if 'minervagpvm' in str(socket.gethostname()):
     fnaluser = os.environ.get('USER')
-    datadir = os.path.join('/minerva/data/users',fnaluser)
+    datadir = os.path.join('/exp/minerva/data/users',fnaluser)
     if not os.path.exists(datadir):
         print 'ERROR: Cannot find your area:',datadir,' Exiting...'
         sys.exit()
