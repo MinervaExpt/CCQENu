@@ -303,7 +303,8 @@ cmd += " --expected-lifetime  " + opts.lifetime
 cmd += " --memory "+str(memory)+"MB "
 cmd += configstring+" " #the environments for the tunes to bee applied
 #cmd += "-f "+opts.outdir+"/myareatar_"+tag_name+".tar.gz "
-cmd += " --tar_file_name dropbox://"+os.path.join(opts.tardir,"myareatar_"+tag_name+".tar.gz)  --use-cvmfs-dropbox "
+cmd += " --tar_file_name dropbox://"+os.path.join(opts.tardir,"myareatar_"+tag_name+".tar.gz") 
+cmd += " --use-cvmfs-dropbox "
 #cmd += "-i /cvmfs/minerva.opensciencegrid.org/minerva/software_releases/v22r1p1"+" "
 cmd += "file://"+os.environ["PWD"]+"/"+wrapper_name
 print (cmd+"\n")
