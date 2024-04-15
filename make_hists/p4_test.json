@@ -1,12 +1,12 @@
 {
   "version":13,  // Run major variables in batch, use v13 of cuts, add closure
-  "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_short.txt",
-  "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt", // hack for type plot of resolution
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC_short.txt",
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt", // hack for type plot of resolution
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
   "DoResolution":1,
   "MinervaModel":"${MYMODEL}", // set this as an environmental to MnvTunev1 or MnvTunev2
-  "recoName":"CCQENu", // change if running on MAT tuples
+  "recoName":"MasterAnaDev", // change if running on MAT tuples
   "tunedmc":"both", // uses the tunes if available
   "closure":0, // set to 1 if you want to do closure test, otherwise 0
   "scalefileIn":"${CCQEMAT}/data/FullSample_${MYMODEL}_Q2QErecoil.root", // location of anti-nu background tuning
@@ -35,8 +35,7 @@
     "RPA",
     "2p2h",
     "MuonMinerva",
-    "geant4",
-    "response"
+    "geant4"
   ],
   "fluxUniverses": 2, // # of flux universes set low to run fast!
   "NuEConstraint": 1, // apply constraints to flux

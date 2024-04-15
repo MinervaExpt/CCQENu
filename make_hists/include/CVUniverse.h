@@ -106,6 +106,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetMultiplicity() const;
     virtual int GetDeadTime() const;
 
+    virtual bool FastFilter() const;
+    virtual bool TrueFastFilter() const;
+
     // ----------------------- Cut-configuring Functions -------------------------
 
     static int GetAnalysisNeutrinoPDG();

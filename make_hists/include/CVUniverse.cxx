@@ -263,6 +263,19 @@ double CVUniverse::GetWeight() const {
 // to write all your own functions for now.
 // ========================================================================
 
+// fast filter that reproduces CCQENu tuple cuts
+
+bool CVUniverse::FastFilter() const {
+    bool result = false;
+    // if (GetMultiplicity() < 1) return result;
+    if (GetIsMinosMatchTrack() != -1) return result;
+    if (GetZVertex() < 5980 || GetZVertex() > 8422) return result;
+    if (GetApothemX() > 850.) return result;
+    if (GetApothemY() > 850.) return result;
+    return true;
+}
+bool CVUniverse::TrueFastFilter() const { return true; }
+
 double CVUniverse::GetEventID() const { return GetDouble("eventID"); }
 int CVUniverse::GetMultiplicity() const { return GetInt("multiplicity"); }
 int CVUniverse::GetDeadTime() const { return GetInt("phys_n_dead_discr_pair_upstream_prim_track_proj"); }
