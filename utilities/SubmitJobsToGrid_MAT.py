@@ -299,7 +299,7 @@ if "el7" in ostype:
     cmd += " --singularity-image /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest "
 cmd += " --role=Analysis "
 #cmd += " --disk=10GB " # comment out for test
-cmd += " --expected-lifetime  " + opts.lifetime
+cmd += " --expected-lifetime " + opts.lifetime
 cmd += " --memory "+str(memory)+"MB "
 cmd += configstring+" " #the environments for the tunes to bee applied
 #cmd += "-f "+opts.outdir+"/myareatar_"+tag_name+".tar.gz "
