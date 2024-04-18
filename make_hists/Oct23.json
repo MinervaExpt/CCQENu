@@ -1,7 +1,7 @@
 {
   "version":13,  // Run major variables in batch, use v13 of cuts, add closure
   "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
-  "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_short.txt", // hack for type plot of resolution
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt", // hack for type plot of resolution
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
   "DoResolution":1,

@@ -1,7 +1,7 @@
 #export _CONDOR_SCRATCH_DIR=$PWD
 #export INPUT_TAR_DIR_LOCAL=$APP
 # some setup that I use to find common directories
-export BLUE=/minerva/data/users/$USER
+export BLUE=/exp/minerva/data/users/$USER
 export SCRATCH=/pnfs/minerva/scratch/users/$USER
 export APP=/exp/minerva/app/users/$USER
 # example test batch job to run on minervagpvm01 to run CCQEMAT

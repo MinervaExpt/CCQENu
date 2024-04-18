@@ -24,7 +24,7 @@ The directory I run from is $APP/NEWMAT/CCQENu/make_hists so I set RUNDIR to tha
 ```
 export APP=/exp/minerva/app/users/$USER
 export SCRATCH=/pnfs/minerva/scratch/users/$USER
-export BLUE=/minerva/data/users/$USER   
+export BLUE=/exp/minerva/data/users/$USER   
 
 export BASEDIR=$APP/NEWMAT    #  YOU NEED TO CHANGE THIS TO WHERE YOUR MAT CODE IS !!!!!!!!! 
 
