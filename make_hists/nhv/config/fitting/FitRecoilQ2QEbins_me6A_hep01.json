@@ -1,0 +1,38 @@
+{
+  "InputFile": "${CCQEMAT}/ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root",
+  "Sidebands": [
+    "QElike",
+    "LoPionThetaSideband",
+    "HiPionThetaSideband",
+    "BlobSideband",
+    "MultipBlobSideband"
+  ],
+  "IncludeInFit": [
+    "LoPionThetaSideband",
+    "HiPionThetaSideband",
+    "BlobSideband",
+    "MultipBlobSideband"],
+  "Categories": [
+    "qelike",
+    "neutralpion",
+    "chargedpion",
+    "multipion",
+    "other"
+  ],
+  "Backgrounds": [
+    "neutralpion",
+    "chargedpion",
+    "multipion",
+    "other"
+  ],
+  "FitVariable": "recoil",
+  "ProjectionVariable": "Q2QE",
+  "Variable2D": "Q2QE_recoil",
+  "FitType": "FastChi2",
+  "OutputDir": "${CCQEMAT}/out_fits/fit2d_params_noothermultipion",
+  "OutputFile": "fits_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1_noothermultipion.root",
+  "LogPlot": false,
+  "Template": "h2D___%s___%s___%s___reconstructed",
+  "TunedTemplate": "h2D___%s___%s___%s___reconstructed_tuned",
+  "FitTemplate": "h2D___%s___%s___%s___reconstructed_fitted"
+}

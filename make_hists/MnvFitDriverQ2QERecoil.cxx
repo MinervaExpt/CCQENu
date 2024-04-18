@@ -236,7 +236,7 @@ int main(int argc, char* argv[]) {
         // dataHist[side]->SetNormBinWidth(1.0);
         // dataHist[sidename] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
         for (auto cat : categories) {
-            std::snprintf(cname, sizeof(cname), tuned_template.c_str(), side.c_str(), cat.c_str(), varName2d.c_str()); // unfit hist name
+            std::snprintf(cname, sizeof(cname), h_template.c_str(), side.c_str(), cat.c_str(), varName2d.c_str()); // unfit hist name
             std::snprintf(fname, sizeof(fname), f_template.c_str(), side.c_str(), cat.c_str(), varName2d.c_str());  // fitted hist name
             name = TString(cname);
             std::cout << " look for " << cname << std::endl;
