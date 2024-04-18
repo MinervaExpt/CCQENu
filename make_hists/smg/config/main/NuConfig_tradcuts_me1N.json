@@ -1,0 +1,36 @@
+{
+  "version":8,  // Dec 2021 large scale tests
+  "mcIn":"playlists/CCQENu_minervame1N_MC_Inextinguishable_merged.txt",
+  "dataIn":"playlists/CCQENu_minervame1N_DATA_Inextinguishable_merged.txt",
+  "prescale":1,
+  "playlist":"minervame1N",
+  "MinervaModel":"MnvTunev2",
+  "recoName":"CCQENu",
+  "pdg":14,
+  "useTuned":false,
+  "runsamples":["QElike_Mult1","QElike_Mult2p","Mult1","Mult2p"],
+  "cutsFile":"config/cuts/NuCuts_v8.json",
+  "universeFile":"config/universe/NuUniverse_v8.json",
+  "varsFile":"config/variables/NuVariables_v8.json",
+  "samplesFile":"config/samples/NuSamples_v8.json",
+  "outRoot":"SB",
+  "AnalyzeVariables":["Q2QE","pzmu","ptmu"],
+  "Analyze2DVariables":[],
+  "signal":{"QElike_Mult1":"qelike",
+            "QElike_Mult2p":"qelike",
+            "Mult1":"qelike",
+            "Mult2p":"qelike"},
+  "background":{"QElike_Mult1":["1chargedpion","1neutralpion","multipion","other"],
+                "QElike_Mult2p":["1chargedpion","1neutralpion","multipion","other"],
+                "Mult1":["1chargedpion","1neutralpion","multipion","other"],
+                "Mult2p":["1chargedpion","1neutralpion","multipion","other"]},
+  "data":{},
+  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+                 "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "fluxUniverses":2,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}
