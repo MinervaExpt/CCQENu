@@ -17,6 +17,7 @@
 #include <algorithm>
 
 #include "include/CVUniverse.h"
+#include "CVUniverse.h"
 
 using namespace PlotUtils;
 
@@ -26,6 +27,20 @@ double MeVGeV = 0.001;  // lazy conversion from MeV to GeV before filling histos
 bool m_useNeutronCVReweight = true;
 
 }  // namespace
+
+//==============================================================================
+// Calorimetry spline setup
+//==============================================================================
+// Path to MParamFiles calibration file
+std::string splines_file = "$MPARAMFILESROOT/data/Calibrations/energy_calib/CalorimetryTunings.txt";
+
+// Initialize calorimetric correction for tracker
+util::CaloCorrection Nu_tracker(splines_file.c_str(), "NukeCC_Nu_Tracker");
+util::CaloCorrection AntiNu_tracker(splines_file.c_str(), "NukeCC_AntiNu_Tracker");
+// arguments:
+// 1. path to calibration file
+// 2. name of the calorimetric spline
+
 // ===========================================================
 // ====================== Configurables ======================
 // ===========================================================
@@ -820,6 +835,13 @@ int CVUniverse::GetTrueProtonCount() const {
 }
 
 // ----------------------------- Recoil Variables ----------------------------
+double CVUniverse::ApplyCaloTuning(double calRecoilE) const {
+    if (m_analysis_neutrino_pdg == -14) {
+        return AntiNu_tracker.eCorrection(calRecoilE * MeVGeV) / MeVGeV;
+    } // else
+    return Nu_tracker.eCorrection(calRecoilE * MeVGeV) / MeVGeV;
+    
+}
 
 double CVUniverse::GetCalRecoilEnergy() const {
     bool neutrinoMode = GetAnalysisNuPDG() > 0;
@@ -831,7 +853,6 @@ double CVUniverse::GetCalRecoilEnergy() const {
         return GetDouble("recoil_energy_nonmuon_nonvtx100mm");
     }
 }
-
 double CVUniverse::GetCalRecoilEnergyGeV() const { return CVUniverse::GetCalRecoilEnergy() * MeVGeV; }
 double CVUniverse::GetNonCalRecoilEnergy() const { return 0; }  // not certain why I want to implement this but there ya go.
 double CVUniverse::GetNonCalRecoilEnergyGeV() const { return GetNonCalRecoilEnergy() * MeVGeV; }
@@ -839,6 +860,8 @@ double CVUniverse::GetRecoilEnergyGeV() const { return GetRecoilEnergy() * MeVGe
 double CVUniverse::GetTrueRecoilEnergyGeV() const { return CVUniverse::GetTrueQ0GeV(); }                   // need this?
 double CVUniverse::GetTrueLog10RecoilEnergyGeV() const { return std::log10(CVUniverse::GetTrueQ0GeV()); }  // need this?
 double CVUniverse::GetLog10RecoilEnergyGeV() const { return std::log10(GetRecoilEnergy()) - 3.; }
+
+
 // return CVUniverse::GetCalRecoilEnergy();
 // std::cout << GetRecoilEnergy()*MeVGeV <<  " " << std::log10(GetRecoilEnergy()) << std::log10(GetRecoilEnergy())  - 3. << std::endl;
 
