@@ -66,6 +66,7 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
     leg.SetFillStyle(0)
     leg.SetBorderSize(0)
     leg.SetTextSize(0.03)
+    leg.SetNColumns(3)
     return leg
 
 def PanelCanvas(name, n_xbins, n_ybins, x_size=1000, y_size=750):
@@ -393,7 +394,7 @@ def main():
             canvas_name = "%s_%s"%(a_sample,b_var)
             canvas_title = "%s %s"%(a_sample,b_var)
             gc2 = PanelCanvas(canvas_name, n_xbins, n_ybins)
-            legend = CCQELegend(0.77, 0.05, 1, 0.35)
+            legend = CCQELegend(0.7, 0.1, .9, 0.25)
 
             # zbins = global_bins_dict[b_var][2]
             # zbin_title = ""
@@ -424,7 +425,13 @@ def main():
             # PlotDataMCOnGrid(gc2,zbin_title,data_list,stack_list,multipliers,plot_max,bin_range_list)
             PlotDataMCOnGrid(gc2,panel_title,data_list,stack_list,multipliers,plot_max,bin_range_list)
             for cat in order:
-                legend.AddEntry(plot_dict[cat]["reconstructed"], catsnames[cat])
+                style = ""
+                hist = MakeHistPretty(plot_dict[cat]["reconstructed"], cat)
+                if cat=="data":
+                    style = "pe"
+                else: 
+                    style = "f"
+                legend.AddEntry(hist, catsnames[cat], style)
             legend.Draw("same")
             ofilename = str(dirname+"/"+str(b_var)+"/"+canvas_name+"_FinalStates.pdf")
             gc2.Print(ofilename)

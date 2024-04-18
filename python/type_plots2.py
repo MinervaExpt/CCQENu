@@ -28,7 +28,29 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
     leg.SetTextSize(0.03)
     return leg
 
+# def AddPreliminary(x,y):
+#     text = "MINER#nuA Work In Progress"
+#     font = 112
+#     color = ROOT.kRed +1
+#     latex = ROOT.TLatex(x,y,text)
+#     latex.SetNDC()
+#     latex.SetTextSize(12)
+#     latex.SetTextColor(color)
+#     latex.SetTextFont(font)
+#     latex.SetTextAlign(22)
+#     return latex
+
 process=["data","QE","RES","DIS","COH","","","","2p2h",""]
+whichcats = ["data","qelike","qelikenot"]
+
+samplenames = {
+    "BlobSideband": "1 #pi^{0} Sideband",
+    "MultipBlobSideband": "Multi #pi Sideband",
+    "QElike": "QElike Signal Sample",
+    "QElikeOld": "2D Era QElike Signal Sample",
+    "HiPionThetaSideband": "Backwards #pi^{+/-} Sideband",
+    "LoPionThetaSideband": "Forwards #pi^{+/-} Sideband",
+}
 
 nproc = len(process)
 
@@ -98,6 +120,8 @@ for k in keys:
     variable = parse[3]
     # reorder so category is last
     if hist == "h2D": continue
+    if cat not in whichcats:
+        continue
     if hist not in groups.keys():
         groups[hist] = {}
         #legs[parse[0]] = {}
@@ -125,6 +149,8 @@ for k in keys:
     cat = parse[2]
     variable = parse[3]
     # these are stacked histos
+    if cat not in whichcats:
+        continue
     if flag in parse[4]:
         index = int(parse[4].replace(flag,""))
         #print ("check",index,name)
@@ -186,7 +212,7 @@ for a_hist in groups.keys():
                 continue
             
             data = TH1D(groups[a_hist][b_sample][c_var]["data"][0])
-            data.SetTitle("MINERvA Preliminary")
+            data.SetTitle(samplenames[b_sample])
             data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
             dmax = data.GetMaximum()
             if noData:
@@ -214,7 +240,8 @@ for a_hist in groups.keys():
                 bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
             #print ("bestorder",bestorder)
             for d_type in bestorder:
-                if d_type == "data": continue
+                if d_type == "data": 
+                    continue
                 if first == 0: # make a stack
                     stack = THStack(name.replace(flag,"stack"),"")
                 first+=1
@@ -227,6 +254,11 @@ for a_hist in groups.keys():
                     stack.Add(h)
                     leg.AddEntry(h,process[index],'f')
             smax = stack.GetMaximum()
+            if c_var=="PionAngle":
+                if b_sample == "LoPionThetaSideband":
+                    data.GetXaxis().SetRangeUser(0.,90.)            
+                elif b_sample == "HiPionThetaSideband":
+                    data.GetXaxis().SetRangeUser(90.,180.)
             #print ("max",smax,dmax)
             if smax > dmax:
                 data.SetMaximum(smax*1.5)
@@ -244,6 +276,10 @@ for a_hist in groups.keys():
             if not noData: 
                 data.Draw("PE same")
             leg.Draw()
+            # prelim = AddPreliminary(0.1,0.9)
+            # prelim.DrawLatexNDC(0.1,0.9,"MINER#nuA Work In Progress")
+            # cc.Modified()
+            # cc.Update()
             cc.Draw()
             cc.Print(dirname+"/"+thename+"_"+flag+".png")
             
