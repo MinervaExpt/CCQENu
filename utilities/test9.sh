@@ -8,6 +8,6 @@
 # here my release is in $APP/NEWMAT - your mileage may differ
 
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test \
- --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=MnvTunev2 \
- --tag=SL7 --mail --prescale=100 --config=Mar24 --exe=sidebands_v2 --sample=QElike \
- --setup=CCQENu/utilities/setup_batch_mat.sh --tmpdir=$BLUE/tmp --expected-lifetime=4h --memory=3000   #--debug --notimestamp
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=MnvTunev2 --tag=AL9 \
+ --mail --prescale=100 --config=Mar24 --exe=sidebands_v2 --sample=QElike --setup=CCQENu/utilities/setup_batch_mat9.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=3000   #--debug --notimestamp

@@ -26,10 +26,11 @@
 #define CVUNIVERSE_H
 
 #include <iostream>
-#include <vector>
 #include <map>
 #include <string>
+#include <vector>
 
+#include "PlotUtils/CaloCorrection.h"
 #include "PlotUtils/ChainWrapper.h"
 #include "PlotUtils/GeantHadronSystematics.h"
 #include "PlotUtils/MinervaUniverse.h"
@@ -112,6 +113,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetMultiplicity() const;
     virtual int GetDeadTime() const;
 
+    virtual bool FastFilter() const;
+    virtual bool TrueFastFilter() const;
+
     // ----------------------- Cut-configuring Functions -------------------------
 
     static int GetAnalysisNeutrinoPDG();
@@ -191,6 +195,15 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetHadronEGeV() const;
 
     // ----------------------------- Recoil Variables ----------------------------
+
+    //virtual double GetRecoilEnergy() const;
+
+    // // dummy to try to avoid redefinition errors in 
+    // inline virtual double ApplyCaloTuning(const double energy) const {
+    //     return energy;
+    // } ;
+
+    virtual double ApplyCaloTuning(double calRecoilE) const;
 
     virtual double GetCalRecoilEnergy() const;
     virtual double GetCalRecoilEnergyGeV() const;

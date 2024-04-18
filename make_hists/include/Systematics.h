@@ -195,11 +195,20 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
   // Response systematics (which also have recoil syst)
   // Stole this from Andrew's code
   if(std::find(flags.begin(), flags.end(), "response")!=flags.end()){
+    bool use_ID = false;
+    bool use_OD = false;
+    std::string name_tag = "allNonMuonClusters";
     bool neutron = false;
     bool part_response = false;
     bool proton = false;
-    UniverseMap response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, neutron, part_response, proton); // Not totally sure what the args do here
-    error_bands.insert(response_systematics.begin(),response_systematics.end());
+    bool use_nucl = false;
+    bool use_tracker = true; 
+    bool use_ecal = false;
+    bool use_hcal = false;
+
+    // UniverseMap response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, neutron, part_response, proton);  // Not totally sure what the args do here
+    UniverseMap response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, use_ID, use_OD, name_tag, neutron, part_response, proton, use_nucl, use_tracker, use_ecal, use_hcal);  // Not totally sure what the args do here
+    error_bands.insert(response_systematics.begin(), response_systematics.end());
     std::cout << " do make response systematics " << std::endl;
   }
   else{
