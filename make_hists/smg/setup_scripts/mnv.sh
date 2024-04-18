@@ -14,7 +14,7 @@ export PYTHONPATH=$WHEREIPUTMYCODE/MAT-MINERvA/python:$WHEREIPUTMYCODE/MAT-MINER
 # Same cvmfs setup/cmake/root used for MAT-MINERvA
 source /cvmfs/fermilab.opensciencegrid.org/products/common/etc/setups
 setup cmake v3_14_3 -z /cvmfs/larsoft.opensciencegrid.org/products
-setup root v6_16_00 -q e17:prof -z /cvmfs/larsoft.opensciencegrid.org/products
+setup root v6_28_12 -q e20:p3915:prof -z /cvmfs/larsoft.opensciencegrid.org/products
 setup python v3_7_2 -z /cvmfs/larsoft.opensciencegrid.org/products
 setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
 setup ifdhc -z /cvmfs/fermilab.opensciencegrid.org/products/common/db
