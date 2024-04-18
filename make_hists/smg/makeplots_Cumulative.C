@@ -204,6 +204,8 @@ int main(const int argc, const char *argv[]) {
 				h_data->SetBinContent(i,0.);
 			}
 			
+			h_data->GetYaxis()->SetRangeUser(0,1);
+			
 			THStack *hs = new THStack();
 			hs->Add(h_other);
 			hs->Add(h_multi);
@@ -230,7 +232,7 @@ int main(const int argc, const char *argv[]) {
 			gPad->RedrawAxis();
 			
 			//c1->Print(Form("%s/1D/%s_%s.png",rootfolder.c_str(),sample.c_str(),vars1D[i].c_str()));
-			c1->Print(Form("%s_ReverseCumulative.png",vars1D[i].c_str()));
+			c1->Print(Form("%s_ReverseCumulative_%s_%s.png",vars1D[i].c_str(),base.c_str(),prescale.c_str()));
 			
 		}
 		

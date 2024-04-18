@@ -1,5 +1,5 @@
 import ROOT
-from ROOT import TCanvas, TPad, TFile, TPaveLabel, TPaveText, TH1F, TH2F, TLegend
+from ROOT import TCanvas, TPad, TFile, TPaveLabel, TPaveText, TH1F, TH2F, TLegend, TLatex
 from ROOT import gROOT
 from array import array
 
@@ -17,7 +17,7 @@ of = TFile(ofile)
 rfile = "SB_NuConfig_mult1pBDTG_me1N_1.root"
 f = TFile(rfile)
 
-vars = ['ptmu','pzmu','Q2QE','EnuCCQE']
+vars = ['ptmu']
 
 for var in vars:
 
@@ -37,7 +37,7 @@ for var in vars:
 
 	h_pur = []
 	h_eff = []
-	h_spec = []
+	h_pureff = []
 
 	h_start = TH1F( 'start', 'QELike BDTG Response Cut Metrics for '+var, nbinX-1, 0, 1 )
 	h_start.GetXaxis().SetTitle("QELike BDTG Response")
@@ -51,6 +51,7 @@ for var in vars:
 		############## Purity ##############
 		h_pur.append(TH1F( 'purity'+str(j), 'Purity', nbinX-1, 0, 1 ))
 		h_pur[j-1].SetLineColor(ROOT.kBlue+1)
+		h_pur[j-1].SetLineWidth(2)
 		h_pur[j-1].SetStats(0)
 		# Fill
 		for i in range(0,nbinX):
@@ -68,6 +69,7 @@ for var in vars:
 		############## Efficiency ##############
 		h_eff.append(TH1F( 'efficiency'+str(j), 'Efficiency', h_qelike.GetNbinsX()-1, 0, 1 ))
 		h_eff[j-1].SetLineColor(ROOT.kGreen+2)
+		h_eff[j-1].SetLineWidth(2)
 		h_eff[j-1].SetStats(0)
 		# Fill
 		for i in range(0,nbinX):
@@ -79,38 +81,31 @@ for var in vars:
 		h_eff[j-1].DrawCopy("Same")
 
 		############## Selectivity ##############
-		h_spec.append(TH1F( 'specificity'+str(j), 'Specificity', h_qelike.GetNbinsX()-1, 0, 1 ))
-		h_spec[j-1].SetLineColor(ROOT.kRed+1)
-		h_spec[j-1].SetStats(0)
+		h_pureff.append(TH1F( 'purity*efficiency'+str(j), 'Purity*Efficiency', h_qelike.GetNbinsX()-1, 0, 1 ))
+		h_pureff[j-1].SetLineColor(ROOT.kRed+1)
+		h_pureff[j-1].SetLineWidth(2)
+		h_pureff[j-1].SetStats(0)
 		# Fill
 		for i in range(0,nbinX):
-			denom = (h_1chargedpion.Integral(1,nbinX,j,j)+
-			         h_1neutralpion.Integral(1,nbinX,j,j)+
-			         h_multipion.Integral(1,nbinX,j,j)+
-			         h_other.Integral(1,nbinX,j,j))
-			if denom > 0:
-				n = (h_1chargedpion.Integral(0,i-1,j,j)+
-						 h_1neutralpion.Integral(0,i-1,j,j)+
-						 h_multipion.Integral(0,i-1,j,j)+
-						 h_other.Integral(0,i-1,j,j))/denom
-				h_spec[j-1].SetBinContent(i,n)
+			n = h_pur[j-1].GetBinContent(i)*h_eff[j-1].GetBinContent(i)
+			h_pureff[j-1].SetBinContent(i,n)
 		# Draw
-		h_spec[j-1].DrawCopy("Same")
+		h_pureff[j-1].DrawCopy("Same")
 
 	############## Legend ##############
 	legend = TLegend(0.3,0.2,0.5,0.4)
 	legend.SetBorderSize(1)
 	legend.SetFillColor(0)
-	legend.AddEntry(h_pur[0], "purity (sensitivity)", "l")
+	legend.AddEntry(h_pur[0], "purity", "l")
 	legend.AddEntry(h_eff[0], "efficiency", "l")
-	legend.AddEntry(h_spec[0], "specificity", "l")
+	legend.AddEntry(h_pureff[0], "purity*efficiency", "l")
 	legend.Draw()
 
 	############## Save ##############
-	c1.SaveAs(var+'_Eff_Pur_Spec_vs_Response_2D.png')
+	c1.SaveAs(var+'_Eff_Pur_vs_Response_2D.png')
 	
 	del h_qelike, h_1chargedpion, h_1neutralpion, h_multipion, h_other
-	del h_start, legend, h_pur, h_eff, h_spec
+	del h_start, legend, h_pur, h_eff, h_pureff
 	
 for var in vars:
 
@@ -149,11 +144,11 @@ for var in vars:
 
 	h_pur = []
 	h_eff = []
-	h_spec = []
+	h_pureff = []
 	
 	#oh_pur = TH1F( 'old purity', 'old purity', nbinY, array('f',yEdges))
 	#oh_eff = TH1F( 'old efficiency', 'old efficiency', nbinY, array('f',yEdges))
-	#oh_spec = TH1F( 'old specificity', 'old specificity', nbinY, array('f',yEdges))
+	#oh_pureff = TH1F( 'old specificity', 'old specificity', nbinY, array('f',yEdges))
 
 	for i in range(5,11):
 		pads.append(TPad( 'pad1', 'The pad with the function', 
@@ -174,6 +169,7 @@ for var in vars:
 		############## Purity ##############
 		h_pur.append(TH1F( 'purity', 'BDTG QELike Response >= '+str(cut), nbinY, array('f',yEdges)))
 		h_pur[i-5].SetLineColor(ROOT.kBlue+1)
+		h_pur[i-5].SetLineWidth(2)
 		h_pur[i-5].SetFillColor(0)
 		h_pur[i-5].SetStats(0)
 		#h_pur[i-5].GetXaxis().SetTitle(var)
@@ -208,6 +204,7 @@ for var in vars:
 		############## Efficiency ##############
 		h_eff.append(TH1F( 'efficiency', 'Efficiency', nbinY, array('f',yEdges)))
 		h_eff[i-5].SetLineColor(ROOT.kGreen+2)
+		h_eff[i-5].SetLineWidth(2)
 		h_eff[i-5].SetStats(0)
 		# Fill
 		for j in range(1,nbinY+1):
@@ -219,23 +216,16 @@ for var in vars:
 		h_eff[i-5].DrawCopy("Same")
 
 		############## Selectivity ##############
-		h_spec.append(TH1F( 'specificity', 'Specificity', nbinY, array('f',yEdges)))
-		h_spec[i-5].SetLineColor(ROOT.kRed+1)
-		h_spec[i-5].SetStats(0)
+		h_pureff.append(TH1F( 'purity*efficiency', 'Purity*Efficiency', nbinY, array('f',yEdges)))
+		h_pureff[i-5].SetLineColor(ROOT.kRed+1)
+		h_pureff[i-5].SetLineWidth(2)
+		h_pureff[i-5].SetStats(0)
 		# Fill
 		for j in range(1,nbinY+1):
-			denom = (h_1chargedpion.Integral(0,nbinX,j,j)+
-				       h_1neutralpion.Integral(0,nbinX,j,j)+
-				       h_multipion.Integral(0,nbinX,j,j)+
-				       h_other.Integral(0,nbinX,j,j))
-			if denom > 0:
-				n = (h_1chargedpion.Integral(0,i-1,j,j)+
-						 h_1neutralpion.Integral(0,i-1,j,j)+
-						 h_multipion.Integral(0,i-1,j,j)+
-						 h_other.Integral(0,i-1,j,j))/denom
-				h_spec[i-5].SetBinContent(j,n)
+			n = h_pur[i-5].GetBinContent(j)*h_eff[i-5].GetBinContent(j)
+			h_pureff[i-5].SetBinContent(j,n)
 		# Draw
-		h_spec[i-5].DrawCopy("Same")
+		h_pureff[i-5].DrawCopy("Same")
 
 	c2.cd()
 	############## Legend ##############
@@ -245,13 +235,13 @@ for var in vars:
 	legend.SetFillColor(0)
 	legend.AddEntry(h_pur[0], "purity", "l")
 	legend.AddEntry(h_eff[0], "efficiency (sensitivity)", "l")
-	legend.AddEntry(h_spec[0], "specificity", "l")
+	legend.AddEntry(h_pureff[0], "purity*efficiency", "l")
 	legend.Draw()
 		
-	c2.SaveAs(var+'_Eff_Pur_Spec_for_Response_cut_2D.png')
+	c2.SaveAs(var+'_Eff_Pur_for_Response_cut_2D.png')
 	
 	del h_qelike, h_1chargedpion, h_1neutralpion, h_multipion, h_other
-	del legend, h_pur, h_eff, h_spec
+	del legend, h_pur, h_eff, h_pureff
 
 
 

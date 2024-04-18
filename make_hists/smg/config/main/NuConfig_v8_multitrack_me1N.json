@@ -14,7 +14,7 @@
   "varsFile":"config/variables/NuVariables_v8.json",
   "samplesFile":"config/samples/NuSamples_v8.json",
   "outRoot":"SB",
-  "AnalyzeVariables":["Q2QE","recoil","pzmu","ptmu"],
+  "AnalyzeVariables":["Q2QE","pzmu","ptmu"],
   "Analyze2DVariables":[],
   "_signal":{"QElike_Mult2p":"qelike",
             "MichelSideBand_Mult2p":"qelike",

@@ -1,0 +1,1418 @@
+---
+title: "BDTG Explore"
+author: "Sean Gilligan"
+output: pdf_document
+---
+
+CSV_CCQENu_minervame1N_MC_Inextinguishable_merged.csv
+
+```{r, message = F, warning = F, echo = F}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(stringr)
+library(knitr)
+library(kableExtra)
+library(GGally)
+library(viridis)
+library(fitdistrplus)
+library(purrr)
+library(ggforce)
+library(ggpattern)
+library(xgboost)
+library(caret)
+library(Ckmeans.1d.dp)
+library(archdata)
+library(jcolors)
+library(ggpp)
+```
+
+```{r, message = F, warning = F, echo = F}
+percent <- function(x, digits = 2, format = "f", ...) {
+  paste0(formatC(x * 100, format = format, digits = digits, ...), "%")
+}
+```
+
+```{r, message = F, warning = F, echo = F}
+events <- read.csv("CSV_CCQENu_minervame1N_MC_Inextinguishable_merged.csv", sep=";")
+```
+
+```{r, message = F, warning = F, echo = F}
+colnames(events)[which(colnames(events) == "X1chargedpionBDTG")] <- "1chargedpionBDTG"
+colnames(events)[which(colnames(events) == "X1neutralpionBDTG")] <- "1neutralpionBDTG"
+events$Truth = gsub("Mult1p___", "", events$Truth)
+events <- events %>%
+  mutate(`len/T_0` = ProtonCandTrackLength_0/PrimaryProtonTfromdEdx) #%>%
+  #mutate(`len/T_1` = SecProtonTfromdEdx_1/SecProtonTfromdEdx_1) %>%
+  #mutate(`len/T_2` = SecProtonTfromdEdx_2/SecProtonTfromdEdx_2)
+
+cbind(colnames(events))
+```
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(BlobCount <= 20)) +
+  stat_bin(binwidth = 1, position = position_stacknudge(x = 0.5), mapping = aes(BlobCount, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_stacknudge(x = 0), mapping = aes(BlobCount, fill = Truth)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(BlobCount <= 20)) +
+  stat_bin(binwidth = 1, mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 0.5)) +
+  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_fillnudge(x = 0), mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(BlobCount <= 20)) +
+  stat_bin(binwidth = 1, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobCount, fill = Truth), size = 2) +
+  stat_bin(binwidth = 1, geom = "step", color = "white", position = position_nudge(x = 0), mapping = aes(BlobCount, fill = Truth), size = 1) +
+  stat_bin(binwidth = 1, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobCount, color = Truth), size = 1, alpha = 0.8) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(BlobCount >= 0)) +
+  stat_bin(binwidth = 100, position = position_stacknudge(x = 50), mapping = aes(BlobDistance0, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_stacknudge(x = 0), mapping = aes(BlobDistance0, fill = Truth)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(BlobCount >= 0)) +
+  stat_bin(binwidth = 100, mapping = aes(BlobDistance0, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 50)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_fillnudge(x = 0), mapping = aes(BlobDistance0, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(BlobCount >= 0)) +
+  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobDistance0, fill = Truth), size = 2) +
+  stat_bin(binwidth = 100, geom = "step", color = "white", position = position_nudge(x = 0), mapping = aes(BlobDistance0, fill = Truth), size = 1) +
+  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobDistance0, color = Truth), size = 1, alpha = 0.8) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=10}
+ggplot(events %>%  
+         filter(ImprovedMichelCount <= 5)) +
+  stat_bin(binwidth = 1, position = position_stacknudge(x = .5), mapping = aes(BlobCount, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_stacknudge(x = 0), mapping = aes(BlobCount, fill = Truth)) + 
+  theme_bw() + ggtitle("Improved Michel Count") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(vars(ImprovedMichelCount), ncol = 3, scales = "free")
+
+ggplot(events %>%  
+         filter(ImprovedMichelCount <= 5)) +
+  stat_bin(binwidth = 1, mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = .5)) +
+  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_fillnudge(x = 0), mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() + ggtitle("Improved Michel Count") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(ImprovedMichelCount), ncol = 3, scales = "free")
+
+ggplot(events %>%  
+         filter(FittedMichelCount <= 5)) +
+  stat_bin(binwidth = 1, position = position_stacknudge(x = .5), mapping = aes(BlobCount, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_stacknudge(x = 0), mapping = aes(BlobCount, fill = Truth)) + 
+  theme_bw() + ggtitle("Fitted Michel Count") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(vars(FittedMichelCount), ncol = 3, scales = "free")
+
+ggplot(events %>%  
+         filter(FittedMichelCount <= 5)) +
+  stat_bin(binwidth = 1, mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = .5)) +
+  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_fillnudge(x = 0), mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() + ggtitle("Fitted Michel Count") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(FittedMichelCount), ncol = 3, scales = "free")
+
+
+```
+```{r, message = F, warning = F, echo = F, fig.height=8, fig.width=16}
+ggplot(events %>% 
+         filter(Multiplicity == 1) %>%
+         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
+                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
+                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
+         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
+                                            BlobCount == 1 ~ "blobs: 1",
+                                            BlobCount == 2 ~ "blobs: 2",
+                                            BlobCount >= 3 ~ "blobs: 3+"))) +
+  stat_bin(binwidth = 0.1, position = position_stacknudge(x = .05), mapping = aes(recoil, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.1, position = position_stacknudge(x = 0), mapping = aes(recoil, fill = Truth)) + 
+  theme_bw() + ggtitle("Multiplicity == 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
+
+ggplot(events %>% 
+         filter(Multiplicity == 1) %>%
+         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
+                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
+                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
+         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
+                                            BlobCount == 1 ~ "blobs: 1",
+                                            BlobCount == 2 ~ "blobs: 2",
+                                            BlobCount >= 3 ~ "blobs: 3+"))) +
+  stat_bin(binwidth = 0.1, mapping = aes(recoil, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = .05)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.1, position = position_fillnudge(x = 0), mapping = aes(recoil, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() + ggtitle("Multiplicity == 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
+```
+```{r, message = F, warning = F, echo = F, fig.height=8, fig.width=16}
+ggplot(events %>% 
+         filter(Multiplicity > 1) %>%
+         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
+                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
+                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
+         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
+                                            BlobCount == 1 ~ "blobs: 1",
+                                            BlobCount == 2 ~ "blobs: 2",
+                                            BlobCount >= 3 ~ "blobs: 3+"))) +
+  stat_bin(binwidth = 0.1, position = position_stacknudge(x = .05), mapping = aes(recoil, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.1, position = position_stacknudge(x = 0), mapping = aes(recoil, fill = Truth)) + 
+  theme_bw() + ggtitle("Multiplicity > 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
+
+ggplot(events %>% 
+         filter(Multiplicity > 1) %>%
+         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
+                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
+                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
+         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
+                                            BlobCount == 1 ~ "blobs: 1",
+                                            BlobCount == 2 ~ "blobs: 2",
+                                            BlobCount >= 3 ~ "blobs: 3+"))) +
+  stat_bin(binwidth = 0.1, mapping = aes(recoil, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = .05)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.1, position = position_fillnudge(x = 0), mapping = aes(recoil, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() + ggtitle("Multiplicity > 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=8, fig.width=16}
+ggplot(events %>%
+         filter(PrimaryProtonScore1 >= 0) %>%
+         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
+                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
+                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
+         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
+                                            BlobCount == 1 ~ "blobs: 1",
+                                            BlobCount == 2 ~ "blobs: 2",
+                                            BlobCount >= 3 ~ "blobs: 3+"))) +
+  stat_bin(binwidth = 0.05, position = position_stacknudge(x = .025), mapping = aes(PrimaryProtonScore1, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_stacknudge(x = 0), mapping = aes(PrimaryProtonScore1, fill = Truth)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
+
+ggplot(events %>%
+         filter(PrimaryProtonScore1 >= 0) %>%
+         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
+                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
+                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
+         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
+                                            BlobCount == 1 ~ "blobs: 1",
+                                            BlobCount == 2 ~ "blobs: 2",
+                                            BlobCount >= 3 ~ "blobs: 3+"))) +
+  stat_bin(binwidth = 0.05, mapping = aes(PrimaryProtonScore1, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = .025)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_fillnudge(x = 0), mapping = aes(PrimaryProtonScore1, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
+
+```
+
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(BlobCount >= 1)) +
+  stat_bin(binwidth = 100, position = position_stacknudge(x = 50), mapping = aes(BlobDistance1, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_stacknudge(x = 0), mapping = aes(BlobDistance1, fill = Truth)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(BlobCount >= 1)) +
+  stat_bin(binwidth = 100, mapping = aes(BlobDistance1, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 50)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_fillnudge(x = 0), mapping = aes(BlobDistance1, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(BlobCount >= 1)) +
+  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobDistance1, fill = Truth), size = 2) +
+  stat_bin(binwidth = 100, geom = "step", color = "white", position = position_nudge(x = 0), mapping = aes(BlobDistance1, fill = Truth), size = 1) +
+  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobDistance1, color = Truth), size = 1, alpha = 0.8) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+```{r, message = F, warning = F, echo = F}
+# secondary proton score 1 vs primary proton score 1
+ggplot(events %>% 
+         filter(PrimaryProtonTfromdEdx >= 0) %>%
+         filter(SecProtonTfromdEdx_1 >= 0) %>%
+         filter(qelikeBDTG >= 0.35), 
+       aes(PrimaryProtonScore1, SecProtonScore1_1)) +
+  stat_bin2d() +
+  theme_bw() + ggtitle("qelikeBDTG >= 0.35") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2")
+
+ggplot(events %>% 
+         filter(PrimaryProtonTfromdEdx >= 0) %>%
+         filter(SecProtonTfromdEdx_1 >= 0) %>%
+         filter(qelikeBDTG < 0.35), 
+       aes(PrimaryProtonScore1, SecProtonScore1_1)) +
+  stat_bin2d() +
+  theme_bw() + ggtitle("qelikeBDTG < 0.35") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2")
+
+# blob count vs primary proton score 1
+ggplot(events %>% 
+         filter(PrimaryProtonTfromdEdx >= 0) %>%
+         filter(qelikeBDTG >= 0.35), 
+       aes(PrimaryProtonScore1, BlobCount)) +
+  stat_bin2d(binwidth = c(0.025,1)) +
+  theme_bw() + ggtitle("qelikeBDTG >= 0.35") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2")
+
+ggplot(events %>% 
+         filter(PrimaryProtonTfromdEdx >= 0) %>%
+         filter(qelikeBDTG < 0.35), 
+       aes(PrimaryProtonScore1, MuonToPrimaryProtonAngle)) +
+  stat_bin2d(binwidth = c(0.025,10)) +
+  theme_bw() + ggtitle("qelikeBDTG < 0.35") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2")
+```
+
+
+```{r, message = F, warning = F, echo = F, fig.height = 6, fig.width = 8}
+ggplot(events %>% 
+         mutate(qelikeBDTG_band = cut(events$qelikeBDTG, seq(0,1,0.1))) %>%
+         filter(BlobCount <= 10) %>%
+         filter(recoil <= 20) %>%
+         filter(Multiplicity == 1), 
+       aes(BlobCount, recoil)) +
+  stat_bin2d(binwidth = c(1,1)) +
+  theme_bw() + ggtitle("Multiplicity == 1, QELike BDT Response") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2") +
+  facet_wrap(vars(qelikeBDTG_band))
+
+ggplot(events %>% 
+         mutate(qelikeBDTG_band = cut(events$qelikeBDTG, seq(0,1,0.1))) %>%
+         filter(PrimaryProtonTfromdEdx >= 0) %>%
+         filter(SecProtonTfromdEdx_1 >= 0) %>%
+         filter(qelikeBDTG > 0.1), 
+       aes(PrimaryProtonScore1, SecProtonScore1_1)) +
+  stat_bin2d(binwidth = c(0.05,0.05)) +
+  theme_bw() + ggtitle("QELike BDT Response") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2") +
+  facet_wrap(vars(qelikeBDTG_band))
+
+ggplot(events %>% 
+         mutate(qelikeBDTG_band = cut(events$qelikeBDTG, seq(0,1,0.1))) %>%
+         filter(PrimaryProtonTfromdEdx >= 0) %>%
+         filter(BlobCount <= 20) %>%
+         filter(qelikeBDTG > 0.1), 
+       aes(PrimaryProtonScore1, BlobCount)) +
+  stat_bin2d(binwidth = c(0.05,1)) +
+  theme_bw() + ggtitle("QELike BDT Response") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2") +
+  facet_wrap(vars(qelikeBDTG_band))
+
+ggplot(events %>% 
+         mutate(qelikeBDTG_band = cut(events$qelikeBDTG, seq(0,1,0.1))) %>%
+         filter(PrimaryProtonTfromdEdx >= 0) %>%
+         filter(MuonToPrimaryProtonAngle > 70 | PrimaryProtonScore1 > 0.05 | MuonToPrimaryProtonAngle < 10) %>%
+         filter(qelikeBDTG > 0.1),
+       aes(PrimaryProtonScore1, MuonToPrimaryProtonAngle)) +
+  stat_bin2d(binwidth = c(0.05,10)) +
+  theme_bw() + ggtitle("QELike BDT Response") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2") +
+  facet_wrap(vars(qelikeBDTG_band))
+
+ggplot(events %>% 
+         mutate(qelikeBDTG_band = cut(events$qelikeBDTG, seq(0,1,0.1))) %>%
+         filter(PrimaryProtonTfromdEdx >= 0) %>%
+         filter(PrimaryProtonTrackVtxGap <= 400) %>%
+         filter(PrimaryProtonTrackVtxGap > 120 | PrimaryProtonScore1 > 0.05) %>%
+         filter(PrimaryProtonTrackVtxGap > 20 | PrimaryProtonScore1 > 0.25) %>%
+         filter(PrimaryProtonTrackVtxGap > 60 | PrimaryProtonScore1 > 0.1) %>%
+         filter(PrimaryProtonTrackVtxGap > 40 | PrimaryProtonScore1 > 0.15) %>%
+         filter(qelikeBDTG > 0.1),
+       aes(PrimaryProtonScore1, PrimaryProtonTrackVtxGap)) +
+  stat_bin2d(binwidth = c(0.05,20)) +
+  theme_bw() + ggtitle("QELike BDT Response") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2") +
+  facet_wrap(vars(qelikeBDTG_band))
+
+```
+```{r, message = F, warning = F, echo = F, fig.height = 10, fig.width = 12}
+ggplot(events %>% 
+         mutate(qelikeBDTG_band = cut(events$qelikeBDTG, seq(0,1,0.2))) %>%
+         filter(BlobCount <= 10) %>%
+         filter(recoil <= 20) %>%
+         filter(Multiplicity == 1), 
+       aes(BlobCount, recoil)) +
+  stat_bin2d(binwidth = c(1,1)) +
+  theme_bw() + ggtitle("Multiplicity == 1, QELike BDT Response") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2") +
+  facet_wrap(vars(qelikeBDTG_band, Truth), ncol = 5)
+
+ggplot(events %>% 
+         mutate(qelikeBDTG_band = cut(events$qelikeBDTG, seq(0,1,0.2))) %>%
+         filter(ImprovedMichelCount <= 5) %>%
+         filter(recoil <= 20) %>%
+         filter(Multiplicity == 1), 
+       aes(ImprovedMichelCount, recoil)) +
+  stat_bin2d(binwidth = c(1,1)) +
+  theme_bw() + ggtitle("Multiplicity == 1, QELike BDT Response") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2") +
+  facet_wrap(vars(qelikeBDTG_band, Truth), ncol = 5)
+
+ggplot(events %>% 
+         mutate(qelikeBDTG_band = cut(events$qelikeBDTG, seq(0,1,0.2))) %>%
+         filter(ImprovedMichelCount <= 5) %>%
+         filter(BlobCount <= 10) %>%
+         filter(Multiplicity == 1), 
+       aes(ImprovedMichelCount, BlobCount)) +
+  stat_bin2d(binwidth = c(1,1)) +
+  theme_bw() + ggtitle("Multiplicity == 1, QELike BDT Response") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2") +
+  facet_wrap(vars(qelikeBDTG_band, Truth), ncol = 5)
+```
+
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(PrimaryProtonTfromdEdx >= 0), aes(`PrimaryProtonTOF`, fill = Truth)) +
+  stat_bin(origin = 0, binwidth = 200) +
+  stat_bin(origin = 0, color = "black", geom = "step", binwidth = 200, position = position_stacknudge(x=-100)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,11000)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+  
+ggplot(events %>% filter(PrimaryProtonTfromdEdx >= 0)) +
+  stat_bin(origin = 0, binwidth = 200, mapping = aes(`PrimaryProtonTOF`, fill = Truth, y = ..count../sum(..count..)), position = "fill") +
+  stat_bin(origin = 0, color = "black", geom = "step", binwidth = 200, position = position_fillnudge(x=-100), mapping = aes(`PrimaryProtonTOF`, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,11000)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+
+ggplot(events %>% filter(PrimaryProtonTfromdEdx >= 0), aes(`len/T_0`, fill = Truth)) +
+  stat_bin(origin = 0, binwidth = 0.2) +
+  stat_bin(origin = 0, color = "black", geom = "step", binwidth = 0.2, position = position_stacknudge(x=-0.1)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3.605)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+  
+ggplot(events %>% filter(PrimaryProtonTfromdEdx >= 0)) +
+  stat_bin(origin = 0, binwidth = 0.2, mapping = aes(`len/T_0`, fill = Truth, y = ..count../sum(..count..)), position = "fill") +
+  stat_bin(origin = 0, color = "black", geom = "step", binwidth = 0.2, position = position_fillnudge(x=-0.1), mapping = aes(`len/T_0`, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3.605)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(PrimaryProtonTfromdEdx >= 0), aes(PrimaryProtonTfromdEdx/1000, fill = Truth)) +
+  stat_bin(origin = 0, binwidth = 0.1) +
+  stat_bin(origin = 0, color = "black", binwidth = 0.1, geom = "step", position = position_stacknudge(x=-0.05)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5075)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+  
+ggplot(events) +
+  stat_bin(origin = 0, binwidth = 0.1, mapping = aes(PrimaryProtonTfromdEdx/1000, fill = Truth, y = ..count../sum(..count..)), position = "fill") +
+  stat_bin(origin = 0, color = "black", geom = "step", binwidth = 0.1, position = position_fillnudge(x=-0.05), mapping = aes(PrimaryProtonTfromdEdx/1000, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5075)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(PrimaryProtonTfromdEdx >= 0), aes(ProtonCandTrackLength_0/1000, fill = Truth)) +
+  stat_bin(origin = 0, binwidth = 0.2) +
+  stat_bin(origin = 0, color = "black", binwidth = 0.2, geom = "step", position = position_stacknudge(x=-0.1)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3.4075)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+  
+ggplot(events) +
+  stat_bin(origin = 0, binwidth = 0.2, mapping = aes(ProtonCandTrackLength_0/1000, fill = Truth, y = ..count../sum(..count..)), position = "fill") +
+  stat_bin(origin = 0, color = "black", geom = "step", binwidth = 0.2, position = position_fillnudge(x=-0.1), mapping = aes(ProtonCandTrackLength_0/1000, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3.4075)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(PrimaryProtonTfromdEdx >= 0), aes(ProtonCandTrackLength_0/1000, fill = Truth, y = cumsum(..count..)/sum(..count..))) +
+  stat_bin(origin = 0, binwidth = 0.2) +
+  stat_bin(origin = 0, color = "black", binwidth = 0.2, geom = "step", position = position_stacknudge(x=-0.1)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3.4075)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(vars(Truth))
+
+ggplot(events %>% filter(PrimaryProtonTfromdEdx >= 0), aes(x = Truth, y = `len/T_0`)) +
+  geom_violin(mapping = aes(fill = Truth)) + 
+  geom_boxplot(width = 0.1) +
+  theme_bw()
+
+ggplot(events %>% filter(PrimaryProtonTfromdEdx >= 0), aes(`len/T_0`, color = Truth)) +
+  stat_bin(origin = 0, geom = "step", binwidth = 0.2, position = "identity") + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3.605)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+
+events <- events %>%
+  mutate(`TOF/len` = PrimaryProtonTOF/ProtonCandTrackLength_0) %>%
+  mutate(`TOF/T_0` = PrimaryProtonTOF/PrimaryProtonTfromdEdx)
+evt <- events %>%
+  filter(PrimaryProtonTfromdEdx >= 0) %>%
+  mutate(x1 = (`TOF/len`-mean(events$`TOF/len`))/sd(events$`TOF/len`)) %>%
+  mutate(x2 = (`len/T_0`-mean(events$`len/T_0`))/sd(events$`len/T_0`)) %>%
+  mutate(x3 = (`TOF/T_0`-mean(events$`TOF/T_0`))/sd(events$`TOF/T_0`)) %>%
+  dplyr::select(x1,x2,x3,Truth)
+
+ggpairs(evt, columns = 1:3, aes(color = Truth)) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))
+
+
+ggplot(events %>% filter(PrimaryProtonScore1 >= 0), aes(PrimaryProtonScore1,PrimaryProtonScore2)) +
+  stat_bin2d() +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Truth))
+
+ggplot(evt, aes(x1,x3)) +
+  stat_bin2d() +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Truth))
+
+ggplot(evt, aes(x2,x3)) +
+  stat_bin2d() +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0)) +
+  facet_wrap(vars(Truth))
+
+ggplot(evt, aes(x2, fill = Truth)) +
+  stat_bin(origin = 0, binwidth = .2) +
+  stat_bin(origin = 0, color = "black", geom = "step", binwidth = .2, position = position_stacknudge(x=-.1)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(-2.4,3.4)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+  
+ggplot(evt) +
+  stat_bin(origin = 0, binwidth = .2, mapping = aes(x2, fill = Truth, y = ..count../sum(..count..)), position = "fill") +
+  stat_bin(origin = 0, color = "black", geom = "step", binwidth = .2, position = position_fillnudge(x=-.1), mapping = aes(x2, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(-2.4,3.4)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+```
+
+
+```{r, message = F, warning = F, echo = F}
+evt_compare <- events %>%
+  group_by(Truth) %>%
+  count(name = "Ntruth")
+evt_compare$wgtSums <- apply(as.matrix(events[,60:64]),2,sum)[c(2:5,1)]
+evt_compare <- evt_compare %>% mutate(`wgtSums/Ntruth` = signif(wgtSums/Ntruth,4))
+
+labels <- c("qelike","1chargedpion","1neutralpion","multipion","other")
+pred_n <- tibble(Pred = map_chr(1:nrow(events),~labels[which.max(events[.x,60:64])])) %>%
+  group_by(Pred) %>% count()
+evt_compare$maxN <- c(pred_n$n[1:3],0,pred_n$n[4])
+evt_compare <- evt_compare %>% mutate(`maxN/Ntruth` = signif(maxN/Ntruth,4))
+
+kable(evt_compare, booktabs = TRUE, escape=FALSE, align = c("lrrrrr")) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  column_spec(c(2,4), border_right = T)
+
+wgt_dist <- events %>% 
+  group_by(Truth) %>% 
+  count(wt = `1chargedpionBDTG`, name = "1chargedpion")
+wgt_dist$`1neutralpion` = events %>% 
+           group_by(Truth) %>% 
+           count(wt = `1neutralpionBDTG`, name = "1neutralpion") %>% 
+           pull(`1neutralpion`)
+wgt_dist$multipion = events %>% 
+           group_by(Truth) %>% 
+           count(wt = multipionBDTG, name = "multipion") %>% 
+           pull(multipion)
+wgt_dist$other = events %>% 
+           group_by(Truth) %>% 
+           count(wt = otherBDTG, name = "other") %>% 
+           pull(other)
+wgt_dist$qelike = events %>% 
+           group_by(Truth) %>% 
+           count(wt = qelikeBDTG, name = "qelike") %>% 
+           pull(qelike)
+
+kable(wgt_dist, booktabs = TRUE, escape=FALSE, align = c("lrrrrr")) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  column_spec(c(1), border_right = T)
+
+kable(cbind(wgt_dist[,1],signif(wgt_dist[,2:6]/matrix(rep(apply(as.matrix(wgt_dist[,2:6]),2,sum),5),nrow=5,byrow = T),2)), 
+      booktabs = TRUE, escape=FALSE, align = c("lrrrrr")) %>%
+  kable_styling(bootstrap_options = c("striped")) %>%
+  column_spec(c(1), border_right = T)
+
+```
+
+```{r, message = F, warning = F, echo = F, fig.height = 8, fig.width = 6}
+bands <- c("QELike","Michel","Blob","MicBlob")
+
+events$Pred <- map_chr(1:nrow(events),~bands[which.max(events[.x,c(24,20:22)])])
+
+events %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Pred),scales="free_y", ncol=1)
+
+events %>%
+  filter(qelikeBDTG >= 0.35) %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(Pred),scales="free_y", ncol=1)
+
+events %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.1, position = "fill", origin = 0) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(Pred),scales="free_y", ncol=1)
+
+events %>%
+  filter(qelikeBDTG >= 0.35) %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.1, position = "fill", origin = 0) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(Pred),scales="free_y", ncol=1)
+```
+```{r, message = F, warning = F, echo = F}
+# multiplicity == 1
+events %>%
+  filter(Multiplicity == 1) %>%
+  filter(Pred == "QELike") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelikeBDTG is max, multiplicity = 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+events %>%
+  filter(Multiplicity == 1) %>%
+  filter(qelikeBDTG >= 0.35) %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelikeBDTG >= 0.35, multiplicity = 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+events %>%
+  filter(Multiplicity == 1) %>%
+  filter(Pred == "QELike") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", position = "fill", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelikeBDTG is max, multiplicity = 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+events %>%
+  filter(Multiplicity == 1) %>%
+  filter(qelikeBDTG >= 0.35) %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", position = "fill", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelikeBDTG >= 0.35, multiplicity = 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+# multiplicity > 1
+events %>%
+  filter(Multiplicity > 1) %>%
+  filter(Pred == "QELike") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelikeBDTG is max, multiplicity > 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+events %>%
+  filter(Multiplicity > 1) %>%
+  filter(qelikeBDTG >= 0.35) %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelikeBDTG >= 0.35, multiplicity > 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+events %>%
+  filter(Multiplicity > 1) %>%
+  filter(Pred == "QELike") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", position = "fill", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelikeBDTG is max, multiplicity > 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+events %>%
+  filter(Multiplicity > 1) %>%
+  filter(qelikeBDTG >= 0.35) %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", position = "fill", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelikeBDTG >= 0.35, multiplicity > 1") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+# multiplicity > 0
+events %>%
+  filter(Pred == "QELike") %>%
+  ggplot(aes(qelikeBDTG, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() + ggtitle("qelikeBDTG is max") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+events %>%
+  filter(qelikeBDTG >= 0.35) %>%
+  ggplot(aes(qelikeBDTG, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() + ggtitle("qelikeBDTG >= 0.35") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+```{r, message = F, warning = F, echo = F}
+events %>%
+  filter(Multiplicity == 1) %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG, Multiplicity = 1") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.026,1.026)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(Multiplicity > 1) %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG, Multiplicity > 1") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.026,1.026)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG, muon only") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.026,1.026)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(model != "1track") %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG, muon + proton(s)") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.026,1.026)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(qelikeBDTG > 0.3) %>%
+  ggplot(aes(`1chargedpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG, muon + proton(s)") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+
+```{r, message = F, warning = F, echo = F, fig.height = 8, fig.width = 6}
+events %>%
+  filter(Multiplicity == 1) %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG, Multiplicity = 1") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.026,1.026)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth),scales="free_y", ncol=1)
+
+events %>%
+  filter(Multiplicity > 1) %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG, Multiplicity > 1") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.026,1.026)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth),scales="free_y", ncol=1)
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG, muon only") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.026,1.026)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth),scales="free_y", ncol=1)
+
+events %>%
+  filter(model != "1track") %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG, muon + proton(s)") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.026,1.026)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth),scales="free_y", ncol=1)
+
+
+```
+
+
+```{r, message = F, warning = F, echo = F}
+events %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.026,1.026)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  ggplot(aes(`1chargedpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1chargedpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.025,1.025)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  ggplot(aes(`1neutralpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1neutralpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.025,1.025)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  ggplot(aes(multipionBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("multipionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.025,1.025)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  ggplot(aes(otherBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("otherBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.025,1.025)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+```
+```{r, message = F, warning = F, echo = F}
+events %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black",  position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  ggplot(aes(`1chargedpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1chargedpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  ggplot(aes(`1neutralpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1neutralpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  ggplot(aes(multipionBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("multipionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+```
+```{r, message = F, warning = F, echo = F}
+cbind(
+  events %>%
+    count(Truth) %>%
+    mutate(N = n) %>%
+    dplyr::select(Truth,N),
+  events %>%
+    filter(multipionBDTG >= 0.4) %>%
+    count(Truth) %>%
+    dplyr::select(n)
+) %>%
+  mutate(`n/N %` = signif(100*n/N,4)) %>%
+  mutate(`n/Sum n %` = signif(100*n/sum(n),4))
+
+cbind(
+  events %>%
+    filter(Multiplicity == 1) %>%
+    count(Truth) %>%
+    mutate(N = n) %>%
+    dplyr::select(Truth,N),
+  events %>%
+    filter(Multiplicity == 1) %>%
+    filter(qelikeBDTG >= 0.35) %>%
+    count(Truth) %>%
+    dplyr::select(n)
+) %>%
+  mutate(`n/N %` = signif(100*n/N,4)) %>%
+  mutate(`n/Sum n %` = signif(100*n/sum(n),4))
+
+cbind(
+  events %>%
+    count(Truth) %>%
+    mutate(N = n) %>%
+    dplyr::select(Truth,N),
+  events %>%
+    filter(qelikeBDTG >= 0.35) %>%
+    count(Truth) %>%
+    dplyr::select(n)
+) %>%
+  mutate(`n/N %` = signif(100*n/N,4)) %>%
+  mutate(`n/Sum n %` = signif(100*n/sum(n),4))
+
+cbind(
+  events %>%
+    count(Truth) %>%
+    mutate(N = n) %>%
+    dplyr::select(Truth,N),
+  events %>%
+    filter(Pred == "QELike") %>% 
+    count(Truth) %>%
+    dplyr::select(n)
+) %>%
+  mutate(`n/N %` = signif(100*n/N,4)) %>%
+  mutate(`n/Sum n %` = signif(100*n/sum(n),4))
+
+```
+```{r, message = F, warning = F, echo = F}
+x = seq(0,1,0.01)
+y1 = c()
+for(i in x){
+  n1 <- nrow(events %>% filter(Multiplicity == 1 & Truth == "qelike" & qelikeBDTG >= i))
+  n2 <- nrow(events %>% filter(Multiplicity == 1 & Truth == "qelike"))
+  y1 <- c(y1,n1/n2)
+}
+y2 = c()
+for(i in x){
+  n1 <- nrow(events %>% filter(Multiplicity == 1 & Truth == "qelike" & qelikeBDTG >= i))
+  n2 <- nrow(events %>% filter(Multiplicity == 1 & qelikeBDTG >= i))
+  y2 <- c(y2,n1/n2)
+}
+y3 = c()
+for(i in x){
+  n1 <- nrow(events %>% filter(Multiplicity > 1 & Truth == "qelike" & qelikeBDTG >= i))
+  n2 <- nrow(events %>% filter(Multiplicity > 1 & Truth == "qelike"))
+  y3 <- c(y3,n1/n2)
+}
+y4 = c()
+for(i in x){
+  n1 <- nrow(events %>% filter(Multiplicity > 1 & Truth == "qelike" & qelikeBDTG >= i))
+  n2 <- nrow(events %>% filter(Multiplicity > 1 & qelikeBDTG >= i))
+  y4 <- c(y4,n1/n2)
+}
+
+plot(x,y1,col=2)
+points(x,y2,col=4)
+points(x,y1*y2,col=3)
+
+plot(x,y3,col=2)
+points(x,y4,col=4)
+points(x,y3*y4,col=3)
+
+m1 <- which.max(y1*y2)
+m2 <- which.max(y3*y4)
+x[m1]
+x[m2]
+
+plot(x[(m1-5):(m1+5)],y1[(m1-5):(m1+5)],col=2, ylim = c(0.6,0.9))
+points(x[(m1-5):(m1+5)],y2[(m1-5):(m1+5)],col=4)
+points(x[(m1-5):(m1+5)],(y1*y2)[(m1-5):(m1+5)],col=3)
+
+plot(x[(m2-5):(m2+5)],y3[(m2-5):(m2+5)],col=2, ylim = c(0.4,0.8))
+points(x[(m2-5):(m2+5)],y4[(m2-5):(m2+5)],col=4)
+points(x[(m2-5):(m2+5)],(y3*y4)[(m2-5):(m2+5)],col=3)
+
+
+
+cbind(x,(y1*y2))
+cbind(x,(y3*y4))
+```
+```{r, message = F, warning = F, echo = F}
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.026,1.026)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  ggplot(aes(`1chargedpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1chargedpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.025,1.025)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  ggplot(aes(`1neutralpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1neutralpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.025,1.025)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+```
+
+```{r, message = F, warning = F, echo = F}
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  ggplot(aes(qelikeBDTG,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black",  position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  ggplot(aes(`1chargedpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1chargedpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  ggplot(aes(`1neutralpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1neutralpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+```
+```{r, message = F, warning = F, echo = F}
+cbind(
+  events %>%
+    count(Truth) %>%
+    mutate(N = n) %>%
+    dplyr::select(Truth,N),
+  events %>%
+    filter(multipionBDTG < 0.4) %>%
+    filter(qelikeBDTG >= 0.4) %>%
+    count(Truth) %>%
+    dplyr::select(n)
+) %>%
+  mutate(`n/N %` = signif(100*n/N,4)) %>%
+  mutate(`n/Sum n %` = signif(100*n/sum(n),4))
+```
+```{r, message = F, warning = F, echo = F}
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  filter(qelikeBDTG < 0.4) %>%
+  ggplot(aes(`1chargedpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1chargedpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.025,1.025)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  filter(qelikeBDTG < 0.4) %>%
+  ggplot(aes(`1neutralpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1neutralpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.025,1.025)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+```
+
+```{r, message = F, warning = F, echo = F}
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  filter(qelikeBDTG < 0.4) %>%
+  ggplot(aes(`1chargedpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1chargedpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  filter(qelikeBDTG < 0.4) %>%
+  ggplot(aes(`1neutralpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1neutralpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+```
+```{r, message = F, warning = F, echo = F}
+cbind(
+  events %>%
+    count(Truth) %>%
+    mutate(N = n) %>%
+    dplyr::select(Truth,N),
+  events %>%
+    filter(multipionBDTG < 0.4) %>%
+    filter(qelikeBDTG < 0.4) %>%
+    filter(`1chargedpionBDTG` >= 0.4) %>%
+    count(Truth) %>%
+    dplyr::select(n)
+) %>%
+  mutate(`n/N %` = signif(100*n/N,4)) %>%
+  mutate(`n/Sum n %` = signif(100*n/sum(n),4))
+```
+```{r, message = F, warning = F, echo = F}
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  filter(qelikeBDTG < 0.4) %>%
+  filter(`1chargedpionBDTG` < 0.4) %>%
+  ggplot(aes(`1neutralpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1neutralpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.025,1.025)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+```
+
+```{r, message = F, warning = F, echo = F}
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  filter(qelikeBDTG < 0.4) %>%
+  filter(`1chargedpionBDTG` < 0.4) %>%
+  ggplot(aes(`1neutralpionBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1neutralpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  filter(multipionBDTG < 0.4) %>%
+  filter(qelikeBDTG < 0.4) %>%
+  filter(`1chargedpionBDTG` < 0.4) %>%
+  ggplot(aes(`otherBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("1neutralpionBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+```
+```{r, message = F, warning = F, echo = F, eval = F}
+events = events %>%
+  mutate(isMultipion = case_when(Truth == "multipion" ~ 1, .default = 0)) %>%
+  mutate(isQELike = case_when(Truth == "qelike" ~ 1, .default = 0)) %>%
+  mutate(is1ChargedPion = case_when(Truth == "1chargedpion" ~ 1, .default = 0))
+
+events[,c("isMultipion","qelikeBDTG","1chargedpionBDTG","1neutralpionBDTG","multipionBDTG","otherBDTG")]
+
+logit_qelike_1 <- glm(isQELike~., family = binomial,
+                         data = events[,c("isQELike","qelikeBDTG","1chargedpionBDTG","1neutralpionBDTG","multipionBDTG","otherBDTG")])
+summary(logit_qelike_1)
+
+logit_multipion_2 <- stepAIC(logit_multipion_1)
+summary(logit_multipion_2)
+
+logit_multipion_2$fitted.values
+
+events %>%
+  mutate(logit_qelike = logit_qelike_1$fitted.values) %>%
+  ggplot(aes(`logit_qelike`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("logit_qelike") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.025,1.025)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  ggplot(aes(`qelikeBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(-0.025,1.025)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  mutate(logit_qelike = logit_qelike_1$fitted.values) %>%
+  ggplot(aes(`logit_qelike`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("logit_qelike") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+
+events %>%
+  ggplot(aes(`qelikeBDTG`,fill=Truth,color=Truth)) +
+  stat_bin(colour = "black", position = 'fill', binwidth = 0.05, origin = 0) +
+  theme_bw() +
+  ggtitle("qelikeBDTG") +
+  scale_x_continuous(breaks = seq(0,1,0.1), expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(model),scales="free_y", ncol=1)
+```
+
+```{r, message = F, warning = F, echo = F, eval = F}
+cbind(
+  events %>%
+    count(Truth) %>%
+    mutate(N = n) %>%
+    dplyr::select(Truth,N),
+  events %>%
+    filter(qelikeBDTG >= 0.4) %>%
+    count(Truth) %>%
+    dplyr::select(n)
+) %>%
+  mutate(`n/N %` = signif(100*n/N,4)) %>%
+  mutate(`n/Sum n %` = signif(100*n/sum(n),4))
+
+cbind(
+  events %>%
+    count(Truth) %>%
+    mutate(N = n) %>%
+    dplyr::select(Truth,N),
+  events %>%
+    mutate(logit_qelike = logit_qelike_1$fitted.values) %>%
+    filter(logit_qelike >= 0.4) %>%
+    count(Truth) %>%
+    dplyr::select(n)
+) %>%
+  mutate(`n/N %` = signif(100*n/N,4)) %>%
+  mutate(`n/Sum n %` = signif(100*n/sum(n),4))
+```
+
+```{r, message = F, warning = F, echo = F}
+library(scico)
+
+my_fn <- function(data, mapping, ...){
+  # Using default ggplot density function
+  p <- ggplot(data = data, mapping = mapping) + 
+    stat_density2d(aes(fill=..density..), geom="tile", n=20, contour = FALSE) +
+    scale_fill_stepsn(n.breaks = 13, colours = c("#FFFFFFFF",viridis::viridis(12)))
+  p
+}
+
+ggpairs(events %>%
+    dplyr::select(qelikeBDTG,`1chargedpionBDTG`,`1neutralpionBDTG`,
+                  multipionBDTG,otherBDTG,Truth) %>%
+    filter(Truth == "qelike"), columns = 1:5, lower=list(continuous=my_fn)) +
+  theme_bw() + ggtitle("qelike") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))
+ggpairs(events %>%
+    dplyr::select(qelikeBDTG,`1chargedpionBDTG`,`1neutralpionBDTG`,
+                  multipionBDTG,otherBDTG,Truth) %>%
+    filter(Truth == "1chargedpion"), columns = 1:5, lower=list(continuous=my_fn)) +
+  theme_bw() + ggtitle("1chargedpion") +
+  theme(legend.position = "right") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))
+ggpairs(events %>%
+    dplyr::select(qelikeBDTG,`1chargedpionBDTG`,`1neutralpionBDTG`,
+                  multipionBDTG,otherBDTG,Truth) %>%
+    filter(Truth == "1neutralpion"), columns = 1:5, lower=list(continuous=my_fn)) +
+  theme_bw() + ggtitle("1neturalpion") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))
+ggpairs(events %>%
+    dplyr::select(qelikeBDTG,`1chargedpionBDTG`,`1neutralpionBDTG`,
+                  multipionBDTG,otherBDTG,Truth) %>%
+    filter(Truth == "multipion"), columns = 1:5, lower=list(continuous=my_fn)) +
+  theme_bw() + ggtitle("multipion") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))
+ggpairs(events %>%
+    dplyr::select(qelikeBDTG,`1chargedpionBDTG`,`1neutralpionBDTG`,
+                  multipionBDTG,otherBDTG,Truth) %>%
+    filter(Truth == "other"), columns = 1:5, lower=list(continuous=my_fn)) +
+  theme_bw() + ggtitle("other") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))
+ggpairs(events %>%
+    dplyr::select(qelikeBDTG,`1chargedpionBDTG`,`1neutralpionBDTG`,
+                  multipionBDTG,otherBDTG,Truth), columns = 1:5, lower=list(continuous=my_fn)) +
+  theme_bw() + ggtitle("All") +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))
+  
+```
+
+```{r, message = F, warning = F, echo = F}
+events$Truth = factor(events$Truth)
+events$target = as.numeric(events$Truth)
+events$target = events$target-1
+# Make split index
+train_index <- sample(1:nrow(events), nrow(events)*0.75)
+# Full data set
+data_variables <- as.matrix(events[,4:8])
+data_label <- events[,"target"]
+data_matrix <- xgb.DMatrix(data = as.matrix(events[,c(14,4:8)]), label = data_label)
+# split train data and make xgb.DMatrix
+train_data   <- data_variables[train_index,]
+train_label  <- data_label[train_index]
+train_matrix <- xgb.DMatrix(data = train_data, label = train_label)
+# split test data and make xgb.DMatrix
+test_data  <- data_variables[-train_index,]
+test_label <- data_label[-train_index]
+test_matrix <- xgb.DMatrix(data = test_data, label = test_label)
+```
+
+# XGBoost
+
+```{r, message = F, warning = F, echo = F}
+numberOfClasses <- length(unique(events$target))
+xgb_params <- list("objective" = "multi:softprob",
+                   "eval_metric" = "mlogloss",
+                   "num_class" = numberOfClasses)
+nround    <- 50 # number of XGBoost rounds
+cv.nfold  <- 5
+
+# Fit cv.nfold * cv.nround XGB models and save OOF predictions
+cv_model <- xgb.cv(params = xgb_params,
+                   data = train_matrix, 
+                   nrounds = nround,
+                   nfold = cv.nfold,
+                   verbose = FALSE,
+                   prediction = TRUE)
+```
+
+```{r, message = F, warning = F, echo = F}
+events %>% group_by(target,Truth) %>% count()
+```
+
+```{r, message = F, warning = F, echo = F}
+OOF_prediction <- data.frame(cv_model$pred) %>%
+  mutate(max_prob = max.col(., ties.method = "last"),
+         label = train_label + 1)
+head(OOF_prediction)
+
+bst_model <- xgb.train(params = xgb_params,
+                       data = train_matrix,
+                       nrounds = nround)
+
+# Predict hold-out test set
+test_pred <- predict(bst_model, newdata = test_matrix)
+test_prediction <- matrix(test_pred, nrow = numberOfClasses,
+                          ncol=length(test_pred)/numberOfClasses) %>%
+  t() %>%
+  data.frame() %>%
+  mutate(label = test_label + 1,
+         max_prob = max.col(., "last"))
+# confusion matrix of test set
+cM <- confusionMatrix(factor(test_prediction$max_prob),
+                      factor(test_prediction$label),
+                      mode = "everything")
+colnames(cM$table) <- sort(unique(events$Truth))
+rownames(cM$table) <- sort(unique(events$Truth))
+rownames(cM$byClass) <- sort(unique(events$Truth))
+cM$byClass
+cM
+```
+
+```{r, message = F, warning = F, echo = F}
+# get the feature real names
+names <-  colnames(events[,4:8])
+# compute feature importance matrix
+importance_matrix = xgb.importance(feature_names = names, model = bst_model)
+head(importance_matrix)
+```
+```{r, message = F, warning = F, echo = F}
+# plot
+gp = xgb.ggplot.importance(importance_matrix)
+print(gp) 
+```

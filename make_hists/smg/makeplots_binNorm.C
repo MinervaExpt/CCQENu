@@ -14,6 +14,7 @@
 #include "PlotUtils/FluxReweighter.h"
 #include <math.h>
 #include "TColor.h"
+#include "TLatex.h"
 #include <filesystem>
 
 #ifndef __CINT__
@@ -124,7 +125,7 @@ int main(const int argc, const char *argv[]) {
 			snu->SetFillColor(TColor::GetColor(76,140,43));//kGreen-3);
 			multi->SetFillColor(TColor::GetColor(234,170,0));//kRed-4);
 			other->SetFillColor(TColor::GetColor(82,37,6));//kBlack);
-			data->SetFillColor(TColor::GetColor(0,0,0));
+			data->SetFillColor(TColor::GetColor(255,255,255));
 
 			qe->SetFillStyle(3001);
 			sch->SetFillStyle(3001);
@@ -137,7 +138,7 @@ int main(const int argc, const char *argv[]) {
 			snu->SetLineColor(TColor::GetColor(76,140,43));//kGreen-3);
 			multi->SetLineColor(TColor::GetColor(234,170,0));//kRed-4);
 			other->SetLineColor(TColor::GetColor(82,37,6));//kBlack);
-			data->SetLineColor(TColor::GetColor(0,0,0));
+			data->SetLineColor(TColor::GetColor(255,255,255));
 		
 		  int nbins = qe->GetNbinsX();
 			for( int i=0; i<=nbins; i++ ){
@@ -163,6 +164,8 @@ int main(const int argc, const char *argv[]) {
 				data->SetBinContent(i,0.);
 			}
 			
+			data->GetYaxis()->SetRangeUser(0,1);
+			
 			THStack *hs = new THStack();
 			hs->Add(other);
 			hs->Add(multi);
@@ -170,10 +173,36 @@ int main(const int argc, const char *argv[]) {
 			hs->Add(sch);
 			hs->Add(qe);
 			
-			data->GetYaxis()->SetTitle("Counts/Unit");
 			data->GetXaxis()->SetTitleOffset(1.2);
-			data->GetYaxis()->SetTitleOffset(1.3);
-			data->SetTitle(vars1D[i].c_str());
+			if (vars1D[i] == "ptmu" ||
+			    vars1D[i] == "pzmu"   ) {
+				data->GetYaxis()->SetTitle("Relative Contribution per GeV");
+			}
+			else if (vars1D[i] == "Q2QE") {
+				data->GetYaxis()->SetTitle("Relative Contribution per GeV^{2}");
+			}
+			else {
+				data->GetYaxis()->SetTitle("Events/Unit");
+			}
+			data->GetYaxis()->SetTitleOffset(1);
+			
+			if (sample == "QElike_Mult1") {
+				data->SetTitle("Multiplicity = 1, Traditional Cuts");
+			}
+			else if (sample == "Mult1TMVA04" ||
+			         sample == "Mult1TMVA035"  ) {
+				data->SetTitle("Multiplicity = 1, TMVA Gradient BDTs");
+			}
+			else if (sample == "QElike_Mult2p") {
+				data->SetTitle("Multiplicity #geq 2, Traditional Cuts");
+			}
+			else if (sample == "Mult2pTMVA04" ||
+			         sample == "Mult2pTMVA035"  ) {
+				data->SetTitle("Multiplicity #geq 2, TMVA Gradient BDTs");
+			}
+			else if (sample == "Mult1p") {
+				data->SetTitle("Multiplicity #geq 1");
+			}
 			data->SetStats(0);
 			applyStyle(data);
 			
@@ -185,14 +214,27 @@ int main(const int argc, const char *argv[]) {
 			leg->AddEntry(multi,"2+ #pi","F");
 			leg->AddEntry(other,"Other","F");
 			
+			double xmax = data->GetXaxis()->GetBinUpEdge(data->GetNbinsX());
+			double xmin = data->GetXaxis()->GetBinLowEdge(1);
+			double xdel = xmax-xmin;
+			double xtext = xmin+0.35*xdel;
+			double ytext = data->GetMaximum();
+			
+			TLatex *text = new TLatex(xtext,0.98,"Work in progress");
+			text->SetTextAlign(13);
+			text->SetTextColor(kRed);
+			text->SetTextFont(13);
+			text->SetTextSize(20);
+			
 			data->Draw("HIST");
 			hs->Draw("HISTSAME");
 			//data->Draw("PE1SAME");
 			leg->Draw("SAME");
+			text->Draw("SAME");
 			gPad->RedrawAxis();
 			
 			//c1->Print(Form("%s/1D/%s_%s.png",rootfolder.c_str(),sample.c_str(),vars1D[i].c_str()));
-			c1->Print(Form("%s_%s.png",vars1D[i].c_str(),"binNormalized"));
+			c1->Print(Form("%s_binNormalized___%s___%s_%s.png",sample.c_str(),vars1D[i].c_str(),base.c_str(),prescale.c_str()));
 			
 		}
 	}

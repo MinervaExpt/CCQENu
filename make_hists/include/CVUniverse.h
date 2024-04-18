@@ -321,6 +321,13 @@ public:
 	// Isolated Blobs
 
 	virtual int GetNBlobs() const;
+	
+	virtual double GetBlobDistance(int i) const;
+	virtual double GetBlobDistance0() const;
+	virtual double GetBlobDistance1() const;
+	virtual double GetBlobDistance2() const;
+	virtual double GetBlobDistance3() const;
+	virtual double GetBlobDistance4() const;
 
 	// Michel Electrons
 
@@ -494,6 +501,8 @@ public:
 	virtual double GetSecProtonTrackVtxGap_4() const;
 	virtual double GetSecProtonTrackVtxGap_5() const;
 	virtual double GetSecProtonTrackVtxGap_6() const;
+	
+	virtual double GetPrimaryProtonTOF() const;
 
 	virtual double GetCalibEClustsProtonEnd(int i) const;
 	virtual double GetCalibEClustsPrimaryProtonEnd() const;

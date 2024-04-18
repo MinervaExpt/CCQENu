@@ -898,13 +898,25 @@ namespace {
 		double gap = sqrt(pow(startX-vtx[0],2) + pow(startY-vtx[1],2) + pow(startZ-vtx[2],2));
 		return gap;
 	}
-	double CVUniverse::GetPrimaryProtonTrackVtxGap() const{ return GetProtonTrackVtxGap(0); }
-	double CVUniverse::GetSecProtonTrackVtxGap_1() const{ return GetProtonTrackVtxGap(1); }
-	double CVUniverse::GetSecProtonTrackVtxGap_2() const{ return GetProtonTrackVtxGap(2); }
-	double CVUniverse::GetSecProtonTrackVtxGap_3() const{ return GetProtonTrackVtxGap(3); }
-	double CVUniverse::GetSecProtonTrackVtxGap_4() const{ return GetProtonTrackVtxGap(4); }
-	double CVUniverse::GetSecProtonTrackVtxGap_5() const{ return GetProtonTrackVtxGap(5); }
-	double CVUniverse::GetSecProtonTrackVtxGap_6() const{ return GetProtonTrackVtxGap(6); }
+	double CVUniverse::GetPrimaryProtonTrackVtxGap() const { return GetProtonTrackVtxGap(0); }
+	double CVUniverse::GetSecProtonTrackVtxGap_1() const { return GetProtonTrackVtxGap(1); }
+	double CVUniverse::GetSecProtonTrackVtxGap_2() const { return GetProtonTrackVtxGap(2); }
+	double CVUniverse::GetSecProtonTrackVtxGap_3() const { return GetProtonTrackVtxGap(3); }
+	double CVUniverse::GetSecProtonTrackVtxGap_4() const { return GetProtonTrackVtxGap(4); }
+	double CVUniverse::GetSecProtonTrackVtxGap_5() const { return GetProtonTrackVtxGap(5); }
+	double CVUniverse::GetSecProtonTrackVtxGap_6() const { return GetProtonTrackVtxGap(6); }
+	
+	// Proton "TOF"
+	double CVUniverse::GetPrimaryProtonTOF() const {
+		double ti = GetVecElem("vtx",0);
+		if (GetPrimaryProtonScore1() >= 0) {
+			double tf = GetVecElem("proton_prong_tpos",0);
+			return tf - ti;
+		}
+		else {
+			return -9999.;
+		}
+	}
 	
 	// Proton candidate T from dEdx of candidate track
 	double CVUniverse::GetPrimaryProtonTfromdEdx() const {
@@ -1457,6 +1469,20 @@ namespace {
 		}
 		return n_blobs;
 	}
+	
+	double CVUniverse::GetBlobDistance(int i) const {
+		if( GetInt("nonvtx_iso_blobs_distance_in_prong_sz") > i ) {
+			return GetVecElem("nonvtx_iso_blobs_distance_in_prong",i);
+		}
+		else {
+			return -9999.;
+		}
+	}
+	double CVUniverse::GetBlobDistance0() const { return CVUniverse::GetBlobDistance(0); }
+	double CVUniverse::GetBlobDistance1() const { return CVUniverse::GetBlobDistance(1); }
+	double CVUniverse::GetBlobDistance2() const { return CVUniverse::GetBlobDistance(2); }
+	double CVUniverse::GetBlobDistance3() const { return CVUniverse::GetBlobDistance(3); }
+	double CVUniverse::GetBlobDistance4() const { return CVUniverse::GetBlobDistance(4); }
 	
 	double CVUniverse::GetPionScore() const {
 		return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_pion_score").c_str());

@@ -367,10 +367,10 @@
     "background":["1chargedpion","1neutralpion","multipion","other"],
     "categories":{
          "qelike":{"for":["selected_reco","selected_truth","truth","response"]},
-         "1neutralpion":{"for":["selected_reco","selected_truth"]},
-         "1chargedpion":{"for":["selected_reco","selected_truth"]},
-         "multipion":{"for":["selected_reco","selected_truth"]},
-         "other":{"for":["selected_reco","selected_truth"]}
+         "1neutralpion":{"for":["selected_reco"]},
+         "1chargedpion":{"for":["selected_reco"]},
+         "multipion":{"for":["selected_reco"]},
+         "other":{"for":["selected_reco"]}
     },
     "fill_colors":{"qelike":612,
                    "1chargedpion":593,
@@ -397,10 +397,38 @@
 		"background":["1neutralpion","1chargedpion","multipion","other"],
 		"categories":{
 			"qelike":{"for":["selected_reco","selected_truth","truth","response"]},
-			"1neutralpion":{"for":["selected_reco","selected_truth","truth"]},
-			"1chargedpion":{"for":["selected_reco","selected_truth","truth"]},
-			"multipion":{"for":["selected_reco","selected_truth","truth"]},
-			"other":{"for":["selected_reco","selected_truth","truth"]}
+			"1neutralpion":{"for":["selected_reco"]},
+			"1chargedpion":{"for":["selected_reco"]},
+			"multipion":{"for":["selected_reco"]},
+			"other":{"for":["selected_reco"]}
+		}
+	},
+	"Mult1":{
+		"name":"Mult1",
+		"reco":"Mult1",
+		"phase_space":"phase_space",
+		"signal":["qelike"],
+		"background":["1neutralpion","1chargedpion","multipion","other"],
+		"categories":{
+			"qelike":{"for":["selected_reco","selected_truth","truth","response"]},
+			"1neutralpion":{"for":["selected_reco"]},
+			"1chargedpion":{"for":["selected_reco"]},
+			"multipion":{"for":["selected_reco"]},
+			"other":{"for":["selected_reco"]}
+		}
+	},
+	"Mult2p":{
+		"name":"Mult2p",
+		"reco":"Mult2p",
+		"phase_space":"phase_space",
+		"signal":["qelike"],
+		"background":["1neutralpion","1chargedpion","multipion","other"],
+		"categories":{
+			"qelike":{"for":["selected_reco","selected_truth","truth","response"]},
+			"1neutralpion":{"for":["selected_reco"]},
+			"1chargedpion":{"for":["selected_reco"]},
+			"multipion":{"for":["selected_reco"]},
+			"other":{"for":["selected_reco"]}
 		}
 	},
 	"MichelSideBand_Mult1p":{

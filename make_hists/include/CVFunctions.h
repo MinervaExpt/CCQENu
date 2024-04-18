@@ -185,6 +185,12 @@ public:
 		// Isolated Blobs
 
 		recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
+		
+		recofunctions["BlobDistance0"] = &CVUNIVERSE::GetBlobDistance0;
+		recofunctions["BlobDistance1"] = &CVUNIVERSE::GetBlobDistance1;
+		recofunctions["BlobDistance2"] = &CVUNIVERSE::GetBlobDistance2;
+		recofunctions["BlobDistance3"] = &CVUNIVERSE::GetBlobDistance3;
+		recofunctions["BlobDistance4"] = &CVUNIVERSE::GetBlobDistance4;
 
 		// Michel Electrons
 
@@ -340,6 +346,8 @@ public:
 		recofunctions["SecProtonTrackVtxGap_4"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_4;
 		recofunctions["SecProtonTrackVtxGap_5"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_5;
 		recofunctions["SecProtonTrackVtxGap_6"] = &CVUNIVERSE::GetSecProtonTrackVtxGap_6;
+		
+		recofunctions["PrimaryProtonTOF"] = &CVUNIVERSE::GetPrimaryProtonTOF;
 
 		recofunctions["CalibEClustsPrimaryProtonEnd"] = &CVUNIVERSE::GetCalibEClustsPrimaryProtonEnd;
 		recofunctions["CalibEClustsSecProtonEnd_1"] = &CVUNIVERSE::GetCalibEClustsSecProtonEnd_1;
