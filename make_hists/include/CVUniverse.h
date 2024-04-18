@@ -35,8 +35,8 @@
 #include "PlotUtils/GeantHadronSystematics.h"
 #include "PlotUtils/MinervaUniverse.h"
 #include "PlotUtils/PhysicsVariables.h"
-#include "TVector3.h"
 #include "TMath.h"
+#include "TVector3.h"
 #include "utils/NuConfig.h"
 
 class CVUniverse : public PlotUtils::MinervaUniverse {
@@ -68,7 +68,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 #include "PlotUtils/RecoilEnergyFunctions.h"
 #include "PlotUtils/TruthFunctions.h"
 #include "PlotUtils/WeightFunctions.h"
-// #endif
+    // #endif
 
     // ========================================================================
     // Constructor/Destructor
@@ -196,9 +196,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // ----------------------------- Recoil Variables ----------------------------
 
-    //virtual double GetRecoilEnergy() const;
+    // virtual double GetRecoilEnergy() const;
 
-    // // dummy to try to avoid redefinition errors in 
+    // // dummy to try to avoid redefinition errors in
     // inline virtual double ApplyCaloTuning(const double energy) const {
     //     return energy;
     // } ;
@@ -213,16 +213,13 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetRecoilEnergyGeV() const;
     virtual double GetTrueRecoilEnergyGeV() const;
-    
-    virtual double ApplyCaloTuning(double ) const;
 
-	virtual double GetLog10RecoilEnergyGeV() const;
-	virtual double GetTrueLog10RecoilEnergyGeV() const;
+    virtual double GetLog10RecoilEnergyGeV() const;
+    virtual double GetTrueLog10RecoilEnergyGeV() const;
 
     virtual double GetOffsetRecoilEnergyGeV() const;
 
     virtual double GetRecoilEnergyMinusNeutBlobsGeV() const;
-
 
     virtual double GetTrueQ0GeV() const;
     virtual double GetTrueQ3GeV() const;
@@ -341,7 +338,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetChargedPionAngle() const;
     virtual int GetNPionTracks() const;
     virtual int GetTruthHasMultiPion() const;
-    virtual double GetExtraTrackAngle() const; // This just does the leading/primary proton candidate
+    virtual double GetExtraTrackAngle() const;  // This just does the leading/primary proton candidate
 
     // Charged and Neutral Pions
 
@@ -498,7 +495,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetRecoTruthIsPrimaryPion() const;
     virtual int GetRecoTruthIsPrimaryOther() const;
 
-    virtual int GetIsAllTracksProtons() const; // special for Antinu, assumes you have multiplicity cuts
+    virtual int GetIsAllTracksProtons() const;  // special for Antinu, assumes you have multiplicity cuts
 
     virtual int GetIsPrimaryProton() const;
     virtual int GetIsPrimaryProton1() const;
