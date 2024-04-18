@@ -10,8 +10,8 @@
         "background": ["qelikenot"],
         "categories": {
             "qelike": {
-                // "for": ["selected_reco"]
-                "for": ["selected_reco", "selected_truth", "truth", "response"]
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
              },
             "qelikenot": {
                 "for": ["selected_reco"]
@@ -154,7 +154,63 @@
             "qelike": "QELike",
             "qelikenot": "QELikeNot",
         }
-    }, 
+    },
+    "LoPionThetaSideband": {
+        "name": "LoPionThetaSideband",
+        "reco": "LoPionThetaSideband",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "HiPionThetaSideband": {
+        "name": "HiPionThetaSideband",
+        "reco": "HiPionThetaSideband",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
     "MultipBlobSideband": {
         "name": "MultipBlobSideband",
         "reco": "MultipBlobSideband",

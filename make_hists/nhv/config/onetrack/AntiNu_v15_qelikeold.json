@@ -5,7 +5,7 @@
   "cutsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuCuts_v15_1track.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_FS_recoonly.json",
-  "outRoot": "Test_recoileff_me5A_${MYMODEL}",
+  "outRoot": "Test_FitClosure_me5A_${MYMODEL}",
   // "outRoot": "${MYROOTOUTPUT}/FinalState_5A_1track_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
   "prescale":999,
@@ -20,9 +20,10 @@
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike"//,
-    // "QElikeNeutrons"//,
-    // "MultiplicitySideband",
+    "QElikeOld"
+    // "QElike",
+    // // "QElikeNeutrons"//,
+    // // "MultiplicitySideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband",
     // "BlobSideband",
@@ -40,14 +41,14 @@
     // "EAvailWiggled"
     // "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"
-    "recoil"
+    // "recoil"
     // "recoilQE"
     // "NNeutBlobs"
     // "NeutBlobsRatio"
     // "pzmu",
     // "ptmu"
   ],
-  "Analyze2DVariables": ["Q2QE_recoil"], //["pzmu_ptmu"], 
+  "Analyze2DVariables": [],//["Q2QE_recoil"], //["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [], 
   "systematics": [
     "Flux"//,

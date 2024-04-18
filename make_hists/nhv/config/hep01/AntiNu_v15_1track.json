@@ -1,28 +1,29 @@
 {
   "version":15,  
-  "mcIn":"${PLAYLISTROOT}/MC_5A_local.txt",
-  "dataIn":"${PLAYLISTROOT}/DATA_5A_local.txt",
+  "mcIn":"${PLAYLISTROOT}/local_CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt"
+  "dataIn":"${PLAYLISTROOT}/local_CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuCuts_v15_1track.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_FS_recoonly.json",
-  "outRoot": "Test_recoileff_me5A_${MYMODEL}",
+  "outRoot": "Test_${MYSAMPLE}_${MYPLAYLIST}_${MYMODEL}",
   // "outRoot": "${MYROOTOUTPUT}/FinalState_5A_1track_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
   "prescale":999,
-  "playlist":"minervame5A",
+  "playlist":"${MYPLAYLIST}",
   "MinervaModel":"${MYMODEL}", 
   "recoName":"CCQENu",
   "tunedmc":"untuned", 
   "closure":0,
   "TuneCategories":["qelike", "chargedpion","neutralpion","multipion","other"], 
   "DoResolution": false,
-  "DoTypes": false,
+  "DoTypes": true,
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike"//,
-    // "QElikeNeutrons"//,
-    // "MultiplicitySideband",
+    "${MYSAMPLE}"
+    // "QElike",
+    // // "QElikeNeutrons"//,
+    // // "MultiplicitySideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband",
     // "BlobSideband",
@@ -35,35 +36,35 @@
     // "NChargedPions",
     // "HasMultiPion"
     // "recoilNoBlobs",
-    "Q2QE",
+    // "Q2QE",
     // "EAvail",
     // "EAvailWiggled"
     // "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"
-    "recoil"
+    // "recoil"
     // "recoilQE"
     // "NNeutBlobs"
     // "NeutBlobsRatio"
-    // "pzmu",
-    // "ptmu"
+    "pzmu",
+    "ptmu"
   ],
-  "Analyze2DVariables": ["Q2QE_recoil"], //["pzmu_ptmu"], 
+  "Analyze2DVariables": ["pzmu_ptmu"], //["Q2QE_recoil"], 
   "AnalyzeHyperDVariables": [], 
   "systematics": [
-    "Flux"//,
-    // "MuonMINOS",
-    // "MuonResolution",
-    // "MINOSEfficiency",
-    // "Angle",
-    // "GENIE",
-    // "GenieRvx1pi",
-    // "RPA",
-    // "2p2h",
-    // "MuonMinerva",
-    // "geant4",
-    // "response"
+    "Flux",
+    "MuonMINOS",
+    "MuonResolution",
+    "MINOSEfficiency",
+    "Angle",
+    "GENIE",
+    "GenieRvx1pi",
+    "RPA",
+    "2p2h",
+    "MuonMinerva",
+    "geant4",
+    "response"
   ],
-  "fluxUniverses": 2, //100, //10,
+  "fluxUniverses": 100, //10,
   "NuEConstraint":1, 
   "Geant4NeutronCV":1,
   "Geant4Elastics":1//,
