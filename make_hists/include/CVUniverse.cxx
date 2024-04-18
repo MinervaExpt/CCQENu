@@ -837,8 +837,10 @@ int CVUniverse::GetTrueProtonCount() const {
 // ----------------------------- Recoil Variables ----------------------------
 double CVUniverse::ApplyCaloTuning(double calRecoilE) const {
     if (m_analysis_neutrino_pdg == -14) {
+        std::cout << "CVUniverse::ApplyCaloTuning set to antinu, using AntiNu_tracker" << std::endl;
         return AntiNu_tracker.eCorrection(calRecoilE * MeVGeV) / MeVGeV;
     } // else
+    std::cout << "CVUniverse::ApplyCaloTuning set to neutrino, using Nu_tracker" << std::endl;
     return Nu_tracker.eCorrection(calRecoilE * MeVGeV) / MeVGeV;
     
 }
