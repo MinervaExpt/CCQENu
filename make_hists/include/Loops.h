@@ -12,6 +12,7 @@
  */
 #include "TMVA/RReader.hxx"
 #include "TMVA/RBDT.hxx"
+#include "utils/expandEnv.h"
 
 enum EDataMCTruth {kData, kMC, kTruth, kNDataMCTruthTypes};
 
@@ -254,18 +255,12 @@ void LoopAndFillCSV(std::vector<int> file_entries,
   for (auto v : variables) {
 		csvFile << ";" << v->GetName();
   }
-  std::vector<std::string> dbl_branches = {"CCQENu_proton_score1_BetheBloch_biasDown","CCQENu_proton_score1_BetheBloch_biasUp",
-                                           "CCQENu_proton_score1_Birks_bias","CCQENu_proton_score1_MEU_biasDown","CCQENu_proton_score1_MEU_biasUp",
-                                           "CCQENu_proton_score1_Mass_biasDown","CCQENu_proton_score1_Mass_biasUp"};
-	for (auto d : dbl_branches) {
-		csvFile << ";" << d;
-  }
 	csvFile << ";Truth;Interaction;mc_intType;qelikeBDTG;1chargedpionBDTG;1neutralpionBDTG;multipionBDTG;otherBDTG;model;ProngTrajID;nERParts;ERIDs;nFSPart;FSPDGs;FSPartEs;Arachne" << std::endl;
 	std::vector<std::string> interaction = {"None","QE","RES","DIS","COHPI","AMNUGAMMA","IMD","NUEEL","2P2H","NA","Unknown"};
 	
-	TMVA::Experimental::RReader model_1track("/home/sean/MinervaExpt/CCQENu/make_hists/TMVA/TMVAMulticlass_1track_BDTG.weights.xml");
-  TMVA::Experimental::RReader model_2track("/home/sean/MinervaExpt/CCQENu/make_hists/TMVA/TMVAMulticlass_2track_BDTG.weights.xml");
-  TMVA::Experimental::RReader model_3ptrack("/home/sean/MinervaExpt/CCQENu/make_hists/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml");
+	TMVA::Experimental::RReader model_1track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_1track_BDTG.weights.xml"));
+  TMVA::Experimental::RReader model_2track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_2track_BDTG.weights.xml"));
+  TMVA::Experimental::RReader model_3ptrack(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml"));
 	
 	// Begin loop over entries
 	std::cout << std::endl << "Beginning loop over " << nentries << " entries\n" << std::endl;
@@ -397,9 +392,6 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 							csvFile << i;
 							for (auto v : variables) {
 								csvFile << ";" << v->GetRecoValue(*universe, 0);
-							}
-							for (auto d : dbl_branches) {
-								csvFile << ";" << universe->GetDouble(d.c_str());
 							}
 							csvFile << ";" << tname;
 							csvFile << ";" << interaction[mcinttype];
@@ -738,10 +730,9 @@ void LoopAndFillBDTG(std::string tag,
   TMVA::Experimental::RBDT<> my_3ptrack_bdt("my_3ptrack_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_3ptrack_Training.root");*/
   
   // TMVA only
-	TMVA::Experimental::RReader model_1track("/home/sean/MinervaExpt/CCQENu/make_hists/TMVA/TMVAMulticlass_1track_BDTG.weights.xml");
-  TMVA::Experimental::RReader model_2track("/home/sean/MinervaExpt/CCQENu/make_hists/TMVA/TMVAMulticlass_2track_BDTG.weights.xml");
-  TMVA::Experimental::RReader model_3ptrack("/home/sean/MinervaExpt/CCQENu/make_hists/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml");
-  //TMVA::Experimental::RReader model_4ptrack("/home/sean/MinervaExpt/CCQENu/make_hists/TMVA/TMVAMulticlass_4ptrack_BDTG.weights.xml");
+	TMVA::Experimental::RReader model_1track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_1track_BDTG.weights.xml"));
+  TMVA::Experimental::RReader model_2track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_2track_BDTG.weights.xml"));
+  TMVA::Experimental::RReader model_3ptrack(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml"));
 
   unsigned int loc = tag.find("___")+3;
   std::string cat(tag,loc,string::npos);

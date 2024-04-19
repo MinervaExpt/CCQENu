@@ -4,8 +4,6 @@ author: "Sean Gilligan"
 output: pdf_document
 ---
 
-CSV_CCQENu_minervame1N_MC_Inextinguishable_merged.csv
-
 ```{r, message = F, warning = F, echo = F}
 library(dplyr)
 library(ggplot2)
@@ -48,216 +46,7 @@ events <- events %>%
 
 cbind(colnames(events))
 ```
-```{r, message = F, warning = F, echo = F}
-ggplot(events %>% filter(BlobCount <= 20)) +
-  stat_bin(binwidth = 1, position = position_stacknudge(x = 0.5), mapping = aes(BlobCount, fill = Truth)) +
-  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_stacknudge(x = 0), mapping = aes(BlobCount, fill = Truth)) + 
-  theme_bw() +
-  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
 
-ggplot(events %>% filter(BlobCount <= 20)) +
-  stat_bin(binwidth = 1, mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 0.5)) +
-  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_fillnudge(x = 0), mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..))) + 
-  theme_bw() +
-  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0)))
-
-ggplot(events %>% filter(BlobCount <= 20)) +
-  stat_bin(binwidth = 1, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobCount, fill = Truth), size = 2) +
-  stat_bin(binwidth = 1, geom = "step", color = "white", position = position_nudge(x = 0), mapping = aes(BlobCount, fill = Truth), size = 1) +
-  stat_bin(binwidth = 1, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobCount, color = Truth), size = 1, alpha = 0.8) +
-  theme_bw() +
-  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
-```
-```{r, message = F, warning = F, echo = F}
-ggplot(events %>% filter(BlobCount >= 0)) +
-  stat_bin(binwidth = 100, position = position_stacknudge(x = 50), mapping = aes(BlobDistance0, fill = Truth)) +
-  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_stacknudge(x = 0), mapping = aes(BlobDistance0, fill = Truth)) + 
-  theme_bw() +
-  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
-
-ggplot(events %>% filter(BlobCount >= 0)) +
-  stat_bin(binwidth = 100, mapping = aes(BlobDistance0, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 50)) +
-  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_fillnudge(x = 0), mapping = aes(BlobDistance0, fill = Truth, y = ..count../sum(..count..))) + 
-  theme_bw() +
-  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0)))
-
-ggplot(events %>% filter(BlobCount >= 0)) +
-  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobDistance0, fill = Truth), size = 2) +
-  stat_bin(binwidth = 100, geom = "step", color = "white", position = position_nudge(x = 0), mapping = aes(BlobDistance0, fill = Truth), size = 1) +
-  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobDistance0, color = Truth), size = 1, alpha = 0.8) +
-  theme_bw() +
-  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
-```
-```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=10}
-ggplot(events %>%  
-         filter(ImprovedMichelCount <= 5)) +
-  stat_bin(binwidth = 1, position = position_stacknudge(x = .5), mapping = aes(BlobCount, fill = Truth)) +
-  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_stacknudge(x = 0), mapping = aes(BlobCount, fill = Truth)) + 
-  theme_bw() + ggtitle("Improved Michel Count") +
-  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
-  facet_wrap(vars(ImprovedMichelCount), ncol = 3, scales = "free")
-
-ggplot(events %>%  
-         filter(ImprovedMichelCount <= 5)) +
-  stat_bin(binwidth = 1, mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = .5)) +
-  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_fillnudge(x = 0), mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..))) + 
-  theme_bw() + ggtitle("Improved Michel Count") +
-  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0))) +
-  facet_wrap(vars(ImprovedMichelCount), ncol = 3, scales = "free")
-
-ggplot(events %>%  
-         filter(FittedMichelCount <= 5)) +
-  stat_bin(binwidth = 1, position = position_stacknudge(x = .5), mapping = aes(BlobCount, fill = Truth)) +
-  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_stacknudge(x = 0), mapping = aes(BlobCount, fill = Truth)) + 
-  theme_bw() + ggtitle("Fitted Michel Count") +
-  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
-  facet_wrap(vars(FittedMichelCount), ncol = 3, scales = "free")
-
-ggplot(events %>%  
-         filter(FittedMichelCount <= 5)) +
-  stat_bin(binwidth = 1, mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = .5)) +
-  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_fillnudge(x = 0), mapping = aes(BlobCount, fill = Truth, y = ..count../sum(..count..))) + 
-  theme_bw() + ggtitle("Fitted Michel Count") +
-  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0))) +
-  facet_wrap(vars(FittedMichelCount), ncol = 3, scales = "free")
-
-
-```
-```{r, message = F, warning = F, echo = F, fig.height=8, fig.width=16}
-ggplot(events %>% 
-         filter(Multiplicity == 1) %>%
-         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
-                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
-                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
-         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
-                                            BlobCount == 1 ~ "blobs: 1",
-                                            BlobCount == 2 ~ "blobs: 2",
-                                            BlobCount >= 3 ~ "blobs: 3+"))) +
-  stat_bin(binwidth = 0.1, position = position_stacknudge(x = .05), mapping = aes(recoil, fill = Truth)) +
-  stat_bin(color = "black", geom = "step", binwidth = 0.1, position = position_stacknudge(x = 0), mapping = aes(recoil, fill = Truth)) + 
-  theme_bw() + ggtitle("Multiplicity == 1") +
-  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
-  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
-
-ggplot(events %>% 
-         filter(Multiplicity == 1) %>%
-         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
-                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
-                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
-         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
-                                            BlobCount == 1 ~ "blobs: 1",
-                                            BlobCount == 2 ~ "blobs: 2",
-                                            BlobCount >= 3 ~ "blobs: 3+"))) +
-  stat_bin(binwidth = 0.1, mapping = aes(recoil, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = .05)) +
-  stat_bin(color = "black", geom = "step", binwidth = 0.1, position = position_fillnudge(x = 0), mapping = aes(recoil, fill = Truth, y = ..count../sum(..count..))) + 
-  theme_bw() + ggtitle("Multiplicity == 1") +
-  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0))) +
-  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
-```
-```{r, message = F, warning = F, echo = F, fig.height=8, fig.width=16}
-ggplot(events %>% 
-         filter(Multiplicity > 1) %>%
-         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
-                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
-                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
-         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
-                                            BlobCount == 1 ~ "blobs: 1",
-                                            BlobCount == 2 ~ "blobs: 2",
-                                            BlobCount >= 3 ~ "blobs: 3+"))) +
-  stat_bin(binwidth = 0.1, position = position_stacknudge(x = .05), mapping = aes(recoil, fill = Truth)) +
-  stat_bin(color = "black", geom = "step", binwidth = 0.1, position = position_stacknudge(x = 0), mapping = aes(recoil, fill = Truth)) + 
-  theme_bw() + ggtitle("Multiplicity > 1") +
-  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
-  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
-
-ggplot(events %>% 
-         filter(Multiplicity > 1) %>%
-         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
-                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
-                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
-         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
-                                            BlobCount == 1 ~ "blobs: 1",
-                                            BlobCount == 2 ~ "blobs: 2",
-                                            BlobCount >= 3 ~ "blobs: 3+"))) +
-  stat_bin(binwidth = 0.1, mapping = aes(recoil, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = .05)) +
-  stat_bin(color = "black", geom = "step", binwidth = 0.1, position = position_fillnudge(x = 0), mapping = aes(recoil, fill = Truth, y = ..count../sum(..count..))) + 
-  theme_bw() + ggtitle("Multiplicity > 1") +
-  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0))) +
-  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
-```
-
-```{r, message = F, warning = F, echo = F, fig.height=8, fig.width=16}
-ggplot(events %>%
-         filter(PrimaryProtonScore1 >= 0) %>%
-         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
-                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
-                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
-         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
-                                            BlobCount == 1 ~ "blobs: 1",
-                                            BlobCount == 2 ~ "blobs: 2",
-                                            BlobCount >= 3 ~ "blobs: 3+"))) +
-  stat_bin(binwidth = 0.05, position = position_stacknudge(x = .025), mapping = aes(PrimaryProtonScore1, fill = Truth)) +
-  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_stacknudge(x = 0), mapping = aes(PrimaryProtonScore1, fill = Truth)) + 
-  theme_bw() +
-  scale_x_continuous(expand = c(0,0), limits = c(0,1)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
-  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
-
-ggplot(events %>%
-         filter(PrimaryProtonScore1 >= 0) %>%
-         mutate(ImprovedMichelCount_bands = case_when(ImprovedMichelCount == 0 ~ "improved michels: 0",
-                                                      ImprovedMichelCount == 1 ~ "improved michels: 1",
-                                                      ImprovedMichelCount >= 2 ~ "improved michels: 2+")) %>%
-         mutate(BlobCount_bands = case_when(BlobCount == 0 ~ "blobs: 0",
-                                            BlobCount == 1 ~ "blobs: 1",
-                                            BlobCount == 2 ~ "blobs: 2",
-                                            BlobCount >= 3 ~ "blobs: 3+"))) +
-  stat_bin(binwidth = 0.05, mapping = aes(PrimaryProtonScore1, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = .025)) +
-  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_fillnudge(x = 0), mapping = aes(PrimaryProtonScore1, fill = Truth, y = ..count../sum(..count..))) + 
-  theme_bw() +
-  scale_x_continuous(expand = c(0,0), limits = c(0,1)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0))) +
-  facet_wrap(vars(ImprovedMichelCount_bands,BlobCount_bands), ncol = 4, scales = "free")
-
-```
-
-```{r, message = F, warning = F, echo = F}
-ggplot(events %>% filter(BlobCount >= 1)) +
-  stat_bin(binwidth = 100, position = position_stacknudge(x = 50), mapping = aes(BlobDistance1, fill = Truth)) +
-  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_stacknudge(x = 0), mapping = aes(BlobDistance1, fill = Truth)) + 
-  theme_bw() +
-  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
-
-ggplot(events %>% filter(BlobCount >= 1)) +
-  stat_bin(binwidth = 100, mapping = aes(BlobDistance1, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 50)) +
-  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_fillnudge(x = 0), mapping = aes(BlobDistance1, fill = Truth, y = ..count../sum(..count..))) + 
-  theme_bw() +
-  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0)))
-
-ggplot(events %>% filter(BlobCount >= 1)) +
-  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobDistance1, fill = Truth), size = 2) +
-  stat_bin(binwidth = 100, geom = "step", color = "white", position = position_nudge(x = 0), mapping = aes(BlobDistance1, fill = Truth), size = 1) +
-  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobDistance1, color = Truth), size = 1, alpha = 0.8) +
-  theme_bw() +
-  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
-  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
-```
 ```{r, message = F, warning = F, echo = F}
 # secondary proton score 1 vs primary proton score 1
 ggplot(events %>% 
@@ -959,6 +748,7 @@ cbind(
 
 ```
 ```{r, message = F, warning = F, echo = F}
+events %>% group_by(Truth) %>% count()
 x = seq(0,1,0.01)
 y1 = c()
 for(i in x){
@@ -974,14 +764,14 @@ for(i in x){
 }
 y3 = c()
 for(i in x){
-  n1 <- nrow(events %>% filter(Multiplicity > 1 & Truth == "qelike" & qelikeBDTG >= i))
-  n2 <- nrow(events %>% filter(Multiplicity > 1 & Truth == "qelike"))
+  n1 <- nrow(events %>% filter(Multiplicity == 2 & Truth == "qelike" & qelikeBDTG >= i))
+  n2 <- nrow(events %>% filter(Multiplicity == 2 & Truth == "qelike"))
   y3 <- c(y3,n1/n2)
 }
 y4 = c()
 for(i in x){
-  n1 <- nrow(events %>% filter(Multiplicity > 1 & Truth == "qelike" & qelikeBDTG >= i))
-  n2 <- nrow(events %>% filter(Multiplicity > 1 & qelikeBDTG >= i))
+  n1 <- nrow(events %>% filter(Multiplicity == 2 & Truth == "qelike" & qelikeBDTG >= i))
+  n2 <- nrow(events %>% filter(Multiplicity == 2 & qelikeBDTG >= i))
   y4 <- c(y4,n1/n2)
 }
 
@@ -1011,6 +801,49 @@ points(x[(m2-5):(m2+5)],(y3*y4)[(m2-5):(m2+5)],col=3)
 cbind(x,(y1*y2))
 cbind(x,(y3*y4))
 ```
+```{r, message = F, warning = F, echo = F}
+
+x = seq(0,1,0.01)
+y1 = c()
+for(i in x){
+  n1 <- nrow(events %>% filter(PrimaryProtonScore1 < 0 & Truth == "qelike" & qelikeBDTG >= i))
+  n2 <- nrow(events %>% filter(PrimaryProtonScore1 < 0 & Truth == "qelike"))
+  y1 <- c(y1,n1/n2)
+}
+y2 = c()
+for(i in x){
+  n1 <- nrow(events %>% filter(PrimaryProtonScore1 < 0 & Truth == "qelike" & qelikeBDTG >= i))
+  n2 <- nrow(events %>% filter(PrimaryProtonScore1 < 0 & qelikeBDTG >= i))
+  y2 <- c(y2,n1/n2)
+}
+y3 = c()
+for(i in x){
+  n1 <- nrow(events %>% filter(PrimaryProtonScore1 >= 0 & Truth == "qelike" & qelikeBDTG >= i))
+  n2 <- nrow(events %>% filter(PrimaryProtonScore1 >= 0 & Truth == "qelike"))
+  y3 <- c(y3,n1/n2)
+}
+y4 = c()
+for(i in x){
+  n1 <- nrow(events %>% filter(PrimaryProtonScore1 >= 0 & Truth == "qelike" & qelikeBDTG >= i))
+  n2 <- nrow(events %>% filter(PrimaryProtonScore1 >= 0 & qelikeBDTG >= i))
+  y4 <- c(y4,n1/n2)
+}
+
+plot(x,y1,col=2)
+points(x,y2,col=4)
+points(x,y1*y2,col=3)
+
+plot(x,y3,col=2)
+points(x,y4,col=4)
+points(x,y3*y4,col=3)
+
+m1 <- which.max(y1*y2)
+m2 <- which.max(y3*y4)
+x[m1]
+x[m2]
+
+```
+
 ```{r, message = F, warning = F, echo = F}
 events %>%
   filter(multipionBDTG < 0.4) %>%
