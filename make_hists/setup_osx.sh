@@ -2,7 +2,7 @@
 #source /cvmfs/fermilab.opensciencegrid.org/products/common/etc/setups
 
 export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
-export WHEREIPUTMYCODE=$HOME/Dropbox/MNV9
+#export WHEREIPUTMYCODE=$HOME/Dropbox/TOPMAT9
 #export WHEREIPUTMYCODE=$HOME/Dropbox/BIGMAT    # change this here if you want a different location
 source $WHEREIPUTMYCODE/opt/build/setup.sh     # you have to have this
 

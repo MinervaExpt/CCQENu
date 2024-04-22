@@ -44,6 +44,11 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
   // CV
   error_bands[std::string("cv")].push_back(new CVUniverse(chain));
 
+// HMS 4-20-2024 - make systematics version configurable
+  std::string responseSystematicsVersion = "CCQENu";
+  if (config.IsMember("responseSystematicsVersion")){
+      responseSystematicsVersion = config.GetString("responseSystematicsVersion");
+  }
   //#ifndef NOFLUX
   if(std::find(flags.begin(), flags.end(), "Flux")!=flags.end()){
     //========================================================================
@@ -206,8 +211,21 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
     bool use_ecal = false;
     bool use_hcal = false;
 
-    // UniverseMap response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, neutron, part_response, proton);  // Not totally sure what the args do here
-    UniverseMap response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, use_ID, use_OD, name_tag, neutron, part_response, proton, use_nucl, use_tracker, use_ecal, use_hcal);  // Not totally sure what the args do here
+    UniverseMap response_systematics;
+    std::cout << " using version " << responseSystematicsVersion << " of response systematics" << std::endl;
+    if (responseSystematicsVersion == "CCQENu") {
+        response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, neutron, part_response, proton);  // Not totally sure what the args do here
+    }
+    else{
+      if (responseSystematicsVersion == "2024"){
+         
+        response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, use_ID, use_OD, name_tag, neutron, part_response, proton, use_nucl, use_tracker, use_ecal, use_hcal);  // Not totally sure what the args do here
+      }
+      else {
+        std::cout << " unknown responseSystematicsVersion set; will not do response " << responseSystematicsVersion << std::endl;
+        assert(0);
+      } 
+    }
     error_bands.insert(response_systematics.begin(), response_systematics.end());
     std::cout << " do make response systematics " << std::endl;
   }
