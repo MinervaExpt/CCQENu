@@ -835,7 +835,10 @@ int CVUniverse::GetTrueProtonCount() const {
 }
 
 // ----------------------------- Recoil Variables ----------------------------
+
+// HMS 4-20-2024 - implement (or not) new
 double CVUniverse::ApplyCaloTuning(double calRecoilE) const {
+    // for antineutrino do nothing;
     if (m_analysis_neutrino_pdg == -14) {
         std::cout << "CVUniverse::ApplyCaloTuning set to antinu, using AntiNu_tracker" << std::endl;
         return AntiNu_tracker.eCorrection(calRecoilE * MeVGeV) / MeVGeV;
@@ -855,6 +858,9 @@ double CVUniverse::GetCalRecoilEnergy() const {
         return GetDouble("recoil_energy_nonmuon_nonvtx100mm");
     }
 }
+
+
+
 double CVUniverse::GetCalRecoilEnergyGeV() const { return CVUniverse::GetCalRecoilEnergy() * MeVGeV; }
 double CVUniverse::GetNonCalRecoilEnergy() const { return 0; }  // not certain why I want to implement this but there ya go.
 double CVUniverse::GetNonCalRecoilEnergyGeV() const { return GetNonCalRecoilEnergy() * MeVGeV; }
