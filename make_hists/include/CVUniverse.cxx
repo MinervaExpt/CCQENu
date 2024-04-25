@@ -26,6 +26,22 @@ double MeVGeV = 0.001;  // lazy conversion from MeV to GeV before filling histos
 bool m_useNeutronCVReweight = true;
 
 }  // namespace
+
+// NHV 4-22-2024 - DLast suggests not using splines for CCQENu analyses. See ApplyCaloTuning for more details and implimentation
+// //==============================================================================
+// // Calorimetry spline setup
+// //==============================================================================
+// // Path to MParamFiles calibration file
+// std::string splines_file = "$MPARAMFILESROOT/data/Calibrations/energy_calib/CalorimetryTunings.txt";
+
+// // Initialize calorimetric correction for tracker
+// util::CaloCorrection Nu_tracker(splines_file.c_str(), "NukeCC_Nu_Tracker");
+// util::CaloCorrection AntiNu_tracker(splines_file.c_str(), "NukeCC_AntiNu_Tracker");
+// // arguments:
+// // 1. path to calibration file
+// // 2. name of the calorimetric spline
+
+
 // ===========================================================
 // ====================== Configurables ======================
 // ===========================================================
@@ -820,6 +836,22 @@ int CVUniverse::GetTrueProtonCount() const {
 }
 
 // ----------------------------- Recoil Variables ----------------------------
+
+
+// HMS 4-20-2024 - implement (or not) new
+double CVUniverse::ApplyCaloTuning(double calRecoilE) const {
+    // NHV 4-22-24 David Last suggests just not using splines, but could be necessary for new AntiNu EAvail, will need to revisit later
+    return calRecoilE
+    // for antineutrino do nothing;
+    // if (m_analysis_neutrino_pdg == -14) {
+    //     std::cout << "CVUniverse::ApplyCaloTuning set to antinu, using AntiNu_tracker" << std::endl;
+    //     return AntiNu_tracker.eCorrection(calRecoilE * MeVGeV) / MeVGeV;
+    // } // else
+    // std::cout << "CVUniverse::ApplyCaloTuning set to neutrino, using Nu_tracker" << std::endl;
+    // return Nu_tracker.eCorrection(calRecoilE * MeVGeV) / MeVGeV;
+    
+}
+
 
 double CVUniverse::GetCalRecoilEnergy() const {
     bool neutrinoMode = GetAnalysisNuPDG() > 0;

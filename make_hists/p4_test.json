@@ -1,7 +1,7 @@
 {
   "version":13,  // Run major variables in batch, use v13 of cuts, add closure
-  "mcIn":"${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC_short.txt",
-  "dataIn":"${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt", // hack for type plot of resolution
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_p4/${MYPLAYLIST}_MC.txt",
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}_p4/${MYPLAYLIST}_Data.txt", // hack for type plot of resolution
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
   "DoResolution":1,
@@ -16,13 +16,14 @@
   "varsFile":"${CCQEMAT}/AntiNuExample/Variables_v13.json", // describe the variables, choose them below
   "samplesFile":"${CCQEMAT}/AntiNuExample/AntiNuSamples_v13.json",  // describe the samples, cuts are chosen here
   "runsamples":["${MYSAMPLE}"], // chose which samples to run can provide a list or chose 1 using the batch
-  "outRoot":"CCQENu_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // name for output files
+  "outRoot":"P4_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // name for output files
   "AnalyzeVariables":["Q2QE","Q0QE","pzmu","ptmu","Enu","EnuCCQE","TrueEnuDiffGeV","TrueEnuRatio","RecoTrueEnuRatio","ThetamuDegrees","recoil"], // choose the 1D variables
   "Analyze2DVariables":["pzmu_ptmu"], // choose 2D variables, 1D variables must be chosen
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"}, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
   "data":{"QElike":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
   // turn on/off systematics
+  "responseSystematicsVersion":"2024",
   "systematics": [
     "Flux",
     "MuonMINOS",
@@ -35,7 +36,8 @@
     "RPA",
     "2p2h",
     "MuonMinerva",
-    "geant4"
+    "geant4",
+    "response"
   ],
   "fluxUniverses": 2, // # of flux universes set low to run fast!
   "NuEConstraint": 1, // apply constraints to flux
