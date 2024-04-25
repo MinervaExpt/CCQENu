@@ -100,7 +100,7 @@ def createTarball(tmpdir,tardir,tag,basedirname):
         #cmd = "tar -czf /exp/minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
         print (" in directory",os.getcwd())
         tarpath = os.path.join(tmpdir,"myareatar_%s.tar.gz"%(tag))
-        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif,*.csv} -zcf  %s ./%s"%(tarpath,basedirname)
+        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif,*.csv,*.tbz2} -zcf  %s ./%s"%(tarpath,basedirname)
         print ("Making tar",cmd)
         os.system(cmd)
 
@@ -189,7 +189,8 @@ print ("******************************************************")
 if(not os.path.exists(opts.outdir)):
     print ("Looks like opts.outdir doesn't exist",opts.outdir)
     sys.exit(1)
-theoutdir = os.path.join(opts.outdir,opts.playlist+"_"+opts.sample+"_"+tag_name)
+theoutname = "%s_%s_%s_%s_%s_%s"%(opts.stage,opts.config,opts.sample,opts.playlist,opts.model,tag_name)
+theoutdir = os.path.join(opts.outdir,theoutname)
 print ("output dir",theoutdir)
 # Make outdir if not exist
 if(not os.path.isdir(theoutdir) and not opts.debug):
@@ -207,7 +208,7 @@ if opts.stage not in valid_stages:
 #  Create wrapper
 ##############################################
 
-wrapper_name = "%s_%s_%s_wrapper_%s.sh"%(opts.stage,opts.playlist,opts.model,tag_name)
+wrapper_name = "%s_%s_%s_%s_%s_wrapper_%s.sh"%(opts.stage,opts.config,opts.sample,opts.playlist,opts.model,tag_name)
 
 mywrapper = open(wrapper_name,"w")
 mywrapper.write("#!/bin/sh\n") # don't wrap this one
@@ -236,14 +237,14 @@ if (not opts.debug):
         here = os.getenv("PWD")
 
         os.chdir(basedirpath)
-        print (" move to directory",basedirpath,os.getcwd())
+        print (" change to directory",basedirpath,os.getcwd())
         if (not os.path.exists(opts.tmpdir)):
             print ("--tmpdir=",opts.tmpdir," seems not to exist, making it")
             os.makedirs(opts.tmpdir)
         tarname = createTarball(opts.tmpdir,opts.tardir,tag_name,basedirname)
         # and then go back to where we were.
         os.chdir(here)
-        print (" move to directory",here,os.getcwd())
+        print (" change to directory",here,os.getcwd())
     else:
         tarname = str(opts.tarfilename)
         tarthing = os.path.join(opts.tardir,opts.tarfilename)
