@@ -200,9 +200,6 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
   // Response systematics (which also have recoil syst)
   // Stole this from Andrew's code
   if(std::find(flags.begin(), flags.end(), "response")!=flags.end()){
-    bool use_ID = false;
-    bool use_OD = false;
-    std::string name_tag = "allNonMuonClusters";
     bool neutron = false;
     bool part_response = false;
     bool proton = false;

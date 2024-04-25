@@ -26,11 +26,10 @@
 #define CVUNIVERSE_H
 
 #include <iostream>
+#include <vector>
 #include <map>
 #include <string>
-#include <vector>
 
-#include "PlotUtils/CaloCorrection.h"
 #include "PlotUtils/ChainWrapper.h"
 #include "PlotUtils/GeantHadronSystematics.h"
 #include "PlotUtils/MinervaUniverse.h"
@@ -39,7 +38,7 @@
 #include "utils/NuConfig.h"
 
 class CVUniverse : public PlotUtils::MinervaUniverse {
-   protected:
+	protected:
     // default values
     static int m_analysis_neutrino_pdg;
     static double m_min_blob_zvtx;
@@ -192,12 +191,11 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     //virtual double GetRecoilEnergy() const;
 
-    // // dummy to try to avoid redefinition errors in 
-    // inline virtual double ApplyCaloTuning(const double energy) const {
-    //     return energy;
-    // } ;
-
-    virtual double ApplyCaloTuning(double calRecoilE) const;
+    // dummy to try to avoid redefinition errors in 
+    inline virtual double ApplyCaloTuning(const double energy) const {
+        return energy;
+    } ;
+    
 
     virtual double GetCalRecoilEnergy() const;
     virtual double GetCalRecoilEnergyGeV() const;
