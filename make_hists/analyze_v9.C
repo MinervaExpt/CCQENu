@@ -92,6 +92,7 @@ int main(const int argc, const char* argv[]) {
         allconfigs["varsFile"] = new NuConfig(std::string(f->Get("varsFile")->GetTitle()));
         allconfigs["cutsFile"] = new NuConfig(std::string(f->Get("cutsFile")->GetTitle()));
         allconfigs["samplesFile"] = new NuConfig(std::string(f->Get("samplesFile")->GetTitle()));
+       
 
         singlesample = 0;
         // see if the root file has already had fits done - these will be used in the cross section fit.
@@ -398,7 +399,7 @@ int main(const int argc, const char* argv[]) {
                 basename = "h_" + variable;
             }
             std::cout << "basename is " << basename << std::endl;
-            int exit = GetCrossSection(sample, variable, basename, hists1D[sample][variable], response1D[sample][variable], allconfigs, canvas1D, norm, POTScale, h_flux_dewidthed, unfold, num_iter, DEBUG, hasbkgsub, usetune);
+            int exit = GetCrossSection(sample, variable, basename, hists1D[sample][variable], response1D[sample][variable], allconfigs, canvas1D, norm, POTScale, h_flux_dewidthed, unfold, num_iter, DEBUG, hasbkgsub, usetune, pdfname);
 
             if (DEBUG) std::cout << exit << std::endl;
         }
@@ -461,7 +462,7 @@ int main(const int argc, const char* argv[]) {
             if (singlesample) {
                 basename = "h_" + variable;
             }
-            int exit = GetCrossSection(sample, variable, basename, hists2D[sample][variable], response2D[sample][variable], allconfigs, canvas2D, norm, POTScale, h_flux_dewidthed, unfold, num_iter, DEBUG, hasbkgsub, usetune);
+            int exit = GetCrossSection(sample, variable, basename, hists2D[sample][variable], response2D[sample][variable], allconfigs, canvas2D, norm, POTScale, h_flux_dewidthed, unfold, num_iter, DEBUG, hasbkgsub, usetune, pdfname);
             if (DEBUG) std::cout << exit << std::endl;
         }
     }
