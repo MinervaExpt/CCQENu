@@ -18,36 +18,36 @@
   "DoResolution": false,
   "DoTypes": false,
   "pdg":-14,
-  "mcRecoToCSV": false,
+  "mcRecoToCSV": true,
   "runsamples": [
-    "QElike"//,
+    // "QElike"//,
     // "QElikeNeutrons"//,
     // "MultiplicitySideband",
     // "LoPionThetaSideband",
-    // "HiPionThetaSideband",
+    "HiPionThetaSideband"//,
     // "BlobSideband",
     // "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
     // "NBlobs",
     // "Multiplicity",
-    // "PionAngle"
+    "PionAngle"
     // "NChargedPions",
     // "HasMultiPion"
     // "recoilNoBlobs",
-    "Q2QE",
+    // "Q2QE",
     // "EAvail",
     // "EAvailWiggled"
     // "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"
-    "recoil"
+    // "recoil"
     // "recoilQE"
     // "NNeutBlobs"
     // "NeutBlobsRatio"
     // "pzmu",
     // "ptmu"
   ],
-  "Analyze2DVariables": ["Q2QE_recoil"], //["pzmu_ptmu"], 
+  "Analyze2DVariables": [],//["Q2QE_recoil"], //["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [], 
   "systematics": [
     "Flux"//,
