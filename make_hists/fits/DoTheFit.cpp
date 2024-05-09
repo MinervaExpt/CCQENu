@@ -378,12 +378,12 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             int nextPar = 0;
             for (unsigned int i = 0; i < func2.NDim(); ++i) {
                 std::string name = categories[i];
-                if (name=="other" || name=="multipion") {
-                    std::cout << " fixing parameter " << i << " " << name << std::endl;
-                    mini2->SetFixedVariable(i, name, 1.0);
-                    nextPar++;
-                    continue;
-                }
+                // if (name=="other" || name=="multipion") {
+                //     std::cout << " fixing parameter " << i << " " << name << std::endl;
+                //     mini2->SetFixedVariable(i, name, 1.0);
+                //     nextPar++;
+                //     continue;
+                // }
                 double lower_limit = 0.0;
                 // double upper_limit = 2.0;
                 // if (name=="qelike") {
