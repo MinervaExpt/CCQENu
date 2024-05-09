@@ -2,6 +2,7 @@ import ROOT
 from PlotUtils import MnvH1D, MnvH2D, MnvPlotter
 import os
 import sys
+from array import array
 
 plotfiletype = "pdf"
 
@@ -77,8 +78,8 @@ def main():
     f = ROOT.TFile(filename1, "READONLY")
 
 
-    # filebasename1=os.path.basename(filename1)
-    # outfilename=filebasename1.replace(".root","_2DPlots")
+    filebasename1=os.path.basename(filename1)
+    outfilename=filebasename1.replace(".root","_2DPlots")
 
     # Expects CCQENu naming convention
     print("Looking for hists...")
@@ -116,40 +117,66 @@ def main():
 
 
 
-    # binning = [0.0]
-    # for bin in range(1,hist_dict["reco"].GetNbinsX()+1):
-    #     binning.append(hist_dict["reco"].GetXaxis().GetBinUpEdge())
+    binning = [0.0]
+    for bin in range(1,hist_dict["reco"].GetNbinsX()+1):
+        binning.append(hist_dict["reco"].GetXaxis().GetBinUpEdge(bin))
+    print("binning: ", binning)
+    binning = array('d',binning)
     norm_matrix = hist_dict["matrix"].Clone()
-
+    
     #now the row normalized migration....
 
     nbinsy = hist_dict["matrix"].GetNbinsY()
     nbinsx = hist_dict["matrix"].GetNbinsX()
+    norm_matrix.SetBins(nbinsx,binning,nbinsy,binning)
+    out_matrix = ROOT.TH2D(norm_matrix.GetName(),norm_matrix.GetTitle(),nbinsx,binning,nbinsy,binning)
     for i in range(0,nbinsy+1):
         row_norm = 0.0
         for j in range(0,nbinsx+1):
             row_norm += hist_dict["matrix"].GetBinContent(j,i)
-        for j in range(0,nbinsy+1):
+        # for j in range(0,nbinsy+1):
+        for j in range(0,nbinsx+1):
             _cont = norm_matrix.GetBinContent(j,i)
             if row_norm!=0.0:
-                norm_matrix.SetBinContent(j,i,_cont/row_norm)
+                # norm_matrix.SetBinContent(j,i,_cont/row_norm)
+                out_matrix.SetBinContent(j,i,_cont/row_norm)
+    # for i in range(0,nbinsx+1):
+    #     row_norm = 0.0
+    #     for j in range(0,nbinsy+1):
+    #         row_norm += hist_dict["matrix"].GetBinContent(i,j)
+    #     # for j in range(0,nbinsy+1):
+    #     for j in range(0,nbinsy+1):
+    #         _cont = norm_matrix.GetBinContent(i,j)
+    #         if row_norm!=0.0:
+    #             # norm_matrix.SetBinContent(j,i,_cont/row_norm)
+    #             out_matrix.SetBinContent(i,j,_cont/row_norm)
 
 
     mnv = MnvPlotter()
 
-    mnv.SetCorrelationPalette()
-    canvas = ROOT.TCanvas("c","c",750,750)
+    # mnv.SetBlackbodyPalette()
+    mnv.SetRedHeatPalette()
+    canvas = ROOT.TCanvas("c","c",1500,1500)
 
     canvas.cd()
 
-    norm_matrix.SetMaximum(1.0)
+    ROOT.gStyle.SetPaintTextFormat("0.2f")
+    # norm_matrix.SetMaximum(1.0)
+    # norm_matrix.GetYaxis().SetTitle("True E_{Avail} bins")
+    # norm_matrix.GetXaxis().SetTitle("Reconstructed Recoil bins")
+    # norm_matrix.Draw("colz text")
 
-    norm_matrix.GetYaxis().SetTitle("True E_{Avail} bins")
-    norm_matrix.GetXaxis().SetTitle("Reconstructed Recoil bins")
-    norm_matrix.Draw("colz text")
+    out_matrix.SetMaximum(1.0)
+    out_matrix.GetYaxis().SetTitle("True E_{Avail}")
+    out_matrix.GetXaxis().SetTitle("Reconstructed Recoil")
+    out_matrix.Draw("colz text")
+    # canvas.SetLogx()
+    # canvas.SetLogy()
+    canvas.SetLogz()
+    canvas.Print("plotmigration_"+outfilename+".png")
+    # canvas.Print("plotresponse_"+outfilename+".png")
 
-
-    canvas.Print("plotmigration_"+hist_dict["matrix"].GetName()+".png")
+    # canvas.Print("plotmigration_"+hist_dict["matrix"].GetName()+".png")
 
     # print("Making plots...")
     # for key in hist_dict.keys():
