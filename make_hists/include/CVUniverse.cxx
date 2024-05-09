@@ -1045,7 +1045,7 @@ double CVUniverse::GetTrueEAvailWithNeutronsGeV() const {
         int pdg = GetVecElem("mc_FSPartPDG", i);
         double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
         if (pdg == 2112)
-            Eavail += (energy - 939.5654)*0.75;  // Skip neutrons
+            Eavail += (energy - 939.56542);  // Skip neutrons
         else if (abs(pdg) > 1e9)
             continue;  // ignore nuclear fragments
         else if (abs(pdg) == 11 || abs(pdg) == 13)
