@@ -323,10 +323,10 @@
       "true": "TrueEAvailGeV",
       "name": "EAvail",
       "title": "E_{Available} in GeV",
-      "nbins": 26,
-      "min": -0.02,
+      "nbins": 25,
+      "min": 0.0,
       "max": 0.5,
-      "bins": [0.0,0.0025,0.005,0.0125,0.031,0.075,0.16,0.5],
+      // "bins": [0.0,0.0025,0.005,0.0125,0.031,0.075,0.16,0.5],
       "fluxnorm": false
     },
     "EAvailOffset": {
@@ -357,22 +357,22 @@
       "true": "TrueEAvailWithNeutronsGeV",
       "name": "EAvailWithNeutrons",
       "title": "E_{Available} + neutrons in GeV",
-      // "nbins": 208,
-      // "min": -0.02,
-      // "max": 0.5,
-      "bins": [
-        0.0,
-        0.0325,
-        0.065,
-        0.0975,
-        0.13,
-        0.1625,
-        0.2,
-        0.2425,
-        0.3025,
-        0.38,
-        0.5
-      ],
+      "nbins": 25,
+      "min": 0.0,
+      "max": 0.5,
+      // "bins": [
+      //   0.0,
+      //   0.0325,
+      //   0.065,
+      //   0.0975,
+      //   0.13,
+      //   0.1625,
+      //   0.2,
+      //   0.2425,
+      //   0.3025,
+      //   0.38,
+      //   0.5
+      // ],
       "fluxnorm": false
     },
     "EAvailWiggled": {
