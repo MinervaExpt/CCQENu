@@ -312,8 +312,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // Isolated Blobs
 
     virtual int GetNBlobs() const;
-    virtual int GetNNeutBlobs() const;
-    virtual double GetNNeutBlobsRatio() const;
+    virtual int GetN3DBlobs() const;
+    virtual double Get3DBlobsRatio() const;
     virtual int GetTrueNBlobs() const;  // This is just N_pi0*2
 
     // Michel Electrons

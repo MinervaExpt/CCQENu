@@ -980,7 +980,7 @@ double CVUniverse::GetOffsetRecoilEnergyGeV() const { return CVUniverse::GetReco
 double CVUniverse::GetRecoilEnergyMinusNeutBlobsGeV() const {
     // this takes recoil and removes the energy from 3D blobs, which are more likely to be neutrons
     double recoil = GetRecoilEnergyGeV(); // regular recoil def
-    double nblobs = CVUniverse::GetNNeutBlobs(); // number of 3d blobs
+    double nblobs = CVUniverse::GetN3DBlobs(); // number of 3d blobs
     if (nblobs > 0) { // if there aren't any blobs, just return the recoil as is
         std::vector<double> blob_energy_vec = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_BlobTotalE").c_str()); // TODO: this might not be just 3d blobs???
         for (int i = 0; i < nblobs; i++) 
@@ -1124,6 +1124,14 @@ double CVUniverse::GetTpiGeV(const int hadron) const {
     double TLA = GetVecElem("hadron_track_length_area", hadron);
     return (2.3112 * TLA + 37.03) * MeVGeV;  // what are these numbers
 }
+
+// ------------------------------ Neutron Stuff ------------------------------
+
+// double CVUniverse::GetNeutronMultiplicity() const {
+//     const auto vertex = GetVertex();
+// }
+
+// std::vector<double> CVUniverse::GetBlobEdep() const {}
 
 // --------------------- Quantities only needed for cuts ---------------------
 // Although unlikely, in principle these quanties could be shifted by a
@@ -1387,12 +1395,12 @@ int CVUniverse::GetNBlobs() const {
     return n_blobs;
 }
 
-int CVUniverse::GetNNeutBlobs() const {
+int CVUniverse::GetN3DBlobs() const {
     return GetInt((MinervaUniverse::GetTreeName() + "_BlobIs3D_sz").c_str());
 }
 
-double CVUniverse::GetNNeutBlobsRatio() const {
-    double n_3d_blobs = (double)CVUniverse::GetNNeutBlobs();
+double CVUniverse::Get3DBlobsRatio() const {
+    double n_3d_blobs = (double)CVUniverse::GetN3DBlobs();
     double n_neutrons = (double)CVUniverse::GetTrueNeutronCount();
     if (n_3d_blobs == 0.) return 9999.;
     return n_neutrons/n_3d_blobs;

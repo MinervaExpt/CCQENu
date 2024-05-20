@@ -216,11 +216,11 @@ class CVFunctions {
         recointfunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
         truefunctions["TrueNBlobs"] = &CVUNIVERSE::GetTrueNBlobs;
 
-        recofunctions["NNeutBlobs"] = &CVUNIVERSE::GetNNeutBlobs;
-        recointfunctions["NNeutBlobs"] = &CVUNIVERSE::GetNNeutBlobs;
+        recofunctions["N3DBlobs"] = &CVUNIVERSE::GetN3DBlobs;
+        recointfunctions["N3DBlobs"] = &CVUNIVERSE::GetN3DBlobs;
 
-        recofunctions["NeutBlobsRatio"] = &CVUNIVERSE::GetNNeutBlobsRatio;
-        truefunctions["NeutBlobsRatio"] = &CVUNIVERSE::GetNNeutBlobsRatio;
+        recofunctions["3DBlobsRatio"] = &CVUNIVERSE::Get3DBlobsRatio;
+        truefunctions["3DBlobsRatio"] = &CVUNIVERSE::Get3DBlobsRatio;
 
         // Michel Electrons
 
