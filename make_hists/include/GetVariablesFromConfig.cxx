@@ -42,7 +42,7 @@
 
 typedef std::function<double(const CVUniverse &)> PointerToCVUniverseFunction;
 
-std::map<std::string, CCQENu::VariableFromConfig *> GetVariablesFromConfig(const std::vector<std::string> vars, const std::vector<std::string> tags, NuConfig configraw, const bool doresolution, const bool dotypes, const std::string tunedmc) {
+std::map<std::string, CCQENu::VariableFromConfig *> GetVariablesFromConfig(const std::vector<std::string> vars, const std::vector<std::string> tags, NuConfig configraw, const bool doresolution, const bool dotypes, const std::string tunedmc, const std::vector<std::string> fitsamples) {
     //=========================================
     // Constructor wants: name, x-axis label,
     //                    binning,
@@ -69,6 +69,7 @@ std::map<std::string, CCQENu::VariableFromConfig *> GetVariablesFromConfig(const
                 allvariables[key]->SetDoResolution(doresolution);
                 allvariables[key]->SetDoTypes(dotypes);
                 allvariables[key]->SetTunedMC(tunedmc);
+                allvariables[key]->SetFitSamples(fitsamples);
                 std::cout << "GetVariables: set up variable " << allvariables[key]->GetName() << std::endl;
             }
         }

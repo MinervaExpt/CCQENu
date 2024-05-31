@@ -40,6 +40,11 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     bool m_doresolution;
     bool m_dotypes;
 
+    // these bools for filling a hist using NHV's simultaneous fit over several samples using TFractionFitter
+    bool m_dofitFill = false; // if variable has this set up (in variable config as "dofitFill")
+    std::vector<std::string> m_fitSamples;  // list of the tags for each sample
+    std::vector<double> m_fitbinning;
+
    public:
     //=======================================================================================
     // CTOR
@@ -69,6 +74,48 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
     bool GetDoTypes() {
         return m_dotypes;
+    }
+
+    // For filling a hist using NHV's simultaneous fit over several samples using TFractionFitter
+    void SetDoFitFill(const bool dofitFill) {
+        m_dofitFill = dofitFill;
+    }
+
+    bool GetDoFitFill() const {
+        return m_dofitFill;
+    }
+
+    void SetFitSamples(const std::vector<std::string> fitSamples) {
+        if (m_dofitFill) {
+            m_fitSamples = fitSamples;
+            double bin_range = m_binning.back() - m_binning[0];
+            std::vector<double> fitbinning = m_binning;
+            for (int i = 1; i < m_fitSamples.size(); i++) {
+                for (int j = 1; j < m_binning.size(); j++) {
+                    fitbinning.push_back(i * bin_range + m_binning[j]);  // + (i - 1) * m_binning.back());
+                }
+                // for (int j = 1; j < m_binning.size()+1; j++) {
+                //     double tmp_hiedge = fitbinning.back();
+                //     fitbinning.push_back(tmp_hiedge + (m_binning[j] - m_binning[j - 1]));
+                // }
+            }
+            m_fitbinning = fitbinning;
+            std::cout << "m_fitbinning: ";
+            for (auto b : m_fitbinning) std::cout << b << " ";
+            std::cout << "\n";
+        }
+    }
+
+    std::vector<double> GetFitBinVec() const {
+        if (m_dofitFill) {
+            return m_fitbinning;
+        } else {
+            return m_binning;
+        }
+    }
+
+    std::vector<std::string> GetFitSamples() const {
+        return m_fitSamples;
     }
 
     VariableFromConfig(const NuConfig config) {
@@ -118,6 +165,9 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 m_for.push_back(s);
             }
         }
+        if (config.IsMember("dofitFill")) {
+            m_dofitFill = config.GetBool("dofitFill");
+        }
 
         if (config.IsMember("bins")) {
             PlotUtils::VariableBase<CVUniverse>::m_binning = config.GetDoubleVector("bins");
@@ -127,6 +177,19 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
             } else {
                 PlotUtils::VariableBase<CVUniverse>::m_has_reco_binning = false;
             }
+            // if (m_dofitFill) {
+            //     std::vector<double> bins = m_binning;
+            //     for (int i = 1; i < m_fitSamples.size(); i++) {
+            //         for (int j = 1; j < m_binning.size()+1; j++) {
+            //             double tmp_hiedge = bins.back();
+            //             bins.push_back(tmp_hiedge + (bins[j]-bins[j-1]));
+            //         }
+            //     }
+            //     m_fitbinning = bins;
+            //     std::cout << "m_fitbinning: ";
+            //     for (auto b : m_fitbinning) std::cout << b << " ";
+            //     std::cout << "\n";
+            // }
         } else {
             int nbins = config.GetInt("nbins");
             double xmin = config.GetDouble("min");
@@ -140,10 +203,15 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
             } else {
                 PlotUtils::VariableBase<CVUniverse>::m_has_reco_binning = false;
             }
+            // if (m_dofitFill) {
+            //     nbins += nbins * m_fitSamples.size();
+            //     xmax += (xmax - xmin) * m_fitSamples.size();
+            //     m_fitbinning = MakeUniformBinning(nbins, xmin, xmax);
+            // }
         }
 
-        // std::cout << " Check Binning For" << config.GetString("name") << std::endl;
-        // PrintBinning();
+        std::cout << " Check Binning For" << config.GetString("name") << std::endl;
+        PrintBinning();
         // wPrintRecoBinning();
     }
 
@@ -164,6 +232,11 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     RM m_tuned_response;
     HM m_resolution;
     HM m_tuned_resolution;
+
+    HM m_selected_mc_forfit;
+    HM m_tuned_selected_mc_forfit;
+    HM m_selected_data_forfit;
+
     typedef std::map<int, TH1D*> TYPES;
     typedef std::map<std::string, TYPES> TYPEMAP;
     TYPEMAP m_types;
@@ -248,6 +321,17 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 hasType[tag] = false;
             }
         }
+
+        if (m_dofitFill) {
+            
+            m_selected_mc_forfit = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + " fit samples;counts/bin").c_str(), m_fitbinning.size()-1, m_fitbinning, univs, tags);
+            std::cout << "m_fitbinning: ";
+            for (auto b : m_fitbinning) std::cout << b << " ";
+            std::cout << "\n";
+            m_selected_mc_forfit.AppendName("reconstructed_simulfit", tags);  // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+            std::cout << " created m_selected_mc_forfit " << GetName() << std::endl;
+        }
+        
         //        for (int i=0; i<intypes.size(); i++){
         //            std::cout << i << " " << intypes[i] << std::endl;
         //        }
@@ -324,6 +408,11 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
         m_selected_data = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label).c_str(), GetNRecoBins(), recobins, univs, tags);
         m_selected_data.AppendName("reconstructed", tags);
+        if (m_dofitFill) {
+            m_selected_data_forfit = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + " fit samples;counts/bin").c_str(), m_fitbinning.size()-1, m_fitbinning, univs, tags);
+            m_selected_data_forfit.AppendName("reconstructed_simulfit", tags);  // patch to conform to CCQENU standard 
+            std::cout << " created m_selected_data_forfit " << GetName() << std::endl;
+        }
     }
 
     template <typename T>
@@ -363,6 +452,11 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 m_tuned_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName() + ";" + m_xaxis_label + " reco-true").c_str(), 50, -range / 10., range / 10., reco_univs, tuned_tags);
                 m_tuned_resolution.AppendName("resolution_tuned", tuned_tags);
             }
+        }
+        if (m_dofitFill) {
+            m_tuned_selected_mc_forfit = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + " fit samples;counts/bin").c_str(), m_fitbinning.size()-1, m_fitbinning, reco_univs, tuned_tags);
+            m_tuned_selected_mc_forfit.AppendName("reconstructed_simulfit_tuned", tuned_tags);  // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+            std::cout << " created m_tuned_selected_mc_forfit " << GetName() << std::endl;
         }
         std::string axislabel = (GetName() + ";" + m_xaxis_label + ";counts/bin");
         if (m_dotypes) {
@@ -427,6 +521,10 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 if (m_tunedmc != "tuned") {
                     m_selected_mc_reco.Write(tag);
                     std::cout << " write out selected mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+                    if (m_dofitFill) {
+                        m_selected_mc_forfit.Write(tag);
+                        std::cout << " write out selected mc for fit histogram " << m_selected_mc_forfit.GetHist(tag)->GetName() << std::endl;
+                    }
                 }
                 if (m_dotypes) {
                     for (auto h : m_types[tag]) {
@@ -439,6 +537,10 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 if (hasTunedMC[tag]) {
                     m_tuned_selected_mc_reco.Write(tag);
                     std::cout << " write out tuned selected mc histogram " << m_tuned_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+                    if (m_dofitFill) {
+                        m_tuned_selected_mc_forfit.Write(tag);
+                        std::cout << " write out tuned selected mc for fit histogram " << m_tuned_selected_mc_forfit.GetHist(tag)->GetName() << std::endl;
+                    }
                 }
             }
             if (hasSelectedTruth[tag]) {
@@ -484,6 +586,10 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
             if (hasData[tag]) {
                 std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
                 m_selected_data.Write(tag);
+                if (m_dofitFill) {
+                    m_selected_data_forfit.Write(tag);
+                    std::cout << " write out selected data for fit histogram " << m_selected_data_forfit.GetHist(tag)->GetName() << std::endl;
+                }
             }
         }
         // f.ls();
@@ -497,9 +603,15 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
             if (hasMC[tag]) {
                 if (m_tunedmc != "tuned") {
                     m_selected_mc_reco.SyncCVHistos();
+                    if (m_dofitFill) {
+                        m_selected_mc_forfit.SyncCVHistos();
+                    }
                 }
                 if (hasTunedMC[tag]) {
                     m_tuned_selected_mc_reco.SyncCVHistos();
+                    if (m_dofitFill) {
+                        m_tuned_selected_mc_forfit.SyncCVHistos();
+                    }
                 }
             }
             if (hasSelectedTruth[tag]) {
@@ -515,6 +627,9 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
             }
             if (hasData[tag]) {
                 m_selected_data.SyncCVHistos();
+                if (m_dofitFill) {
+                    m_selected_data_forfit.SyncCVHistos();
+                }
             }
             if (hasTruth[tag]) {
                 if (m_tunedmc != "tuned") {
@@ -566,6 +681,60 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         if (hasTunedMC[tag] && scale >= 0.) {
             // std::cout << " tuned fill" << tag << " " << type << " " << value << " " << scale << std::endl;
             m_tuned_types[tag][type]->Fill(value, weight * scale);
+        }
+    }
+
+    double GetFitFillValue(std::string tag, const double i_value) {
+        // if (value < m_binning[0] || value > m_binning.back()) return;  // Not worried about under or overflow here, and can mess up hist filling
+        double value = i_value;
+        std::string sample(tag, 0, tag.find("___"));
+        for (int i = 0; i < m_fitSamples.size(); i++) {
+            if (m_fitSamples[i] == sample) {
+                value += i * (m_binning.back() - m_binning[0]);
+                break;
+            }
+        }
+        return value;
+    }
+
+    // overload Fill fit histogram (via NHV's scheme) for MC
+    void FillForFit(std::string tag, CVUniverse* univ, const double i_value,
+                    const double weight, const double scale = 1.0) {
+        if (!m_dofitFill) return;
+        if (i_value < m_binning[0] || i_value > m_binning.back()) return;  // Not worried about under or overflow here, and can mess up hist filling
+        // double fillvalue = value;
+        // std::string sample(tag, 0, tag.find("___"));
+        // for (int i = 0; i < m_fitSamples.size(); i++) {
+        //     if (m_fitSamples[i] == sample) {
+        //         fillvalue += i * (m_binning.back() - m_binning[0]);
+        //         break;
+        //     }
+        // }
+        double value = GetFitFillValue(tag, i_value);
+        if (hasMC[tag] && m_tunedmc != "tuned") {
+            m_selected_mc_forfit.Fill(tag, univ, value, weight);
+        }
+        if (hasTunedMC[tag] && scale >= 0.) {
+            m_tuned_selected_mc_forfit.Fill(tag, univ, value, weight * scale);
+        }
+    }
+
+    // overload Fill fit histogram (via NHV's scheme) for Data 
+    void FillForFit(std::string tag, CVUniverse* univ, const double i_value) {
+        if (!m_dofitFill) return;
+        if (i_value < m_binning[0] || i_value > m_binning.back()) return;  // Not worried about under or overflow here, and can mess up hist filling
+        // double fillvalue = value;
+        // std::string sample(tag, 0, tag.find("___"));
+        // for (int i = 0; i < m_fitSamples.size(); i++) {
+        //     if (m_fitSamples[i] == sample) {
+        //         fillvalue += i * (m_binning.back() - m_binning[0]);
+        //         break;
+        //     }
+        // }
+
+        if (hasData[tag]) {
+            double value = GetFitFillValue(tag, i_value);
+            m_selected_data_forfit.Fill(tag, univ, value);
         }
     }
 

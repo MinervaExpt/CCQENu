@@ -88,7 +88,7 @@ void LoopAndFillEventSelection(std::string tag,
     std::string sample(tag, 0, loc - 3);
     std::cout << sample << " category " << cat << std::endl;
     std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
-
+    std::cout << " tag is " << tag << std::endl;
     // If sending MC Reco values to CSV create file and add columns names
     if (data_mc_truth == kMC && mc_reco_to_csv) {
         std::string csvFileName = "mc_reco_entries_" + sample + "_" + cat + ".csv";
@@ -225,7 +225,7 @@ void LoopAndFillEventSelection(std::string tag,
                             csvFile << ";" << universe->GetTrueNumberOfFSParticles();
 
                             std::vector<int> FSPartPDG = universe->GetVecInt("mc_FSPartPDG");
-                            std::vector<double> mc_FSPartE = universe->GetVecDouble("mc_FSPartPDG");
+                            std::vector<double> mc_FSPartE = universe->GetVecDouble("mc_FSPartE");
                             csvFile << ";{";
                             for (int i = 0; i < nFSParts - 1; i++) csvFile << FSPartPDG[i] << ",";
                             csvFile << FSPartPDG[nFSParts - 1] << "};{";

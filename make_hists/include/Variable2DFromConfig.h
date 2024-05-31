@@ -103,6 +103,12 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             m_tunedmc = x_tunedmc;
         } else
             std::cout << "Variable2DFromConfig: tunedmc for x and y incompatible. Defaulting to both. " << std::endl;
+        m_dofitFill_x = x.GetDoFitFill();
+        m_dofitFill_y = y.GetDoFitFill();
+        m_fitbinning_x = x.GetFitBinVec();
+        m_fitbinning_y = y.GetFitBinVec();
+        if (m_dofitFill_x) m_fitSamples = x.GetFitSamples();
+        if (m_dofitFill_y) m_fitSamples = y.GetFitSamples();
     };
 
     typedef std::map<std::string, std::vector<CVUniverse*>> UniverseMap;
@@ -121,6 +127,18 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     RM2D m_response;
     RM2D m_tuned_response;
 
+    // HM2D's to fill for NHV's scheme for simultaneous fits
+    HM2D m_selected_mc_forfit;
+    HM2D m_tuned_selected_mc_forfit;
+    HM2D m_selected_data_forfit;
+   private:
+    bool m_dofitFill_x;
+    bool m_dofitFill_y;
+    std::vector<double> m_fitbinning_x;
+    std::vector<double> m_fitbinning_y;
+    std::vector<std::string> m_fitSamples;  // list of the tags for each sample
+
+   public:
     UniverseMap m_universes;  // need to change this?
     std::string m_units;
     std::map<const std::string, bool> hasData;
@@ -172,6 +190,11 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
 
         m_selected_mc_reco = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins, ybins, xrecobins, yrecobins, univs, tags);  // Hist2DWrapper doesn't need nbins for variable binning
         m_selected_mc_reco.AppendName("reconstructed", tags);
+
+        if (m_dofitFill_x || m_dofitFill_y) {
+            m_selected_mc_forfit = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), m_fitbinning_x, m_fitbinning_y, m_fitbinning_x, m_fitbinning_y, univs, tags);  // Hist2DWrapper doesn't need nbins for variable binning
+            m_selected_mc_forfit.AppendName("reconstructed_simulfit", tags);                                                                                                                       // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+        }
     }
 
     template <typename T>
@@ -241,6 +264,10 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
 
         m_selected_data = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xrecobins, yrecobins, univs, tags);  // Hist2DWrapper doesn't need nbins for variable binning
         m_selected_data.AppendName("reconstructed", tags);
+        if (m_dofitFill_x || m_dofitFill_y) {
+            m_selected_data_forfit = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), m_fitbinning_x, m_fitbinning_y, univs, tags);  // Hist2DWrapper doesn't need nbins for variable binning
+            m_selected_data_forfit.AppendName("reconstructed_simulfit", tags);                                                                                                           // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+        }
     }
 
     template <typename T>
@@ -276,6 +303,10 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         }
         if (std::count(m_for.begin(), m_for.end(), "response") >= 1) {
             m_tuned_response = RM2D(Form("%s", GetName().c_str()), reco_univs, xrecobins, xbins, yrecobins, ybins, response_tags, "_tuned");
+        }
+        if (m_dofitFill_x || m_dofitFill_y) {
+            m_tuned_selected_mc_forfit = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), m_fitbinning_x, m_fitbinning_y, m_fitbinning_x, m_fitbinning_y, reco_univs, tuned_tags);
+            m_tuned_selected_mc_forfit.AppendName("reconstructed_simulfit_tuned", tuned_tags);  // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
         }
     }
 
@@ -318,10 +349,18 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
                 if (m_tunedmc != "tuned") {
                     m_selected_mc_reco.Write(tag);
                     std::cout << " write out mc histogram " << m_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+                    if (m_dofitFill_x || m_dofitFill_y) {
+                        m_selected_mc_forfit.Write(tag);
+                        std::cout << " write out selected mc for fit histogram " << m_selected_mc_forfit.GetHist(tag)->GetName() << std::endl;
+                    }
                 }
                 if (hasTunedMC[tag]) {
                     m_tuned_selected_mc_reco.Write(tag);
                     std::cout << " write out tuned mc histogram " << m_tuned_selected_mc_reco.GetHist(tag)->GetName() << std::endl;
+                    if (m_dofitFill_x || m_dofitFill_y) {
+                        m_tuned_selected_mc_forfit.Write(tag);
+                        std::cout << " write out tuned selected mc for fit histogram " << m_tuned_selected_mc_forfit.GetHist(tag)->GetName() << std::endl;
+                    }
                 }
             }
             if (hasSelectedTruth[tag]) {
@@ -357,6 +396,10 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             if (hasData[tag]) {
                 m_selected_data.Write(tag);
                 std::cout << " write out data histogram " << m_selected_data.GetHist(tag)->GetName() << std::endl;
+                if (m_dofitFill_x || m_dofitFill_y) {
+                    m_selected_data_forfit.Write(tag);
+                    std::cout << " write out selected data for fit histogram " << m_selected_data_forfit.GetHist(tag)->GetName() << std::endl;
+                }
             }
         }
     }
@@ -369,9 +412,15 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             if (hasMC[tag]) {
                 if (m_tunedmc != "tuned") {
                     m_selected_mc_reco.SyncCVHistos();
+                    if (m_dofitFill_x || m_dofitFill_y) {
+                        m_selected_mc_forfit.SyncCVHistos();
+                    }
                 }
                 if (hasTunedMC[tag]) {
                     m_tuned_selected_mc_reco.SyncCVHistos();
+                    if (m_dofitFill_x || m_dofitFill_y) {
+                        m_tuned_selected_mc_forfit.SyncCVHistos();
+                    }
                 }
             }
             if (hasSelectedTruth[tag]) {
@@ -384,6 +433,9 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             }
             if (hasData[tag]) {
                 m_selected_data.SyncCVHistos();
+                if (m_dofitFill_x || m_dofitFill_y) {
+                    m_selected_data_forfit.SyncCVHistos();
+                }
             }
             if (hasTruth[tag]) {
                 if (m_tunedmc != "tuned") {
@@ -402,6 +454,47 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         }
         if (hasTunedMC[tag] && scale >= 0.) {
             m_tuned_response.Fill2D(tag, univ, x_value, y_value, x_truth, y_truth, weight, scale);  // value here is reco
+        }
+    }
+
+    std::pair<double, double> GetFitFillValue(std::string tag, const double i_xvalue, const double i_yvalue) {
+        std::pair<double, double> values(i_xvalue, i_yvalue);
+        std::string sample(tag, 0, tag.find("___"));
+        for (int i = 0; i < m_fitSamples.size(); i++) {
+            if (m_fitSamples[i] == sample) {
+                if (m_dofitFill_x) values.first += i * (GetBinVecX().back() - GetBinVecX()[0]);
+                if (m_dofitFill_y) values.second += i * (GetBinVecY().back() - GetBinVecY()[0]);
+                break;
+            }
+        }
+        return values;
+    }
+
+    // overload Fill fit histogram (via NHV's scheme) for MC
+    void FillForFit2D(std::string tag, CVUniverse* univ, 
+                    const double x_value, const double y_value,
+                    const double weight, const double scale = 1.0) {
+        if (!m_dofitFill_x && !m_dofitFill_y) return;
+        if (x_value < GetBinVecX()[0] || x_value > GetBinVecX().back() || y_value < GetBinVecY()[0] || y_value > GetBinVecY().back()) return;  // Not worried about under or overflow here, and can mess up hist filling
+
+        if (hasMC[tag] && m_tunedmc != "tuned") {
+            std::pair<double,double> values = GetFitFillValue(tag, x_value, y_value);
+            m_selected_mc_forfit.Fill2D(tag, univ, values.first, values.second, weight);
+        }
+        if (hasTunedMC[tag] && scale >= 0.) {
+            std::pair<double, double> values = GetFitFillValue(tag, x_value, y_value);
+            m_tuned_selected_mc_forfit.Fill2D(tag, univ, values.first, values.second, weight * scale);
+        }
+    }
+
+    // overload Fill fit histogram (via NHV's scheme) for Data
+    void FillForFit2D(std::string tag, CVUniverse* univ, const double x_value, const double y_value) {
+        if (!m_dofitFill_x && !m_dofitFill_y) return;
+        if (x_value < GetBinVecX()[0] || x_value > GetBinVecX().back() || y_value < GetBinVecY()[0] || y_value > GetBinVecY().back()) return;  // Not worried about under or overflow here, and can mess up hist filling
+
+        if (hasData[tag]) {
+            std::pair<double, double> values = GetFitFillValue(tag, x_value, y_value);
+            m_selected_data_forfit.Fill2D(tag, univ, values.first, values.second);
         }
     }
 
