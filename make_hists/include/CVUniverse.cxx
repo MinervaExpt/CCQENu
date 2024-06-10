@@ -11,7 +11,9 @@
 #define CVUNIVERSE_cxx
 
 #include "include/CVUniverse.h"
-
+#include "include/CVFunctions.h"
+#include "include/TMVAUtils.h"
+#include "utils/expandEnv.h"
 #include <algorithm>
 
 using namespace PlotUtils;
@@ -104,7 +106,9 @@ namespace {
 	std::map<int,int> CVUniverse::m_fs_pdg_counts_with_constraints = std::map<int,int>();
 	std::map<std::string,bool> CVUniverse::m_passes_signal_cuts = std::map<std::string,bool>();
 	std::map<std::string,bool> CVUniverse::m_passes_signal_cuts_old = std::map<std::string,bool>();
+	std::map<std::string,RReader> CVUniverse::m_tmva_models = std::map<std::string,RReader>();
 	std::vector<float> CVUniverse::m_response_vec = {};
+	std::vector<std::string> CVUniverse::m_tmva_model_names = {};
 	std::vector<float> CVUniverse::m_xgboost_response_vec = {};
 	
 	bool CVUniverse::_is_analysis_neutrino_pdg_set = false;
@@ -115,6 +119,7 @@ namespace {
 	bool CVUniverse::_are_fs_pdgs_counted = false;
 	bool CVUniverse::_are_signal_truths_set = false;
 	bool CVUniverse::_are_signal_truths_set_old = false;
+	bool CVUniverse::_is_tmva_model_loaded = false;
 	bool CVUniverse::_is_response_vec_filled = false;
 	bool CVUniverse::_is_xgboost_response_vec_filled = false;
 	
@@ -352,8 +357,21 @@ namespace {
 	}
 	
 	//////// TMVA Models /////////
-	bool CVUniverse::SetVectorResponse(std::vector<float> response_vec) {
-		m_response_vec = response_vec;
+	bool CVUniverse::LoadTMVAModel(std::string name, std::string path) {
+		m_tmva_models[name].LoadModel(path);
+		return 1;
+	}
+	std::map<std::string,RReader> * CVUniverse::GetPointerToTMVAModels() {
+		std::map<std::string,RReader> * models = &m_tmva_models;
+		return models;
+	}
+	bool CVUniverse::ComputeVectorResponse(std::string name, std::vector<float> var_values) {
+		m_response_vec = m_tmva_models[name].Compute(var_values);
+		_is_response_vec_filled = true;
+		return 1;
+	}
+	bool CVUniverse::SetVectorResponse(std::vector<float> vector_response) {
+		m_response_vec = vector_response;
 		_is_response_vec_filled = true;
 		return 1;
 	}
@@ -521,7 +539,10 @@ namespace {
 	int CVUniverse::GetNumberOfProtonCandidates() const {
 		int count = 0;
 		if (GetPrimaryProtonScore1() >= 0) count++;
-		count += GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
+		int sec_count = GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_proton_scores1_sz").c_str());
+		if (sec_count >= 1) {	
+			count += sec_count;
+		}
 		return count;
 	}
 	
@@ -920,11 +941,14 @@ namespace {
 	
 	// Proton candidate T from dEdx of candidate track
 	double CVUniverse::GetPrimaryProtonTfromdEdx() const {
-		return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_T_fromdEdx").c_str());
+		if(GetPrimaryProtonScore1() >= 0) {
+			return GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_T_fromdEdx").c_str());
+		}
+		else return -9999.;
 	}
 	double CVUniverse::GetSecProtonTfromdEdx(int i) const {
 		if(GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_T_fromdEdx_sz").c_str()) > i) {
-			return GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_T_fromdEdx").c_str(),i-1);
+			return GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_T_fromdEdx").c_str(),i);
 		}
 		else return -9999.;
 	}
@@ -934,6 +958,26 @@ namespace {
 	double CVUniverse::GetSecProtonTfromdEdx_4() const { return GetSecProtonTfromdEdx(3); }
 	double CVUniverse::GetSecProtonTfromdEdx_5() const { return GetSecProtonTfromdEdx(4); }
 	double CVUniverse::GetSecProtonTfromdEdx_6() const { return GetSecProtonTfromdEdx(5); }
+	
+	// Proton candidate ratio of T from dEdX to track length
+	
+	double CVUniverse::ProtonRatioTdEdX2TrackLength(int i) const {
+		if(i == 0 & GetPrimaryProtonScore1() >= 0) {
+			double TfromdEdX = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_T_fromdEdx").c_str());
+			double tracklength = GetProtonCandTrackLength(i);
+			return TfromdEdX/tracklength;
+		}
+		if(GetInt(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_T_fromdEdx_sz").c_str()) >= i) {
+			double TfromdEdX = GetVecElem(std::string(MinervaUniverse::GetTreeName()+"_sec_protons_T_fromdEdx").c_str(),i-1);
+			double tracklength = GetProtonCandTrackLength(i);
+			return TfromdEdX/tracklength;
+		}
+		else return -9999.;
+	}
+	double CVUniverse::ProtonRatioTdEdX2TrackLength_0() const { return ProtonRatioTdEdX2TrackLength(0); }
+	double CVUniverse::ProtonRatioTdEdX2TrackLength_1() const { return ProtonRatioTdEdX2TrackLength(1); }
+	double CVUniverse::ProtonRatioTdEdX2TrackLength_2() const { return ProtonRatioTdEdX2TrackLength(2); }
+	double CVUniverse::ProtonRatioTdEdX2TrackLength_3() const { return ProtonRatioTdEdX2TrackLength(3); }
 	
 	// Proton candidate total E from T in dEdX and calibrated E in clusters at end of track
 	double CVUniverse::GetTotalProtonVisEnergy(int i) const {
@@ -2008,54 +2052,142 @@ namespace {
 	
 	// TMVA
 	
+	/*bool CVUniverse::CalculateTMVAVectorResponse() const {
+		std::vector<float> response_vec;
+		
+		float multiplicity = GetMultiplicity();
+		float proton_score1_0 = GetPrimaryProtonScore1();
+		float proton_score1_1 = GetProtonScore1_1();
+		float proton_score1_2 = GetProtonScore1_2();
+		float proton_track_vtx_gap_0 = GetPrimaryProtonTrackVtxGap();
+		float proton_track_vtx_gap_1 = GetSecProtonTrackVtxGap_1();
+		float proton_track_vtx_gap_2 = GetSecProtonTrackVtxGap_2();
+		float proton_T_from_dEdX_0 = GetPrimaryProtonTfromdEdx();
+		float proton_T_from_dEdX_1 = GetSecProtonTfromdEdx_1();
+		float proton_T_from_dEdX_2 = GetSecProtonTfromdEdx_2();
+		float proton_clusters_0 = GetNumClustsPrimaryProtonEnd();
+		float proton_ratio_T_to_length_0 = ProtonRatioTdEdX2TrackLength_0();
+		float proton_ratio_T_to_length_1 = ProtonRatioTdEdX2TrackLength_1();
+		float proton_ratio_T_to_length_2 = ProtonRatioTdEdX2TrackLength_2();
+		float proton_clusters_1 = GetNumClustsSecProtonEnd_1();
+		float proton_clusters_2 = GetNumClustsSecProtonEnd_2();
+		float proton_fraction_vis_energy_in_cone_0 = GetPrimaryProtonFractionVisEnergyInCone();
+		float proton_fraction_vis_energy_in_cone_1 = GetSecProtonFractionVisEnergyInCone_1();
+		float proton_fraction_vis_energy_in_cone_2 = GetSecProtonFractionVisEnergyInCone_2();
+		float sec_proton_cand_count = GetSecondaryProtonCandidateCount1();
+		float muon_to_primary_proton_angle = GetMuonToPrimaryProtonAngle();
+		float blob_count = GetNBlobs();
+		float improved_michel_count = GetImprovedNMichel();
+		float recoil = GetRecoilEnergyGeV();
+		float improved_michel_1_views = GetImprovedMichel_0_Views();
+		float improved_michel_2_views = GetImprovedMichel_1_Views();
+		float improved_michel_3_views = GetImprovedMichel_2_Views();
+		float improved_michel_sum_views = GetImprovedMichel_Sum_Views();
+
+		std::vector<float> input_vars;
+		input_vars.emplace_back(multiplicity);
+		
+		if (proton_score1_0 >= 0) {
+			if (sec_proton_cand_count == 0) {
+				
+				input_vars.emplace_back(proton_score1_0);
+				input_vars.emplace_back(proton_track_vtx_gap_0);
+				input_vars.emplace_back(proton_ratio_T_to_length_0);
+				input_vars.emplace_back(proton_clusters_0);
+				input_vars.emplace_back(proton_fraction_vis_energy_in_cone_0);
+				input_vars.emplace_back(blob_count);
+				input_vars.emplace_back(improved_michel_count);
+				input_vars.emplace_back(recoil);
+				input_vars.emplace_back(improved_michel_sum_views);
+				
+				std::vector<float> input_vars_2track;
+				response_vec = m_tmva_2track_model.Compute(input_vars_2track);
+			}
+			else {				
+				input_vars.emplace_back(proton_score1_0);
+				input_vars.emplace_back(proton_score1_1);
+				input_vars.emplace_back(proton_track_vtx_gap_0);
+				input_vars.emplace_back(proton_track_vtx_gap_1);
+				input_vars.emplace_back(proton_ratio_T_to_length_0);
+				input_vars.emplace_back(proton_ratio_T_to_length_1);
+				input_vars.emplace_back(proton_clusters_0);
+				input_vars.emplace_back(proton_clusters_1);
+				input_vars.emplace_back(proton_fraction_vis_energy_in_cone_0);
+				input_vars.emplace_back(proton_fraction_vis_energy_in_cone_1);
+				input_vars.emplace_back(sec_proton_cand_count);
+				input_vars.emplace_back(blob_count);
+				input_vars.emplace_back(improved_michel_count);
+				input_vars.emplace_back(recoil);
+				input_vars.emplace_back(improved_michel_sum_views);
+				if (input_vars.size() == m_tmva_3ptrack_model.GetVariableNames().size()) {
+					response_vec = m_tmva_3ptrack_model.Compute(input_vars);
+				}
+				else {
+					response_vec = {0,0,0,0,0};
+					std::cout << "WARNING: INPUT VECTOR SIZE DOES NOT MATCH 3+ TRACK MODEL EXPECTATION" << std::endl;
+				}
+			}
+		}
+		else {
+			input_vars.emplace_back(blob_count);
+			input_vars.emplace_back(improved_michel_count);
+			input_vars.emplace_back(recoil);
+			input_vars.emplace_back(improved_michel_sum_views);
+			if (input_vars.size() == m_tmva_1track_model.GetVariableNames().size()) {
+				response_vec = m_tmva_1track_model.Compute(input_vars);
+			}
+			else {
+				response_vec = {0,0,0,0,0};
+				std::cout << "WARNING: INPUT VECTOR SIZE DOES NOT MATCH 1 TRACK MODEL EXPECTATION" << std::endl;
+			}
+		}
+
+		SetVectorResponse(response_vec);
+		return 1;
+	}*/
 	double CVUniverse::bdtgQELike() const {
 		if (_is_response_vec_filled) {
-			double response = m_response_vec[0];
-			return response;
+			return m_response_vec[0];
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
-			return 0.;
+			return -9999.;
 		}
 	}
 	double CVUniverse::bdtg1ChargedPion() const {
 		if (_is_response_vec_filled) {
-			double response = m_response_vec[1];
-			return response;
+			return m_response_vec[1];
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
-			return 0.;
+			return -9999.;
 		}
 	}
 	double CVUniverse::bdtg1NeutralPion() const {
 		if (_is_response_vec_filled) {
-			double response = m_response_vec[2];
-			return response;
+			return m_response_vec[2];
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
-			return 0.;
+			return -9999.;
 		}
 	}
 	double CVUniverse::bdtgMultiPion() const {
 		if (_is_response_vec_filled) {
-			double response = m_response_vec[3];
-			return response;
+			return m_response_vec[3];
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
-			return 0.;
+			return -9999.;
 		}
 	}
 	double CVUniverse::bdtgOther() const {
 		if (_is_response_vec_filled) {
-			double response = m_response_vec[4];
-			return response;
+			return m_response_vec[4];
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
-			return 0.;
+			return -9999.;
 		}
 	}
 	

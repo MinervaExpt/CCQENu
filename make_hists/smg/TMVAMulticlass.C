@@ -79,7 +79,7 @@ int main( int argc, char** argv )
 	TString outfileName = std::string("Multiclassed_"+config.GetString("Tag")+"_"+config.GetString("InFile"));
 	TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
 
-	TMVA::Factory *factory = new TMVA::Factory( "TMVAMulticlass", outputFile,
+	TMVA::Factory *factory = new TMVA::Factory( std::string("TMVAMulticlass_"+config.GetString("Tag")), outputFile,
 		                                         "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Multiclass" );
 	TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset");
 

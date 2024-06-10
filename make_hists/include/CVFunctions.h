@@ -372,6 +372,11 @@ public:
 		recofunctions["SecProtonTfromdEdx_4"] = &CVUNIVERSE::GetSecProtonTfromdEdx_4;
 		recofunctions["SecProtonTfromdEdx_5"] = &CVUNIVERSE::GetSecProtonTfromdEdx_5;
 		recofunctions["SecProtonTfromdEdx_6"] = &CVUNIVERSE::GetSecProtonTfromdEdx_6;
+		
+		recofunctions["ProtonRatioTdEdX2TrackLength_0"] = &CVUNIVERSE::ProtonRatioTdEdX2TrackLength_0;
+		recofunctions["ProtonRatioTdEdX2TrackLength_1"] = &CVUNIVERSE::ProtonRatioTdEdX2TrackLength_1;
+		recofunctions["ProtonRatioTdEdX2TrackLength_2"] = &CVUNIVERSE::ProtonRatioTdEdX2TrackLength_2;
+		recofunctions["ProtonRatioTdEdX2TrackLength_3"] = &CVUNIVERSE::ProtonRatioTdEdX2TrackLength_3;
 
 		recofunctions["TotalPrimaryProtonVisEnergy"] = &CVUNIVERSE::GetTotalPrimaryProtonVisEnergy;
 		recofunctions["TotalSecProtonVisEnergy_1"] = &CVUNIVERSE::GetTotalSecProtonVisEnergy_1;
@@ -575,6 +580,20 @@ public:
 		assert(trueintfunctions.count(name));
 		return trueintfunctions[name];
 	};
+	
+	std::vector<float> GetVectorOfValues(const CVUNIVERSE * univ, const std::vector<std::string> varlist)
+	{
+	 
+		std::vector<float> vals;
+		float val;
+        
+    for (auto name : varlist){
+    	val = recofunctions[name](*univ);
+      vals.emplace_back(val);      
+    }
+		
+		return vals;
+	}
 };
 
 #endif

@@ -36,6 +36,17 @@ events <- read.csv("CSV_CCQENu_minervame1N_MC_Inextinguishable_merged.csv", sep=
 ```
 
 ```{r, message = F, warning = F, echo = F}
+events <- events %>% 
+  mutate(Particle_0 = case_when(PrimaryProtonCandidatePDG == 2212 ~ "Proton",
+                                PrimaryProtonCandidatePDG %in% c(-211,211) ~ "Pion +/-",
+                                PrimaryProtonCandidatePDG == 111 ~ "Pion 0",
+                                PrimaryProtonCandidatePDG == -1 ~ "No Particle",
+                                .default = "Other")) %>% 
+  mutate(Particle_1 = case_when(SecProtonCandidatePDG_1 == 2212 ~ "Proton",
+                                (SecProtonCandidatePDG_1 %in% c(-211,211)) ~ "Pion +/-",
+                                SecProtonCandidatePDG_1 == 111 ~ "Pion 0",
+                                SecProtonCandidatePDG_1 == -1 ~ "No Particle",
+                                .default = "Other"))
 colnames(events)[which(colnames(events) == "X1chargedpionBDTG")] <- "1chargedpionBDTG"
 colnames(events)[which(colnames(events) == "X1neutralpionBDTG")] <- "1neutralpionBDTG"
 events$Truth = gsub("Mult1p___", "", events$Truth)
@@ -45,6 +56,70 @@ events <- events %>%
 
 cbind(colnames(events))
 ```
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(Particle_0 != "No Particle")) +
+  stat_bin(binwidth = 1, position = position_stacknudge(x = 0.5), mapping = aes(NumClustsPrimaryProtonEnd, fill = Particle_0)) +
+  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_stacknudge(x = 0), mapping = aes(NumClustsPrimaryProtonEnd, fill = Particle_0)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,6)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(Particle_0 != "No Particle")) +
+  stat_bin(binwidth = 1, mapping = aes(NumClustsPrimaryProtonEnd, fill = Particle_0, y = ..count../sum(..count..)), position = position_fillnudge(x = 0.5)) +
+  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_fillnudge(x = 0), mapping = aes(NumClustsPrimaryProtonEnd, fill = Particle_0, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,6)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(Particle_0 != "No Particle")) +
+  stat_bin(binwidth = 1, geom = "step", position = position_nudge(x = 0), mapping = aes(NumClustsPrimaryProtonEnd, color = Particle_0), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,6)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(Particle_1 != "No Particle")) +
+  stat_bin(binwidth = 1, position = position_stacknudge(x = 0.5), mapping = aes(NumClustsSecProtonEnd_1, fill = Particle_1)) +
+  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_stacknudge(x = 0), mapping = aes(NumClustsSecProtonEnd_1, fill = Particle_1)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,6)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(Particle_1 != "No Particle")) +
+  stat_bin(binwidth = 1, mapping = aes(NumClustsSecProtonEnd_1, fill = Particle_1, y = ..count../sum(..count..)), position = position_fillnudge(x = 0.5)) +
+  stat_bin(color = "black", geom = "step", binwidth = 1, position = position_fillnudge(x = 0), mapping = aes(NumClustsSecProtonEnd_1, fill = Particle_1, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,6)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(Particle_1 != "No Particle")) +
+  stat_bin(binwidth = 1, geom = "step", position = position_nudge(x = 0), mapping = aes(NumClustsSecProtonEnd_1, color = Particle_1), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,6)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(Particle_0 != "No Particle" & PrimaryProtonFractionVisEnergyInCone > 0)) +
+  stat_bin(binwidth = 0.02, position = position_stacknudge(x = 0.01), mapping = aes(PrimaryProtonFractionVisEnergyInCone, fill = Particle_0)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.02, position = position_stacknudge(x = 0), mapping = aes(PrimaryProtonFractionVisEnergyInCone, fill = Particle_0)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,0.4)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(Particle_0 != "No Particle" & PrimaryProtonFractionVisEnergyInCone > 0)) +
+  stat_bin(binwidth = 0.02, mapping = aes(PrimaryProtonFractionVisEnergyInCone, fill = Particle_0, y = ..count../sum(..count..)), position = position_fillnudge(x = 0.01)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.02, position = position_fillnudge(x = 0), mapping = aes(PrimaryProtonFractionVisEnergyInCone, fill = Particle_0, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,0.4)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(Particle_0 != "No Particle" & PrimaryProtonFractionVisEnergyInCone > 0)) +
+  stat_bin(binwidth = 0.02, geom = "step", position = position_nudge(x = 0), mapping = aes(PrimaryProtonFractionVisEnergyInCone, color = Particle_0), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,0.4)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+
 ```{r, message = F, warning = F, echo = F}
 ggplot(events %>% filter(ImprovedMichelCount <= 6)) +
   stat_bin(binwidth = 1, position = position_stacknudge(x = 0.5), mapping = aes(ImprovedMichelCount, fill = Truth)) +
@@ -216,6 +291,271 @@ ggplot(events %>% filter(BlobCount >= 3)) +
   scale_x_continuous(expand = c(0,0), limits = c(-2500,2500)) +
   scale_y_continuous(expand = expansion(mult = c(0,0.05)))
 ```
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(PrimaryProtonScore1 >= 0)) +
+  stat_bin(binwidth = 100, position = position_stacknudge(x = 50), mapping = aes(ProtonCandTrackLength_0, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_stacknudge(x = 0), mapping = aes(ProtonCandTrackLength_0, fill = Truth)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(PrimaryProtonScore1 >= 0)) +
+  stat_bin(binwidth = 100, mapping = aes(ProtonCandTrackLength_0, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 50)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_fillnudge(x = 0), mapping = aes(ProtonCandTrackLength_0, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(PrimaryProtonScore1 >= 0)) +
+  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(ProtonCandTrackLength_0, color = Truth), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+```
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(Particle_0 != "No Particle")) +
+  stat_bin(binwidth = 100, position = position_stacknudge(x = 50), mapping = aes(ProtonCandTrackLength_0, fill = Particle_0)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_stacknudge(x = 0), mapping = aes(ProtonCandTrackLength_0, fill = Particle_0)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(Particle_0 != "No Particle")) +
+  stat_bin(binwidth = 100, mapping = aes(ProtonCandTrackLength_0, fill = Particle_0, y = ..count../sum(..count..)), position = position_fillnudge(x = 50)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_fillnudge(x = 0), mapping = aes(ProtonCandTrackLength_0, fill = Particle_0, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(Particle_0 != "No Particle")) +
+  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(ProtonCandTrackLength_0, color = Particle_0), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+```
+
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(PrimaryProtonScore1 > 0)) +
+  stat_bin(binwidth = 50, position = position_stacknudge(x = 25), mapping = aes(PrimaryProtonTfromdEdx, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 50, position = position_stacknudge(x = 0), mapping = aes(PrimaryProtonTfromdEdx, fill = Truth)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1200), breaks = seq(0,1200,100)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(PrimaryProtonScore1 >= 0)) +
+  stat_bin(binwidth = 50, mapping = aes(PrimaryProtonTfromdEdx, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 25)) +
+  stat_bin(color = "black", geom = "step", binwidth = 50, position = position_fillnudge(x = 0), mapping = aes(PrimaryProtonTfromdEdx, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1200), breaks = seq(0,1200,100)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(PrimaryProtonScore1 >= 0)) +
+  stat_bin(binwidth = 50, geom = "step", position = position_nudge(x = 0), mapping = aes(PrimaryProtonTfromdEdx, color = Truth), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1200), breaks = seq(0,1200,100)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(PrimaryProtonScore1 >= 0)) +
+  stat_bin(binwidth = 0.05, position = position_stacknudge(x = 0.025), mapping = aes(PrimaryProtonTfromdEdx/ProtonCandTrackLength_0, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_stacknudge(x = 0), mapping = aes(PrimaryProtonTfromdEdx/ProtonCandTrackLength_0, fill = Truth)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(PrimaryProtonScore1 >= 0)) +
+  stat_bin(binwidth = 0.05, mapping = aes(PrimaryProtonTfromdEdx/ProtonCandTrackLength_0, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 0.025)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_fillnudge(x = 0), mapping = aes(PrimaryProtonTfromdEdx/ProtonCandTrackLength_0, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(PrimaryProtonScore1 >= 0)) +
+  stat_bin(binwidth = 0.05, geom = "step", position = position_nudge(x = 0), mapping = aes(PrimaryProtonTfromdEdx/ProtonCandTrackLength_0, color = Truth), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(Particle_0 != "No Particle")) +
+  stat_bin(binwidth = 0.05, position = position_stacknudge(x = 0.025), mapping = aes(PrimaryProtonTfromdEdx/ProtonCandTrackLength_0, fill = Particle_0)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_stacknudge(x = 0), mapping = aes(PrimaryProtonTfromdEdx/ProtonCandTrackLength_0, fill = Particle_0)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(Particle_0 != "No Particle")) +
+  stat_bin(binwidth = 0.05, mapping = aes(PrimaryProtonTfromdEdx/ProtonCandTrackLength_0, fill = Particle_0, y = ..count../sum(..count..)), position = position_fillnudge(x = 0.025)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_fillnudge(x = 0), mapping = aes(PrimaryProtonTfromdEdx/ProtonCandTrackLength_0, fill = Particle_0, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(Particle_0 != "No Particle")) +
+  stat_bin(binwidth = 0.05, geom = "step", position = position_nudge(x = 0), mapping = aes(PrimaryProtonTfromdEdx/ProtonCandTrackLength_0, color = Particle_0), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(SecProtonScore1_1 >= 0)) +
+  stat_bin(binwidth = 100, position = position_stacknudge(x = 50), mapping = aes(ProtonCandTrackLength_1, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_stacknudge(x = 0), mapping = aes(ProtonCandTrackLength_1, fill = Truth)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(SecProtonScore1_1 >= 0)) +
+  stat_bin(binwidth = 100, mapping = aes(ProtonCandTrackLength_1, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 50)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_fillnudge(x = 0), mapping = aes(ProtonCandTrackLength_1, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(SecProtonScore1_1 >= 0)) +
+  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(ProtonCandTrackLength_1, color = Truth), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+```
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(Particle_1 != "No Particle")) +
+  stat_bin(binwidth = 100, position = position_stacknudge(x = 50), mapping = aes(ProtonCandTrackLength_1, fill = Particle_1)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_stacknudge(x = 0), mapping = aes(ProtonCandTrackLength_1, fill = Particle_1)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(Particle_1 != "No Particle")) +
+  stat_bin(binwidth = 100, mapping = aes(ProtonCandTrackLength_1, fill = Particle_1, y = ..count../sum(..count..)), position = position_fillnudge(x = 50)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_fillnudge(x = 0), mapping = aes(ProtonCandTrackLength_1, fill = Particle_1, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(Particle_1 != "No Particle")) +
+  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(ProtonCandTrackLength_1, color = Particle_1), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2500), breaks = seq(0,2500,200)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+```
+
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(SecProtonTfromdEdx_1 > -1)) +
+  stat_bin(binwidth = 50, position = position_stacknudge(x = 25), mapping = aes(SecProtonTfromdEdx_1, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 50, position = position_stacknudge(x = 0), mapping = aes(SecProtonTfromdEdx_1, fill = Truth)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,900), breaks = seq(0,900,100)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(SecProtonScore1_1 >= 0)) +
+  stat_bin(binwidth = 50, mapping = aes(SecProtonTfromdEdx_1, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 25)) +
+  stat_bin(color = "black", geom = "step", binwidth = 50, position = position_fillnudge(x = 0), mapping = aes(SecProtonTfromdEdx_1, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,900), breaks = seq(0,900,100)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(SecProtonScore1_1 >= 0)) +
+  stat_bin(binwidth = 50, geom = "step", position = position_nudge(x = 0), mapping = aes(SecProtonTfromdEdx_1, color = Truth), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,900), breaks = seq(0,900,100)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+```
+
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(SecProtonScore1_1 >= 0)) +
+  stat_bin(binwidth = 0.05, position = position_stacknudge(x = 0.025), mapping = aes(SecProtonTfromdEdx_1/ProtonCandTrackLength_1, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_stacknudge(x = 0), mapping = aes(SecProtonTfromdEdx_1/ProtonCandTrackLength_1, fill = Truth)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(SecProtonScore1_1 >= 0)) +
+  stat_bin(binwidth = 0.05, mapping = aes(SecProtonTfromdEdx_1/ProtonCandTrackLength_1, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 0.025)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_fillnudge(x = 0), mapping = aes(SecProtonTfromdEdx_1/ProtonCandTrackLength_1, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(SecProtonScore1_1 >= 0)) +
+  stat_bin(binwidth = 0.05, geom = "step", position = position_nudge(x = 0), mapping = aes(SecProtonTfromdEdx_1/ProtonCandTrackLength_1, color = Truth), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+```
+```{r, message = F, warning = F, echo = F}
+ggplot(events %>% filter(Particle_1 != "No Particle")) +
+  stat_bin(binwidth = 0.05, position = position_stacknudge(x = 0.025), mapping = aes(SecProtonTfromdEdx_1/ProtonCandTrackLength_1, fill = Particle_1)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_stacknudge(x = 0), mapping = aes(SecProtonTfromdEdx_1/ProtonCandTrackLength_1, fill = Particle_1)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+ggplot(events %>% filter(Particle_1 != "No Particle")) +
+  stat_bin(binwidth = 0.05, mapping = aes(SecProtonTfromdEdx_1/ProtonCandTrackLength_1, fill = Particle_1, y = ..count../sum(..count..)), position = position_fillnudge(x = 0.025)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_fillnudge(x = 0), mapping = aes(SecProtonTfromdEdx_1/ProtonCandTrackLength_1, fill = Particle_1, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+ggplot(events %>% filter(Particle_1 != "No Particle")) +
+  stat_bin(binwidth = 0.05, geom = "step", position = position_nudge(x = 0), mapping = aes(SecProtonTfromdEdx_1/ProtonCandTrackLength_1, color = Particle_1), size = 1.5) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1.5), breaks = seq(0,1.5,0.1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
+```
+
+```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=10}
+ggplot(events %>% filter(BlobCount >= 1) %>% 
+         mutate(BlobCount_bands = case_when(BlobCount == 1 ~ "blob count: 1",
+                                            BlobCount == 2 ~ "blob count: 2",
+                                            BlobCount == 3 ~ "blob count: 3",
+                                            BlobCount == 4 ~ "blob count: 4",
+                                            BlobCount == 5 ~ "blob count: 5",
+                                            BlobCount >= 6 ~ "blob count: 6+"))) +
+  stat_bin(binwidth = 100, position = position_stacknudge(x = 50), mapping = aes(BlobDistance0, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_stacknudge(x = 0), mapping = aes(BlobDistance0, fill = Truth)) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(vars(BlobCount_bands), ncol = 3, scales = "free")
+
+ggplot(events %>% filter(BlobCount >= 1) %>% 
+         mutate(BlobCount_bands = case_when(BlobCount == 1 ~ "blob count: 1",
+                                            BlobCount == 2 ~ "blob count: 2",
+                                            BlobCount == 3 ~ "blob count: 3",
+                                            BlobCount == 4 ~ "blob count: 4",
+                                            BlobCount == 5 ~ "blob count: 5",
+                                            BlobCount >= 6 ~ "blob count: 6+"))) +
+  stat_bin(binwidth = 100, mapping = aes(BlobDistance0, fill = Truth, y = ..count../sum(..count..)), position = position_fillnudge(x = 50)) +
+  stat_bin(color = "black", geom = "step", binwidth = 100, position = position_fillnudge(x = 0), mapping = aes(BlobDistance0, fill = Truth, y = ..count../sum(..count..))) + 
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(BlobCount_bands), ncol = 3)
+
+ggplot(events %>% filter(BlobCount >= 1) %>% 
+         mutate(BlobCount_bands = case_when(BlobCount == 1 ~ "blob count: 1",
+                                            BlobCount == 2 ~ "blob count: 2",
+                                            BlobCount == 3 ~ "blob count: 3",
+                                            BlobCount == 4 ~ "blob count: 4",
+                                            BlobCount == 5 ~ "blob count: 5",
+                                            BlobCount >= 6 ~ "blob count: 6+"))) +
+  stat_bin(binwidth = 100, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobDistance0, color = Truth), size = 1) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3000)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(vars(BlobCount_bands), ncol = 3, scales = "free")
+```
+
 ```{r, message = F, warning = F, echo = F, fig.height=5, fig.width=7}
 ggplot(events) +
   stat_bin(binwidth = 1, position = position_stacknudge(x = .5), mapping = aes(BlobCount, fill = Truth)) +
@@ -231,6 +571,13 @@ ggplot(events) +
   theme_bw() + ggtitle("Max Improved Michel Views") +
   scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
   scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(MaxImprovedMichelViews), ncol = 2, scales = "free")
+
+ggplot(events) +
+  stat_bin(binwidth = 1, geom = "step", position = position_nudge(x = 0), mapping = aes(BlobCount, color = Truth), size = 1) +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0), limits = c(0,20)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
   facet_wrap(vars(MaxImprovedMichelViews), ncol = 2, scales = "free")
 ```
 

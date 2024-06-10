@@ -10,8 +10,8 @@
 * @section DESCRIPTION *
 * This implements a loop over the tuple that fills the histograms
  */
-#include "TMVA/RReader.hxx"
 #include "TMVA/RBDT.hxx"
+#include "include/TMVAUtils.h"
 #include "utils/expandEnv.h"
 
 enum EDataMCTruth {kData, kMC, kTruth, kNDataMCTruthTypes};
@@ -74,13 +74,15 @@ void LoopAndFillEventSelection(std::string tag,
                                std::vector<CCQENu::Variable2DFromConfig*>& variables2D,
                                EDataMCTruth data_mc_truth,
                                PlotUtils::Cutter<CVUniverse>& selection, 
-                               PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model, 
+                               PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model,
                                PlotUtils::weight_MCreScale mcRescale,
-                               bool closure=false, bool mc_reco_to_csv=false) {
+                               bool closure=false,
+                               bool use_prog_bar=false) {
 
   // Prepare loop
   MinervaUniverse::SetTruth(false);
   int nentries = -1;
+  CVFunctions<CVUniverse> fund;
 
   // get ready for weights by finding cv universe pointer
 
@@ -101,10 +103,11 @@ void LoopAndFillEventSelection(std::string tag,
     nentries = util.GetMCEntries();
   }
   else{
-    nentries = util.GetTruthEntries() ;
+    nentries = util.GetTruthEntries();
     MinervaUniverse::SetTruth(true);
   }
 
+	std::map<std::string,RReader> * tmva_models = CVUniverse::GetPointerToTMVAModels();
 
   unsigned int loc = tag.find("___")+3;
   std::string cat(tag,loc,string::npos);
@@ -115,7 +118,7 @@ void LoopAndFillEventSelection(std::string tag,
 	// Begin entries loop
   for (int i = 0; i < nentries; i++) {
     		
-		ProgressBar(nentries,i,false,data_mc_truth,prescale);
+		ProgressBar(nentries,i,use_prog_bar,data_mc_truth,prescale);
 		
     cvUniv->SetEntry(i);
     //atree->GetEntry(i);
@@ -145,6 +148,17 @@ void LoopAndFillEventSelection(std::string tag,
         // probably want to move this later on inside the loop
         const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event); //Only calculate the per-universe weight for events that will actually use it.
         //PlotUtils::detail::empty event;
+				
+				if((*tmva_models)[sample].GetVariableNames().size() > 0 && data_mc_truth != kTruth){
+					std::vector<std::string> var_names = (*tmva_models)[sample].GetVariableExpressions();
+					std::vector<float> var_values = fund.GetVectorOfValues(universe,var_names);
+					//std::cout << "Variables: { " << var_names[0] << ": " << var_values[0] << "; ";
+					//for (int i=1; i<var_names.size(); i++) { 
+					//	std::cout << "; " << var_names[i] << ": " << var_values[i]; 
+					//}
+					//std::cout << " }" << std::endl;
+					CVUniverse::ComputeVectorResponse(sample,var_values);
+				}
 
         //=========================================
         // Fill
@@ -159,7 +173,6 @@ void LoopAndFillEventSelection(std::string tag,
 #endif
 					if(selection.isMCSelected(*universe, event, weight).all()
 						&& selection.isSignal(*universe)) {
-
 						//double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
 						const double q2qe = universe->GetQ2QEGeV();
 						double scale = 1.0;
@@ -168,6 +181,14 @@ void LoopAndFillEventSelection(std::string tag,
 						FillMC(tag, universe, weight, variables, variables2D, scale);
 						FillResponse(tag,universe,weight,variables,variables2D, scale);
 						FillResolution(tag,universe,weight,variables,variables2D, scale);
+						
+						/*if () {
+							std::string<float> tmva_variable_values = {};
+							
+							for (auto v : fVariablesFromConfig) {
+								fVariableValues.emplace_back(v->GetRecoValue(*fUniverse, 0));
+							}
+						}*/
 		      }
 				}
         else if (data_mc_truth == kTruth){
@@ -187,6 +208,7 @@ void LoopAndFillEventSelection(std::string tag,
           }
 #endif
           if(selection.isDataSelected(*universe, event).all()) {
+          
             FillData(tag, universe, variables, variables2D);
             
           }
@@ -258,9 +280,9 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 	csvFile << ";Truth;Interaction;mc_intType;qelikeBDTG;1chargedpionBDTG;1neutralpionBDTG;multipionBDTG;otherBDTG;model;ProngTrajID;nERParts;ERIDs;nFSPart;FSPDGs;FSPartEs;Arachne" << std::endl;
 	std::vector<std::string> interaction = {"None","QE","RES","DIS","COHPI","AMNUGAMMA","IMD","NUEEL","2P2H","NA","Unknown"};
 	
-	TMVA::Experimental::RReader model_1track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_1track_BDTG.weights.xml"));
-  TMVA::Experimental::RReader model_2track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_2track_BDTG.weights.xml"));
-  TMVA::Experimental::RReader model_3ptrack(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml"));
+	RReader model_1track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_1track_BDTG.weights.xml"));
+  RReader model_2track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_2track_BDTG.weights.xml"));
+  RReader model_3ptrack(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml"));
 	
 	// Begin loop over entries
 	std::cout << std::endl << "Beginning loop over " << nentries << " entries\n" << std::endl;
@@ -483,74 +505,96 @@ void LoopAndFillTMVA(std::vector<int> file_entries,
 	std::cout << std::endl << std::endl << "New branches: ";
 	
 	Int_t entry;
+	Int_t MCIntType;
 	std::cout << std::endl << "  entry";
+	std::cout << std::endl << "  MCIntType";
 	
 	Double_t wgt;
-	Double_t q2qe;
-	Double_t ptmu;
-	Double_t pzmu;
-	Double_t recoil;
+	Double_t Q2QE;
+	Double_t PperpMuGeV;
+	Double_t PparMuGeV;
+	Double_t RecoilEnergyGeV;
+	Int_t Multiplicity;
 	std::cout << std::endl << "  weight";
-	std::cout << std::endl << "  q2qe";
-	std::cout << std::endl << "  ptmu";
-	std::cout << std::endl << "  pzmu";
-	std::cout << std::endl << "  recoil";
+	std::cout << std::endl << "  Q2QE";
+	std::cout << std::endl << "  PperpMuGeV";
+	std::cout << std::endl << "  PparMuGeV";
+	std::cout << std::endl << "  RecoilEnergyGeV";
+	std::cout << std::endl << "  Multiplicity";
 	
-	Double_t sec_proton_score1_1;
-	Double_t sec_proton_score1_2;
-	Double_t sec_proton_score1_3;
-	std::cout << std::endl << "  sec_proton_score1_1";
-	std::cout << std::endl << "  sec_proton_score1_2";
-	std::cout << std::endl << "  sec_proton_score1_3";
+	Int_t NumberOfProtonCandidates;
+	std::cout << std::endl << "  NumberOfProtonCandidates";
 	
-	Double_t sec_proton_T_from_dEdX_1;
-	Double_t sec_proton_T_from_dEdX_2;
-	Double_t sec_proton_T_from_dEdX_3;
-	std::cout << std::endl << "  sec_proton_T_from_dEdX_1";
-	std::cout << std::endl << "  sec_proton_T_from_dEdX_2";
-	std::cout << std::endl << "  sec_proton_T_from_dEdX_3";
+	Double_t PrimaryProtonScore1;
+	Double_t SecProtonScore1_1;
+	Double_t SecProtonScore1_2;
+	Double_t SecProtonScore1_3;
+	std::cout << std::endl << "  PrimaryProtonScore1";
+	std::cout << std::endl << "  SecProtonScore1_1";
+	std::cout << std::endl << "  SecProtonScore1_2";
+	std::cout << std::endl << "  SecProtonScore1_3";
 	
-	Double_t primary_proton_track_vtx_gap; 
-	Double_t sec_proton_track_vtx_gap_1;
-	Double_t sec_proton_track_vtx_gap_2;
-	Double_t sec_proton_track_vtx_gap_3;
-	std::cout << std::endl << "  primary_proton_track_vtx_gap";
-	std::cout << std::endl << "  sec_proton_track_vtx_gap_1";
-	std::cout << std::endl << "  sec_proton_track_vtx_gap_2";
-	std::cout << std::endl << "  sec_proton_track_vtx_gap_3";
+	Double_t PrimaryProtonTfromdEdx;
+	Double_t SecProtonTfromdEdx_1;
+	Double_t SecProtonTfromdEdx_2;
+	Double_t SecProtonTfromdEdx_3;
+	std::cout << std::endl << "  PrimaryProtonTfromdEdx";
+	std::cout << std::endl << "  SecProtonTfromdEdx_1";
+	std::cout << std::endl << "  SecProtonTfromdEdx_2";
+	std::cout << std::endl << "  SecProtonTfromdEdx_3";
 	
-	Double_t primary_proton_fraction_vis_energy_in_cone;
-	Double_t sec_proton_fraction_vis_energy_in_cone_1;
-	Double_t sec_proton_fraction_vis_energy_in_cone_2;
-	Double_t sec_proton_fraction_vis_energy_in_cone_3;
-	std::cout << std::endl << "  primary_proton_fraction_vis_energy_in_cone";
-	std::cout << std::endl << "  sec_proton_fraction_vis_energy_in_cone_1";
-	std::cout << std::endl << "  sec_proton_fraction_vis_energy_in_cone_2";
-	std::cout << std::endl << "  sec_proton_fraction_vis_energy_in_cone_3";
+	Double_t ProtonRatioTdEdX2TrackLength_0;
+	Double_t ProtonRatioTdEdX2TrackLength_1;
+	Double_t ProtonRatioTdEdX2TrackLength_2;
+	Double_t ProtonRatioTdEdX2TrackLength_3;
+	std::cout << std::endl << "  ProtonRatioTdEdX2TrackLength_0";
+	std::cout << std::endl << "  ProtonRatioTdEdX2TrackLength_1";
+	std::cout << std::endl << "  ProtonRatioTdEdX2TrackLength_2";
+	std::cout << std::endl << "  ProtonRatioTdEdX2TrackLength_3";
 	
-	Int_t primary_proton_clusters;
-	Int_t sec_proton_clusters_1;
-	Int_t sec_proton_clusters_2;
-	Int_t sec_proton_clusters_3;
-	std::cout << std::endl << "  primary_proton_clusters";
-	std::cout << std::endl << "  sec_proton_clusters_1";
-	std::cout << std::endl << "  sec_proton_clusters_2";
-	std::cout << std::endl << "  sec_proton_clusters_3";
+	Double_t PrimaryProtonTrackVtxGap; 
+	Double_t SecProtonTrackVtxGap_1;
+	Double_t SecProtonTrackVtxGap_2;
+	Double_t SecProtonTrackVtxGap_3;
+	std::cout << std::endl << "  PrimaryProtonTrackVtxGap";
+	std::cout << std::endl << "  SecProtonTrackVtxGap_1";
+	std::cout << std::endl << "  SecProtonTrackVtxGap_2";
+	std::cout << std::endl << "  SecProtonTrackVtxGap_3";
+	
+	Double_t PrimaryProtonFractionVisEnergyInCone;
+	Double_t SecProtonFractionVisEnergyInCone_1;
+	Double_t SecProtonFractionVisEnergyInCone_2;
+	Double_t SecProtonFractionVisEnergyInCone_3;
+	std::cout << std::endl << "  PrimaryProtonFractionVisEnergyInCone";
+	std::cout << std::endl << "  SecProtonFractionVisEnergyInCone_1";
+	std::cout << std::endl << "  SecProtonFractionVisEnergyInCone_2";
+	std::cout << std::endl << "  SecProtonFractionVisEnergyInCone_3";
+	
+	Int_t NumClustsPrimaryProtonEnd;
+	Int_t NumClustsSecProtonEnd_1;
+	Int_t NumClustsSecProtonEnd_2;
+	Int_t NumClustsSecProtonEnd_3;
+	std::cout << std::endl << "  NumClustsPrimaryProtonEnd";
+	std::cout << std::endl << "  NumClustsSecProtonEnd_1";
+	std::cout << std::endl << "  NumClustsSecProtonEnd_2";
+	std::cout << std::endl << "  NumClustsSecProtonEnd_3";
 
-	Double_t muon_to_primary_proton_angle;
-	std::cout << std::endl << "muon_to_primary_proton_angle";
+	Double_t MuonToPrimaryProtonAngle;
+	std::cout << std::endl << "  MuonToPrimaryProtonAngle";
 
-	Int_t blob_count;
-	std::cout << std::endl << "  blob_count";
+	Int_t NBlobs;
+	std::cout << std::endl << "  NBlobs";
 	
-	Int_t improved_michel_1_views;
-	Int_t improved_michel_2_views;
-	Int_t improved_michel_3_views;
-	Int_t improved_michel_sum_views;
-	std::cout << std::endl << "  improved_michel_1_views";
-	std::cout << std::endl << "  improved_michel_2_views";
-	std::cout << std::endl << "  improved_michel_3_views";
-	std::cout << std::endl << "  improved_michel_sum_views";
+	Int_t ImprovedNMichel;
+	Int_t ImprovedMichel_0_Views;
+	Int_t ImprovedMichel_1_Views;
+	Int_t ImprovedMichel_2_Views;
+	Int_t ImprovedMichel_Sum_Views;
+	std::cout << std::endl << "  ImprovedNMichel";
+	std::cout << std::endl << "  ImprovedMichel_0_Views";
+	std::cout << std::endl << "  ImprovedMichel_1_Views";
+	std::cout << std::endl << "  ImprovedMichel_2_Views";
+	std::cout << std::endl << "  ImprovedMichel_Sum_Views";
 	
 	// Trees
 	std::map<std::string,TTree*> ttrees;
@@ -562,48 +606,60 @@ void LoopAndFillTMVA(std::vector<int> file_entries,
 		std::cout << "  " << tname << std::endl;
 		
 		ttrees[tname]->Branch("entry",&entry,"entry/I");
+		ttrees[tname]->Branch("MCIntType",&MCIntType,"MCIntType/I");
 		
 		ttrees[tname]->Branch("weight",&wgt,"weight/D");
-		ttrees[tname]->Branch("q2qe",&q2qe,"q2qe/D");
-		ttrees[tname]->Branch("ptmu",&ptmu,"ptmu/D");
-		ttrees[tname]->Branch("pzmu",&pzmu,"pzmu/D");
-		ttrees[tname]->Branch("recoil",&recoil,"recoil/D");
+		ttrees[tname]->Branch("Q2QE",&Q2QE,"Q2QE/D");
+		ttrees[tname]->Branch("PperpMuGeV",&PperpMuGeV,"PperpMuGeV/D");
+		ttrees[tname]->Branch("PparMuGeV",&PparMuGeV,"PparMuGeV/D");
+		ttrees[tname]->Branch("RecoilEnergyGeV",&RecoilEnergyGeV,"RecoilEnergyGeV/D");
+		ttrees[tname]->Branch("Multiplicity",&Multiplicity,"Multiplicity/I");
 		
-		ttrees[tname]->Branch("sec_proton_score1_1",&sec_proton_score1_1,"sec_proton_score1_1/D");
-		ttrees[tname]->Branch("sec_proton_score1_2",&sec_proton_score1_2,"sec_proton_score1_2/D");
-		ttrees[tname]->Branch("sec_proton_score1_3",&sec_proton_score1_3,"sec_proton_score1_3/D");
+		ttrees[tname]->Branch("NumberOfProtonCandidates",&NumberOfProtonCandidates,"NumberOfProtonCandidates/I");
 		
-		ttrees[tname]->Branch("sec_proton_T_from_dEdX_1",&sec_proton_T_from_dEdX_1,"sec_proton_T_from_dEdX_1/D");
-		ttrees[tname]->Branch("sec_proton_T_from_dEdX_2",&sec_proton_T_from_dEdX_2,"sec_proton_T_from_dEdX_2/D");
-		ttrees[tname]->Branch("sec_proton_T_from_dEdX_3",&sec_proton_T_from_dEdX_3,"sec_proton_T_from_dEdX_3/D");
+		ttrees[tname]->Branch("PrimaryProtonScore1",&PrimaryProtonScore1,"PrimaryProtonScore1/D");
+		ttrees[tname]->Branch("SecProtonScore1_1",&SecProtonScore1_1,"SecProtonScore1_1/D");
+		ttrees[tname]->Branch("SecProtonScore1_2",&SecProtonScore1_2,"SecProtonScore1_2/D");
+		ttrees[tname]->Branch("SecProtonScore1_3",&SecProtonScore1_3,"SecProtonScore1_3/D");
 		
-		ttrees[tname]->Branch("primary_proton_track_vtx_gap",&primary_proton_track_vtx_gap,"primary_proton_track_vtx_gap/D");
-		ttrees[tname]->Branch("sec_proton_track_vtx_gap_1",&sec_proton_track_vtx_gap_1,"sec_proton_track_vtx_gap_1/D");
-		ttrees[tname]->Branch("sec_proton_track_vtx_gap_2",&sec_proton_track_vtx_gap_2,"sec_proton_track_vtx_gap_2/D");
-		ttrees[tname]->Branch("sec_proton_track_vtx_gap_3",&sec_proton_track_vtx_gap_3,"sec_proton_track_vtx_gap_3/D");
+		ttrees[tname]->Branch("PrimaryProtonTfromdEdx",&PrimaryProtonTfromdEdx,"PrimaryProtonTfromdEdx/D");
+		ttrees[tname]->Branch("SecProtonTfromdEdx_1",&SecProtonTfromdEdx_1,"SecProtonTfromdEdx_1/D");
+		ttrees[tname]->Branch("SecProtonTfromdEdx_2",&SecProtonTfromdEdx_2,"SecProtonTfromdEdx_2/D");
+		ttrees[tname]->Branch("SecProtonTfromdEdx_3",&SecProtonTfromdEdx_3,"SecProtonTfromdEdx_3/D");
 		
-		ttrees[tname]->Branch("primary_proton_fraction_vis_energy_in_cone",
-		                      &primary_proton_fraction_vis_energy_in_cone,"CCQENu_proton_fraction_vis_energy_in_cone/D");
-		ttrees[tname]->Branch("sec_proton_fraction_vis_energy_in_cone_1",
-		                      &sec_proton_fraction_vis_energy_in_cone_1,"sec_proton_fraction_vis_energy_in_cone_1/D");
-		ttrees[tname]->Branch("sec_proton_fraction_vis_energy_in_cone_2",
-		                      &sec_proton_fraction_vis_energy_in_cone_2,"sec_proton_fraction_vis_energy_in_cone_2/D");
-		ttrees[tname]->Branch("sec_proton_fraction_vis_energy_in_cone_3",
-		                      &sec_proton_fraction_vis_energy_in_cone_3,"sec_proton_fraction_vis_energy_in_cone_3/D");
+		ttrees[tname]->Branch("ProtonRatioTdEdX2TrackLength_0",&ProtonRatioTdEdX2TrackLength_0,"ProtonRatioTdEdX2TrackLength_0/D");
+		ttrees[tname]->Branch("ProtonRatioTdEdX2TrackLength_1",&ProtonRatioTdEdX2TrackLength_1,"ProtonRatioTdEdX2TrackLength_1/D");
+		ttrees[tname]->Branch("ProtonRatioTdEdX2TrackLength_2",&ProtonRatioTdEdX2TrackLength_2,"ProtonRatioTdEdX2TrackLength_2/D");
+		ttrees[tname]->Branch("ProtonRatioTdEdX2TrackLength_3",&ProtonRatioTdEdX2TrackLength_3,"ProtonRatioTdEdX2TrackLength_3/D");
 		
-		ttrees[tname]->Branch("primary_proton_clusters",&primary_proton_clusters,"primary_proton_clusters/I");
-		ttrees[tname]->Branch("sec_proton_clusters_1",&sec_proton_clusters_1,"sec_proton_clusters_1/I");
-		ttrees[tname]->Branch("sec_proton_clusters_2",&sec_proton_clusters_2,"sec_proton_clusters_2/I");
-		ttrees[tname]->Branch("sec_proton_clusters_3",&sec_proton_clusters_3,"sec_proton_clusters_3/I");
+		ttrees[tname]->Branch("PrimaryProtonTrackVtxGap",&PrimaryProtonTrackVtxGap,"PrimaryProtonTrackVtxGap/D");
+		ttrees[tname]->Branch("SecProtonTrackVtxGap_1",&SecProtonTrackVtxGap_1,"SecProtonTrackVtxGap_1/D");
+		ttrees[tname]->Branch("SecProtonTrackVtxGap_2",&SecProtonTrackVtxGap_2,"SecProtonTrackVtxGap_2/D");
+		ttrees[tname]->Branch("SecProtonTrackVtxGap_3",&SecProtonTrackVtxGap_3,"SecProtonTrackVtxGap_3/D");
 		
-		ttrees[tname]->Branch("muon_to_primary_proton_angle",&muon_to_primary_proton_angle,"muon_to_primary_proton_angle/D");
+		ttrees[tname]->Branch("PrimaryProtonFractionVisEnergyInCone",
+		                      &PrimaryProtonFractionVisEnergyInCone,"PrimaryProtonFractionVisEnergyInCone/D");
+		ttrees[tname]->Branch("SecProtonFractionVisEnergyInCone_1",
+		                      &SecProtonFractionVisEnergyInCone_1,"SecProtonFractionVisEnergyInCone_1/D");
+		ttrees[tname]->Branch("SecProtonFractionVisEnergyInCone_2",
+		                      &SecProtonFractionVisEnergyInCone_2,"SecProtonFractionVisEnergyInCone_2/D");
+		ttrees[tname]->Branch("SecProtonFractionVisEnergyInCone_3",
+		                      &SecProtonFractionVisEnergyInCone_3,"SecProtonFractionVisEnergyInCone_3/D");
 		
-		ttrees[tname]->Branch("blob_count",&blob_count,"blob_count/I");
+		ttrees[tname]->Branch("NumClustsPrimaryProtonEnd",&NumClustsPrimaryProtonEnd,"NumClustsPrimaryProtonEnd/I");
+		ttrees[tname]->Branch("NumClustsSecProtonEnd_1",&NumClustsSecProtonEnd_1,"NumClustsSecProtonEnd_1/I");
+		ttrees[tname]->Branch("NumClustsSecProtonEnd_2",&NumClustsSecProtonEnd_2,"NumClustsSecProtonEnd_2/I");
+		ttrees[tname]->Branch("NumClustsSecProtonEnd_3",&NumClustsSecProtonEnd_3,"NumClustsSecProtonEnd_3/I");
 		
-		ttrees[tname]->Branch("improved_michel_1_views",&improved_michel_1_views,"improved_michel_1_views/I");
-		ttrees[tname]->Branch("improved_michel_2_views",&improved_michel_1_views,"improved_michel_2_views/I");
-		ttrees[tname]->Branch("improved_michel_3_views",&improved_michel_1_views,"improved_michel_3_views/I");
-		ttrees[tname]->Branch("improved_michel_sum_views",&improved_michel_sum_views,"improved_michel_sum_views/I");
+		ttrees[tname]->Branch("MuonToPrimaryProtonAngle",&MuonToPrimaryProtonAngle,"MuonToPrimaryProtonAngle/D");
+		
+		ttrees[tname]->Branch("NBlobs",&NBlobs,"NBlobs/I");
+		
+		ttrees[tname]->Branch("ImprovedNMichel",&ImprovedNMichel,"ImprovedNMichel/I");
+		ttrees[tname]->Branch("ImprovedMichel_0_Views",&ImprovedMichel_0_Views,"ImprovedMichel_0_Views/I");
+		ttrees[tname]->Branch("ImprovedMichel_1_Views",&ImprovedMichel_1_Views,"ImprovedMichel_1_Views/I");
+		ttrees[tname]->Branch("ImprovedMichel_2_Views",&ImprovedMichel_2_Views,"ImprovedMichel_2_Views/I");
+		ttrees[tname]->Branch("ImprovedMichel_Sum_Views",&ImprovedMichel_Sum_Views,"ImprovedMichel_Sum_Views/I");
 	}
 	tree_mcreco->SetBranchStatus("*",1);
 	
@@ -631,44 +687,56 @@ void LoopAndFillTMVA(std::vector<int> file_entries,
 							
 							// TMVA trees fill
 							entry = i;
+							MCIntType = universe->GetMCIntType();
 							
 							wgt = universe->GetWeight();
-							q2qe = universe->GetQ2QEGeV();
-							ptmu = universe->GetPperpMuGeV();
-							pzmu = universe->GetPparMuGeV();
-							recoil = universe->GetRecoilEnergyGeV();
+							Q2QE = universe->GetQ2QEGeV();
+							PperpMuGeV = universe->GetPperpMuGeV();
+							PparMuGeV = universe->GetPparMuGeV();
+							RecoilEnergyGeV = universe->GetRecoilEnergyGeV();
+							Multiplicity = universe->GetMultiplicity();
 							
-							sec_proton_score1_1 = universe->GetProtonScore1_1();
-							sec_proton_score1_2 = universe->GetProtonScore1_2();
-							sec_proton_score1_3 = universe->GetProtonScore1_3();
+							NumberOfProtonCandidates = universe->GetNumberOfProtonCandidates();
 							
-							sec_proton_T_from_dEdX_1 = universe->GetSecProtonTfromdEdx_1();
-							sec_proton_T_from_dEdX_2 = universe->GetSecProtonTfromdEdx_2();
-							sec_proton_T_from_dEdX_3 = universe->GetSecProtonTfromdEdx_3();
+							PrimaryProtonScore1 = universe->GetProtonScore1_0();
+							SecProtonScore1_1 = universe->GetProtonScore1_1();
+							SecProtonScore1_2 = universe->GetProtonScore1_2();
+							SecProtonScore1_3 = universe->GetProtonScore1_3();
 							
-							primary_proton_track_vtx_gap = universe->GetPrimaryProtonTrackVtxGap();
-							sec_proton_track_vtx_gap_1 = universe->GetSecProtonTrackVtxGap_1();
-							sec_proton_track_vtx_gap_2 = universe->GetSecProtonTrackVtxGap_2();
-							sec_proton_track_vtx_gap_3 = universe->GetSecProtonTrackVtxGap_3();
+							PrimaryProtonTfromdEdx = universe->GetPrimaryProtonTfromdEdx();
+							SecProtonTfromdEdx_1 = universe->GetSecProtonTfromdEdx_1();
+							SecProtonTfromdEdx_2 = universe->GetSecProtonTfromdEdx_2();
+							SecProtonTfromdEdx_3 = universe->GetSecProtonTfromdEdx_3();
 							
-							primary_proton_fraction_vis_energy_in_cone = universe->GetPrimaryProtonFractionVisEnergyInCone();
-							sec_proton_fraction_vis_energy_in_cone_1 = universe->GetSecProtonFractionVisEnergyInCone_1();
-							sec_proton_fraction_vis_energy_in_cone_2 = universe->GetSecProtonFractionVisEnergyInCone_2();
-							sec_proton_fraction_vis_energy_in_cone_3 = universe->GetSecProtonFractionVisEnergyInCone_3();
+							ProtonRatioTdEdX2TrackLength_0 = universe->ProtonRatioTdEdX2TrackLength_0();
+							ProtonRatioTdEdX2TrackLength_1 = universe->ProtonRatioTdEdX2TrackLength_1();
+							ProtonRatioTdEdX2TrackLength_2 = universe->ProtonRatioTdEdX2TrackLength_2();
+							ProtonRatioTdEdX2TrackLength_3 = universe->ProtonRatioTdEdX2TrackLength_3();
 							
-							primary_proton_clusters = universe->GetNumClustsPrimaryProtonEnd();
-							sec_proton_clusters_1 = universe->GetNumClustsSecProtonEnd_1();
-							sec_proton_clusters_2 = universe->GetNumClustsSecProtonEnd_2();
-							sec_proton_clusters_3 = universe->GetNumClustsSecProtonEnd_3();
+							PrimaryProtonTrackVtxGap = universe->GetPrimaryProtonTrackVtxGap();
+							SecProtonTrackVtxGap_1 = universe->GetSecProtonTrackVtxGap_1();
+							SecProtonTrackVtxGap_2 = universe->GetSecProtonTrackVtxGap_2();
+							SecProtonTrackVtxGap_3 = universe->GetSecProtonTrackVtxGap_3();
 							
-							muon_to_primary_proton_angle = universe->GetMuonToPrimaryProtonAngle();
+							PrimaryProtonFractionVisEnergyInCone = universe->GetPrimaryProtonFractionVisEnergyInCone();
+							SecProtonFractionVisEnergyInCone_1 = universe->GetSecProtonFractionVisEnergyInCone_1();
+							SecProtonFractionVisEnergyInCone_2 = universe->GetSecProtonFractionVisEnergyInCone_2();
+							SecProtonFractionVisEnergyInCone_3 = universe->GetSecProtonFractionVisEnergyInCone_3();
 							
-							blob_count = universe->GetNBlobs();
+							NumClustsPrimaryProtonEnd = universe->GetNumClustsPrimaryProtonEnd();
+							NumClustsSecProtonEnd_1 = universe->GetNumClustsSecProtonEnd_1();
+							NumClustsSecProtonEnd_2 = universe->GetNumClustsSecProtonEnd_2();
+							NumClustsSecProtonEnd_3 = universe->GetNumClustsSecProtonEnd_3();
 							
-							improved_michel_1_views = universe->GetImprovedMichel_0_Views();
-							improved_michel_2_views = universe->GetImprovedMichel_1_Views();
-							improved_michel_3_views = universe->GetImprovedMichel_2_Views();
-							improved_michel_sum_views = universe->GetImprovedMichel_Sum_Views();
+							MuonToPrimaryProtonAngle = universe->GetMuonToPrimaryProtonAngle();
+							
+							NBlobs = universe->GetNBlobs();
+							
+							ImprovedNMichel = universe->GetImprovedNMichel();
+							ImprovedMichel_0_Views = universe->GetImprovedMichel_0_Views();
+							ImprovedMichel_1_Views = universe->GetImprovedMichel_1_Views();
+							ImprovedMichel_2_Views = universe->GetImprovedMichel_2_Views();
+							ImprovedMichel_Sum_Views = universe->GetImprovedMichel_Sum_Views();
 							
 							tree_mcreco->GetEntry(i);
 							ttrees[tname]->Fill();				
@@ -725,14 +793,14 @@ void LoopAndFillBDTG(std::string tag,
   }
   
   // xgboost
-  /*TMVA::Experimental::RBDT<> my_1track_bdt("my_1track_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_1track_Training.root");
-  TMVA::Experimental::RBDT<> my_2track_bdt("my_2track_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_2track_Training.root");
-  TMVA::Experimental::RBDT<> my_3ptrack_bdt("my_3ptrack_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_3ptrack_Training.root");*/
+  /*RBDT<> my_1track_bdt("my_1track_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_1track_Training.root");
+  RBDT<> my_2track_bdt("my_2track_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_2track_Training.root");
+  RBDT<> my_3ptrack_bdt("my_3ptrack_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_3ptrack_Training.root");*/
   
   // TMVA only
-	TMVA::Experimental::RReader model_1track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_1track_BDTG.weights.xml"));
-  TMVA::Experimental::RReader model_2track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_2track_BDTG.weights.xml"));
-  TMVA::Experimental::RReader model_3ptrack(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml"));
+	RReader model_1track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_1track_BDTG.weights.xml"));
+  RReader model_2track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_2track_BDTG.weights.xml"));
+  RReader model_3ptrack(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml"));
 
   unsigned int loc = tag.find("___")+3;
   std::string cat(tag,loc,string::npos);
@@ -791,6 +859,9 @@ void LoopAndFillBDTG(std::string tag,
 					float proton_T_from_dEdX_1 = universe->GetSecProtonTfromdEdx_1();
 					float proton_T_from_dEdX_2 = universe->GetSecProtonTfromdEdx_2();
 					float proton_clusters_0 = universe->GetNumClustsPrimaryProtonEnd();
+					float proton_ratio_T_to_length_0 = universe->ProtonRatioTdEdX2TrackLength_0();
+					float proton_ratio_T_to_length_1 = universe->ProtonRatioTdEdX2TrackLength_1();
+					float proton_ratio_T_to_length_2 = universe->ProtonRatioTdEdX2TrackLength_2();
 					float proton_clusters_1 = universe->GetNumClustsSecProtonEnd_1();
 					float proton_clusters_2 = universe->GetNumClustsSecProtonEnd_2();
 					float proton_fraction_vis_energy_in_cone_0 = universe->GetPrimaryProtonFractionVisEnergyInCone();
@@ -816,14 +887,13 @@ void LoopAndFillBDTG(std::string tag,
 						
 							input_vars.emplace_back(proton_score1_0);
 							input_vars.emplace_back(proton_track_vtx_gap_0);
-							input_vars.emplace_back(proton_T_from_dEdX_0);
+							input_vars.emplace_back(proton_ratio_T_to_length_0);
 							input_vars.emplace_back(proton_clusters_0);
 							input_vars.emplace_back(proton_fraction_vis_energy_in_cone_0);
 							input_vars.emplace_back(blob_count);
 							input_vars.emplace_back(improved_michel_count);
 							input_vars.emplace_back(recoil);
 							input_vars.emplace_back(improved_michel_sum_views);
-							input_vars.emplace_back(muon_to_primary_proton_angle);
 							
 							/*xgboost_input_vars.emplace_back(proton_score1_0);
 							xgboost_input_vars.emplace_back(proton_track_vtx_gap_0);
@@ -849,7 +919,8 @@ void LoopAndFillBDTG(std::string tag,
 							input_vars.emplace_back(proton_score1_1);
 							input_vars.emplace_back(proton_track_vtx_gap_0);
 							input_vars.emplace_back(proton_track_vtx_gap_1);
-							input_vars.emplace_back(proton_T_from_dEdX_0);
+							input_vars.emplace_back(proton_ratio_T_to_length_0);
+							input_vars.emplace_back(proton_ratio_T_to_length_1);
 							input_vars.emplace_back(proton_clusters_0);
 							input_vars.emplace_back(proton_clusters_1);
 							input_vars.emplace_back(proton_fraction_vis_energy_in_cone_0);
@@ -859,7 +930,6 @@ void LoopAndFillBDTG(std::string tag,
 							input_vars.emplace_back(improved_michel_count);
 							input_vars.emplace_back(recoil);
 							input_vars.emplace_back(improved_michel_sum_views);
-							input_vars.emplace_back(muon_to_primary_proton_angle);
 							
 							/*xgboost_input_vars.emplace_back(proton_score1_0);
 							xgboost_input_vars.emplace_back(proton_score1_1);
@@ -1005,7 +1075,7 @@ void LoopAndFillEventSelection2(std::string tag,
                                std::vector<CCQENu::Variable2DFromConfig*>& variables2D,
                                EDataMCTruth data_mc_truth,
                                PlotUtils::Cutter<CVUniverse>& selection, 
-                               PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model, 
+                               PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>& model,
                                PlotUtils::weight_MCreScale mcRescale,
                                bool closure=false, bool mc_reco_to_csv=false) {
 

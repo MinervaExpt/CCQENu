@@ -19,6 +19,7 @@
   "outRoot":"SB",
   "AnalyzeVariables":["ptmu","pzmu","EnuCCQE","Q2QE","recoil","Multiplicity",
                       "MuonToPrimaryProtonAngle",
+                      "ProtonRatioTdEdX2TrackLength_0","ProtonRatioTdEdX2TrackLength_1",
                       "PrimaryProtonScore1","SecProtonScore1_1","SecProtonScore2_1",
                       "PrimaryProtonScore2","SecProtonScore1_2","SecProtonScore2_2",
                       "PrimaryProtonCandidatePDG","SecProtonCandidatePDG_1","SecProtonCandidatePDG_2",

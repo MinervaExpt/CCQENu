@@ -10,6 +10,44 @@
 		{"name":"ApothemY","max":850,"variable":"ApothemY"},
 		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
 	],
+	"1track":[
+		{"name":"Multiplicity","min":1,"variable":"Multiplicity"},
+		{"name":"NumberOfProtonCandidates","equals":0,"variable":"NumberOfProtonCandidates"},
+		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+		{"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"},
+		{"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+		{"name":"ApothemX","max":850,"variable":"ApothemX"},
+		{"name":"ApothemY","max":850,"variable":"ApothemY"},
+		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+	],
+	"2track":[
+		{"name":"Multiplicity","min":1,"variable":"Multiplicity"},
+		{"name":"PrimaryProtonScore1","min":0,"variable":"PrimaryProtonScore1"},
+		{"name":"NumberOfProtonCandidates","equals":1,"variable":"NumberOfProtonCandidates"},
+		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+		{"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"},
+		{"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+		{"name":"ApothemX","max":850,"variable":"ApothemX"},
+		{"name":"ApothemY","max":850,"variable":"ApothemY"},
+		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+	],
+	"3ptrack":[
+		{"name":"Multiplicity","min":1,"variable":"Multiplicity"},
+		{"name":"PrimaryProtonScore1","min":0,"variable":"PrimaryProtonScore1"},
+		{"name":"NumberOfProtonCandidates","min":2,"variable":"NumberOfProtonCandidates"},
+		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+		{"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+		{"name":"ZVertex","min":5980,"max":8410,"variable":"ZVertex"},
+		{"name":"HasMINOSMatch","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+		{"name":"ApothemX","max":850,"variable":"ApothemX"},
+		{"name":"ApothemY","max":850,"variable":"ApothemY"},
+		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+	],
 	"Mult1":[
 		{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
 		{"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino

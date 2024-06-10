@@ -14,17 +14,17 @@ c1.SetGrid()
 rfile = "SB_NuConfig_mult1pBDTG_me1N_1.root"
 f = TFile(rfile)
 
-h_qelike = gROOT.FindObject( "h___Mult1p___qelike___bdtgQELike___reconstructed" )
-h_1chargedpion = gROOT.FindObject( "h___Mult1p___1chargedpion___bdtgQELike___reconstructed" )
-h_1neutralpion = gROOT.FindObject( "h___Mult1p___1neutralpion___bdtgQELike___reconstructed" )
-h_multipion = gROOT.FindObject( "h___Mult1p___multipion___bdtgQELike___reconstructed" )
-h_other = gROOT.FindObject( "h___Mult1p___other___bdtgQELike___reconstructed" )
+h_qelike = gROOT.FindObject( "h___Mult1p_2track___qelike___bdtgQELike___reconstructed" )
+h_1chargedpion = gROOT.FindObject( "h___Mult1p_2track___1chargedpion___bdtgQELike___reconstructed" )
+h_1neutralpion = gROOT.FindObject( "h___Mult1p_2track___1neutralpion___bdtgQELike___reconstructed" )
+h_multipion = gROOT.FindObject( "h___Mult1p_2track___multipion___bdtgQELike___reconstructed" )
+h_other = gROOT.FindObject( "h___Mult1p_2track___other___bdtgQELike___reconstructed" )
 
 nbin = h_qelike.GetNbinsX()
 
 ############## Purity ##############
 #pad1.cd()
-h_pur = TH1F( 'purity', 'QELike BDTG Response Cut Metrics', nbin-1, 0, 1 )
+h_pur = TH1F( 'purity', 'QELike BDTG Response Cut Metrics for 2 Tracks', nbin-1, 0, 1 )
 h_pur.SetFillColor(0)
 h_pur.SetLineColor(ROOT.kBlue+1)
 h_pur.SetLineWidth(2)
@@ -33,11 +33,15 @@ h_pur.SetStats(0)
 h_pur.GetXaxis().SetTitle("QELike BDTG Response")
 # Fill
 for i in range(0,nbin):
-	n = h_qelike.Integral(i,nbin)/(h_qelike.Integral(i,nbin)+
-	                             h_1chargedpion.Integral(i,nbin)+
-	                             h_1neutralpion.Integral(i,nbin)+
-	                             h_multipion.Integral(i,nbin)+
-	                             h_other.Integral(i,nbin))
+	denom = (h_qelike.Integral(i,nbin)+
+	        h_1chargedpion.Integral(i,nbin)+
+	        h_1neutralpion.Integral(i,nbin)+
+	        h_multipion.Integral(i,nbin)+
+	        h_other.Integral(i,nbin))
+	if denom > 0:
+		n = h_qelike.Integral(i,nbin)/denom
+	else:
+		n = 0
 	h_pur.SetBinContent(i,n)
 # Draw
 h_pur.DrawCopy()
@@ -98,7 +102,7 @@ ltext.SetTextSize(19);
 ltext.Draw();
 
 ############## Save ##############
-c1.SaveAs('Eff_Pur_vs_Response.png')
+c1.SaveAs('Eff_Pur_vs_Response_2track_v2.png')
 
 
 

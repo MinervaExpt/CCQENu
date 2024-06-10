@@ -35,6 +35,8 @@
 #include "PlotUtils/PhysicsVariables.h"
 #include "TVector3.h"
 #include "PlotUtils/GeantHadronSystematics.h"
+#include "include/TMVAUtils.h"
+#include "TMVA/RBDT.hxx"
 
 class CVUniverse : public PlotUtils::MinervaUniverse {
 protected:
@@ -50,8 +52,10 @@ protected:
 	static std::map<int,int> m_fs_pdg_counts_with_constraints;
 	static std::map<std::string,bool> m_passes_signal_cuts;
 	static std::map<std::string,bool> m_passes_signal_cuts_old;
+	static std::map<std::string,RReader> m_tmva_models;
 	static std::vector<float> m_response_vec;
 	static std::vector<float> m_xgboost_response_vec;
+	static std::vector<std::string> m_tmva_model_names;
 
 	// initially set to false
 	static bool _is_analysis_neutrino_pdg_set;
@@ -148,6 +152,9 @@ public:
 	static bool GetSignalTruth_old(std::string signal);
 	static bool ResetSignalTruths();
 	
+	static bool LoadTMVAModel(std::string name, std::string path);
+	static std::map<std::string,RReader> * GetPointerToTMVAModels();
+	static bool ComputeVectorResponse(std::string name, std::vector<float> var_values);
 	static bool SetVectorResponse(std::vector<float> response_vec);
 	static bool ResetVectorResponse();
 	static std::vector<float> GetVectorResponse();
@@ -531,6 +538,12 @@ public:
 	virtual double GetSecProtonTfromdEdx_5() const;
 	virtual double GetSecProtonTfromdEdx_6() const;
 	
+	virtual double ProtonRatioTdEdX2TrackLength(int i) const;
+	virtual double ProtonRatioTdEdX2TrackLength_0() const;
+	virtual double ProtonRatioTdEdX2TrackLength_1() const;
+	virtual double ProtonRatioTdEdX2TrackLength_2() const;
+	virtual double ProtonRatioTdEdX2TrackLength_3() const;
+	
 	virtual double GetTotalProtonVisEnergy(int i) const;
 	virtual double GetTotalPrimaryProtonVisEnergy() const;
 	virtual double GetTotalSecProtonVisEnergy_1() const;
@@ -619,7 +632,7 @@ public:
 	virtual int Dummy() const;
 	
 	// TMVA
-	
+
 	virtual double bdtgQELike() const;
 	virtual double bdtg1ChargedPion() const;
 	virtual double bdtg1NeutralPion() const;

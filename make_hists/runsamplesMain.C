@@ -272,6 +272,7 @@ int main(const int argc, const char *argv[] ) {
                                                                   config_truth::GetCCQEPhaseSpaceFromConfig<CVUniverse>(phasespace));
     }
   }
+  
   //=========================================
   // Get variables and initialize their hists
   //=========================================
@@ -383,13 +384,25 @@ int main(const int argc, const char *argv[] ) {
   }
 
 	// Check if using progress bar during loops
-	bool use_prog_bar = 0;
+	bool use_prog_bar = false;
 	if (config.IsMember("useProgressBar")) {
 		use_prog_bar = config.GetBool("useProgressBar");
 	}
 
 	std::cout << " just before event loop" << std::endl;
 	util.PrintMacroConfiguration("runEventLoop");
+	
+	// TMVA stuff
+	if (config.IsMember("TMVAmodels")) {
+  	NuConfig tmvaConfig = config.GetConfig("TMVAmodels");
+  	std::vector<std::string> models = tmvaConfig.GetKeys();
+  	
+  	for (auto m:models) {
+  		std::string path = expandEnv(tmvaConfig.GetString(m));
+  		CVUniverse::LoadTMVAModel(m,path);
+  	}
+  }
+	
   // here we fill them
 
   for (auto tag:datatags){

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<MethodSetup Method="BDT::BDTG">
+  <GeneralInfo>
+    <Info name="AnalysisType" value="Multiclass"/>
+  </GeneralInfo>
+  <Variables NVar="1">
+    <Variable VarIndex="0" Expression="null" Label="null" Title="null" Unit="" Internal="null" Type="I" Min="0.00000000e+00" Max="0.00000000e+00"/>
+  </Variables>
+  <Classes NClass="1">
+    <Class Name="null" Index="0"/>
+  </Classes>
+</MethodSetup>
