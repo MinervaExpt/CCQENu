@@ -4,9 +4,9 @@
   "dataIn":"${PLAYLISTROOT}/DATA_5A_local.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuCuts_v15_1track.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
-  "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_QELike_recoonly.json",
-  "outRoot": "simulfittest2D_me5A_${MYMODEL}",
-  // "outRoot": "${MYROOTOUTPUT}/FinalState_5A_1track_${MYMODEL}",
+  "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_FS_recoonly.json",
+  "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
+  "outRoot": "fittest_q2qereciol_me5a_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
   "prescale":999,
   "playlist":"minervame5A",
@@ -29,11 +29,13 @@
     "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "FitQ2QE",
+    "Q2QE",
+    // "PrimaryProtonScore"//,
     "recoil"
     // "NBlobs",
     // "Multiplicity",
-    // "PionAngle"
+    // "PionAngle",
+    // "ThetamuDegrees"//,
     // "NChargedPions",
     // "HasMultiPion"
     // "recoilNoBlobs",
@@ -49,8 +51,13 @@
     // "pzmu",
     // "ptmu"
   ],
-  "Analyze2DVariables": ["FitQ2QE_recoil"], //["pzmu_ptmu"], 
-  "AnalyzeHyperDVariables": [  ], 
+  "Analyze2DVariables": [
+    // "PionAngle_ThetamuDegrees"//,
+    // "Q2QE_PrimaryProtonScore"//,
+    "Q2QE_recoil"//,
+    // "pzmu_ptmu"
+  ],
+  "AnalyzeHyperDVariables": [],
   "systematics": [
     "Flux"//,
     // "MuonMINOS",
