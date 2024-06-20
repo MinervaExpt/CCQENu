@@ -54,6 +54,8 @@ double CVUniverse::m_proton_ke_cut = NSFDefaults::TrueProtonKECutCentral;  // De
 NuConfig CVUniverse::m_proton_score_config = Json::Value::null;
 std::vector<double> CVUniverse::m_proton_score_Q2QEs = {0.2, 0.6};
 std::vector<double> CVUniverse::m_proton_score_mins = {0.2, 0.1, 0.0};
+// std::vector<double> CVUniverse::m_proton_score_Q2QEs = {0.2, 0.6};
+// std::vector<double> CVUniverse::m_proton_score_mins = {0.4, 0.3, 0.2};
 /*
 The vectors
         m_proton_score_Q2QEs
@@ -88,7 +90,7 @@ Valid proton score configuration inputs are of the form:
         |  for...             |  proton if...         |
         |_____________________|_______________________|
         |                     |                       |
-        |        Q2QE <= 0.2  |  proton score >= 0.2  |
+        |        Q2QE <= 0.2  |  proton score >= 0.2  | 
         |  0.2 < Q2QE <= 0.6  |  proton score >= 0.1  |
         |  0.6 < Q2QE         |  proton score >= 0.0  |
         |_____________________|_______________________|
@@ -209,6 +211,7 @@ NuConfig CVUniverse::GetProtonScoreConfig(bool print = false) {
     }
     return m_proton_score_config;
 }
+
 bool CVUniverse::SetProtonScoreConfig(NuConfig protonScoreConfig, bool print) {
     if (_is_proton_score_config_set) {
         std::cout << "WARNING: YOU ATTEMPTED TO SET PROTON SCORE CONFIGURATION A SECOND TIME. "
@@ -268,8 +271,6 @@ double CVUniverse::GetWeight() const {
 
     return wgt_flux_and_cv * wgt_genie * wgt_2p2h * wgt_rpa * wgt_mueff * wgt_geant;
 }
-
-
 
 double CVUniverse::GetCoherentPiWeight() const {
     if (GetInt("mc_intType") != 4) return 1.0;
