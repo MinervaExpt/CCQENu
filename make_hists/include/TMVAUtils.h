@@ -9,17 +9,8 @@
 #include "TMVA/RTensor.hxx"
 #include "TMVA/Reader.h"
 
-#include "CVUniverse.h"
-#include "include/CVFunctions.h"
-
 #include <memory> // std::unique_ptr
 #include <sstream> // std::stringstream
-
-namespace CCQENu {
-  class VariableFromConfig;
-}
-
-class CVUniverse;
 
 namespace Internal {
 
@@ -125,6 +116,7 @@ private:
    std::vector<float> fValues;
    Internal::AnalysisType fAnalysisType;
    std::unique_ptr<TMVA::Reader> fReader;
+   std::vector<std::string> fClasses;
    unsigned int fNumClasses;
    const char *name = "RReader";
 
@@ -135,6 +127,7 @@ public:
 		fVariables = {};
 		fExpressions = {};
 		fAnalysisType = Internal::AnalysisType::Undefined;
+		fClasses = {};
 		fNumClasses = 0;
 		fReader = std::make_unique<TMVA::Reader>("Silent");
 		//const auto numVars = fVariables.size();
@@ -149,6 +142,7 @@ public:
 		fVariables = c.variables;
 		fExpressions = c.expressions;
 		fAnalysisType = c.analysisType;
+		fClasses = c.classes;
 		fNumClasses = c.numClasses;
 
 		// Setup reader
@@ -170,6 +164,7 @@ public:
 		fVariables = c.variables;
 		fExpressions = c.expressions;
 		fAnalysisType = c.analysisType;
+		fClasses = c.classes;
 		fNumClasses = c.numClasses;
 
 		// Setup reader
@@ -274,6 +269,7 @@ public:
 
 	std::vector<std::string> GetVariableNames() { return fVariables; }
 	std::vector<std::string> GetVariableExpressions() { return fExpressions; }
+	std::vector<std::string> GetClassNames() { return fClasses; }
 }; // End of class
 
 #endif // TMVA_RREADER

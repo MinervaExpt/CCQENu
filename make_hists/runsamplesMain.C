@@ -396,10 +396,18 @@ int main(const int argc, const char *argv[] ) {
 	if (config.IsMember("TMVAmodels")) {
   	NuConfig tmvaConfig = config.GetConfig("TMVAmodels");
   	std::vector<std::string> models = tmvaConfig.GetKeys();
-  	
   	for (auto m:models) {
   		std::string path = expandEnv(tmvaConfig.GetString(m));
+  		std::cout << "Loading TMVA model " << path << std::endl;
   		CVUniverse::LoadTMVAModel(m,path);
+  	}
+  	if (config.IsMember("sample_categories")) {
+  		NuConfig sampleCatConfig = config.GetConfig("sample_categories");
+  		std::vector<std::string> samps = sampleCatConfig.GetKeys();
+  		for (auto s:samps) {
+				std::string category = sampleCatConfig.GetString(s);
+				CVUniverse::SetSampleCategory(s,category);
+  		}
   	}
   }
 	
@@ -440,7 +448,7 @@ int main(const int argc, const char *argv[] ) {
   }
 
   for (auto tag:truthtags){
-    std::cout << "Loop and Fill MC Truth  for " <<  tag << "\n";
+    std::cout << "\nLoop and Fill MC Truth  for " <<  tag << "\n";
 
 		if(cutsfilename.find("speedtest") != std::string::npos) {
     	std::cout << "Doing speed test..." << std::endl;

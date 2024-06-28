@@ -53,9 +53,12 @@ protected:
 	static std::map<std::string,bool> m_passes_signal_cuts;
 	static std::map<std::string,bool> m_passes_signal_cuts_old;
 	static std::map<std::string,RReader> m_tmva_models;
+	static std::vector<std::string> m_tmva_classes;
 	static std::vector<float> m_response_vec;
-	static std::vector<float> m_xgboost_response_vec;
+	static std::map<std::string,float> m_response_map;
 	static std::vector<std::string> m_tmva_model_names;
+	static std::map<std::string,std::string> m_sample_categories;
+	static std::vector<float> m_xgboost_response_vec;
 
 	// initially set to false
 	static bool _is_analysis_neutrino_pdg_set;
@@ -117,6 +120,9 @@ public:
 	// to write all your own functions for now.
 	// ========================================================================
 
+	virtual bool FastFilter() const;
+	virtual bool TrueFastFilter() const;
+
 	virtual double GetEventID() const;
 	virtual int GetMultiplicity() const;
 	virtual int GetDeadTime() const;
@@ -124,7 +130,7 @@ public:
 	// ----------------------- Cut-configuring Functions -------------------------
 
 	static int GetAnalysisNeutrinoPDG();
-	static bool SetAnalysisNeutrinoPDG(int neutrino_pdg, bool print);	
+	static bool SetAnalysisNeutrinoPDG(int neutrino_pdg, bool print);
 
 	static double GetMinBlobZVtx();
 	static bool SetMinBlobZVtx(double min_zvtx, bool print);
@@ -154,10 +160,13 @@ public:
 	
 	static bool LoadTMVAModel(std::string name, std::string path);
 	static std::map<std::string,RReader> * GetPointerToTMVAModels();
-	static bool ComputeVectorResponse(std::string name, std::vector<float> var_values);
-	static bool SetVectorResponse(std::vector<float> response_vec);
-	static bool ResetVectorResponse();
-	static std::vector<float> GetVectorResponse();
+	static bool ComputeTMVAResponse(std::string name, std::vector<float> var_values);
+	static bool SetTMVAResponse(std::vector<float> response_vec);
+	static bool ResetTMVAResponse();
+	static std::vector<float> GetTMVAVectorResponse();
+	static float GetTMVAClassResponse(std::string name);
+	static bool SetSampleCategory(std::string sample,std::string truth);
+	static std::string GetSampleCategory(std::string sample);
 	
 	static bool SetXgboostVectorResponse(std::vector<float> response_vec);
 	static bool ResetXgboostVectorResponse();

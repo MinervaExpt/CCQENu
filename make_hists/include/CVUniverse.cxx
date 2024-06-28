@@ -107,8 +107,11 @@ namespace {
 	std::map<std::string,bool> CVUniverse::m_passes_signal_cuts = std::map<std::string,bool>();
 	std::map<std::string,bool> CVUniverse::m_passes_signal_cuts_old = std::map<std::string,bool>();
 	std::map<std::string,RReader> CVUniverse::m_tmva_models = std::map<std::string,RReader>();
+	std::vector<std::string> CVUniverse::m_tmva_classes = {};
 	std::vector<float> CVUniverse::m_response_vec = {};
+	std::map<std::string,float> CVUniverse::m_response_map = std::map<std::string,float>();
 	std::vector<std::string> CVUniverse::m_tmva_model_names = {};
+	std::map<std::string,std::string> CVUniverse::m_sample_categories = std::map<std::string,std::string>();
 	std::vector<float> CVUniverse::m_xgboost_response_vec = {};
 	
 	bool CVUniverse::_is_analysis_neutrino_pdg_set = false;
@@ -359,29 +362,47 @@ namespace {
 	//////// TMVA Models /////////
 	bool CVUniverse::LoadTMVAModel(std::string name, std::string path) {
 		m_tmva_models[name].LoadModel(path);
+		m_tmva_classes = m_tmva_models[name].GetClassNames();
 		return 1;
 	}
 	std::map<std::string,RReader> * CVUniverse::GetPointerToTMVAModels() {
 		std::map<std::string,RReader> * models = &m_tmva_models;
 		return models;
 	}
-	bool CVUniverse::ComputeVectorResponse(std::string name, std::vector<float> var_values) {
+	bool CVUniverse::ComputeTMVAResponse(std::string name, std::vector<float> var_values) {
 		m_response_vec = m_tmva_models[name].Compute(var_values);
+		for (int i=0; i<m_response_vec.size(); i++) {
+			m_response_map[m_tmva_classes[i]] = m_response_vec[i];
+		}
 		_is_response_vec_filled = true;
 		return 1;
 	}
-	bool CVUniverse::SetVectorResponse(std::vector<float> vector_response) {
+	bool CVUniverse::SetTMVAResponse(std::vector<float> vector_response) {
 		m_response_vec = vector_response;
+		for (int i=0; i<vector_response.size(); i++) {
+			m_response_map[m_tmva_classes[i]] = vector_response[i];
+		}
 		_is_response_vec_filled = true;
 		return 1;
 	}
-	bool CVUniverse::ResetVectorResponse() {
+	bool CVUniverse::ResetTMVAResponse() {
 		m_response_vec = {};
+		m_response_map = std::map<std::string,float>();
 		_is_response_vec_filled = false;
 		return 1;
 	}
-	std::vector<float> CVUniverse::GetVectorResponse() {
+	std::vector<float> CVUniverse::GetTMVAVectorResponse() {
 		return m_response_vec;
+	}
+	float CVUniverse::GetTMVAClassResponse(std::string name) {
+		return m_response_map[name];
+	}
+	bool CVUniverse::SetSampleCategory(std::string sample,std::string truth) {
+		m_sample_categories[sample] = truth;
+		return 1;
+	}
+	std::string CVUniverse::GetSampleCategory(std::string sample) {
+		return m_sample_categories[sample];
 	}
 	
 	//////// xgboost Models /////////
@@ -438,6 +459,19 @@ namespace {
 	// that you want. The future of these functions is uncertain. You might want
 	// to write all your own functions for now.
 	// ========================================================================
+
+	// fast filter that reproduces CCQENu tuple cuts
+
+	bool CVUniverse::FastFilter() const {
+		bool result = false;
+		// if (GetMultiplicity() < 1) return result;
+		if (GetIsMinosMatchTrack() != -1) return result;
+		if (GetZVertex() < 5980 || GetZVertex() > 8422) return result;
+		if (GetApothemX() > 850.) return result;
+		if (GetApothemY() > 850.) return result;
+		return true;
+	}
+	bool CVUniverse::TrueFastFilter() const { return true; }
 
 	double CVUniverse::GetEventID() const { return GetDouble("eventID"); }
 	int CVUniverse::GetMultiplicity() const { return GetInt("multiplicity"); }
@@ -2147,7 +2181,7 @@ namespace {
 	}*/
 	double CVUniverse::bdtgQELike() const {
 		if (_is_response_vec_filled) {
-			return m_response_vec[0];
+			return m_response_map["qelike"];
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
@@ -2156,7 +2190,7 @@ namespace {
 	}
 	double CVUniverse::bdtg1ChargedPion() const {
 		if (_is_response_vec_filled) {
-			return m_response_vec[1];
+			return m_response_map["1chargedpion"];
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
@@ -2165,7 +2199,7 @@ namespace {
 	}
 	double CVUniverse::bdtg1NeutralPion() const {
 		if (_is_response_vec_filled) {
-			return m_response_vec[2];
+			return m_response_map["1neutralpion"];
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
@@ -2174,7 +2208,7 @@ namespace {
 	}
 	double CVUniverse::bdtgMultiPion() const {
 		if (_is_response_vec_filled) {
-			return m_response_vec[3];
+			return m_response_map["multipion"];
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
@@ -2183,7 +2217,7 @@ namespace {
 	}
 	double CVUniverse::bdtgOther() const {
 		if (_is_response_vec_filled) {
-			return m_response_vec[4];
+			return m_response_map["other"];
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;

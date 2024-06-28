@@ -107,13 +107,20 @@ void LoopAndFillEventSelection(std::string tag,
     MinervaUniverse::SetTruth(true);
   }
 
-	std::map<std::string,RReader> * tmva_models = CVUniverse::GetPointerToTMVAModels();
-
   unsigned int loc = tag.find("___")+3;
   std::string cat(tag,loc,string::npos);
   std::string sample(tag,0,loc-3);
-  std::cout << sample << " category " << cat << std::endl;
+  
+  std::map<std::string,RReader> *tmva_models = CVUniverse::GetPointerToTMVAModels();
+  std::vector<std::string> var_names = (*tmva_models)[sample].GetVariableExpressions();
+	int tmva_variable_size = (*tmva_models)[sample].GetVariableNames().size();
+	
+	std::cout << " number of error bands: " << error_bands.size() << std::endl;
+  std::cout << " " << sample << " category " << cat << std::endl;
   std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
+  const clock_t begin_time = clock();
+
+	int counter = 0;
 
 	// Begin entries loop
   for (int i = 0; i < nentries; i++) {
@@ -125,6 +132,9 @@ void LoopAndFillEventSelection(std::string tag,
 
     if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
+		if (data_mc_truth == kMC || data_mc_truth == kData){
+			if (!cvUniv->FastFilter()) continue;
+		}
 
     const double cvWeight = (data_mc_truth == kData ||  closure ) ? 1. : model.GetWeight(*cvUniv,event);  // detail may be used for more complex things
     // TODO: Is this scaled cvWeight necessary?
@@ -144,21 +154,21 @@ void LoopAndFillEventSelection(std::string tag,
         // Process this event/universe
         //double weight = 1;
         //if (universe->ShortName() == "cv" ) weight = data_mc_truth == kData ? 1. : universe->GetWeight();
-
+        
+				if(tmva_variable_size > 0 && data_mc_truth != kTruth){
+					std::vector<float> var_values = fund.GetVectorOfValues(universe,var_names);
+					CVUniverse::ComputeTMVAResponse(sample,var_values);
+				}
+				double aux_weight = 1.;
+				std::string sample_category = CVUniverse::GetSampleCategory(sample);
+				if(sample_category.size() > 0){
+					double tmva_weight = CVUniverse::GetTMVAClassResponse(sample_category);
+					aux_weight = aux_weight*tmva_weight;
+				}
+				
         // probably want to move this later on inside the loop
         const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event); //Only calculate the per-universe weight for events that will actually use it.
         //PlotUtils::detail::empty event;
-				
-				if((*tmva_models)[sample].GetVariableNames().size() > 0 && data_mc_truth != kTruth){
-					std::vector<std::string> var_names = (*tmva_models)[sample].GetVariableExpressions();
-					std::vector<float> var_values = fund.GetVectorOfValues(universe,var_names);
-					//std::cout << "Variables: { " << var_names[0] << ": " << var_values[0] << "; ";
-					//for (int i=1; i<var_names.size(); i++) { 
-					//	std::cout << "; " << var_names[i] << ": " << var_values[i]; 
-					//}
-					//std::cout << " }" << std::endl;
-					CVUniverse::ComputeVectorResponse(sample,var_values);
-				}
 
         //=========================================
         // Fill
@@ -169,7 +179,6 @@ void LoopAndFillEventSelection(std::string tag,
           if(closure && universe->ShortName() == "cv" && selection.isMCSelected(*universe, event, weight).all()){
             std::cout  << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all() << " " << tag  << selection.isSignal(*universe)  << " " << universe->ShortName() <<  std::endl;
               universe->Print();
-          }
 #endif
 					if(selection.isMCSelected(*universe, event, weight).all()
 						&& selection.isSignal(*universe)) {
@@ -177,18 +186,16 @@ void LoopAndFillEventSelection(std::string tag,
 						const double q2qe = universe->GetQ2QEGeV();
 						double scale = 1.0;
 						if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
-
-						FillMC(tag, universe, weight, variables, variables2D, scale);
-						FillResponse(tag,universe,weight,variables,variables2D, scale);
-						FillResolution(tag,universe,weight,variables,variables2D, scale);
 						
-						/*if () {
-							std::string<float> tmva_variable_values = {};
-							
-							for (auto v : fVariablesFromConfig) {
-								fVariableValues.emplace_back(v->GetRecoValue(*fUniverse, 0));
-							}
-						}*/
+						counter++;
+						if (counter <= 20) {
+							std::cout << std::endl << sample << " " << sample_category << " " << cat << " " << aux_weight;
+						}
+						
+						FillMC(tag, universe, weight*aux_weight, variables, variables2D, scale);
+						FillResponse(tag,universe,weight*aux_weight,variables,variables2D, scale);
+						FillResolution(tag,universe,weight*aux_weight,variables,variables2D, scale);
+						
 		      }
 				}
         else if (data_mc_truth == kTruth){
@@ -209,10 +216,12 @@ void LoopAndFillEventSelection(std::string tag,
 #endif
           if(selection.isDataSelected(*universe, event).all()) {
           
-            FillData(tag, universe, variables, variables2D);
+            FillData(tag, universe, variables, variables2D, aux_weight);
             
           }
         }
+        
+        CVUniverse::ResetTMVAResponse();
 
       } // End universes
     } // End error bands
@@ -220,6 +229,7 @@ void LoopAndFillEventSelection(std::string tag,
     if(data_mc_truth != kData) i+= prescale-1;
     
   } // End entries loop
+  std::cout << "Elapsed time: " << float( clock() - begin_time )/1000000 << " s" << std::endl;
 
 }
 
@@ -249,24 +259,6 @@ void LoopAndFillCSV(std::vector<int> file_entries,
     std::cout << " no variables to fill " << std::endl;
     return;  // don't bother if there are no variables.
   }
-  
-  // TMVA setup
-  /*
-  std::cout << std::endl << "Loading TMVA Macro "
-            << "/home/sean/MinervaExpt/CCQENu/make_hists/smg/dataset/weights/TMVAMulticlass_BDTG.class.C" 
-            << std::endl;
-  gROOT->LoadMacro("/home/sean/MinervaExpt/CCQENu/make_hists/smg/dataset/weights/TMVAMulticlass_BDTG.class.C");
-  // define the names of the input variables (same as for training)
-  std::vector<std::string> inputVars = {"CCQENu_proton_score1",
-                                        "primary_proton_track_vtx_gap",
-                                        "CCQENu_proton_T_fromdEdx",
-                                        "primary_proton_clusters",
-                                        "primary_proton_fraction_vis_energy_in_cone",
-                                        "blob_count",
-                                        "improved_michel_match_vec_sz",
-                                        "recoil"};
-	// create a class object for the BDTG response
-	IClassifierReader* bdtgResponse = new ReadBDTG( inputVars );*/
 
 	// CSV setup
   std::string csvFileName = "CSV_"+outNameBase+".csv";
@@ -277,7 +269,7 @@ void LoopAndFillCSV(std::vector<int> file_entries,
   for (auto v : variables) {
 		csvFile << ";" << v->GetName();
   }
-	csvFile << ";Truth;Interaction;mc_intType;qelikeBDTG;1chargedpionBDTG;1neutralpionBDTG;multipionBDTG;otherBDTG;model;ProngTrajID;nERParts;ERIDs;nFSPart;FSPDGs;FSPartEs;Arachne" << std::endl;
+	csvFile << ";Truth;Interaction;mc_intType;qelikeBDTG;1chargedpionBDTG;1neutralpionBDTG;multipionBDTG;otherBDTG;model;weight;ProngTrajID;nERParts;ERIDs;nFSPart;FSPDGs;FSPartEs;Arachne" << std::endl;
 	std::vector<std::string> interaction = {"None","QE","RES","DIS","COHPI","AMNUGAMMA","IMD","NUEEL","2P2H","NA","Unknown"};
 	
 	RReader model_1track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_1track_BDTG.weights.xml"));
@@ -293,7 +285,10 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 		ProgressBar(nentries,i,use_prog_bar,kMC,1);
 		
 		cvUniv->SetEntry(i);
+		
 		model.SetEntry(*cvUniv, event);
+		
+		if (!cvUniv->FastFilter()) continue;
 		
 		for (auto band : error_bands) {
 			std::vector<CVUniverse*> error_band_universes = band.second;
@@ -316,13 +311,15 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 					float proton_T_from_dEdX_0 = universe->GetPrimaryProtonTfromdEdx();
 					float proton_T_from_dEdX_1 = universe->GetSecProtonTfromdEdx_1();
 					float proton_T_from_dEdX_2 = universe->GetSecProtonTfromdEdx_2();
+					float proton_ratio_T_to_tracklength_0 = universe->ProtonRatioTdEdX2TrackLength_0();
+					float proton_ratio_T_to_tracklength_1 = universe->ProtonRatioTdEdX2TrackLength_1();
 					float proton_clusters_0 = universe->GetNumClustsPrimaryProtonEnd();
 					float proton_clusters_1 = universe->GetNumClustsSecProtonEnd_1();
 					float proton_clusters_2 = universe->GetNumClustsSecProtonEnd_2();
 					float proton_fraction_vis_energy_in_cone_0 = universe->GetPrimaryProtonFractionVisEnergyInCone();
 					float proton_fraction_vis_energy_in_cone_1 = universe->GetSecProtonFractionVisEnergyInCone_1();
 					float proton_fraction_vis_energy_in_cone_2 = universe->GetSecProtonFractionVisEnergyInCone_2();
-					float sec_proton_cand_count = universe->GetSecondaryProtonCandidateCount1();
+					float proton_cand_count = universe->GetNumberOfProtonCandidates();
 					float muon_to_primary_proton_angle = universe->GetMuonToPrimaryProtonAngle();
 					float blob_count = universe->GetNBlobs();
 					float improved_michel_count = universe->GetImprovedNMichel();
@@ -336,17 +333,17 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 					
 					input_vars.emplace_back(multiplicity);
 					if (proton_score1_0 >= 0) {
-						if (sec_proton_cand_count == 0) {
+						if (proton_cand_count == 1) {
 							input_vars.emplace_back(proton_score1_0);
 							input_vars.emplace_back(proton_track_vtx_gap_0);
-							input_vars.emplace_back(proton_T_from_dEdX_0);
-							input_vars.emplace_back(proton_clusters_0);
+							input_vars.emplace_back(proton_ratio_T_to_tracklength_0);
 							input_vars.emplace_back(proton_fraction_vis_energy_in_cone_0);
+							input_vars.emplace_back(proton_clusters_0);
 							input_vars.emplace_back(blob_count);
 							input_vars.emplace_back(improved_michel_count);
 							input_vars.emplace_back(recoil);
 							input_vars.emplace_back(improved_michel_sum_views);
-							input_vars.emplace_back(muon_to_primary_proton_angle);
+							//input_vars.emplace_back(muon_to_primary_proton_angle);
 							if (input_vars.size() == model_2track.GetVariableNames().size()) {
 								response_vec = model_2track.Compute(input_vars);
 								model_name = "2track";
@@ -361,17 +358,18 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 							input_vars.emplace_back(proton_score1_1);
 							input_vars.emplace_back(proton_track_vtx_gap_0);
 							input_vars.emplace_back(proton_track_vtx_gap_1);
-							input_vars.emplace_back(proton_T_from_dEdX_0);
+							input_vars.emplace_back(proton_ratio_T_to_tracklength_0);
+							input_vars.emplace_back(proton_ratio_T_to_tracklength_1);
 							input_vars.emplace_back(proton_clusters_0);
 							input_vars.emplace_back(proton_clusters_1);
 							input_vars.emplace_back(proton_fraction_vis_energy_in_cone_0);
 							input_vars.emplace_back(proton_fraction_vis_energy_in_cone_1);
-							input_vars.emplace_back(sec_proton_cand_count);
+							input_vars.emplace_back(proton_cand_count);
 							input_vars.emplace_back(blob_count);
 							input_vars.emplace_back(improved_michel_count);
 							input_vars.emplace_back(recoil);
 							input_vars.emplace_back(improved_michel_sum_views);
-							input_vars.emplace_back(muon_to_primary_proton_angle);
+							//input_vars.emplace_back(muon_to_primary_proton_angle);
 							if (input_vars.size() == model_3ptrack.GetVariableNames().size()) {
 								response_vec = model_3ptrack.Compute(input_vars);
 								model_name = "3ptrack";
@@ -397,11 +395,10 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 						}
 					}
 					
-					CVUniverse::SetVectorResponse(response_vec);
-					
     			for (auto tname:recotags) {
     				if(selectionCriteria[tname]->isMCSelected(*universe, event, weight).all()
     				   && selectionCriteria[tname]->isSignal(*universe)) {
+							
 							// CSV
 							int mcinttype = universe->GetMCIntType();
 							int ProngTrajID = universe->GetInt("proton_prong_traj_ID");
@@ -424,6 +421,7 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 							csvFile << ";" << response_vec[3];
 							csvFile << ";" << response_vec[4];
 							csvFile << ";" << model_name;
+							csvFile << ";" << weight;
 							csvFile << ";" << ProngTrajID;
 							csvFile << ";" << nERParts;
 							for (int iter = 0; iter < nERParts; iter++) { 
@@ -1004,7 +1002,7 @@ void LoopAndFillBDTG(std::string tag,
 					}
 				}
 				
-				CVUniverse::SetVectorResponse(response_vec);
+				CVUniverse::SetTMVAResponse(response_vec);
 				//CVUniverse::SetXgboostVectorResponse(xgboost_response_vec);
 
         //=========================================
@@ -1050,12 +1048,12 @@ void LoopAndFillBDTG(std::string tag,
           }
 #endif
           if(selection.isDataSelected(*universe, event).all()) {
-            FillData(tag, universe, variables, variables2D);
+            FillData(tag, universe, variables, variables2D, 1.);
             
           }
         }
 
-        CVUniverse::ResetVectorResponse();
+        CVUniverse::ResetTMVAResponse();
         //CVUniverse::ResetXgboostVectorResponse();
 
 
@@ -1197,7 +1195,7 @@ void LoopAndFillEventSelection2(std::string tag,
           }
 #endif
           if(selection.isDataSelected(*universe, event).all()) {
-            FillData(tag, universe, variables, variables2D);
+            FillData(tag, universe, variables, variables2D, 1.);
             
           }
         }

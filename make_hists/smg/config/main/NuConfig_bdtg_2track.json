@@ -49,7 +49,7 @@
   "signal":{"2track":"qelike"},
   "background":{"2track":["1chargedpion","1neutralpion","multipion","other"]},
   "useProgressBar":true,
-  "systematics":["MuonMinerva","MuonMINOS","MuonResolution"],
+  "systematics":[],
   "_systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
                  "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
   "fluxUniverses":2,

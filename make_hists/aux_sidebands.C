@@ -466,8 +466,8 @@ int main(const int argc, const char *argv[] ) {
 		                recotags, branches, closure, use_prog_bar);
 	}
 	if (mc_reco_to_csv) {
-		LoopAndFillCSV(file_entries, nentries, mc_error_bands, variables1D, selectionCriteria, model, outNameBase, 
-		               recotags, closure, use_prog_bar);
+		LoopAndFillCSV(file_entries, nentries, mc_error_bands, variables1D, selectionCriteria, model,
+		               outNameBase, recotags, closure, use_prog_bar);
 	}
     
     /*std::cout << "\nCut summary for MC Reco:" <<  tag << "\n" << *selectionCriteria[tag] << "\n";

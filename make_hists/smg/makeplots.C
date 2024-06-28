@@ -139,7 +139,7 @@ int main(const int argc, const char *argv[]) {
 			multi->SetLineColor(TColor::GetColor(234,170,0));//kRed-4);
 			other->SetLineColor(TColor::GetColor(82,37,6));//kBlack);
 			data->SetLineColor(TColor::GetColor(255,255,255));
-			
+			/*
 			double data_integral = data->Integral();
 			double mc_integral = qe->Integral() + sch->Integral() + snu->Integral() +
 			                     multi->Integral() + other->Integral();
@@ -150,13 +150,18 @@ int main(const int argc, const char *argv[]) {
 			snu->Scale(integral_scale);
 			multi->Scale(integral_scale);
 			other->Scale(integral_scale);
-			
+			*/
 			qe->Scale(1.0,"width");
 			sch->Scale(1.0,"width");
 			snu->Scale(1.0,"width");
 			multi->Scale(1.0,"width");
 			other->Scale(1.0,"width");
 			data->Scale(1.0,"width");
+			
+			int nbins = data->GetNbinsX();
+			for( int i=0; i<=nbins; i++ ){
+				data->SetBinContent(i,0.);
+			}
 			
 			THStack *hs = new THStack();
 			hs->Add(new TH1D(other->GetCVHistoWithError()));
@@ -167,13 +172,10 @@ int main(const int argc, const char *argv[]) {
 			
 			int hs_max = hs->GetMaximum();
 			double data_max = data->GetMaximum();
-			double hist_max;
-			if (data_max > hs_max) {
-				hist_max = data_max;
-			}
-			else {
-				hist_max = hs_max;
-			}
+			double hist_max = hs_max;
+			//if (data_max > hs_max) {
+			//	hist_max = data_max;
+			//}
 			
 			data->GetYaxis()->SetRangeUser(0.,hist_max*1.05);
 			if (vars1D[i] == "ptmu" ||
@@ -249,26 +251,6 @@ int main(const int argc, const char *argv[]) {
 			c1->Print(Form("%s___%s___%s_%s.png",sample.c_str(),vars1D[i].c_str(),base.c_str(),prescale.c_str()));
 			
 		}
-
-		
-		/*for ( int i=0; i<vars2D.size(); i++ ) {
-		
-			std::vector<std::string> interactions = {"data","qelike","1chargedpion","1neutralpion","multipion","other"};
-			
-			for (auto iter : interactions) {
-				TCanvas *c1 = new TCanvas(vars2D[i].c_str(),vars2D[i].c_str());
-				c1->SetLeftMargin(0.15);
-				c1->SetRightMargin(0.1);
-				c1->SetBottomMargin(0.15);
-				c1->SetTopMargin(0.1);
-				
-				MnvH2D *h2D = (MnvH2D*)infile->Get(Form("h2D___%s___%s___%s___reconstructed",
-				                                        sample.c_str(),iter.c_str(),vars2D[i].c_str()));
-				                                        
-				c1->Print(Form("%s/2D/%s_%s_%s.png",rootfolder.c_str(),sample.c_str(),iter.c_str(),vars2D[i].c_str()));
-			}
-		}*/
-		
 	}
    
 	exit(0);

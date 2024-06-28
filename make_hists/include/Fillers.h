@@ -20,18 +20,19 @@
 //==============================================================================
 void FillData(std::string tag, CVUniverse* univ,
               std::vector<CCQENu::VariableFromConfig*> variables,
-              std::vector<CCQENu::Variable2DFromConfig*> variables2D) {
+              std::vector<CCQENu::Variable2DFromConfig*> variables2D,
+              double weight = 1.) {
   for (auto v : variables) {
     if (v->hasData[tag]){
       double fill_val = v->GetRecoValue(*univ, 0);
-      v->m_selected_data.Fill(tag, univ, fill_val);
+      v->m_selected_data.Fill(tag, univ, fill_val, weight);
     }
   }
   for (auto v2 : variables2D) {
     if (v2->hasData[tag]){
       double fill_val_x = v2->GetRecoValueX(*univ, 0);
       double fill_val_y = v2->GetRecoValueY(*univ, 0);
-      v2->m_selected_data.Fill2D(tag, univ, fill_val_x, fill_val_y);
+      v2->m_selected_data.Fill2D(tag, univ, fill_val_x, fill_val_y, weight);
     }
   }
 }

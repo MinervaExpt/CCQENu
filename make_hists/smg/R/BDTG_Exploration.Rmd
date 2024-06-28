@@ -23,33 +23,75 @@ library(Ckmeans.1d.dp)
 library(archdata)
 library(jcolors)
 library(ggpp)
+library(MASS)
+library(tidymodels)
 ```
 
 ```{r, message = F, warning = F, echo = F}
-percent <- function(x, digits = 2, format = "f", ...) {
-  paste0(formatC(x * 100, format = format, digits = digits, ...), "%")
-}
-```
-
-```{r, message = F, warning = F, echo = F}
-events <- read.csv("CSV_CCQENu_minervame1N_MC_Inextinguishable_merged.csv", sep=";")
+events <- read.csv("CSV_CCQENu_minervame1N.csv", sep=";")
 ```
 
 ```{r, message = F, warning = F, echo = F}
 colnames(events)[which(colnames(events) == "X1chargedpionBDTG")] <- "1chargedpionBDTG"
 colnames(events)[which(colnames(events) == "X1neutralpionBDTG")] <- "1neutralpionBDTG"
 events$Truth = gsub("Mult1p___", "", events$Truth)
-events <- events %>%
-  mutate(`len/T_0` = ProtonCandTrackLength_0/PrimaryProtonTfromdEdx) #%>%
-  #mutate(`len/T_1` = SecProtonTfromdEdx_1/SecProtonTfromdEdx_1) %>%
-  #mutate(`len/T_2` = SecProtonTfromdEdx_2/SecProtonTfromdEdx_2)
+
+events <- events %>% mutate(tracks = case_when((NumberOfProtonCandidates == 0) ~ "1track",
+                                               (PrimaryProtonScore1 >= 0 & NumberOfProtonCandidates == 1) ~ "2track",
+                                               (PrimaryProtonScore1 >= 0 & NumberOfProtonCandidates >= 2) ~ "3ptrack",
+                                                .default = "other"))
 
 cbind(colnames(events))
 ```
 ```{r, message = F, warning = F, echo = F}
+percent <- function(x, digits = 2, format = "f", ...) {
+  paste0(formatC(x * 100, format = format, digits = digits, ...), "%")
+}
+
+events$Truth <- factor(events$Truth, levels = c("qelike","1chargedpion","1neutralpion","multipion","other"))
+truth_colors = c("#0085ad","#af272f","#4c8c2b","#eaaa00","#522506")
+
+diffplot <- function(evts, x, xbreaks = seq(0,1,0.2), title, bin_width, units = "", wgt = 1) {
+  ggplot() +
+    geom_histogram_pattern(evts,
+             mapping = aes({{x}}, pattern_fill = Truth, weight = {{wgt}}*weight/bin_width),
+             pattern = "magick", fill = "white", pattern_type = "hs_diagcross", pattern_scale = 0.45,
+             binwidth = bin_width, origin = 0, geom = "step") +
+    stat_bin(evts,
+             mapping = aes({{x}}, color = Truth, weight = {{wgt}}*weight/bin_width),
+             binwidth = bin_width, origin = 0, geom = "step", position = position_stacknudge(x=-bin_width/2)) +
+    theme_bw() + ggtitle(title) + ylab(paste("events per",bin_width,units)) +
+    scale_pattern_fill_manual(values = truth_colors) +
+    scale_color_manual(values = truth_colors) +
+    scale_x_continuous(expand = c(0,0), limits = c(min(xbreaks),max(xbreaks)), breaks = xbreaks) +
+    scale_y_continuous(expand = expansion(mult = c(0,.1)), n.breaks = 12, labels = scales::scientific)
+}
+
+propplot <- function(evts, x, xbreaks = seq(0,1,0.2), title, bin_width, units = "", wgt = 1) {
+  ggplot() +
+    geom_histogram_pattern(evts,
+             mapping = aes({{x}}, pattern_fill = Truth, weight = {{wgt}}*weight/bin_width),
+             pattern = "magick", fill = "white", pattern_type = "hs_diagcross", pattern_scale = 0.45,
+             binwidth = bin_width, origin = 0, geom = "step", position = "fill") +
+    stat_bin(evts,
+             mapping = aes({{x}}, color = Truth, weight = {{wgt}}*weight/bin_width),
+             binwidth = bin_width, origin = 0, geom = "step", position = position_fillnudge(x=-bin_width/2)) +
+    theme_bw() + ggtitle(title) + ylab("relative contribution") +
+    scale_pattern_fill_manual(values = truth_colors) +
+    scale_color_manual(values = truth_colors) +
+    scale_x_continuous(expand = c(0,0), limits = c(min(xbreaks),max(xbreaks)), breaks = xbreaks) +
+    scale_y_continuous(expand = c(0,0), limits = c(0,1), breaks = seq(0,10,0.1))
+}
+
+
+
+
+```
+
+
+```{r, message = F, warning = F, echo = F}
 ggplot(events %>% 
-         filter(PrimaryProtonScore1 < 0) %>% 
-         filter(SecProtonScore1_1 < 0)) +
+         filter(tracks == "1track")) +
   stat_bin(binwidth = 0.05, position = position_stacknudge(x = 0.025), mapping = aes(qelikeBDTG, fill = Truth)) +
   stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_stacknudge(x = 0), mapping = aes(qelikeBDTG, fill = Truth)) + 
   theme_bw() + ggtitle("1 Track") +
@@ -75,11 +117,53 @@ ggplot(events %>%
   scale_x_continuous(expand = c(0,0), limits = c(0,1)) +
   scale_y_continuous(expand = expansion(mult = c(0,0)))
 ```
+```{r, message = F, warning = F, echo = F, fig.height = 5, fig.width = 10}
+diffplot(events %>% filter(tracks=="1track"),  qelikeBDTG,        seq(0,1,0.2), "1track", 0.025, "")
+diffplot(events %>% filter(tracks=="1track"), `1chargedpionBDTG`, seq(0,1,0.2), "1track", 0.05,  "")
+diffplot(events %>% filter(tracks=="1track"), `1neutralpionBDTG`, seq(0,1,0.2), "1track", 0.05,  "")
+diffplot(events %>% filter(tracks=="1track"),  multipionBDTG,     seq(0,1,0.2), "1track", 0.05,  "")
+```
+```{r, message = F, warning = F, echo = F}
+propplot(events %>% filter(tracks=="1track"),  qelikeBDTG,        seq(0,1,0.2), "1track", 0.025, "")
+propplot(events %>% filter(tracks=="1track"), `1chargedpionBDTG`, seq(0,1,0.2), "1track", 0.05,  "")
+propplot(events %>% filter(tracks=="1track"), `1neutralpionBDTG`, seq(0,1,0.2), "1track", 0.05,  "")
+propplot(events %>% filter(tracks=="1track"),  multipionBDTG,     seq(0,1,0.2), "1track", 0.05,  "")
+```
+```{r, message = F, warning = F, echo = F, fig.height = 5, fig.width = 10}
+diffplot(events %>% filter(tracks=="2track"),  qelikeBDTG,        seq(0,1,0.2), "2track", 0.025, "")
+diffplot(events %>% filter(tracks=="2track"), `1chargedpionBDTG`, seq(0,1,0.2), "2track", 0.05,  "")
+diffplot(events %>% filter(tracks=="2track"), `1neutralpionBDTG`, seq(0,1,0.2), "2track", 0.05,  "")
+diffplot(events %>% filter(tracks=="2track"),  multipionBDTG,     seq(0,1,0.2), "2track", 0.05,  "")
+diffplot(events %>% filter(tracks=="2track"),  ptmu,              seq(0,2.5,0.1), "2track", 0.1, "")
+diffplot(events %>% filter(tracks=="2track"),  zvtx,              c(5700,seq(6000,8500,500)), "2track", 28, "")
+```
+```{r, message = F, warning = F, echo = F}
+propplot(events %>% filter(tracks=="2track"),  qelikeBDTG,        seq(0,1,0.2), "2track", 0.025, "")
+propplot(events %>% filter(tracks=="2track"), `1chargedpionBDTG`, seq(0,1,0.2), "2track", 0.05,  "")
+propplot(events %>% filter(tracks=="2track"), `1neutralpionBDTG`, seq(0,1,0.2), "2track", 0.05,  "")
+propplot(events %>% filter(tracks=="2track"),  multipionBDTG,     seq(0,1,0.2), "2track", 0.05,  "")
+```
+```{r, message = F, warning = F, echo = F, fig.height = 5, fig.width = 10}
+diffplot(events %>% filter(tracks=="2track"),  ptmu,  seq(0,2.5,0.1), "2track", 0.1, "", qelikeBDTG)
+diffplot(events %>% filter(tracks=="2track"), `pzmu`, seq(0, 15,0.5), "2track", 1.0, "", qelikeBDTG)
+diffplot(events %>% filter(tracks=="2track"), `Q2QE`, seq(0,  4,0.5), "2track", 0.1, "", qelikeBDTG)
+```
+```{r, message = F, warning = F, echo = F, fig.height = 5, fig.width = 10}
+propplot(events %>% filter(tracks=="2track"),  ptmu,  seq(0,2.5,0.1), "2track", 0.1, "", qelikeBDTG)
+propplot(events %>% filter(tracks=="2track"), `pzmu`, seq(0, 15,  1), "2track", 1,  "", qelikeBDTG)
+propplot(events %>% filter(tracks=="2track"), `Q2QE`, seq(0,  4,0.5), "2track", 0.5,  "", qelikeBDTG)
+```
+
+```{r, message = F, warning = F, echo = F, fig.height = 5, fig.width = 10}
+diffplot(events %>% filter(tracks=="3ptrack"),  qelikeBDTG,        seq(0,1,0.2), "3ptrack", 0.025, "")
+diffplot(events %>% filter(tracks=="3ptrack"), `1chargedpionBDTG`, seq(0,1,0.2), "3ptrack", 0.05,  "")
+diffplot(events %>% filter(tracks=="3ptrack"), `1neutralpionBDTG`, seq(0,1,0.2), "3ptrack", 0.05,  "")
+diffplot(events %>% filter(tracks=="3ptrack"),  multipionBDTG,     seq(0,1,0.2), "3ptrack", 0.05,  "")
+```
 
 ```{r, message = F, warning = F, echo = F}
 ggplot(events %>% 
-         filter(PrimaryProtonScore1 >= 0) %>% 
-         filter(SecProtonScore1_1 < 0)) +
+         filter(tracks == "2track")) +
   stat_bin(binwidth = 0.05, position = position_stacknudge(x = 0.025), mapping = aes(qelikeBDTG, fill = Truth)) +
   stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_stacknudge(x = 0), mapping = aes(qelikeBDTG, fill = Truth)) + 
   theme_bw() + ggtitle("2 Tracks") +
@@ -107,6 +191,15 @@ ggplot(events %>%
 ```
 
 ```{r, message = F, warning = F, echo = F}
+ggplot(events %>% 
+         filter(PrimaryProtonScore1 >= 0) %>% 
+         filter(SecProtonScore1_1 >= 0)) +
+  stat_bin(binwidth = 0.05, position = position_stacknudge(x = 0.025), mapping = aes(qelikeBDTG, fill = Truth)) +
+  stat_bin(color = "black", geom = "step", binwidth = 0.05, position = position_stacknudge(x = 0), mapping = aes(qelikeBDTG, fill = Truth)) + 
+  theme_bw() + ggtitle("3+ Tracks") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,1)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+
 ggplot(events %>% 
          filter(PrimaryProtonScore1 >= 0) %>% 
          filter(SecProtonScore1_1 >= 0)) +
@@ -471,6 +564,198 @@ kable(cbind(wgt_dist[,1],signif(wgt_dist[,2:6]/matrix(rep(apply(as.matrix(wgt_di
 ```{r, message = F, warning = F, echo = F, fig.height = 8, fig.width = 6}
 bands <- c("QELike","Michel","Blob","MicBlob")
 events$Pred <- map_chr(1:nrow(events),~bands[which.max(events[.x,43:46])])
+```
+
+```{r, message = F, warning = F, echo = F, fig.height = 5, fig.width = 10}
+# qelike
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = qelikeBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelike response weights, 1track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth), ncol=2, scales="free_y")
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = qelikeBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelike response weights, 1track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) 
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = qelikeBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0, position = "fill") +
+  theme_bw() + ggtitle("qelike response weights, 1track") + ylab("event contributions") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+# 1chargedpion
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = `1chargedpionBDTG`*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("1chargedpion response weights, 1track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = `1chargedpionBDTG`*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0, position = "fill") +
+  theme_bw() + ggtitle("1chargedpion response weights, 1track") + ylab("event contributions") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+# 1neutralpion
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = `1neutralpionBDTG`*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("1neutralpion response weights, 1track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = `1neutralpionBDTG`*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0, position = "fill") +
+  theme_bw() + ggtitle("1neutralpion response weights, 1track") + ylab("event contributions") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+# multipion
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = multipionBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("multipion response weights, 1track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = multipionBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0, position = "fill") +
+  theme_bw() + ggtitle("multipion response weights") + ylab("event contributions") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+# other
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = otherBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("other response weights, 1track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = otherBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0, position = "fill") +
+  theme_bw() + ggtitle("other response weights, 1track") + ylab("event contributions") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+```
+
+```{r, message = F, warning = F, echo = F, fig.height = 5, fig.width = 10}
+# qelike
+events %>%
+  filter(model == "2track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = qelikeBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelike response weights, 2track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
+  facet_wrap(vars(Truth), ncol=2, scales="free_y")
+
+events %>%
+  filter(model == "2track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = qelikeBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("qelike response weights, 2track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) 
+
+events %>%
+  filter(model == "2track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = qelikeBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0, position = "fill") +
+  theme_bw() + ggtitle("qelike response weights, 2track") + ylab("event contributions") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+# 1chargedpion
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = `1chargedpionBDTG`*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("1chargedpion response weights, 1track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = `1chargedpionBDTG`*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0, position = "fill") +
+  theme_bw() + ggtitle("1chargedpion response weights, 1track") + ylab("event contributions") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+# 1neutralpion
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = `1neutralpionBDTG`*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("1neutralpion response weights, 1track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = `1neutralpionBDTG`*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0, position = "fill") +
+  theme_bw() + ggtitle("1neutralpion response weights, 1track") + ylab("event contributions") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+# multipion
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = multipionBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("multipion response weights, 1track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = multipionBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0, position = "fill") +
+  theme_bw() + ggtitle("multipion response weights") + ylab("event contributions") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
+
+# other
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = otherBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("other response weights, 1track") + ylab("events per GeV") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)))
+
+events %>%
+  filter(model == "1track") %>%
+  ggplot(aes(ptmu, fill = Truth, color = Truth, weight = otherBDTG*weight/0.1)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0, position = "fill") +
+  theme_bw() + ggtitle("other response weights, 1track") + ylab("event contributions") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,2.5)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0)))
 ```
 
 ```{r, message = F, warning = F, echo = F, fig.height = 5, fig.width = 10}
@@ -1265,14 +1550,152 @@ ggpairs(events %>%
 ```
 
 ```{r, message = F, warning = F, echo = F}
-events$Truth = factor(events$Truth)
-events$target = as.numeric(events$Truth)
-events$target = events$target-1
+events2 = (events %>% filter(Truth != "other"))
+events2$Truth = factor(events2$Truth)
+events2$target = as.numeric(events2$Truth)
+events2$target = events2$target-1
+
+evts_1track <- events2 %>% filter(tracks == "1track")
+evts_2track <- events2 %>% filter(tracks == "2track")
+evts_3ptrack <- events2 %>% filter(tracks == "3ptrack")
+
+evts_1track <- evts_1track[,c("Truth","Q2QE","qelikeBDTG","1chargedpionBDTG","1neutralpionBDTG","multipionBDTG")]
+evts_2track <- evts_2track[,c("Truth","Q2QE","qelikeBDTG","1chargedpionBDTG","1neutralpionBDTG","multipionBDTG")]
+evts_3ptrack <- evts_3ptrack[,c("Truth","Q2QE","qelikeBDTG","1chargedpionBDTG","1neutralpionBDTG","multipionBDTG")]
+
+data_split_1track <- initial_split(evts_1track, prop = 0.75)
+data_split_2track <- initial_split(evts_2track, prop = 0.75)
+data_split_3ptrack <- initial_split(evts_3ptrack, prop = 0.75)
+
+train_data_1track <- training(data_split_1track)
+train_data_2track <- training(data_split_2track)
+train_data_3ptrack <- training(data_split_3ptrack)
+
+test_data_1track <- testing(data_split_1track)
+test_data_2track <- testing(data_split_2track)
+test_data_3ptrack <- testing(data_split_3ptrack)
+
+evts_3ptrack %>% group_by(Truth) %>% count()
+```
+
+```{r, message = F, warning = F, echo = F}
+tree_spec <- decision_tree(tree_depth = 20) %>%
+ set_engine("rpart") %>%
+ set_mode("classification")
+
+tree_fit_1track <- tree_spec %>%
+ fit(Truth ~ ., data = train_data_1track)
+tree_fit_2track <- tree_spec %>%
+ fit(Truth ~ ., data = train_data_2track)
+tree_fit_3ptrack <- tree_spec %>%
+ fit(Truth ~ ., data = train_data_3ptrack)
+
+# Make predictions on the testing data
+predictions_1track <- tree_fit_1track %>%
+ predict(test_data_1track) %>%
+ pull(.pred_class)
+predictions_2track <- tree_fit_2track %>%
+ predict(test_data_2track) %>%
+ pull(.pred_class)
+predictions_3ptrack <- tree_fit_3ptrack %>%
+ predict(test_data_3ptrack) %>%
+ pull(.pred_class)
+
+# Confusion Matrices
+confusionMatrix(predictions_1track, test_data_1track$Truth)
+confusionMatrix(predictions_2track, test_data_2track$Truth)
+confusionMatrix(predictions_3ptrack, test_data_3ptrack$Truth)
+
+```
+
+```{r, message = F, warning = F, echo = F}
+evts_1track <- evts_1track %>%
+  mutate(`qelikeBDTG`= `qelikeBDTG`/max(evts_1track$`qelikeBDTG`)) %>%
+  mutate(`1chargedpionBDTG`= `1chargedpionBDTG`/max(evts_1track$`1chargedpionBDTG`)) %>%
+  mutate(`1neutralpionBDTG`= `1neutralpionBDTG`/max(evts_1track$`1neutralpionBDTG`)) %>%
+  mutate(`multipionBDTG`= `multipionBDTG`/max(evts_1track$`multipionBDTG`))
+evts_2track <- evts_2track %>%
+  mutate(`qelikeBDTG`= `qelikeBDTG`/max(evts_2track$`qelikeBDTG`)) %>%
+  mutate(`1chargedpionBDTG`= `1chargedpionBDTG`/max(evts_2track$`1chargedpionBDTG`)) %>%
+  mutate(`1neutralpionBDTG`= `1neutralpionBDTG`/max(evts_2track$`1neutralpionBDTG`)) %>%
+  mutate(`multipionBDTG`= `multipionBDTG`/max(evts_2track$`multipionBDTG`))
+evts_3ptrack <- evts_3ptrack %>%
+  mutate(`qelikeBDTG`= `qelikeBDTG`/max(evts_3ptrack$`qelikeBDTG`)) %>%
+  mutate(`1chargedpionBDTG`= `1chargedpionBDTG`/max(evts_3ptrack$`1chargedpionBDTG`)) %>%
+  mutate(`1neutralpionBDTG`= `1neutralpionBDTG`/max(evts_3ptrack$`1neutralpionBDTG`)) %>%
+  mutate(`multipionBDTG`= `multipionBDTG`/max(evts_3ptrack$`multipionBDTG`))
+
+cats <- c("qelike","1chargedpion","1neutralpion","multipion")
+evts_1track$prediction <- map_chr(1:nrow(evts_1track),~cats[which.max(evts_1track[.,c("qelikeBDTG","1chargedpionBDTG","1neutralpionBDTG","multipionBDTG")])])
+evts_2track$prediction <- map_chr(1:nrow(evts_2track),~cats[which.max(evts_2track[.,c("qelikeBDTG","1chargedpionBDTG","1neutralpionBDTG","multipionBDTG")])])
+evts_3ptrack$prediction <- map_chr(1:nrow(evts_3ptrack),~cats[which.max(evts_3ptrack[.,c("qelikeBDTG","1chargedpionBDTG","1neutralpionBDTG","multipionBDTG")])])
+
+evts_1track$prediction <- factor(evts_1track$prediction)
+evts_2track$prediction <- factor(evts_2track$prediction)
+evts_3ptrack$prediction <- factor(evts_3ptrack$prediction)
+
+confusionMatrix(evts_1track$prediction, evts_1track$Truth)
+confusionMatrix(evts_2track$prediction, evts_2track$Truth)
+confusionMatrix(evts_3ptrack$prediction, evts_3ptrack$Truth)
+
+evts_1track %>% 
+  ggplot(aes(Q2QE, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("1track") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(vars(prediction), scales = "free_y")
+evts_1track %>% 
+  ggplot(aes(Q2QE, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", position = "fill", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("1track") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(prediction), scales = "free_y")
+
+evts_2track %>% 
+  ggplot(aes(Q2QE, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("2track") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(vars(prediction), scales = "free_y")
+evts_2track %>% 
+  ggplot(aes(Q2QE, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", position = "fill", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("2track") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(prediction), scales = "free_y")
+
+evts_3ptrack %>% 
+  ggplot(aes(Q2QE, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("3ptrack") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(vars(prediction), scales = "free_y")
+evts_3ptrack %>% 
+  ggplot(aes(Q2QE, fill = Truth, color = Truth)) +
+  stat_bin(colour = "black", position = "fill", binwidth = 0.1, origin = 0) +
+  theme_bw() + ggtitle("3ptrack") +
+  scale_x_continuous(expand = c(0,0), limits = c(0,3)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  facet_wrap(vars(prediction), scales = "free_y")
+```
+
+```{r, message = F, warning = F, echo = F}
 # Make split index
-train_index <- sample(1:nrow(events), nrow(events)*0.75)
+train_index_1track <- sample(1:nrow(evts_1track), nrow(evts_1track)*0.75)
+train_index_2track <- sample(1:nrow(evts_2track), nrow(evts_2track)*0.75)
+train_index_3ptrack <- sample(1:nrow(evts_3ptrack), nrow(evts_3ptrack)*0.75)
 # Full data set
-data_variables <- as.matrix(events[,4:8])
-data_label <- events[,"target"]
+data_variables_1track <- as.matrix(evts_1track[,c("Q2QE","qelikeBDTG","1chargedpionBDTG","1neutralpionBDTG","multipionBDTG")])
+data_variables_2track <- as.matrix(evts_2track[,c("Q2QE","qelikeBDTG","1chargedpionBDTG","1neutralpionBDTG","multipionBDTG")])
+data_variables_3ptrack <- as.matrix(evts_3ptrack[,c("Q2QE","qelikeBDTG","1chargedpionBDTG","1neutralpionBDTG","multipionBDTG")])
+data_label_1track <- evts_1track[,"target"]
+data_label_2track <- evts_2track[,"target"]
+data_label_3ptrack <- evts_3ptrack[,"target"]
 data_matrix <- xgb.DMatrix(data = as.matrix(events[,c(14,4:8)]), label = data_label)
 # split train data and make xgb.DMatrix
 train_data   <- data_variables[train_index,]
@@ -1282,6 +1705,8 @@ train_matrix <- xgb.DMatrix(data = train_data, label = train_label)
 test_data  <- data_variables[-train_index,]
 test_label <- data_label[-train_index]
 test_matrix <- xgb.DMatrix(data = test_data, label = test_label)
+
+colnames(events2)
 ```
 
 # XGBoost
