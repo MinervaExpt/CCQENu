@@ -253,6 +253,8 @@ class CVFunctions {
 
         recointfunctions["NumberOfProtonCandidates"] = &CVUNIVERSE::GetNumberOfProtonCandidates;
         recofunctions["NumberOfProtonCandidates"] = &CVUNIVERSE::GetNumberOfProtonCandidates;
+        truefunctions["NumberOfProtonCandidates"] = &CVUNIVERSE::GetNumberOfProtonCandidates;
+        trueintfunctions["NumberOfProtonCandidates"] = &CVUNIVERSE::GetNumberOfProtonCandidates;
 
         recofunctions["ProtonScore_0"] = &CVUNIVERSE::GetProtonScore_0;
         recofunctions["ProtonScore_1"] = &CVUNIVERSE::GetProtonScore_1;
