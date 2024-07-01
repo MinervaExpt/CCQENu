@@ -13,7 +13,7 @@ import time
 # names associated with each category: data for full data, qelike for MC signal, qelikenot for MC bkg
 category_list = ["data", "qelike", "chargedpion", "neutralpion", "multipion", "other"]
 mc_category_list = ["qelike", "chargedpion", "neutralpion", "multipion", "other"]
-fixed_cats_list = ["other"]#, "multipion"]
+fixed_cats_list = ["other", "multipion"]
 scale_var = "Q2QE"
 fit_var = "recoil"
 scaletype = "area"
@@ -240,7 +240,7 @@ def RunFractionFitter(i_hist_dict):
         if mc_category_list[i] in fixed_cats_list:
             virtual_fitter.Config().ParSettings(i).Fix()
         else:
-            fit.Constrain(i, mc_frac_list[i]/20., mc_frac_list[i]*10.)
+            fit.Constrain(i, mc_frac_list[i]*0.05, mc_frac_list[i]*5.)
 
     # Set the bin range you want to fit on
     fit.SetRangeX(min_bin, max_bin)
@@ -252,6 +252,7 @@ def RunFractionFitter(i_hist_dict):
 
     if status != 0:
         print(">>>>>>>>>>>>>>>>>>>> WARNING: Fit did not converge...")
+        sys.exit(1)
         return fit
     if status == 0:
         print(">>>>>>>>>>>>>>>>>>>> Fit converged.")
@@ -277,6 +278,7 @@ def GetOutVals(fit, prefit_frac_list):
         fit_frac_err_list.append(fit_err)
         scale_list.append(scale)
         scale_err_list.append(scale_err)
+        print("==========",mc_category_list[i]," fit_frac: ", fit_frac, "\t fit_err: ", fit_err, "\t scale: ", scale, "\t scale_err: ", scale_err)
 
     return fit_frac_list, fit_frac_err_list, scale_list, scale_err_list
 
@@ -516,12 +518,12 @@ def main():
                         prefit_fitvar_mnvh = category_dict[key]["hist"].ProjectionY(prefit_mnvh1d_name, fitbin, fitbin, "e").Clone()
                         prefit_mnvh1d_dict[fitbin][key] = prefit_fitvar_mnvh #TODO need to scale these
                 
-                mc_hist_list = []
-                for cat in mc_category_list:
-                    mc_hist_list.append(prefit_th1d_dict[cat])
-                mc_frac_list = GetMCFracList(prefit_th1d_dict) #["mctot"],mc_hist_list)
+                # mc_hist_list = []
+                # for cat in mc_category_list:
+                #     mc_hist_list.append(prefit_th1d_dict[cat])
                 
                 if scaletype!="POT":
+                    print("Doing area scaling...")
                     max_xbin = prefit_th1d_dict["data"].GetNbinsX()
                     area_scale = (prefit_th1d_dict["data"].Integral(min_bin, max_xbin)) / (prefit_th1d_dict["mctot"].Integral(min_bin, max_xbin))
                     prefit_th1d_dict["mctot"].Scale(area_scale)
@@ -533,8 +535,9 @@ def main():
                 # Moved chi2 stuff to "if 'cv'" part at end of this loop
                 # prefit_chi2 = prefit_th1d_dict["data"].Chi2Test(prefit_th1d_dict["mctot"], "UW,CHI2")
                 # prefit_ndf = prefit_th1d_dict["data"].GetNbinsX() - 1 # TODO: this might be different for so many hists
+                mc_frac_list = GetMCFracList(prefit_th1d_dict) #["mctot"],mc_hist_list)
 
-                print("        Running Fraction Fitter... ")
+                print("        Running Fraction Fitter... fitbin ", fitbin)
                 fit = RunFractionFitter(prefit_th1d_dict)
                 fit_frac_list, fit_frac_err_list, scale_list, scale_err_list = GetOutVals(fit,mc_frac_list)
 
@@ -568,7 +571,7 @@ def main():
                     fit_ndf = fit.GetNDF()
                     # chi2 of hists after the fit (same ndf as prefit)
                     postfit_chi2 = prefit_th1d_dict["data"].Chi2Test(fit_th1d_dict["mctot"],"UW,CHI2")
-                    
+
                     # store the chi2
                     fit_chi2_dict[fitbin] = {"chi2":fit_chi2,"ndf":fit_ndf}
                     prefit_chi2_dict[fitbin] = {"chi2":prefit_chi2,"ndf":prefit_ndf}
@@ -581,7 +584,8 @@ def main():
                         scalefrac_mnvh1d_dict[mc_category_list[i]]["fraction"].SetBinError(fitbin,fit_frac_err_list[i])
                         scalefrac_mnvh1d_dict[mc_category_list[i]]["scale"].SetBinContent(fitbin,scale_list[i])
                         scalefrac_mnvh1d_dict[mc_category_list[i]]["scale"].SetBinError(fitbin,scale_err_list[i])
-                        
+                        print("==========",mc_category_list[i]," fit_frac: ", fit_frac_list[i], "\t fit_err: ", fit_frac_err_list[i], "\t scale: ", scale_list[i], "\t scale_err: ", scale_err_list[i])
+
                         # Start building mnvh1ds of each hist scaled from fit
                         tmp_fit_mnvh1d = MnvH1D(fit_th1d_dict[mc_category_list[i]])
                         tmp_fit_mnvh1d.SetName("h___AllSamples___"+mc_category_list[i]+"___"+fit_var+"_"+fitbin_name+"___fit")
