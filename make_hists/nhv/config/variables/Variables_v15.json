@@ -98,6 +98,11 @@
       "name": "PionAngle_ThetamuDegrees",
       "xvar": "PionAngle",
       "yvar": "ThetamuDegrees"
+    },
+    "Multiplicty_NumberOfProtonCandidates": {
+      "name": "Multiplicty_NumberOfProtonCandidates",
+      "xvar": "Multiplicity",
+      "yvar": "NumberOfProtonCandidates"
     }
   },
   "1D": {
@@ -627,6 +632,15 @@
       "nbins": 5,
       "min": -1.5,
       "max": 3.5
+    },
+    "NumberOfProtonCandidates": {
+      "reco": "NumberOfProtonCandidates",
+      "true": "NumberOfProtonCandidates",
+      "name": "NumberOfProtonCandidates",
+      "title": "N_{proton cand}",
+      "nbins": 5,
+      "min": -0.5,
+      "max": 4.5
     }
   }
 }

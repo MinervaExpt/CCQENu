@@ -16,6 +16,7 @@
   "QElike": [
     {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
+    // {"name": "Max Multiplicity", "equals": 2, "variable": "Multiplicity"},
     {"name": "Max Multiplicity", "max": 2, "variable": "Multiplicity"},
     {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
     {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
@@ -148,7 +149,7 @@
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
     // {"name": "Min Pion Angle", "min": 150,"variable": "ChargedPionAngle"} 
-    {"name": "Min Pion Angle", "min": 90.00001,"variable": "ChargedPionAngle"} 
+    {"name": "Min Pion Angle", "min": 90.000001,"variable": "ChargedPionAngle"} 
   ],
   "MultiplicitySideband": [
     {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},

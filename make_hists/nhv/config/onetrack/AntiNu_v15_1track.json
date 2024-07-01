@@ -6,7 +6,7 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_FS_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
-  "outRoot": "fittest_q2qereciol_me5a_${MYMODEL}",
+  "outRoot": "multipvsprotoncand_me5a_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
   "prescale":999,
   "playlist":"minervame5A",
@@ -29,11 +29,11 @@
     "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "Q2QE",
+    // "Q2QE",
     // "PrimaryProtonScore"//,
-    "recoil"
+    // "recoil"
     // "NBlobs",
-    // "Multiplicity",
+    "Multiplicity",
     // "PionAngle",
     // "ThetamuDegrees"//,
     // "NChargedPions",
@@ -50,12 +50,14 @@
     // "NeutBlobsRatio"
     // "pzmu",
     // "ptmu"
+    "NumberOfProtonCandidates"
   ],
   "Analyze2DVariables": [
     // "PionAngle_ThetamuDegrees"//,
     // "Q2QE_PrimaryProtonScore"//,
-    "Q2QE_recoil"//,
+    // "Q2QE_recoil"//,
     // "pzmu_ptmu"
+    "Multiplicty_NumberOfProtonCandidates"
   ],
   "AnalyzeHyperDVariables": [],
   "systematics": [

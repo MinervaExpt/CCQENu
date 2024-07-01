@@ -18,10 +18,12 @@
         ],
         "categories": {
             "qelike": {
-                "for": ["selected_reco", "selected_truth", "truth", "response"]
-                // "for": [
-                //     "selected_reco"
-                // ]
+                "for": [
+                    "selected_reco"//,
+                    // "selected_truth",
+                    // "truth",
+                    // "response"
+                ]
             },
             "neutralpion": {
                 "for": [
