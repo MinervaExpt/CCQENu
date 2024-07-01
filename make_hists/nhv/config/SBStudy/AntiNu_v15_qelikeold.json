@@ -1,0 +1,72 @@
+{
+  "version":15,  
+  "mcIn":"${PLAYLISTROOT}/MC_5A_local.txt",
+  "dataIn":"${PLAYLISTROOT}/DATA_5A_local.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuCuts_v15_1track.json", 
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
+  "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_FS_recoonly.json",
+  "outRoot": "Test_FitClosure_me5A_${MYMODEL}",
+  // "outRoot": "${MYROOTOUTPUT}/FinalState_5A_1track_${MYMODEL}",
+  "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
+  "prescale":999,
+  "playlist":"minervame5A",
+  "MinervaModel":"${MYMODEL}", 
+  "recoName":"CCQENu",
+  "tunedmc":"untuned", 
+  "closure":0,
+  "TuneCategories":["qelike", "chargedpion","neutralpion","multipion","other"], 
+  "DoResolution": false,
+  "DoTypes": false,
+  "pdg":-14,
+  "mcRecoToCSV": false,
+  "runsamples": [
+    "QElikeOld"
+    // "QElike",
+    // // "QElikeNeutrons"//,
+    // // "MultiplicitySideband",
+    // "LoPionThetaSideband",
+    // "HiPionThetaSideband",
+    // "BlobSideband",
+    // "MultipBlobSideband"
+  ], 
+  "AnalyzeVariables": [
+    // "NBlobs",
+    // "Multiplicity",
+    // "PionAngle"
+    // "NChargedPions",
+    // "HasMultiPion"
+    // "recoilNoBlobs",
+    "Q2QE",
+    // "EAvail",
+    // "EAvailWiggled"
+    // "EAvailWithNeutrons",
+    // "resEAvailWithNeutrons"
+    // "recoil"
+    // "recoilQE"
+    // "NNeutBlobs"
+    // "NeutBlobsRatio"
+    // "pzmu",
+    // "ptmu"
+  ],
+  "Analyze2DVariables": [],//["Q2QE_recoil"], //["pzmu_ptmu"], 
+  "AnalyzeHyperDVariables": [], 
+  "systematics": [
+    "Flux"//,
+    // "MuonMINOS",
+    // "MuonResolution",
+    // "MINOSEfficiency",
+    // "Angle",
+    // "GENIE",
+    // "GenieRvx1pi",
+    // "RPA",
+    // "2p2h",
+    // "MuonMinerva",
+    // "geant4",
+    // "response"
+  ],
+  "fluxUniverses": 2, //100, //10,
+  "NuEConstraint":1, 
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1//,
+  //"RPAMaterials":0 
+}
