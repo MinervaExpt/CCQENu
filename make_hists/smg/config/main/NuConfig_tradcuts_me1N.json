@@ -1,9 +1,9 @@
 {
   "version":8,  // Dec 2021 large scale tests
-  "mcIn":"playlists/CCQENu_minervame1N_MC_Inextinguishable_merged.txt",
-  "dataIn":"playlists/CCQENu_minervame1N_DATA_Inextinguishable_merged.txt",
+  "mcIn":"${CCQEMAT}/smg/playlists/CCQENu_minervameNu_MC_Inextinguishable_merged.txt",
+  "dataIn":"${CCQEMAT}/smg/playlists/CCQENu_minervameNu_DATA_Inextinguishable_merged.txt",
   "prescale":1,
-  "playlist":"minervame1N",
+  "playlist":"minervameNu",
   "MinervaModel":"MnvTunev2",
   "recoName":"CCQENu",
   "pdg":14,
