@@ -1008,6 +1008,13 @@ double CVUniverse::GetTrueQ2GeV() const {
     return q3 * q3 - q0 * q0;
 }
 
+double CVUniverse::GetCorrectedEAvailGeV() const {
+    // Based off Abbey's corrected Eavail here
+    double E = GetDouble("recoil_energy_nonmuon_nonvtx0mm") * MeVGeV;
+    double corrected_EAvailable = 0.00294575 + 0.6420878 * E + 1.44967454 * E * E - 0.79841303 * E * E * E + 0.18055716 * E * E * E * E;
+    return corrected_EAvailable;
+}
+
 double CVUniverse::GetTrueEAvailGeV() const {
     double Eavail = 0.0;
     int pdgsize = GetInt("mc_nFSPart");
@@ -1133,6 +1140,11 @@ double CVUniverse::GetTpiGeV(const int hadron) const {
 // }
 
 // std::vector<double> CVUniverse::GetBlobEdep() const {}
+
+// double CVUniverse::GetBlobDistance() const {
+//     double distance = -999.;
+//     return distance;
+// }
 
 // --------------------- Quantities only needed for cuts ---------------------
 // Although unlikely, in principle these quanties could be shifted by a
@@ -1824,6 +1836,36 @@ double CVUniverse::GetChargedPionAngle() const {
     }
     return angle;
 }
+
+// double CVUniverse::GetMuonPionAngle() const {
+//     double thetamu = GetThetamu();
+//     double phimu = GetPhimu();
+//     double norm_mu_px = std::sin(thetamu) * std::cos(phimu);
+//     double norm_mu_py = std::sin(thetamu) * std::sin(phimu);
+//     double norm_mu_pz = std::cos(thetamu);
+
+//     double angle = -9999.;
+
+//     if (CVUniverse::GetMultiplicity() < 2)
+//         return angle;
+//     double tree_Q2 = GetQ2QEGeV();  // used to test proton score
+
+//     double prim_proton_score = GetPrimaryProtonScore();
+//     if (GetPassProtonScoreCut(prim_proton_score, tree_Q2) == 0)  // No pass on this means the primary proton candidate is a pion,
+//         return GetPrimaryProtonAngle() * 180. / M_PI;            // so get it's angle and return
+
+//     int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
+//     if (n_sec_proton_scores == 0)
+//         return angle;  // If no secondary candidates, just return value from the first one
+//     std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str());
+//     for (int i = 0; i < sec_proton_scores.size(); i++) {
+//         if (GetPassProtonScoreCut(sec_proton_scores[i], tree_Q2) == 0) {
+//             angle = GetProtonAngle(i);
+//             // if (tmp_angle < -2* M_PI)  // if the protonangle fails, it returns -9999. also (as of 3/19/24)
+//             //     return tmp_angle;
+//             return angle * 180. / M_PI;  // Otherewise, angle is good, spit it out
+//         }
+//     }
 
 int CVUniverse::GetNPionTracks() const {
     int n_pions = 0;

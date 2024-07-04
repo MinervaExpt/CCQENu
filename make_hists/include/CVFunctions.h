@@ -106,6 +106,8 @@ class CVFunctions {
         recofunctions["EAvailWithNeutronsResolutionGeV"] = &CVUNIVERSE::GetEAvailWithNeutronsResolutionGeV;
         truefunctions["EAvailWithNeutronsResolutionGeV"] = &CVUNIVERSE::GetEAvailWithNeutronsResolutionGeV;
 
+        recofunctions["CorrectedEAvailGeV"] = &CVUniverse::GetCorrectedEAvailGeV;
+        
         recofunctions["Log10RecoilEnergyGeV"] = &CVUNIVERSE::GetLog10RecoilEnergyGeV;
         truefunctions["TrueLog10RecoilEnergyGeV"] = &CVUNIVERSE::GetTrueLog10RecoilEnergyGeV;
         // there is not true value

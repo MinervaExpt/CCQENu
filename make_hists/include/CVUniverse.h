@@ -225,6 +225,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetTrueQ3GeV() const;
     virtual double GetTrueQ2GeV() const;
 
+    virtual double GetCorrectedEAvailGeV() const;
+
     virtual double GetTrueEAvailGeV() const;
 
     virtual double GetTrueEAvailWithNeutronsGeV() const;
