@@ -11,7 +11,7 @@
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
   "MinervaModel":"${MYMODEL}", 
-  "recoName":"CCQENu",
+  "recoName":"${MYRECONAME}",
   "tunedmc":"untuned", 
   "closure":0,
   "TuneCategories": [
@@ -26,9 +26,9 @@
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
-    // "QElike",
-    "QElike0Blob",
-    "QElike1Blob"//,
+    "QElike"
+    // "QElike0Blob",
+    // "QElike1Blob"//,
     // "QElikeNeutrons"//,
     // "TrackSideband",
     // "LoPionThetaSideband",
@@ -37,7 +37,7 @@
     // "TrackBlobSideband"
   ], 
   "AnalyzeVariables": [
-    // "Q2QE"//,
+    "Q2QE"//,
     // "PrimaryProtonScore"//,
     // "recoil"
     // "NBlobs",
@@ -48,7 +48,7 @@
     // "HasMultiPion"
     // "recoilNoBlobs",
     // "Q2QE",
-    "EAvail"//,
+    // "EAvail"//,
     // "EAvailWiggled"
     // "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"
