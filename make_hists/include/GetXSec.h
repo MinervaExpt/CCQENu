@@ -28,7 +28,7 @@
 #include "utils/NuConfig.h"
 #include "utils/RebinFlux.h"
 #include "utils/SyncBands.h"
-
+#include <filesystem>
 #ifndef __CINT__
 #include "include/plotting_pdf.h"
 #endif
@@ -512,8 +512,14 @@ template std::vector<MnvH2D*> DoEfficiencyCorrection<MnvH2D>(std::string basenam
 // Does number of target normalization (passed in from analyze code) and flux normalization.
 // Returns a vector of size to of < (Data xsec), (MC xsec) >
 template <class MnvHistoType>
-std::vector<MnvHistoType*> DoNormalization(std::map<const std::string, NuConfig*> configs, std::string basename, std::map<std::string, bool> FluxNorm, double norm, MnvHistoType* effcorr, MnvHistoType* ialltruhist, MnvH1D* h_flux_dewidthed) {
+std::vector<MnvHistoType*> DoNormalization(std::map<const std::string, NuConfig*> configs, std::string basename, std::map<std::string, bool> FluxNorm, double norm, MnvHistoType* effcorr, MnvHistoType* ialltruhist, MnvH1D* h_flux_dewidthed, const std::string outname) {
     NuConfig* config = configs["main"];
+    //std::string tag = config->GetString("outRoot");
+    //std::string thename = effcorr->GetName();
+    //if (thename.find("tuned") != std::string::npos) tag += "_tuned";
+
+    std::string csvdir = std::string("./csv_") + outname;
+    std::filesystem::create_directory(csvdir.c_str());
     std::string sigmaname = std::string(effcorr->GetName()) + "_sigma";
     MnvHistoType* sigma = (MnvHistoType*)effcorr->Clone(sigmaname.c_str());
     sigma->SetDirectory(0);
@@ -570,15 +576,15 @@ std::vector<MnvHistoType*> DoNormalization(std::map<const std::string, NuConfig*
     if (sigma->InheritsFrom("TH2")) {
         MnvH2D* sigma2D = dynamic_cast<MnvH2D*>(sigma->Clone());
         MnvH2D* sigma2DMC = dynamic_cast<MnvH2D*>(sigmaMC->Clone());
-        sigma2D->MnvH2DToCSV(sigma2D->GetName(), "./csv", 1.E39, false, true, true, true);
-        sigma2DMC->MnvH2DToCSV(sigma2DMC->GetName(), "./csv", 1.E39, false, true, true, true);
+        sigma2D->MnvH2DToCSV(sigma2D->GetName(), csvdir, 1.E39, false, true, true, true);
+        sigma2DMC->MnvH2DToCSV(sigma2DMC->GetName(), csvdir, 1.E39, false, true, true, true);
         // sigma2D->Delete();
         sigma2DMC->Delete();
     } else {
         MnvH1D* sigma1D = dynamic_cast<MnvH1D*>(sigma->Clone());
         MnvH1D* sigma1DMC = dynamic_cast<MnvH1D*>(sigmaMC->Clone());
-        sigma1D->MnvH1DToCSV(sigma1D->GetName(), "./csv", 1.E39, false, true, true, true);
-        sigma1DMC->MnvH1DToCSV(sigma1DMC->GetName(), "./csv", 1.E39, false, true, true, true);
+        sigma1D->MnvH1DToCSV(sigma1D->GetName(), csvdir , 1.E39, false, true, true, true);
+        sigma1DMC->MnvH1DToCSV(sigma1DMC->GetName(), csvdir, 1.E39, false, true, true, true);
         // sigma1D->Delete();
         sigma1DMC->Delete();
     }
@@ -588,8 +594,8 @@ std::vector<MnvHistoType*> DoNormalization(std::map<const std::string, NuConfig*
     return sigmaVec;
 }
 
-template std::vector<MnvH1D*> DoNormalization<MnvH1D>(std::map<const std::string, NuConfig*> configs, std::string basename, std::map<std::string, bool> FluxNorm, double norm, MnvH1D* effcorr, MnvH1D* ialltruhist, MnvH1D* h_flux_dewidthed);
-template std::vector<MnvH2D*> DoNormalization<MnvH2D>(std::map<const std::string, NuConfig*> configs, std::string basename, std::map<std::string, bool> FluxNorm, double norm, MnvH2D* effcorr, MnvH2D* ialltruhist, MnvH1D* h_flux_dewidthed);
+template std::vector<MnvH1D*> DoNormalization<MnvH1D>(std::map<const std::string, NuConfig*> configs, std::string basename, std::map<std::string, bool> FluxNorm, double norm, MnvH1D* effcorr, MnvH1D* ialltruhist, MnvH1D* h_flux_dewidthed, std::string outname);
+template std::vector<MnvH2D*> DoNormalization<MnvH2D>(std::map<const std::string, NuConfig*> configs, std::string basename, std::map<std::string, bool> FluxNorm, double norm, MnvH2D* effcorr, MnvH2D* ialltruhist, MnvH1D* h_flux_dewidthed, std::string outname);
 
 //============================= GetCrossSection ================================
 
@@ -599,7 +605,7 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
                     std::map<std::string, std::map<std::string, MnvHistoType*> > histsND,
                     std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
                     NuConfig oneconfig, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                    MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub, bool usetune) {
+                    MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub, bool usetune, std::string outname) {
     std::map<const std::string, NuConfig*> configmap;
     configmap["main"] = &oneconfig;
     std::cout << " pass single config into map" << std::endl;
@@ -607,7 +613,7 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
                            histsND,
                            responseND,
                            configmap, canvas, norm, POTScale, h_flux_dewidthed,
-                           unfold, num_iter, DEBUG, hasbkgsub, usetune);
+                           unfold, num_iter, DEBUG, hasbkgsub, usetune, outname);
 }
 
 template <class MnvHistoType>
@@ -615,7 +621,7 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
                     std::map<std::string, std::map<std::string, MnvHistoType*> > histsND,
                     std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
                     std::map<const std::string, NuConfig*> configs, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                    MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub, bool usetune) {
+                    MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub, bool usetune, std::string outname) {
     bool binwid = true;
     int logscale = 0;  // 0 for none, 1 for x, 2 for y, 3 for both
 
@@ -1019,7 +1025,7 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
         binwid = true;
     }
 
-    std::vector<MnvHistoType*> sigmaVec = DoNormalization(configs, basename, fluxnorm, norm, effcorr, ialltruhist, h_flux_dewidthed);
+    std::vector<MnvHistoType*> sigmaVec = DoNormalization(configs, basename, fluxnorm, norm, effcorr, ialltruhist, h_flux_dewidthed, outname);
     MnvHistoType* sigma = sigmaVec[0];
     sigma->Write();
     sigma->Print();
@@ -1047,22 +1053,26 @@ template int GetCrossSection<MnvH1D>(std::string sample, std::string variable, s
                                      std::map<std::string, std::map<std::string, MnvH1D*> > histsND,
                                      std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
                                      std::map<const std::string, NuConfig*> configs, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false);
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false,
+                                     std::string outname="");
 
 template int GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,
                                      std::map<std::string, std::map<std::string, MnvH2D*> > histsND,
                                      std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
                                      std::map<const std::string, NuConfig*> configs, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false);
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false,
+                                     std::string outname="");
 
 template int GetCrossSection<MnvH1D>(std::string sample, std::string variable, std::string basename,
                                      std::map<std::string, std::map<std::string, MnvH1D*> > histsND,
                                      std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
                                      NuConfig mainconfig, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false);
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false,
+                                     std::string outname);
 
 template int GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,
                                      std::map<std::string, std::map<std::string, MnvH2D*> > histsND,
                                      std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
                                      NuConfig mainconfig, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false);
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false,
+                                     std::string outname="");

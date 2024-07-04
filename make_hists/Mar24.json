@@ -1,6 +1,6 @@
 {
   "version":13,  // Run major variables in batch, use v13 of cuts, add closure
-  "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_short.txt",
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_MC_Inextinguishable_merged.txt",
   "dataIn":"${CCQEMAT}/playlists/${DATALOC}/CCQENu_${MYPLAYLIST}_DATA_Inextinguishable_merged.txt", // hack for type plot of resolution
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
@@ -23,7 +23,8 @@
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
   "data":{"QElike":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
   // turn on/off systematics
-  "systematics": [
+    "responseSystematicsVersion":"CCQENu", //this is the old version, new one is 2024
+    "systematics": [
     "Flux",
     "MuonMINOS",
     "MuonResolution",
