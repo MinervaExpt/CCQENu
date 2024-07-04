@@ -68,6 +68,7 @@
     // "Multiplicty_NumberOfProtonCandidates"
   // ],
   "AnalyzeHyperDVariables": [],
+  // "responseSystematicsVersion": "CCQENu", //this is the old version, new one is 2024
   "systematics": [
     "Flux"//,
     // "MuonMINOS",
