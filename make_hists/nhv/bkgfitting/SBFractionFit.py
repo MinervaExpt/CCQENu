@@ -11,22 +11,51 @@ import numpy as np
 import time
 
 # names associated with each category: data for full data, qelike for MC signal, qelikenot for MC bkg
-category_list = ["data", "qelike", "chargedpion", "neutralpion", "multipion", "other"]
-mc_category_list = ["qelike", "chargedpion", "neutralpion", "multipion", "other"]
-fixed_cats_list = ["other", "multipion"]
+category_list = [
+    "data", 
+    "qelike", 
+    "chargedpion", 
+    "neutralpion", 
+    # "multipion",
+    "other"
+]
+mc_category_list = [
+    "qelike", 
+    "chargedpion", 
+    "neutralpion", 
+    # "multipion", 
+    "other"
+]
+fixed_cats_list = [
+    "other"#, 
+    # "multipion"
+]
 scale_var = "Q2QE"
 fit_var = "recoil"
 scaletype = "area"
 
 variable_list = ["Q2QE_recoil"]
 # names associated with each "sample" e.g. QElike, QElikeALL
-sample_list = ["QElike", "LoPionThetaSideband", "HiPionThetaSideband", "BlobSideband", "MultipBlobSideband"]
+sample_list = [
+    "QElike", 
+    # "LoPionThetaSideband", 
+    # "HiPionThetaSideband", 
+    "TrackSideband",
+    "BlobSideband"#, 
+    # "MultipBlobSideband"
+    # "TrackBlobSideband"
+]
+
+outsample_name = ""
+for sample in sample_list:
+    outsample_name+=sample+"_"
 
 # DRAW = True
 # CONFINT = True
 
 # Do fit on tuned hists or not
 useTuned = 0
+# rebin = 2
 
 # Some fit parameters globally set
 min_bin = 1
@@ -485,9 +514,12 @@ def main():
                 if key in mc_category_list:
                     scale_univhist_dict[key].append(dummy_scalevar_th1d.Clone())
                     frac_univhist_dict[key].append(dummy_scalevar_th1d.Clone())
-
                 tmp_th2d_dict[key] = tmp_th2d
             
+            print("***********************************************",frac_univhist_dict.keys())
+            for key in frac_univhist_dict.keys():
+                print(len(frac_univhist_dict[key]))
+
             for fitbin in range(1, n_xbins + 1):
                 print("        Working on fitbin number ", fitbin)
                 fitbin_name = "fitbin" + str("%02d" % fitbin)
@@ -503,6 +535,8 @@ def main():
                 for key in tmp_th2d_dict.keys():
                     proj_name = fitbin_name + '_' + key
                     tmp_fitbin_th1d = tmp_th2d_dict[key].ProjectionY(proj_name, fitbin, fitbin, "e")
+                    # if rebin>1.:
+                    #     tmp_fitbin_th1d.Rebin(rebin)
                     prefit_th1d_dict[key] = tmp_fitbin_th1d
                     print("     Number of entries in ", key,": ", tmp_fitbin_th1d.GetEntries())
                     # Need to make a MnvH1D of each fitbin before the fit. Using 'cv' universe so this only happens once (rather than doing this step needlessly in every universe)
@@ -510,12 +544,14 @@ def main():
                         print(">>>>>>>>> key: ",key)
                         if 'tuned' in key:
                             tmpname = key.replace('_tuned','')
-                            prefit_mnvh1d_name = "h___AllSamples___" + tmpname + "___" + recoil_type + "_" + fitbin_name + "___prefit_tuned"
+                            prefit_mnvh1d_name = "h___"+outsample_name+"__" + tmpname + "___" + recoil_type + "_" + fitbin_name + "___prefit_tuned"
                         else:
-                            prefit_mnvh1d_name = "h___AllSamples___" + key + "___" + recoil_type + "_" + fitbin_name + "___prefit"
+                            prefit_mnvh1d_name = "h___"+outsample_name+"__" + key + "___" + recoil_type + "_" + fitbin_name + "___prefit"
 
                         print(prefit_mnvh1d_name)
                         prefit_fitvar_mnvh = category_dict[key]["hist"].ProjectionY(prefit_mnvh1d_name, fitbin, fitbin, "e").Clone()
+                        # if rebin>1.:
+                        #     prefit_fitvar_mnvh.Rebin(rebin)
                         prefit_mnvh1d_dict[fitbin][key] = prefit_fitvar_mnvh #TODO need to scale these
                 
                 # mc_hist_list = []
@@ -588,21 +624,24 @@ def main():
 
                         # Start building mnvh1ds of each hist scaled from fit
                         tmp_fit_mnvh1d = MnvH1D(fit_th1d_dict[mc_category_list[i]])
-                        tmp_fit_mnvh1d.SetName("h___AllSamples___"+mc_category_list[i]+"___"+fit_var+"_"+fitbin_name+"___fit")
+                        tmp_fit_mnvh1d.SetName("h___"+outsample_name+"__"+mc_category_list[i]+"___"+fit_var+"_"+fitbin_name+"___fit")
                         fit_mnvh1d_dict[fitbin][mc_category_list[i]] = tmp_fit_mnvh1d
                     # Do the same for the mctot hist
                     tmp_fit_mctot_mnvh1d = MnvH1D(fit_th1d_dict["mctot"])
-                    tmp_fit_mctot_mnvh1d.SetName("h___AllSamples___mctot___"+fit_var+"_"+fitbin_name+"___fit")
+                    tmp_fit_mctot_mnvh1d.SetName("h___"+outsample_name+"__mctot___"+fit_var+"_"+fitbin_name+"___fit")
                     fit_mnvh1d_dict[fitbin]["mctot"] = tmp_fit_mctot_mnvh1d
                 else:
                     print("        Filling hists for error band ", univ_name, "...")  
-                    for cat in mc_category_list:
+                    for i in range(len(mc_category_list)):
+                        cat = mc_category_list[i]
+                        print("                Inside cat loop for ", cat)
                         # Set the bin content for this universes scale/frac
                         frac_univhist_dict[cat][univ].SetBinContent(fitbin,fit_frac_list[i])
-                        frac_univhist_dict[cat][univ].SetBinError(fitbin,fit_frac_err_list[i])
+                        # frac_univhist_dict[cat][univ].SetBinError(fitbin,fit_frac_err_list[i])
+                        print (" after set bin contents for frac")                        
                         scale_univhist_dict[cat][univ].SetBinContent(fitbin,scale_list[i])
-                        scale_univhist_dict[cat][univ].SetBinError(fitbin,scale_err_list[i])
-
+                        # scale_univhist_dict[cat][univ].SetBinError(fitbin,scale_err_list[i])
+                        print (" after set bin contents for scale")
                         # Make a list of histograms for this universe so we can add all as one error band
                         fitbin_cat_univ_hist_dict[fitbin][cat].append(fit_th1d_dict[cat])
                         # kind of hacky but oh well
