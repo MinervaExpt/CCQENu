@@ -1882,14 +1882,16 @@ double CVUniverse::GetCosMuonPionAngle() const {
         if (n_sec_proton_scores == 0)
             return angle;  // If no secondary candidates, just return value from the first one
         std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str());
+        bool found = false;
         for (int i = 0; i < sec_proton_scores.size(); i++) {
             if (GetPassProtonScoreCut(sec_proton_scores[i], tree_Q2) == 0) {
                 protontheta = GetProtonAngle(i);
                 protonphi = GetProtonPhi(i);
+                found = true;
                 break;
             }
         }
-        if (!passed) return angle;
+        if (!found) return angle;
     }
 
     double mutheta = GetThetamu(); 
