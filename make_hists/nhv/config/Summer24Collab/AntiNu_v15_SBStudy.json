@@ -37,7 +37,7 @@
     // "TrackBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "Q2QE"//,
+    "FitQ2QE",
     // "PrimaryProtonScore"//,
     // "recoil"
     // "NBlobs",
@@ -52,7 +52,7 @@
     // "EAvailWiggled"
     // "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"
-    // "recoil"
+    "recoil"
     // "recoilQE"
     // "NNeutBlobs"
     // "NeutBlobsRatio"
@@ -60,10 +60,9 @@
     // "ptmu"
     // "NumberOfProtonCandidates"
   ],
-  "Analyze2DVariables": [],
+  "Analyze2DVariables": [ "FitQ2QE_recoil"],
     // "PionAngle_ThetamuDegrees"//,
     // "Q2QE_PrimaryProtonScore"//,
-    // "Q2QE_recoil"//,
     // "pzmu_ptmu"
     // "Multiplicty_NumberOfProtonCandidates"
   // ],
