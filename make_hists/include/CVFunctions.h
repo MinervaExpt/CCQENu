@@ -244,10 +244,12 @@ class CVFunctions {
         recofunctions["NPionTracks"] = &CVUNIVERSE::GetNPionTracks;
         recofunctions["ChargedPionAngle"] = &CVUNIVERSE::GetChargedPionAngle;  // This is just the leading pion candidate
 
+        recofunctions["CosMuonPionAngle"] = &CVUNIVERSE::GetCosMuonPionAngle;
+
         // Both
 
         recointfunctions["HasMichelOrNBlobs"] = &CVUNIVERSE::GetHasMichelOrNBlobs;
-        
+
         recointfunctions["HasMultiPion"] = &CVUNIVERSE::GetHasMultiPion;
         recofunctions["HasMultiPion"] = &CVUNIVERSE::GetHasMultiPion;
 
