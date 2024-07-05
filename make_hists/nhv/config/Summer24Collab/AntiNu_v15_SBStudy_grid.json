@@ -1,0 +1,80 @@
+{
+  "version":15,  
+  "mcIn": "${CCQEMAT}/playlists/${DATALOC}_p4/${MYPLAYLIST}_MC.txt",
+  "dataIn": "${CCQEMAT}/playlists/${DATALOC}_p4/${MYPLAYLIST}_Data.txt", 
+  "cutsFile": "${CCQEMAT}/nhv/config/Summer24Collab/AntiNuCuts_v15_SBStudy.json", 
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
+  "samplesFile": "${CCQEMAT}/nhv/config/Summer24Collab/AntiNuSamples_v15_SBStudy_FS.json",
+  "paramsFile": "${CCQEMAT}/nhv/config/Summer24Collab/AntiNuParams_v15_1track.json",
+  "outRoot": "CCQENu_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}",
+  "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
+  "prescale":999,
+  "playlist":"${MYPLAYLIST}",
+  "MinervaModel":"${MYMODEL}", 
+  "recoName":"MasterAnaDev",
+  "tunedmc":"untuned", 
+  "closure":0,
+  "TuneCategories": [
+    "qelike",
+    "chargedpion",
+    "neutralpion",
+    // "multipion",
+    "other"
+  ],
+  "DoResolution": false,
+  "DoTypes": false,
+  "pdg":-14,
+  "mcRecoToCSV": false,
+  "runsamples": ["${MYSAMPLE}"], 
+  "AnalyzeVariables": [
+    "Q2QE"//,
+    // "PrimaryProtonScore"//,
+    // "recoil"
+    // "NBlobs",
+    // "Multiplicity",
+    // "PionAngle",
+    // "ThetamuDegrees"//,
+    // "NChargedPions",
+    // "HasMultiPion"
+    // "recoilNoBlobs",
+    // "Q2QE",
+    // "EAvail"//,
+    // "EAvailWiggled"
+    // "EAvailWithNeutrons",
+    // "resEAvailWithNeutrons"
+    // "recoil"
+    // "recoilQE"
+    // "NNeutBlobs"
+    // "NeutBlobsRatio"
+    // "pzmu",
+    // "ptmu"
+    // "NumberOfProtonCandidates"
+  ],
+  "Analyze2DVariables": [],
+    // "PionAngle_ThetamuDegrees"//,
+    // "Q2QE_PrimaryProtonScore"//,
+    // "Q2QE_recoil"//,
+    // "pzmu_ptmu"
+    // "Multiplicty_NumberOfProtonCandidates"
+  // ],
+  "AnalyzeHyperDVariables": [],
+  "responseSystematicsVersion": "2024", //old one is CCQENu, new one is 2024
+  "systematics": [
+    "Flux",
+    "MuonMINOS",
+    "MuonResolution",
+    "MINOSEfficiency",
+    "Angle",
+    "GENIE",
+    "GenieRvx1pi",
+    "RPA",
+    "2p2h",
+    "MuonMinerva",
+    "geant4",
+    "response"
+  ],
+  "fluxUniverses": 2, //100, //10,
+  "NuEConstraint":1, 
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1
+}
