@@ -20,8 +20,6 @@ echo "export MYMODEL=MnvTunev1"
 echo "export MYPLAYLIST=minervame6A"
 echo "export MYSAMPLE=QElike"
 
-export PLAYLISTROOT=${CCQEMAT}/playlists/${DATALOC}
 export MYRECONAME=CCQENu
 
-echo "export PLAYLISTROOT=${CCQEMAT}/playlists/${DATALOC}"
 echo "export MYRECONAME=MasterAnaDev"
