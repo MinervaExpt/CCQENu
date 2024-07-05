@@ -315,7 +315,13 @@
     {"name": "TruthHasMultiplePions", "equals": 1, "variable": "TruthHasMultiPion"}
   ],
   "other": [
-    // {"name": "TruthHasMultiplePions", "equals": 0, "variable": "TruthHasMultiPion"},
+    {"name": "TruthHasSingleChargedPion", "equals": 0, "variable": "TruthHasSingleChargedPion"},
+    {"name": "TruthHasSingleNeutralPion", "equals": 0, "variable": "TruthHasSingleNeutralPion"},
+    {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"}
+    // {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike","protonKECutMeV":10000000.0} //, "protonKECutMeV": 120.0}
+  ],
+  "other_nomultipi": [
+    {"name": "TruthHasMultiplePions", "equals": 0, "variable": "TruthHasMultiPion"},
     {"name": "TruthHasSingleChargedPion", "equals": 0, "variable": "TruthHasSingleChargedPion"},
     {"name": "TruthHasSingleNeutralPion", "equals": 0, "variable": "TruthHasSingleNeutralPion"},
     {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"}
