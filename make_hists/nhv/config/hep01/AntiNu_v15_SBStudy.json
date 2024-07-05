@@ -60,9 +60,9 @@
     // "ptmu"
     // "NumberOfProtonCandidates"
   ],
-  "Analyze2DVariables": [],
+  "Analyze2DVariables": ["Q2QE_PrimaryProtonScore"],
     // "PionAngle_ThetamuDegrees"//,
-    "Q2QE_PrimaryProtonScore"//,
+    //,
     // "Q2QE_recoil"//,
     // "pzmu_ptmu"
     // "Multiplicty_NumberOfProtonCandidates"
