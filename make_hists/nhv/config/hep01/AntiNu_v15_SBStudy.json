@@ -38,7 +38,7 @@
   ], 
   "AnalyzeVariables": [
     "Q2QE",
-    "PrimaryProtonScore" //,
+    "PrimaryProtonScore",
     "PrimaryProtonScore1" //,
     // "recoil"
     // "NBlobs",
