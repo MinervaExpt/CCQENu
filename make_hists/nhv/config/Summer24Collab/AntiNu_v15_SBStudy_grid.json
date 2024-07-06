@@ -78,7 +78,7 @@
     "geant4",
     "response"
   ],
-  "fluxUniverses": 2, //100, //10,
+  "fluxUniverses": 100, //100, //10,
   "NuEConstraint":1, 
   "Geant4NeutronCV":1,
   "Geant4Elastics":1
