@@ -1,7 +1,7 @@
 {
   "version":15,  
-  "mcIn": "${CCQEMAT}/playlists/${DATALOC}_p4/${MYPLAYLIST}_MC.txt",
-  "dataIn": "${CCQEMAT}/playlists/${DATALOC}_p4/${MYPLAYLIST}_Data.txt", 
+  "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
+  "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt", 
   "cutsFile": "${CCQEMAT}/nhv/config/Summer24Collab/AntiNuCuts_v15_SBStudy.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/Summer24Collab/AntiNuSamples_v15_SBStudy_FS.json",
