@@ -2,7 +2,7 @@ export WHEREIPUTMYCODE=/exp/minerva/app/users/$USER/minerva
 export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
 export UTILITIES=$WHEREIPUTMYCODE/CCQENu/utilities
 export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
-export JSONCPP_DIR=$WHEREIPUTMYCODE/jsoncpp-build 
+export JSONCPP_DIR=$WHEREIPUTMYCODE/jsoncpp-build
 export LD_LIBRARY_PATH=${JSONCPP_DIR}/lib:${PLOTUTILSROOT}:${UNFOLDUTILSROOT}:${LD_LIBRARY_PATH}
 export THEDATA=/pnfs/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron
 export SCRATCH=/pnfs/minerva/scratch/users/gilligan
@@ -15,6 +15,7 @@ export PYTHONPATH=$WHEREIPUTMYCODE/MAT-MINERvA/python:$WHEREIPUTMYCODE/MAT-MINER
 
 # Same cvmfs setup/cmake/root used for MAT-MINERvA
 source /cvmfs/larsoft.opensciencegrid.org/spack-packages/setup-env.sh
+spack load gcc@12.2.0
 spack load root@6.28.12%gcc@12.2.0
 spack load cmake@3.27.7
 spack load fife-utils@3.7.0

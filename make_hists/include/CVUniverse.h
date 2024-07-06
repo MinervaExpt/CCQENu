@@ -226,6 +226,7 @@ public:
 
 	// ----------------------------- Recoil Variables ----------------------------
 
+	virtual double ApplyCaloTuning(double calRecoilE) const;
 
 	virtual double GetCalRecoilEnergy() const;
 	virtual double GetCalRecoilEnergyGeV() const;

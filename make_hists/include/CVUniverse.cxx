@@ -1189,6 +1189,15 @@ namespace {
 
 	// ----------------------------- Recoil Variables ----------------------------
 
+	double CVUniverse::ApplyCaloTuning(double calRecoilE) const {
+    		// for antineutrino do nothing;
+    		if (m_analysis_neutrino_pdg == -14) {
+        		//return AntiNu_tracker.eCorrection(calRecoilE * MeVGeV) / MeVGeV;
+        		return calRecoilE;
+    		} // else
+    		//return Nu_tracker.eCorrection(calRecoilE * MeVGeV) / MeVGeV;
+        	return calRecoilE; // also do nothing here 
+	}
 
 	double CVUniverse::GetCalRecoilEnergy() const {
 		bool neutrinoMode = GetAnalysisNuPDG() > 0;
