@@ -6,7 +6,7 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/Summer24Collab/AntiNuSamples_v15_SBStudy_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/Summer24Collab/AntiNuParams_v15_1track.json",
-  "outRoot": "CCQENu_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "MasterAnaDev_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
@@ -26,18 +26,19 @@
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike"
+    // "QElike"
     // "QElike0Blob",
     // "QElike1Blob"//,
     // "QElikeNeutrons"//,
-    // "TrackSideband",
+    "TrackSideband"
     // "LoPionThetaSideband",
     // "HiPionThetaSideband",
     // "BlobSideband",
     // "TrackBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "FitQ2QE",
+    "CosMuonPionAngle"
+    // "FitQ2QE",
     // "PrimaryProtonScore"//,
     // "recoil"
     // "NBlobs",
@@ -52,7 +53,7 @@
     // "EAvailWiggled"
     // "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"
-    "recoil"
+    // "recoil"
     // "recoilQE"
     // "NNeutBlobs"
     // "NeutBlobsRatio"
@@ -60,8 +61,9 @@
     // "ptmu"
     // "NumberOfProtonCandidates"
   ],
-  "Analyze2DVariables": [ "FitQ2QE_recoil"],
-    // "PionAngle_ThetamuDegrees"//,
+  "Analyze2DVariables": [],
+    // "FitQ2QE_recoil"
+  // "PionAngle_ThetamuDegrees"//,
     // "Q2QE_PrimaryProtonScore"//,
     // "pzmu_ptmu"
     // "Multiplicty_NumberOfProtonCandidates"

@@ -245,6 +245,7 @@ class CVFunctions {
         recofunctions["ChargedPionAngle"] = &CVUNIVERSE::GetChargedPionAngle;  // This is just the leading pion candidate
 
         recofunctions["CosMuonPionAngle"] = &CVUNIVERSE::GetCosMuonPionAngle;
+        truefunctions["CosMuonPionAngle"] = &CVUNIVERSE::GetCosMuonPionAngle;
 
         // Both
 

@@ -543,7 +543,7 @@
       "true": "TrueZVertex",
       "name": "ZVertex",
       "title": "ZVertex (mm)",
-      "nbins": 52,
+      "nbins": 13,
       "min": 5900,
       "max":8500.0
     },
@@ -652,6 +652,15 @@
       "nbins": 5,
       "min": -0.5,
       "max": 4.5
+    },
+    "CosMuonPionAngle": {
+      "reco": "CosMuonPionAngle",
+      "true": "CosMuonPionAngle",
+      "name": "CosMuonPionAngle",
+      "title": "cos(#theta_{#mu, #pi})",
+      "nbins": 6,
+      "min": -1.0,
+      "max": -0.7
     }
   }
 }

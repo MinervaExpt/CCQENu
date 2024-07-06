@@ -6,7 +6,7 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/SBStudy/AntiNuSamples_v15_SBStudy_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
-  "outRoot": "Signal_0blob_1blob_${MYMODEL}",
+  "outRoot": "cosmupiangle_test_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
   "prescale":999,
   "playlist":"minervame5A",
@@ -22,21 +22,23 @@
     "other"
   ],
   "DoResolution": false,
-  "DoTypes": false,
+  "DoTypes": true,
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
     // "QElike",
-    "QElike0Blob",
-    "QElike1Blob"//,
+    // "QElike0Blob",
+    // "QElike1Blob"//,
     // "QElikeNeutrons"//,
-    // "TrackSideband",
+    "TrackSideband"//,
     // "LoPionThetaSideband",
     // "HiPionThetaSideband",
     // "BlobSideband",
     // "TrackBlobSideband"
   ], 
   "AnalyzeVariables": [
+    "CosMuonPionAngle",
+    "ZVertex"
     // "Q2QE"//,
     // "PrimaryProtonScore"//,
     // "recoil"
@@ -48,7 +50,7 @@
     // "HasMultiPion"
     // "recoilNoBlobs",
     // "Q2QE",
-    "EAvail"//,
+    // "EAvail"//,
     // "EAvailWiggled"
     // "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"

@@ -203,7 +203,8 @@
     {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
     {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
-    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"},
+    {"name": "Min Pion Angle", "min": 160,"variable": "ChargedPionAngle"} 
     ],
   "TrackBlobSideband": [
     {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
