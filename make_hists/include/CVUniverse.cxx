@@ -696,6 +696,7 @@ double CVUniverse::GetPrimaryProtonTrackEndX() const { return GetDouble("proton_
 double CVUniverse::GetPrimaryProtonTrackEndY() const { return GetDouble("proton_track_endy"); }
 double CVUniverse::GetPrimaryProtonTrackEndZ() const { return GetDouble("proton_track_endz"); }
 
+
 // Proton candidate angles wrt beam
 double CVUniverse::GetProtonAngle(int i) const {
     if (i == 0) {
@@ -717,7 +718,7 @@ double CVUniverse::GetSecProtonAngle_6() const { return GetProtonAngle(6); }
 double CVUniverse::GetProtonPhi(int i) const {
     if (i == 0) {
         return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_phi").c_str());
-    } else if (GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_phi_sz").c_str()) >= i) {
+    } else if (GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_phi_sz").c_str()) >= i) { //Only works on CCQENu
         return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_phi").c_str(), i - 1);
     } else
         return -9999.;
@@ -731,6 +732,41 @@ double CVUniverse::GetPrimaryProtonPhi() const { return GetProtonPhi(0); }
 // double CVUniverse::GetSecProtonPhi_5() const { return GetProtonPhi(5); }
 // double CVUniverse::GetSecProtonPhi_6() const { return GetProtonPhi(6); }
 
+double CVUniverse::GetProtonP(int i) const {
+    if (i == 0) {
+        return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_P_fromdEdx").c_str());
+    } else if (GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_P_fromdEdx_sz").c_str()) >= i) {
+        return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_P_fromdEdx").c_str(), i - 1);
+    } else
+        return -9999.;
+}
+
+double CVUniverse::GetProtonPx(int i) const {
+    if (i == 0) {
+        return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_Px_fromdEdx").c_str());
+    } else if (GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_Px_fromdEdx_sz").c_str()) >= i) {
+        return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_Px_fromdEdx").c_str(), i - 1);
+    } else
+        return -9999.;
+}
+
+double CVUniverse::GetProtonPy(int i) const {
+    if (i == 0) {
+        return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_Py_fromdEdx").c_str());
+    } else if (GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_Py_fromdEdx_sz").c_str()) >= i) {
+        return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_Py_fromdEdx").c_str(), i - 1);
+    } else
+        return -9999.;
+}
+
+double CVUniverse::GetProtonPz(int i) const {
+    if (i == 0) {
+        return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_Pz_fromdEdx").c_str());
+    } else if (GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_Pz_fromdEdx_sz").c_str()) >= i) {
+        return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_Pz_fromdEdx").c_str(), i - 1);
+    } else
+        return -9999.;
+}
 // Gap between interaction vertex and start of proton candidate track (mm)
 double CVUniverse::GetProtonTrackVtxGap(int i) const {
     double startX;
@@ -1862,22 +1898,28 @@ double CVUniverse::GetChargedPionAngle() const {
 }
 
 double CVUniverse::GetCosMuonPionAngle() const {
+
     // For finding the 3D angle between the muon and pion in an event
     double angle = -9999.;
     // First check if there's another track, if not, return default value
     if (CVUniverse::GetMultiplicity() < 2)
         return angle; 
     // TODO: are the angle wrt beam?
-    double protontheta;
-    double protonphi;
+    double proton_p;
+    double proton_px;
+    double proton_py;
+    double proton_pz;
+
     // Now check if the extra tracks are pions 
     double tree_Q2 = GetQ2QEGeV();  // used to test proton score
     // Check primary first
     double prim_proton_score = GetPrimaryProtonScore();
-    if (GetPassProtonScoreCut(prim_proton_score, tree_Q2) == 0) { // No pass on this means the primary proton candidate is a pion,
-        protontheta = GetPrimaryProtonAngle(); 
-        protonphi = GetPrimaryProtonPhi(); 
-    } else { // Now check other tracks
+    if (GetPassProtonScoreCut(prim_proton_score, tree_Q2) == 0) {  // No pass on this means the primary proton candidate is a pion,
+        proton_p = GetProtonP(0);
+        proton_px = GetProtonPx(0);
+        proton_py = GetProtonPy(0);
+        proton_pz = GetProtonPz(0);
+    } else {  // Now check other tracks
         int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
         if (n_sec_proton_scores == 0)
             return angle;  // If no secondary candidates, just return value from the first one
@@ -1885,8 +1927,10 @@ double CVUniverse::GetCosMuonPionAngle() const {
         bool found = false;
         for (int i = 0; i < sec_proton_scores.size(); i++) {
             if (GetPassProtonScoreCut(sec_proton_scores[i], tree_Q2) == 0) {
-                protontheta = GetProtonAngle(i);
-                protonphi = GetProtonPhi(i);
+                proton_p = GetProtonP(i);
+                proton_px = GetProtonPx(i);
+                proton_py = GetProtonPy(i);
+                proton_pz = GetProtonPz(i);
                 found = true;
                 break;
             }
@@ -1896,15 +1940,12 @@ double CVUniverse::GetCosMuonPionAngle() const {
 
     double mutheta = GetThetamu(); 
     double muphi = GetPhimu();
-    double norm_mu_px = std::sin(mutheta) * std::cos(muphi);
-    double norm_mu_py = std::sin(mutheta) * std::sin(muphi);
-    double norm_mu_pz = std::cos(mutheta);
 
-    double norm_proton_px = std::sin(protontheta) * std::cos(protonphi);
-    double norm_proton_py = std::sin(protontheta) * std::sin(protonphi);
-    double norm_proton_pz = std::cos(protontheta);
+    double muon_px = GetPmu()*std::sin(mutheta) * std::cos(muphi);
+    double muon_py = GetPmu()*std::sin(mutheta) * std::sin(muphi);
+    double muon_pz = GetPmu()*std::cos(mutheta);
 
-    double cos_angle_mupi = norm_mu_px*norm_proton_px + norm_mu_py*norm_proton_py + norm_mu_pz*norm_proton_pz;
+    double cos_angle_mupi = (muon_px*proton_px + muon_py*proton_py+muon_pz*proton_pz)/(GetPmu()*proton_p);
     return cos_angle_mupi;
 }
 

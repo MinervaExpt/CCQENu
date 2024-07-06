@@ -421,6 +421,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetProtonPhi(int i) const;
     virtual double GetPrimaryProtonPhi() const;
+    virtual double GetProtonP(int i) const;
+    virtual double GetProtonPx(int i) const;
+    virtual double GetProtonPy(int i) const;
+    virtual double GetProtonPz(int i) const;
     // virtual double GetSecProtonPhi_1() const;
     // virtual double GetSecProtonPhi_2() const;
     // virtual double GetSecProtonPhi_3() const;
