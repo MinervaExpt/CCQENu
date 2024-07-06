@@ -38,7 +38,8 @@
   ], 
   "AnalyzeVariables": [
     "Q2QE",
-    "PrimaryProtonScore"//,
+    "PrimaryProtonScore" //,
+    "PrimaryProtonScore1" //,
     // "recoil"
     // "NBlobs",
     // "Multiplicity",
@@ -60,8 +61,11 @@
     // "ptmu"
     // "NumberOfProtonCandidates"
   ],
-  "Analyze2DVariables": ["Q2QE_PrimaryProtonScore"],
-    // "PionAngle_ThetamuDegrees"//,
+  "Analyze2DVariables": [
+    "Q2QE_PrimaryProtonScore",
+    "Q2QE_PrimaryProtonScore"
+  ],
+  // "PionAngle_ThetamuDegrees"//,
     //,
     // "Q2QE_recoil"//,
     // "pzmu_ptmu"

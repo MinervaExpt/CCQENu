@@ -94,6 +94,11 @@
       "xvar": "Q2QE",
       "yvar": "PrimaryProtonScore"
     },
+    "Q2QE_PrimaryProtonScore1": {
+      "name": "Q2QE_PrimaryProtonScore1",
+      "xvar": "Q2QE",
+      "yvar": "PrimaryProtonScore1"
+    },
     "PionAngle_ThetamuDegrees": {
       "name": "PionAngle_ThetamuDegrees",
       "xvar": "PionAngle",
@@ -595,6 +600,16 @@
       "true": "TruthHasSingleProton",
       "name": "PrimaryProtonScore",
       "title": "Proton Score of Primary non-Muon Track",
+      "nbins": 20,
+      "min":0.0,
+      "max":1.0,
+      "fluxnorm": false
+    },
+      "PrimaryProtonScore1": {
+      "reco": "PrimaryProtonScore1",
+      "true": "TruthHasSingleProton",
+      "name": "PrimaryProtonScore",
+      "title": "Proton Score 1 of Primary non-Muon Track",
       "nbins": 20,
       "min":0.0,
       "max":1.0,
