@@ -1,7 +1,7 @@
 {
     "comments": "Added to config proton scores 6/17/2024",
     "ProtonScoreConfig": {
-        "pass_proton_score_min": 0.3
+        "pass_proton_score_min": 0.7
     }//,
     // "ProtonScoreConfig": {
     //     "band1": {
