@@ -38,7 +38,7 @@
   ], 
   "AnalyzeVariables": [
     "CosMuonPionAngle",
-    "ApothemX",.
+    "ApothemX",
     "ApothemY"
     // "FitQ2QE",
     // "PrimaryProtonScore"//,
