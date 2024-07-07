@@ -425,13 +425,16 @@
         "categories": {
             "qelike": {
                 // "for": ["selected_reco", "selected_truth", "truth", "response"]
-                "for": ["selected_reco"]
+                "for": ["selected_reco", "selected_truth"]
              },
             "neutralpion": {
                 "for": ["selected_reco"]
             },
             "chargedpion": {
-                "for": ["selected_reco"]
+                "for": [
+                    "selected_reco",
+                    "selected_truth"
+                ]
             },
             // "multipion": {
             //     "for": ["selected_reco"]
@@ -440,7 +443,10 @@
                 "for": ["selected_reco"]
             },
             "qelikenot": {
-                "for": ["selected_reco"]
+                "for": [
+                    "selected_reco",
+                    "selected_truth"
+                ]
             }
         },
         "legend_entries": {
