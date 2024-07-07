@@ -658,9 +658,9 @@
       "true": "CosMuonPionAngle",
       "name": "CosMuonPionAngle",
       "title": "cos(#theta_{#mu, #pi})",
-      "nbins": 6,
+      "nbins": 40,
       "min": -1.0,
-      "max": -0.7
+      "max": 1.0
     }
   }
 }
