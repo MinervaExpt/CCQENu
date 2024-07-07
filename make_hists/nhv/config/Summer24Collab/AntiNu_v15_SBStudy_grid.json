@@ -6,7 +6,7 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/Summer24Collab/AntiNuSamples_v15_SBStudy_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/Summer24Collab/AntiNuParams_v15_1track.json",
-  "outRoot": "FullSampleFits_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "FullSampleFits_MasterAnaDev_200FluxUnivs_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
@@ -78,7 +78,7 @@
     "geant4",
     "response"
   ],
-  "fluxUniverses": 100, //100, //10,
+  "fluxUniverses": 200, //100, //10,
   "NuEConstraint":1, 
   "Geant4NeutronCV":1,
   "Geant4Elastics":1
