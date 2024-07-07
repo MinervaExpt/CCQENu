@@ -665,7 +665,11 @@
       "title": "cos(#theta_{#mu, #pi})",
       "nbins": 40,
       "min": -1.0,
-      "max": 1.0
+      "max": 1.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
     }
   }
 }
