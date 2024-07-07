@@ -37,7 +37,9 @@
     // "TrackBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "CosMuonPionAngle"
+    "CosMuonPionAngle",
+    "ApothemX",.
+    "ApothemY"
     // "FitQ2QE",
     // "PrimaryProtonScore"//,
     // "recoil"
@@ -61,7 +63,7 @@
     // "ptmu"
     // "NumberOfProtonCandidates"
   ],
-  "Analyze2DVariables": [],
+  "Analyze2DVariables": ["ApothemX_ApothemY"],
     // "FitQ2QE_recoil"
   // "PionAngle_ThetamuDegrees"//,
     // "Q2QE_PrimaryProtonScore"//,

@@ -44,6 +44,11 @@
     // }
   },
   "2D": {
+    "ApothemX_ApothemY": {
+      "name": "ApothemX_ApothemY",
+      "xvar": "ApothemX",
+      "yvar": "ApothemY"
+    },
     "FitQ2QE_recoil": {
       "name": "FitQ2QE_recoil",
       "xvar": "FitQ2QE",
@@ -605,7 +610,7 @@
       "max":1.0,
       "fluxnorm": false
     },
-      "PrimaryProtonScore1": {
+    "PrimaryProtonScore1": {
       "reco": "PrimaryProtonScore1",
       "true": "TruthHasSingleProton",
       "name": "PrimaryProtonScore",
