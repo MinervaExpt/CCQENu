@@ -10,4 +10,4 @@
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/Summer24Collab \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame6F --model=MnvTunev1 --tag=AL9 \
  --mail --prescale=1 --config=nhv/config/Summer24Collab/AntiNu_v15_SBStudy_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
- --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=3000   #--debug --notimestamp
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000   #--debug --notimestamp
