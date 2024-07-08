@@ -329,7 +329,7 @@
       "true": "TrueRecoilEnergyGeV",
       "name": "recoil",
       "title": "Recoil in GeV",
-      "nbins": 12,
+      "nbins": 48,
       "min": 0.0,
       "max": 0.5,
       // "for": [
