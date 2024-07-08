@@ -39,6 +39,10 @@ class CVFunctions {
 
    public:
     CVFunctions() {
+        recofunctions["XVertex"] = &CVUNIVERSE::GetXVertex;
+        truefunctions["TrueXVertex"] = &CVUNIVERSE::GetTrueXVertex;
+        recofunctions["YVertex"] = &CVUNIVERSE::GetYVertex;
+        truefunctions["TrueYVertex"] = &CVUNIVERSE::GetTrueYVertex;
         recofunctions["ZVertex"] = &CVUNIVERSE::GetZVertex;
         truefunctions["TrueZVertex"] = &CVUNIVERSE::GetTrueZVertex;
 
@@ -218,8 +222,8 @@ class CVFunctions {
         recointfunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
         truefunctions["TrueNBlobs"] = &CVUNIVERSE::GetTrueNBlobs;
 
-        recofunctions["N3DBlobs"] = &CVUNIVERSE::GetN3DBlobs;
-        recointfunctions["N3DBlobs"] = &CVUNIVERSE::GetN3DBlobs;
+        recofunctions["NNeutCands"] = &CVUNIVERSE::GetNNeutCands;
+        recointfunctions["NNeutCands"] = &CVUNIVERSE::GetNNeutCands;
 
         recofunctions["3DBlobsRatio"] = &CVUNIVERSE::Get3DBlobsRatio;
         truefunctions["3DBlobsRatio"] = &CVUNIVERSE::Get3DBlobsRatio;

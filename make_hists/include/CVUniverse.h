@@ -275,8 +275,13 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     double GetTrueApothemY() const;
     double GetTrueApothemX() const;
 
+    double GetXVertex() const;
+    double GetYVertex() const;
     double GetZVertex() const;
+    
     ROOT::Math::XYZTVector GetTrueVertex() const;
+    double GetTrueXVertex() const;
+    double GetTrueYVertex() const;
     double GetTrueZVertex() const;
 
     // Some stuff Heidi added to test out some issues with the NTuples
@@ -314,7 +319,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // Isolated Blobs
 
     virtual int GetNBlobs() const;
-    virtual int GetN3DBlobs() const;
+    virtual int GetNNeutCands() const;
     virtual double Get3DBlobsRatio() const;
     virtual int GetTrueNBlobs() const;  // This is just N_pi0*2
 

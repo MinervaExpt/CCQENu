@@ -44,6 +44,11 @@
     // }
   },
   "2D": {
+    "XVertex_YVertex": {
+      "name": "XVertex_YVertex",
+      "xvar": "XVertex",
+      "yvar": "YVertex"
+    },
     "ApothemX_ApothemY": {
       "name": "ApothemX_ApothemY",
       "xvar": "ApothemX",
@@ -542,6 +547,24 @@
       "nbins": 50,
       "min":-1000.0,
       "max":1000.0
+    },
+    "XVertex": {
+      "reco": "XVertex",
+      "true": "TrueXVertex",
+      "name": "XVertex",
+      "title": "XVertex (mm)",
+      "nbins": 50,
+      "min": -1000.0,
+      "max": 1000.0
+    },
+    "YVertex": {
+      "reco": "YVertex",
+      "true": "TrueYVertex",
+      "name": "YVertex",
+      "title": "YVertex (mm)",
+      "nbins": 50,
+      "min": -1000.0,
+      "max": 1000.0
     },
     "ZVertex": {
       "reco": "ZVertex",
