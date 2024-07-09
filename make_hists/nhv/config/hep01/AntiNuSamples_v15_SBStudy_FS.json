@@ -11,10 +11,10 @@
             "qelike"
         ],
         "background": [
-            // "neutralpion",
+            "neutralpion",
             "chargedpion",
             // // "multipion",
-            // "other",
+            "other",
             "qelikenot"
         ],
         "categories": {
@@ -26,11 +26,11 @@
                     // "response"
                 ]
             },
-            // "neutralpion": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
+            "neutralpion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
             "chargedpion": {
                 "for": [
                     "selected_reco"
@@ -41,11 +41,11 @@
             // //         "selected_reco"
             // //     ]
             // // },
-            // "other": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
+            "other": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
             "qelikenot": {
                 // "for": ["selected_reco", "selected_truth", "truth", "response"]                
                 "for": [
@@ -56,10 +56,10 @@
         "legend_entries": {
             "data": "Data",
             "qelike": "QELike",
-            // "neutralpion": "1#pi^{0}",
+            "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
             // // "multipion": "N#pi",
-            // "other": "Other",
+            "other": "Other",
             "qelikenot": "QELike Not"
         }
     },

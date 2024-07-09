@@ -7,22 +7,22 @@
   "samplesFile": "${CCQEMAT}/nhv/config/hep01/AntiNuSamples_v15_SBStudy_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/hep01/AntiNuParams_v15_1track.json",
   "outRoot": "ProtonScoreStudy_QElikeNoProtonScoreCut_${MYPLAYLIST}_${MYMODEL}",
-  "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
+  "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root", 
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
   "MinervaModel":"${MYMODEL}", 
   "recoName":"${MYRECONAME}",
-  "tunedmc":"untuned", 
+  "tunedmc":"both", 
   "closure":0,
   "TuneCategories": [
     "qelike",
     "chargedpion",
-    "neutralpion",
+    "neutralpion"
     // "multipion",
-    "other"
+    // "other"
   ],
   "DoResolution": false,
-  "DoTypes": false,
+  "DoTypes": true,
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
@@ -30,17 +30,17 @@
     // "QElike0Blob",
     // "QElike1Blob"//,
     // "QElikeNeutrons"//,
-    // "TrackSideband",
+    "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband",
-    // "BlobSideband",
+    "BlobSideband",
     // "TrackBlobSideband"
   ], 
   "AnalyzeVariables": [
     "Q2QE",
-    "PrimaryProtonScore",
-    "PrimaryProtonScore1" //,
-    // "recoil"
+    // "PrimaryProtonScore",
+    // "PrimaryProtonScore1" //,
+    "recoil",
     // "NBlobs",
     // "Multiplicity",
     // "PionAngle",
@@ -57,14 +57,11 @@
     // "recoilQE"
     // "NNeutBlobs"
     // "NeutBlobsRatio"
-    // "pzmu",
-    // "ptmu"
+    "pzmu",
+    "ptmu"
     // "NumberOfProtonCandidates"
   ],
-  "Analyze2DVariables": [
-    "Q2QE_PrimaryProtonScore",
-    "Q2QE_PrimaryProtonScore1"
-  ],
+  "Analyze2DVariables": [],
   // "PionAngle_ThetamuDegrees"//,
     //,
     // "Q2QE_recoil"//,
