@@ -26,14 +26,14 @@
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike"
+    "QElike",
     // "QElike0Blob",
     // "QElike1Blob"//,
     // "QElikeNeutrons"//,
     "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband",
-    "BlobSideband",
+    "BlobSideband"
     // "TrackBlobSideband"
   ], 
   "AnalyzeVariables": [
