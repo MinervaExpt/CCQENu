@@ -56,7 +56,7 @@ void weight_MCreScale::read(TString filename) {
     if (m_f_ScaleFrac) {
         std::cout << "weight_MCreScale: I'm using this scale file " << filename << std::endl;
         for (auto cat : m_categories) {
-            std::string name = "h___Background___" + cat + "___Q2QE___scale";
+            std::string name = "h___QElike___" + cat + "___Q2QE___scale";
             m_mnvh_Scales[cat] = (MnvH1D*)m_f_ScaleFrac->Get(name.c_str());
             // m_scale_minmax[cat] = { m_mnvh_Scales[cat]->GetXaxis()->GetXmin}
         }
