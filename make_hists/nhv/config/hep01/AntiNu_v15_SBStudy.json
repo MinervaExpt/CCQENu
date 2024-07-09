@@ -6,7 +6,7 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/hep01/AntiNuSamples_v15_SBStudy_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/hep01/AntiNuParams_v15_1track.json",
-  "outRoot": "OldProtonScore_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "BlobSignalTest_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root", 
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
@@ -22,25 +22,25 @@
     // "other"
   ],
   "DoResolution": false,
-  "DoTypes": true,
+  "DoTypes": false,
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
     "QElike",
-    // "QElike0Blob",
-    // "QElike1Blob"//,
+    "QElike0Blob",
+    "QElike1Blob"//,
     // "QElikeNeutrons"//,
-    "TrackSideband",
+    // "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband",
-    "BlobSideband"
+    // "BlobSideband"
     // "TrackBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "Q2QE",
+    // "Q2QE",
     // "PrimaryProtonScore",
     // "PrimaryProtonScore1" //,
-    "recoil",
+    // "recoil",
     // "NBlobs",
     // "Multiplicity",
     // "PionAngle",
@@ -49,7 +49,7 @@
     // "HasMultiPion"
     // "recoilNoBlobs",
     // "Q2QE",
-    // "EAvail"//,
+    "EAvail"//,
     // "EAvailWiggled"
     // "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"
@@ -57,8 +57,8 @@
     // "recoilQE"
     // "NNeutBlobs"
     // "NeutBlobsRatio"
-    "pzmu",
-    "ptmu"
+    // "pzmu",
+    // "ptmu"
     // "NumberOfProtonCandidates"
   ],
   "Analyze2DVariables": [],

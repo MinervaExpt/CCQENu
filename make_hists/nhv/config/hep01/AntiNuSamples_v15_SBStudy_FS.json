@@ -20,10 +20,10 @@
         "categories": {
             "qelike": {
                 "for": [
-                    "selected_reco"//,
-                    // "selected_truth",
-                    // "truth",
-                    // "response"
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
                 ]
             },
             "neutralpion": {
