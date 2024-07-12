@@ -1768,11 +1768,19 @@
 		                   "name":"MinProtonScore1",
 		                   "title":"Minimum Proton Candidate Score1",
 		                   "units":"",
-                       "nbins":20,
-                       "min":0.,
-                       "max":1.,
-                       "fluxnorm":false,
-                       "tunedmc":"none"}
+                                   "nbins":20,
+                                   "min":0.,
+		                   "max":1.,
+		                   "fluxnorm":false,
+		                   "tunedmc":"none"},
+		"MissingTrackCount":{"reco":"MissingTrackCount",
+			             "true":"TrueFSPartCount",
+				     "name":"MissingTrackCount",
+				     "title":"Missing Track Count",
+				     "units":"",
+				     "bins":[0,1,2,3,4,5],
+				     "fluxnorm":false,
+				     "tunedmc":"none"}
   }
 }
 

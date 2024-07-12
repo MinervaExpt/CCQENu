@@ -247,6 +247,8 @@ public:
 
 	// ----------------------------- Other Variables -----------------------------
 
+	virtual int GetMissingTrackCount() const;
+
 	//  virtual double GetWgenie() const { return GetDouble("mc_w"); }
 	virtual int GetIntType() const;
 	virtual int GetMCIntType() const;

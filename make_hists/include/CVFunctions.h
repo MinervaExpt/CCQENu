@@ -178,6 +178,9 @@ public:
 
 		// ----------------------- Sean Neutrino Functions ------------------------------------------
 
+		recointfunctions["MissingTrackCount"] = &CVUNIVERSE::GetMissingTrackCount;
+		recofunctions["MissingTrackCount"] = &CVUNIVERSE::GetMissingTrackCount;
+
 		// Interaction Vertex
 
 		recointfunctions["HasInteractionVertex"] = &CVUNIVERSE::GetHasInteractionVertex;

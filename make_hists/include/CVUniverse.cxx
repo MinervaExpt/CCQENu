@@ -561,10 +561,20 @@ namespace {
 	
 	double CVUniverse::GetThetamuDegrees() const { return GetThetamu()*180/M_PI; }
 	double CVUniverse::GetTrueThetamuDegrees() const { return GetTrueThetamu()*180/M_PI; }
-  double CVUniverse::GetThetaXmuDegrees() const { return GetThetaXmu()*180/M_PI; }
-  double CVUniverse::GetTrueThetaXmuDegrees() const { return GetTrueThetaXmu()*180/M_PI; }
-  double CVUniverse::GetThetaYmuDegrees() const { return GetThetaYmu()*180/M_PI; }
-  double CVUniverse::GetTrueThetaYmuDegrees() const { return GetTrueThetaYmu()*180/M_PI; }
+	double CVUniverse::GetThetaXmuDegrees() const { return GetThetaXmu()*180/M_PI; }
+	double CVUniverse::GetTrueThetaXmuDegrees() const { return GetTrueThetaXmu()*180/M_PI; }
+	double CVUniverse::GetThetaYmuDegrees() const { return GetThetaYmu()*180/M_PI; }
+	double CVUniverse::GetTrueThetaYmuDegrees() const { return GetTrueThetaYmu()*180/M_PI; }
+
+	// Tracks not included amongst the primary muon track or any of the proton candidate tracks
+	int CVUniverse::GetMissingTrackCount() const {
+		int obs_tracks = GetNumberOfProtonCandidates();
+		if (GetEmuGeV() >= 0) {
+			obs_tracks++;
+		}
+		int all_tracks = GetMultiplicity();
+		return all_tracks - obs_tracks;
+	}
 
 	// ----------------------------- Proton Variables ----------------------------
 

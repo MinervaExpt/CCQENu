@@ -1,8 +1,8 @@
 {
   "version":13,  // Dec 2021 large scale tests
   "_mcIn":"/home/sean/MinervaExpt/data/playlists/local/run00113271.txt",
-  "mcIn":"/home/sean/MinervaExpt/data/playlists/local/CCQENu_minervame1N_MC_Inextinguishable_merged.txt",
-  "dataIn":"/home/sean/MinervaExpt/data/playlists/local/CCQENu_minervame1N_DATA_Inextinguishable_merged.txt",
+  "mcIn":"playlists/CCQENu_minervame1N_MC_Inextinguishable_merged.txt",
+  "dataIn":"playlists/CCQENu_minervame1N_DATA_Inextinguishable_merged.txt",
   "prescale":1,
   "playlist":"minervame1N",
   "MinervaModel":"MnvTunev2",
