@@ -105,9 +105,17 @@ def createTarball(tmpdir,tardir,tag,basedirname):
         os.system(cmd)
 
         cmd2 = "cp %s %s/"%(tarpath,tardir)
+        
         print ("Copying tar",cmd2)
 
         os.system(cmd2)
+
+        cmd = "rm %s "%(tarpath)
+        
+        print ("removing tar",tarpath)
+
+        os.system(cmd2)
+
         return "myareatar_%s.tar.gz"%(tag)
 
 # Define function to unpack tarball
@@ -297,6 +305,9 @@ ostype = platform.platform()
 if "el7" in ostype:
     #cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
     cmd += " --singularity-image /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest "
+else: 
+    cmd += " --singularity-image /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-el9:latest "
+
 cmd += " --role=Analysis "
 #cmd += " --disk=10GB " # comment out for test
 cmd += " --expected-lifetime " + opts.lifetime
