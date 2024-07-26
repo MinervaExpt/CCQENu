@@ -77,19 +77,19 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
 
   mnvPlotter.axis_maximum=0.2;
   mnvPlotter.axis_minimum=0.0;
-  mnvPlotter.error_color_map["Flux"]                    = kViolet+6;
-  mnvPlotter.error_color_map["Recoil Reconstruction"]   = kOrange+2;
-  mnvPlotter.error_color_map["Cross Section Models"]         = kMagenta;
+  mnvPlotter.error_color_map["Flux"]                   = kViolet+6;
+  mnvPlotter.error_color_map["Recoil Reconstruction"]  = kOrange+2;
+  mnvPlotter.error_color_map["Cross Section Models"]   = kMagenta;
   mnvPlotter.error_color_map["FSI Model"]              = kRed;
-  mnvPlotter.error_color_map["Muon Reconstruction"]     = kGreen;
-  mnvPlotter.error_color_map["Muon Energy"]     = kGreen+3;
-  mnvPlotter.error_color_map["Muon_Energy_MINERvA"]     = kRed-3;
-  mnvPlotter.error_color_map["Muon_Energy_MINOS"]     = kViolet-3;
+  mnvPlotter.error_color_map["Muon Reconstruction"]    = kGreen;
+  mnvPlotter.error_color_map["Muon Energy"]            = kGreen+3;
+  mnvPlotter.error_color_map["Muon_Energy_MINERvA"]    = kRed-3;
+  mnvPlotter.error_color_map["Muon_Energy_MINOS"]      = kViolet-3;
   mnvPlotter.error_color_map["Other"]                  = kGreen+3;
-  mnvPlotter.error_color_map["Low Recoil Fits"]         = kRed+3;
-  mnvPlotter.error_color_map["GEANT4"]                = kBlue;
+  mnvPlotter.error_color_map["Low Recoil Fits"]        = kRed+3;
+  mnvPlotter.error_color_map["GEANT4"]                 = kBlue;
   mnvPlotter.error_color_map["Background Subtraction"] = kGreen;
-  mnvPlotter.error_color_map["Tune"]=kOrange+2;
+  mnvPlotter.error_color_map["Tune"]                   = kOrange+2;
   
   mnvPlotter.error_summary_group_map.clear();
 #ifndef NOGENIE
@@ -156,13 +156,13 @@ void PlotErrorSummary(TCanvas & cE, PlotUtils::MnvH1D* hist, std::string label, 
   mnvPlotter.error_summary_group_map["Geant"].push_back("GEANT_Proton");
   mnvPlotter.error_summary_group_map["Geant"].push_back("GEANT_Pion");
   //
-   mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_MINOS");
- mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_MINERvA");
-  mnvPlotter.error_summary_group_map["Muon Energy"].push_back("MINOS_Reconstruction_Efficiency");
-   mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_Resolution");
-    mnvPlotter.error_summary_group_map["Muon Energy"].push_back("BeamAngleX");
-    mnvPlotter.error_summary_group_map["Muon Energy"].push_back("BeamAngleY");
-//  mnvPlotter.error_summary_group_map["Unfolding"].push_back("Unfolding");
+	mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_MINOS");
+	mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_MINERvA");
+	mnvPlotter.error_summary_group_map["Muon Energy"].push_back("MINOS_Reconstruction_Efficiency");
+	mnvPlotter.error_summary_group_map["Muon Energy"].push_back("Muon_Energy_Resolution");
+	mnvPlotter.error_summary_group_map["Muon Energy"].push_back("BeamAngleX");
+	mnvPlotter.error_summary_group_map["Muon Energy"].push_back("BeamAngleY");
+//	mnvPlotter.error_summary_group_map["Unfolding"].push_back("Unfolding");
 
 
   mnvPlotter.DrawErrorSummary(hist,"TR",include_stat_error,false,0.0, do_cov_area_norm, "",do_fractional_uncertainty);

@@ -43,6 +43,43 @@ events <- events %>% mutate(tracks = case_when((NumberOfProtonCandidates == 0) ~
 
 cbind(colnames(events))
 ```
+
+```{r}
+events <- events$Q2QE
+sum(events > 4)/length(events)
+quantile(events[which(events<4)], probs = seq(0,1,length.out = 7))
+
+hist(events[which(events<4)], breaks = c(0,0.125,0.25,0.41,0.64,1.05,4))
+hist(events[which(events<4)], breaks = c(0,0.124037,0.248861,0.407641,0.637749,1.077180,3.999720))
+
+c(sum(events < 0.124037),
+  sum(events < 0.248861) - sum(events < 0.124037),
+  sum(events < 0.407641) - sum(events < 0.248861),
+  sum(events < 0.637749) - sum(events < 0.407641),
+  sum(events < 1.077180) - sum(events < 0.637749),
+  sum(events < 3.999720) - sum(events < 1.077180))
+
+c(sum(events < 0.125),
+  sum(events < 0.25) - sum(events < 0.125),
+  sum(events < 0.41) - sum(events < 0.25),
+  sum(events < 0.64) - sum(events < 0.41),
+  sum(events < 1.05) - sum(events < 0.64),
+  sum(events < 4) - sum(events < 1.05))
+
+c(sum(events < 0.1),
+  sum(events < 0.2) - sum(events < 0.1),
+  sum(events < 0.4) - sum(events < 0.2),
+  sum(events < 0.6) - sum(events < 0.4),
+  sum(events < 1) - sum(events < 0.6),
+  sum(events < 4) - sum(events < 1))
+
+c(sum(events < 0.2),
+  sum(events < 0.4) - sum(events < 0.2),
+  sum(events < 0.6) - sum(events < 0.4),
+  sum(events < 1) - sum(events < 0.6),
+  sum(events < 4) - sum(events < 1))
+```
+
 ```{r, message = F, warning = F, echo = F}
 percent <- function(x, digits = 2, format = "f", ...) {
   paste0(formatC(x * 100, format = format, digits = digits, ...), "%")
@@ -53,41 +90,53 @@ truth_colors = c("#0085ad","#af272f","#4c8c2b","#eaaa00","#522506")
 
 diffplot <- function(evts, x, xbreaks = seq(0,1,0.2), title, bin_width, units = "", wgt = 1) {
   ggplot() +
-    geom_histogram_pattern(evts,
+    geom_histogram_pattern(evts, position = position_stacknudge(x=bin_width),
              mapping = aes({{x}}, pattern_fill = Truth, weight = {{wgt}}*weight/bin_width),
              pattern = "magick", fill = "white", pattern_type = "hs_diagcross", pattern_scale = 0.45,
-             binwidth = bin_width, origin = 0, geom = "step") +
-    stat_bin(evts,
+             binwidth = bin_width, center = bin_width/2) +
+    stat_bin(evts, position = position_stacknudge(x=bin_width/2),
              mapping = aes({{x}}, color = Truth, weight = {{wgt}}*weight/bin_width),
-             binwidth = bin_width, origin = 0, geom = "step", position = position_stacknudge(x=-bin_width/2)) +
+             binwidth = bin_width, center = bin_width/2, geom = "step") +
     theme_bw() + ggtitle(title) + ylab(paste("events per",bin_width,units)) +
     scale_pattern_fill_manual(values = truth_colors) +
     scale_color_manual(values = truth_colors) +
-    scale_x_continuous(expand = c(0,0), limits = c(min(xbreaks),max(xbreaks)), breaks = xbreaks) +
+    scale_x_continuous(expand = c(0,0), limits = c(min(xbreaks)-bin_width/1000,max(xbreaks)+bin_width/1000), breaks = xbreaks) +
     scale_y_continuous(expand = expansion(mult = c(0,.1)), n.breaks = 12, labels = scales::scientific)
 }
 
 propplot <- function(evts, x, xbreaks = seq(0,1,0.2), title, bin_width, units = "", wgt = 1) {
   ggplot() +
-    geom_histogram_pattern(evts,
+    geom_histogram_pattern(evts, position = position_fillnudge(x=bin_width),
              mapping = aes({{x}}, pattern_fill = Truth, weight = {{wgt}}*weight/bin_width),
              pattern = "magick", fill = "white", pattern_type = "hs_diagcross", pattern_scale = 0.45,
-             binwidth = bin_width, origin = 0, geom = "step", position = "fill") +
-    stat_bin(evts,
+             binwidth = bin_width, origin = 0) +
+    stat_bin(evts, position = position_stacknudge(x=bin_width/2),
              mapping = aes({{x}}, color = Truth, weight = {{wgt}}*weight/bin_width),
-             binwidth = bin_width, origin = 0, geom = "step", position = position_fillnudge(x=-bin_width/2)) +
+             binwidth = bin_width, boundary = 0, geom = "step") +
     theme_bw() + ggtitle(title) + ylab("relative contribution") +
     scale_pattern_fill_manual(values = truth_colors) +
     scale_color_manual(values = truth_colors) +
-    scale_x_continuous(expand = c(0,0), limits = c(min(xbreaks),max(xbreaks)), breaks = xbreaks) +
+    scale_x_continuous(expand = c(0,0), limits = c(min(xbreaks)-bin_width/1000,max(xbreaks)+bin_width/1000), breaks = xbreaks) +
     scale_y_continuous(expand = c(0,0), limits = c(0,1), breaks = seq(0,10,0.1))
 }
-
-
-
-
 ```
 
+```{r, message = F, warning = F, echo = F}
+events %>% group_by(Multiplicity,NumberOfProtonCandidates) %>% count()
+events %>% group_by(Multiplicity) %>% count()
+events %>% group_by(NumberOfProtonCandidates) %>% count()
+
+events %>% group_by(Truth) %>% count() %>% mutate(`n%` = percent(n/nrow(events)))
+events %>% filter((Multiplicity-1) > NumberOfProtonCandidates) %>% group_by(Truth) %>% count() %>%
+  mutate(`n%` = percent(n/(events %>% filter((Multiplicity-1) > NumberOfProtonCandidates) %>% nrow())))
+events %>% filter((Multiplicity-1) == NumberOfProtonCandidates) %>% group_by(Truth) %>% count() %>%
+  mutate(`n%` = percent(n/(events %>% filter((Multiplicity-1) == NumberOfProtonCandidates) %>% nrow())))
+
+diffplot(events %>% mutate(MissingTracks = Multiplicity-1-NumberOfProtonCandidates),MissingTracks,0:5,"Missing Tracks",1)
+propplot(events %>% mutate(MissingTracks = Multiplicity-1-NumberOfProtonCandidates),MissingTracks,0:5,"Missing Tracks",1)  
+  
+events %>% mutate(MissingTracks = Multiplicity-1-NumberOfProtonCandidates) %>% group_by(MissingTracks) %>% count()
+```
 
 ```{r, message = F, warning = F, echo = F}
 ggplot(events %>% 
@@ -222,6 +271,33 @@ ggplot(events %>%
 
 
 ```{r, message = F, warning = F, echo = F}
+# 
+ggplot(events %>% 
+         filter(PrimaryProtonTfromdEdx >= 0) %>%
+         mutate(angleDiff = PrimaryProtonAngle*360/(2*pi)-ThetamuDegrees), 
+       aes(PrimaryProtonTrackVtxGap,angleDiff)) +
+  stat_bin2d() +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0))) +
+  scale_fill_jcolors_contin("pal2")
+
+ggplot(events %>% 
+         filter(PrimaryProtonTfromdEdx >= 0) %>%
+         mutate(angleDiff = PrimaryProtonAngle*360/(2*pi)-ThetamuDegrees), 
+       aes(angleDiff, fill = Truth)) +
+  stat_bin(color = "black") +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05)))
+ggplot(events %>% 
+         filter(PrimaryProtonTfromdEdx >= 0) %>%
+         mutate(angleDiff = PrimaryProtonAngle*360/(2*pi)-ThetamuDegrees)) +
+  stat_bin(color = "black", mapping = aes(angleDiff, fill = Truth, y = ..count../sum(..count..)), position = "fill") +
+  theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0))
+
 # secondary proton score 1 vs primary proton score 1
 ggplot(events %>% 
          filter(PrimaryProtonTfromdEdx >= 0) %>%

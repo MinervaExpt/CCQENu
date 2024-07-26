@@ -132,6 +132,7 @@ add_executable(makeplots_stats ../smg/makeplots_stats.C)
 add_executable(makeTMVAfile ../smg/makeTMVAfile.C)
 add_executable(TMVAMulticlass ../smg/TMVAMulticlass.C)
 add_executable(hist_compare ../smg/hist_compare.C)
+add_executable(makeErrorPlots ../smg/makeErrorPlots.C)
 #add_executable(TMVAMulticlassApplication ../smg/TMVAMulticlassApplication.C)
 
 
@@ -158,4 +159,5 @@ target_link_libraries(makeplots_stats PRIVATE ${PROJECT_NAME} )
 target_link_libraries(makeTMVAfile PRIVATE ${PROJECT_NAME} )
 target_link_libraries(TMVAMulticlass PRIVATE ${PROJECT_NAME} )
 target_link_libraries(hist_compare PRIVATE ${PROJECT_NAME} )
+target_link_libraries(makeErrorPlots PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(TMVAMulticlassApplication PRIVATE ${PROJECT_NAME} )
