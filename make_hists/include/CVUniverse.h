@@ -226,6 +226,7 @@ public:
 
 	// ----------------------------- Recoil Variables ----------------------------
 
+	virtual double ApplyCaloTuning(double calRecoilE) const;
 
 	virtual double GetCalRecoilEnergy() const;
 	virtual double GetCalRecoilEnergyGeV() const;
@@ -245,6 +246,8 @@ public:
 
 
 	// ----------------------------- Other Variables -----------------------------
+
+	virtual int GetMissingTrackCount() const;
 
 	//  virtual double GetWgenie() const { return GetDouble("mc_w"); }
 	virtual int GetIntType() const;

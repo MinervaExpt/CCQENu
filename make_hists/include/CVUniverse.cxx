@@ -561,10 +561,20 @@ namespace {
 	
 	double CVUniverse::GetThetamuDegrees() const { return GetThetamu()*180/M_PI; }
 	double CVUniverse::GetTrueThetamuDegrees() const { return GetTrueThetamu()*180/M_PI; }
-  double CVUniverse::GetThetaXmuDegrees() const { return GetThetaXmu()*180/M_PI; }
-  double CVUniverse::GetTrueThetaXmuDegrees() const { return GetTrueThetaXmu()*180/M_PI; }
-  double CVUniverse::GetThetaYmuDegrees() const { return GetThetaYmu()*180/M_PI; }
-  double CVUniverse::GetTrueThetaYmuDegrees() const { return GetTrueThetaYmu()*180/M_PI; }
+	double CVUniverse::GetThetaXmuDegrees() const { return GetThetaXmu()*180/M_PI; }
+	double CVUniverse::GetTrueThetaXmuDegrees() const { return GetTrueThetaXmu()*180/M_PI; }
+	double CVUniverse::GetThetaYmuDegrees() const { return GetThetaYmu()*180/M_PI; }
+	double CVUniverse::GetTrueThetaYmuDegrees() const { return GetTrueThetaYmu()*180/M_PI; }
+
+	// Tracks not included amongst the primary muon track or any of the proton candidate tracks
+	int CVUniverse::GetMissingTrackCount() const {
+		int obs_tracks = GetNumberOfProtonCandidates();
+		if (GetEmuGeV() >= 0) {
+			obs_tracks++;
+		}
+		int all_tracks = GetMultiplicity();
+		return all_tracks - obs_tracks;
+	}
 
 	// ----------------------------- Proton Variables ----------------------------
 
@@ -1189,10 +1199,26 @@ namespace {
 
 	// ----------------------------- Recoil Variables ----------------------------
 
+	double CVUniverse::ApplyCaloTuning(double calRecoilE) const {
+    		// for antineutrino do nothing;
+    		if (m_analysis_neutrino_pdg == -14) {
+        		//return AntiNu_tracker.eCorrection(calRecoilE * MeVGeV) / MeVGeV;
+        		return calRecoilE;
+    		} // else
+    		//return Nu_tracker.eCorrection(calRecoilE * MeVGeV) / MeVGeV;
+        	return calRecoilE; // also do nothing here 
+	}
 
 	double CVUniverse::GetCalRecoilEnergy() const {
 		bool neutrinoMode = GetAnalysisNuPDG() > 0;
-		if(neutrinoMode) return (GetDouble("nonvtx_iso_blobs_energy")+GetDouble("dis_id_energy")); // several definitions of this, be careful
+		if(neutrinoMode) {
+			if(MinervaUniverse::GetTreeName()=="MasterAnaDev") {
+				return (GetDouble("nonvtx_iso_blobs_energy")+GetDouble("dispr_id_energy")); // several definitions of this, be careful
+			}
+			else {
+				return (GetDouble("nonvtx_iso_blobs_energy")+GetDouble("dis_id_energy"));
+			}
+		}
 		else {
 			//if(GetVecDouble("recoil_summed_energy").size()==0) return -999.; // protect against bad input,
 			//return (GetVecDouble("recoil_summed_energy")[0] - GetDouble("recoil_energy_nonmuon_vtx100mm"));
