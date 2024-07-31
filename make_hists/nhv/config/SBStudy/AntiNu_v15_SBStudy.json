@@ -6,7 +6,7 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/SBStudy/AntiNuSamples_v15_SBStudy_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
-  "outRoot": "vertex_tracksbstudy_${MYMODEL}",
+  "outRoot": "NeutronEnergyStudy_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
   "prescale":999,
   "playlist":"minervame5A",
@@ -26,19 +26,21 @@
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
-    // "QElike",
-    // "QElike0Blob",
-    // "QElike1Blob"//,
+    "QElike",
+    "QElike0Blob",
+    "QElike1Blob"//,
     // "QElikeNeutrons"//,
-    "TrackSideband"//,
+    // "TrackSideband"//,
     // "LoPionThetaSideband",
     // "HiPionThetaSideband",
     // "BlobSideband",
     // "TrackBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "XVertex",
-    "YVertex"
+    // "XVertex",
+    // "YVertex"
+    "EAvail",
+    "TrueNeutronEnergy"
     // "CosMuonPionAngle",
     // "ZVertex"
     // "Q2QE"//,
@@ -64,7 +66,7 @@
     // "ptmu"
     // "NumberOfProtonCandidates"
   ],
-  "Analyze2DVariables": ["XVertex_YVertex"],
+  "Analyze2DVariables": [],//["XVertex_YVertex"],
     // "PionAngle_ThetamuDegrees"//,
     // "Q2QE_PrimaryProtonScore"//,
     // "Q2QE_recoil"//,

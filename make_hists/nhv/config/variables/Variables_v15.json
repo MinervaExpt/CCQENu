@@ -693,6 +693,19 @@
         "data",
         "selected_reco"
       ]
+    },
+    "TrueNeutronEnergy": {
+      "reco": "TrueNeutronEGeV",
+      "true": "TrueNeutronEGeV",
+      "name": "TrueNeutronEGeV",
+      "title": "True Neutron Energy (GeV)",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 2.0,
+      "for": [
+        "selected_reco",
+        "selected_truth"
+      ]
     }
   }
 }
