@@ -11,7 +11,7 @@ import ROOT
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
 
 TEST=False
-noData=True  # use this to plot MC only types
+noData=False  # use this to plot MC only types
 sigtop=True # use this to place signal on top of background
 dotuned=False
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
@@ -20,7 +20,7 @@ legendfontsize = 0.042
 
 
 
-def CCQECanvas(name,title,xsize=1000,ysize=720):
+def CCQECanvas(name,title,xsize=1100,ysize=720):
     c2 = ROOT.TCanvas(name,title,xsize,ysize)
     # c2.SetLeftMargin(0.1)
     c2.SetRightMargin(0.04)
@@ -55,29 +55,40 @@ def MakeTitleOnPlot():
     latex.SetTextAlign(21)
     return latex
 
-
+catstodo = [
+    "data",
+    "qelike",
+    "chargedpion",
+    "neutralpion",
+    "other"
+]
 catsnames = {
 "data":"data", 
 "qelike":"QElike",
 "chargedpion":"1#pi^{#pm}",
 "neutralpion":"1#pi^{0}",
-"multipion":"N#pi",
+# "multipion":"N#pi",
 "other":"Other"}
 catscolors = {
 "data":ROOT.kBlack, 
 "qelike":ROOT.kBlue-6,
 "chargedpion":ROOT.kMagenta-6,
 "neutralpion":ROOT.kRed-6,
-"multipion":ROOT.kGreen-6,
+# "multipion":ROOT.kGreen-6,
 "other":ROOT.kYellow-6}
 
+
 samplenames = {
-    "BlobSideband": "1 #pi^{0} Sideband",
-    "MultipBlobSideband": "Multiple #pi Sideband",
     "QElike": "QElike Signal Sample",
+    "QElike0Blob": "QElike Signal w/o Blobs",
+    "QElike1Blob": "QElike Signal w/ 1 Blob",
     "QElikeOld": "2D Era QElike Signal Sample",
+    # "BlobSideband": "1 #pi^{0} Sideband",
+    "BlobSideband": "Blob Sideband",
+    "MultipBlobSideband": "Multiple #pi Sideband",
     "HiPionThetaSideband": "Backward #pi^{#pm} Sideband",
     "LoPionThetaSideband": "Forward #pi^{#pm} Sideband",
+    "TrackSideband": "Track Sideband"
 }
 if len(sys.argv) == 1:
     print ("enter root file name and optional 2nd argument to get tuned version")
@@ -96,7 +107,7 @@ keys = f.GetListOfKeys()
 
 h_pot = f.Get("POT_summary")
 dataPOT = h_pot.GetBinContent(1)
-mcPOTprescaled = h_pot.GetBinContent(3)
+mcPOTprescaled = h_pot.GetBinContent(2)
 POTScale = dataPOT / mcPOTprescaled
 print("POTScale: ",POTScale)
 
@@ -123,9 +134,12 @@ for k in keys:
     variable = parse[3]
     if "types" in parse[4]:
         continue
+    if "simulfit" in parse[4]:
+        continue
     # reorder so category is last
     if hist == "h2D": continue
-    if cat == "qelikenot": continue
+    # if cat == "qelikenot": continue
+    if cat not in catstodo: continue
     if hist not in groups.keys():
         groups[hist] = {}
         #legs[parse[0]] = {}
@@ -151,10 +165,14 @@ for k in keys:
     if hist == "h2D": continue # only 1d
     sample = parse[1]
     cat = parse[2]
-    if cat == "qelikenot": continue
-
+    # if cat == "qelikenot": continue
+    if cat not in catstodo: continue
     variable = parse[3]
     if "reconstructed" not in parse[4]: continue
+    if "types" in parse[4]:
+        continue
+    if "simulfit" in parse[4]:
+        continue
     if "tuned" not in parse[4] and dotuned and cat!="data":
         continue
     if "tuned" in parse[4] and not dotuned:
@@ -244,7 +262,13 @@ for a_hist in groups.keys():
             
             data.Print()
             
-            bestorder = list(["other","multipion","neutralpion","chargedpion","qelike"])
+            bestorder = list([
+                "other",
+                # "multipion",
+                "neutralpion",
+                "chargedpion",
+                "qelike"
+            ])
 
             for d_cat in bestorder:
                 if d_cat == "data": continue

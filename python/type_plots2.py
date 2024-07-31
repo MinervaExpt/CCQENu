@@ -12,7 +12,7 @@ from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F
 TEST=False
 noData=False  # use this to plot MC only types
 sigtop=True # use this to place signal on top of background
-
+manualrange = True
 
 def CCQECanvas(name,title,xsize=750,ysize=750):
     c2 = ROOT.TCanvas(name,title,xsize,ysize)
@@ -50,6 +50,7 @@ samplenames = {
     "QElikeOld": "2D Era QElike Signal Sample",
     "HiPionThetaSideband": "Backwards #pi^{+/-} Sideband",
     "LoPionThetaSideband": "Forwards #pi^{+/-} Sideband",
+    "TrackSideband": "#pi^{#pm} Sideband"
 }
 
 nproc = len(process)
@@ -100,7 +101,10 @@ POTScale = dataPOT / mcPOTprescaled
     
 groups = {}
 scaleX = ["Q2QE"]
-scaleY = ["recoil"]
+scaleY = [
+    "recoil"#, 
+    # "CosMuonPionAngle"
+]
 
 
 # find all the valid histogram and group by keywords
@@ -165,6 +169,7 @@ for k in keys:
             index += 10
             h.SetFillStyle(3244)
         groups[hist][sample][variable][cat][index]=h
+        
         #print ("mc",groups[hist][sample][variable][cat])
     # this is data
     if "data" in cat:
@@ -266,6 +271,10 @@ for a_hist in groups.keys():
             else:
                 data.SetMaximum(dmax*1.5)
                 stack.SetMaximum(dmax*1.5)
+            if c_var=="CosMuonPionAngle":
+                data.SetMaximum(8000)
+                data.SetMinimum(0)
+                data.GetXaxis().SetRangeUser(-1.0,-0.5)
             if not noData: 
                 data.Draw("PE")
                 stack.Draw("hist same")
@@ -279,9 +288,17 @@ for a_hist in groups.keys():
             # prelim = AddPreliminary(0.1,0.9)
             # prelim.DrawLatexNDC(0.1,0.9,"MINER#nuA Work In Progress")
             # cc.Modified()
-            # cc.Update()
+            cc.Update()
+            cc.RedrawAxis()
+            # if c_var in scaleX:
+            #     cc.SetLogx()
+            # if c_var in scaleY:
+            #     cc.SetLogy()
             cc.Draw()
-            cc.Print(dirname+"/"+thename+"_"+flag+".png")
+            outname = dirname+"/"+thename+"_"+flag+".png"
+            if manualrange: 
+                outname = dirname+"/"+thename+"_"+flag+"_manualxrange.png"
+            cc.Print(outname)
             
     
 

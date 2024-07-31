@@ -5,7 +5,9 @@ import sys
 from array import array
 
 plotfiletype = "pdf"
-
+# QElike
+# QElike0Blob
+sampletodo = "QElike0Blob"
 def CCQECanvas(name,title,xsize=1000,ysize=750):
     c2 = ROOT.TCanvas(name,title,xsize,ysize)
     # c2.SetLeftMargin(0.1)
@@ -95,6 +97,8 @@ def main():
         # Looking only for 2D hists
         if parse[0]!="h":
             continue
+        if parse[1]!= sampletodo:
+            continue
         if parse[2]!="qelike":
             continue
         if "response" not in parse[4]:
@@ -150,7 +154,7 @@ def main():
     #         if row_norm!=0.0:
     #             # norm_matrix.SetBinContent(j,i,_cont/row_norm)
     #             out_matrix.SetBinContent(i,j,_cont/row_norm)
-
+    out_matrix.Rebin2D()
 
     mnv = MnvPlotter()
 
