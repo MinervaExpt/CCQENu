@@ -11,6 +11,7 @@ import numpy as np
 import time
 
 # names associated with each category: data for full data, qelike for MC signal, qelikenot for MC bkg
+combinefirstbins = False
 category_list = [
     "data", 
     "qelike", 
@@ -34,7 +35,7 @@ scale_var = "Q2QE"
 fit_var = "recoil"
 scaletype = "area"
 
-variable_list = ["Q2QE_recoil"]
+variable_list = ["FitQ2QE_recoil"]
 # names associated with each "sample" e.g. QElike, QElikeALL
 sample_list = [
     "QElike", 
@@ -262,14 +263,15 @@ def RunFractionFitter(i_hist_dict):
         #     fit.Constrain(i, 0.0, 0.05)   
 
         # Set(<name>,<fraction>,<stepsize>,<lowerbound>,<upperbound>)
-        virtual_fitter.Config().ParSettings(i).Set(mc_category_list[i], mc_frac_list[i], 0.001, 0.0, 1.0) # Switched step size to be the bin width of 25 recoil bins
+        virtual_fitter.Config().ParSettings(i).Set(mc_category_list[i], mc_frac_list[i], mc_frac_list[i]*0.01)#, 0.0, 1.0) # Switched step size to be the bin width of 25 recoil bins
         # Constrain the fit to between [0,1], since they are fracs and area-normed
         # if mc_frac_list[i] < 0.01:
         #     virtual_fitter.Config().ParSettings(i).Fix()
         if mc_category_list[i] in fixed_cats_list:
             virtual_fitter.Config().ParSettings(i).Fix()
         else:
-            fit.Constrain(i, mc_frac_list[i]*0.05, mc_frac_list[i]*5.)
+            # fit.Constrain(i, mc_frac_list[i]*0.05, mc_frac_list[i]*5.)
+            fit.Constrain(i, 0., 1.)
 
     # Set the bin range you want to fit on
     fit.SetRangeX(min_bin, max_bin)
@@ -432,7 +434,7 @@ def main():
 
     outfilebase = filename.replace(".root","_"+recoil_type+".root")
     # dummy q2 and recoil hists, both mnvhnd and th2d
-    dummy_scalevar_mnvh1d, dummy_scalevar_th1d = GetDummyHistCV(infile)
+    dummy_scalevar_mnvh1d, dummy_scalevar_th1d = GetDummyHistCV(infile, scale_var)
 
     dummy_fitvar_mnvh1d, dummy_fitvar_th1d = GetDummyHistCV(infile, recoil_type)
 
@@ -534,7 +536,16 @@ def main():
 
                 for key in tmp_th2d_dict.keys():
                     proj_name = fitbin_name + '_' + key
-                    tmp_fitbin_th1d = tmp_th2d_dict[key].ProjectionY(proj_name, fitbin, fitbin, "e")
+                    tmp_fitbin_th1d = ROOT.TH1D()
+                    if fitbin == 1 and combinefirstbins:
+                        tmp_fitbin_th1d = tmp_th2d_dict[key].ProjectionY(proj_name, fitbin, fitbin+1, "e")
+                    elif fitbin == 2 and combinefirstbins:
+                        tmp_fitbin_th1d = tmp_th2d_dict[key].ProjectionY(proj_name, fitbin-1, fitbin, "e")
+                    else:
+                        tmp_fitbin_th1d = tmp_th2d_dict[key].ProjectionY(proj_name, fitbin, fitbin, "e")
+
+                    tmp_fitbin_th1d.Rebin(3)
+
                     # if rebin>1.:
                     #     tmp_fitbin_th1d.Rebin(rebin)
                     prefit_th1d_dict[key] = tmp_fitbin_th1d
