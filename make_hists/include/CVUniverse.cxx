@@ -1499,8 +1499,18 @@ int CVUniverse::GetNNeutCands() const {
     return GetInt((MinervaUniverse::GetTreeName() + "_BlobIs3D_sz").c_str());
 }
 
-
-
+double CVUniverse::GetTrueNeutronEGeV() const {
+    // Returns true energy of leading neutron in an event
+    double neut_E = -9999.;
+    int pdgsize = GetInt("mc_nFSPart");
+    for (int i = 0; i < pdgsize; i++) {
+        int pdg = GetVecElem("mc_FSPartPDG", i);
+        double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
+        if (pdg == 2112)
+            return energy*MeVGeV;  // Skip neutrons
+    }
+    return neut_E;
+}
 
 // int CVUniverse::GetBlobIsNeut() const {
 //     int n_neut_cands = GetNNeutCands();
@@ -1932,8 +1942,7 @@ double CVUniverse::GetChargedPionAngle() const {
 }
 
 double CVUniverse::GetCosMuonPionAngle() const {
-
-    // For finding the 3D angle between the muon and pion in an event
+    // For finding the 3D angle between the muon and pion candidate in an event
     double angle = -9999.;
     // First check if there's another track, if not, return default value
     if (CVUniverse::GetMultiplicity() < 2)

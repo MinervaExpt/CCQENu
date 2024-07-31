@@ -225,6 +225,9 @@ class CVFunctions {
         recofunctions["NNeutCands"] = &CVUNIVERSE::GetNNeutCands;
         recointfunctions["NNeutCands"] = &CVUNIVERSE::GetNNeutCands;
 
+        truefunctions["TrueNeutronEGeV"] = &CVUNIVERSE::GetTrueNeutronEGeV;
+        recofunctions["TrueNeutronEGeV"] = &CVUNIVERSE::GetTrueNeutronEGeV;
+
         recofunctions["3DBlobsRatio"] = &CVUNIVERSE::Get3DBlobsRatio;
         truefunctions["3DBlobsRatio"] = &CVUNIVERSE::Get3DBlobsRatio;
 

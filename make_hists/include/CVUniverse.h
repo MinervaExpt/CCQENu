@@ -320,6 +320,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual int GetNBlobs() const;
     virtual int GetNNeutCands() const;
+    virtual double GetTrueNeutronEGeV() const;
     virtual double Get3DBlobsRatio() const;
     virtual int GetTrueNBlobs() const;  // This is just N_pi0*2
 
