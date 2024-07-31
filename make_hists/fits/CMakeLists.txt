@@ -28,7 +28,7 @@ find_package(ROOT REQUIRED COMPONENTS RIO Net Minuit2 Minuit)
 #---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 include(${ROOT_USE_FILE})
 #include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include $ENV{PLOTUTILSROOT}/../include $ENV{PLOTUTILSROOT}/../include/PlotUtils $ENV{PLOTUTILSROOT}/../include/UnfoldUtils $ENV{PLOTUTILSROOT}/../include/RooUnfold)
-include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include $ENV{PLOTUTILSROOT}/../include $ENV{PLOTUTILSROOT}/../include/PlotUtils $ENV{PLOTUTILSROOT}/../include/UnfoldUtils $ENV{PLOTUTILSROOT}/../include/RooUnfold $ENV{JSONCPP_DIR}/include)
+include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include $ENV{PLOTUTILSROOT}/../include $ENV{PLOTUTILSROOT}/../include/PlotUtils $ENV{PLOTUTILSROOT}/../include/UnfoldUtils $ENV{JSONCPP_DIR}/include)
 
 link_directories(${ROOT_LIBRARY_DIR})
 
@@ -104,7 +104,7 @@ MESSAGE("ROOT_LIBRARIES:${ROOT_LIBRARIES} ")
 
 MESSAGE("PROJECT:${PROJECT_NAME}")
 
-target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT}  -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) 
+target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT}  -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) 
 #target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT} -lplotutils -L$ENV{UNFOLDUTILSROOT} -lunfoldutils -l$ENV{UNFOLDUTILSROOT} -lG__UnfoldUtilsDict.so)
 
 
