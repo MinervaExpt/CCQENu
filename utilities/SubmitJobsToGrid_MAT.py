@@ -2,6 +2,7 @@ import os,sys,time,datetime
 from optparse import OptionParser
 import datetime
 
+import platform
 ###########################################################
 #  Script: JobSubmission python script for submitting
 #          analysis jobs to the grid
@@ -96,7 +97,7 @@ def createTarball(tmpdir,tardir,tag,basedirname):
     found = os.path.isfile("%s/myareatar_%s.tar.gz"%(tardir,tag))
 
     if(not found):
-        #cmd = "tar -czf /minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
+        #cmd = "tar -czf /exp/minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
         print (" in directory",os.getcwd())
         tarpath = os.path.join(tmpdir,"myareatar_%s.tar.gz"%(tag))
         cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif,*.csv} -zcf  %s ./%s"%(tarpath,basedirname)
@@ -122,7 +123,7 @@ def writeOptions(parser):
     print ("Now write options to the parser")
     # Directory to write output
     parser.add_option('--outdir', dest='outdir', help='Directory to write tagged output directory to', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
-    parser.add_option('--tardir', dest='tardir', help='Tarball location', default = "/minerva/data/users/"+_user_+"/tars/")
+    parser.add_option('--tardir', dest='tardir', help='Tarball location', default = "/pnfs/minerva/scratch/users/"+_user_+"/tars/")
     parser.add_option('--basedir', dest='basedirpath', help='Base directory for making tarball (full path)', default = "NONE")
     parser.add_option('--rundir', dest='rundir', help='relative path in basedir for the directory you run from, if different', default = ".")
     parser.add_option('--setup', dest='setup', help='relative path in basedir to the setup script', default = ".")
@@ -245,11 +246,12 @@ if (not opts.debug):
         print (" move to directory",here,os.getcwd())
     else:
         tarname = str(opts.tarfilename)
-        if not os.path.exists(opts.tardir+opts.tarfilename):
-            print ("Tar File "+opts.tardir+opts.tarfilename+" doesn't Exist!")
+        tarthing = os.path.join(opts.tardir,opts.tarfilename)
+        if not os.path.exists(tarthing):
+            print ("Tar File "+tarthing+" doesn't Exist!")
             sys.exit()
     #change the tag to the current one...
-        cmd="cp "+opts.tardir+opts.tarfilename+" "+opts.tardir+"myareatar_"+tag_name+".tar.gz"
+        cmd="cp "+tarthing+" "+os.path.join(opts.tardir,"myareatar_"+tag_name+".tar.gz")
         os.system(cmd)
 
 # This will unpack the tarball we just made above
@@ -291,21 +293,28 @@ if opts.mail:
 #cmd += "--subgroup=Nightly " #This is only for high priority jobs
 cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC " # remove OFFSITE
 # make a very complicated thing to tell it to use a singularity image
-cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
+ostype = platform.platform()
+if "el7" in ostype:
+    #cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
+    cmd += " --singularity-image /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest "
 cmd += " --role=Analysis "
 #cmd += " --disk=10GB " # comment out for test
-cmd += " --expected-lifetime  " + opts.lifetime
+cmd += " --expected-lifetime " + opts.lifetime
 cmd += " --memory "+str(memory)+"MB "
 cmd += configstring+" " #the environments for the tunes to bee applied
 #cmd += "-f "+opts.outdir+"/myareatar_"+tag_name+".tar.gz "
-cmd += " --tar_file_name dropbox://"+opts.tardir+"myareatar_"+tag_name+".tar.gz  --use-cvmfs-dropbox "
+cmd += " --tar_file_name dropbox://"+os.path.join(opts.tardir,"myareatar_"+tag_name+".tar.gz") 
+cmd += " --use-cvmfs-dropbox "
 #cmd += "-i /cvmfs/minerva.opensciencegrid.org/minerva/software_releases/v22r1p1"+" "
 cmd += "file://"+os.environ["PWD"]+"/"+wrapper_name
-print (cmd)
+print (cmd+"\n")
 
 
 if not opts.debug:
     sf = open(wrapper_name.replace(".sh",".log"),'w')
+    jg = open(wrapper_name.replace(".sh",".job"),'w')
+    jg.write(cmd)
+    jg.close()
     sf.write(cmd)
     #os.system(cmd)
     answer="failed"

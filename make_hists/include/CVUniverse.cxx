@@ -2251,6 +2251,27 @@ namespace {
 		}
 	}
 	
+	int CVUniverse::GetPassbdtgQELikeCut() const {
+		double score = bdtgQELike();
+		int protons = GetNumberOfProtonCandidates();
+		if (protons == 0) {
+			double q2 = GetQ2QEGeV();
+			if (q2 < 0.4) {
+				if (score >= 0.25) return 1;
+				else return 0;
+			}
+			else if (q2 < 0.6) {
+				if (score >= 0.2) return 1;
+				else return 0;
+			}
+			else if (score >= 0.1) return 1;
+			else return 0;
+		}
+		else if (protons == 1 && score >= 0.1) return 1;
+		else if (protons > 1 && score >= 0.02) return 1;
+		else return 0;
+	}
+	
 	// xgboost
 	
 	double CVUniverse::xgboostQELike() const {

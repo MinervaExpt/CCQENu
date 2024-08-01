@@ -651,6 +651,8 @@ public:
 	virtual double bdtgMultiPion() const;
 	virtual double bdtgOther() const;
 	
+	virtual int GetPassbdtgQELikeCut() const;
+	
 	// xgboost
 	
 	virtual double xgboostQELike() const;

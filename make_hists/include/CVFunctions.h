@@ -522,6 +522,8 @@ public:
 		recofunctions["bdtgMultiPion"] = &CVUNIVERSE::bdtgMultiPion;
 		recofunctions["bdtgOther"] = &CVUNIVERSE::bdtgOther;
 		
+		recointfunctions["PassbdtgQELikeCut"] = &CVUNIVERSE::GetPassbdtgQELikeCut;
+		
 		// TMVA
 		recofunctions["xgboostQELike"] = &CVUNIVERSE::xgboostQELike;
 		recofunctions["xgboost1ChargedPion"] = &CVUNIVERSE::xgboost1ChargedPion;

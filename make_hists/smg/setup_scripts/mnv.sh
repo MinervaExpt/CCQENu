@@ -1,4 +1,5 @@
 export WHEREIPUTMYCODE=/exp/minerva/app/users/$USER/minerva
+export BASEDIR=$WHEREIPUTMYCODE
 export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
 export UTILITIES=$WHEREIPUTMYCODE/CCQENu/utilities
 export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
