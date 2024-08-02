@@ -20,6 +20,7 @@
 	             "SecProtonScore1_1",
 	             "PrimaryProtonTrackVtxGap",
 	             "SecProtonTrackVtxGap_1",
+	             "MuonToPrimaryProtonAngle",
 	             "ProtonRatioTdEdX2TrackLength_0",
 	             "ProtonRatioTdEdX2TrackLength_1",
 	             "NumClustsPrimaryProtonEnd",

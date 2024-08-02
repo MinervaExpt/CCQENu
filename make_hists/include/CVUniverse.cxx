@@ -856,14 +856,21 @@ namespace {
 	
 	double CVUniverse::GetMuonToPrimaryProtonAngle() const {
 		if (GetProtonScore1_0() < 0) return -9999.;
-		double theta1 = GetThetamu();
-		double phi1 = GetPhimu();
-		double theta2 = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_theta").c_str());
-		double phi2 = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_phi").c_str());
-		double theta = std::acos(std::sin(theta1)*std::cos(phi1)*std::sin(theta2)*std::cos(phi2) +
-		                         std::sin(theta1)*std::sin(phi1)*std::sin(theta2)*std::sin(phi2) +
-		                         std::cos(theta1)*std::cos(theta2));
-		                         return theta*180/M_PI;
+		// proton
+		double proton_p = GetDouble(std::string(MinervaUniverse::GetTreeName()+"_proton_P_fromdEdx").c_str());
+		double proton_px = GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_Px_fromdEdx").c_str());;
+		double proton_py = GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_Py_fromdEdx").c_str());;
+		double proton_pz = GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_Pz_fromdEdx").c_str());;
+		// muon
+		double mutheta = GetThetamu(); 
+		double muphi = GetPhimu();
+		double muon_px = GetPmu()*std::sin(mutheta) * std::cos(muphi);
+		double muon_py = GetPmu()*std::sin(mutheta) * std::sin(muphi);
+		double muon_pz = GetPmu()*std::cos(mutheta);
+		// angle
+		double cos_angle_muproton = (muon_px*proton_px + muon_py*proton_py+muon_pz*proton_pz)/(GetPmu()*proton_p);
+		double angle = std::acos(cos_angle_muproton);
+		return angle;
 	}
 	
 	// Proton P (from dEdx)

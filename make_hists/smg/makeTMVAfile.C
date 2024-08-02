@@ -169,6 +169,10 @@ int main(const int argc, const char *argv[] ) {
 		use_prog_bar = config.GetBool("useProgressBar");
 	}
 	
+	// Do this to prevent annoying warning
+	PlotUtils::MinervaUniverse::RPAMaterials(true);
+	PlotUtils::MinervaUniverse::SetZExpansionFaReweight(true);
+	
 	//Selection Criteria
 
   std::string cutsfilename = config.GetString("cutsFile");
