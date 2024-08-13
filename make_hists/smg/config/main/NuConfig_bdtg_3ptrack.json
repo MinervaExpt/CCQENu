@@ -20,7 +20,7 @@
   "samplesFile":"config/samples/NuSamples_bdtg.json",
   "outRoot":"SB",
   "AnalyzeVariables":["pzmu","ptmu","Q2QE","bdtgQELike","bdtg1ChargedPion",
-                      "bdtg1NeutralPion","bdtgMultiPion","bdtgOther"],
+                      "bdtg1NeutralPion","bdtgMultiPion","bdtgOther","Multiplicity"],
   "_AnalyzeVariables":["ptmu","pzmu","EnuCCQE","Q2QE","bdtgQELike","bdtg1ChargedPion",
                       "bdtg1NeutralPion","bdtgMultiPion","bdtgOther",
                       "PrimaryProtonScore1","SecProtonScore1_1",
