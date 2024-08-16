@@ -1,0 +1,18 @@
+{"InputFile":"/Users/schellma/Dropbox/ccqe/BDT/samples.root",
+    "%%%InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_mnv_Nu_v8_multitrack_1.root",
+    //"Sidebands":["QElike","MichelSideBand","BlobSideBand","MicBlobSideBand"],
+    "Sidebands":["1track","2track"],
+    "IncludeInFit":["1track","2track"],
+    "Categories":["1chargedpion","1neutralpion","multipion","other","qelike"],
+    "Backgrounds":["1chargedpion","1neutralpion","multipion","other","qelike"],
+    "Span":40,
+    "Rebin":4,
+    "Variable":"bdtgQELike",
+    "FitType":"FastChi2",
+    "OutputFile":"BDT_3.root",
+    "PixDir":"./pix3",
+    "LogPlot":true,
+    "LogMinimum":1000.,
+    "Template":"h___%s___%s___%s___reconstructed",
+    "FitTemplate":"h___%s___%s___%s___fitted"
+}

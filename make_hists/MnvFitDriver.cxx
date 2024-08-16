@@ -104,7 +104,7 @@ void printCorrMatrix(const ROOT::Math::Minimizer& minim, const int nPars)
 // direct from Rene Brun and the tutorials
 void CopyDir(TDirectory *source, TDirectory *adir) {
    //copy all objects and subdirs of directory source as a subdir of the current directory
-   source->ls();
+   //source->ls();
    adir->cd();
    //loop on all entries of this directory
    TKey *key;
@@ -161,6 +161,7 @@ int main(int argc, char* argv[]) {
     std::string inputFileName=config.GetString("InputFile");
     std::string outputFileName = config.GetString("OutputFile");
     bool logPlot = config.GetBool("LogPlot");
+    double logMinimum = config.GetDouble("LogMinimum");
     std::vector<std::string> sidebands = config.GetStringVector("Sidebands");
     std::vector<std::string> categories = config.GetStringVector("Categories");
     
@@ -178,7 +179,13 @@ int main(int argc, char* argv[]) {
     std::string fitType = config.GetString("FitType");
     std::string h_template = config.GetString("Template");
     std::string f_template = config.GetString("FitTemplate");
-    
+
+    int rebin=1;
+    if (config.CheckMember("Rebin")){
+        rebin = config.GetInt("Rebin");
+    }
+
+
     // read in the data and parse it
     
     TFile* inputFile = TFile::Open(inputFileName.c_str(),"READ");
@@ -194,7 +201,7 @@ int main(int argc, char* argv[]) {
     std:vector<double > potinfo(2);
     potinfo[0]=pot_summary->GetBinContent(1);
     potinfo[1]=pot_summary->GetBinContent(3); // this includes any prescale
-  pot_summary->Print("ALL");
+    pot_summary->Print("ALL");
     TParameter<double>* mcPOT = (TParameter<double>*) &potinfo[1];
     TParameter<double>* dataPOT = (TParameter<double>*) &potinfo[0];
     std::cout << " dataPOT "<< potinfo[0] << " mcPOT " << potinfo[1] << std::endl;
@@ -210,26 +217,33 @@ int main(int argc, char* argv[]) {
     char cname[1000];
     char fname[1000];
     std::map<const std::string, PlotUtils::MnvH1D*> dataHist;
-    std::map<const std::string,std::vector<PlotUtils::MnvH1D*>> fitHists;
-    std::map<const std::string,std::vector<PlotUtils::MnvH1D*>> unfitHists;
+    std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists;
+    std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists;
     TString name = varName;
     for (auto const side:sidebands){
         std::string cat = "data";
-        std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
-        std::sprintf(fname,f_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
+        std::snprintf(cname,1000,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
+        std::snprintf(fname,1000,f_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
         std::cout << " look for " << cname << std::endl;
         dataHist[side] = (PlotUtils::MnvH1D*)inputFile->Get(cname);
+        
+        dataHist[side]->Rebin(rebin);
+        std::cout << " nbins " << cname << " " << dataHist[side]->GetXaxis()->GetNbins() << std::endl;
+        if (logPlot) dataHist[side]->SetMinimum(logMinimum);
         //dataHist[side]->SetNormBinWidth(1.0);
         //dataHist[sidename] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
         for (auto cat:categories){
-            std::sprintf(cname,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
-            std::sprintf(fname,f_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
+            std::snprintf(cname,1000,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
+            std::snprintf(fname,1000,f_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
             name = TString(cname);
           std::cout << " look for " << cname << std::endl;
           MnvH1D* newhist = (PlotUtils::MnvH1D*)inputFile->Get(cname);
           if (!newhist){
             std::cout << " no " << cname << std::endl;
           }
+          newhist->Rebin(rebin);
+          if (logPlot) newhist->SetMinimum(logMinimum);
+          std::cout << "nbins " << cname << " " << newhist->GetXaxis()->GetNbins() << std::endl;
           newhist->Print();
           newhist->Scale(POTscale);
           newhist->Print();
@@ -271,7 +285,7 @@ int main(int argc, char* argv[]) {
     std::map<const std::string, MnvH1D*> bkgsub;
     
     for (auto side:sidebands){
-        dataHist[side]->Print();
+        //dataHist[side]->Print();
         
 
         //dataHist[side]->Write();
@@ -280,7 +294,8 @@ int main(int argc, char* argv[]) {
         
         for (int i = 0; i < categories.size(); i++){
             fitHists[side][i]->Write();
-            std::sprintf(fname,f_template.c_str(),side.c_str(), "all",varName.c_str());
+            //std::sprintf(fname,f_template.c_str(),side.c_str(), "all",varName.c_str());
+            std::snprintf(fname, 1000, f_template.c_str(), side.c_str(), "all", varName.c_str());
             if (i == 0){
                 tot[side] = (MnvH1D*)fitHists[side][i]->Clone(TString(fname));
             }
@@ -297,7 +312,7 @@ int main(int argc, char* argv[]) {
     
     for (auto side:sidebands){
         for (int i = 0; i < categories.size(); i++){
-            std::sprintf(cname,h_template.c_str(),side.c_str(), "all",varName.c_str());
+            std::snprintf(cname,1000, h_template.c_str(),side.c_str(), "all",varName.c_str());
             if (i == 0){
                 pre[side] = (MnvH1D*)unfitHists[side][i]->Clone(TString(cname));
             }
@@ -318,7 +333,7 @@ int main(int argc, char* argv[]) {
             for (int j = 0; j < backgrounds.size(); j++){
                 //std::cout << "match " << categories[i] << " " << backgrounds[j] << " " << count << std::endl;
                 if (categories[i] == backgrounds[j]){
-                     std::sprintf(fname,f_template.c_str(),side.c_str(), "bkg",varName.c_str());
+                     std::snprintf(fname,1000, f_template.c_str(),side.c_str(), "bkg",varName.c_str());
                     if (count == 0){
                         bkg[side] = (MnvH1D*)fitHists[side][i]->Clone(TString(fname));
                         count +=1;
@@ -336,7 +351,7 @@ int main(int argc, char* argv[]) {
         }
     }
     for (auto side:sidebands){
-        std::sprintf(fname,f_template.c_str(),side.c_str(), "bkgsub",varName.c_str());
+        std::snprintf(fname,1000,f_template.c_str(),side.c_str(), "bkgsub",varName.c_str());
         bkgsub[side]=(MnvH1D*)dataHist[side]->Clone(fname);
         bkgsub[side]->AddMissingErrorBandsAndFillWithCV(*(fitHists[side][0]));
         bkgsub[side]->Add(bkg[side],-1);
@@ -361,7 +376,7 @@ int main(int argc, char* argv[]) {
     }
     
     for (auto side:sidebands){
-        
+        dataHist[side]->SetTitle(dataHist[side]->GetName());
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot[side], 1., "TR");
         cF.Print(TString(side+"_postfit_compare.png").Data());
         
@@ -369,8 +384,9 @@ int main(int argc, char* argv[]) {
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre[side], 1., "TR");
         cF.Print(TString(side+"_prefit_compare.png").Data());
         
-        mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side], fitHists[side][0], 1., "TR");
-        cF.Print(TString(side+"_bkgsub_compare.png").Data());
+        
+        //mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side], fitHists[side][0], 1., "TR");
+        //cF.Print(TString(side+"_bkgsub_compare.png").Data());
     }
     
     TObjArray* combmcin;
@@ -390,7 +406,7 @@ int main(int argc, char* argv[]) {
         t.SetTitle(label.c_str());
         t.SetNDC(1);
         t.SetTextSize(.03);
-        
+        if (logPlot) data->SetMinimum(logMinimum);
         mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
         t.Draw("same");
         cF.Print(TString(side+"_prefit_combined.png").Data());
@@ -410,11 +426,11 @@ int main(int argc, char* argv[]) {
         t2.SetTitle(label.c_str());
         bkgsub[side]->SetTitle("bkgsub");
         mnvPlotter.DrawDataStackedMC(bkgsub[side],combmcout,1.0,"TR");
-        cF.Print(TString(side+"_"+fitType+"_bkgsub_combined.png").Data());
+        //cF.Print(TString(side+"_"+fitType+"_bkgsub_combined.png").Data());
     }
     
     
-    inputFile->Close();
+    //inputFile->Close();
     outputfile->Close();
     cout << "Closing Output File... Does this solve the issue of seg fault." << endl;
    

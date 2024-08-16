@@ -8,7 +8,7 @@
 
 namespace fit{
 
-int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHists, const std::map<const std::string, std::vector< PlotUtils::MnvH1D*> > unfitHists, const std::map<const std::string, PlotUtils::MnvH1D*>  dataHist, const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type, const int lowBin, const int hiBin, const bool binbybin ){
+int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHists,  std::map<const std::string, std::vector< PlotUtils::MnvH1D*> > unfitHists, const std::map<const std::string, PlotUtils::MnvH1D*>  dataHist, const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type, const int lowBin, const int hiBin, const bool binbybin ){
     
     // takes the histograms in unfitHists[sample][category], fits to dataHist by combining all the samples by changing the normalization of the category templates and then makes fitHists[sample][category] which contains the best template fit for each universe.
     // writes the chi2 value, parameters and covariance of the parameters into the output root file but does not return them.
@@ -73,7 +73,7 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
             std::cout << " now do the fit for " << univ << " " << iuniv << std::endl;
             // make a local TH1F map unfitHistsCV that the fitter expects
             std::map<const std::string, std::vector< TH1D*>> unfitHistsCV;
-             if (univ == "CV"){
+            if (univ == "CV"){
                 for (auto sample:unfitHists){
                     for (int i = 0; i < ncat; i++){
                         TString name = unfitHists.at(sample.first).at(i)->GetName()+TString("_"+univ);
@@ -96,9 +96,9 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
                     }
                 }
             }
-            std::cout << " have made the local samples for this universe"<< std::endl;
+        std::cout << " have made the local samples for this universe"<< std::endl;
             
-          for (int thebin = lowBin; thebin <= hiBin; thebin++){
+        for (int thebin = lowBin; thebin <= hiBin; thebin++){
             fit::MultiScaleFactors func2(unfitHistsCV,dataHistCV,includeInFit,type,lowBin,hiBin);
  
             // set parameters with lower limit of 0
@@ -167,7 +167,7 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
                         ScaleResults[i] = data/tot;
                     }
                 }
-            }
+            } // end of failure
             // print out the parameters
             std::cout << "fix" << success << " " << status << " " << univ << " " << iuniv << " " << status;
             for (int i = 0; i < func2.NDim(); i++){
@@ -184,13 +184,20 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
                         covariance.SetBinContent(i+1,j+1,mini2->CovMatrix(i,j));
                     }
                 }
+            
+                parameters.Print("ALL");
+                parameters.Write();
                 // hack the main histogram by brute force
                 for (auto sample:fitHists){
+                    const std::string myname = sample.first;
                     for (int i = 0; i < func2.NDim(); i++){
                         int nbins = fitHists[sample.first][i]->GetNbinsX();
-                        for (int j = lowBin; j <= hiBin; j++){
-                            fitHists[sample.first][i]->SetBinContent(j,fitHists[sample.first][i]->GetBinContent(j)*combScaleResults[i]);
-                            fitHists[sample.first][i]->SetBinError(j,fitHists[sample.first][i]->GetBinError(j)*ScaleResults[i]);
+                        std::cout << "scale CV" << myname << " " << i << " " << ScaleResults[i] << std::endl;
+                        fitHists[myname][i]->Print();
+                        unfitHists[myname][i]->Print();
+                        for (int j = lowBin; j <= hiBin; j++) {
+                            fitHists[myname][i]->SetBinContent(j,unfitHists[myname][i]->GetBinContent(j)*combScaleResults[i]);
+                            fitHists[myname][i]->SetBinError(j,unfitHists[myname][i]->GetBinError(j)*ScaleResults[i]);
                         }
                     }
                 }
