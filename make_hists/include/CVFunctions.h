@@ -98,7 +98,12 @@ class CVFunctions {
 
         recofunctions["OffsetRecoilEnergyGeV"] = &CVUNIVERSE::GetOffsetRecoilEnergyGeV;
 
-        recofunctions["RecoilEnergyMinusNeutBlobsGeV"] = &CVUNIVERSE::GetRecoilEnergyMinusNeutBlobsGeV;
+        recofunctions["EAvailGeV"] = &CVUNIVERSE::GetEAvailGeV;
+        
+        recofunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
+        truefunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
+
+        // recofunctions["RecoilEnergyMinusNeutBlobsGeV"] = &CVUNIVERSE::GetRecoilEnergyMinusNeutBlobsGeV;
 
         truefunctions["TrueEAvailGeV"] = &CVUNIVERSE::GetTrueEAvailGeV;
         truefunctions["TrueEAvailWithNeutronsGeV"] = &CVUNIVERSE::GetTrueEAvailWithNeutronsGeV;

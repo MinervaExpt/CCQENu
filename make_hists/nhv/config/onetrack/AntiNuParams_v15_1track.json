@@ -1,8 +1,9 @@
 {
-    "comments": "Added to config proton scores 6/17/2024",
+    "comments": ["Added to config proton scores 6/17/2024",
+                 "Added recoil var config and started blob config, 8/2/24"],
     "ProtonScoreConfig": {
         "pass_proton_score_min": 0.3
-    }//,
+    },
     // "ProtonScoreConfig": {
     //     "band1": {
     //         "Q2QE_max": 0.2,
@@ -20,4 +21,8 @@
     //         "pass_proton_score_min": 0.1
     //     }
     // }
+    "RecoilBranchConfig": {
+        "vertex_dist": "50", //"100", "150"
+        "recoil_branch":"recoil_energy_nonmuon_nonvtx50mm"
+    }
 }

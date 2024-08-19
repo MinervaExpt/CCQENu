@@ -38,6 +38,7 @@
 #include "TMath.h"
 #include "TVector3.h"
 #include "utils/NuConfig.h"
+#include "include/NeutCands.h"
 
 class CVUniverse : public PlotUtils::MinervaUniverse {
    protected:
@@ -50,12 +51,16 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static std::vector<double> m_proton_score_Q2QEs;
     static std::vector<double> m_proton_score_mins;
 
+    static NuConfig m_recoil_branch_config;
+    static std::string m_recoil_branch;
+
     // initially set to false
     static bool _is_analysis_neutrino_pdg_set;
     static bool _is_min_blob_zvtx_set;
     static bool _is_photon_energy_cut_set;
     static bool _is_proton_ke_cut_set;
     static bool _is_proton_score_config_set;
+    static bool _is_recoil_branch_set;
 
    public:
 // #ifndef HAZMAT
@@ -205,6 +210,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double ApplyCaloTuning(double calRecoilE) const;
 
+    virtual double SetRecoilBranch(NuConfig RecoilBranchConfig, bool print);
+
     virtual double GetCalRecoilEnergy() const;
     virtual double GetCalRecoilEnergyGeV() const;
 
@@ -219,7 +226,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetOffsetRecoilEnergyGeV() const;
 
-    virtual double GetRecoilEnergyMinusNeutBlobsGeV() const;
+    virtual double GetEAvailGeV() const;
+
+    // virtual double GetRecoilEnergyMinusNeutBlobsGeV() const;
 
     virtual double GetTrueQ0GeV() const;
     virtual double GetTrueQ3GeV() const;
@@ -320,6 +329,12 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual int GetNBlobs() const;
     virtual int GetNNeutCands() const;
+    virtual std::vector<double> GetNeutCandEs() const;
+    virtual NeutronCandidates::NeutCand* GetNeutCand(int index) const;
+    virtual NeutronCandidates::NeutCands* GetNeutCands() const;
+    virtual int GetBlobIsNeutron(NeutronCandidates::NeutCand* cand) const;
+    virtual int GetNNonNeutBlobs();
+    virtual double GetTotNeutBlobEGeV() const;
     virtual double GetTrueNeutronEGeV() const;
     virtual double Get3DBlobsRatio() const;
     virtual int GetTrueNBlobs() const;  // This is just N_pi0*2

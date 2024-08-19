@@ -1,24 +1,23 @@
 {
   "version":15,  
-  "mcIn":"${PLAYLISTROOT}/MC_5A_local.txt",
-  "dataIn":"${PLAYLISTROOT}/DATA_5A_local.txt",
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuCuts_v15_blobs.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
-  "outRoot": "Test_BlobSamples_me5A_${MYMODEL}",
-  // "outRoot": "${MYROOTOUTPUT}/FinalState_5A_1track_${MYMODEL}",
+  "outRoot": "Test_Recoiltighterrad_me5A_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
   "prescale":999,
   "playlist":"minervame5A",
   "MinervaModel":"${MYMODEL}", 
-  "recoName":"CCQENu",
+  "recoName":"MasterAnaDev",
   "tunedmc":"untuned", 
   "closure":0,
   "TuneCategories":["qelike", "chargedpion","neutralpion","multipion","other"], 
   "DoResolution": false,
   "DoTypes": false,
   "pdg":-14,
-  "mcRecoToCSV": true,
+  "mcRecoToCSV": false,
   "runsamples": [
     "QElike",
     "QElike_0blob",
@@ -31,16 +30,17 @@
     // "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "NBlobs",
+    // "NBlobs",
     // "Multiplicity",
     // "PionAngle"
     // "NChargedPions",
     // "HasMultiPion"
     // "recoilNoBlobs",
     // "Q2QE",
-    "EAvail",
+    "EAvail"
+    // "TotalNeutBlobE"
     // "EAvailWiggled"
-    "EAvailWithNeutrons"
+    // "EAvailWithNeutrons"
     // "resEAvailWithNeutrons"
     // "recoil"
     // "recoilQE"

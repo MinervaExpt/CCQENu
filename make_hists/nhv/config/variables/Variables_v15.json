@@ -118,6 +118,11 @@
       "name": "Multiplicty_NumberOfProtonCandidates",
       "xvar": "Multiplicity",
       "yvar": "NumberOfProtonCandidates"
+    },
+    "recoil_EAvail": {
+      "name": "recoil_EAvail",
+      "xvar": "recoil",
+      "yvar": "EAvail"
     }
   },
   "1D": {
@@ -329,7 +334,7 @@
       "fluxnorm": false
     },
     "recoil": {
-      "dofitFill": true,
+      // "dofitFill": true,
       "reco": "RecoilEnergyGeV",
       "true": "TrueRecoilEnergyGeV",
       "name": "recoil",
@@ -390,6 +395,18 @@
       "max": 0.5,
       // "bins": [0.0,0.0025,0.005,0.0125,0.031,0.075,0.16,0.5],
       "fluxnorm": false
+    },
+    "TotalNeutBlobE": {
+      "reco": "TotNeutBlobEGeV",
+      "true": "TotNeutBlobEGeV",
+      "name": "TotalNeutBlobE",
+      "title": "Total Neutron Blob Energy",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 0.5,
+      "for": [
+        "selected_reco"
+      ]
     },
     "EAvailOffset": {
       "reco": "OffsetRecoilEnergyGeV",

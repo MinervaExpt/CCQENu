@@ -56,7 +56,7 @@ class NeutCand {
 
     // Here for use in Variable-like classes
     double GetDummyVar() const { return -999.; }
-
+    
     int MatchesFSNeutron(TLorentzVector neutMom, double tolerance);
     int GetID() const { return fID; };
     int GetIs3D() const { return fIs3D; };
@@ -158,35 +158,35 @@ class NeutCands {
    private:
     int fNCands;
     int fIDmaxE;
-    NeutCand fCandMaxE;
-    std::map<int, NeutCand> fCands;
+    NeutCand* fCandMaxE;
+    std::map<int, NeutCand*> fCands;
 
     void init();
 
    public:
     // CTORS
     NeutCands();
-    NeutCands(std::vector<NeutCand> cands);
+    NeutCands(std::vector<NeutCand*> cands);
     NeutCands(std::map<int, intCandData> candsDataInt, std::map<int, doubleCandData> candDataDouble);
 
     // DTOR
     virtual ~NeutCands() = default;
 
-    void SetCands(std::map<int, NeutCand> inCands) {
+    void SetCands(std::map<int, NeutCand*> inCands) {
         fCands = inCands;
         fNCands = inCands.size();
     }
 
     int GetIDMaxE() const { return fIDmaxE; };
     int GetNCands() const { return fNCands; };
-    NeutCand GetCandidate(int ID) {
+    NeutCand* GetCandidate(int ID) {
         if (fNCands == 0)
-            return NeutCand();
+            return new NeutCand();
         else
             return fCands[ID];
     };
-    NeutCand GetMaxCandidate() const { return fCandMaxE; };
-    std::map<int, NeutCand> GetCandidates() const { return fCands; };
+    NeutCand* GetMaxCandidate() const { return fCandMaxE; };
+    std::map<int, NeutCand*> GetCandidates() const { return fCands; };
 };
 
 }  // namespace NeutronCandidates
@@ -203,11 +203,11 @@ class NeutronEvent {
     double fEMNBlobs, fEMBlobE, fEMBlobNHits;
     double fMaxFSNeutronKE;
     std::bitset<64> fSideBands;
-    NeutronCandidates::NeutCands fNeutCands;
+    NeutronCandidates::NeutCands* fNeutCands;
 
    public:
     NeutronEvent() : fNeutCands(), fIsSignal(false), fIsFSSignal(false), fIsMC(false), fIntType(-999), fIntCode(-999), fTgtZ(-999), fBinPTPZ(-1.0), fEMNBlobs(-999.0), fEMBlobE(-999.0), fEMBlobNHits(-999.0), fMaxFSNeutronKE(-999.0), fSideBands(0) {}
-    NeutronEvent(NeutronCandidates::NeutCands cands) : fIsSignal(false), fIsFSSignal(false), fIsMC(false), fIntType(-999), fIntCode(-999), fTgtZ(-999), fBinPTPZ(-1.0), fEMNBlobs(-999.0), fEMBlobE(-999.0), fEMBlobNHits(-999.0), fMaxFSNeutronKE(-999.0), fSideBands(0) { fNeutCands = cands; }
+    NeutronEvent(NeutronCandidates::NeutCands* cands) : fIsSignal(false), fIsFSSignal(false), fIsMC(false), fIntType(-999), fIntCode(-999), fTgtZ(-999), fBinPTPZ(-1.0), fEMNBlobs(-999.0), fEMBlobE(-999.0), fEMBlobNHits(-999.0), fMaxFSNeutronKE(-999.0), fSideBands(0) { fNeutCands = cands; }
 
     // Use in Variable-like classes
     double GetDummyVar() const { return -999.; }
@@ -231,8 +231,8 @@ class NeutronEvent {
     double GetMaxFSNeutronKE() const { return fMaxFSNeutronKE; }
     std::bitset<64> GetSideBandStat() const { return fSideBands; }
 
-    NeutronCandidates::NeutCand GetLeadingNeutCand() const { return fNeutCands.GetMaxCandidate(); }
-    NeutronCandidates::NeutCands GetNeutCands() const { return fNeutCands; }
+    NeutronCandidates::NeutCand* GetLeadingNeutCand() const { return fNeutCands->GetMaxCandidate(); }
+    NeutronCandidates::NeutCands* GetNeutCands() const { return fNeutCands; }
 
     void SetSignal(bool isSignal) { fIsSignal = isSignal; }
     void SetFSSignal(bool isFSSignal) { fIsFSSignal = isFSSignal; }
