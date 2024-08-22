@@ -8,6 +8,15 @@
     "add log10recoil"
   ],
   "HyperD": {
+    "pzmu_ptmu_EAvail": {
+      "name": "pzmu_ptmu_EAvail",
+      "vars": [
+        "pzmuHD",
+        "ptmuHD",
+        "EAvail"
+      ],
+      "analysistype": 1
+    },
     "pzmu_ptmu_recoil": {
       "name": "pzmu_ptmu_recoil",
       "vars": [
@@ -386,11 +395,11 @@
       "fluxnorm": false
     },
     "EAvail": {
-      "reco": "RecoilEnergyGeV",
+      "reco": "EAvailGeV",
       "true": "TrueEAvailGeV",
       "name": "EAvail",
       "title": "E_{Available} in GeV",
-      "nbins": 25,
+      "nbins": 6,
       "min": 0.0,
       "max": 0.5,
       // "bins": [0.0,0.0025,0.005,0.0125,0.031,0.075,0.16,0.5],

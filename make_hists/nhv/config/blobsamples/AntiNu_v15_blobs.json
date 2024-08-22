@@ -5,7 +5,8 @@
   "cutsFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuCuts_v15_blobs.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
-  "outRoot": "Test_Recoiltighterrad_me5A_${MYMODEL}",
+  "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
+  "outRoot": "Test_30per_NHVNeutronMultiplicity_me5A_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
   "prescale":999,
   "playlist":"minervame5A",
@@ -19,9 +20,9 @@
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike",
-    "QElike_0blob",
-    "QElike_1blob"
+    "QElike"//,
+    // "QElike_0blob",
+    // "QElike_1blob"
     // "QElikeNeutrons"//,
     // "MultiplicitySideband",
     // "LoPionThetaSideband",
@@ -37,7 +38,9 @@
     // "HasMultiPion"
     // "recoilNoBlobs",
     // "Q2QE",
-    "EAvail"
+    "EAvail",
+    "pzmuHD",
+    "ptmuHD"
     // "TotalNeutBlobE"
     // "EAvailWiggled"
     // "EAvailWithNeutrons"
@@ -50,7 +53,7 @@
     // "ptmu"
   ],
   "Analyze2DVariables": [],//["pzmu_ptmu"], 
-  "AnalyzeHyperDVariables": [], 
+  "AnalyzeHyperDVariables": ["pzmu_ptmu_EAvail"], 
   "systematics": [
     "Flux"//,
     // "MuonMINOS",
