@@ -381,8 +381,20 @@ int main(int argc, char* argv[]) {
         cF.Print(TString(side+"_postfit_compare.png").Data());
         
   
-        mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre[side], 1., "TR");
+        mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre[side], 1., "TR", false , NULL, NULL, false, true);
         cF.Print(TString(side+"_prefit_compare.png").Data());
+
+        mnvPlotter.DrawDataMCRatio(dataHist[side], tot[side], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
+        cF.Print(TString(side+"_postfit_compare_ratio.png").Data());
+
+        mnvPlotter.DrawDataMCRatio(dataHist[side], pre[side], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
+        cF.Print(TString(side+"_prefit_compare_ratio.png").Data());
+
+        mnvPlotter.DrawErrorSummary(pre[side]);
+        cF.Print(TString(side+"_prefit_errors.png").Data());
+
+        mnvPlotter.DrawErrorSummary(tot[side]);
+        cF.Print(TString(side+"_postfit_errors.png").Data());
         
         
         //mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side], fitHists[side][0], 1., "TR");
