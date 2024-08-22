@@ -56,8 +56,9 @@ double CVUniverse::m_proton_ke_cut = NSFDefaults::TrueProtonKECutCentral;  // De
 NuConfig CVUniverse::m_recoil_branch_config = Json::Value::null;
 std::string CVUniverse::m_recoil_branch = "recoil_energy_nonmuon_nonvtx100mm";
 
-// // neutron stuff
-// NuConfig CVUniverese::m_neutron_config = Json::Value::null;
+// neutron stuff
+NuConfig CVUniverse::m_neutron_config = Json::Value::null;
+NeutronMultiplicity::NeutEvent m_nuetevent = NeutronMultiplicity::NeutEvent();
 
 NuConfig CVUniverse::m_proton_score_config = Json::Value::null;
 std::vector<double> CVUniverse::m_proton_score_Q2QEs = {0.2, 0.6};
@@ -147,8 +148,7 @@ bool CVUniverse::_is_photon_energy_cut_set = false;
 bool CVUniverse::_is_proton_ke_cut_set = false;
 bool CVUniverse::_is_proton_score_config_set = false;
 bool CVUniverse::_is_recoil_branch_set = false;
-// TODO
-// bool CVUniverse::_is_neutron_config_set = false;
+bool CVUniverse::_is_neutron_config_set = false;
 
 ///////////////// Incoming Neutrino PDG /////////////////
 int CVUniverse::GetAnalysisNeutrinoPDG() { return m_analysis_neutrino_pdg; }
@@ -284,6 +284,35 @@ bool CVUniverse::SetProtonScoreConfig(NuConfig protonScoreConfig, bool print) {
         _is_proton_score_config_set = true;
         return 1;
     }
+}
+
+NuConfig CVUniverse::GetNeutronConfig(bool print) {
+    if (!_is_neutron_config_set) {  // Uses default configuration, which produces default m_proton_score_* values
+        std::cout << "\nUSING DEFAULT Neutron CONFIGURATION.\n\n";
+        m_neutron_config = NuConfig();
+        if (print) m_neutron_config.Print();
+        // m_proton_score_config.ReadFromString(R"({"band1":{"Q2QE_max":0.2,"pass_proton_score_min":0.2},"band2":{"Q2QE_range":[0.2,0.6],"pass_proton_score_min":0.1},"band3":{"Q2QE_min":0.6,"pass_proton_score_min":0.0}})");
+        // if (print) m_proton_score_config.Print();
+    } else {
+        std::cout << "\nUsing neutron configuration provided by user configuration file.\n\n";
+        if (print) m_neutron_config.Print();
+    }
+    return m_neutron_config;
+}
+
+bool CVUniverse::SetNeutronConfig(NuConfig neutron_config, bool print) {
+    if (_is_neutron_config_set) {
+        std::cout << "WARNING: YOU ATTEMPTED TO SET PROTON SCORE CONFIGURATION A SECOND TIME. "
+                  << "THIS IS NOT ALLOWED FOR CONSISTENCY." << std::endl;
+        return 0;
+    } else {
+        std::cout << "\nUsing neutron configuration provided by user configuration file.\n\n";
+        _is_neutron_config_set = true;
+        m_neutron_config = neutron_config;
+        if (print) m_neutron_config.Print();
+        m_nuetevent = NeutronMultiplicity::NeutEvent(neutron_config);
+    }
+    return 1;
 }
 
 // ========================================================================
@@ -1097,7 +1126,7 @@ double CVUniverse::GetEAvailGeV() const {
     // Take recoil and remove the neutron blob energy from it
     double recoil = GetRecoilEnergyGeV(); // regular recoil
     double neutblobE = GetTotNeutBlobEGeV();
-    return recoil - neutblobE;
+    return 1.3*(recoil - neutblobE);
 }
 
 // double CVUniverse::GetRecoilEnergyMinusNeutBlobsGeV() const {
@@ -1550,10 +1579,37 @@ int CVUniverse::GetNNeutCands() const {
     return GetInt((MinervaUniverse::GetTreeName() + "_BlobIs3D_sz").c_str());
 }
 
-// Neutron candidate energies
-std::vector<double> CVUniverse::GetNeutCandEs() const {
-    return GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str());
+NeutronMultiplicity::NeutEvent CVUniverse::GetNeutEvent() const {
+    TVector3 pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
+    TVector3 vtx(GetVec<double>("vtx").at(0), GetVec<double>("vtx").at(1), GetVec<double>("vtx").at(2));
+    if (!_is_neutron_config_set) {
+        NeutronMultiplicity::NeutEvent neutevent = NeutronMultiplicity::NeutEvent(CVUniverse::GetNNeutCands(), vtx, pmu);  // default vals
+        neutevent.SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()), GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()), GetBlobsBegPos());
+        return neutevent;
+    }
+    NeutronMultiplicity::NeutEvent neutevent = NeutronMultiplicity::NeutEvent(CVUniverse::m_neutron_config, CVUniverse::GetNNeutCands(), vtx, pmu);
+    neutevent.SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()), GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()), GetBlobsBegPos());
+    return neutevent;
 }
+
+double CVUniverse::GetTotNeutBlobEGeV() const {
+    NeutronMultiplicity::NeutEvent neutevent = GetNeutEvent();
+    double edep = 0.0;
+    if (GetNNeutCands() == 0) {
+        // std::cout << edep << std::endl;
+        return edep;
+    }
+    for (int i = 0; i < GetNNeutCands(); i++) {
+            if (neutevent.GetCandIsNeut(i)) edep += neutevent.GetCand(i)->GetCandRecoEDep();
+    }
+    // if (edep > 0.0) std::cout << edep << std::endl;
+    return edep * MeVGeV;
+}
+
+// // Neutron candidate energies
+// std::vector<double> CVUniverse::GetNeutCandEs() const {
+//     return GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str());
+// }
 
 // int CVUniverse::GetBlobIs3D(int index) const {
 //     return GetVecElemInt((GetAnaToolName() + "_BlobIs3D").c_str(), index);
@@ -1579,101 +1635,103 @@ std::vector<double> CVUniverse::GetNeutCandEs() const {
 //     return GetVecElem((GetAnaToolName() + "_BlobTotalE").c_str(), index);
 // }
 
-// TVector3 CVUniverse::GetBlobBegPos(int index) const {
-//     TVector3 begpos;
-//     begpos.SetXYZ(
-//         GetVecElem((GetAnaToolName() + "_BlobBegX").c_str(), index),
-//         GetVecElem((GetAnaToolName() + "_BlobBegY").c_str(), index),
-//         GetVecElem((GetAnaToolName() + "_BlobBegZ").c_str(), index));
-//     return begpos;
+std::vector<TVector3> CVUniverse::GetBlobsBegPos() const {
+    std::vector<TVector3> positions;
+    for (int i = 0; i < GetNNeutCands(); i++) {
+        TVector3 begpos(GetVecElem((GetAnaToolName() + "_BlobBegX").c_str(), i),
+                        GetVecElem((GetAnaToolName() + "_BlobBegY").c_str(), i),
+                        GetVecElem((GetAnaToolName() + "_BlobBegZ").c_str(), i));
+        positions.push_back(begpos);
+    }
+    return positions;
+}
+
+// // Set up a neutcand
+// NeutronCandidates::NeutCand* CVUniverse::GetNeutCand(int index) const {
+//     std::vector<double> vtx = GetVec<double>("vtx");
+//     TVector3 EvtVtx;
+//     EvtVtx.SetXYZ(vtx.at(0), vtx.at(1), vtx.at(2));
+//     NeutronCandidates::intCandData intData;
+//     NeutronCandidates::doubleCandData doubleData;
+//     std::string toolName = GetAnaToolName();
+//     for (const auto& intMember : NeutronCandidates::GetBranchIntMap()) {
+//         intData[intMember.first] = {};
+//         for (const auto& branchName : intMember.second) {
+//             intData[intMember.first].push_back(GetVecElemInt((toolName + branchName).c_str(), index));
+//         }
+//     }
+//     for (const auto& doubleMember : NeutronCandidates::GetBranchDoubleMap()) {
+//         doubleData[doubleMember.first] = {};
+//         for (const auto& branchName : doubleMember.second) {
+//             doubleData[doubleMember.first].push_back(GetVecElem((toolName + branchName).c_str(), index));
+//         }
+//     }
+//     return new NeutronCandidates::NeutCand(intData, doubleData, EvtVtx);
 // }
 
-// Set up a neutcand
-NeutronCandidates::NeutCand* CVUniverse::GetNeutCand(int index) const {
-    std::vector<double> vtx = GetVec<double>("vtx");
-    TVector3 EvtVtx;
-    EvtVtx.SetXYZ(vtx.at(0), vtx.at(1), vtx.at(2));
-    NeutronCandidates::intCandData intData;
-    NeutronCandidates::doubleCandData doubleData;
-    std::string toolName = GetAnaToolName();
-    for (const auto& intMember : NeutronCandidates::GetBranchIntMap()) {
-        intData[intMember.first] = {};
-        for (const auto& branchName : intMember.second) {
-            intData[intMember.first].push_back(GetVecElemInt((toolName + branchName).c_str(), index));
-        }
-    }
-    for (const auto& doubleMember : NeutronCandidates::GetBranchDoubleMap()) {
-        doubleData[doubleMember.first] = {};
-        for (const auto& branchName : doubleMember.second) {
-            doubleData[doubleMember.first].push_back(GetVecElem((toolName + branchName).c_str(), index));
-        }
-    }
-    return new NeutronCandidates::NeutCand(intData, doubleData, EvtVtx);
-}
+// // set up all the neutcands
+// NeutronCandidates::NeutCands* CVUniverse::GetNeutCands() const {
+//     std::vector<NeutronCandidates::NeutCand*> cands;
+//     int nBlobs = GetNNeutCands();
+//     if (nBlobs == 0) return new NeutronCandidates::NeutCands();
+//     for (int neutBlobIndex = 0; neutBlobIndex < nBlobs; ++neutBlobIndex) {
+//         cands.push_back(CVUniverse::GetNeutCand(neutBlobIndex));
+//     }
 
-// set up all the neutcands
-NeutronCandidates::NeutCands* CVUniverse::GetNeutCands() const {
-    std::vector<NeutronCandidates::NeutCand*> cands;
-    int nBlobs = GetNNeutCands();
-    if (nBlobs == 0) return new NeutronCandidates::NeutCands();
-    for (int neutBlobIndex = 0; neutBlobIndex < nBlobs; ++neutBlobIndex) {
-        cands.push_back(CVUniverse::GetNeutCand(neutBlobIndex));
-    }
+//     NeutronCandidates::NeutCands* EvtCands = new NeutronCandidates::NeutCands(cands);
+//     return EvtCands;
+// }
 
-    NeutronCandidates::NeutCands* EvtCands = new NeutronCandidates::NeutCands(cands);
-    return EvtCands;
-}
+// // Checks if a neutron candidate passes checks
+// int CVUniverse::GetBlobIsNeutron(NeutronCandidates::NeutCand* cand) const {
+//     // Check if 3D
+//     if (cand->GetIs3D() == 0) return 0;
+//     // Check if outside vertex
+//     if (cand->GetVtxDist() >= 100.) return 0;
+//     // Check if outside muon (set to 15deg exclusive)
+//     TVector3 pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
+//     TVector3 candFP = cand->GetFlightPath();
+//     if (candFP.Mag() == 0 || pmu.Mag() == 0)
+//         return 0;
+//     else
+//         return candFP.Angle(pmu) > 0.261799388;  // in rad
+// }
 
-// Checks if a neutron candidate passes checks
-int CVUniverse::GetBlobIsNeutron(NeutronCandidates::NeutCand* cand) const {
-    // Check if 3D
-    if (cand->GetIs3D() == 0) return 0;
-    // Check if outside vertex
-    if (cand->GetVtxDist() >= 100.) return 0;
-    // Check if outside muon (set to 15deg exclusive)
-    TVector3 pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
-    TVector3 candFP = cand->GetFlightPath();
-    if (candFP.Mag() == 0 || pmu.Mag() == 0)
-        return 0;
-    else
-        return candFP.Angle(pmu) > 0.261799388;  // in rad
-}
+// int CVUniverse::GetNNonNeutBlobs() {
+//     // Check if there are any candidates
+//     if (CVUniverse::GetNNeutCands() == 0) return 0;
 
-int CVUniverse::GetNNonNeutBlobs() {
-    // Check if there are any candidates
-    if (CVUniverse::GetNNeutCands() == 0) return 0;
+//     // Check each candidate
+//     NeutronCandidates::NeutCands* cands = CVUniverse::GetNeutCands();
+//     int count = 0;
+//     for (int i = 0; i < CVUniverse::GetNNeutCands(); i++) {
+//         NeutronCandidates::NeutCand* cand = cands->GetCandidate(i);
+//         int isNeut = GetBlobIsNeutron(cand);
+//         if (isNeut == 0) count += 1;  // TODO: this might be tricky because it could throw out non-neutron blobs that might be fine, e.g. ones around the muon track
+//     }
+//     return count;
+// }
 
-    // Check each candidate
-    NeutronCandidates::NeutCands* cands = CVUniverse::GetNeutCands();
-    int count = 0;
-    for (int i = 0; i < CVUniverse::GetNNeutCands(); i++) {
-        NeutronCandidates::NeutCand* cand = cands->GetCandidate(i);
-        int isNeut = GetBlobIsNeutron(cand);
-        if (isNeut == 0) count += 1;  // TODO: this might be tricky because it could throw out non-neutron blobs that might be fine, e.g. ones around the muon track
-    }
-    return count;
-}
+// double CVUniverse::GetTotNeutBlobEGeV() const {
+//     // if no blobs, then don't need this
+//     if (CVUniverse::GetNNeutCands() == 0) return 0.0;
 
-double CVUniverse::GetTotNeutBlobEGeV() const {
-    // if no blobs, then don't need this
-    if (CVUniverse::GetNNeutCands() == 0) return 0.0;
+//     double totEMeV = 0.0;
+//     NeutronCandidates::NeutCands* cands = CVUniverse::GetNeutCands();
+//     // loop over the cands
+//     for (int i = 0; i < CVUniverse::GetNNeutCands(); i++) {
+//         NeutronCandidates::NeutCand* cand = cands->GetCandidate(i);
+//         // Check if neutron, skip if not
+//         if (GetBlobIsNeutron(cand) == 0) continue;
+//         // add to total
+//         totEMeV += cand->GetTotalE();
+//         // std::cout << "tmp blob E is " << totEMeV << std::endl;
+//     }
+//     // std::cout << "Total blob E is " << totEMeV << std::endl;
 
-    double totEMeV = 0.0;
-    NeutronCandidates::NeutCands* cands = CVUniverse::GetNeutCands();
-    // loop over the cands
-    for (int i = 0; i < CVUniverse::GetNNeutCands(); i++) {
-        NeutronCandidates::NeutCand* cand = cands->GetCandidate(i);
-        // Check if neutron, skip if not
-        if (GetBlobIsNeutron(cand) == 0) continue;
-        // add to total
-        totEMeV += cand->GetTotalE();
-        // std::cout << "tmp blob E is " << totEMeV << std::endl;
-    }
-    // std::cout << "Total blob E is " << totEMeV << std::endl;
-
-    // convert to GeV and return
-    return totEMeV * MeVGeV;
-}
+//     // convert to GeV and return
+//     return totEMeV * MeVGeV;
+// }
 
 double CVUniverse::GetTrueNeutronEGeV() const {
     // Returns true energy of leading neutron in an event

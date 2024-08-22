@@ -38,7 +38,8 @@
 #include "TMath.h"
 #include "TVector3.h"
 #include "utils/NuConfig.h"
-#include "include/NeutCands.h"
+// #include "include/NeutCands.h" // David's
+#include "include/NeutronMultiplicity.h"
 
 class CVUniverse : public PlotUtils::MinervaUniverse {
    protected:
@@ -54,6 +55,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static NuConfig m_recoil_branch_config;
     static std::string m_recoil_branch;
 
+    static NuConfig m_neutron_config;
+    static NeutronMultiplicity::NeutEvent m_neutevent;
+
     // initially set to false
     static bool _is_analysis_neutrino_pdg_set;
     static bool _is_min_blob_zvtx_set;
@@ -61,6 +65,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static bool _is_proton_ke_cut_set;
     static bool _is_proton_score_config_set;
     static bool _is_recoil_branch_set;
+    static bool _is_neutron_config_set;
 
    public:
 // #ifndef HAZMAT
@@ -138,6 +143,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static NuConfig GetProtonScoreConfig(bool print);
     static bool SetProtonScoreConfig(NuConfig protonScoreConfig, bool print);
 
+    static NuConfig GetNeutronConfig(bool print);
+    static bool SetNeutronConfig(NuConfig neutron_config, bool print);
     // ----------------------- Analysis-related Variables ------------------------
 
     virtual int GetIsMinosMatchTrack() const;
@@ -326,15 +333,42 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetHasInteractionVertex() const;
 
     // Isolated Blobs
-
     virtual int GetNBlobs() const;
     virtual int GetNNeutCands() const;
-    virtual std::vector<double> GetNeutCandEs() const;
-    virtual NeutronCandidates::NeutCand* GetNeutCand(int index) const;
-    virtual NeutronCandidates::NeutCands* GetNeutCands() const;
-    virtual int GetBlobIsNeutron(NeutronCandidates::NeutCand* cand) const;
-    virtual int GetNNonNeutBlobs();
+
+    // ---------------------------- Neutron stuff -----------------------------
+
+    // access nhv's reco neutron classes TODO: un comment these
+    // NeutronMultiplicity::NeutEvent m_neut_event;
+    virtual NeutronMultiplicity::NeutEvent GetNeutEvent() const;
+    virtual std::vector<TVector3> GetBlobsBegPos() const;
+    // virtual NeutronMultiplicity::NeutCand GetNeutCand() const;
+
+    // // Count number of blobs id'd as neutrons
+    // // virtual int GetNBlobIsNeut() const;
+    // // See if blobs (from newer branches) are within the tracker, and away from the vertex for a given neut cand
+    // virtual int GetIsBlobIsolated(int index) const;
+    // virtual int GetAllIsBlobIsolated(int index) const;
+
+    // virtual int GetIsBlob3D(int index);
+    // virtual int GetIsAllBlob3D() const;
+
+    // virtual int GetTruthBlobPID(int index) const;;
+    // virtual int GetTruthBlobTopPID(int index) const;
+
+    // virtual int GetBlobMuonTrackDist(int index) const;
+    // virtual int GetBlobFPMuonAngle(int index) const;
+
+    // virtual double GetNeutBlobEGeV(int index) const;
     virtual double GetTotNeutBlobEGeV() const;
+    // TODO: down to here
+
+    // virtual std::vector<double> GetNeutCandEs() const;
+    // virtual NeutronCandidates::NeutCand* GetNeutCand(int index) const;
+    // virtual NeutronCandidates::NeutCands* GetNeutCands() const;
+    // virtual int GetBlobIsNeutron(NeutronCandidates::NeutCand* cand) const;
+    // virtual int GetNNonNeutBlobs();
+    // virtual double GetTotNeutBlobEGeV() const;
     virtual double GetTrueNeutronEGeV() const;
     virtual double Get3DBlobsRatio() const;
     virtual int GetTrueNBlobs() const;  // This is just N_pi0*2

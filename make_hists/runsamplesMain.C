@@ -208,6 +208,9 @@ int main(const int argc, const char *argv[]) {
         if (paramsConfig.IsMember("ProtonKECut")) {
             CVUniverse::SetProtonKECut(paramsConfig.GetConfig("ProtonKECut").GetDouble("energy"), printConfigs);
         }
+        if (paramsConfig.IsMember("NeutronConfig")) {
+            CVUniverse::SetNeutronConfig(paramsConfig.GetConfig("NeutronConfig"), printConfigs);
+        }
         // if (paramsConfig.IsMember("RecoilBranchConfig")) {
         //     CVUniverse::SetRecoilBranchConfig(paramsConfig.GetConfig("RecoilBranchConfig"), printConfigs);
         // }

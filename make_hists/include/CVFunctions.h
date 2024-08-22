@@ -100,8 +100,8 @@ class CVFunctions {
 
         recofunctions["EAvailGeV"] = &CVUNIVERSE::GetEAvailGeV;
         
-        recofunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
-        truefunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
+        // recofunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
+        // truefunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
 
         // recofunctions["RecoilEnergyMinusNeutBlobsGeV"] = &CVUNIVERSE::GetRecoilEnergyMinusNeutBlobsGeV;
 
@@ -225,7 +225,7 @@ class CVFunctions {
 
         recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
         recointfunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
-        truefunctions["TrueNBlobs"] = &CVUNIVERSE::GetTrueNBlobs;
+        // truefunctions["TrueNBlobs"] = &CVUNIVERSE::GetTrueNBlobs;
 
         recofunctions["NNeutCands"] = &CVUNIVERSE::GetNNeutCands;
         recointfunctions["NNeutCands"] = &CVUNIVERSE::GetNNeutCands;
