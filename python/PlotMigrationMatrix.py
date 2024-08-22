@@ -7,7 +7,7 @@ from array import array
 plotfiletype = "pdf"
 # QElike
 # QElike0Blob
-sampletodo = "QElike0Blob"
+sampletodo = "QElike"
 def CCQECanvas(name,title,xsize=1000,ysize=750):
     c2 = ROOT.TCanvas(name,title,xsize,ysize)
     # c2.SetLeftMargin(0.1)
@@ -46,7 +46,12 @@ def MakeHistPretty(i_hist,xvar,yvar):
         xaxis_name = "p_{||}"
     if(yvar == "pzmu"):
         yaxis_name = "p_{||}"
+    if(xvar == "EAvail"):
+        xaxis_name = "E_{Available}"
+    if(yvar == "EAvail"):
+        yaxis_name = "E_{Available}"
 
+    
     hist_title = yaxis_name+" vs. "+xaxis_name
     hist.SetTitle(hist_title)
 
@@ -143,6 +148,7 @@ def main():
             _cont = norm_matrix.GetBinContent(j,i)
             if row_norm!=0.0:
                 # norm_matrix.SetBinContent(j,i,_cont/row_norm)
+                # out_matrix.SetBinContent(j,i,0.5*_cont/row_norm)
                 out_matrix.SetBinContent(j,i,_cont/row_norm)
     # for i in range(0,nbinsx+1):
     #     row_norm = 0.0
@@ -154,12 +160,13 @@ def main():
     #         if row_norm!=0.0:
     #             # norm_matrix.SetBinContent(j,i,_cont/row_norm)
     #             out_matrix.SetBinContent(i,j,_cont/row_norm)
-    out_matrix.Rebin2D()
+    # out_matrix.Rebin2D()
 
     mnv = MnvPlotter()
 
     # mnv.SetBlackbodyPalette()
-    mnv.SetRedHeatPalette()
+    # mnv.SetRedHeatPalette()
+    mnv.SetBlackbodyPalette()
     canvas = ROOT.TCanvas("c","c",1500,1500)
 
     canvas.cd()
