@@ -170,7 +170,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                 // print out the parameters
                 std::cout << "fix" << success << " " << status << " " << univ << " " << iuniv << " " << status;
                 for (int i = 0; i < func2.NDim(); i++) {
-                    std::cout << " " << i << " " << combScaleResults[i] << " " << ScaleResults[i];
+                    std::cout << " test " << i << " " << combScaleResults[i] << " " << ScaleResults[i];
                 }
                 std::cout << std::endl;
 
@@ -180,7 +180,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                 if (univ == "CV") {
                     fcn.SetBinContent(1, mini2->MinValue());
                     for (int i = 0; i < func2.NDim(); i++) {
-                        parameters.SetBinContent(i + 1, combScaleResults[i]);
+                        parameters.SetBinContent(i + 1, ScaleResults[i]);
                         for (int j = 0; j < func2.NDim(); j++) {
                             covariance.SetBinContent(i + 1, j + 1, mini2->CovMatrix(i, j));
                         }
@@ -197,7 +197,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                             fitHists[myname][i]->Print();
                             unfitHists[myname][i]->Print();
                             for (int j = lowBin; j <= hiBin; j++) {
-                                fitHists[myname][i]->SetBinContent(j, unfitHists[myname][i]->GetBinContent(j) * combScaleResults[i]);
+                                fitHists[myname][i]->SetBinContent(j, unfitHists[myname][i]->GetBinContent(j) * ScaleResults[i]);
                                 fitHists[myname][i]->SetBinError(j, unfitHists[myname][i]->GetBinError(j) * ScaleResults[i]);
                             }
                         }
@@ -211,7 +211,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                     TH1D* phist = parameters.GetVertErrorBand(univ)->GetHist(iuniv);
                     TH2D* chist = covariance.GetVertErrorBand(univ)->GetHist(iuniv);
                     for (int i = 0; i < ncat; i++) {
-                        phist->SetBinContent(i + 1, combScaleResults[i]);
+                        phist->SetBinContent(i + 1, ScaleResults[i]);
                         for (int j = 0; j < ncat; j++) {
                             chist->SetBinContent(i + 1, j + 1, mini2->CovMatrix(i, j));
                         }
@@ -228,7 +228,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
 
                             for (int j = lowBin; j <= hiBin; j++) {
                                 // HMS change to only do the bin range
-                                newhist->SetBinContent(j, hist->GetBinContent(j) * combScaleResults[i]);
+                                newhist->SetBinContent(j, hist->GetBinContent(j) * ScaleResults[i]);
                                 newhist->SetBinError(j, hist->GetBinError(j) * ScaleResults[i]);
                             }
 
