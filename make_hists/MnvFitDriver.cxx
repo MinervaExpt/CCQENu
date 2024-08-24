@@ -158,6 +158,14 @@ int main(int argc, char* argv[]) {
     NuConfig config;
     config.Read(ConfigName);
     config.Print();
+    int lowBin = 1;
+    if (config.IsMember("LowBin")) {
+        lowBin = config.GetInt("LowBin");
+    }
+    double upperLimit=2.0;
+    if (config.IsMember("UpperLimit")){
+        upperLimit =config.GetInt("UpperLimit");
+    }
     std::string inputFileName=config.GetString("InputFile");
     std::string outputFileName = config.GetString("OutputFile");
     bool logPlot = config.GetBool("LogPlot");
@@ -260,17 +268,17 @@ int main(int argc, char* argv[]) {
     std::cout << "have extracted the inputs" << std::endl;
     
     // now have made a common map for all histograms
-    int lowBin = 1;
+    //int lowBin = 1;
     int hiBin = dataHist[include[0]]->GetXaxis()->GetNbins();
     fit::fit_type type;
     type = fit::kFastChi2;
     if (fitType == "FastChi2")type = fit::kFastChi2;
     if (fitType == "SlowChi2")type = fit::kSlowChi2;
     if (fitType == "ML")type = fit::kML;
-    std::cout << " Try to write it out " << std::endl;
+    std::cout << " Try to write it out" << std::endl;
     
     outputfile->cd();
-    int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin);
+    int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin, upperLimit);
     
     // set up for plots
     
@@ -296,7 +304,7 @@ int main(int argc, char* argv[]) {
             fitHists[side][i]->Write();
             //std::sprintf(fname,f_template.c_str(),side.c_str(), "all",varName.c_str());
             std::snprintf(fname, 1000, f_template.c_str(), side.c_str(), "all", varName.c_str());
-            fitHists[side][i]->MnvH1DToCSV(fitHists[side][i]->GetName(), "./csv/", 1., false,true,false);
+            fitHists[side][i]->MnvH1DToCSV(fitHists[side][i]->GetName(), "./csv/", 1., false);// ,true,false);
             if (i == 0){
                 tot[side] = (MnvH1D*)fitHists[side][i]->Clone(TString(fname));
             }
@@ -441,6 +449,18 @@ int main(int argc, char* argv[]) {
         bkgsub[side]->SetTitle("bkgsub");
         mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side],(MnvH1D*)fitHists[side][0], 1.0, "TR");
         cF.Print(TString(pixheader + "_" + fitType + "_bkgsub_combined.png").Data());
+        //cF.sSetLogy(1);
+        mnvPlotter.DrawErrorSummary(bkgsub[side]);
+        cF.Print(TString(pixheader + "_" + fitType + "_bkgsub_errors.png").Data());
+        for (int i = 0; i < categories.size(); i++) {
+            TString cat = categories[i];
+            mnvPlotter.DrawErrorSummary(unfitHists[side][i]);
+            cF.Print(TString(pixheader + "_" + "prefit" + "_" + cat + "_errors.png").Data());
+            mnvPlotter.DrawErrorSummary(fitHists[side][i]);
+            cF.Print(TString(pixheader + "_" + fitType + "_" + cat + "_errors.png").Data());
+        }
+        //cF.SetLogy(0);
+
     }
     
     
