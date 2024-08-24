@@ -34,7 +34,7 @@ TMatrixD  extrabands(const TMatrixDSym cov) {
         }
         for (int j = 0; j < n ; j++){
            // std::cout << "eigen " << vi << " " << j << " " << results[vi][j] << " " << e[vi][vi] <<  " " << m[vi][j] << std::endl;
-            results[vi][j] += e[vi] * m[vi][j];
+            results[vi][j] += std::sqrt(e[vi]) * m[vi][j];
         }
     }
     
