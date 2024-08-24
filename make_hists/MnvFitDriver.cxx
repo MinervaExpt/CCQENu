@@ -296,7 +296,7 @@ int main(int argc, char* argv[]) {
             fitHists[side][i]->Write();
             //std::sprintf(fname,f_template.c_str(),side.c_str(), "all",varName.c_str());
             std::snprintf(fname, 1000, f_template.c_str(), side.c_str(), "all", varName.c_str());
-            fitHists[side][i]->MnvH1DToCSV(fitHists[side][i]->GetName(), "./csv/", 1., false);
+            fitHists[side][i]->MnvH1DToCSV(fitHists[side][i]->GetName(), "./csv/", 1., false,true,false);
             if (i == 0){
                 tot[side] = (MnvH1D*)fitHists[side][i]->Clone(TString(fname));
             }

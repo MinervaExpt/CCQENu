@@ -111,7 +111,8 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
     PlotUtils::MnvH1D fcn(TString("fcn" + aname), "fcn", 1, 0., 1.);
 
     // add in the CV so you do a loop over universes
-    TMatrixD variants(5,5);
+    TMatrixD variants(ncat,ncat);
+    TVectorD theparameters(ncat);
 
     //  now loop over all universes and fit each one
     for (auto univ : universes) {
@@ -243,6 +244,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                     fcn.SetBinContent(1, mini2->MinValue());
                     for (int i = 0; i < func2.NDim(); i++) {
                         parameters.SetBinContent(i + 1, ScaleResults[i]);
+                        theparameters[i] = ScaleResults[i]; // persistent outside loops
                         for (int j = 0; j < func2.NDim(); j++) {
                             covariance.SetBinContent(i + 1, j + 1, mini2->CovMatrix(i, j));
                         }
@@ -341,8 +343,8 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                     TH1D* hist = errorband->GetHist(iuniv);
 
                     int sign = (2*k)-1;
-                    
-                    double variation = (1. + variants[var][i] * sign);
+                    // central value already scaled by the fit parameter so have to back it off. 
+                    double variation = (1 + variants[var][i] * sign/theparameters[i]);
                     //std::cout << "factor" << var << " " << i << " " << variation << std::endl;
                     //hist->Scale(variation);
                     //hist->Print();
