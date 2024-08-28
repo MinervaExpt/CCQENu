@@ -102,7 +102,10 @@ class CVFunctions {
         
         // recofunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
         // truefunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
-
+        recofunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
+        truefunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
+        recofunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
+        truefunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
         // recofunctions["RecoilEnergyMinusNeutBlobsGeV"] = &CVUNIVERSE::GetRecoilEnergyMinusNeutBlobsGeV;
 
         truefunctions["TrueEAvailGeV"] = &CVUNIVERSE::GetTrueEAvailGeV;

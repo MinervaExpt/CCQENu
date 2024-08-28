@@ -56,7 +56,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static std::string m_recoil_branch;
 
     static NuConfig m_neutron_config;
-    static NeutronMultiplicity::NeutEvent m_neutevent;
+    // static NeutronMultiplicity::NeutEvent* m_neutevent;
 
     // initially set to false
     static bool _is_analysis_neutrino_pdg_set;
@@ -66,8 +66,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static bool _is_proton_score_config_set;
     static bool _is_recoil_branch_set;
     static bool _is_neutron_config_set;
+    // static bool _is_neut_event_set;
 
    public:
+
 // #ifndef HAZMAT
 // #include "PlotUtils/SystCalcs/MuonFunctions.h"
 // #include "PlotUtils/SystCalcs/RecoilEnergyFunctions.h"
@@ -145,6 +147,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     static NuConfig GetNeutronConfig(bool print);
     static bool SetNeutronConfig(NuConfig neutron_config, bool print);
+    // bool SetNeutEvent();
     // ----------------------- Analysis-related Variables ------------------------
 
     virtual int GetIsMinosMatchTrack() const;
@@ -340,7 +343,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // access nhv's reco neutron classes TODO: un comment these
     // NeutronMultiplicity::NeutEvent m_neut_event;
-    virtual NeutronMultiplicity::NeutEvent GetNeutEvent() const;
+    virtual NeutronMultiplicity::NeutEvent* GetNeutEvent() const;
     virtual std::vector<TVector3> GetBlobsBegPos() const;
     // virtual NeutronMultiplicity::NeutCand GetNeutCand() const;
 
@@ -361,6 +364,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // virtual double GetNeutBlobEGeV(int index) const;
     virtual double GetTotNeutBlobEGeV() const;
+    virtual int GetTruthMaxNeutCandMCPID();
+    virtual int GetTruthMaxNeutCandTopMCPID();
+    virtual int GetPlotNeutCandMCPID();
+    virtual int GetPlotNeutCandTopMCPID();
     // TODO: down to here
 
     // virtual std::vector<double> GetNeutCandEs() const;
