@@ -74,7 +74,7 @@ int NeutCand::GetCandTruthPID() {
     return m_truthTopMCPID;
 }
 
-int NeutCand::GetCandTruthTopMCPID() {
+int NeutCand::GetCandTruthTopPID() {
     if (!m_truthset) return -1;
     return m_truthPID;
 }
@@ -83,14 +83,14 @@ int NeutCand::GetCandTruthTopMCPID() {
 // CTORS
 NeutEvent::NeutEvent(NuConfig config, int n_neutcands, TVector3 vtx, TVector3 mupath) : m_vtx(vtx),
                                                                                         m_mupath(mupath),
-                                                                                        m_nneutcands(n_neutcands),
-                                                                                        m_vtxdist_max(config.GetDouble("vtxdist_max")),
-                                                                                        m_vtxdist_min(config.GetDouble("vtxdist_min")),
-                                                                                        m_zpos_max(config.GetDouble("zpos_max")),
-                                                                                        m_zpos_min(config.GetDouble("zpos_min")),
-                                                                                        m_muoncone_min(config.GetDouble("muoncone_min")),
-                                                                                        m_muondist_min(config.GetDouble("muondist_min")),
-                                                                                        m_edep_min(config.GetDouble("edep_min")) {
+                                                                                        m_nneutcands(n_neutcands) {
+    if (config.IsMember("vtxdist_max")) m_vtxdist_max = config.GetDouble("vtxdist_max");
+    if (config.IsMember("vtxdist_min")) m_vtxdist_min = config.GetDouble("vtxdist_min");
+    if (config.IsMember("zpos_max")) m_zpos_max = config.GetDouble("zpos_max");
+    if (config.IsMember("zpos_min")) m_zpos_min = config.GetDouble("zpos_min");
+    if (config.IsMember("muoncone_min")) m_muoncone_min = config.GetDouble("muoncone_min");
+    if (config.IsMember("muondist_min")) m_muondist_min = config.GetDouble("muondist_min");
+    if (config.IsMember("edep_min")) m_edep_min = config.GetDouble("edep_min");
     for (int i = 0; i < n_neutcands; i++) {
         NeutCand* cand = new NeutCand();
         m_cands.push_back(cand);
@@ -137,10 +137,12 @@ void NeutEvent::SetCands(int n_neutcands, TVector3 vtx, TVector3 mupath) {
 }
 
 void NeutEvent::ClearCands() {
+    if (!_is_cands_set) return;
     for (auto cand : m_cands){
         delete cand;
     }
     m_cands.clear();
+    _is_cands_set = false;
 }
 
 void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<TVector3> positions) {
@@ -171,7 +173,7 @@ std::vector<NeutronMultiplicity::NeutCand*> NeutEvent::GetNeutCands() {
 NeutronMultiplicity::NeutCand* NeutEvent::GetMaxNeutCand() {
     std::pair<int, double> max_edep(0, 0.0);
     for (int i = 0; i < m_nneutcands; i++) {
-        if (m_cands[i]->m_recoEDep > max_edep.second)
+        if (m_cands[i]->m_recoEDep > max_edep.second && GetCandIsNeut(i))
             max_edep = {i, m_cands[i]->m_recoEDep};
     }
     return m_cands[max_edep.first];
@@ -182,10 +184,12 @@ NeutCand* NeutEvent::GetCand(int index) {
 }
 
 int NeutEvent::GetCandIsNeut(int index) {
+    // return (CandIsOutsideMuonDist(index) && CandIsFiducial(index) && CandIsIsolated(index) && CandIsHighE(index));
     return (CandIsOutsideMuonAngle(index) && CandIsOutsideMuonDist(index) && CandIsFiducial(index) && CandIsIsolated(index) && CandIsHighE(index));
 }
 
 int NeutEvent::CandIsOutsideMuonAngle(int index) {
+    if (m_muoncone_min < 0.0) return 1;
     TVector3 candfp = m_cands[index]->GetCandFlightPath();
     double angle = m_mupath.Angle(candfp) * 180. / M_PI; // need this in deg (for user configurability)
     return angle > m_muoncone_min;
@@ -211,6 +215,14 @@ int NeutEvent::CandIsIsolated(int index) {
 int NeutEvent::CandIsHighE(int index) {
     double edep = m_cands[index]->GetCandRecoEDep();
     return edep > m_edep_min;
+}
+
+int NeutEvent::GetCandTruthPID(int index) {
+    return m_cands[index]->GetCandTruthPID();
+}
+
+int NeutEvent::GetCandTruthTopPID(int index) {
+    return m_cands[index]->GetCandTruthTopPID();
 }
 
 // int NeutEvent::GetCandIsNeut(int index) {

@@ -51,7 +51,7 @@ class NeutCand {
     double GetCandVtxDist(); // TODO: Andrew does something weird with this
 
     int GetCandTruthPID();
-    int GetCandTruthTopMCPID();
+    int GetCandTruthTopPID();
 
     // NeutCand(int index);  // give index, intialize internally
 };
@@ -62,10 +62,10 @@ class NeutEvent {
     // set up via config, contain info to check cands by
     double m_vtxdist_max = 10000.;  // in mm
     double m_vtxdist_min = 100.;    // in mm
-    double m_zpos_min = 5980.;      // in mm
-    double m_zpos_max = 8422.;      // in mm
-    double m_muoncone_min = 15.;    // in deg
-    double m_muondist_min = 10.;    // in mm
+    double m_zpos_min = 5980.0;      // in mm
+    double m_zpos_max = 8422.0;      // in mm
+    double m_muoncone_min = -1.0;    // in deg
+    double m_muondist_min = 0.0;    // in mm
     double m_edep_min = 0.;         // in MeV
 
     int m_nneutcands;
@@ -79,7 +79,7 @@ class NeutEvent {
     // TOOD: make neutron config vars in CVUniverse
     NeutEvent(NuConfig config, int n_neutcands, TVector3 vtx, TVector3 mupath);  // configure number of cands and set up the cands internally based off how many there are
     NeutEvent(int n_neutcands, TVector3 vtx, TVector3 mupath);
-    NeutEvent(NuConfig config);  // would need to set up cands separately using SetReco or SetTruth
+    NeutEvent(NuConfig config);  // would need to set up cands separately using SetCands
     NeutEvent();
 
     // NeutEvent();
@@ -103,6 +103,9 @@ class NeutEvent {
     int CandIsFiducial(int index);          // check if inside z bounds
     int CandIsIsolated(int index);          // check if far from vertex
     int CandIsHighE(int index);             // check if Edep is high enough
+
+    int GetCandTruthPID(int index);
+    int GetCandTruthTopPID(int index);
 
     // int GetCandIsNeut(int index);
 //    private:
