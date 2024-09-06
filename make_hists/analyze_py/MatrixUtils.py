@@ -146,4 +146,17 @@ if __name__ == "__main__":
     new = ToMatrixDSym(h_covariance)
     new.Print()
 
+def checktag(keys, tag) :
+    count = 0
+    for x in keys:
+        if tag in x: count += 1
+    return count
+    #return std.count(keys.begin(), keys.end(), tag) > 0
 
+def ZeroDiagonal(m):
+    print(" TRACE: enter ZeroDiagonal  " )
+    newm = TMatrixD(m)
+    n = newm.GetNrows()
+    for i in range(0,n): 
+        newm[i][i] = 0
+    return newm
