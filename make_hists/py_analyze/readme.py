@@ -130,7 +130,7 @@ allconfigs = {}
 
 configloc = "root"
 inputname = "/Users/schellma/Dropbox/FORGE/CCQENu/make_hists/BDT_3_out.root"
-inputname = "/Users/schellma/Dropbox/FORGE/CCQENu/make_hists/p4.root"
+inputname = "/Users/schellma/Dropbox/FORGE/CCQENu/make_hists/py_analyze/p4.root"
 # if len(sys.argv) > 1: 
 #     print("getting config from root input " , sys.argv[1] )
 #     inputname = (sys.argv[1])
