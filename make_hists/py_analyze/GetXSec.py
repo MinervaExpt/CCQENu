@@ -590,7 +590,7 @@ def GetCrossSection(sample,  variable,  basename,
                     histsND,
                     responseND,
                     oneconfig, canvas, norm, POTScale, h_flux_dewidthed,
-                    unfold, num_iter, DEBUG, hasbkgsub, usetune,  outname) :
+                    unfold, num_iter, DEBUG, hasbkgsub, usetune, rescale, outname) :
     configmap = []
     
     configmap["main"] = oneconfig
@@ -599,7 +599,7 @@ def GetCrossSection(sample,  variable,  basename,
                            histsND,
                            responseND,
                            configmap, canvas, norm, POTScale, h_flux_dewidthed,
-                           unfold, num_iter, DEBUG, hasbkgsub, usetune, outname)
+                           unfold, num_iter, DEBUG, hasbkgsub, usetune, rescale,  outname)
 
 
 #template <class MnvHistoType>
@@ -607,7 +607,7 @@ def GetCrossSection(sample, variable, basename,
                     histsND,
                     responseND,
                     configs,  canvas, norm, POTScale, h_flux_dewidthed,
-                    unfold, num_iter, DEBUG, hasbkgsub, usetune, outname): 
+                    unfold, num_iter, DEBUG, hasbkgsub, usetune, rescale, outname): 
     binwid = True
 
     logscale = 0  # 0 for none, 1 for x, 2 for y, 3 for both
@@ -668,7 +668,7 @@ def GetCrossSection(sample, variable, basename,
     for type in histsND.keys(): 
         print("hists key " , type )
         for category in histsND[type].keys(): 
-            print("category " , category )
+            #print("category " , category )
             if (category == "data"): hasdata = True
             if (dat not in category): 
                 if (histsND[type][category] != 0): 
@@ -693,64 +693,81 @@ def GetCrossSection(sample, variable, basename,
 
     # Assign each input histogram type used for doing the analysis.
     # MnvHistoType can be MnvH1D or MnvH2D so far. Response is always MnvH2D.
+
+    mctype = "reconstructed"
+    seltype = "selected_truth"
+    trutype = "all_truth"
+    migtype = "response_migration"
+    mrecotype = "response_reco"
+    mtrutype = "response_truth"
+    if usetune:
+        mctype += "_tuned"
+        seltype += "_tuned"
+        trutype += "_tuned"
+        migtype += "_tuned"
+        mrecotype = mrecotype.replace("response_reco","response_tuned_reco")
+        mtrutype = mtrutype.replace("response_truth","response_tuned_truth")
+    if rescale:
+        mctype += "_scaledmc"
+        seltype += "_scaledmc"
+        trutype += "_scaledmc"
+        migtype += "_scaledmc"
+        mrecotype += "_scaledmc"
+        mtrutype +=  "_scaledmc"
     idatahist = histsND["reconstructed"][dat]
-    imcsighist = histsND["reconstructed"][sig]
-    stuned = ""
-    if ("reconstructed_tuned" in histsND.keys() and usetune): 
-        stuned = "Tuned "
-        imcsighist = histsND["reconstructed_tuned"][sig]
-        print(" using " , imcsighist.GetName() )
+    imcsighist = histsND[mctype][sig]
+
+    print ("check stuff",dat,sig,idatahist.GetName(),imcsighist.GetName())
     
+    stuned = ""
+    # if ("reconstructed_tuned" in histsND.keys() and usetune): 
+    #     stuned = "Tuned "
+    #     imcsighist = histsND["reconstructed_tuned"][sig]
+    #     print(" using " , imcsighist.GetName() )
+    # if ("_scaledmc" in histND.keys() and rescale):
+
     # print("using signal " , imcsighist.GetName() )
     #MnvHistoType* imcbkghist
     #MnvHistoType* ibkgsubhist
+    imcbkghist = 0
     if (not hasbkgsub): 
-        imcbkghist = histsND["reconstructed"][bkg]
-        if (("reconstructed_tuned") in histsND.keys() and usetune): 
-            imcbkghist = histsND["reconstructed_tuned"][bkg]
-            print(" using " , imcbkghist.GetName() )
-        
-    
-    
-
-    if (hasbkgsub): 
+        imcbkghist = histsND[mctype][bkg]
+        print(" using " , imcbkghist.GetName() )
+    else:
         ibkgsubhist = histsND["fitted"]["bkgsub"]
-    
-    print("using background " , imcbkghist.GetName() )
+
+        #print("using background " , imcbkghist.GetName() )
 
     #if (DEBUG): print("test pointers " , ibkgsubhist )
     #MnvHistoType* iseltruhist
-    if ("selected_truth_tuned" in histsND and usetune): 
-        iseltruhist = histsND["selected_truth_tuned"][sig]
-        print(" using " , iseltruhist.GetName() )
-    else: 
-        iseltruhist = histsND["selected_truth"][sig]
+    
+    iseltruhist = histsND[seltype][sig]
     
 
     if (DEBUG and hasbkgsub): print("test pointers " , ibkgsubhist , " " , iseltruhist )
     #MnvHistoType* ialltruhist
 
-    if ("all_truth_tuned" in histsND and usetune): 
-        ialltruhist = histsND["all_truth_tuned"][sig]
-        print(" using " , ialltruhist.GetName() )
-    else: 
-        ialltruhist = histsND["all_truth"][sig]
+    # if ("all_truth_tuned" in histsND and usetune): 
+    #     ialltruhist = histsND["all_truth_tuned"][sig]
+    #     print(" using " , ialltruhist.GetName() )
+    # else: 
+    ialltruhist = histsND[trutype][sig]
     
     if (DEBUG): print("test pointers " , sig , " " , iseltruhist.GetName() , ialltruhist )
     iresponse = MnvH2D()
     #MnvHistoType* iresponse_reco = imcsighist
     #MnvHistoType* iresponse_truth = iseltruhist
-    if ("response_migration_tuned" in responseND.keys() and usetune): 
-        iresponse = responseND["response_migration_tuned"][sig]
-        iresponse_reco = histsND["response_tuned_reco"][sig]
-        iresponse_truth = histsND["response_tuned_truth"][sig]
-        print(" using " , iresponse.GetName() , " " , iresponse.ProjectionX().Integral() , " " , iresponse.ProjectionY().Integral() )
-    else: 
-        iresponse = responseND["response_migration"][sig]
-        iresponse_reco = histsND["response_reco"][sig]
-        iresponse_truth = histsND["response_truth"][sig]
-        print(" using " , iresponse.GetName() , " " , iresponse.ProjectionX().Integral() , " " , iresponse.ProjectionY().Integral() )
-    
+    # if ("response_migration_tuned" in responseND.keys() and usetune): 
+    #     iresponse = responseND["response_migration_tuned"][sig]
+    #     iresponse_reco = histsND["response_tuned_reco"][sig]
+    #     iresponse_truth = histsND["response_tuned_truth"][sig]
+    #     print(" using " , iresponse.GetName() , " " , iresponse.ProjectionX().Integral() , " " , iresponse.ProjectionY().Integral() )
+    # else: 
+    iresponse = responseND[migtype][sig]
+    iresponse_reco = histsND[mrecotype][sig]
+    iresponse_truth = histsND[mtrutype][sig]
+    print(" using " , iresponse.GetName() , " " , iresponse.ProjectionX().Integral() , " " , iresponse.ProjectionY().Integral() )
+
     # TODO: POTScale by if (not data): -. POTScale
 
     # Check for each hist "category" for the variable you're analyzing.
@@ -792,12 +809,16 @@ def GetCrossSection(sample, variable, basename,
     #MnvHistoType* signalFraction
 
     if (not hasbkgsub): 
+
         if (DEBUG): print(" Start MakeMC... " )
         # mcname = basename+"_mc_tot"
-        if (DEBUG): 
-            print(" basename is " , basename )
-            imcsighist.Print()
-            imcbkghist.Print()
+        if (True): 
+            print(" basename is " , basename)
+
+            print (imcsighist.GetName())
+            #imcsighist.Print("ALL")
+            print (imcbkghist.GetName())
+            #imcbkghist.Print("ALL")
         
         mc = MakeMC(basename, imcsighist, imcbkghist)
         if (DEBUG): mc.Print()

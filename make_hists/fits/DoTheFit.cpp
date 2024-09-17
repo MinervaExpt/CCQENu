@@ -326,10 +326,14 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
 
     
 
-    int neigen=3;  // only use the top 3 eigenvalues. 
-    // variants.ResizeTo(ncat,ncat);
+    int neigen=3;
+    if (CovMatrix.GetNrows() < neigen){
+        neigen = CovMatrix.GetNrows();
+    }
+          // only use the top 3 eigenvalues.
+                 // variants.ResizeTo(ncat,ncat);
     variants = extrabands(CovMatrix);
-    for (int var = 0; var< ncat; var++){
+    for (int var = 0; var < ncat; var++) {
         TVectorD tmp = variants[var];
         tmp.Print();
     }

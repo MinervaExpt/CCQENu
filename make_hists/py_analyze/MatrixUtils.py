@@ -22,8 +22,8 @@ def extrabands(cov):
     m = TMatrixD()
     m = E.GetEigenVectors()
 
-    e.Print()
-    m.Print()
+    #e.Print()
+    #m.Print()
     results = TMatrixD(n,n)
     count = 0
     for vi in range(0,n):
@@ -35,8 +35,8 @@ def extrabands(cov):
             results[vi][j] += math.sqrt(e[vi]) * m[j][vi]
         
     
-    print ("uncertainty vectors")
-    results.Print()
+    #print ("uncertainty vectors")
+    #results.Print()
     return results
 
 
@@ -51,7 +51,7 @@ def ToMatrixDSym(hist):
         for jj in range(0,m):
             j = jj + 1
             matrix[ii][jj] = hist.GetBinContent(i,j)
-            print (ii,jj,hist.GetBinContent(i,j))
+            #print (ii,jj,hist.GetBinContent(i,j))
     return matrix
 
 def ToVectorD(hist):
@@ -80,7 +80,7 @@ def SyncBands(thehist):
         band.SetBinContent(i,theCVHisto.GetBinContent(i))
         band.SetBinError(i,theCVHisto.GetBinError(i))
 
-def scaleHist(oldhist,index, parameters,covariance,newname):
+def scaleHist(oldhist,index, parameters,covariance, newname):
     newhist = MnvH1D()
     ncat = len(parameters)
     #print ("rescale by",index,parameters[index])

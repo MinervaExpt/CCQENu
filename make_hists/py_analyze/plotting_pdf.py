@@ -4,6 +4,7 @@ from ROOT import TH1D, gPad, TCanvas, TText
 from PlotUtils import MnvH1D, MnvH2D, MnvPlotter
 #ifndef plotting_functions_H
 #define plotting_functions_H
+FULLDUMP=False
 # #define FULLDUMP  # dumps all syst error subgroups
 #include <iostream>
 #include <string>
@@ -17,6 +18,14 @@ from PlotUtils import MnvH1D, MnvH2D, MnvPlotter
 #include "PlotUtils/MnvVertErrorBand.h"
 #include "TCanvas.h"
 #include "TText.h"
+
+kDefaultStyle     = 0 #!< The Default style
+kCompactStyle     = 1 #!< Same as the default style but with less whitespace
+kNukeCCStyle      = 2 #!< Similar to compact but with NukeCC-specifics
+kNukeCCPrintStyle = 3 
+kCCNuPionIncStyle = 4 #!< compact with CCNuPionInc color scheme
+kCCCohStyle       = 5 #!< Coherent rocks!!!
+kCCQENuStyle      = 6
 
 xmin = 0.
 xmax = 20.e3
@@ -85,7 +94,7 @@ def PlotTotalError(hist, method_str):
 #                      print(" no error summary for 2D" : 
 
 def PlotErrorSummary(cE, hist, label, logscale):
-    mnvPlotter = MnvPlotter()#PlotUtils.kCCQEAntiNuStyle)
+    mnvPlotter = MnvPlotter(kCompactStyle)#PlotUtils.kCCQEAntiNuStyle)
     resetLogScale()
     # TCanvas cE ("c1","c1")
     #  hist.GetXaxis().SetTitle(hist.GetTitle())
@@ -199,27 +208,28 @@ def PlotErrorSummary(cE, hist, label, logscale):
     t.Draw()
     cE.Print(cE.GetName(), plotname)
     resetLogScale()
-#ifdef FULLDUMP
-    for group in mnvPlotter.error_summary_group_map: 
-        # print(" error summary for " , group.first :
-        mnvPlotter.DrawErrorSummary(hist, "TR", include_stat_error, False, 0.0, do_cov_area_norm, group.first, do_fractional_uncertainty)
-        plotname = "Title: ErrorSummary_%s_%s_%s_%s"%(hist.GetName(), group.first, do_cov_area_norm_str, label)
-        t = TText(.3, .95, label)
-        t.SetNDC(1)
-        t.SetTextSize(.03)
-        setLogScale(logscale)
-        #  gPad.SetLogy(False)
-        #  gPad.SetLogx(False)
-        #  if (logscale== 2 || logscale ==3):
-        #    gPad.SetLogy()
-        #    hist.SetMinimum(0.001)
-        #  
-        #  if (logscale== 1 || logscale ==3): gPad.SetLogx():
-        t.Draw()
-        cE.Print(cE.GetName(), plotname)
-        resetLogScale()
+    if FULLDUMP:
+        for group in mnvPlotter.error_summary_group_map: 
+            # print(" error summary for " , group.first :
+            mnvPlotter.DrawErrorSummary(hist, "TR", include_stat_error, False, 0.0, do_cov_area_norm, group.first, do_fractional_uncertainty)
+            plotname = "Title: ErrorSummary_%s_%s_%s_%s"%(hist.GetName(), group.first, do_cov_area_norm_str, label)
+            t = TText(.3, .95, label)
+            t.SetNDC(1)
+            t.SetTextSize(.03)
+            setLogScale(logscale)
+            #  gPad.SetLogy(False)
+            #  gPad.SetLogx(False)
+            #  if (logscale== 2 || logscale ==3):
+            #    gPad.SetLogy()
+            #    hist.SetMinimum(0.001)
+            #  
+            #  if (logscale== 1 || logscale ==3): gPad.SetLogx():
+            t.Draw()
+            cE.Print(cE.GetName(), plotname)
+            resetLogScale()
     
 #endif
+
     # mnvPlotter.MultiPrint(&cE, plotname, "pdf")
     #   mnvPlotter.DrawErrorSummary(hist,"TR",include_stat_error,True,0.0, do_cov_area_norm, "Angle",False)
     #   plotname = Form("ResponseErrorSummary_%s_%s_%s", hist.GetName(),do_cov_area_norm_str,label)
