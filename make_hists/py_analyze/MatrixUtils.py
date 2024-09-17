@@ -1,5 +1,5 @@
 import os,sys
-from ROOT import TMatrixD,TMatrixDSym,TVectorD,TFile,TMatrixDSymEigen, TH1D, TObjArray
+from ROOT import TMatrixD,TMatrixDSym,TVectorD,TFile,TMatrixDSymEigen, TH1D, TH2D, TObjArray
 from PlotUtils import MnvH1D,MnvVertErrorBand
 import math
 
@@ -81,34 +81,45 @@ def SyncBands(thehist):
         band.SetBinError(i,theCVHisto.GetBinError(i))
 
 def scaleHist(oldhist,index, parameters,covariance, newname):
-    newhist = MnvH1D()
     ncat = len(parameters)
-    #print ("rescale by",index,parameters[index])
-    newhist = oldhist.Clone(newname)
-    newhist.Scale(parameters[index])
-    # newband = MnvVertErrorBand("FitVariations", newhist, varhists) 
-    # newhist.AddVertErrorBandAndFillWithCV("FitVariations", ncat * 2)
-    # errorband = MnvVertErrorBand()
-    # errorband = newhist.GetVertErrorBand("FitVariations")
+    if oldhist.InheritsFrom("MnvH1D"):
+        newhist = MnvH1D()
+        #print ("rescale by",index,parameters[index])
+        newhist = oldhist.Clone(newname)
+        newhist.Scale(parameters[index])
+        # newband = MnvVertErrorBand("FitVariations", newhist, varhists) 
+        # newhist.AddVertErrorBandAndFillWithCV("FitVariations", ncat * 2)
+        # errorband = MnvVertErrorBand()
+        # errorband = newhist.GetVertErrorBand("FitVariations")
 
-    variants = extrabands(covariance)
-    varhists = []
-    for var in range (0,ncat): #{ // loop over variations
-        for k in range(0,2): 
-            iuniv = var*2+k
-            hist = TH1D()
-            hist = newhist.GetCVHistoWithStatError() 
-            sign = (2*k)-1
-            # central value already scaled by the fit parameter so have to back it off. 
-            variation = (1. + variants[var][index] * sign/parameters[index])
-            hist.Scale(variation)
-            varhists.append(hist)
-    hist = TH1D()
-    hist = newhist.GetCVHistoWithStatError() 
-    #newband = MnvVertErrorBand()
-    #newband = MnvVertErrorBand("FitVariations", hist, varhists) 
-    newhist.AddVertErrorBand("FitVariations",varhists)
-    return newhist
+        variants = extrabands(covariance)
+        varhists = []
+        for var in range (0,ncat): #{ // loop over variations
+            for k in range(0,2): 
+                iuniv = var*2+k
+                hist = TH1D()
+                hist = newhist.GetCVHistoWithStatError() 
+                sign = (2*k)-1
+                # central value already scaled by the fit parameter so have to back it off. 
+                variation = (1. + variants[var][index] * sign/parameters[index])
+                hist.Scale(variation)
+                varhists.append(hist)
+        hist = TH1D()
+        hist = newhist.GetCVHistoWithStatError() 
+        #newband = MnvVertErrorBand()
+        #newband = MnvVertErrorBand("FitVariations", hist, varhists) 
+        newhist.AddVertErrorBand("FitVariations",varhists)
+        return newhist
+    else:
+        
+        if oldhist.InheritsFrom("TH2D"):
+            newhist = TH2D()
+        else:
+            newhist = TH1D()
+        #print ("rescale by",index,parameters[index])
+        newhist = oldhist.Clone(newname)
+        newhist.Scale(parameters[index])
+        return newhist
     
 def TexFigure(name,caption,label=None):
         if label is None: label = name

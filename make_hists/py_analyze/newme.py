@@ -4,7 +4,7 @@
 TEST = True
 DEBUG = False
 STOP1 = False
-rescale = False # expect a fit of some sort
+rescale = True # expect a fit of some sort
 
 import os,sys
 from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixDSym, TVectorD
@@ -303,6 +303,7 @@ if not os.path.exists("csv"):
     os.mkdir("csv")
 keylist = open("keylist.txt",'w')
 
+# first pull out the parameters and covariance
 
 # first get the parameters
 for k in f.GetListOfKeys():
@@ -341,19 +342,85 @@ for k in f.GetListOfKeys():
         # covariance.Print()
         continue
 
+# now do some scaling for MC
+
+skip = ["covariance","parameters","correlation"]
+noscale = ["data","all","bkg","bkgsub"]
+
+goodhists = {}
 for k in f.GetListOfKeys():
-    keylist.write(k.GetName()+"\n")
-    #print(k)
+    
     count += 1
-    #if count > 400: break
-    keys.append(k.GetName())
     key = k.GetName()
+    
+    for x in skip:
+        if x in key:
+            continue
+    parsekey = k.GetName().split("___")
+    if len(parsekey) < 4: 
+        #print(" not a " , k.GetName() )
+
+        continue
+    print ("got a key",key)
+    hNd = parsekey[0]
+    sample = parsekey[1]
+    category = parsekey[2]
+    variable = parsekey[3]
+    thetype = parsekey[4]
+    
+    
+
+    if "migration" in thetype or "h2D" in hNd:
+        hist = MnvH2D()
+    else:
+        hist = MnvH1D()
+
+    if "type_" in category or "types_" in category:
+        hist = TH1D()
+    
+
+    hist = f.Get(key)
+    goodhists[key] = hist
+    print ("the hist is ", hist)
+    hist.Print()
+
+    if category in ["data","bkgsub"]:  # these can't be POT normalized
+        continue
+    before = hist.Integral()
+    hist.Scale(POTScale)
+    after = hist.Integral()
+    print ("POTscale",before,after,hist.GetName())
+
+    if rescale and category not in noscale:
+        newtype = thetype + "_scaledmc"
+        newname = key.replace(thetype,newtype)
+         
+        newres = scaleHist(hist,categoryMap[category], parameters[sample],covariance[sample],newname)
+        # addentry(response1D,sample,variable,newtype,category,newres)
+        # if DEBUG: print ("made ",newname)
+        # response1D[sample][variable][thetype][category].SetDirectory(0)
+        # keylist.write(newname+"\n")
+        afterscale = newres.Integral()
+
+        print ("rescale",after,newres,newres.GetName())
+        goodhists[newname]=newres
+
+        
+# sort into buckets
+
+
+for key in goodhists.keys():
+    # keylist.write(k.GetName()+"\n")
+    # #print(k)
+    # count += 1
+    # #if count > 400: break
+    # keys.append(k.GetName())
     
     if "parameters" in key or "covariance" in key: continue
     if "type_" in key or "types_" in key: continue
     #if DEBUG and "Q2QE" not in key: continue
 
-    parsekey = k.GetName().split("___")
+    parsekey = key.split("___")
     if len(parsekey) < 4: 
         #print(" not a " , k.GetName() )
 
@@ -384,25 +451,24 @@ for k in f.GetListOfKeys():
         print(" add a thetype: " , thetype )
     
     # get the histogram
-    me = TNamed()
-    me = f.GetKey(key)
+    #me = TNamed()
+    # me = f.GetKey(key)
     
     if "correlation" in key or ("h___" not in key[0:5] and "h2D___" not in key):
         continue
     if "covariance" in key or "parameters" in key: continue
 
-    noscale = ["data","all","bkg","bkgsub"]
-    skip = ["covariance","parameters","correlation"]
+    #noscale = ["data","all","bkg","bkgsub"]
+    #skip = ["covariance","parameters","correlation"]
     # 1D hists
     if "h_" in key[0:2]:
         
         # if response in name its a 2D so do a cast to MnvH2D
-        if key in skip: 
-            if DEBUG: print ("skip ",key)
-            continue
+        
         if "migration" in key:
-            hist = MnvH2D()
-            hist = (f.Get(key))
+            # hist = MnvH2D()
+            # hist = (f.Get(key))
+            hist = goodhists[key]
             #print ("found migration",key,sample,variable,thetype,category)
             if (hist != 0) and hist != None: 
                 addentry(response1D,sample,variable,thetype,category,hist.Clone())
@@ -411,15 +477,15 @@ for k in f.GetListOfKeys():
                 response1D[sample][variable][thetype][category].SetDirectory(0)
                 #print(" migration " , sample , " " , variable , " " , thetype , " " , category )
                 #delete hist
-                if rescale and category not in noscale:
-                    newtype = thetype + "_scaledmc"
-                    newname = key.replace(thetype,newtype)
-                    newres = MnvH2D()
-                    newres = scaleHist(hist,categoryMap[category], parameters[sample],covariance[sample],newname)
-                    addentry(response1D,sample,variable,newtype,category,newres)
-                    if DEBUG: print ("made ",newname)
-                    response1D[sample][variable][thetype][category].SetDirectory(0)
-                    keylist.write(newname+"\n")
+                # if rescale and category not in noscale:
+                #     newtype = thetype + "_scaledmc"
+                #     newname = key.replace(thetype,newtype)
+                #     newres = MnvH2D()
+                #     newres = scaleHist(hist,categoryMap[category], parameters[sample],covariance[sample],newname)
+                #     addentry(response1D,sample,variable,newtype,category,newres)
+                #     if DEBUG: print ("made ",newname)
+                #     response1D[sample][variable][thetype][category].SetDirectory(0)
+                #     keylist.write(newname+"\n")
                     
             else: 
                 #print("could not read " , key )
@@ -428,34 +494,34 @@ for k in f.GetListOfKeys():
         
         # it's normal so it's a 1D.
         else: 
-            temp = MnvH1D()
-            temp = (f.Get(key))
-            if (temp != 0): 
-                if DEBUG: print ("found an h1D", sample,variable,thetype,category,temp.GetName())
+            hist = MnvH1D()
+            hist = goodhists[key]
+            if (hist != 0): 
+                if DEBUG: print ("found an h1D", sample,variable,thetype,category,hist.GetName())
                 #if (category == "all"):
                     # print ("all", key)
                 if "_resolution" in variable:
-                    addentry(res1D,sample,variable,thetype,category,temp.Clone())
+                    addentry(res1D,sample,variable,thetype,category,hist.Clone())
                     #hists1D[sample][variable][thetype][category].Scale(POTScale)
                     #hists1D[sample][variable][thetype][category].Print()
                     res1D[sample][variable][thetype][category].SetDirectory(0)
                 elif "type_" in variable or "types_" in variable:
-                    addentry(types1D,sample,variable,thetype,category,temp.Clone())
+                    addentry(types1D,sample,variable,thetype,category,hist.Clone())
                     #hists1D[sample][variable][thetype][category].Scale(POTScale)
                     #hists1D[sample][variable][thetype][category].Print()
                     types1D[sample][variable][thetype][category].SetDirectory(0)
                 else:
-                    addentry(hists1D,sample,variable,thetype,category,temp.Clone())
+                    addentry(hists1D,sample,variable,thetype,category,hist.Clone())
                     hists1D[sample][variable][thetype][category].SetDirectory(0)
-                    if rescale and category not in noscale:
-                        newtype = thetype + "_scaledmc"
-                        newname = temp.GetName().replace(thetype,newtype)
+                    # if rescale and category not in noscale:
+                    #     newtype = thetype + "_scaledmc"
+                    #     newname = hist.GetName().replace(thetype,newtype)
 
-                        newhist = scaleHist(temp,categoryMap[category], parameters[sample],covariance[sample],newname)
-                        if DEBUG: print ("rescale",newname)
-                        addentry(hists1D,sample,variable,newtype,category,newhist)
-                        hists1D[sample][variable][newtype][category].SetDirectory(0)
-                        keylist.write(newname+"\n")
+                    #     newhist = scaleHist(hixt,categoryMap[category], parameters[sample],covariance[sample],newname)
+                    #     if DEBUG: print ("rescale",newname)
+                    #     addentry(hists1D,sample,variable,newtype,category,newhist)
+                    #     hists1D[sample][variable][newtype][category].SetDirectory(0)
+                    #     keylist.write(newname+"\n")
                         
             else: 
                 #print("could not read " , key )
@@ -468,13 +534,14 @@ for k in f.GetListOfKeys():
 
     if (hNd == "h2D" or "h2D" in key): 
         # partsof2D = split(variable, "_")
-        hist = MnvH2D()
-        hist = (f.Get(key))
+        # hist = MnvH2D()
+        # hist = (f.Get(key))
+        hist = goodhists[key]
         # Check if response is in its name
         if (hist != 0): 
             if ("migration" in key): 
                 addentry(response2D,sample,variable,thetype,category,hist)
-                response2D[sample][variable][thetype][category] = hist.Clone()
+                #response2D[sample][variable][thetype][category] = hist.Clone()
                 #response2D[sample][variable][thetype][category].Print()
                 #response2D[sample][variable][thetype][category].Scale(POTScale)
                 response2D[sample][variable][thetype][category].SetDirectory(0)
@@ -482,7 +549,7 @@ for k in f.GetListOfKeys():
                 #delete hist
             else: 
                 addentry(hists2D,sample,variable,thetype,category,hist)
-                hists2D[sample][variable][thetype][category] = hist.Clone()
+                #hists2D[sample][variable][thetype][category] = hist.Clone()
                 #hists2D[sample][variable][thetype][category].Scale(POTScale)
                 #hists2D[sample][variable][thetype][category].Print()
                 hists2D[sample][variable][thetype][category].SetDirectory(0)
@@ -494,10 +561,10 @@ for k in f.GetListOfKeys():
             if ("migration" in "key"): 
                 addentry(response2D,sample,variable,thetype,category,0)
                 #hists2D[sample][variable][thetype][category].Scale(POTScale)
-                response2D[sample][variable][thetype][category] = None
+                #response2D[sample][variable][thetype][category] = None
             else: 
                 addentry(hists2D,sample,variable,thetype,category,0)
-                hists2D[sample][variable][thetype][category] = None
+                #hists2D[sample][variable][thetype][category] = 0
                 
 
 print (samples)
