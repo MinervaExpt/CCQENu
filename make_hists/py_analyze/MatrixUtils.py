@@ -1,6 +1,6 @@
 import os,sys
 from ROOT import TMatrixD,TMatrixDSym,TVectorD,TFile,TMatrixDSymEigen, TH1D, TH2D, TObjArray
-from PlotUtils import MnvH1D,MnvVertErrorBand
+from PlotUtils import MnvH1D,MnvH2D, MnvVertErrorBand
 import math
 
 def map2TObjArray(thing):
@@ -82,7 +82,38 @@ def SyncBands(thehist):
 
 def scaleHist(oldhist,index, parameters,covariance, newname):
     ncat = len(parameters)
-    if oldhist.InheritsFrom("MnvH1D"):
+    if oldhist.InheritsFrom("MnvH2D"):
+        print ("scale 2D",oldhist.GetName())
+        newhist = MnvH2D()
+        #print ("rescale by",index,parameters[index])
+        newhist = oldhist.Clone(newname)
+        newhist.Scale(parameters[index])
+        # newband = MnvVertErrorBand("FitVariations", newhist, varhists) 
+        # newhist.AddVertErrorBandAndFillWithCV("FitVariations", ncat * 2)
+        # errorband = MnvVertErrorBand()
+        # errorband = newhist.GetVertErrorBand("FitVariations")
+
+        variants = extrabands(covariance)
+        varhists = []
+        for var in range (0,ncat): #{ // loop over variations
+            for k in range(0,2): 
+                iuniv = var*2+k
+                hist = TH2D()
+                hist = newhist.GetCVHistoWithStatError() 
+                sign = (2*k)-1
+                # central value already scaled by the fit parameter so have to back it off. 
+                variation = (1. + variants[var][index] * sign/parameters[index])
+                hist.Scale(variation)
+                varhists.append(hist)
+        hist = TH2D()
+        hist = newhist.GetCVHistoWithStatError() 
+        #newband = MnvVertErrorBand()
+        #newband = MnvVertErrorBand("FitVariations", hist, varhists) 
+        newhist.AddVertErrorBand("FitVariations",varhists)
+        return newhist
+    
+    elif oldhist.InheritsFrom("MnvH1D"):
+        print ("scale 1D",oldhist.GetName())
         newhist = MnvH1D()
         #print ("rescale by",index,parameters[index])
         newhist = oldhist.Clone(newname)
@@ -111,7 +142,7 @@ def scaleHist(oldhist,index, parameters,covariance, newname):
         newhist.AddVertErrorBand("FitVariations",varhists)
         return newhist
     else:
-        
+        print ("scale TH1D",oldhist.GetName())
         if oldhist.InheritsFrom("TH2D"):
             newhist = TH2D()
         else:

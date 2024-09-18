@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-TEST = True
-DEBUG = False
-STOP1 = False
-rescale = True # expect a fit of some sort
+TEST = False # only does Enu
+DEBUG = False # even more printout
+STOP1 = False # just does readin
+rescale = False # expect a fit of some sort
 
 import os,sys
 from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixDSym, TVectorD
@@ -155,10 +155,11 @@ g = TFile.Open(inputname.replace(".root","_out.root"),"RECREATE")
 mains = f.Get("main").GetTitle()
 
 #print (mains)
-if not prefit:
-    allconfigs["Fit"] = fitconfig
-if prefit: 
-    allconfigs["Fit"] = commentjson.loads((f.Get("Fit").GetTitle()))
+if rescale:
+    if not prefit:
+        allconfigs["Fit"] = fitconfig
+    if prefit: 
+        allconfigs["Fit"] = commentjson.loads((f.Get("Fit").GetTitle()))
 allconfigs["main"] = commentjson.loads(mains)
 allconfigs["varsFile"] = commentjson.loads((f.Get("varsFile").GetTitle()))
 
@@ -294,6 +295,7 @@ thetypes = []
 # In[ ]:
 
 
+
 count = 0
 DEBUG=1
 keys = []
@@ -361,28 +363,44 @@ for k in f.GetListOfKeys():
         #print(" not a " , k.GetName() )
 
         continue
-    print ("got a key",key)
+    if DEBUG: print ("got a key",key)
     hNd = parsekey[0]
     sample = parsekey[1]
     category = parsekey[2]
     variable = parsekey[3]
     thetype = parsekey[4]
     
-    
+    dim = 1
 
     if "migration" in thetype or "h2D" in hNd:
         hist = MnvH2D()
+        dim = 2
     else:
         hist = MnvH1D()
+        dim = 1
 
-    if "type_" in category or "types_" in category:
+    if "type_" in key or "types_" in key:
         hist = TH1D()
+        dim = 0
     
+       
 
     hist = f.Get(key)
     goodhists[key] = hist
     print ("the hist is ", hist)
-    hist.Print()
+    #hist.Print()
+    dim = 0
+    if hist.InheritsFrom("MnvH2D"): dim=2
+    elif hist.InheritsFrom("MnvH1D"): dim = 1
+    else: dim=0
+
+    if DEBUG and dim==1: 
+        print ("errorband",hist.GetName(), hist.GetErrorBandNames())
+        hist.MnvH1DToCSV(hist.GetName(),"./csv", 1., False, True, True, True)
+    if DEBUG and dim==2: 
+        print ("errorband",hist.GetName(), hist.GetErrorBandNames())
+        #hist.MnvH2DToCSV(hist.GetName(),"./csv", 1., False, True, True, True)
+
 
     if category in ["data","bkgsub"]:  # these can't be POT normalized
         continue
@@ -390,17 +408,28 @@ for k in f.GetListOfKeys():
     hist.Scale(POTScale)
     after = hist.Integral()
     print ("POTscale",before,after,hist.GetName())
-
+    
     if rescale and category not in noscale:
         newtype = thetype + "_scaledmc"
         newname = key.replace(thetype,newtype)
-         
+        print ("dim",dim)
         newres = scaleHist(hist,categoryMap[category], parameters[sample],covariance[sample],newname)
+        if newres.InheritsFrom("MnvH1D"):
+            print ("band", newres.GetName(), newres.GetErrorBandNames())
+        #else:
+        #    print ("noband", newres.GetName())
         # addentry(response1D,sample,variable,newtype,category,newres)
         # if DEBUG: print ("made ",newname)
         # response1D[sample][variable][thetype][category].SetDirectory(0)
         # keylist.write(newname+"\n")
         afterscale = newres.Integral()
+        if DEBUG and dim==1: 
+            print ("errorband2",hist.GetName(), hist.GetErrorBandNames())
+            hist.MnvH1DToCSV(hist.GetName(),"./csv", 1., False, True, True, True)
+        if DEBUG and dim==2: 
+            print ("errorband2",hist.GetName(), hist.GetErrorBandNames())
+        #hist.MnvH2DToCSV(hist.GetName(),"./csv", 1., False, True, True, True)
+
 
         print ("rescale",after,newres,newres.GetName())
         goodhists[newname]=newres
@@ -431,7 +460,7 @@ for key in goodhists.keys():
     category = parsekey[2]
     variable = parsekey[3]
     thetype = parsekey[4]
-
+    if TEST and variable != "Enu": continue
     
     # build lists of tags
     if not checktag(samples, sample):

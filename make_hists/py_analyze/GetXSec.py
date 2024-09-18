@@ -262,7 +262,7 @@ def DoRatioUnfolding(basename, bkgsub, imcsighist, idatahist, iseltruhist):
 # template 
 
 def DoResponseUnfolding(basename,  iresponse,  imcsighist, iseltruhist,  bkgsub, idatahist,  unfold, num_iter):
-    if imcsighist.InheritsFrom("TH2D"):
+    if imcsighist.InheritsFrom("MnvH2D"):
         return DoResponseUnfolding2D(basename,  iresponse,  imcsighist, iseltruhist,  bkgsub, idatahist,  unfold, num_iter)
     else:
         return DoResponseUnfolding1D(basename,  iresponse,  imcsighist, iseltruhist,  bkgsub, idatahist,  unfold, num_iter)
@@ -284,7 +284,7 @@ def DoResponseUnfolding1D(basename,  iresponse,  imcsighist, iseltruhist,  bkgsu
                         # make an unsmeared without error bands so that the unfolding can add them
     #unsmeared = (iseltruhist).GetCVHistoWithStatError()
     # HMS - make certain it is a real MnvH1D. 
-    unsmeard = MnvH1D()
+    unsmeared = MnvH1D()
     unsmeared = MnvH1D((iseltruhist).GetCVHistoWithStatError())
     unsmeared.SetName(unsmearedname)
     #  unsmeared.SetName(unsmearedname)
