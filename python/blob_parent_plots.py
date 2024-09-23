@@ -11,7 +11,7 @@ import ROOT
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
 
 TEST=False
-noData=False  # use this to plot MC only types
+noData=True  # use this to plot MC only types
 sigtop=True # use this to place signal on top of background
 dotuned=False
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
@@ -56,28 +56,53 @@ def MakeTitleOnPlot():
     return latex
 
 catstodo = [
-    "data",
+    # "data",
     "qelike",
     "chargedpion",
     "neutralpion",
-    # "multipion",
+    "multipion",
     "other"
 ]
-catsnames = {
-"data":"data", 
-"qelike":"QElike",
-"chargedpion":"1#pi^{#pm}",
-"neutralpion":"1#pi^{0}",
-"multipion":"N#pi",
-"other":"Other"}
-catscolors = {
-"data":ROOT.kBlack, 
-"qelike":ROOT.kBlue-6,
-"chargedpion":ROOT.kMagenta-6,
-"neutralpion":ROOT.kRed-6,
-"multipion":ROOT.kGreen-6,
-"other":ROOT.kYellow-6}
 
+catsnames = {
+    # "data":"data", 
+    "qelike":"QElike",
+    "chargedpion":"1#pi^{#pm}",
+    "neutralpion":"1#pi^{0}",
+    "multipion":"N#pi",
+    "other":"Other"
+}
+
+catscolors = {
+    # "data":ROOT.kBlack, 
+    "qelike":ROOT.kBlue-6,
+    "chargedpion":ROOT.kMagenta-6,
+    "neutralpion":ROOT.kRed-6,
+    "multipion":ROOT.kGreen-6,
+    "other":ROOT.kYellow-6
+}
+
+#  These are the vars that fill into bins
+varstodo= [
+    "NeutCandMCPID",
+    "NeutCandTopMCPID"
+]
+samplestodo= [
+    "QElike",
+]
+
+# Used to make the labels. See CVUniverse and variables config for binnning
+bin_pid = { 
+    1: "n",
+    2: "p",
+    3: "#pi^{0}",
+    4: "#pi^{+}",
+    5: "#pi^{-}",
+    6: "#gamma",
+    7: "e^{#pm}",
+    8: "#mu^{#pm}",
+    10: "Other"
+}
 
 samplenames = {
     "QElike": "QElike Signal Sample",
@@ -114,11 +139,11 @@ print("POTScale: ",POTScale)
 
 groups = {}
 scaleX = ["Q2QE"]
-scaleY = []#"recoil","EAvail"]
+scaleY = ["recoil","EAvail"]
+
 
 
 # find all the valid histogram and group by keywords
-ncats = 5
 for k in keys:
     name = k.GetName()
     if "___" not in name:
@@ -141,6 +166,10 @@ for k in keys:
     if hist == "h2D": continue
     # if cat == "qelikenot": continue
     if cat not in catstodo: continue
+    if variable not in varstodo:
+        continue
+    if sample not in samplestodo: continue
+    
     if hist not in groups.keys():
         groups[hist] = {}
         #legs[parse[0]] = {}
@@ -152,10 +181,6 @@ for k in keys:
         
     if cat not in groups[hist][sample][variable].keys():
         groups[hist][sample][variable][cat] = {}
-    # neehist to know the #of categories later
-    #print ("cats",groups[d][s][variable].keys())
-    # if len(groups[hist][sample][variable].keys())-1 > ncats:
-    #     ncats = len(groups[hist][sample][variable].keys())-1
 
 # now that the structure is created, stuff histograms into it after scaling for POT
 for k in keys:
@@ -166,9 +191,12 @@ for k in keys:
     if hist == "h2D": continue # only 1d
     sample = parse[1]
     cat = parse[2]
+    variable = parse[3]
+
     # if cat == "qelikenot": continue
     if cat not in catstodo: continue
-    variable = parse[3]
+    if variable not in varstodo: continue
+    if sample not in samplestodo: continue
     if "reconstructed" not in parse[4]: continue
     if "types" in parse[4]:
         continue
@@ -225,43 +253,47 @@ for a_hist in groups.keys():
             leg.SetNColumns(2)
             thename = "%s_%s"%(b_sample,c_var)
             thetitle = "%s %s"%(b_sample,c_var)
-            # do the data first
+
             cc = CCQECanvas(name,name)
-            if c_var in scaleX:
-                cc.SetLogx()
-            if c_var in scaleY:
-                cc.SetLogy()
+
+            # do the data first
+            # if c_var in scaleX:
+            #     cc.SetLogx()
+            # if c_var in scaleY:
+            #     cc.SetLogy()
             
-            data = TH1D()
-            if len(groups[a_hist][b_sample][c_var]["data"]) < 1:
-                print (" no data",a_hist,b_sample,c_var)
-                continue
+            # hist = TH1D(groups[a_hist][b_sample][c_var]["qelike"])
+
+            # data = TH1D()
+            # if len(groups[a_hist][b_sample][c_var]["data"]) < 1:
+            #     print (" no data",a_hist,b_sample,c_var)
+            #     continue
             
-            data = TH1D(groups[a_hist][b_sample][c_var]["data"])
+            # data = TH1D(groups[a_hist][b_sample][c_var]["data"])
             plottitle=samplenames[b_sample]
             if dotuned:
                 plottitle = "Tuned "+plottitle
-            # data.SetTitle(plottitle)
-            data.SetTitle("")
-            # data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
-            # data.GetYaxis().SetTitle("Counts/unit")
-            data.GetYaxis().SetTitle("Counts #times 10^{3}/GeV^{2}")
-            data.GetYaxis().CenterTitle()
-            data.GetYaxis().SetTitleSize(0.05)
-            data.GetYaxis().SetLabelSize(0.04)
+            # # data.SetTitle(plottitle)
+            # data.SetTitle("")
+            # # data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
+            # # data.GetYaxis().SetTitle("Counts/unit")
+            # data.GetYaxis().SetTitle("Counts #times 10^{3}/GeV^{2}")
+            # data.GetYaxis().CenterTitle()
+            # data.GetYaxis().SetTitleSize(0.05)
+            # data.GetYaxis().SetLabelSize(0.04)
 
-            # data.GetXaxis().SetTitle("Recoil in GeV")
-            data.GetXaxis().CenterTitle()
-            data.GetXaxis().SetTitleSize(0.05)    
-            data.GetXaxis().SetLabelSize(0.04)
+            # # data.GetXaxis().SetTitle("Recoil in GeV")
+            # data.GetXaxis().CenterTitle()
+            # data.GetXaxis().SetTitleSize(0.05)    
+            # data.GetXaxis().SetLabelSize(0.04)
 
-            dmax = data.GetMaximum()
-            if noData:
-                dmax = 0.0
-            #data.Draw("PE")
-            if not noData: leg.AddEntry(data,"data","pe")
+            # dmax = data.GetMaximum()
+            # if noData:
+            #     dmax = 0.0
+            # #data.Draw("PE")
+            # if not noData: leg.AddEntry(data,"data","pe")
             
-            data.Print()
+            # data.Print()
             
             bestorder = list([
                 "other",
@@ -283,27 +315,41 @@ for a_hist in groups.keys():
             #print ("max",smax,dmax)
             max_multiplier = 1.4
 
-            if c_var in scaleY:
-                max_multiplier = 2.0
-                data.SetMinimum(0.)
-                data.GetXaxis().SetRangeUser(0.0,0.5)
-            if smax > dmax:
-                data.SetMaximum(smax*max_multiplier)
-                stack.SetMaximum(smax*max_multiplier)
-            else:
-                data.SetMaximum(dmax*max_multiplier)
-                stack.SetMaximum(dmax*max_multiplier)
-            if not noData: 
-                data.Draw("PE")
-                stack.Draw("hist same")
-            else:
-                data.Reset()
-                data.Draw("hist")  # need to this to get the axis titles from data
-                stack.Draw("hist same")
-                data.Draw("AXIS same")
-            if not noData: 
-                data.Draw("AXIS same")
-                data.Draw("PE same")
+            stack.SetTitle("")
+            stack.Draw("")
+
+            stack.GetYaxis().SetTitle("Counts #times 10^{3}")
+            stack.GetYaxis().CenterTitle()
+            stack.GetYaxis().SetTitleSize(0.05)
+            stack.GetYaxis().SetLabelSize(0.05)
+            
+            for bin in bin_pid.keys():
+                stack.GetXaxis().SetBinLabel(bin, bin_pid[bin])
+            stack.GetXaxis().SetTitle("PID of particle reconstructed as blob")
+            stack.GetXaxis().CenterTitle()
+            # if c_var in scaleY:
+            #     max_multiplier = 2.0
+            #     data.SetMinimum(500.)
+            #     data.GetXaxis().SetRangeUser(0.0,0.5)
+            # if smax > dmax:
+            #     data.SetMaximum(smax*max_multiplier)
+            #     stack.SetMaximum(smax*max_multiplier)
+            # else:
+            #     data.SetMaximum(dmax*max_multiplier)
+            #     stack.SetMaximum(dmax*max_multiplier)
+            # if not noData: 
+            #     data.Draw("PE")
+            #     stack.Draw("hist same")
+            # else:
+            #     data.Reset()
+            #     data.Draw("hist")  # need to this to get the axis titles from data
+            #     stack.Draw("hist same")
+            #     data.Draw("AXIS same")
+            # if not noData: 
+            #     data.Draw("AXIS same")
+            #     data.Draw("PE same")
+            stack.Draw("hist")
+
             leg.Draw()
             prelim = AddPreliminary()
             prelim.DrawLatex(0.6,0.72,"MINER#nuA Work In Progress")

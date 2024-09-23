@@ -14,26 +14,36 @@ TEST=False
 noData=True  # use this to plot MC only types
 sigtop=True # use this to place signal on top of background
 dotuned=False
+
+doratiocolz = True
+dobox = True
+
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
 legendfontsize = 0.03
 # plottile = "Q^{2}_{QE} vs Primary Proton Score: 2 tracks"
 
-
+# varstodo = [
+#     "Q2QE_PrimaryProtonScore",
+#     "Q2QE_PrimaryProtonScore1"
+# ]
 varstodo = [
-    "Q2QE_PrimaryProtonScore",
-    "Q2QE_PrimaryProtonScore1"
+    # "Q2QE_PrimaryProtonScore",
+    # "Q2QE_PrimaryProtonScore1",
+    "Q2QE_recoil"
 ]
 
 varnames = {
     "Q2QE": "Q^{2}_{QE} (GeV^{2})",
+    "FitQ2QE": "Q^{2}_{QE} (GeV^{2})",
     "PrimaryProtonScore": "Proton Score",
-    "PrimaryProtonScore1": "Proton Score1"
+    "PrimaryProtonScore1": "Proton Score1",
+    "recoil": "recoil (GeV)"
 }
 
 catstodo = [
     "qelike",
-    "qelikenot",
-    "chargedpion"
+    "qelikenot"
+    # "chargedpion"
 ]
 
 catsnames = {
@@ -54,7 +64,7 @@ catscolors = {
     # "multipion":ROOT.kGreen-6,
     # "other":ROOT.kYellow-6
 }
-scalevar = ["Q2QE"]
+scalevar = ["Q2QE", "FitQ2QE"]
 
 
 
@@ -93,7 +103,19 @@ def MakeTitleOnPlot():
     latex.SetTextAlign(21)
     return latex
 
+def MakeRatioHist(i_sig_hist,i_bkg_hist):
+    sig_hist = i_sig_hist.Clone()
+    sig_ratio_hist = i_sig_hist.Clone()
+    bkg_hist = i_bkg_hist.Clone()
+    bkg_ratio_hist = i_bkg_hist.Clone()
 
+    tot_hist = i_sig_hist.Clone()
+    tot_hist.Add(i_bkg_hist,1.)
+
+    sig_ratio_hist.Divide(sig_ratio_hist,tot_hist,1.,1.)
+    bkg_ratio_hist.Divide(bkg_ratio_hist,tot_hist,1.,1.)
+    
+    return sig_ratio_hist, bkg_ratio_hist
 
 # 
 if len(sys.argv) == 1:
@@ -144,7 +166,7 @@ for k in keys:
 
     hist = f.Get(name).Clone()
     hist.SetLineColor(catscolors[cat])
-    hist.SetLineWidth(3)
+    # hist.SetLineWidth(3)
     hist.Scale(1.0,"width")
     # hist.RebinY()
     # hist.SetFillColor(catscolors[cat])
@@ -160,7 +182,7 @@ for var in varstodo:
         logX = True
     if varsplit[1] in scalevar:
         logY = True
-    plottitle = "%s vs %s: 2 tracks"%(varnames[varsplit[0]],varnames[varsplit[1]])
+    plottitle = "%s vs %s"%(varnames[varsplit[0]],varnames[varsplit[1]])
     hist_dict[var]["qelike"].SetTitle(plottitle)
     hist_dict[var]["qelike"].GetXaxis().SetTitle(varnames[varsplit[0]])
     hist_dict[var]["qelike"].GetYaxis().SetTitle(varnames[varsplit[1]])
@@ -169,47 +191,98 @@ for var in varstodo:
     for cat in catstodo:
         if cat == "qelike":
             continue
-        canvas_name = "%s_%s_BoxPlot"%(cat,var)
-        # hist_dict[var][cat].SetTitle(plottitle)
-        # hist_dict[var][cat].GetXaxis().SetTitle(varnames[varsplit[0]])
-        # hist_dict[var][cat].GetYaxis().SetTitle(varnames[varsplit[1]])
-        # hist_dict[var][cat].GetXaxis().CenterTitle()
-        # hist_dict[var][cat].GetYaxis().CenterTitle()
-        leg = CCQELegend(0.85,0.57,0.97,0.43)
-        # leg.SetNColumns(2)
+        if dobox:
+            canvas_name = "%s_%s_BoxPlot"%(cat,var)
+            # hist_dict[var][cat].SetTitle(plottitle)
+            # hist_dict[var][cat].GetXaxis().SetTitle(varnames[varsplit[0]])
+            # hist_dict[var][cat].GetYaxis().SetTitle(varnames[varsplit[1]])
+            # hist_dict[var][cat].GetXaxis().CenterTitle()
+            # hist_dict[var][cat].GetYaxis().CenterTitle()
+            leg = CCQELegend(0.85,0.57,0.97,0.43)
+            # leg.SetNColumns(2)
 
-        dummyqelike = hist_dict[var]["qelike"].Clone()
-        dummyqelike.SetFillColor(catscolors["qelike"])
-        leg.AddEntry(dummyqelike,catsnames["qelike"],"f")
+            dummyqelike = hist_dict[var]["qelike"].Clone()
+            dummyqelike.SetFillColor(catscolors["qelike"])
+            leg.AddEntry(dummyqelike,catsnames["qelike"],"f")
 
 
-        hist_dict[var]["qelike"].SetFillColor(catscolors["qelike"])
-        hist_dict[var]["qelike"].SetFillColorAlpha(catscolors["qelike"],0.6)
+            # hist_dict[var]["qelike"].SetFillColor(catscolors["qelike"])
+            # hist_dict[var]["qelike"].SetFillColorAlpha(catscolors["qelike"],0.6)
 
-        hist_dict[var][cat].SetFillColor(catscolors[cat])
-        hist_dict[var][cat].SetFillColorAlpha(catscolors[cat],0.6)
+            # hist_dict[var][cat].SetFillColor(catscolors[cat])
+            # hist_dict[var][cat].SetFillColorAlpha(catscolors[cat],0.6)
 
-        # hist_dict[var][cat].SetFillColor(catscolors[cat])
-        # leg.AddEntry(hist_dict[var][cat],catsnames[cat],"f")
-        dummycat = hist_dict[var][cat].Clone()
-        dummycat.SetFillColor(catscolors[cat])
-        leg.AddEntry(dummycat,catsnames[cat], "f")
+            # hist_dict[var][cat].SetFillColor(catscolors[cat])
+            # leg.AddEntry(hist_dict[var][cat],catsnames[cat],"f")
+            dummycat = hist_dict[var][cat].Clone()
+            dummycat.SetFillColor(catscolors[cat])
+            leg.AddEntry(dummycat,catsnames[cat], "f")
 
-        hist_dict[var][cat].SetLineWidth(3)
-        hist_dict[var]["qelike"].SetLineWidth(3)
+            # hist_dict[var][cat].SetLineWidth(3)
+            # hist_dict[var]["qelike"].SetLineWidth(3)
 
-        canvas = CCQECanvas(var,var)
-        if logX:
-            canvas.SetLogx()
-        if logY:
-            canvas.SetLogy()
-        # canvas.SetLogz()
-        # hist_dict[var][cat].Draw("BOX")
-        # hist_dict[var]["qelike"].Draw("BOX same")
-        hist_dict[var]["qelike"].Draw("BOX")
-        hist_dict[var][cat].Draw("BOX same")
-        leg.Draw()
-        canvas.Print(dirname+"/"+canvas_name+".png")
+            canvas = CCQECanvas(var,var)
+            if logX:
+                canvas.SetLogx()
+            if logY:
+                canvas.SetLogy()
+            # canvas.SetLogz()
+            # hist_dict[var][cat].Draw("BOX")
+            # hist_dict[var]["qelike"].Draw("BOX same")
+            hist_dict[var]["qelike"].Draw("BOX")
+            hist_dict[var][cat].Draw("BOX same")
+            leg.Draw()
+            canvas.Print(dirname+"/"+canvas_name+".png")
+        if doratiocolz:
+            # makes a background ratio colz plot
+            canvas_name = "%s_%s_RatioPlot"%(cat,var)
+            leg = CCQELegend(0.85,0.57,0.97,0.43)
+
+            ratio_hist = MakeRatioHist(hist_dict[var]["qelike"],hist_dict[var]["qelikenot"])[1]
+
+            ratio_hist
+            ROOT.gStyle.SetPalette(ROOT.kCandy)
+            ratio_hist.SetTitle(plottitle)
+            ratio_hist.GetXaxis().SetTitle(varnames[varsplit[0]])
+            ratio_hist.GetYaxis().SetTitle(varnames[varsplit[1]])
+            ratio_hist.GetXaxis().CenterTitle()
+            ratio_hist.GetYaxis().CenterTitle()
+            ratio_hist.GetZaxis().SetTitle("Background Ratio")
+
+            ratio_hist.Draw("COLZ")
+            canvas.Print(dirname+"/"+canvas_name+".png")
+        if doratiocolz and dobox:
+            canvas_name = "%s_%s_BoxRatioPlot"%(cat,var)
+
+            sig_ratio_hist, bkg_ratio_hist = MakeRatioHist(hist_dict[var]["qelike"],hist_dict[var]["qelikenot"])
+
+            sig_ratio_hist.RebinY()
+            bkg_ratio_hist.RebinY()
+            dummyqelike = hist_dict[var]["qelike"].Clone()
+            dummyqelike.SetFillColor(catscolors["qelike"])
+            leg.AddEntry(dummyqelike,catsnames["qelike"],"f")
+
+            dummycat = hist_dict[var]["qelikenot"].Clone()
+            dummycat.SetFillColor(catscolors["qelikenot"])
+            leg.AddEntry(dummycat,catsnames["qelikenot"], "f")
+
+            sig_ratio_hist.SetTitle(plottitle)
+            sig_ratio_hist.GetXaxis().SetTitle(varnames[varsplit[0]])
+            sig_ratio_hist.GetYaxis().SetTitle(varnames[varsplit[1]])
+            sig_ratio_hist.GetXaxis().CenterTitle()
+            sig_ratio_hist.GetYaxis().CenterTitle()
+            sig_ratio_hist.GetZaxis().SetTitle("Background Ratio")
+            
+            sig_ratio_hist.SetLineColor(catscolors["qelike"])
+            bkg_ratio_hist.SetLineColor(catscolors["qelikenot"])
+
+            sig_ratio_hist.Draw("BOX")
+            bkg_ratio_hist.Draw("BOX same")
+            leg.Draw()
+            canvas.Print(dirname+"/"+canvas_name+".png")
+            
+
+
 
 
     
