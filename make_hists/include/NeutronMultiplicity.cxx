@@ -171,12 +171,15 @@ std::vector<NeutronMultiplicity::NeutCand*> NeutEvent::GetNeutCands() {
 }
 
 NeutronMultiplicity::NeutCand* NeutEvent::GetMaxNeutCand() {
-    std::pair<int, double> max_edep(0, 0.0);
+    int max_index;
+    double max_edep = 0.0;
+    // std::pair<int, double> max_edep(0, 0.0);
     for (int i = 0; i < m_nneutcands; i++) {
-        if (m_cands[i]->m_recoEDep > max_edep.second && GetCandIsNeut(i))
-            max_edep = {i, m_cands[i]->m_recoEDep};
+        if (m_cands[i]->m_recoEDep > max_edep && GetCandIsNeut(i))
+            max_edep = m_cands[i]->m_recoEDep;
+            max_index = i;
     }
-    return m_cands[max_edep.first];
+    return m_cands[max_index];
 }
 
 NeutCand* NeutEvent::GetCand(int index) {
@@ -185,7 +188,9 @@ NeutCand* NeutEvent::GetCand(int index) {
 
 int NeutEvent::GetCandIsNeut(int index) {
     // return (CandIsOutsideMuonDist(index) && CandIsFiducial(index) && CandIsIsolated(index) && CandIsHighE(index));
-    return (CandIsOutsideMuonAngle(index) && CandIsOutsideMuonDist(index) && CandIsFiducial(index) && CandIsIsolated(index) && CandIsHighE(index));
+    // return (CandIsOutsideMuonAngle(index) && CandIsOutsideMuonDist(index) && CandIsFiducial(index) && CandIsIsolated(index) && CandIsHighE(index));
+    return (CandIsOutsideMuonAngle(index) && CandIsOutsideMuonDist(index) && CandIsFiducial(index) && CandIsIsolated(index) && CandIsHighE(index) && m_cands[index]->GetCandIs3D());
+    // return (CandIsHighE(index) && m_cands[index]->GetCandIs3D());
 }
 
 int NeutEvent::CandIsOutsideMuonAngle(int index) {
@@ -199,22 +204,22 @@ int NeutEvent::CandIsOutsideMuonDist(int index) {
     TVector3 candfp = m_cands[index]->GetCandFlightPath();
     double angle = m_mupath.Angle(candfp);
     double dist = candfp.Mag() * std::sin(angle);
-    return dist > m_muondist_min;
+    return dist >= m_muondist_min;
 }
 
 int NeutEvent::CandIsFiducial(int index) {
     TVector3 candpos = m_cands[index]->GetCandPosition();
-    return (candpos.Z() > m_zpos_min && candpos.Z() < m_zpos_max);
+    return (candpos.Z() >= m_zpos_min && candpos.Z() <= m_zpos_max);
 }
 
 int NeutEvent::CandIsIsolated(int index) {
     double dist = m_cands[index]->GetCandVtxDist();
-    return dist > m_vtxdist_min;
+    return dist >= m_vtxdist_min;
 }
 
 int NeutEvent::CandIsHighE(int index) {
     double edep = m_cands[index]->GetCandRecoEDep();
-    return edep > m_edep_min;
+    return edep >= m_edep_min;
 }
 
 int NeutEvent::GetCandTruthPID(int index) {

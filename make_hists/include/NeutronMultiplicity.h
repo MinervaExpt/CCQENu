@@ -23,8 +23,8 @@ class NeutCand {
     TVector3 m_flightpath;  // which direction did it travel from the vtx????
 
     // Truth vars
-    int m_truthPID;         // what is it in truth?
-    int m_truthTopMCPID;    // what is mc pid?
+    int m_truthPID = -1;         // what is it in truth?
+    int m_truthTopMCPID = -1;    // what is mc pid?
 
     bool m_recoset = false;
     bool m_truthset = false;
