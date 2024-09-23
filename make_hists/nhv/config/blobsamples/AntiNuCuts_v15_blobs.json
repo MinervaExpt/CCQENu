@@ -14,8 +14,29 @@
     "also add QElikeNot which is complement to QElike with recoil cut reversed"
   ],
   "QElike": [
+    // {"name": "Max Recoil 100mm", "max": 0.5, "variable": "RecoilEnergy100mmGeV"},
     {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
+    // {"name": "AllBlobCandsNeut", "equals":1, "variable": "AllBlobCandsNeut"},
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
+    {"name": "Max Multiplicity", "max": 2, "variable": "Multiplicity"},
+    {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
+    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
+    {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
+    {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
+    {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
+    {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
+    {"name": "ZVertex", "min": 5980, "max": 8410, "variable": "ZVertex"},
+    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"}, 
+    {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
+    {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
+    {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
+    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
+  ],  
+  "QElikeNeut": [
+    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
+    {"name": "NNeutCands", "max": 2, "variable": "NNeutCands"},
+    // {"name": "AllBlobCandsNeut", "equals": 1, "variable": "AllBlobCandsNeut"},
+    // {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
     {"name": "Max Multiplicity", "max": 2, "variable": "Multiplicity"},
     {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
     {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
@@ -315,7 +336,7 @@
     {"name": "TruthHasMultiplePions", "equals": 1, "variable": "TruthHasMultiPion"}
   ],
   "other": [
-    {"name": "TruthHasMultiplePions", "equals": 0, "variable": "TruthHasMultiPion"},
+    // {"name": "TruthHasMultiplePions", "equals": 0, "variable": "TruthHasMultiPion"},
     {"name": "TruthHasSingleChargedPion", "equals": 0, "variable": "TruthHasSingleChargedPion"},
     {"name": "TruthHasSingleNeutralPion", "equals": 0, "variable": "TruthHasSingleNeutralPion"},
     {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"}

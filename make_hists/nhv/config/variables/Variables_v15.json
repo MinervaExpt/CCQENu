@@ -8,11 +8,29 @@
     "add log10recoil"
   ],
   "HyperD": {
+    "pmu_CosThetamu_recoil": {
+      "name": "pmu_CosThetamu_recoil",
+      "vars": [
+        "pmu",
+        "CosThetamu",
+        "recoil"
+      ],
+      "analysistype": 1
+    },
+    "pmu_ThetamuDegrees_recoil": {
+      "name": "pmu_ThetamuDegrees_recoil",
+      "vars": [
+        "pmu",
+        "ThetamuDegrees",
+        "recoil"
+      ],
+      "analysistype": 1
+    },
     "pzmu_ptmu_EAvail": {
       "name": "pzmu_ptmu_EAvail",
       "vars": [
-        "pzmuHD",
-        "ptmuHD",
+        "pzmu",
+        "ptmu",
         "EAvail"
       ],
       "analysistype": 1
@@ -22,7 +40,7 @@
       "vars": [
         "pzmuHD",
         "ptmuHD",
-        "recoilHD"
+        "recoil"
       ],
       "analysistype": 1
     },
@@ -132,7 +150,22 @@
       "name": "recoil_EAvail",
       "xvar": "recoil",
       "yvar": "EAvail"
-    }
+    },
+    "NBlobs_NNeutCands": {
+      "name": "NBlobs_NNeutCands",
+      "xvar": "NBlobs",
+      "yvar": "NNeutCands"
+    },
+    "NBlobs_NNonVtxIsoBlobs": {
+      "name": "NBlobs_NNonVtxIsoBlobs",
+      "xvar": "NBlobs",
+      "yvar": "NNonVtxIsoBlobs"
+    },
+    "NBlobs_NNonVtxIsoBlobsAll": {
+      "name": "NBlobs_NNonVtxIsoBlobsAll",
+      "xvar": "NBlobs",
+      "yvar": "NNonVtxIsoBlobsAll"
+    },
   },
   "1D": {
     "recoilHD": {
@@ -154,7 +187,23 @@
       "true": "TruePperpMuGeV",
       "name": "ptmuHD",
       "title": "muon p_{T} (GeV/c)",
-      "bins":[0,0.1,0.3,0.7,1.25,2.5],
+            "bins": [
+              0,
+              0.075,
+              0.15,
+              0.25,
+              0.325,
+              0.4,
+              0.475,
+              0.55,
+              0.7,
+              0.85,
+              // 1,
+              1.25,
+              // 1.5,
+              2.5
+            ],
+      // "bins":[0,0.1,0.3,0.7,1.25,2.5],
       "fluxnorm": false
     },
     "pzmuHD": {
@@ -162,7 +211,24 @@
       "true": "TruePparMuGeV",
       "name": "pzmuHD",
       "title": "muon p_{||} (GeV/c)",
-      "bins": [1.5, 3, 6, 10, 15],
+            "bins": [
+              1.5,
+              // 2,
+              2.5,
+              // 3,
+              3.5,
+              // 4,
+              4.5,
+              5,
+              5.5,
+              6,
+              7,
+              // 8,
+              // 9,
+              10,
+              15
+            ],
+      // "bins": [1.5, 3, 6, 10, 15],
       "fluxnorm": false
     },
     "EnuCCQE": {
@@ -268,19 +334,19 @@
       "title": "muon p (GeV/c)",
       "bins": [
         1.5,
-        2,
+        // 2,
         2.5,
-        3,
+        // 3,
         3.5,
-        4,
+        // 4,
         4.5,
-        5,
+        // 5,
         5.5,
-        6,
+        // 6,
         7,
-        8,
+        // 8,
         9,
-        10,
+        // 10,
         15
       ],
       "fluxnorm": false
@@ -345,16 +411,36 @@
     "recoil": {
       // "dofitFill": true,
       "reco": "RecoilEnergyGeV",
-      "true": "TrueRecoilEnergyGeV",
+      "true": "TrueEAvailGeV",
       "name": "recoil",
       "title": "Recoil in GeV",
-      "nbins": 48,
-      "min": 0.0,
-      "max": 0.5,
+      // "nbins": 6,
+      // "min": 0.0,
+      // "max": 0.5,
+      "bins": [
+        0.0,
+        0.05,
+        0.10,
+        0.15,
+        // 0.25,
+        0.30,
+        // 0.35,
+        0.50
+      ],
       // "for": [
       //   "data",
       //   "selected_reco"
       // ],
+      "fluxnorm": false
+    },
+    "VertexEnergy": {
+      "reco": "VertexEnergy",
+      "true": "",
+      "name": "vertex energy",
+      "title": "Vertex Energy in GeV",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 100.,
       "fluxnorm": false
     },
     "recoilQE": {
@@ -399,10 +485,20 @@
       "true": "TrueEAvailGeV",
       "name": "EAvail",
       "title": "E_{Available} in GeV",
-      "nbins": 6,
-      "min": 0.0,
-      "max": 0.5,
+      // "nbins": 10,
+      // "min": 0.0,
+      // "max": 0.5,
       // "bins": [0.0,0.0025,0.005,0.0125,0.031,0.075,0.16,0.5],
+      "bins": [
+        0.0,
+        0.05,
+        0.10,
+        0.15,
+        // 0.25,
+        0.30,
+        // 0.35,
+        0.50
+      ],
       "fluxnorm": false
     },
     "TotalNeutBlobE": {
@@ -525,17 +621,52 @@
       ],
       "fluxnorm": false
     },
+    "NeutCandMCPID": {
+      "reco": "NeutCandMCPID",
+      "true": "NeutCandMCPID",
+      "name": "NeutCandMCPID",
+      "title": "Blob parent PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "NeutCandTopMCPID": {
+      "reco": "NeutCandTopMCPID",
+      "true": "NeutCandTopMCPID",
+      "name": "NeutCandTopMCPID",
+      "title": "Blob parent Top PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },  
     "ThetamuDegrees": {
       "reco": "ThetamuDegrees",
       "true": "TrueThetamuDegrees",
       "name": "ThetamuDegrees",
       "title": "theta_mu (degrees)",
-      "nbins": 20,
+      "nbins": 10,
       "min":0.0,
       "max": 20.0,
       // "max": 40.0,
       "fluxnorm": false
     },
+    "CosThetamu": {
+      "reco": "CosThetamu",
+      "true": "TrueCosThetamu",
+      "name": "CosThetamu",
+      "title": "cos(thetamu)",
+      "nbins": 10,
+      "min": 0.9,
+      "max": 1.0,
+      // "max": 40.0,
+      "fluxnorm": false
+    },    
     "ThetaXmuDegrees": {
       "reco": "ThetaXmuDegrees",
       "true": "TrueThetaXmuDegrees",
@@ -610,11 +741,29 @@
       "min" : -0.5,
       "max" : 10.5
     },
-    "NNeutBlobs": {
-      "reco": "NNeutBlobs",
+    "NNonVtxIsoBlobs": {
+      "reco": "NNonVtxIsoBlobs",
+      "true": "TrueNeutralPionCount",
+      "name": "NNonVtxIsoBlobs",
+      "title": "Number of NonVtxIsoBlobs",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "NNonVtxIsoBlobsAll": {
+      "reco": "NNonVtxIsoBlobsAll",
+      "true": "TrueNeutralPionCount",
+      "name": "NNonVtxIsoBlobsAll",
+      "title": "Number of NonVtxIsoBlobsAll",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "NNeutCands": {
+      "reco": "NNeutCands",
       "true": "TrueNeutronCount",
-      "name": "NNeutBlobs",
-      "title": "Number of 3D Blobs",
+      "name": "NNeutCands",
+      "title": "Number of MAD_Blobs",
       "nbins": 11,
       "min": -0.5,
       "max": 10.5
