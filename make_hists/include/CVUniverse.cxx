@@ -48,7 +48,8 @@ util::CaloCorrection AntiNu_tracker(splines_file.c_str(), "NukeCC_AntiNu_Tracker
 ///////////////// Defaults and Declarations /////////////////
 // Analysis var
 int CVUniverse::m_analysis_neutrino_pdg = -14;
-double CVUniverse::m_min_blob_zvtx = 4750.0;
+// double CVUniverse::m_min_blob_zvtx = 4750.0;
+double CVUniverse::m_min_blob_zvtx = 5980.0;
 double CVUniverse::m_photon_energy_cut = 10.0;                             // in MeV
 double CVUniverse::m_proton_ke_cut = NSFDefaults::TrueProtonKECutCentral;  // Default value
 
@@ -595,6 +596,10 @@ double CVUniverse::GetTrueThetamu() const {
 
 double CVUniverse::GetThetamuDegrees() const { return GetThetamu() * 180 / M_PI; }
 double CVUniverse::GetTrueThetamuDegrees() const { return GetTrueThetamu() * 180 / M_PI; }
+
+double CVUniverse::GetCosThetamu() const { return std::cos(GetThetamu());}
+double CVUniverse::GetTrueCosThetamu() const { return std::cos(GetTrueThetamu()); }
+
 double CVUniverse::GetThetaXmuDegrees() const { return GetThetaXmu() * 180 / M_PI; }
 double CVUniverse::GetTrueThetaXmuDegrees() const { return GetTrueThetaXmu() * 180 / M_PI; }
 double CVUniverse::GetThetaYmuDegrees() const { return GetThetaYmu() * 180 / M_PI; }
@@ -1090,13 +1095,13 @@ double CVUniverse::ApplyCaloTuning(double calRecoilE) const {
         return calRecoilE; // also do nothing here 
 }
 
-double CVUniverse::SetRecoilBranch(NuConfig RecoilBranchConfig, bool print) {
-    m_recoil_branch = RecoilBranchConfig.GetString("recoil_branch");
+int CVUniverse::SetRecoilBranch(NuConfig RecoilBranchConfig, bool print) {
     if (_is_recoil_branch_set) {
         std::cout << "WARNING: YOU ATTEMPTED TO RECOIL BRANCH A SECOND TIME. "
                   << "THIS IS NOT ALLOWED FOR CONSISTENCY." << std::endl;
         return 0;
     } else {
+        m_recoil_branch = RecoilBranchConfig.GetString("recoil_branch");
         _is_recoil_branch_set = true;
         if (print) RecoilBranchConfig.Print();
         return 1;
@@ -1115,8 +1120,21 @@ double CVUniverse::SetRecoilBranch(NuConfig RecoilBranchConfig, bool print) {
 //     }
 // }
 
+double CVUniverse::GetVertexEnergyGeV() const {
+    // Get's the energy inside the 100mm radius around the vertex, TODO: does this need calo tuning?
+    return (GetDouble("recoil_energy_nonmuon_nonvtx0mm") - GetDouble("recoil_energy_nonmuon_nonvtx100mm"));
+}
+
+double CVUniverse::GetRecoilEnergy100mmGeV() const {
+    return GetDouble("recoil_energy_nonmuon_nonvtx100mm");
+}
+
 double CVUniverse::GetCalRecoilEnergy() const {
-    return GetDouble("recoil_energy_nonmuon_nonvtx0mm");
+    // if (!_is_recoil_branch_set) {
+
+    // }
+    // return GetDouble("recoil_energy_nonmuon_nonvtx0mm");
+    return GetDouble(m_recoil_branch.c_str());
 }
 
 double CVUniverse::GetCalRecoilEnergyGeV() const { return CVUniverse::GetCalRecoilEnergy() * MeVGeV; }
@@ -1587,6 +1605,22 @@ int CVUniverse::GetNBlobs() const {
     return n_blobs;
 }
 
+int CVUniverse::GetNNonVtxIsoBlobs() const {
+    return GetInt("n_nonvtx_iso_blobs");
+}
+
+int CVUniverse::GetNNonVtxIsoBlobsAll() const {
+    return GetInt("n_nonvtx_iso_blobs_all");
+}
+
+int CVUniverse::GetLeadingNonVtxIsoBlobPDG() const {
+    return GetVecElem("nonvtx_iso_blobs_particle_pdg_in_prong",0);
+}
+
+int CVUniverse::GetLeadingNonVtxIsoBlobPrimaryPDG() const {
+    return GetVecElem("nonvtx_iso_blobs_primary_particle_pdg_in_prong", 0);
+}
+
 int CVUniverse::GetTrueNBlobs() const {  // This is just messing around... -NHV 6/20/23
     int pi0_count = GetTrueNeutralPionCount();
     return pi0_count * 2.;
@@ -1597,12 +1631,23 @@ int CVUniverse::GetTrueNBlobs() const {  // This is just messing around... -NHV 
 // ----------------------------------------------------------------------------
 
 int CVUniverse::GetNNeutCands() const {
+    int raw_tot = GetInt((MinervaUniverse::GetTreeName() + "_BlobIs3D_sz").c_str());
+    // int tot = 0;
+    // for (int i = 0; i < raw_tot; i++) {
+    //     if ((!GetVecElem((GetAnaToolName() + "_BlobBegZ").c_str(), i)) < 5980.0 && (GetVecElem((GetAnaToolName() + "_BlobIs3D").c_str(), i)==1))
+    //         tot += 1;
+    // }
+    // return tot;
+    return raw_tot;
+}
+
+int CVUniverse::GetNMADBlobs() const {
     return GetInt((MinervaUniverse::GetTreeName() + "_BlobIs3D_sz").c_str());
 }
 
 std::vector<TVector3> CVUniverse::GetBlobsBegPos() const {
     std::vector<TVector3> positions;
-    for (int i = 0; i < GetNNeutCands(); i++) {
+    for (int i = 0; i < GetNMADBlobs(); i++) {
         TVector3 begpos(GetVecElem((GetAnaToolName() + "_BlobBegX").c_str(), i),
                         GetVecElem((GetAnaToolName() + "_BlobBegY").c_str(), i),
                         GetVecElem((GetAnaToolName() + "_BlobBegZ").c_str(), i));
@@ -1615,84 +1660,102 @@ NeutronMultiplicity::NeutEvent* CVUniverse::GetNeutEvent() const {
     TVector3 pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
     TVector3 vtx(GetVec<double>("vtx").at(0), GetVec<double>("vtx").at(1), GetVec<double>("vtx").at(2));
     // if (_is_neut_event_set) { // if you use the global neutevent
-    //     m_neutevent->SetCands(CVUniverse::GetNNeutCands(), vtx, pmu);
+    //     m_neutevent->SetCands(CVUniverse::GetNMADBlobs(), vtx, pmu);
     //     m_neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()), GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()), GetBlobsBegPos());
     //     return m_neutevent;
     // }
     if (!_is_neutron_config_set) { // if the global config is not set
-        NeutronMultiplicity::NeutEvent* neutevent = new NeutronMultiplicity::NeutEvent(CVUniverse::GetNNeutCands(), vtx, pmu);  // default vals
+        NeutronMultiplicity::NeutEvent* neutevent = new NeutronMultiplicity::NeutEvent(CVUniverse::GetNMADBlobs(), vtx, pmu);  // default vals
         neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()), GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()), GetBlobsBegPos());
         return neutevent;
     } // else, if the global config is set without setting global neut event
-    NeutronMultiplicity::NeutEvent* neutevent = new NeutronMultiplicity::NeutEvent(CVUniverse::m_neutron_config, CVUniverse::GetNNeutCands(), vtx, pmu);
+    NeutronMultiplicity::NeutEvent* neutevent = new NeutronMultiplicity::NeutEvent(CVUniverse::m_neutron_config, CVUniverse::GetNMADBlobs(), vtx, pmu);
     neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()), GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()), GetBlobsBegPos());
     return neutevent;
+}
+
+int CVUniverse::GetAllBlobCandsNeut() const {
+    if (GetNMADBlobs() == 0) return 1;
+    NeutronMultiplicity::NeutEvent* neutevent = CVUniverse::GetNeutEvent();
+    for (int i = 0; i < GetNMADBlobs(); i++) {
+        if (!neutevent->GetCandIsNeut(i)) return 0;
+    }
+    return 1;
 }
 
 double CVUniverse::GetTotNeutBlobEGeV() const {
     NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
     double edep = 0.0;
-    if (GetNNeutCands() == 0) {
+    if (GetNMADBlobs() == 0) {
         // std::cout << edep << std::endl;
         return edep;
     }
-    for (int i = 0; i < GetNNeutCands(); i++) {
-            if (neutevent->GetCandIsNeut(i)) edep += neutevent->GetCand(i)->GetCandRecoEDep();
+    for (int i = 0; i < GetNMADBlobs(); i++) {
+        if (neutevent->GetCandIsNeut(i) && neutevent->CandIsFiducial(i) && neutevent->CandIsIsolated(i) && neutevent->CandIsOutsideMuonDist(i)) edep += neutevent->GetCand(i)->GetCandRecoEDep();
     }
     // if (edep > 0.0) std::cout << edep << std::endl;
     return edep * MeVGeV;
 }
 
-int CVUniverse::GetTruthMaxNeutCandMCPID() {
+int CVUniverse::GetTruthMaxNeutCandMCPID() const {
+    if (GetNMADBlobs() == 0) return 0;
     NeutronMultiplicity::NeutEvent* neutevent = CVUniverse::GetNeutEvent();
+    neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()));
     return neutevent->GetMaxNeutCand()->GetCandTruthPID(); // this checks if neutron
 }
 
-int CVUniverse::GetTruthMaxNeutCandTopMCPID() {
+int CVUniverse::GetTruthMaxNeutCandTopMCPID() const {
+    if (GetNMADBlobs() == 0) return 0;
     NeutronMultiplicity::NeutEvent* neutevent = CVUniverse::GetNeutEvent();
+    neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()));
     return neutevent->GetMaxNeutCand()->GetCandTruthTopPID();  // this checks if neutron
 }
 
-int CVUniverse::GetPlotNeutCandMCPID() {
-    int pid = GetTruthMaxNeutCandMCPID();
-    if (pid == 2112)
-        return 1;  // neutron
-    else if (pid == 2212)
-        return 2;  // proton
-    else if (pid == 111)
-        return 3;  // pi0
-    else if (pid == 211)
-        return 4;  // pi+
-    else if (pid == -211)
-        return 5;  // pi-
-    else if (pid == 22)
-        return 7;  // photon
-    else if (abs(pid) == 11)
-        return 8;  // electron
-    else if (abs(pid) == 22)
-        return 9;  // muon
+int CVUniverse::GetPlotNeutCandMCPID() const {
+    int pid = CVUniverse::GetTruthMaxNeutCandMCPID();
+    if (pid == 0)
+        return -9999;
+    if (pid == 2112)          // neutron
+        return 1;  
+    else if (pid == 2212)     // proton
+        return 2; 
+    else if (pid == 111)      // pi0
+        return 3; 
+    else if (pid == 211)      // pi+
+        return 4; 
+    else if (pid == -211)     // pi-
+        return 5;  
+    else if (pid == 22)       // photon
+        return 6;  
+    else if (abs(pid) == 11)  // electron
+        return 7; 
+    else if (abs(pid) == 13)  // muon
+        return 8; 
     else
         return 10;
 }
 
-int CVUniverse::GetPlotNeutCandTopMCPID() {
-    int pid = GetTruthMaxNeutCandTopMCPID();
-    if (pid == 2112)
-        return 1;  // neutron
-    else if (pid == 2212)
-        return 2;  // proton
-    else if (pid == 111)
-        return 3;  // pi0
-    else if (pid == 211)
-        return 4;  // pi+
-    else if (pid == -211)
-        return 5;  // pi-
-    else if (pid == 22)
-        return 7;  // photon
-    else if (abs(pid) == 11)
-        return 8;  // electron
-    else if (abs(pid) == 22)
-        return 9;  // muon
+
+int CVUniverse::GetPlotNeutCandTopMCPID() const {
+    int pid = CVUniverse::GetTruthMaxNeutCandTopMCPID();
+    if (pid == 0)
+        return -9999;
+    if (pid == 2112)          // neutron
+        return 1;  
+    else if (pid == 2212)     // proton
+        return 2; 
+    else if (pid == 111)      // pi0
+        return 3; 
+    else if (pid == 211)      // pi+
+        return 4; 
+    else if (pid == -211)     // pi-
+        return 5;  
+    else if (pid == 22)       // photon
+        return 6;  
+    else if (abs(pid) == 11)  // electron
+        return 7; 
+    else if (abs(pid) == 13)  // muon
+        return 8; 
     else
         return 10;
 }

@@ -93,20 +93,16 @@ class CVFunctions {
         recofunctions["Curvature"] = &CVUNIVERSE::GetCurvature;
         truefunctions["TrueCurvature"] = &CVUNIVERSE::GetTrueCurvature;
 
+        recofunctions["RecoilEnergy100mmGeV"] = &CVUNIVERSE::GetRecoilEnergy100mmGeV;
+
+        recofunctions["VertexEnergyGeV"] = &CVUNIVERSE::GetVertexEnergyGeV;
+
         recofunctions["RecoilEnergyGeV"] = &CVUNIVERSE::GetRecoilEnergyGeV;
         truefunctions["TrueRecoilEnergyGeV"] = &CVUNIVERSE::GetTrueRecoilEnergyGeV;
 
         recofunctions["OffsetRecoilEnergyGeV"] = &CVUNIVERSE::GetOffsetRecoilEnergyGeV;
 
         recofunctions["EAvailGeV"] = &CVUNIVERSE::GetEAvailGeV;
-        
-        // recofunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
-        // truefunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
-        recofunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
-        truefunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
-        recofunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
-        truefunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
-        // recofunctions["RecoilEnergyMinusNeutBlobsGeV"] = &CVUNIVERSE::GetRecoilEnergyMinusNeutBlobsGeV;
 
         truefunctions["TrueEAvailGeV"] = &CVUNIVERSE::GetTrueEAvailGeV;
         truefunctions["TrueEAvailWithNeutronsGeV"] = &CVUNIVERSE::GetTrueEAvailWithNeutronsGeV;
@@ -126,6 +122,9 @@ class CVFunctions {
 
         recofunctions["ThetamuDegrees"] = &CVUNIVERSE::GetThetamuDegrees;
         truefunctions["TrueThetamuDegrees"] = &CVUNIVERSE::GetTrueThetamuDegrees;
+
+        recofunctions["CosThetamu"] = &CVUNIVERSE::GetCosThetamu;
+        truefunctions["TrueCosThetamu"] = &CVUNIVERSE::GetTrueCosThetamu;
 
         recofunctions["ThetaXmuDegrees"] = &CVUNIVERSE::GetThetaXmuDegrees;
         truefunctions["TrueThetaXmuDegrees"] = &CVUNIVERSE::GetTrueThetaXmuDegrees;
@@ -228,6 +227,36 @@ class CVFunctions {
 
         recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
         recointfunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
+
+        recofunctions["NNonVtxIsoBlobs"] = &CVUNIVERSE::GetNNonVtxIsoBlobs;
+        recointfunctions["NNonVtxIsoBlobs"] = &CVUNIVERSE::GetNNonVtxIsoBlobs;
+
+        recofunctions["NNonVtxIsoBlobsAll"] = &CVUNIVERSE::GetNNonVtxIsoBlobsAll;
+        recointfunctions["NNonVtxIsoBlobsAll"] = &CVUNIVERSE::GetNNonVtxIsoBlobsAll;
+
+        recofunctions["LeadingNonVtxIsoBlobPDG"] = &CVUNIVERSE::GetLeadingNonVtxIsoBlobPDG;
+        recointfunctions["LeadingNonVtxIsoBlobPDG"] = &CVUNIVERSE::GetLeadingNonVtxIsoBlobPDG;
+        
+        recofunctions["LeadingNonVtxIsoBlobPrimaryPDG"] = &CVUNIVERSE::GetLeadingNonVtxIsoBlobPrimaryPDG;
+        recointfunctions["LeadingNonVtxIsoBlobPrimaryPDG"] = &CVUNIVERSE::GetLeadingNonVtxIsoBlobPrimaryPDG;
+
+        // recofunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
+        // truefunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
+        // recofunctions["RecoilEnergyMinusNeutBlobsGeV"] = &CVUNIVERSE::GetRecoilEnergyMinusNeutBlobsGeV;
+
+        recofunctions["AllBlobCandsNeut"] = &CVUNIVERSE::GetAllBlobCandsNeut;
+        recointfunctions["AllBlobCandsNeut"] = &CVUNIVERSE::GetAllBlobCandsNeut;
+
+        recofunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
+        recointfunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
+        truefunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
+        trueintfunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
+
+        recofunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
+        recointfunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
+        truefunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
+        trueintfunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
+
         // truefunctions["TrueNBlobs"] = &CVUNIVERSE::GetTrueNBlobs;
 
         recofunctions["NNeutCands"] = &CVUNIVERSE::GetNNeutCands;

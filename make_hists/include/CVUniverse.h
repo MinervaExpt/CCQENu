@@ -191,6 +191,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetThetamuDegrees() const;
     virtual double GetTrueThetamuDegrees() const;
 
+    virtual double GetCosThetamu() const;
+
+    virtual double GetTrueCosThetamu() const;
+
     virtual double GetThetaXmuDegrees() const;
     virtual double GetTrueThetaXmuDegrees() const;
 
@@ -220,7 +224,11 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double ApplyCaloTuning(double calRecoilE) const;
 
-    virtual double SetRecoilBranch(NuConfig RecoilBranchConfig, bool print);
+    static int SetRecoilBranch(NuConfig RecoilBranchConfig, bool print);
+
+    virtual double GetVertexEnergyGeV() const;
+
+    virtual double GetRecoilEnergy100mmGeV() const;
 
     virtual double GetCalRecoilEnergy() const;
     virtual double GetCalRecoilEnergyGeV() const;
@@ -337,13 +345,26 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // Isolated Blobs
     virtual int GetNBlobs() const;
+
+    virtual int GetNNonVtxIsoBlobs() const;
+
+    virtual int GetNNonVtxIsoBlobsAll() const;
+
+    virtual int GetLeadingNonVtxIsoBlobPDG() const;
+
+    virtual int GetLeadingNonVtxIsoBlobPrimaryPDG() const;
+
     virtual int GetNNeutCands() const;
+
+    // All blobs
+    virtual int GetNMADBlobs() const;
 
     // ---------------------------- Neutron stuff -----------------------------
 
     // access nhv's reco neutron classes TODO: un comment these
     // NeutronMultiplicity::NeutEvent m_neut_event;
     virtual NeutronMultiplicity::NeutEvent* GetNeutEvent() const;
+    virtual int GetAllBlobCandsNeut() const;
     virtual std::vector<TVector3> GetBlobsBegPos() const;
     // virtual NeutronMultiplicity::NeutCand GetNeutCand() const;
 
@@ -364,10 +385,11 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // virtual double GetNeutBlobEGeV(int index) const;
     virtual double GetTotNeutBlobEGeV() const;
-    virtual int GetTruthMaxNeutCandMCPID();
-    virtual int GetTruthMaxNeutCandTopMCPID();
-    virtual int GetPlotNeutCandMCPID();
-    virtual int GetPlotNeutCandTopMCPID();
+    virtual int GetTruthMaxNeutCandMCPID() const;
+    virtual int GetTruthMaxNeutCandTopMCPID() const;
+
+    virtual int GetPlotNeutCandMCPID() const;
+    virtual int GetPlotNeutCandTopMCPID() const;
     // TODO: down to here
 
     // virtual std::vector<double> GetNeutCandEs() const;

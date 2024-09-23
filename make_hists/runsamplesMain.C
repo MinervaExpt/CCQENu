@@ -211,9 +211,13 @@ int main(const int argc, const char *argv[]) {
         if (paramsConfig.IsMember("NeutronConfig")) {
             CVUniverse::SetNeutronConfig(paramsConfig.GetConfig("NeutronConfig"), printConfigs);
         }
-        // if (paramsConfig.IsMember("RecoilBranchConfig")) {
-        //     CVUniverse::SetRecoilBranchConfig(paramsConfig.GetConfig("RecoilBranchConfig"), printConfigs);
-        // }
+        std::cout << " setting recoil branch." << std::endl;
+
+        if (paramsConfig.IsMember("RecoilBranchConfig")) {
+            std::cout << " setting recoil branch." << std::endl;
+            CVUniverse::SetRecoilBranch(paramsConfig.GetConfig("RecoilBranchConfig"), printConfigs);
+            std::cout << " finished setting recoil branch." << std::endl;
+        }
         CVUniverse::SetAnalysisNeutrinoPDG(pdg, printConfigs);
     }
 
