@@ -8,3 +8,12 @@
 /Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123008_Playlist.root
 /Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123009_Playlist.root
 /Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123010_Playlist.root
+/Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123011_Playlist.root
+/Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123012_Playlist.root
+/Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123013_Playlist.root
+/Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123014_Playlist.root
+/Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123015_Playlist.root
+/Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123016_Playlist.root
+/Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123017_Playlist.root
+/Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123018_Playlist.root
+/Users/nova/minerva/data/ME/p4/5A/mc/MasterAnaDev_mc_AnaTuple_run00123019_Playlist.root
