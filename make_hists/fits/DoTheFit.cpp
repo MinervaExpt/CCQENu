@@ -34,7 +34,7 @@ TMatrixD  extrabands(const TMatrixDSym cov) {
         }
         for (int j = 0; j < n ; j++){
            // std::cout << "eigen " << vi << " " << j << " " << results[vi][j] << " " << e[vi][vi] <<  " " << m[vi][j] << std::endl;
-            results[vi][j] += std::sqrt(e[vi]) * m[vi][j];
+            results[vi][j] += std::sqrt(e[vi]) * m[j][vi];
         }
     }
     
@@ -86,10 +86,10 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
 
     // make objects to contain the fit information
     PlotUtils::MnvH1D parameters(TString("parameters_" + aname), "fit parameters", ncat, 0.0, double(ncat));
-    PlotUtils::MnvH2D covariance(TString("covariance_" + aname), "fit parameters", ncat, 0.0, double(ncat), ncat, 0.0, double(ncat));
-    PlotUtils::MnvH2D correlation(TString("correlation_" + aname), "fit parameters", ncat, 0.0, double(ncat), ncat, 0.0, double(ncat));
+    PlotUtils::MnvH2D covariance(TString("covariance_" + aname), "covariance", ncat, 0.0, double(ncat), ncat, 0.0, double(ncat));
+    PlotUtils::MnvH2D correlation(TString("correlation_" + aname), "correlation", ncat, 0.0, double(ncat), ncat, 0.0, double(ncat));
     PlotUtils::MnvH1D fcn(TString("fcn" + aname), "fcn", 1, 0., 1.);
-
+    std::cout << "covariance" << covariance.GetName() << std::endl;
     
     TMatrixD variants(ncat,ncat);
     TVectorD theparameters(ncat);
@@ -326,10 +326,14 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
 
     
 
-    int neigen=3;  // only use the top 3 eigenvalues. 
-    // variants.ResizeTo(ncat,ncat);
+    int neigen=3;
+    if (CovMatrix.GetNrows() < neigen){
+        neigen = CovMatrix.GetNrows();
+    }
+          // only use the top 3 eigenvalues.
+                 // variants.ResizeTo(ncat,ncat);
     variants = extrabands(CovMatrix);
-    for (int var = 0; var< ncat; var++){
+    for (int var = 0; var < ncat; var++) {
         TVectorD tmp = variants[var];
         tmp.Print();
     }
@@ -379,6 +383,8 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
     parameters.MnvH1DToCSV("parameters", "./csv/");
     covariance.MnvH2DToCSV("covariance", "./csv/");
     correlation.MnvH2DToCSV("correlation", "./csv/");
+    std::cout << " Write at end" << std::endl;
+    parameters.Print();
     parameters.Write();
     covariance.Write();
     correlation.Write();

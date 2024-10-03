@@ -1,0 +1,18 @@
+{//"InputFile":"/Users/schellma/Dropbox/CCQE/SB_minervame1A_multitrack_mnvgpvm_v8_1.root",
+    "InputFile":"/Users/schellma/Dropbox/CCQE/p4_run/p4run.root",
+"OutputFile":"$CCQEMAT/p4_run_fit.root",
+   // "%%%InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_mnv_Nu_v8_multitrack_1.root",
+    "Sidebands":["QElike"],
+    "IncludeInFit":["QElike"],
+    "Categories":["qelike","qelikenot"],
+ "Backgrounds":["qelikenot"],
+ "Span":3,
+ "Rebin":1,
+ "Variable":"recoil",
+    "FitType":"SlowChi2",
+  "PixDir":"./pix",
+  "LogPlot":false,
+  "LogMinimum":1.0,
+  "Template":"h___%s___%s___%s___reconstructed",
+  "FitTemplate":"h___%s___%s___%s___fitted"
+}

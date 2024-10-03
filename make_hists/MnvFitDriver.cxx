@@ -202,7 +202,7 @@ int main(int argc, char* argv[]) {
     
     
     outputfile->cd();
-    //CopyDir(inputFile,outputfile);
+    CopyDir(inputFile,outputfile);
     
     // std::vector<TString> tags = {""};
     TH1F* pot_summary = (TH1F*) inputFile->Get("POT_summary");
@@ -283,6 +283,7 @@ int main(int argc, char* argv[]) {
     // set up for plots
     
     PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
+    mnvPlotter.error_color_map["FitVariations"] = kBlue + 2;
     mnvPlotter.draw_normalized_to_bin_width = false;
     TCanvas cF("fit","fit");
     if (logPlot) gPad->SetLogy(1);
@@ -412,7 +413,11 @@ int main(int argc, char* argv[]) {
     
     TObjArray* combmcin;
     TObjArray* combmcout;
-    
+    // store the config for the fit
+    std::string config_str = config.ToString();
+    TNamed newconfig("Fit", config_str.c_str());
+    newconfig.Write();
+
     for (auto side:sidebands){
         TString pixheader = TString("pix/" + side + "_" + varName + "_");
 
@@ -452,17 +457,16 @@ int main(int argc, char* argv[]) {
         //cF.sSetLogy(1);
         mnvPlotter.DrawErrorSummary(bkgsub[side]);
         cF.Print(TString(pixheader + "_" + fitType + "_bkgsub_errors.png").Data());
-        for (int i = 0; i < categories.size(); i++) {
-            TString cat = categories[i];
-            mnvPlotter.DrawErrorSummary(unfitHists[side][i]);
-            cF.Print(TString(pixheader + "_" + "prefit" + "_" + cat + "_errors.png").Data());
-            mnvPlotter.DrawErrorSummary(fitHists[side][i]);
-            cF.Print(TString(pixheader + "_" + fitType + "_" + cat + "_errors.png").Data());
-        }
+        // for (int i = 0; i < categories.size(); i++) {
+        //     TString cat = categories[i];
+        //     mnvPlotter.DrawErrorSummary(unfitHists[side][i]);
+        //     cF.Print(TString(pixheader + "_" + "prefit" + "_" + cat + "_errors.png").Data());
+        //     mnvPlotter.DrawErrorSummary(fitHists[side][i]);
+        //     cF.Print(TString(pixheader + "_" + fitType + "_" + cat + "_errors.png").Data());
+        // }
         //cF.SetLogy(0);
 
     }
-    
     
     //inputFile->Close();
     outputfile->Close();

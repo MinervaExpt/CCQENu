@@ -125,10 +125,10 @@ def TexFigure3(name1,name2,name3,name4,caption,label=None):
     label = label.replace(" ","-")
    
     s = "\\begin{figure}[ht]\n\\centering\n"
-    s += "\\includegraphics[height=0.3\\textwidth]{%s}\n"%((name1))
-    s += "\\includegraphics[height=0.3\\textwidth]{%s}\n"%((name2))
-    s += "\\includegraphics[height=0.3\\textwidth]{%s}\n"%((name3))
-    s += "\\includegraphics[height=0.3\\textwidth]{%s}\n"%((name4))
+    s += "\\includegraphics[height=0.4\\textwidth]{%s}\n"%((name1))
+    s += "\\includegraphics[height=0.4\\textwidth]{%s}\n"%((name2))
+    s += "\\includegraphics[height=0.4\\textwidth]{%s}\n"%((name3))
+    s += "\\includegraphics[height=0.4\\textwidth]{%s}\n"%((name4))
     s += "\\caption{%s}\n"%caption.replace("_","\\_")
     #s += "\\label{fig:%s}\n"%label
     s += "\\end{figure}\n"
