@@ -1,4 +1,4 @@
-PLACE1='WorkComputer' # local
+PLACE1='workcomputer' # local
 PLACE2='minerva'      # minervagpvm0#.fnal.gov
 PLACE3='hep01'        # hep01.physics.oregonstate.edu
 

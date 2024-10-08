@@ -187,11 +187,9 @@ int main(int argc, char* argv[]) {
 
 
     // read in the data and parse it
-    
     TFile* inputFile = TFile::Open(inputFileName.c_str(),"READ");
     TFile* outputfile = TFile::Open(outputFileName.c_str(),"RECREATE");
     //loop on all entries of this directory
-    
     
     outputfile->cd();
     CopyDir(inputFile,outputfile);
@@ -270,10 +268,6 @@ int main(int argc, char* argv[]) {
     std::cout << " Try to write it out " << std::endl;
     
     outputfile->cd();
-    std::string pixdir=".";
-    if (config.IsMember("PixDir")) pixdir = config.GetString("PixDir");
-    std::cout << " writing pictures to directory " << pixdir << std::endl;
-    
     int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin);
     
     // set up for plots
@@ -379,25 +373,40 @@ int main(int argc, char* argv[]) {
         }
     }
     
+    mnvPlotter.error_color_map["FitVariations"] = kBlue + 2;
+    
     for (auto side:sidebands){
         dataHist[side]->SetTitle(dataHist[side]->GetName());
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot[side], 1., "TR");
-        cF.Print(TString(pixdir+"/"+side+"_postfit_compare.png").Data());
-        
-  
-        mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre[side], 1., "TR");
-        cF.Print(TString(pixdir+"/"+side+"_prefit_compare.png").Data());
-        
-        
-        mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side], fitHists[side][0], 1., "TR");
-        cF.Print(TString(pixdir+"/"+side+"_bkgsub_compare.png").Data());
+        TString pixheader = TString("pix/" + side + "_" + varName+"_");
+
+        cF.Print(TString(pixheader + "_postfit_compare.png").Data());
+
+        mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre[side], 1., "TR", false , NULL, NULL, false, true);
+        cF.Print(TString(pixheader + "_prefit_compare.png").Data());
+
+        mnvPlotter.DrawDataMCRatio(dataHist[side], tot[side], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
+        cF.Print(TString(pixheader + "_postfit_compare_ratio.png").Data());
+
+        mnvPlotter.DrawDataMCRatio(dataHist[side], pre[side], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
+        cF.Print(TString(pixheader + "_prefit_compare_ratio.png").Data());
+
+        mnvPlotter.DrawErrorSummary(pre[side]);
+        cF.Print(TString(pixheader + "_prefit_errors.png").Data());
+
+        mnvPlotter.DrawErrorSummary(tot[side]);
+        cF.Print(TString(pixheader + "_postfit_errors.png").Data());
+
+        //mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side], fitHists[side][0], 1., "TR");
+        //cF.Print(TString(side+"_bkgsub_compare.png").Data());
     }
     
     TObjArray* combmcin;
     TObjArray* combmcout;
     
     for (auto side:sidebands){
-        
+        TString pixheader = TString("pix/" + side + "_" + varName + "_");
+
         std::string label;
         label = side+" "+varName;
         combmcin  = Vec2TObjArray(unfitHists[side],categories);
@@ -413,7 +422,7 @@ int main(int argc, char* argv[]) {
         if (logPlot) data->SetMinimum(logMinimum);
         mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
         t.Draw("same");
-        cF.Print(TString(pixdir+"/"+side+"_prefit_combined.png").Data());
+        cF.Print(TString(pixheader + "_prefit_combined.png").Data());
         label = side+" "+varName + " After fit";
         TText t2(.3,.95,label.c_str());
         t2.SetTitle(label.c_str());
@@ -421,7 +430,7 @@ int main(int argc, char* argv[]) {
         t2.SetTextSize(.03);
         t2.SetTitle(label.c_str());
         mnvPlotter.DrawDataStackedMC(data,combmcout,1.0,"TR");
-        cF.Print(TString(pixdir+"/"+side+"_"+fitType+"_postfit_combined.png").Data());
+        cF.Print(TString(pixheader + "_" + fitType + "_postfit_combined.png").Data());
         label = side+" "+varName + "Background Subtracted";
         
         t2.SetTitle(label.c_str());
@@ -429,8 +438,8 @@ int main(int argc, char* argv[]) {
         t2.SetTextSize(.03);
         t2.SetTitle(label.c_str());
         bkgsub[side]->SetTitle("bkgsub");
-        mnvPlotter.DrawDataStackedMC(bkgsub[side],combmcout,1.0,"TR");
-        cF.Print(TString(pixdir+"/"+side+"_"+fitType+"_bkgsub_combined.png").Data());
+        mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side],(MnvH1D*)fitHists[side][0], 1.0, "TR");
+        cF.Print(TString(pixheader + "_" + fitType + "_bkgsub_combined.png").Data());
     }
     
     

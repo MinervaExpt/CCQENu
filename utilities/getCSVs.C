@@ -197,40 +197,51 @@ int main(const int argc, const char *argv[]){
     // directory.csv describes the organization of the generated csv files
     std::ofstream *f_directory = new std::ofstream();
     f_directory->open(("./"+std::string(argv[1])+"/directory.csv").c_str());
-    *f_directory << "variable,event,source,histogram" << std::endl;//covariance,";
-    //*f_directory << ",sysdump,sysdump_meta" << std::endl;//,sysdump_covariance" << std::endl;
+    *f_directory << "variable,sample,signal,cv+errors,systematics" << std::endl;//covariance,";
+    //*f_directory << ",sys_meta" << std::endl;//,sysdump_covariance" << std::endl;
 
     // Keep track of variable use instances
     std::vector<std::string> variablesUsed;
+    
+    // Keep track of samples
+    std::map<std::string,bool> samplesUsed;
 
     // loop over each 1D histogram name
     for(auto name : hists_1d_keys){
+				
+    		if(samplesUsed[parsekey[name][1]]==0){
+    			std::string sampleFolder = std::string("./"+std::string(argv[1])+"/"+parsekey[name][1]);
+    			std::cout << std::endl << "Creating directory\n" << std::endl;
+          std::cout << "\t\033[1;34m" << ("./"+std::string(argv[1])+"/"+parsekey[name][1]).c_str() << "/\033[0m" << std::endl;
+          mkdir(("./"+std::string(argv[1])+"/"+parsekey[name][1]).c_str(), 0777);
+          samplesUsed[parsekey[name][1]] = 1;
+    		}
 		
         if(parsekey[name][3] == titles[name]){
             int timesUsed = 0;
             if(variablesUsed.size() > 0) {
-		        for(auto vars : variablesUsed){
+		        	for(auto vars : variablesUsed){
 		            if(vars == parsekey[name][3]){
 		                timesUsed++;
 		            }
-				}
+							}
             }
             variablesUsed.push_back(parsekey[name][3]);
 
             // Fill directory.csv with names and descriptors
             *f_directory << parsekey[name][3]+","+parsekey[name][1]+","+parsekey[name][2]+",";
-            *f_directory << parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_1d.csv,";
-            *f_directory << std::endl;
+            *f_directory << parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_"+parsekey[name][4]+"_1d.csv,";
             //*f_directory << parsekey[name][1]+"_"+parsekey[name][3]+"_covariance.csv,";
-            /*if(parsekey[name][2] != "data"){
-                *f_directory << parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_sysdump.csv,";
-                *f_directory << parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_sysdump_meta.csv,";
+            if(parsekey[name][2] != "data"){
+                *f_directory << parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_"+parsekey[name][4]+"_sysdump.csv,";
+                //*f_directory << parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_"+parsekey[name][4]+"_sysdump_meta.csv,";
             } else{ // data does not have systematic universes
-                *f_directory << "NA,NA" << std::endl;//,NA" << std::endl;
-            }*/
+                *f_directory << "NA";//,NA";
+            }
+            *f_directory << std::endl;
             
             // Identify variable folder. Make folder if first showing of variable.
-            std::string folderName = std::string("./"+std::string(argv[1])+"/"+parsekey[name][1]);
+            std::string folderName = std::string("./"+std::string(argv[1])+"/"+parsekey[name][1]+"/"+parsekey[name][3]);
             if(timesUsed == 0){
                 std::cout << std::endl << "Creating directory\n" << std::endl;
                 std::cout << "\t\033[1;34m" << folderName << "/\033[0m" << std::endl;
@@ -241,14 +252,14 @@ int main(const int argc, const char *argv[]){
 
             std::cout << "\n\tConverting MnvH1D " << name << " to CSV files\n" << std::endl;
             std::cout << "\t\t\033[1;34m" << folderName << "/\033[1;33m" << parsekey[name][3];
-            std::cout << "_"+parsekey[name][1]+"_"+parsekey[name][2]+"_1d.csv\033[0m\n";
+            std::cout << "_"+parsekey[name][1]+"_"+parsekey[name][2]+"_"+parsekey[name][4]+"_1d.csv\033[0m\n";
             //std::cout << "\t\t\033[1;34m" << folderName << "/\033[1;33m" << parsekey[name][1];
             //std::cout << "_" << parsekey[name][3] << "_covariance.csv\033[0m\n";
 
             std::ofstream *f_hist = new std::ofstream();
             //std::ofstream *f_corr = new std::ofstream();
 
-            f_hist->open((folderName+"/"+parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_1d.csv").c_str());
+            f_hist->open((folderName+"/"+parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_"+parsekey[name][4]+"_1d.csv").c_str());
             //f_corr->open((folderName+"/"+parsekey[name][1]+"_"+parsekey[name][3]+"_covariance.csv").c_str());
 
             TH1D stat = hists_1d[name]->GetStatError(); //stat error
@@ -300,15 +311,15 @@ int main(const int argc, const char *argv[]){
 
             // Systematics
             std::cout << "\t\t\033[1;34m" << folderName << "/\033[1;33m" << parsekey[name][3];
-            std::cout << "_" << parsekey[name][1] << "_" << parsekey[name][2] << "_sysdump.csv\033[0m\n";
-            std::cout << "\t\t\033[1;34m" << folderName << "/\033[1;33m" << parsekey[name][3];
-            std::cout << "_" << parsekey[name][1] << "_" << parsekey[name][2] << "_sysdump_meta.csv\033[0m\n";
+            std::cout << "_" << parsekey[name][1] << "_" << parsekey[name][2] << "_" << parsekey[name][4] << "_sysdump.csv\033[0m\n";
+            //std::cout << "\t\t\033[1;34m" << folderName << "/\033[1;33m" << parsekey[name][3];
+            //std::cout << "_" << parsekey[name][1] << "_" << parsekey[name][2] << "_" << parsekey[name][4] << "_sysdump_meta.csv\033[0m\n";
 
             std::ofstream * f_errors = new std::ofstream();
-            std::ofstream * f_errors_meta = new std::ofstream();
+            //std::ofstream * f_errors_meta = new std::ofstream();
 
-            //f_errors->open((folderName+"/"+parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_sysdump.csv").c_str());
-            //f_errors_meta->open((folderName+"/"+parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_sysdump_meta.csv").c_str());
+            f_errors->open((folderName+"/"+parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_"+parsekey[name][4]+"_sysdump.csv").c_str());
+            //f_errors_meta->open((folderName+"/"+parsekey[name][3]+"_"+parsekey[name][1]+"_"+parsekey[name][2]+"_"+parsekey[name][4]+"_sysdump_meta.csv").c_str());
 
             std::vector<std::string> vert_errBandNames = hists_1d[name]->GetVertErrorBandNames();
             std::vector<std::string> lat_errBandNames  = hists_1d[name]->GetLatErrorBandNames();
@@ -328,8 +339,8 @@ int main(const int argc, const char *argv[]){
             // Counter for keeping track of matrix indexing across vert/lat
             int sys_counter = 1;
 
-            *f_errors << "binLow,binHigh";
-            *f_errors_meta << "vert," << vert_errBandNames.size() <<  std::endl;
+            *f_errors << "binLow,binHigh,CV";
+            //*f_errors_meta << "vert," << vert_errBandNames.size() <<  std::endl;
 
             if(vert_errBandNames.size() > 0){
                 for(std::vector<std::string>::iterator bname=vert_errBandNames.begin(); bname!=vert_errBandNames.end(); ++bname ){
@@ -348,7 +359,7 @@ int main(const int argc, const char *argv[]){
                 }
             }
             
-            *f_errors_meta << "Lat," << lat_errBandNames.size() <<  std::endl;
+            //*f_errors_meta << "Lat," << lat_errBandNames.size() <<  std::endl;
             if(lat_errBandNames.size() > 0){
                 for(std::vector<std::string>::iterator bname=lat_errBandNames.begin(); bname!=lat_errBandNames.end(); ++bname ){
                     PlotUtils::MnvLatErrorBand* v = hists_1d[name]->GetLatErrorBand(*bname);
@@ -408,6 +419,7 @@ int main(const int argc, const char *argv[]){
             for(int i=1; i <= hists_1d[name]->GetXaxis()->GetNbins(); i++){
                *f_errors << hists_1d[name]->GetXaxis()->GetBinLowEdge(i);
                *f_errors << "," << hists_1d[name]->GetXaxis()->GetBinUpEdge(i);
+               *f_errors << "," << Form("%.17e",total.GetBinContent(i));
                for(int j=1; j < sys_counter; j++){
                    *f_errors << "," << sys_matrix[i][j];
                }
@@ -415,7 +427,7 @@ int main(const int argc, const char *argv[]){
            }
 
             f_errors->close();
-            f_errors_meta->close();
+            //f_errors_meta->close();
             
         }
     }

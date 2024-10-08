@@ -132,7 +132,7 @@ int DoTheFitBinByBin(std::map<const std::string, std::vector< PlotUtils::MnvH1D*
           nextPar++;
         }
         
-        mini2->FixVariable(0);
+        //mini2->FixVariable(0);
         mini2->FixVariable(4);
         
         if (nextPar != func2.NDim()){
