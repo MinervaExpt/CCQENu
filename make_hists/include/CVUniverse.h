@@ -162,6 +162,7 @@ public:
 	static std::map<std::string,RReader> * GetPointerToTMVAModels();
 	static bool ComputeTMVAResponse(std::string name, std::vector<float> var_values);
 	static bool SetTMVAResponse(std::vector<float> response_vec);
+	static bool SetTMVAVectorResponse(std::vector<float> response_vec);
 	static bool ResetTMVAResponse();
 	static std::vector<float> GetTMVAVectorResponse();
 	static float GetTMVAClassResponse(std::string name);

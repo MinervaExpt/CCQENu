@@ -826,6 +826,8 @@ void LoopAndFillBDTG(std::string tag,
   RReader model_2track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_2track_BDTG.weights.xml"));
   RReader model_3ptrack(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml"));
 
+	const clock_t begin_time = clock();
+
   unsigned int loc = tag.find("___")+3;
   std::string cat(tag,loc,string::npos);
   std::string sample(tag,0,loc-3);
@@ -1028,7 +1030,7 @@ void LoopAndFillBDTG(std::string tag,
 					}
 				}
 				
-				CVUniverse::SetTMVAResponse(response_vec);
+				CVUniverse::SetTMVAVectorResponse(response_vec);
 				//CVUniverse::SetXgboostVectorResponse(xgboost_response_vec);
 
         //=========================================
@@ -1089,6 +1091,7 @@ void LoopAndFillBDTG(std::string tag,
     if(data_mc_truth != kData) i+= prescale-1;
     
   } // End entries loop
+  std::cout << "Elapsed time: " << float( clock() - begin_time )/1000000 << " s" << std::endl;
 
 }
 

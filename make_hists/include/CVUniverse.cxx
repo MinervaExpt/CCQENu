@@ -363,6 +363,7 @@ namespace {
 	bool CVUniverse::LoadTMVAModel(std::string name, std::string path) {
 		m_tmva_models[name].LoadModel(path);
 		m_tmva_classes = m_tmva_models[name].GetClassNames();
+		_is_tmva_model_loaded = true;
 		return 1;
 	}
 	std::map<std::string,RReader> * CVUniverse::GetPointerToTMVAModels() {
@@ -382,6 +383,11 @@ namespace {
 		for (int i=0; i<vector_response.size(); i++) {
 			m_response_map[m_tmva_classes[i]] = vector_response[i];
 		}
+		_is_response_vec_filled = true;
+		return 1;
+	}
+	bool CVUniverse::SetTMVAVectorResponse(std::vector<float> vector_response) {
+		m_response_vec = vector_response;
 		_is_response_vec_filled = true;
 		return 1;
 	}
@@ -2214,7 +2220,12 @@ namespace {
 	}*/
 	double CVUniverse::bdtgQELike() const {
 		if (_is_response_vec_filled) {
-			return m_response_map["qelike"];
+			if (_is_tmva_model_loaded) {
+				return m_response_map["qelike"];
+			}
+			else {
+				return m_response_vec[0];
+			}
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
@@ -2223,7 +2234,12 @@ namespace {
 	}
 	double CVUniverse::bdtg1ChargedPion() const {
 		if (_is_response_vec_filled) {
-			return m_response_map["1chargedpion"];
+			if (_is_tmva_model_loaded) {
+				return m_response_map["1chargedpion"];
+			}
+			else {
+				return m_response_vec[1];
+			}
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
@@ -2232,7 +2248,12 @@ namespace {
 	}
 	double CVUniverse::bdtg1NeutralPion() const {
 		if (_is_response_vec_filled) {
-			return m_response_map["1neutralpion"];
+			if (_is_tmva_model_loaded) {
+				return m_response_map["1neutralpion"];
+			}
+			else {
+				return m_response_vec[2];
+			}
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
@@ -2241,7 +2262,12 @@ namespace {
 	}
 	double CVUniverse::bdtgMultiPion() const {
 		if (_is_response_vec_filled) {
-			return m_response_map["multipion"];
+			if (_is_tmva_model_loaded) {
+				return m_response_map["multipion"];
+			}
+			else {
+				return m_response_vec[3];
+			}
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
@@ -2250,7 +2276,12 @@ namespace {
 	}
 	double CVUniverse::bdtgOther() const {
 		if (_is_response_vec_filled) {
-			return m_response_map["other"];
+			if (_is_tmva_model_loaded) {
+				return m_response_map["other"];
+			}
+			else {
+				return m_response_vec[4];
+			}
 		}
 		else {
 			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
