@@ -467,7 +467,7 @@ int main(const int argc, const char *argv[] ) {
   TNamed cutsobj("cutsFile",cuts.c_str());
   cutsobj.Write();
   std::string sam = samplesConfig.ToString();
-  TNamed samobj("samplesFile",cuts.c_str());
+  TNamed samobj("samplesFile",sam.c_str());
   samobj.Write();
   //std::string git = git::commitHash();
   //TNamed gitobj("gitVersion",git.c_str());
