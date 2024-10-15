@@ -1,7 +1,7 @@
 #ifndef NUCONFIG_H
 #define NUCONFIG_H
 #include <string>
-#include "json/json.h"
+#include "jsoncpp/json/json.h"
 #include <fstream>
 #include <iostream>
 #include <cassert>

@@ -51,10 +51,10 @@
   "signal":{"2track":"qelike"},
   "background":{"2track":["1chargedpion","1neutralpion","multipion","other"]},
   "useProgressBar":true,
-  "_systematics":["MuonMinerva","MuonMINOS"],
-  "systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+  "systematics":["GENIE"],
+  "_systematics":["GENIE","GenieRvx1pi","RPA","2p2h","MuonMinerva",
                  "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
-  "fluxUniverses":100,
+  "fluxUniverses":2,
   "NuEConstraint":1,
   "DeuteriumGeniePiTune":1, // set to true?
   "NonResPiReweight":1, // set to true?

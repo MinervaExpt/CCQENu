@@ -136,6 +136,7 @@ add_executable(hist_compare ../smg/hist_compare.C)
 add_executable(makeErrorPlots ../smg/makeErrorPlots.C)
 add_executable(stack_SignalBkgd smg/stack_SignalBkgd.C)
 add_executable(combineErrors smg/combineErrors.C)
+add_executable(combineHists smg/combineHists.C)
 
 
 
@@ -165,3 +166,4 @@ target_link_libraries(hist_compare PRIVATE ${PROJECT_NAME} )
 target_link_libraries(makeErrorPlots PRIVATE ${PROJECT_NAME} )
 target_link_libraries(stack_SignalBkgd  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(combineErrors  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(combineHists  PRIVATE ${PROJECT_NAME} )
