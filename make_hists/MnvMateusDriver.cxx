@@ -81,6 +81,7 @@ TObjArray* Vec2TObjArray(std::vector<MnvH1D*> hists, std::vector<std::string> na
     for (int i = 0 ; i != hists.size(); i++){
         
         hists[i]->SetTitle(names[i].c_str());
+        
        
         newArray->Add(hists[i]);
     }
@@ -375,16 +376,30 @@ int main(int argc, char* argv[]) {
 
     
     for (auto side:sidebands){
-        
+        if (logPlot){
+            double max= dataHist[side]->GetMaximum();
+            dataHist[side]->SetMinimum(max/100.);
+            tot[side]->SetMinimum(max / 100.);
+            pre[side]->SetMinimum(max / 100.);
+            bkg[side]->SetMinimum(max / 100.);
+            bkgsub[side]->SetMinimum(max / 100.);
+            for (int i = 0; i < categories.size(); i++) {
+                fitHists[side][i]->SetMinimum(max / 100.);
+                unfitHists[side][i]->SetMinimum(max / 100.);
+            }
+        }
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot[side], 1., "TR");
-        cF.Print(TString(pixdir+"/"+side+"_postfit_compare.png").Data());
+        cF.Print(TString(pixdir+"/fit"+side+"_postfit_compare.png").Data());
+        cF.Print(TString(pixdir+"/fit"+side+"_postfit_compare.C").Data());
         
   
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre[side], 1., "TR");
-        cF.Print(TString(pixdir+"/"+side+"_prefit_compare.png").Data());
-        
+        cF.Print(TString(pixdir+"/fit"+side+"_prefit_compare.png").Data());
+        cF.Print(TString(pixdir+"/fit" + side + "_prefit_compare.C").Data());
+
         mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side], fitHists[side][0], 1., "TR");
-        cF.Print(TString(pixdir+"/"+side+"_bkgsub_compare.png").Data());
+        cF.Print(TString(pixdir+"/fit"+side+"_bkgsub_compare.png").Data());
+        cF.Print(TString(pixdir+"/fit" + side + "_bkgsub_compare.C").Data());
     }
     
     TObjArray* combmcin;
@@ -396,6 +411,15 @@ int main(int argc, char* argv[]) {
         label = side+" "+varName;
         combmcin  = Vec2TObjArray(unfitHists[side],categories);
         combmcout = Vec2TObjArray(fitHists[side],categories);
+        for (auto m : *combmcin ){
+            double max = ((TH1F*)m)->GetMaximum();
+            ((TH1F*)m)->SetMinimum(max / 100.);
+        }
+        for (auto m : *combmcout) {
+            double max = ((TH1F*)m)->GetMaximum();
+            ((TH1F*)m)->SetMinimum(max / 100.);
+        }
+
         std::cout << " before call to DrawStack" << std::endl;
         PlotUtils::MnvH1D* data = new PlotUtils::MnvH1D(*(dataHist[side]));
         data->SetTitle("Data");
@@ -407,7 +431,8 @@ int main(int argc, char* argv[]) {
         
         mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
         t.Draw("same");
-        cF.Print(TString(pixdir+"/"+side+"_prefit_combined.png").Data());
+        cF.Print(TString(pixdir+"/fit"+side+"_prefit_combined.png").Data());
+        cF.Print(TString(pixdir+"/fit" + side + "_prefit_combined.C").Data());
         label = side+" "+varName + " After fit";
         TText t2(.3,.95,label.c_str());
         t2.SetTitle(label.c_str());
@@ -415,7 +440,8 @@ int main(int argc, char* argv[]) {
         t2.SetTextSize(.03);
         t2.SetTitle(label.c_str());
         mnvPlotter.DrawDataStackedMC(data,combmcout,1.0,"TR");
-        cF.Print(TString(pixdir+"/"+side+"_"+fitType+"_postfit_combined.png").Data());
+        cF.Print(TString(pixdir+"/fit"+side+"_"+fitType+"_postfit_combined.png").Data());
+        cF.Print(TString(pixdir+"/fit" + side + "_" + fitType + "_postfit_combined.C").Data());
         label = side+" "+varName + "Background Subtracted";
         
         t2.SetTitle(label.c_str());
@@ -424,7 +450,8 @@ int main(int argc, char* argv[]) {
         t2.SetTitle(label.c_str());
         bkgsub[side]->SetTitle("bkgsub");
         mnvPlotter.DrawDataStackedMC(bkgsub[side],combmcout,1.0,"TR");
-        cF.Print(TString(pixdir+"/"+side+"_"+fitType+"_bkgsub_combined.png").Data());
+        cF.Print(TString(pixdir+"/fit"+side+"_"+fitType+"_bkgsub_combined.png").Data());
+        cF.Print(TString(pixdir+"/fit" + side + "_" + fitType + "_bkgsub_combined.C").Data());
     }
     
     inputFile->Close();
@@ -436,3 +463,5 @@ int main(int argc, char* argv[]) {
     cout << "HEY YOU DID IT!!!" << endl;
     return 0;
 }
+
+ 

@@ -1,0 +1,3 @@
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1L_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00019173_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1L_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00019177_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1L_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00019181_Playlist.root

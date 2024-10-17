@@ -1,6 +1,8 @@
 #include "fits/DoTheFit.h"
 
+
 #include "Minuit2/Minuit2Minimizer.h"
+#include "MnvH2D.h"
 #include "MnvH2D.h"
 #include "TMinuitMinimizer.h"
 #include "fits/MultiScaleFactors.h"
@@ -20,8 +22,12 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
     // takes the histograms in unfitHists[sample][category], fits to dataHist by combining all the samples by changing the normalization of the category templates and then makes fitHists[sample][category] which contains the best template fit for each universe.
     // writes the chi2 value, parameters and covariance of the parameters into the output root file but does not return them.
 
+
     // make a fitter
     auto* mini2 = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kCombined);
+
+    int ncat = categories.size();
+
 
     int ncat = categories.size();
 
@@ -45,6 +51,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
     // long winded way to pull out the universes list
     // could make this in to a consistency check later.
     // this assumes that all histograms have the same universes, which they really should
+
 
     std::vector<std::string> universes;
     PlotUtils::MnvH1D* ahist;
@@ -75,6 +82,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
     for (auto univ : universes) {
         int nuniv;
         if (univ != "CV") {
+        if (univ != "CV") {
             nuniv = ahist->GetVertErrorBand(univ)->GetNHists();
             fcn.AddVertErrorBandAndFillWithCV(univ, nuniv);
             parameters.AddVertErrorBandAndFillWithCV(univ, nuniv);
@@ -84,8 +92,15 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
         }
         // loop over universes within a band
         for (int iuniv = 0; iuniv < nuniv; iuniv++) {
+        for (int iuniv = 0; iuniv < nuniv; iuniv++) {
             std::cout << " now do the fit for " << univ << " " << iuniv << std::endl;
             // make a local TH1F map unfitHistsCV that the fitter expects
+            std::map<const std::string, std::vector<TH1D*>> unfitHistsCV;
+            if (univ == "CV") {
+                for (auto sample : unfitHists) {
+                    for (int i = 0; i < ncat; i++) {
+                        TString name = unfitHists.at(sample.first).at(i)->GetName() + TString("_" + univ);
+                        TH1D* hist = (TH1D*)unfitHists.at(sample.first).at(i)->Clone(name);
             std::map<const std::string, std::vector<TH1D*>> unfitHistsCV;
             if (univ == "CV") {
                 for (auto sample : unfitHists) {
@@ -100,10 +115,16 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                     for (int i = 0; i < ncat; i++) {
                         PlotUtils::MnvVertErrorBand* errorband = unfitHists.at(sample.first).at(i)->GetVertErrorBand(univ);
                         if (errorband == 0) {
+            } else {
+                for (auto sample : unfitHists) {
+                    for (int i = 0; i < ncat; i++) {
+                        PlotUtils::MnvVertErrorBand* errorband = unfitHists.at(sample.first).at(i)->GetVertErrorBand(univ);
+                        if (errorband == 0) {
                             std::cout << " no such band " << std::endl;
                         }
                         TString name = errorband->GetName();
                         name += TString("_" + univ);
+                        TH1D* hist = (TH1D*)errorband->GetHist(iuniv)->Clone(name);
                         TH1D* hist = (TH1D*)errorband->GetHist(iuniv)->Clone(name);
                         unfitHistsCV[sample.first].push_back(hist);
                     }
@@ -251,6 +272,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
     covariance.MnvH2DToCSV("parameters", (outputDir + "/csv/").c_str());
     parameters.Write();
     covariance.Write();
+    correlation.Write();
     return 0;
 }
 

@@ -1,0 +1,12 @@
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010068_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010072_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010076_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010081_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010085_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010091_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010098_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010106_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010112_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010116_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010120_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/Data/Merged_data_ana_me1B_DualVertex_p4/MasterAnaDev_data_AnaTuple_run00010124_Playlist.root

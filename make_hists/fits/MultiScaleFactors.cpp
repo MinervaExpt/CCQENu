@@ -8,7 +8,7 @@
 //  Modified extensively by Heidi Schellman (hschellman on github)
 
 #include "fits/MultiScaleFactors.h"
-// #define DEBUG 0
+//#define DEBUG 
 
 namespace fit {
 MultiScaleFactors::MultiScaleFactors(const std::map<const std::string, std::vector<TH1D*>> unfitHists,
@@ -79,6 +79,7 @@ double MultiScaleFactors::DoEval(const double* parameters) const {
     }
 
 #ifdef DEBUG
+    
     std::cout << "About to return chi2 of: " << chi2 << std::endl;
 #endif
     return chi2;

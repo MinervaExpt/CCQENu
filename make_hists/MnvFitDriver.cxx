@@ -160,6 +160,7 @@ int main(int argc, char* argv[]) {
     std::string outputFileName = config.GetString("OutputFile");
     outputFileName=(outputDir+"/"+outputFileName).c_str();
     bool logPlot = config.GetBool("LogPlot");
+    double logMinimum = config.GetDouble("LogMinimum");
     std::vector<std::string> sidebands = config.GetStringVector("Sidebands");
     std::vector<std::string> categories = config.GetStringVector("Categories");
 
@@ -260,6 +261,7 @@ int main(int argc, char* argv[]) {
     // set up for plots
 
     PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
+    mnvPlotter.error_color_map["FitVariations"] = kBlue + 2;
     mnvPlotter.draw_normalized_to_bin_width = false;
     TCanvas cF("fit", "fit");
     if (logPlot) gPad->SetLogy(1);

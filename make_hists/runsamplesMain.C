@@ -465,18 +465,21 @@ int main(const int argc, const char *argv[]) {
 
     // dump the json files
 
-    std::string top = config.ToString();
-    TNamed topobj("main", top.c_str());
-    topobj.Write();
-    std::string var = configvar.ToString();
-    TNamed varobj("varsFile", var.c_str());
-    varobj.Write();
-    std::string cuts = cutsConfig.ToString();
-    TNamed cutsobj("cutsFile", cuts.c_str());
-    cutsobj.Write();
-    std::string sam = samplesConfig.ToString();
-    TNamed samobj("samplesFile", cuts.c_str());
-    samobj.Write();
+  std::string top = config.ToString();
+  TNamed topobj("main",top.c_str());
+  topobj.Write();
+  std::string var = configvar.ToString();
+  TNamed varobj("varsFile",var.c_str());
+  varobj.Write();
+  std::string cuts = cutsConfig.ToString();
+  TNamed cutsobj("cutsFile",cuts.c_str());
+  cutsobj.Write();
+  std::string sam = samplesConfig.ToString();
+  TNamed samobj("samplesFile",sam.c_str());
+  samobj.Write();
+  //std::string git = git::commitHash();
+  //TNamed gitobj("gitVersion",git.c_str());
+  //gitobj.Write();
 
     for (auto v : variables1D) {
         std::cout << "Writing 1D hist to file" << std::endl;

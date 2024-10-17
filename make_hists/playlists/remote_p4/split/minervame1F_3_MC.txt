@@ -1,0 +1,17 @@
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111493_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111497_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111501_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111505_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111509_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111513_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111517_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111521_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111525_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111529_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111533_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111537_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111541_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111545_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111549_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111553_Playlist.root
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p4/FullDetector/Merged_mc_ana_me1F_DualVertex_p4/MasterAnaDev_mc_AnaTuple_run00111557_Playlist.root
