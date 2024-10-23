@@ -1,0 +1,86 @@
+{
+  "version":15,  
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuCuts_v15_blobs.json", 
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
+  "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
+  "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
+  "outRoot": "extraction_1d_0mmrecoil_${MYMODEL}_${MYPLAYLIST}",
+  "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
+  "prescale":999,
+  "playlist":"${MYPLAYLIST}",
+  "MinervaModel":"${MYMODEL}", 
+  "recoName":"MasterAnaDev",
+  "tunedmc":"untuned", 
+  "closure":0,
+  "TuneCategories":["qelike", "chargedpion","neutralpion"], 
+  "DoResolution": false,
+  "DoTypes": false,
+  "pdg":-14,
+  "mcRecoToCSV": false,
+  "runsamples": [
+    "QElike"//,
+    // "QElikeNeut"
+    // "QElike_0blob",
+    // "QElike_1blob"
+    // "QElikeNeutrons"//,
+    // "MultiplicitySideband",
+    // "LoPionThetaSideband",
+    // "HiPionThetaSideband"//,
+    // "BlobSideband",
+    // "MultipBlobSideband"
+  ], 
+  "AnalyzeVariables": [
+    // "NBlobs",
+    // "NNeutCands",
+    // "NNonVtxIsoBlobs",
+    // "NNonVtxIsoBlobsAll",
+    // "Multiplicity",
+    // "PionAngle"
+    // "NChargedPions",
+    // "HasMultiPion"
+    // "recoilNoBlobs",
+    // "Q2QE",
+    // "FitQ2QE",
+    // "EAvail",
+    // "pzmuHD",
+    // "ptmuHD",
+    // "pmu",
+    // "ThetamuDegrees",
+    // "CosThetamu",
+    // "TotalNeutBlobE"
+    // "EAvailWiggled"
+    // "EAvailWithNeutrons"
+    // "resEAvailWithNeutrons"
+    "recoil"//,
+    // "recoilQE"
+    // "NeutBlobsRatio"
+    // "pzmu",
+    // "ptmu"
+    // "NeutCandMCPID",
+    // "NeutCandTopMCPID"
+  ],
+  "Analyze2DVariables": [],//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "AnalyzeHyperDVariables": [],//"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
+  "responseSystematicsVersion": "2024",
+  "systematics": [
+    "Flux",
+    "MuonMINOS",
+    "MuonResolution",
+    "MINOSEfficiency",
+    "Angle",
+    "GENIE",
+    "GenieRvx1pi",
+    "RPA",
+    "2p2h",
+    "MuonMinerva",
+    "geant4",
+    "response"
+  ],
+  "fluxUniverses": 200, //100, //10,
+  "NuEConstraint":1, 
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1//,
+  //"RPAMaterials":0 
+}
