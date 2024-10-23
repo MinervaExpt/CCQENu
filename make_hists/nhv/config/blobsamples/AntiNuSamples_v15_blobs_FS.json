@@ -21,7 +21,7 @@
                 "for": [
                     "selected_reco",
                     "selected_truth",
-                    // "truth",
+                    "truth",
                     "response"
                 ]
                 // "for": [
