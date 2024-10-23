@@ -127,9 +127,9 @@
             "qelikenot": "QELikeNot",
         }
     },
-    "MultiplicitySideband": {
-        "name": "MultiplicitySideband",
-        "reco": "MultiplicitySideband",
+    "TrackSideband": {
+        "name": "TrackSideband",
+        "reco": "TrackSideband",
         "phase_space": "phase_space",
         "signal": [
             "qelike"

@@ -18,15 +18,15 @@
         ],
         "categories": {
             "qelike": {
-                "for": [
-                    "selected_reco",
-                    "selected_truth",
-                    "truth",
-                    "response"
-                ]
                 // "for": [
-                //     "selected_reco"
+                //     "selected_reco",
+                //     "selected_truth",
+                //     "truth",
+                //     "response"
                 // ]
+                "for": [
+                    "selected_reco"
+                ]
             },
             "neutralpion": {
                 "for": [
@@ -507,9 +507,9 @@
             "chargedpion": {
                 "for": ["selected_reco"]
             },
-            "multipion": {
-                "for": ["selected_reco"]
-            },
+            // "multipion": {
+            //     "for": ["selected_reco"]
+            // },
             "other": {
                 "for": ["selected_reco"]
             },
@@ -522,14 +522,14 @@
             "qelike": "QELike",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
-            "multipion": "N#pi",
+            // "multipion": "N#pi",
             "other": "Other",
             "qelikenot": "QELike Not"
         }
     },
-    "MultiplicitySideband": {
-        "name": "MultiplicitySideband",
-        "reco": "MultiplicitySideband",
+    "TrackSideband": {
+        "name": "TrackSideband",
+        "reco": "TrackSideband",
         "phase_space": "phase_space",
         "signal": ["qelike"],
         "background": ["neutralpion", "chargedpion", "multipion", "other", "qelikenot"],
@@ -544,9 +544,9 @@
             "chargedpion": {
                 "for": ["selected_reco"]
             },
-            "multipion": {
-                "for": ["selected_reco"]
-            },
+            // "multipion": {
+            //     "for": ["selected_reco"]
+            // },
             "other": {
                 "for": ["selected_reco"]
             },
@@ -559,7 +559,7 @@
             "qelike": "QELike",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
-            "multipion": "N#pi",
+            // "multipion": "N#pi",
             "other": "Other",
             "qelikenot": "QELike Not"
         }

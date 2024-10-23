@@ -25,10 +25,10 @@
     // "QElike_0blob",
     // "QElike_1blob"
     // "QElikeNeutrons"//,
-    // "TrackSideband",
+    "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband"//,
-    // "BlobSideband",
+    "BlobSideband"//,
     // "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
@@ -42,7 +42,7 @@
     // "HasMultiPion"
     // "recoilNoBlobs",
     // "Q2QE",
-    // "FitQ2QE",
+    "FitQ2QE",
     // "EAvail",
     // "pzmuHD",
     // "ptmuHD",
@@ -61,7 +61,7 @@
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": [],//"pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "Analyze2DVariables": ["FitQ2QE_recoil"],//"pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [],//"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "responseSystematicsVersion": "2024",
   "systematics": [

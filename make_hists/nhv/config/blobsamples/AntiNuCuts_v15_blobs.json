@@ -148,9 +148,9 @@
     {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
   ],
   "BlobSideband": [
-    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
+    // {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
     {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
-    {"name": "NBlobs", "max": 3, "variable": "NBlobs"},
+    // {"name": "NBlobs", "max": 3, "variable": "NBlobs"},
     // {"name": "NBlobs", "equals": 2, "variable": "NBlobs"},
     {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
     {"name": "Max Multiplicity", "max": 2, "variable": "Multiplicity"},
@@ -205,8 +205,8 @@
     // {"name": "Min Pion Angle", "min": 150,"variable": "ChargedPionAngle"} 
     {"name": "Min Pion Angle", "min": 90.00001,"variable": "ChargedPionAngle"} 
   ],
-  "MultiplicitySideband": [
-    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
+  "TrackSideband": [
+    // {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
     {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
     {"name": "Max Multiplicity", "max": 3, "variable": "Multiplicity"},
