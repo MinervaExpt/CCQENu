@@ -56,12 +56,12 @@
     "recoil"//,
     // "recoilQE"
     // "NeutBlobsRatio"
-    "pzmu",
-    "ptmu"
+    // "pzmu",
+    // "ptmu"
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": ["pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "Analyze2DVariables": [],//"pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [],//"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "responseSystematicsVersion": "2024",
   "systematics": [
