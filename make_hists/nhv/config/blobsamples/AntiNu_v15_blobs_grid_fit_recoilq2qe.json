@@ -6,7 +6,7 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
-  "outRoot": "extraction_1d_0mmrecoil_${MYMODEL}_${MYPLAYLIST}",
+  "outRoot": "sbfits_fit0mmrecoil_fitq2qe_${MYMODEL}_${MYPLAYLIST}",
   "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
