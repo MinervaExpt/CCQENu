@@ -783,7 +783,7 @@
     "NNonVtxIsoBlobsAll": {
       "reco": "NNonVtxIsoBlobsAll",
       "true": "TrueNeutralPionCount",
-      "name": "NNonVtxIsoBlobsAll",x
+      "name": "NNonVtxIsoBlobsAll",
       "title": "Number of NonVtxIsoBlobsAll",
       "nbins": 11,
       "min": -0.5,
