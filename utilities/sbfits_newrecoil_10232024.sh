@@ -9,5 +9,5 @@
 
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/Fall24Collab/fitrecoilq2qe \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=MnvTunev1 --tag=AL9 \
- --mail --prescale=1 --config=nhv/config/blobsamples/AntiNu_v15_blobs_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
+ --mail --prescale=1 --config=nhv/config/blobsamples/AntiNu_v15_blobs_grid_fit_recoilq2qe --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000   #--debug --notimestamp
