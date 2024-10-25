@@ -6,7 +6,7 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
-  "outRoot": "fittedextraction_1d_0mmrecoil_${MYMODEL}_${MYPLAYLIST}",
+  "outRoot": "fittedextraction_1d_100mmrecoil_${MYMODEL}_${MYPLAYLIST}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root", 
   "prescale":999,
   "playlist":"${MYPLAYLIST}",

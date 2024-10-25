@@ -22,8 +22,8 @@
     //     }
     // }
     "RecoilBranchConfig": {
-        "vertex_dist": 0, //"100", "150"
-        "recoil_branch": "recoil_energy_nonmuon_nonvtx0mm"
+        "vertex_dist": 100, //"100", "150"
+        "recoil_branch": "recoil_energy_nonmuon_nonvtx100mm"
     }, 
     "NeutronConfig": {
         "vtxdist_max": 10000.0,
