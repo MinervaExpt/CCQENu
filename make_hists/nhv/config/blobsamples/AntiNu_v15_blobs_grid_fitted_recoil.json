@@ -6,13 +6,13 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
-  "outRoot": "sbfits_fit0mmrecoil_fitq2qe_${MYMODEL}_${MYPLAYLIST}",
-  "scalefileIn": "${CCQEMAT}/out_fits/fit2d_params_me6A_hep01_noother/scales_fits_noother_ToFit_Q2QE_Recoil_minervame6A_MnvTunev1_AntiNu_v15_1track_hep01_1.root", 
+  "outRoot": "fittedextraction_1d_0mmrecoil_${MYMODEL}_${MYPLAYLIST}",
+  "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root", 
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
   "MinervaModel":"${MYMODEL}", 
   "recoName":"MasterAnaDev",
-  "tunedmc":"untuned", 
+  "tunedmc":"both", 
   "closure":0,
   "TuneCategories":["qelike", "chargedpion","neutralpion"], 
   "DoResolution": false,
@@ -20,15 +20,15 @@
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike",
+    "QElike"//,
     // "QElikeNeut"
     // "QElike_0blob",
     // "QElike_1blob"
     // "QElikeNeutrons"//,
-    "TrackSideband",
+    // "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband"//,
-    "BlobSideband"//,
+    // "BlobSideband",
     // "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
@@ -42,7 +42,7 @@
     // "HasMultiPion"
     // "recoilNoBlobs",
     // "Q2QE",
-    "FitQ2QE",
+    // "FitQ2QE",
     // "EAvail",
     // "pzmuHD",
     // "ptmuHD",
@@ -53,7 +53,7 @@
     // "EAvailWiggled"
     // "EAvailWithNeutrons"
     // "resEAvailWithNeutrons"
-    "Fitrecoil"//,
+    "recoil"//,
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
@@ -61,7 +61,7 @@
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": ["FitQ2QE_Fitrecoil"],//"pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "Analyze2DVariables": [],//"pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [],//"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "responseSystematicsVersion": "2024",
   "systematics": [
