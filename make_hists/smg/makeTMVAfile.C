@@ -211,6 +211,11 @@ int main(const int argc, const char *argv[] ) {
     data_file_list = mc_file_list;
   }
   
+  const std::string plist_string(config.GetString("playlist"));
+  const std::string reco_tree_name(config.GetString("recoName"));
+  const std::string truth_tree_name("Truth");
+  const bool do_truth = true;
+  
   std::vector<int> file_entries;
   std::vector<std::string> file_names;
   std::vector<std::string> output_names;
@@ -219,7 +224,8 @@ int main(const int argc, const char *argv[] ) {
   while (mFile.peek()!=EOF) {
   	getline(mFile, line);
   	TFile *f = new TFile(line.c_str(),"read");
-  	TTree *t=(TTree*)f->Get("CCQENu");
+  	//TTree *t=(TTree*)f->Get("CCQENu");
+  	TTree *t=(TTree*)f->Get(reco_tree_name.c_str());
   	file_entries.push_back(t->GetEntries());
   	delete t;
   	f->Close();
@@ -233,11 +239,6 @@ int main(const int argc, const char *argv[] ) {
   	std::cout << file_entries[i] << ", ";
   }
   std::cout << file_entries[file_entries.size()-1] << " }" << std::endl;
-
-  const std::string plist_string(config.GetString("playlist"));
-  const std::string reco_tree_name(config.GetString("recoName"));
-  const std::string truth_tree_name("Truth");
-  const bool do_truth = true;
   
   for( auto fname : file_names ){
   

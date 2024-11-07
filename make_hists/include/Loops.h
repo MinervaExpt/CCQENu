@@ -572,18 +572,18 @@ void LoopAndFillTMVA(std::vector<int> file_entries,
 	Double_t ProtonRatioTdEdX2TrackLength_2;
 	Double_t ProtonRatioTdEdX2TrackLength_3;
 	std::cout << std::endl << "  ProtonRatioTdEdX2TrackLength_0";
-	std::cout << std::endl << "  ProtonRatioTdEdX2TrackLength_1";
-	std::cout << std::endl << "  ProtonRatioTdEdX2TrackLength_2";
-	std::cout << std::endl << "  ProtonRatioTdEdX2TrackLength_3";
+	//std::cout << std::endl << "  ProtonRatioTdEdX2TrackLength_1";
+	//std::cout << std::endl << "  ProtonRatioTdEdX2TrackLength_2";
+	//std::cout << std::endl << "  ProtonRatioTdEdX2TrackLength_3";
 	
 	Double_t PrimaryProtonTrackVtxGap; 
 	Double_t SecProtonTrackVtxGap_1;
 	Double_t SecProtonTrackVtxGap_2;
 	Double_t SecProtonTrackVtxGap_3;
 	std::cout << std::endl << "  PrimaryProtonTrackVtxGap";
-	std::cout << std::endl << "  SecProtonTrackVtxGap_1";
-	std::cout << std::endl << "  SecProtonTrackVtxGap_2";
-	std::cout << std::endl << "  SecProtonTrackVtxGap_3";
+	//std::cout << std::endl << "  SecProtonTrackVtxGap_1";
+	//std::cout << std::endl << "  SecProtonTrackVtxGap_2";
+	//std::cout << std::endl << "  SecProtonTrackVtxGap_3";
 	
 	Double_t PrimaryProtonFractionVisEnergyInCone;
 	Double_t SecProtonFractionVisEnergyInCone_1;
@@ -652,14 +652,14 @@ void LoopAndFillTMVA(std::vector<int> file_entries,
 		ttrees[tname]->Branch("SecProtonTfromdEdx_3",&SecProtonTfromdEdx_3,"SecProtonTfromdEdx_3/D");
 		
 		ttrees[tname]->Branch("ProtonRatioTdEdX2TrackLength_0",&ProtonRatioTdEdX2TrackLength_0,"ProtonRatioTdEdX2TrackLength_0/D");
-		ttrees[tname]->Branch("ProtonRatioTdEdX2TrackLength_1",&ProtonRatioTdEdX2TrackLength_1,"ProtonRatioTdEdX2TrackLength_1/D");
-		ttrees[tname]->Branch("ProtonRatioTdEdX2TrackLength_2",&ProtonRatioTdEdX2TrackLength_2,"ProtonRatioTdEdX2TrackLength_2/D");
-		ttrees[tname]->Branch("ProtonRatioTdEdX2TrackLength_3",&ProtonRatioTdEdX2TrackLength_3,"ProtonRatioTdEdX2TrackLength_3/D");
+		//ttrees[tname]->Branch("ProtonRatioTdEdX2TrackLength_1",&ProtonRatioTdEdX2TrackLength_1,"ProtonRatioTdEdX2TrackLength_1/D");
+		//ttrees[tname]->Branch("ProtonRatioTdEdX2TrackLength_2",&ProtonRatioTdEdX2TrackLength_2,"ProtonRatioTdEdX2TrackLength_2/D");
+		//ttrees[tname]->Branch("ProtonRatioTdEdX2TrackLength_3",&ProtonRatioTdEdX2TrackLength_3,"ProtonRatioTdEdX2TrackLength_3/D");
 		
 		ttrees[tname]->Branch("PrimaryProtonTrackVtxGap",&PrimaryProtonTrackVtxGap,"PrimaryProtonTrackVtxGap/D");
-		ttrees[tname]->Branch("SecProtonTrackVtxGap_1",&SecProtonTrackVtxGap_1,"SecProtonTrackVtxGap_1/D");
-		ttrees[tname]->Branch("SecProtonTrackVtxGap_2",&SecProtonTrackVtxGap_2,"SecProtonTrackVtxGap_2/D");
-		ttrees[tname]->Branch("SecProtonTrackVtxGap_3",&SecProtonTrackVtxGap_3,"SecProtonTrackVtxGap_3/D");
+		//ttrees[tname]->Branch("SecProtonTrackVtxGap_1",&SecProtonTrackVtxGap_1,"SecProtonTrackVtxGap_1/D");
+		//ttrees[tname]->Branch("SecProtonTrackVtxGap_2",&SecProtonTrackVtxGap_2,"SecProtonTrackVtxGap_2/D");
+		//ttrees[tname]->Branch("SecProtonTrackVtxGap_3",&SecProtonTrackVtxGap_3,"SecProtonTrackVtxGap_3/D");
 		
 		ttrees[tname]->Branch("PrimaryProtonFractionVisEnergyInCone",
 		                      &PrimaryProtonFractionVisEnergyInCone,"PrimaryProtonFractionVisEnergyInCone/D");
@@ -713,7 +713,7 @@ void LoopAndFillTMVA(std::vector<int> file_entries,
 							entry = i;
 							MCIntType = universe->GetMCIntType();
 							
-							wgt = universe->GetWeight();
+							wgt = model.GetWeight(*universe, event);
 							Q2QE = universe->GetQ2QEGeV();
 							PperpMuGeV = universe->GetPperpMuGeV();
 							PparMuGeV = universe->GetPparMuGeV();
@@ -733,14 +733,14 @@ void LoopAndFillTMVA(std::vector<int> file_entries,
 							SecProtonTfromdEdx_3 = universe->GetSecProtonTfromdEdx_3();
 							
 							ProtonRatioTdEdX2TrackLength_0 = universe->ProtonRatioTdEdX2TrackLength_0();
-							ProtonRatioTdEdX2TrackLength_1 = universe->ProtonRatioTdEdX2TrackLength_1();
-							ProtonRatioTdEdX2TrackLength_2 = universe->ProtonRatioTdEdX2TrackLength_2();
-							ProtonRatioTdEdX2TrackLength_3 = universe->ProtonRatioTdEdX2TrackLength_3();
+							//ProtonRatioTdEdX2TrackLength_1 = universe->ProtonRatioTdEdX2TrackLength_1();
+							//ProtonRatioTdEdX2TrackLength_2 = universe->ProtonRatioTdEdX2TrackLength_2();
+							//ProtonRatioTdEdX2TrackLength_3 = universe->ProtonRatioTdEdX2TrackLength_3();
 							
 							PrimaryProtonTrackVtxGap = universe->GetPrimaryProtonTrackVtxGap();
-							SecProtonTrackVtxGap_1 = universe->GetSecProtonTrackVtxGap_1();
-							SecProtonTrackVtxGap_2 = universe->GetSecProtonTrackVtxGap_2();
-							SecProtonTrackVtxGap_3 = universe->GetSecProtonTrackVtxGap_3();
+							//SecProtonTrackVtxGap_1 = universe->GetSecProtonTrackVtxGap_1();
+							//SecProtonTrackVtxGap_2 = universe->GetSecProtonTrackVtxGap_2();
+							//SecProtonTrackVtxGap_3 = universe->GetSecProtonTrackVtxGap_3();
 							
 							PrimaryProtonFractionVisEnergyInCone = universe->GetPrimaryProtonFractionVisEnergyInCone();
 							SecProtonFractionVisEnergyInCone_1 = universe->GetSecProtonFractionVisEnergyInCone_1();

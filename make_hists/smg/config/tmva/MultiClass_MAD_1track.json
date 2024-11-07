@@ -1,0 +1,54 @@
+{
+	"InFile":"minervame1N_MAD_MC_TMVA.root",
+	"Tag":"1track",
+	"SignalTree":"qelike",
+	"BackgroundTrees":["1chargedpion",
+	                   "1neutralpion",
+	                   "multipion",
+	                   "other"],
+	"Methods":{
+		"PDEFoam":0,
+		"FDA_GA" :0, // minimisation of user-defined function using Genetics Algorithm
+		"MLP"    :0, // Recommended ANN
+		"BDTG"   :1, // uses Gradient Boost
+		"DL_CPU" :0,
+		"DL_GPU": 0
+	},
+	"Cuts":"PrimaryProtonScore1<0 && NumberOfProtonCandidates==0",
+	"Variables":["Multiplicity",
+	             "NBlobs",
+	             "ImprovedNMichel",
+	             "RecoilEnergyGeV",
+	             "ImprovedMichel_Sum_Views"],
+	"Spectators":["mc_intType",
+	              "weight",
+	              "Q2QE"],
+	"VariableArgs":{
+	  "Multiplicity":{"title":"Multiplicity",
+	                  "units":"",
+	                  "type":"I"},
+		"NBlobs":{"title":"Blob Count",
+		              "units":"",
+		              "type":"I"},
+		"ImprovedNMichel":{"title":"Number of Michel Candidates (Improved)",
+		                                "units":"",
+		                                "type":"I"},
+		"ImprovedMichel_Sum_Views":{"title":"Number of Planes Visible for all Michels",
+		                             "units":"",
+		                             "type":"I"},
+		"RecoilEnergyGeV":{"title":"Recoil",
+		          "units":"GeV",
+		          "type":"F"}
+	},
+	"SpectatorArgs":{
+		"MCIntType":{"title":"Interaction Type",
+		              "units":"",
+		              "type":"I"},
+		"weight":{"title":"Weight",
+		          "units":"",
+		          "type":"F"},
+		"Q2QE":{"title":"Q2QE",
+		        "units":"GeV",
+		        "type":"F"}
+	}
+}
