@@ -296,7 +296,7 @@ cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC " # remove OFFS
 ostype = platform.platform()
 if "el7" in ostype:
     #cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
-    cmd += " --singularity-image /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest "
+    cmd += " --singularity-image /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-el9:latest "
 cmd += " --role=Analysis "
 #cmd += " --disk=10GB " # comment out for test
 cmd += " --expected-lifetime " + opts.lifetime

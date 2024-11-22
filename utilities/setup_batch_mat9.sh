@@ -21,7 +21,7 @@ export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 spack load root@6.28.12%gcc@12.2.0
 spack load cmake
 spack load gcc
-spack load fife-utils
+spack load fife-utils@3.7.4
 
 #setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
 #setup ifdhc -z /cvmfs/fermilab.opensciencegrid.org/products/common/db
