@@ -199,7 +199,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                 //CovMatrix.Print();
                 for (int i = 0; i < ndim; i++) {
                     ScaleResults.push_back(combScaleResults[i]);
-                    if (univ == "CV"){
+                    if (true){
                         for (int j = 0; j < ndim; j++){
                             //std::cout << i << " " << j << std::endl;
                             CovMatrix[i][j] = mini2->CovMatrix(i, j);
