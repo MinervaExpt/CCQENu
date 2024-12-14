@@ -28,7 +28,9 @@ find_package(ROOT REQUIRED COMPONENTS RIO Net Minuit2 Minuit)
 #---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 include(${ROOT_USE_FILE})
 #include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include $ENV{PLOTUTILSROOT}/../include $ENV{PLOTUTILSROOT}/../include/PlotUtils $ENV{PLOTUTILSROOT}/../include/UnfoldUtils $ENV{PLOTUTILSROOT}/../include/RooUnfold)
-include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include $ENV{PLOTUTILSROOT}/../include $ENV{PLOTUTILSROOT}/../include/PlotUtils $ENV{PLOTUTILSROOT}/../include/UnfoldUtils $ENV{PLOTUTILSROOT}/../include/RooUnfold $ENV{JSONCPP_DIR}/include)
+#include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include $ENV{PLOTUTILSROOT}/../include $ENV{PLOTUTILSROOT}/../include/PlotUtils $ENV{PLOTUTILSROOT}/../include/UnfoldUtils $ENV{PLOTUTILSROOT}/../include/RooUnfold $ENV{JSONCPP_DIR}/include)
+include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include $ENV{PLOTUTILSROOT}/../include $ENV{PLOTUTILSROOT}/../include/PlotUtils $ENV{PLOTUTILSROOT}/../include/UnfoldUtils $ENV{PLOTUTILSROOT}/../include/RooUnfold $ENV{JSONCPP_DIR})
+
 
 link_directories(${ROOT_LIBRARY_DIR})
 
@@ -83,7 +85,7 @@ fits/DoTheFitBinByBin.h
 utils/SyncBands.h
 )
 
-include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils)
+include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils , $ENV{JSONCPP_DIR}/include, $ENV{JSONCPP_DIR})
 
 # now generate the dictionary
 
@@ -98,7 +100,7 @@ MESSAGE("ROOT_LIBRARIES:${ROOT_LIBRARIES} ")
 
 MESSAGE("PROJECT:${PROJECT_NAME}")
 
-target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT}  -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) 
+target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT}  -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict  -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) 
 #target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT} -lplotutils -L$ENV{UNFOLDUTILSROOT} -lunfoldutils -l$ENV{UNFOLDUTILSROOT} -lG__UnfoldUtilsDict.so)
 
 
@@ -123,7 +125,7 @@ add_executable(sidebands_v2 sidebands_v2.C)
 add_executable(analyze_v9 analyze_v9.C)
 #add_executable(MnvFitDriver MnvFitDriver.cxx)
 
-add_executable(MnvMateusDriver MnvMateusDriver.cxx)
+#add_executable(MnvMateusDriver MnvMateusDriver.cxx)
 #add_executable(analyze_vSean smg/analyze_vSean.C)
 #add_executable(getCSVs ../utilities/getCSVs.C)
 #add_executable(getRatio ../utilities/getRatio.C)
@@ -140,7 +142,7 @@ target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(MnvFitDriver PRIVATE ${PROJECT_NAME} )
 
-target_link_libraries(MnvMateusDriver PRIVATE ${PROJECT_NAME} )
+#target_link_libraries(MnvMateusDriver PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(analyze_vSean  PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(getCSVs PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(getRatio PRIVATE ${PROJECT_NAME} )
