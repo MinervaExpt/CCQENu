@@ -7,10 +7,10 @@ export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 source $WHEREIPUTMYCODE/opt/build/setup.sh     # you have to have this
 
 #2export JSONCPP_DIR=$HOME/LocalApps/jsoncpp-build # need to change this probably
-
+export JSONCPP_DIR=$HOME/Dropbox/new/jsoncpp-build
 export CCQEMAT=$WHEREIPUTMYCODE/CCQENu/make_hists
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$ROOTSYS/lib
-export DYLD_LIBRARY_PATH=${PLOTUTILSROOT}:${JSONCPP_DIR}/lib
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ROOTSYS}/lib
+export DYLD_LIBRARY_PATH=${PLOTUTILSROOT}:${JSONCPP_DIR}/lib:${DYLD_LIBRARY_PATH}:${ROOTSYS}/lib
 export PYTHONPATH=$CCQEMAT/python:$WHEREIPUTMYCODE/MAT-MINERvA/python:$WHEREIPUTMYCODE/MAT-MINERvA/python/PlotUtils:$WHEREIPUTMYCODE/UnfoldUtils/python/MinervaUnfold:$WHEREIPUTMYCODE/UnfoldUtils/python/UnfoldUtils:$PYTHONPATH
 export THEDATA=/pnfs/minerva/persistent/users/drut1186/CCQENu_Anatuples/MuonKludge_ProtonLLR_UpdatedNeutron
 
