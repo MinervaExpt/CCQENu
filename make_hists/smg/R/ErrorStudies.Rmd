@@ -1,0 +1,113 @@
+---
+title: "Compare Systematics"
+author: "Sean Gilligan"
+output: pdf_document
+---
+
+```{r, warning=FALSE,message=FALSE,echo=FALSE}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+```
+#1 track
+```{r,echo=FALSE}
+xall <- read.csv("/home/sean/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_bdtg_MAD_1track_GENIE_local_1/1track/bdtgQELike/bdtgQELike_1track_qelike_reconstructed_sysdump.csv")
+xsplit <- read.csv("/home/sean/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_bdtg_MAD_1track_GENIE_local_combined_1/1track/bdtgQELike/bdtgQELike_1track_qelike_reconstructed_sysdump.csv")
+
+xall
+xsplit
+
+cbind(xall[1:38,c(1,2)],(xall[1:38,-c(1,2)]-xsplit[1:38,-c(1,2)]))
+cbind(xall[1:38,c(1,2)],(xall[1:38,-c(1,2)]-xsplit[1:38,-c(1,2)])/xall[1:38,-c(1,2)])
+xall[,-c(1,2)]
+sumsqrdiffs <- t(((xall[,-(1:2)]-xsplit[,-(1:2)]))^2) %*% rep(1,nrow(xall))
+sumsqrerrors <- t(((xall[,-(1:3)] - matrix(rep(xall$CV,ncol(xall)-3),nrow = nrow(xall))))^2) %*% rep(1,nrow(xall))
+
+ssd <- tibble(name = rownames(sumsqrdiffs),
+               ssd = sumsqrdiffs)
+sse <- tibble(name = rownames(sumsqrerrors),
+               sse = sumsqrerrors)
+
+sumsqrdiffs <- t(((xall[,-(1:2)]-xsplit[,-(1:2)])/xall[,-(1:2)])^2) %*% rep(1,nrow(xall))
+sumsqrerrors <- t(((xall[,-(1:3)] - matrix(rep(xall$CV,ncol(xall)-3),nrow = nrow(xall)))/xall[,-(1:3)])^2) %*% rep(1,nrow(xall))
+
+ssfd <- tibble(name = rownames(sumsqrdiffs),
+               ssfd = sumsqrdiffs)
+ssfe <- tibble(name = rownames(sumsqrerrors),
+               ssfe = sumsqrerrors)
+```
+\newpage
+```{r,echo=FALSE}
+kable(ssfd[order(ssfd$ssfd,decreasing=T),][1:20,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+kable(ssfd[order(ssfd$ssfd,decreasing=T),][21:40,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+```
+\newpage
+```{r,echo=FALSE}
+kable(ssfd[order(ssfd$ssfd,decreasing=T),][41:60,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+kable(ssfd[order(ssfd$ssfd,decreasing=T),][61:80,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+```
+\newpage
+```{r,echo=FALSE}
+kable(ssfe[order(ssfe$ssfe,decreasing=T),][1:20,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+kable(ssfe[order(ssfe$ssfe,decreasing=T),][21:40,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+```
+\newpage
+```{r,echo=FALSE}
+kable(ssfe[order(ssfe$ssfe,decreasing=T),][41:60,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+kable(ssfe[order(ssfe$ssfe,decreasing=T),][61:80,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+```
+# 1 Track
+```{r,echo=FALSE}
+xall <- read.csv("/home/sean/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_bdtg_1track_all_10/1track/bdtgQELike/bdtgQELike_1track_qelike_reconstructed_sysdump.csv")
+xsplit <- read.csv("/home/sean/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_bdtg_1track_10/1track/bdtgQELike/bdtgQELike_1track_qelike_reconstructed_sysdump.csv")
+
+sumsqrdiffs <- t(((xall[1:38,-(1:2)]-xsplit[1:38,-(1:2)])/xall[1:38,-(1:2)])^2) %*% rep(1,nrow(xall[1:38,]))
+sumsqrerrors <- t(((xall[1:38,-(1:3)] - matrix(rep(xall$CV[1:38],ncol(xall[1:38,])-3),nrow = nrow(xall[1:38,])))/xall[1:38,-(1:3)])^2) %*% rep(1,nrow(xall[1:38,]))
+
+ssfd <- tibble(name = rownames(sumsqrdiffs),
+               ssfd = sumsqrdiffs)
+ssfe <- tibble(name = rownames(sumsqrerrors),
+               ssfe = sumsqrerrors)
+```
+\newpage
+```{r,echo=FALSE}
+kable(ssfd[order(ssfd$ssfd,decreasing=T),][1:20,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+kable(ssfd[order(ssfd$ssfd,decreasing=T),][21:40,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+```
+\newpage
+```{r,echo=FALSE}
+kable(ssfd[order(ssfd$ssfd,decreasing=T),][41:60,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+kable(ssfd[order(ssfd$ssfd,decreasing=T),][61:80,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+```
+\newpage
+```{r,echo=FALSE}
+kable(ssfe[order(ssfe$ssfe,decreasing=T),][1:20,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+kable(ssfe[order(ssfe$ssfe,decreasing=T),][21:40,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+```
+\newpage
+```{r,echo=FALSE}
+kable(ssfe[order(ssfe$ssfe,decreasing=T),][41:60,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+kable(ssfe[order(ssfe$ssfe,decreasing=T),][61:80,], booktabs=TRUE, escape=FALSE, align = c("lr"), linesep="")
+```
+
+```{r}
+
+g <- 9.8
+H <- 2.5
+h <- 1.2
+D <- 3.6
+vy <- sqrt(2*g*(H-h))
+
+dt <- vy/g + sqrt((vy/g)^2+2*h/g)
+
+vx <- D/dt
+
+vy
+vx
+vy/vx
+atan(vy/vx)*(180/pi)
+
+atan(2.6/3.6)*(180/pi)
+```

@@ -139,6 +139,7 @@ add_executable(stack_SignalBkgd smg/stack_SignalBkgd.C)
 add_executable(combineErrors smg/combineErrors.C)
 add_executable(combineHists smg/combineHists.C)
 add_executable(compareHists smg/compareHists.C)
+add_executable(combineROOTfiles smg/combineROOTfiles.C)
 
 
 
@@ -171,3 +172,4 @@ target_link_libraries(stack_SignalBkgd  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(combineErrors  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(combineHists  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(compareHists  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(combineROOTfiles PRIVATE ${PROJECT_NAME} )

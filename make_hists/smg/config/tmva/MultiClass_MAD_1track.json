@@ -1,5 +1,5 @@
 {
-	"InFile":"minervame1N_MAD_MC_TMVA.root",
+	"InFile":"minervame1N_MC_TMVA.root",
 	"Tag":"1track",
 	"SignalTree":"qelike",
 	"BackgroundTrees":["1chargedpion",

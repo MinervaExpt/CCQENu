@@ -7,6 +7,7 @@
 #include <math.h>
 #include "TColor.h"
 #include "TLatex.h"
+#include "TVector2.h"
 
 using namespace PlotUtils;
 
@@ -17,6 +18,17 @@ int main(const int argc, const char *argv[]) {
 	
 	TFile *file1 = new TFile(fname1.c_str());
 	TFile *file2 = new TFile(fname1.c_str());
+	
+	TVector2 *pot1 = (TVector2*) file1->Get("pot");
+	TVector2 *pot2 = (TVector2*) file2->Get("pot");
+	std::cout << std::endl << fname1 << " POTs:";
+	std::cout << std::endl << "   Data POT: " << pot1->X();
+	std::cout << std::endl << "   MC POT: " << pot1->Y();
+	std::cout << std::endl << fname2 << " POTs:";
+	std::cout << std::endl << "   Data POT: " << pot2->X();
+	std::cout << std::endl << "   MC POT: " << pot2->Y() << std::endl << std::endl;
+	delete pot1;
+	delete pot2;
 	
 	for(auto key : *(file1->GetListOfKeys())){
 		std::string name = key->GetName();

@@ -35,6 +35,13 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
     double chi2 = 0.0;
     if (!fDoFit) return chi2;
     double fitSum;
+    // add in nuisance parameter if ANYTHING goes below 0. 
+		double nuisance = 0;
+		double nuisance_factor=1.e-1;
+		for (int whichFit = 0; whichFit < fNdim; whichFit++) {
+			if (parameters[whichFit] >= 0.0) continue;
+			nuisance += parameters[whichFit] * parameters[whichFit]*nuisance_factor;
+		}
 #ifdef DEBUG
     std::cout << "parameters ";
     for (int i = 0; i < fNdim; i++){
@@ -74,8 +81,9 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
         }
     }
     
-#ifdef DEBUG
     
+#ifdef DEBUG
+    //chi2 += nuisance;
     std::cout << "About to return chi2 of: " << chi2 << std::endl;
 #endif
     return chi2;

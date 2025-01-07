@@ -11,8 +11,8 @@
 
 int main()
 {
-	std::vector<std::string> tags = {"1track","2track"};
-	std::vector<std::string> title_tags = {"1 track","2 tracks"};
+	std::vector<std::string> tags = {"1track","2track","3ptrack"};
+	std::vector<std::string> title_tags = {"1 track","2 tracks","3+ tracks"};
 	
 	for (int i=0; i<5; i++) {
 		std::string fname = "Multiclassed_"+tags[i]+"_minervame1N_MAD_MC_TMVA.root";

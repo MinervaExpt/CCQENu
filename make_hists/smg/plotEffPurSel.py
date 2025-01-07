@@ -11,14 +11,14 @@ c1.SetGrid()
 #pad1.Draw()
 #pad2.Draw()
 
-rfile = "SB_NuConfig_mult1pBDTG_me1N_1.root"
+rfile = "SB_NuConfig_bdtg_MAD_1track_1.root"
 f = TFile(rfile)
 
-h_qelike = gROOT.FindObject( "h___Mult1p_2track___qelike___bdtgQELike___reconstructed" )
-h_1chargedpion = gROOT.FindObject( "h___Mult1p_2track___1chargedpion___bdtgQELike___reconstructed" )
-h_1neutralpion = gROOT.FindObject( "h___Mult1p_2track___1neutralpion___bdtgQELike___reconstructed" )
-h_multipion = gROOT.FindObject( "h___Mult1p_2track___multipion___bdtgQELike___reconstructed" )
-h_other = gROOT.FindObject( "h___Mult1p_2track___other___bdtgQELike___reconstructed" )
+h_qelike = gROOT.FindObject( "h___1track___qelike___bdtgQELike___reconstructed" )
+h_1chargedpion = gROOT.FindObject( "h___1track___1chargedpion___bdtgQELike___reconstructed" )
+h_1neutralpion = gROOT.FindObject( "h___1track___1neutralpion___bdtgQELike___reconstructed" )
+h_multipion = gROOT.FindObject( "h___1track___multipion___bdtgQELike___reconstructed" )
+h_other = gROOT.FindObject( "h___1track___other___bdtgQELike___reconstructed" )
 
 nbin = h_qelike.GetNbinsX()
 
@@ -102,7 +102,7 @@ ltext.SetTextSize(19);
 ltext.Draw();
 
 ############## Save ##############
-c1.SaveAs('Eff_Pur_vs_Response_2track_v2.png')
+c1.SaveAs('Eff_Pur_vs_Response_1track_MAD.png')
 
 
 

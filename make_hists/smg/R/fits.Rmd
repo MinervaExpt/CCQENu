@@ -1,0 +1,156 @@
+---
+title: "Untitled"
+author: "Sean Gilligan"
+date: "2024-08-21"
+output: html_document
+---
+
+```{r}
+dat <- read.csv("~/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_bdtg_1track_sys_1/1track/bdtgQELike/bdtgQELike_1track_data_reconstructed_1d.csv")
+xc <- read.csv("~/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_bdtg_1track_sys_1/1track/bdtgQELike/bdtgQELike_1track_1chargedpion_reconstructed_1d.csv")
+xn <- read.csv("~/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_bdtg_1track_sys_1/1track/bdtgQELike/bdtgQELike_1track_1neutralpion_reconstructed_1d.csv")
+xm <- read.csv("~/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_bdtg_1track_sys_1/1track/bdtgQELike/bdtgQELike_1track_multipion_reconstructed_1d.csv")
+xo <- read.csv("~/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_bdtg_1track_sys_1/1track/bdtgQELike/bdtgQELike_1track_other_reconstructed_1d.csv")
+xq <- read.csv("~/MinervaExpt/CCQENu/make_hists/smg/SB_NuConfig_bdtg_1track_sys_1/1track/bdtgQELike/bdtgQELike_1track_qelike_reconstructed_1d.csv")
+
+events <- data.frame(data = dat$Counts,
+                     `1chargedpion` = xc$Counts,
+                     `1neutralpion` = xn$Counts,
+                     multipion = xm$Counts,
+                     other = xo$Counts,
+                     qelike = xq$Counts,
+                     check.names = F)
+
+
+
+events[,2:6] = (sum(events[,1])/sum(events[,2:6]))*events[,2:6]
+
+events <- events[1:38,]
+
+library(penalized)
+
+model <- lm(data ~ `1chargedpion`+`1neutralpion`+multipion+other+qelike+0, events)
+#summary(model)
+
+model2 <- penalized(data ~ `1chargedpion`+`1neutralpion`+multipion+other+qelike, unpenalized = ~0, data = events, 
+                    positive = TRUE, lambda1=0, lambda2=0)
+cf <- coef(model2)
+cf0 <- c(cf[1:3],0,cf[4])
+cf <- c(cf[1:3],1,cf[4])
+names(cf0)[4] <- "other"
+names(cf)[4] <- "other"
+cf
+res0 <- as.matrix(events) %*% c(1,-cf0)
+res <- as.matrix(events) %*% c(1,-cf)
+prefit <- as.matrix(events[,2:6]) %*% rep(1,5)
+
+plot(seq(0.0125,0.9375,length.out=38),events$data,pch = "-", cex = 4)
+points(seq(0.0125,0.9375,length.out=38),prefit,pch = "-", col = 2, cex = 3)
+points(seq(0.0125,0.9375,length.out=38),res0+events$data,pch = "-", col = 4, cex = 3)
+
+plot(seq(0.0125,0.9375,length.out=38),events$data,pch = "-", cex = 4)
+points(seq(0.0125,0.9375,length.out=38),prefit,pch = "-", col = 2, cex = 3)
+points(seq(0.0125,0.9375,length.out=38),res+events$data,pch = "-", col = 4, cex = 3)
+
+
+```
+
+```{r}
+covm <- as.matrix(read.csv("~/MinervaExpt/CCQENu/make_hists/smg/csv/covariance_values_2d.csv",header = F))
+corm <- as.matrix(read.csv("~/MinervaExpt/CCQENu/make_hists/smg/csv/correlation_values_2d.csv",header = F))
+parvals <- as.matrix(read.csv("~/MinervaExpt/CCQENu/make_hists/smg/csv/parameters_values_1d.csv",header = F))
+parsyser <- as.matrix(read.csv("~/MinervaExpt/CCQENu/make_hists/smg/csv/parameters_syserrors_1d.csv",header = F))
+
+covm
+corm
+parvals
+parsyser
+
+covm_eigens <- eigen(covm)
+covm_eigens
+sqrt(covm_eigens$values)
+
+covm_eigens
+covm_eigens$vectors[,1] %*% covm_eigens$vectors[,1]
+covm_eigens$vectors[1,] %*% covm_eigens$vectors[1,]
+
+
+covm %*% covm_eigens$vectors[,1]
+t(t(covm_eigens$vectors[,1] * covm_eigens$values[1]))
+covm_eigens
+
+matrix(rep(covm_eigens$values,5),nrow=5,byrow = T) * covm
+covm %*% covm_eigens$vectors
+
+covm_eigens$values
+
+```
+
+
+
+
+
+
+
+
+
+
+```{r}
+n <- 100000000
+p <- 0
+for(i in 0:n) {
+  xi <- (-1)^i * 1/(2*i+1)
+  p = p + xi
+}
+pi-4*p
+```
+
+```{r}
+x <- sample(seq(0,1,0.001),10000,replace = TRUE)
+y <- sqrt(1-x^2)
+xy <- tibble(xy = c(x,y),
+             dim = rep(c("x","y"),each=length(x)))
+ggplot(xy,aes(xy,fill=dim)) +
+  stat_bin(position = "identity", alpha = 0.5, binwidth = 0.01) + theme_bw()
+
+
+theta <- sample(seq(0,pi/2,length.out=1000),10000,replace = TRUE)
+x <- cos(theta)
+y <- sin(theta)
+xy <- tibble(xy = c(x,y),
+             dim = rep(c("x","y"),each=length(x)))
+ggplot(xy,aes(xy,fill=dim)) +
+  stat_bin(position = "identity", alpha = 0.5, binwidth = 0.01) + theme_bw()
+
+theta <- sample(seq(0,2*pi,length.out=1000),10000,replace = TRUE)
+x <- cos(theta)
+y <- sin(theta)
+xy <- tibble(xy = c(x,y),
+             dim = rep(c("x","y"),each=length(x)))
+ggplot(xy,aes(xy,fill=dim)) +
+  stat_bin(position = "identity", alpha = 0.5, binwidth = 0.01) + theme_bw()
+xy <- tibble(x = x,
+             y = y)
+ggplot(xy,aes(x,y)) +
+  stat_bin2d(binwidth = c(0.05,0.05)) + theme_bw()
+ggplot(tibble(theta=theta),aes(theta)) +
+  stat_bin(binwidth = pi/50) + theme_bw()
+```
+```{r}
+total_seconds <- 9*60 + 37 + 9*60 + 46 + 0.08*(9*60 + 42)
+minutes <- trunc(total_seconds/60)
+seconds <- (total_seconds/60 - minutes)*60
+if(seconds<10) {seconds <- paste0("0",signif(seconds,3))}
+paste0(minutes,":",seconds)
+```
+
+
+```{r}
+sort(c(sum(sort(sample(1:6,4,replace = T))[2:4]),
+       sum(sort(sample(1:6,4,replace = T))[2:4]),
+       sum(sort(sample(1:6,4,replace = T))[2:4]),
+       sum(sort(sample(1:6,4,replace = T))[2:4]),
+       sum(sort(sample(1:6,4,replace = T))[2:4]),
+       sum(sort(sample(1:6,4,replace = T))[2:4]),
+       sum(sort(sample(1:6,4,replace = T))[2:4])))[2:7]
+```

@@ -151,7 +151,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                     std::string name = categories[i];
                     std::cout << " set parameter " << i << " " << name << std::endl;
                     mini2->SetLowerLimitedVariable(i, name, 1.0, 0.1, 0.0);
-                    mini2->SetUpperLimitedVariable(i, name, 1.0, 0.1, upperLimit);
+                    //mini2->SetUpperLimitedVariable(i, name, 1.0, 0.1, upperLimit);
                     nextPar++;
                 }
 

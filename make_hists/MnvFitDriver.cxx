@@ -185,7 +185,7 @@ int main(int argc, char* argv[]) {
         rebin = config.GetInt("Rebin");
     }
 
-
+		std::cout << "\nReading in and parsing data.\n";
     // read in the data and parse it
     TFile* inputFile = TFile::Open(inputFileName.c_str(),"READ");
     TFile* outputfile = TFile::Open(outputFileName.c_str(),"RECREATE");
@@ -374,6 +374,8 @@ int main(int argc, char* argv[]) {
     }
     
     mnvPlotter.error_color_map["FitVariations"] = kBlue + 2;
+    mnvPlotter.error_color_map["Normalization"] = kAlpine;
+    mnvPlotter.error_color_map["GEANT"] = kGreen + 2;
     
     for (auto side:sidebands){
         dataHist[side]->SetTitle(dataHist[side]->GetName());
@@ -441,7 +443,6 @@ int main(int argc, char* argv[]) {
         mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side],(MnvH1D*)fitHists[side][0], 1.0, "TR");
         cF.Print(TString(pixheader + "_" + fitType + "_bkgsub_combined.png").Data());
     }
-    
     
     //inputFile->Close();
     outputfile->Close();
