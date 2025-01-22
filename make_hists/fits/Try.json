@@ -8,6 +8,7 @@
     "LowBin":1,
     "UpperLimit":100.0,
     "Variable":"bdtgQELike",
+    //"FitType":"kML",
     "FitType":"SlowChi2",
     "OutputFile":"BDT_3_out.root",
     "PixDir":"./pix3",
