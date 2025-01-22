@@ -259,7 +259,9 @@ int main(const int argc, const char* argv[]) {
             // if response in name its a 2D so do a cast to MnvH2D
             if (key.find("migration") != std::string::npos) {
                 MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
+                
                 if (hist != 0) {
+                    SyncBands(hist);
                     response1D[sample][variable][type][category] = hist->Clone();
                     // response1D[sample][variable][type][category]->Print();
                     response1D[sample][variable][type][category]->SetDirectory(0);
@@ -273,7 +275,9 @@ int main(const int argc, const char* argv[]) {
             // it's normal so it's a 1D.
             else {
                 MnvH1D* temp = (MnvH1D*)(f->Get(key.c_str()));
+                
                 if (temp != 0) {
+                    SyncBands(temp);
                     hists1D[sample][variable][type][category] = temp->Clone();
                     hists1D[sample][variable][type][category]->Print();
                     hists1D[sample][variable][type][category]->SetDirectory(0);
@@ -290,8 +294,10 @@ int main(const int argc, const char* argv[]) {
         else if (hNd == "h2D" || key.find("h2D") != std::string::npos) {
             std::vector<std::string> partsof2D = split(variable, "_");
             MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
+            
             // Check if response is in its name
             if (hist != 0) {
+                SyncBands(hist);
                 if (key.find("migration") != std::string::npos) {
                     response2D[sample][variable][type][category] = hist->Clone();
                     response2D[sample][variable][type][category]->Print();
