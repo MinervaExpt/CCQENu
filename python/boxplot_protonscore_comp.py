@@ -27,9 +27,9 @@ legendfontsize = 0.03
 #     "Q2QE_PrimaryProtonScore1"
 # ]
 varstodo = [
-    # "Q2QE_PrimaryProtonScore",
+    "Q2QE_PrimaryProtonScore"#,
     # "Q2QE_PrimaryProtonScore1",
-    "Q2QE_recoil"
+    # "Q2QE_recoil"
 ]
 
 varnames = {
@@ -256,8 +256,8 @@ for var in varstodo:
 
             sig_ratio_hist, bkg_ratio_hist = MakeRatioHist(hist_dict[var]["qelike"],hist_dict[var]["qelikenot"])
 
-            sig_ratio_hist.RebinY()
-            bkg_ratio_hist.RebinY()
+            # sig_ratio_hist.RebinY()
+            # bkg_ratio_hist.RebinY()
             dummyqelike = hist_dict[var]["qelike"].Clone()
             dummyqelike.SetFillColor(catscolors["qelike"])
             leg.AddEntry(dummyqelike,catsnames["qelike"],"f")
