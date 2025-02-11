@@ -628,7 +628,7 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     // Get "category" tags set in config. Needs to match ones used in the event loop.
     // TODO: Make this a map in config.
 
-    std::cout << " at the top of GetXsec" << sample << std::endl;
+    std::cout << " at the top of GetXsec " << sample << std::endl;
     // this can come out of the sample information:
     // configs["main"]->Print();
     NuConfig sigkey = configs["main"]->GetConfig("signal");
