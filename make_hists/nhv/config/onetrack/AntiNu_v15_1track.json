@@ -1,7 +1,7 @@
 {
   "version":15,  
-  "mcIn":"${PLAYLISTROOT}/MC_5A_local.txt",
-  "dataIn":"${PLAYLISTROOT}/DATA_5A_local.txt",
+  "mcIn":"${CCQEMAT}/MC_5A_local.txt",
+  "dataIn":"${CCQEMAT}/DATA_5A_local.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuCuts_v15_1track.json", 
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuSamples_v15_1track_FS_recoonly.json",
@@ -29,11 +29,11 @@
     "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
-    // "Q2QE",
-    // "PrimaryProtonScore"//,
+    "Q2QE",
+    "PrimaryProtonScore"//,
     // "recoil"
     // "NBlobs",
-    "Multiplicity",
+    // "Multiplicity",
     // "PionAngle",
     // "ThetamuDegrees"//,
     // "NChargedPions",
@@ -50,14 +50,14 @@
     // "NeutBlobsRatio"
     // "pzmu",
     // "ptmu"
-    "NumberOfProtonCandidates"
+    // "NumberOfProtonCandidates"
   ],
   "Analyze2DVariables": [
     // "PionAngle_ThetamuDegrees"//,
-    // "Q2QE_PrimaryProtonScore"//,
+    "Q2QE_PrimaryProtonScore"//,
     // "Q2QE_recoil"//,
     // "pzmu_ptmu"
-    "Multiplicty_NumberOfProtonCandidates"
+    // "Multiplicty_NumberOfProtonCandidates"
   ],
   "AnalyzeHyperDVariables": [],
   "systematics": [

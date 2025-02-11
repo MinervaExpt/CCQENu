@@ -6,10 +6,10 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
-  "outRoot": "warptest_2d_recoilonly_0mmrecoil_${MYMODEL}",
-  "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
+  "outRoot": "fittedextraction_1d_0mmrecoil_${MYMODEL}_${MYPLAYLIST}",
+  "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root", 
   "prescale":999,
-  "playlist":"minervame5A",
+  "playlist":"${MYPLAYLIST}",
   "MinervaModel":"${MYMODEL}", 
   "recoName":"MasterAnaDev",
   "tunedmc":"both", 
@@ -20,12 +20,12 @@
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike",
+    "QElike"//,
     // "QElikeNeut"
     // "QElike_0blob",
     // "QElike_1blob"
     // "QElikeNeutrons"//,
-    "TrackSideband"
+    // "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband"//,
     // "BlobSideband",
@@ -41,8 +41,7 @@
     // "NChargedPions",
     // "HasMultiPion"
     // "recoilNoBlobs",
-    "Q2QE",
-    "PrimaryProtonScore" //,
+    // "Q2QE",
     // "FitQ2QE",
     // "EAvail",
     // "pzmuHD",
@@ -54,7 +53,7 @@
     // "EAvailWiggled"
     // "EAvailWithNeutrons"
     // "resEAvailWithNeutrons"
-    // "recoil"//,
+    "recoil"//,
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
@@ -62,47 +61,24 @@
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": [
-    "Q2QE_PrimaryProtonScore"], //,//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "Analyze2DVariables": [],//"pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [],//"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
-  "signal": {
-    "QElike": "qelike"//,
-    // "Background": "qelike",
-    // "QElikeNP": "qelike_np",
-    // "QElikeALLAngles": "qelike_np"
-  }, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
-  "background": {
-    "QElike": [
-      "charged_pion",
-      "neutralpion",
-      "other"
-    ] //,
-    // "Background": "qelikenot",
-    // "QElikeNP": "qelikenot_np",
-    // "QElikeALLAngles": "qelikenot_np"
-  },
-  "data": {
-    "QElike": "data"//,
-    // "Background": "data",
-    // "QElikeNP": "data",
-    // "QElikeALLAngles": "data"
-  }, 
   "responseSystematicsVersion": "2024",
   "systematics": [
-    "Flux"//,
-    // "MuonMINOS",
-    // "MuonResolution",
-    // "MINOSEfficiency",
-    // "Angle",
-    // "GENIE",
-    // "GenieRvx1pi",
-    // "RPA",
-    // "2p2h",
-    // "MuonMinerva",
-    // "geant4",
-    // "response"
+    "Flux",
+    "MuonMINOS",
+    "MuonResolution",
+    "MINOSEfficiency",
+    "Angle",
+    "GENIE",
+    "GenieRvx1pi",
+    "RPA",
+    "2p2h",
+    "MuonMinerva",
+    "geant4",
+    "response"
   ],
-  "fluxUniverses": 2, //100, //10,
+  "fluxUniverses": 100, //100, //10,
   "NuEConstraint":1, 
   "Geant4NeutronCV":1,
   "Geant4Elastics":1//,

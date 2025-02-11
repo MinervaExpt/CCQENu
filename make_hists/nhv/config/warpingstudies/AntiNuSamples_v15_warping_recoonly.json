@@ -1,0 +1,275 @@
+{
+    "Comments":[
+        "Change naming convention for categories, samples, remove trackedp stuff"
+    ],
+    "QElike": {
+        "name": "QElike",
+        "reco": "QElike",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["qelikenot"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+             },
+            "qelikenot": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "QElikeNeutrons": {
+        "name": "QElikeNeutrons",
+        "reco": "QElikeNeutrons",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["qelikenot"],
+        "categories": {
+            "qelike": {
+                // "for": ["selected_reco"]
+                "for": ["selected_reco", "selected_truth", "truth", "response"]
+             },
+            "qelikenot": {
+                // "for": ["selected_reco"]
+                "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "QElikeNP": {
+        "name": "QElikeNP",
+        "reco": "QElikeNP",
+        "phase_space": "phase_space",
+        "signal": ["qelike_np"],
+        "background": ["neutralpion", "chargedpion", "multipion", "other_np"],
+        "categories": {
+            "qelike_np": {
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+                "for": ["selected_reco"]
+             },
+            "neutralpion": {
+                "for": ["selected_reco"]
+            },
+            "chargedpion": {
+                "for": ["selected_reco"]
+            },
+            "multipion": {
+                "for": ["selected_reco"]
+            },
+            "other_np": {
+                "for": ["selected_reco"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike_np": "QELike",
+            "neutralpion": "1#pi^{0}",
+            "chargedpion": "1#pi^{+/-}",
+            "multipion": "N#pi",
+            "other_np": "Other"
+        }
+    },
+    "MichelSideband": {
+        "name": "MichelSideband",
+        "reco": "MichelSideband",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["qelikenot"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+             },
+            "qelikenot": {
+                "for": ["selected_reco"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "BlobSideband": {
+        "name": "BlobSideband",
+        "reco": "BlobSideband",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "TrackSideband": {
+        "name": "TrackSideband",
+        "reco": "TrackSideband",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "LoPionThetaSideband": {
+        "name": "LoPionThetaSideband",
+        "reco": "LoPionThetaSideband",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "HiPionThetaSideband": {
+        "name": "HiPionThetaSideband",
+        "reco": "HiPionThetaSideband",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "MultipBlobSideband": {
+        "name": "MultipBlobSideband",
+        "reco": "MultipBlobSideband",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "ProtonSideband": {
+        "name": "ProtonSideband",
+        "reco": "ProtonSideband",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["neutralpion", "chargedpion", "multipion", "other"],
+        "categories": {
+            "qelike": {
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+                "for": ["selected_reco"]
+             },
+            "neutralpion": {
+                "for": ["selected_reco"]
+            },
+            "chargedpion": {
+                "for": ["selected_reco"]
+            },
+            "multipion": {
+                "for": ["selected_reco"]
+            },
+            "other": {
+                "for": ["selected_reco"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "neutralpion": "1#pi^{0}",
+            "chargedpion": "1#pi^{+/-}",
+            "multipion": "N#pi",
+            "other": "Other"
+        }
+    }
+}

@@ -109,18 +109,34 @@ int main(const int argc, const char* argv[]) {
         if (argc > 2) {
             inputtag += "_" + std::string(argv[2]);
         }
+        if ( argc > 3) {
+            usetune = atoi(argv[3]);
+        }
         std::string asample;
 
-        if (argc > 3) {
+        std::string configfilename(std::string(argv[1]) + ".json");
+        NuConfig config;
+        config.Read(configfilename);
+        NuConfig* main = new NuConfig(config);
+        allconfigs["main"] = main;
+        std::cout << "done reading in main" << std::endl;
+
+        // std::string varsFilename = main->GetString("varsFile");
+        NuConfig varsconfig;
+        allconfigs["varsFile"] = new NuConfig(varsconfig.Read(main->GetString("varsFile")));        
+        NuConfig cutsconfig;
+        allconfigs["cutsFile"] = new NuConfig(varsconfig.Read(main->GetString("cutsFile")));
+        NuConfig samplesconfig;
+        allconfigs["samplesFile"] = new NuConfig(samplesconfig.Read(main->GetString("samplesFile")));
+        std::cout << "done reading in configs" << std::endl;
+                
+        if (argc > 4) {
             asample = std::string(argv[3]);
             singlesample = 1;
         } else {
             singlesample = 0;
         }
-        NuConfig* theconfig;
-        theconfig->Read(std::string(argv[1]) + ".json");
-        allconfigs["main"] = theconfig;
-        inputname = theconfig->GetString("outRoot") + "_" + inputtag + ".root";
+        inputname = allconfigs["main"]->GetString("outRoot") + "_" + inputtag + ".root";
         f = TFile::Open(inputname.c_str(), "READONLY");
         // f->ls();
     }
@@ -159,7 +175,6 @@ int main(const int argc, const char* argv[]) {
     double num_iter = 5;
 
     // input 4 D hist-map
-
     // arguments will be sample, variable, type, category
     // order in histogram name is sample___category___variable___type
     // type is reconstructed, truth...
@@ -450,7 +465,7 @@ int main(const int argc, const char* argv[]) {
     TCanvas canvas1Dres(pdffilename1Dres.c_str());
     canvas1Dres.SetLeftMargin(0.15);
     canvas1Dres.SetRightMargin(0.15);
-    canvas1Dres.SetBottomMargin(0.15);
+    canvas1Dres.SetBottomMargin(0.15); 
     canvas1Dres.SetTopMargin(0.15);
     canvas1Dres.Print(pdfstart1Dres.c_str(), "pdf");
     // std::vector<std::string> resolutions = {std::string("resolution"), std::string("tuned_resolution")};

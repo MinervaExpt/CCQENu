@@ -6,7 +6,7 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
-  "outRoot": "warptest_2d_recoilonly_0mmrecoil_${MYMODEL}",
+  "outRoot": "warptest_1d_0mmrecoil_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale":999,
   "playlist":"minervame5A",
@@ -20,12 +20,12 @@
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike",
+    "QElike"//,
     // "QElikeNeut"
     // "QElike_0blob",
     // "QElike_1blob"
     // "QElikeNeutrons"//,
-    "TrackSideband"
+    // "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband"//,
     // "BlobSideband",
@@ -41,8 +41,7 @@
     // "NChargedPions",
     // "HasMultiPion"
     // "recoilNoBlobs",
-    "Q2QE",
-    "PrimaryProtonScore" //,
+    // "Q2QE",
     // "FitQ2QE",
     // "EAvail",
     // "pzmuHD",
@@ -57,13 +56,12 @@
     // "recoil"//,
     // "recoilQE"
     // "NeutBlobsRatio"
-    // "pzmu",
-    // "ptmu"
+    "pzmu",
+    "ptmu"
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": [
-    "Q2QE_PrimaryProtonScore"], //,//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "Analyze2DVariables": [],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [],//"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "signal": {
     "QElike": "qelike"//,
