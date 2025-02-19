@@ -1,6 +1,5 @@
 import ROOT
 import array
-import numpy as np
 import sys
 
 # Stolen from Amit's area. Used to do extraction of cross sections from raw GENIE v3 files for the purpose of comaprison.
