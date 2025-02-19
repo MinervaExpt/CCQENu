@@ -226,15 +226,6 @@ mytree = inputFile.Get("FlatTree_VARS")
 
 ofilename = sys.argv[2]
 
-#ptbins = [0,0.075,0.15,0.25,0.325,0.4,0.475,0.55,0.7,0.85,1,1.25,1.5,2.5,4.5]
-#pzbins = [1.5,2.,2.5,3.,3.5,4.,4.5,5.,6.,7.0,8.,9.0,10.,15.,20.,40.,60.]
-# ptbins = [0.0,0.075,0.15,0.25,0.325,0.4,0.475,0.55,0.7,0.85,1.0,1.25,1.5,2.5]
-# pzbins = [1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,7.0,8.0,9.0,10.0,15.0]
-# q2bins =  [0.0,0.0125,0.025,0.05,0.1,0.2,0.4,0.8,1.2,4.0]
-# q3bins = [0,0.2,0.3,0.4,0.6,0.9,1.2]
-# eabins = [0,0.04,0.08,0.12,0.16,0.24,0.32,0.4,0.6,0.8,1.0]
-# enubins =  [2.0,2.5,3.0,3.5,4.0,4.5,5.0,6.0,7.0,8.0,9.0,10.0,15.0]
-
 # Bins from 3d analysis (might change)
 pzbins = [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 7, 8, 9, 10, 15],
 ptbins = [0, 0.075, 0.15, 0.25, 0.325, 0.4, 0.475, 0.55, 0.7, 0.85, 1, 1.25, 1.5, 2.5],
@@ -272,6 +263,7 @@ for e in mytree:
     Pt = ROOT.TMath.Sqrt(1-coslep*coslep)*P
     if coslep<0.93969262078: continue
     counter+=1
+    Eav = e.Eav
 
     if isHyperon(e)[0]:
         hyp_counter +=1
@@ -280,14 +272,13 @@ for e in mytree:
         qelike_counter+=1
         mypz_qelike.Fill(Pl)
         mypt_qelike.Fill(Pt)
-        # TODO: define recoil or eavail
-        # myrecoil_qelike.Fill(recoil) 
+        myrecoil_qelike.Fill(Eav)
     if isCCQELikeHyp(e,setRHC):
         qelikehyp_counter+=1
         mypz_qelikehyp.Fill(Pl)
         mypt_qelikehyp.Fill(Pt)
-        # TODO: define recoil or eavail
-        # myrecoil_qelikehyp.Fill(recoil) 
+        myrecoil_qelikehyp.Fill(Eav)
+        
 print("qelike counter: ", qelike_counter)
 print("hyperon counter: ", hyp_counter)
 print("qelikehyp counter: ", qelikehyp_counter)
@@ -295,30 +286,36 @@ print("Total Events: ", counter)
 
 mypz.GetXaxis().SetTitle("Muon p_{||} (GeV)")
 mypz.GetYaxis().SetTitle("d#sigma/dp_{||} cm^2/GeV/nucleon")
-
 mypt.GetXaxis().SetTitle("Muon p_{t} (GeV)")
 mypt.GetYaxis().SetTitle("d#sigma/dp_{t} cm^2/GeV/nucleon")
+myrecoil.GetXaxis().SetTitle("E_{Avail} (GeV)")
+myrecoil.GetYaxis().SetTitle("d#sigma/dE_{Avail}} cm^2/GeV/nucleon")
 
 mypz_qelike.GetXaxis().SetTitle("Muon p_{||} (GeV)")
 mypz_qelike.GetYaxis().SetTitle("d#sigma/dp_{||} cm^2/GeV/nucleon")
-
 mypt_qelike.GetXaxis().SetTitle("Muon p_{t} (GeV)")
 mypt_qelike.GetYaxis().SetTitle("d#sigma/dp_{t} cm^2/GeV/nucleon")
+myrecoil_qelike.GetXaxis().SetTitle("E_{Avail} (GeV)")
+myrecoil_qelike.GetYaxis().SetTitle("d#sigma/dE_{Avail}} cm^2/GeV/nucleon")
 
 mypz_qelikehyp.GetXaxis().SetTitle("Muon p_{||} (GeV)")
 mypz_qelikehyp.GetYaxis().SetTitle("d#sigma/dp_{||} cm^2/GeV/nucleon")
-
 mypt_qelikehyp.GetXaxis().SetTitle("Muon p_{t} (GeV)")
 mypt_qelikehyp.GetYaxis().SetTitle("d#sigma/dp_{t} cm^2/GeV/nucleon")
+myrecoil_qelikehyp.GetXaxis().SetTitle("E_{Avail} (GeV)")
+myrecoil_qelikehyp.GetYaxis().SetTitle("d#sigma/dE_{Avail}} cm^2/GeV/nucleon")
 
 print("Making output file")
 myoutput = ROOT.TFile(ofilename,"RECREATE")
 
 mypz_qelike.Write()
 mypt_qelike.Write()
+myrecoil_qelike.Write()
 
 mypz_qelikehyp.Write()
 mypt_qelikehyp.Write()
+myrecoil_qelikehyp.Write()
+
 print("Done writing hists to ", ofilename)
 
 # """
