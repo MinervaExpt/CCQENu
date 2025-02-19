@@ -231,7 +231,7 @@ pzbins = [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 7, 8, 9, 10, 15],
 ptbins = [0, 0.075, 0.15, 0.25, 0.325, 0.4, 0.475, 0.55, 0.7, 0.85, 1, 1.25, 1.5, 2.5],
 recoilbins = [0.0, 0.05, 0.10, 0.15, 0.30, 0.50, 1.0]
 
-myptpz = ROOT.TH2D("ptpz","ptpz",len(pzbins)-1, array.array("d",pzbins),len(ptbins)-1,array.array("d",ptbins))
+# myptpz = ROOT.TH2D("ptpz","ptpz",len(pzbins)-1, array.array("d",pzbins),len(ptbins)-1,array.array("d",ptbins))
 mypt = ROOT.TH1D("pt","pt",len(ptbins)-1,array.array("d",ptbins))
 mypz = ROOT.TH1D("pz","pz",len(pzbins)-1,array.array("d",pzbins))
 myrecoil = ROOT.TH1D("recoil","recoil",len(recoilbins)-1,array.array("d",recoilbins))
@@ -245,7 +245,7 @@ mypz_qelikehyp = ROOT.TH1D("mypz_qelikehyp","mypz_qelikehyp",len(pzbins)-1,array
 myrecoil_qelikehyp = ROOT.TH1D("myrecoil_qelikehyp","myrecoil_qelikehyp",len(recoilbins)-1,array.array("d",recoilbins))
 
 
-myptpz_rate = ROOT.TH2D("ptpz_rate","ptpz_rate",len(pzbins)-1, array.array("d",pzbins),len(ptbins)-1,array.array("d",ptbins))
+# myptpz_rate = ROOT.TH2D("ptpz_rate","ptpz_rate",len(pzbins)-1, array.array("d",pzbins),len(ptbins)-1,array.array("d",ptbins))
 mytheta = ROOT.TH1D("theta","theta",360,0,180)
 
 counter = 0
@@ -278,7 +278,7 @@ for e in mytree:
         mypz_qelikehyp.Fill(Pl)
         mypt_qelikehyp.Fill(Pt)
         myrecoil_qelikehyp.Fill(Eav)
-        
+
 print("qelike counter: ", qelike_counter)
 print("hyperon counter: ", hyp_counter)
 print("qelikehyp counter: ", qelikehyp_counter)
