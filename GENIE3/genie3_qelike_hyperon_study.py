@@ -243,11 +243,12 @@ myrecoil_qelike = ROOT.TH1D("recoil_qelike","recoil_qelike",len(recoilbins)-1,ar
 mypt_qelikehyp = ROOT.TH1D("mypt_qelikehyp","mypt_qelikehyp",len(ptbins)-1,array.array("d",ptbins))
 mypz_qelikehyp = ROOT.TH1D("mypz_qelikehyp","mypz_qelikehyp",len(pzbins)-1,array.array("d",pzbins))
 myrecoil_qelikehyp = ROOT.TH1D("myrecoil_qelikehyp","myrecoil_qelikehyp",len(recoilbins)-1,array.array("d",recoilbins))
-
+print("Done making histograms")
 
 # myptpz_rate = ROOT.TH2D("ptpz_rate","ptpz_rate",len(pzbins)-1, array.array("d",pzbins),len(ptbins)-1,array.array("d",ptbins))
-mytheta = ROOT.TH1D("theta","theta",360,0,180)
+# mytheta = ROOT.TH1D("theta","theta",360,0,180)
 
+print("Entering event loop")
 counter = 0
 qelike_counter = 0
 hyp_counter = 0
@@ -278,7 +279,7 @@ for e in mytree:
         mypz_qelikehyp.Fill(Pl)
         mypt_qelikehyp.Fill(Pt)
         myrecoil_qelikehyp.Fill(Eav)
-
+print("Done with event loop")
 print("qelike counter: ", qelike_counter)
 print("hyperon counter: ", hyp_counter)
 print("qelikehyp counter: ", qelikehyp_counter)
