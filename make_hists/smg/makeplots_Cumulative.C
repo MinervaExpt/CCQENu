@@ -82,25 +82,25 @@ int main(const int argc, const char *argv[]) {
 	std::string configfilename(pl+".json");
 	NuConfig config;
   config.Read(configfilename);
-  
-  std::string path(pl);
-  std::string prescale; 
-  //= config.GetDouble("prescale");
-  prescale = std::string(argv[2]);
-  std::string base = path.substr(path.find_last_of("/\\") + 1);
-  std::string rootfilename = Form("%s_%s_%s.root",config.GetString("outRoot").c_str(),base.c_str(),prescale.c_str());
-  std::cout << "\nroot file: " << rootfilename << std::endl;
-  std::string rootfolder = rootfilename.substr(0, rootfilename.size()-5);
-  //std::filesystem::create_directory(rootfolder);
-  //std::filesystem::create_directory(Form("%s/1D",rootfolder));
-  //std::filesystem::create_directory(Form("%s/2D",rootfolder));
-  
-  std::vector<std::string> vars1D = config.GetStringVector("AnalyzeVariables");
-  std::vector<std::string> vars2D = config.GetStringVector("Analyze2DVariables");
-  std::vector<std::string> samples = config.GetStringVector("runsamples");
-  
-  double yscale = 1.2;
-	
+
+	std::string path(pl);
+	std::string prescale; 
+	//= config.GetDouble("prescale");
+	prescale = std::string(argv[2]);
+	std::string base = path.substr(path.find_last_of("/\\") + 1);
+	std::string rootfilename = Form("%s_%s_%s.root",config.GetString("outRoot").c_str(),base.c_str(),prescale.c_str());
+	std::cout << "\nroot file: " << rootfilename << std::endl;
+	std::string rootfolder = rootfilename.substr(0, rootfilename.size()-5);
+	//std::filesystem::create_directory(rootfolder);
+	//std::filesystem::create_directory(Form("%s/1D",rootfolder));
+	//std::filesystem::create_directory(Form("%s/2D",rootfolder));
+
+	std::vector<std::string> vars1D = config.GetStringVector("AnalyzeVariables");
+	std::vector<std::string> vars2D = config.GetStringVector("Analyze2DVariables");
+	std::vector<std::string> samples = config.GetStringVector("runsamples");
+
+	double yscale = 1.2;
+
 	TFile *infile = new TFile(Form(rootfilename.c_str()));
 	
 	for (auto sample : samples) {
@@ -252,7 +252,7 @@ int main(const int argc, const char *argv[]) {
 			gPad->RedrawAxis();			
 			
 			//c1->Print(Form("%s/1D/%s_%s.png",rootfolder.c_str(),sample.c_str(),vars1D[i].c_str()));
-			c1->Print(Form("binNorm_%s___%s___%s_%s.png",sample.c_str(),vars1D[i].c_str(),base.c_str(),prescale.c_str()));
+			c1->Print(Form("C_%s___%s___%s_%s.png",sample.c_str(),vars1D[i].c_str(),base.c_str(),prescale.c_str()));
 			
 		}
 	}

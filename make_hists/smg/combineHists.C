@@ -16,26 +16,26 @@ int main(const int argc, const char *argv[]) {
 	std::string configfilename = std::string(argv[1]);
 	NuConfig config;
 	std::cout << std::endl;
-  config.Read(configfilename);
-  
-  std::cout << std::endl;
-  config.Print();
-  
-  std::vector<std::string> infilenames = config.GetStringVector("infiles");
-  std::string outfilename = config.GetString("outfile");
-  TFile *outfile = new TFile(outfilename.c_str(),"RECREATE");
-  
-  int n_infiles = infilenames.size();
-  std::cout << std::endl << "Combining the following " << n_infiles << " files:" << std::endl;
-  for(int i=0; i<n_infiles; i++) {
-  	std::cout << "   " << infilenames[i] << std::endl;
-  }
-  std::cout << "to create new file " << outfilename << std::endl;
-	
+	config.Read(configfilename);
+
+	std::cout << std::endl;
+	config.Print();
+
+	std::vector<std::string> infilenames = config.GetStringVector("infiles");
+	std::string outfilename = config.GetString("outfile");
+	TFile *outfile = new TFile(outfilename.c_str(),"RECREATE");
+
+	int n_infiles = infilenames.size();
+	std::cout << std::endl << "Combining the following " << n_infiles << " files:" << std::endl;
+	for(int i=0; i<n_infiles; i++) {
+		std::cout << "   " << infilenames[i] << std::endl;
+	}
+	std::cout << "to create new file " << outfilename << std::endl;
+
 	// vectors of Data (X) and MC (Y) POTs
 	std::vector<double> Xs;
 	std::vector<double> Ys;
-	
+
 	// Loop over files to be combined
 	for(int i=0; i<n_infiles; i++) { // Skipping first infile because already "added"
 	

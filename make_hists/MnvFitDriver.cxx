@@ -265,6 +265,7 @@ int main(int argc, char* argv[]) {
     if (fitType == "FastChi2")type = fit::kFastChi2;
     if (fitType == "SlowChi2")type = fit::kSlowChi2;
     if (fitType == "ML")type = fit::kML;
+    //std::cout << " Fit type: " << type.name() << std::endl;
     std::cout << " Try to write it out " << std::endl;
     
     outputfile->cd();
