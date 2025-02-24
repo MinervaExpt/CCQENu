@@ -52,7 +52,7 @@ def isCCQELikeHyp(mytree, RHC=False):
     # badBaryons = [3112,3122,3212,3222,4112,4122,4212,4222,411,421,111]
     # Looking for hyperons
     badBaryons = [4112,4122,4212,4222,411,421,111]
-    hyperons = [3112,3122,3212,3222]
+    hyperons = [3112,3122,3212,3222,3224,3214,3114,3322,3312,3324,3314,3334]
 
     for p in range(0,nfsp):
         energy = Efsp[p]
@@ -75,7 +75,6 @@ def isCCQELikeHyp(mytree, RHC=False):
         else: return False
 
 def isCCQELike(mytree,RHC=False):
-
     #need 1 muon and no mesons and photons > 10 MeV in final state
 
     nfsp = mytree.nfsp
@@ -95,7 +94,7 @@ def isCCQELike(mytree,RHC=False):
     badMesons = [211,321,323,111,130,310,311,313,411,421]
     #probably addd the pi0 as well....
     #this also has hyperons (as bad baryons) in the signal)
-    badBaryons = [3112,3122,3212,3222,4112,4122,4212,4222,411,421,111]
+    badBaryons = [3112,3122,3212,3222,3224,3214,3114,3322,3312,3324,3314,3334,4112,4122,4212,4222,411,421,111]
     
     for p in range(0,nfsp):
         energy = Efsp[p]
@@ -117,6 +116,19 @@ def isCCQELike(mytree,RHC=False):
         # we do want protons now
         if n_muon == 1 and n_meson==0 and n_gamma==0 and n_baryon==0: return True
         else: return False
+
+def getHyperons(mytree):
+    nfsp  = mytree.nfsp
+    pdg = mytree.pdg
+    Efsp = mytree.E
+    hyp_type = 0
+    hyp_energy = 0.0
+    for i in range(0,nfsp):
+        if 3000<abs(pdg[i])<4000:
+            energy = Efsp[i]
+            hyp_type = abs(pdg[i])
+            hyp_energy = energy
+    return hyp_type,hyp_energy
 
 def getProtonMomentum(mytree):
     nfsp = mytree.nfsp
@@ -248,11 +260,47 @@ print("Done making histograms")
 # myptpz_rate = ROOT.TH2D("ptpz_rate","ptpz_rate",len(pzbins)-1, array.array("d",pzbins),len(ptbins)-1,array.array("d",ptbins))
 # mytheta = ROOT.TH1D("theta","theta",360,0,180)
 
+myhyptype_hist = ROOT.TH1D("myhyptype_hist","Hyperon types", 12,0,12)
+myhypE_hist = ROOT.TH1D("myhypE_hist","Hyperon Energy", 20,0,1.0)
+
+
 print("Entering event loop")
 counter = 0
 qelike_counter = 0
 hyp_counter = 0
 qelikehyp_counter = 0
+
+hyperons = [3112,3122,3212,3222,3224,3214,3114,3322,3312,3324,3314,3334]
+bin_pid = { 
+    3112: "#Sigma^{-}",
+    3122: "#Lambda",
+    3212: "#Sigma^{0}",
+    3222: "#Sigma^{+}",
+    3224: "#Sigma^{*+}",
+    3214: "#Sigma^{*0}",
+    3114: "#Sigma^{*-}",
+    3322: "#Xi^{0}",
+    3312: "#Xi^{-}",
+    3324: "#Xi^{*0}",
+    3314: "#Xi^{*-}",
+    3334: "#Omega^{-}"
+}
+
+hyp_index_dict = { 
+    3112: 1,
+    3122: 2,
+    3212: 3,
+    3222: 4,
+    3224: 5,
+    3214: 6,
+    3114: 7,
+    3322: 8,
+    3312: 9,
+    3324: 10,
+    3314: 11,
+    3334: 12
+}
+
 for e in mytree:
     coslep = e.CosLep
     #20 degree cut
@@ -274,19 +322,39 @@ for e in mytree:
         mypz_qelike.Fill(Pl)
         mypt_qelike.Fill(Pt)
         myrecoil_qelike.Fill(Eav)
+
+    hyp_type = 0
+    hypE = 0
     if isCCQELikeHyp(e,setRHC):
         qelikehyp_counter+=1
         mypz_qelikehyp.Fill(Pl)
         mypt_qelikehyp.Fill(Pt)
         myrecoil_qelikehyp.Fill(Eav)
+        hyp_type,hypE = getHyperons(e)
+        print("hyp_type: ",hyp_type)
+        hyp_index = hyp_index_dict[hyp_type]
+        myhyptype_hist.Fill(hyp_index-.0001)
+        myhypE_hist.Fill(hypE)
 
-    if counter%10000==0:
-        print(counter/1000, "k", end='\r')
+    # if counter%10000==0:
+    #     print(counter/1000, "k", end='\r')
+
+
 print("Done with event loop")
 print("qelike counter: ", qelike_counter)
 print("hyperon counter: ", hyp_counter)
 print("qelikehyp counter: ", qelikehyp_counter)
 print("Total Events: ", counter)
+
+hypbin = 1
+for bin in bin_pid.keys():
+    myhyptype_hist.GetXaxis().SetBinLabel(hypbin, bin_pid[bin])
+    hypbin+1
+
+myhyptype_hist.GetXaxis().SetTitle("Hyperons")
+myhyptype_hist.GetYaxis().SetTitle("N events")
+myhypE_hist.GetXaxis().SetTitle("Hyperon Energy")
+myhypE_hist.GetYaxis().SetTitle("arbitrary N events")
 
 mypz.GetXaxis().SetTitle("Muon p_{||} (GeV)")
 mypz.GetYaxis().SetTitle("d#sigma/dp_{||} cm^{2}/GeV/nucleon")
@@ -319,6 +387,9 @@ myrecoil_qelike.Write()
 mypz_qelikehyp.Write()
 mypt_qelikehyp.Write()
 myrecoil_qelikehyp.Write()
+
+myhyptype_hist.Write()
+myhypE_hist.Write()
 
 print("Done writing hists to ", ofilename)
 
