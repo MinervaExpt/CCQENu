@@ -5,7 +5,7 @@ import sys
 # Stolen from Amit's area. Used to do extraction of cross sections from raw GENIE v3 files for the purpose of comaprison.
 # Changes made by NHV to fit new QElike nubar analysis
 setRHC = True
-
+hyplite = True
 # def isPhaseSpace(mytree):
 #     nfsp = mytree.nfsp
 #     pdg = mytree.pdg
@@ -301,6 +301,7 @@ hyp_index_dict = {
     3334: 12
 }
 
+
 for e in mytree:
     coslep = e.CosLep
     #20 degree cut
@@ -335,6 +336,10 @@ for e in mytree:
         hyp_index = hyp_index_dict[hyp_type]
         myhyptype_hist.Fill(hyp_index-.0001)
         myhypE_hist.Fill(hypE)
+        # hyp_counter +=1
+
+    if hyplite & qelikehyp_counter==10000:
+        break
 
     # if counter%10000==0:
     #     print(counter/1000, "k", end='\r')
@@ -346,10 +351,10 @@ print("hyperon counter: ", hyp_counter)
 print("qelikehyp counter: ", qelikehyp_counter)
 print("Total Events: ", counter)
 
-hypbin = 1
-for bin in bin_pid.keys():
-    myhyptype_hist.GetXaxis().SetBinLabel(hypbin, bin_pid[bin])
-    hypbin+1
+# hypbin = 1
+for pid in bin_pid.keys():
+    myhyptype_hist.GetXaxis().SetBinLabel(hyp_index_dict[pid], bin_pid[pid])
+    # hypbin+=1
 
 myhyptype_hist.GetXaxis().SetTitle("Hyperons")
 myhyptype_hist.GetYaxis().SetTitle("N events")
