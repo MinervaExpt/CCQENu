@@ -275,7 +275,9 @@ print("Done making histograms")
 # mytheta = ROOT.TH1D("theta","theta",360,0,180)
 
 myhyptype_hist = ROOT.TH1D("myhyptype_hist","Hyperon types", 12,0,12)
-myhypE_hist = ROOT.TH1D("myhypE_hist","Hyperon Energy", 20,0,1.0)
+myLambdaE_hist = ROOT.TH1D("myLambdaE_hist","Lambda Energy", 20,0,1.0)
+mySigmaMinusE_hist = ROOT.TH1D("mySigmaMinusE_hist","Sigma- Energy", 20,0,1.0)
+mySigmaZeroE_hist = ROOT.TH1D("mySigmaZeroE_hist","Sigma0 Energy", 20,0,1.0)
 
 
 print("Entering event loop")
@@ -349,11 +351,17 @@ for e in mytree:
         # print("hyp_type: ",hyp_type)
         hyp_index = hyp_index_dict[hyp_type]
         myhyptype_hist.Fill(hyp_index-.0001)
-        myhypE_hist.Fill(hypE)
+        # myhypE_hist.Fill(hypE)
+        if hyp_index==3122:
+            myLambdaE_hist.Fill(hypE)
+        if hyp_index==3112:
+            mySigmaMinusE_hist.Fill(hypE)
+        if hyp_index==3212:
+            mySigmaZeroE_hist.Fill(hypE)
         # hyp_counter +=1
 
-    if hyplite & qelikehyp_counter==10000:
-        break
+    # if hyplite & qelikehyp_counter==10000:
+    #     break
 
     # if counter%10000==0:
     #     print(counter/1000, "k", end='\r')
@@ -372,8 +380,12 @@ for pid in bin_pid.keys():
 
 myhyptype_hist.GetXaxis().SetTitle("Hyperons")
 myhyptype_hist.GetYaxis().SetTitle("N events")
-myhypE_hist.GetXaxis().SetTitle("Hyperon Energy")
-myhypE_hist.GetYaxis().SetTitle("arbitrary N events")
+myLambdaE_hist.GetXaxis().SetTitle("Lambda Energy")
+myLambdaE_hist.GetYaxis().SetTitle("arbitrary N events")
+mySigmaMinusE_hist.GetXaxis().SetTitle("SigmaMinus Energy")
+mySigmaMinusE_hist.GetYaxis().SetTitle("arbitrary N events")
+mySigmaZeroE_hist.GetXaxis().SetTitle("Sigma0 Energy")
+mySigmaZeroE_hist.GetYaxis().SetTitle("arbitrary N events")
 
 mypz.GetXaxis().SetTitle("Muon p_{||} (GeV)")
 mypz.GetYaxis().SetTitle("d#sigma/dp_{||} cm^{2}/GeV/nucleon")
@@ -408,7 +420,9 @@ mypt_qelikehyp.Write()
 myrecoil_qelikehyp.Write()
 
 myhyptype_hist.Write()
-myhypE_hist.Write()
+myLambdaE_hist.Write()
+mySigmaMinusE_hist.Write()
+mySigmaZeroE_hist.Write()
 
 print("Done writing hists to ", ofilename)
 
