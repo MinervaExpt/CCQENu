@@ -355,11 +355,11 @@ for e in mytree:
         if hypE > maxhypE:
             maxhypE = hypE
             print("tmpmaxhypE: ",maxhypE)
-        if hyp_index==3122:
+        if hyp_type==3122:
             myLambdaE_hist.Fill(hypE)
-        if hyp_index==3112:
+        if hyp_type==3112:
             mySigmaMinusE_hist.Fill(hypE)
-        if hyp_index==3212:
+        if hyp_type==3212:
             mySigmaZeroE_hist.Fill(hypE)
         # hyp_counter +=1
 
