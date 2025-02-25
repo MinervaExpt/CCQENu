@@ -276,9 +276,9 @@ print("Done making histograms")
 # mytheta = ROOT.TH1D("theta","theta",360,0,180)
 
 myhyptype_hist = ROOT.TH1D("myhyptype_hist","Hyperon types", 12,0,12)
-myLambdaE_hist = ROOT.TH1D("myLambdaE_hist","Lambda Energy", 20,0,1.0)
-mySigmaMinusE_hist = ROOT.TH1D("mySigmaMinusE_hist","Sigma- Energy", 20,0,1.0)
-mySigmaZeroE_hist = ROOT.TH1D("mySigmaZeroE_hist","Sigma0 Energy", 20,0,1.0)
+myLambdaE_hist = ROOT.TH1D("myLambdaE_hist","Lambda Energy", 30,0.,15.0)
+mySigmaMinusE_hist = ROOT.TH1D("mySigmaMinusE_hist","Sigma- Energy", 30,0.,15.0)
+mySigmaZeroE_hist = ROOT.TH1D("mySigmaZeroE_hist","Sigma0 Energy", 30,0.,15.0)
 
 hyperons = [3112,3122,3212,3222,3224,3214,3114,3322,3312,3324,3314,3334]
 bin_pid = { 
