@@ -12,6 +12,20 @@ hyplite = True
 #     for p in range(0,nfsp):
 #     if(pdg[p]==-13): n_muon+=1 # doesn't this need to be mu plus?
 
+hyperon_mass_dict = {
+    3112: 1197.449 ,
+    3122: 1115.683,
+    3212: 1192.642,
+    3222: 1189.37,
+    3224: 1382.8,
+    3214: 1383.7,
+    3114: 1387.2,
+    3322: 1314.86,
+    3312: 1321.71,
+    3324: 1531.80,
+    3314: 1535.0,
+    3334: 1672.45
+}
 
 def isHyperon(mytree):
     nfsp  = mytree.nfsp
@@ -127,7 +141,7 @@ def getHyperons(mytree):
         if 3000<abs(pdg[i])<4000:
             energy = Efsp[i]
             hyp_type = abs(pdg[i])
-            hyp_energy = energy
+            hyp_energy = energy - hyperon_mass_dict[abs(pdg[i])]
     return hyp_type,hyp_energy
 
 def getProtonMomentum(mytree):
@@ -332,7 +346,7 @@ for e in mytree:
         mypt_qelikehyp.Fill(Pt)
         myrecoil_qelikehyp.Fill(Eav)
         hyp_type,hypE = getHyperons(e)
-        print("hyp_type: ",hyp_type)
+        # print("hyp_type: ",hyp_type)
         hyp_index = hyp_index_dict[hyp_type]
         myhyptype_hist.Fill(hyp_index-.0001)
         myhypE_hist.Fill(hypE)
