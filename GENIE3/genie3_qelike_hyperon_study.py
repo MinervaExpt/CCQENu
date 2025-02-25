@@ -141,7 +141,8 @@ def getHyperons(mytree):
         if 3000<abs(pdg[i])<4000:
             energy = Efsp[i]
             hyp_type = abs(pdg[i])
-            hyp_energy = energy - (hyperon_mass_dict[abs(pdg[i])]*.0001)
+            # hyp_energy = energy - (hyperon_mass_dict[abs(pdg[i])]*.0001)
+            hyp_energy = energy
     return hyp_type,hyp_energy
 
 def getProtonMomentum(mytree):
@@ -279,13 +280,6 @@ myLambdaE_hist = ROOT.TH1D("myLambdaE_hist","Lambda Energy", 20,0,1.0)
 mySigmaMinusE_hist = ROOT.TH1D("mySigmaMinusE_hist","Sigma- Energy", 20,0,1.0)
 mySigmaZeroE_hist = ROOT.TH1D("mySigmaZeroE_hist","Sigma0 Energy", 20,0,1.0)
 
-
-print("Entering event loop")
-counter = 0
-qelike_counter = 0
-hyp_counter = 0
-qelikehyp_counter = 0
-
 hyperons = [3112,3122,3212,3222,3224,3214,3114,3322,3312,3324,3314,3334]
 bin_pid = { 
     3112: "#Sigma^{-}",
@@ -317,6 +311,12 @@ hyp_index_dict = {
     3334: 12
 }
 
+print("Entering event loop")
+counter = 0
+qelike_counter = 0
+hyp_counter = 0
+qelikehyp_counter = 0
+maxhypE = 0.0
 
 for e in mytree:
     coslep = e.CosLep
@@ -352,6 +352,9 @@ for e in mytree:
         hyp_index = hyp_index_dict[hyp_type]
         myhyptype_hist.Fill(hyp_index-.0001)
         # myhypE_hist.Fill(hypE)
+        if hypE > maxhypE:
+            maxhypE = hypE
+            print("tmpmaxhypE: ",maxhypE)
         if hyp_index==3122:
             myLambdaE_hist.Fill(hypE)
         if hyp_index==3112:
@@ -372,7 +375,7 @@ print("qelike counter: ", qelike_counter)
 print("hyperon counter: ", hyp_counter)
 print("qelikehyp counter: ", qelikehyp_counter)
 print("Total Events: ", counter)
-
+print("maxhypE: ",maxhypE)
 # hypbin = 1
 for pid in bin_pid.keys():
     myhyptype_hist.GetXaxis().SetBinLabel(hyp_index_dict[pid], bin_pid[pid])
