@@ -13,18 +13,18 @@ hyplite = True
 #     if(pdg[p]==-13): n_muon+=1 # doesn't this need to be mu plus?
 
 hyperon_mass_dict = {
-    3112: 1197.449 ,
-    3122: 1115.683,
-    3212: 1192.642,
-    3222: 1189.37,
-    3224: 1382.8,
-    3214: 1383.7,
-    3114: 1387.2,
-    3322: 1314.86,
-    3312: 1321.71,
-    3324: 1531.80,
-    3314: 1535.0,
-    3334: 1672.45
+    3112: 1.197449,
+    3122: 1.115683,
+    3212: 1.192642,
+    3222: 1.18937,
+    3224: 1.3828,
+    3214: 1.3837,
+    3114: 1.3872,
+    3322: 1.31486,
+    3312: 1.32171,
+    3324: 1.53180,
+    3314: 1.5350,
+    3334: 1.67245
 }
 
 def isHyperon(mytree):
@@ -141,7 +141,7 @@ def getHyperons(mytree):
         if 3000<abs(pdg[i])<4000:
             energy = Efsp[i]
             hyp_type = abs(pdg[i])
-            hyp_energy = energy - (hyperon_mass_dict[abs(pdg[i])]*.0001)
+            hyp_energy = energy - hyperon_mass_dict[hyp_type]
             # hyp_energy = energy
     return hyp_type,hyp_energy
 
@@ -223,25 +223,25 @@ def getPn(e):
     muonPtVect.SetZ(0)
 
 
-    pn = -99;
-    Mn = 939.5654133/1000;
-    Mp = 938.2720813/1000;
-    Mmu = 105.6583745/1000;
-    MA = 6*Mn + 6*Mp - 92.162/1000;
-    Bin=27.13/1000;
-    MAstar = MA - Mn + Bin;
+    pn = -99
+    Mn = 939.5654133/1000
+    Mp = 938.2720813/1000
+    Mmu = 105.6583745/1000
+    MA = 6*Mn + 6*Mp - 92.162/1000
+    Bin=27.13/1000
+    MAstar = MA - Mn + Bin
+
+    Epprim = ROOT.TMath.Sqrt(Mp*Mp + promom.Mag2())
+    kprimL = mumom.Z()
+    pprimL = promom.Z()
+    Eprim = ROOT.TMath.Sqrt(Mmu*Mmu+mumom.Mag2())
     
-    Epprim = ROOT.TMath.Sqrt(Mp*Mp + promom.Mag2());
-    kprimL = mumom.Z();
-    pprimL = promom.Z();
-    Eprim = ROOT.TMath.Sqrt(Mmu*Mmu+mumom.Mag2());
-    
-    factor = MA - Eprim - Epprim + kprimL + pprimL;
-    pT = (protonPtVect+muonPtVect).Mag();
-    pL = -(MAstar*MAstar + pT*pT-factor*factor)/2.0/factor;
+    factor = MA - Eprim - Epprim + kprimL + pprimL
+    pT = (protonPtVect+muonPtVect).Mag()
+    pL = -(MAstar*MAstar + pT*pT-factor*factor)/2.0/factor
     
 
-    pn = ROOT.TMath.Sqrt(pL*pL + pT*pT);
+    pn = ROOT.TMath.Sqrt(pL*pL + pT*pT)
     return pn
 
 
