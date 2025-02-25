@@ -141,7 +141,7 @@ def getHyperons(mytree):
         if 3000<abs(pdg[i])<4000:
             energy = Efsp[i]
             hyp_type = abs(pdg[i])
-            hyp_energy = energy - hyperon_mass_dict[abs(pdg[i])]
+            hyp_energy = energy - (hyperon_mass_dict[abs(pdg[i])]*.0001)
     return hyp_type,hyp_energy
 
 def getProtonMomentum(mytree):
