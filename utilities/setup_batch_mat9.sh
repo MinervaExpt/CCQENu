@@ -22,6 +22,7 @@ spack load root@6.28.12%gcc@12.2.0
 spack load cmake
 spack load gcc
 spack load fife-utils
+spack load ifdhc@2.7.2
 
 #setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
 #setup ifdhc -z /cvmfs/fermilab.opensciencegrid.org/products/common/db
@@ -45,6 +46,7 @@ export JSONCPP_DIR=$BASEDIR/jsoncpp-build # need to change this probably
 export LD_LIBRARY_PATH=$RUNDIR:$JSONCPP_DIR/lib:$LD_LIBRARY_PATH
 export PYTHONPATH=$RUNDIR/python:$BASEDIR/MAT-MINERvA/python:$BASEDIR/MAT-MINERvA/python/PlotUtils:$PYTHONPATH
 export DATALOC=remote
+export IFDH_DEBUG=10
 echo "------------ CHECK THE VOMS PROXY and the X509"
 voms-proxy-info --all
 echo $X509_USER_PROXY

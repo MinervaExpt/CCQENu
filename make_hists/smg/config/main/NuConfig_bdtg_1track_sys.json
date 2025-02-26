@@ -34,7 +34,7 @@
                       "SecProtonFractionVisEnergyInCone_1",
                       "ImprovedMichel_Sum_Views","ImprovedMichel_0_Views","ImprovedMichelCount",
                       "BlobCount","MuonToPrimaryProtonAngle"],
-  "Analyze2DVariables":[],
+  "Analyze2DVariables":["bdtgQELike_Q2QE"],
   "_Analyze2DVariables":["bdtgQELike_ptmu","bdtgQELike_pzmu","bdtgQELike_Q2QE","bdtgQELike_EnuCCQE",
                         "bdtgQELike_NBlobs","bdtgQELike_ImprovedMichelCount","bdtgQELike_Multiplicity",
                         "bdtgQELike_bdtg1ChargedPion","bdtg1ChargedPion_bdtg1NeutralPion","bdtgQELike_bdtgMultiPion",
