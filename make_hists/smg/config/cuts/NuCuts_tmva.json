@@ -27,6 +27,25 @@
 		{"name":"NoDeadTime","max":1,"variable":"DeadTime"},
 		{"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
 	],
+        "1track_MultiPionCut":[
+		{"name":"bdtgMultiPion","max":0.2,"variable":"bdtgMultiPion"},
+                {"name":"Multiplicity","min":1,"variable":"Multiplicity"},
+                {"name":"NumberOfProtonCandidates","equals":0,"variable":"NumberOfProtonCandidates"},
+                {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+                {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+                {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+                {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+        ],
+        "2track_MultiPionCut":[
+		{"name":"bdtgMultiPion","max":0.2,"variable":"bdtgMultiPion"},
+                {"name":"Multiplicity","min":1,"variable":"Multiplicity"},
+                {"name":"PrimaryProtonScore1","min":0,"variable":"PrimaryProtonScore1"},
+                {"name":"NumberOfProtonCandidates","equals":1,"variable":"NumberOfProtonCandidates"},
+                {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
+                {"name":"MaxMuonAngleInDegrees","max":20.,"variable":"ThetamuDegrees"},
+                {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+                {"name":"HasVertex","equals":1,"variable":"HasInteractionVertex"}
+        ],
 	"3ptrack":[
 		{"name":"Multiplicity","min":1,"variable":"Multiplicity"},
 		{"name":"PrimaryProtonScore1","min":0,"variable":"PrimaryProtonScore1"},
