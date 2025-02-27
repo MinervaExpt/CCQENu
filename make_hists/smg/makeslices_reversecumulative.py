@@ -184,16 +184,22 @@ total_1chargedpion = h_1chargedpion.Integral(1,nbinX+1)
 total_multipion = h_multipion.Integral(1,nbinX+1)
 total_other = h_other.Integral(1,nbinX+1)
 
+sums_qelike = {}
+sums_1chargedpion = {}
+sums_multipion = {}
+sums_other = {}
+
 for i in range(1,nbinX+1):
-	sum_qelike = h_qelike.Integral(i,nbinX+1)
-	sum_1chargedpion = h_1chargedpion.Integral(i,nbinX+1)
-	sum_multipion = h_multipion.Integral(i,nbinX+1)
-	sum_other = h_other.Integral(i,nbinX+1)
-	
-	h_qelike.SetBinContent(i,sum_qelike/total_qelike)
-	h_1chargedpion.SetBinContent(i,sum_1chargedpion/total_1chargedpion)
-	h_multipion.SetBinContent(i,sum_multipion/total_multipion)
-	h_other.SetBinContent(i,sum_other/total_other)
+	sums_qelike[i] = h_qelike.Integral(i,nbinX+1)
+	sums_1chargedpion[i] = h_1chargedpion.Integral(i,nbinX+1)
+	sums_multipion[i] = h_multipion.Integral(i,nbinX+1)
+	sums_other[i] = h_other.Integral(i,nbinX+1)
+
+for i in range(1,nbinX+1):	
+	h_qelike.SetBinContent(i,sums_qelike[i]/total_qelike)
+	h_1chargedpion.SetBinContent(i,sums_1chargedpion[i]/total_1chargedpion)
+	h_multipion.SetBinContent(i,sums_multipion[i]/total_multipion)
+	h_other.SetBinContent(i,sums_other[i]/total_other)
 
 
 pad_qelike.cd()

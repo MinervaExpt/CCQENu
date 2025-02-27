@@ -1,123 +1,196 @@
+import sys,os,math
 import ROOT
-from ROOT import TCanvas, TPad, TFile, TPaveLabel, TPaveText, TH1F, TH2F, TLegend
-from ROOT import gROOT
-from array import array
-from pathlib import Path
+from ROOT import gROOT,gStyle,TFile,THStack,TH1D,TCanvas,TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex,TString,TText
 
 
-Path("SB_NuConfig_mult1pBDTG_me1N_1/2D").mkdir(parents=True, exist_ok=True)
+ROOT.gStyle.SetOptStat(0)
 
-styles = ["BOX","COLZ","CONT4Z"]
-interactions = ["data","qelike","1chargedpion","1neutralpion","multipion","other"]
-vars2d = ["bdtgQELike_ptmu",
-          "bdtgQELike_pzmu",
-          "bdtgQELike_Q2QE",
-          "bdtgQELike_EnuCCQE",
-          "bdtgQELike_NBlobs",
-          "bdtgQELike_ImprovedMichelCount",
-          "bdtgQELike_Multiplicity",
-          "bdtgQELike_PrimaryProtonScore1",
-          "bdtgQELike_SecProtonScore1_1",
-          "bdtgQELike_SecProtonScore1_2",
-          "bdtgQELike_NumClustsPrimaryProtonEnd",
-          "bdtgQELike_NumClustsSecProtonEnd_1",
-          "bdtgQELike_NumClustsSecProtonEnd_2",
-          "bdtgQELike_PrimaryProtonTrackVtxGap",
-          "bdtgQELike_SecProtonTrackVtxGap_1",
-          "bdtgQELike_SecProtonTrackVtxGap_2",
-          "bdtgQELike_PrimaryProtonTfromdEdx",
-          "bdtgQELike_SecProtonTfromdEdx_1",
-          "bdtgQELike_SecProtonTfromdEdx_2",
-          "bdtgQELike_PrimaryProtonFractionVisEnergyInCone",
-          "bdtgQELike_SecProtonFractionVisEnergyInCone_1",
-          "bdtgQELike_SecProtonFractionVisEnergyInCone_2",
-          "bdtgQELike_NumberOfProtonCandidates",
-          "bdtgQELike_bdtg1ChargedPion",
-          "bdtg1ChargedPion_bdtg1NeutralPion"]
-          
-rfile = "SB_NuConfig_mult1pBDTG_me1N_1.root"
-f = TFile(rfile)
-      
-for style in styles:
-	for var in vars2d:
-	
-		c1 = TCanvas( "c1", var+"___"+style, 200, 10, 1500, 900 )
+def CCQECanvas(name,title,xsize=1000,ysize=750):
+	c2 = ROOT.TCanvas(name,title,xsize,ysize)
+	c2.SetLeftMargin(0.20)
+	c2.SetRightMargin(0.05)
+	c2.SetBottomMargin(0.15)
+	return c2
 
-		pad_qe = TPad( "qelike",       "qelike",       0.01, 0.46, 0.34, 0.92, 21)
-		pad_1c = TPad( "1chargedpion", "1chargedpion", 0.34, 0.46, 0.67, 0.92, 21)
-		pad_1n = TPad( "1neutralpion", "1neutralpion", 0.67, 0.46, 1.0,  0.92, 21)
-		pad_mp = TPad( "multipion",    "multipion",    0.01, 0.0,  0.34, 0.46, 21)
-		pad_ot = TPad( "other",        "other",        0.34, 0.0,  0.67, 0.46, 21)
-		pad_dt = TPad( "data",         "data",         0.67, 0.0,  1.0,  0.46, 21)
+def CCQELegend(xlow,ylow,xhigh,yhigh):
+	leg = ROOT.TLegend(xlow,ylow,xhigh,yhigh)
+	leg.SetFillStyle(0)
+	leg.SetBorderSize(1)
+	leg.SetTextSize(0.035)
+	return leg
 
-		pad_qe.SetGrid()
-		pad_1c.SetGrid()
-		pad_1n.SetGrid()
-		pad_mp.SetGrid()
-		pad_ot.SetGrid()
-		pad_dt.SetGrid()
+filename = "SB_NuConfig_bdtg_MAD_2track_me1N_1_testing.root"
+noData = True;
+variables = ["ptmu","pzmu","Q2QE","bdtgQELike","bdtg1ChargedPion",
+	"bdtg1NeutralPion","bdtgMultiPion","bdtgOther"]
 
-		pad_qe.SetFillColor(0)
-		pad_1c.SetFillColor(0)
-		pad_1n.SetFillColor(0)
-		pad_mp.SetFillColor(0)
-		pad_ot.SetFillColor(0)
-		pad_dt.SetFillColor(0)
+scaleX = ["Q2QE"]
+scaleY = ["Q2QE","bdtg1NeutralPion","bdtgQELike"]
 
-		pad_qe.Draw()
-		pad_1c.Draw()
-		pad_1n.Draw()
-		pad_mp.Draw()
-		pad_ot.Draw()
-		pad_dt.Draw()
-		
-		title = TPaveLabel( 0.1, 0.94, 0.9, 0.98, var )
-		title.SetFillColor( 0 )
-		title.SetTextFont( 52 )
-		title.Draw()
-		
-		pad_qe.cd()
-		h2D_qe = gROOT.FindObject( "h2D___Mult1p___qelike___"+var+"___reconstructed" )
-		h2D_qe.SetTitle("qelike")
-		h2D_qe.SetStats(0)
-		h2D_qe.Draw(style)
-		
-		pad_1c.cd()
-		h2D_1c = gROOT.FindObject( "h2D___Mult1p___1chargedpion___"+var+"___reconstructed" )
-		h2D_1c.SetTitle("1chargedpion")
-		h2D_1c.SetStats(0)
-		h2D_1c.Draw(style)
-		
-		pad_1n.cd()
-		h2D_1n = gROOT.FindObject( "h2D___Mult1p___1neutralpion___"+var+"___reconstructed" )
-		h2D_1n.SetTitle("1neutralpion")
-		h2D_1n.SetStats(0)
-		h2D_1n.Draw(style)
-		
-		pad_mp.cd()
-		h2D_mp = gROOT.FindObject( "h2D___Mult1p___multipion___"+var+"___reconstructed" )
-		h2D_mp.SetTitle("multipion")
-		h2D_mp.SetStats(0)
-		h2D_mp.Draw(style)
-		
-		pad_ot.cd()
-		h2D_ot = gROOT.FindObject( "h2D___Mult1p___other___"+var+"___reconstructed" )
-		h2D_ot.SetTitle("other")
-		h2D_ot.SetStats(0)
-		h2D_ot.Draw(style)
-		
-		pad_dt.cd()
-		h2D_dt = gROOT.FindObject( "h2D___Mult1p___data___"+var+"___reconstructed" )
-		h2D_dt.SetTitle("data")
-		h2D_dt.SetStats(0)
-		h2D_dt.Draw(style)
-			
-		c1.SaveAs("SB_NuConfig_mult1pBDTG_me1N_1/2D/"+var+"___2D_"+style+".pdf")
-		
-		del c1,pad_qe,pad_1c,pad_1n,pad_mp,pad_ot,pad_dt,h2D_qe,h2D_1c,h2D_1n,h2D_mp,h2D_ot,h2D_dt
-		
+colors = {
+    "qelike":TColor.GetColor(0,133,173),#ROOT.kMagenta-4,
+    "1chargedpion":TColor.GetColor(175,39,47),#ROOT.kBlue-7,
+    "multipion":TColor.GetColor(234,170,0),#ROOT.kRed-4,
+    "other1neutralpion":TColor.GetColor(76,140,43)#ROOT.kGreen-3
+}
+legend_labels = {
+    "qelike":"QELike",
+    "1chargedpion":"Single #pi^{+/-} in FS",
+    "multipion":"N#pi in FS",
+    "other1neutralpion":"Other"
+}
 
+variable_limits = {
+	"bdtgQELike":[0.0,1.0]
+}
 
+f = TFile.Open(filename,"READONLY")
+dirname = filename.replace(".root","")
+if not os.path.exists(dirname): os.mkdir(dirname)
+
+keys = f.GetListOfKeys()
+
+h_pot = TH1D()
+h_pot = f.Get("POT_summary")
+dataPOT = h_pot.GetBinContent(1)
+mcPOTprescaled = h_pot.GetBinContent(3)
+POTScale = dataPOT / mcPOTprescaled
+
+for var in variables:
+
+	cc = CCQECanvas("canvas","canvas")
+	if var in scaleX: cc.SetLogx()
+	if var in scaleY: cc.SetLogy()
+
+	h_data = f.Get("h___2track___data___"+var+"___reconstructed")
+	h_qelike = f.Get("h___2track___qelike___"+var+"___reconstructed")
+	h_1chargedpion = f.Get("h___2track___1chargedpion___"+var+"___reconstructed")
+	h_multipion = f.Get("h___2track___multipion___"+var+"___reconstructed")
+	h_other = f.Get("h___2track___other1neutralpion___"+var+"___reconstructed")
+
+	h_qelike.SetLineColor(TColor.GetColor(0,133,173))
+	h_1chargedpion.SetLineColor(TColor.GetColor(175,39,47))
+	h_multipion.SetLineColor(TColor.GetColor(234,170,0))
+	h_other.SetLineColor(TColor.GetColor(76,140,43))
+
+	h_qelike.SetFillColor(TColor.GetColor(0,133,173))
+	h_1chargedpion.SetFillColor(TColor.GetColor(175,39,47))
+	h_multipion.SetFillColor(TColor.GetColor(234,170,0))
+	h_other.SetFillColor(TColor.GetColor(76,140,43))
+
+	h_qelike.SetFillStyle(3001)
+	h_1chargedpion.SetFillStyle(3001)
+	h_multipion.SetFillStyle(3001)
+	h_other.SetFillStyle(3001)
+
+	h_qelike.Scale(POTScale,"width")
+	h_1chargedpion.Scale(POTScale,"width")
+	h_multipion.Scale(POTScale,"width")
+	h_other.Scale(POTScale,"width")
+
+	nbins = h_data.GetNbinsX()
+	if var not in variable_limits.keys():
+		xmin = h_data.GetBinLowEdge(1)
+		xmax = h_data.GetBinLowEdge(nbins+1)
+	else:
+		xmin = variable_limits[var][0]
+		xmax = variable_limits[var][1]
+		
+	h_data.GetXaxis().SetRangeUser(xmin,xmax)
+	h_qelike.GetXaxis().SetRangeUser(xmin,xmax)
+	h_1chargedpion.GetXaxis().SetRangeUser(xmin,xmax)
+	h_multipion.GetXaxis().SetRangeUser(xmin,xmax)
+	h_other.GetXaxis().SetRangeUser(xmin,xmax)
+		
+	centerX = (xmax+xmin)/2
+
+	title = "2track:"+" "+var
+
+	h_data.SetTitle(title)
+	h_data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
+	h_data.GetXaxis().CenterTitle(True)
+	h_data.GetYaxis().CenterTitle(True)
+	h_data.SetMarkerStyle(8)
+	h_data.SetLineWidth(2)
+	h_data.SetLabelFont(42)
+	h_data.SetTitleFont(42)
+	h_data.SetLabelSize(0.03,"x");
+	h_data.SetTitleSize(0.04,"x");
+	h_data.SetLabelSize(0.03,"y");
+	h_data.SetTitleSize(0.04,"y");
+	h_data.SetTickLength(0.01, "Y");
+	h_data.SetTickLength(0.02, "X");
+	h_data.SetNdivisions(510, "XYZ");
+
+	#leg = CCQELegend(centerX-0.15,0.73,centerX+0.09,0.89)
+	leg = CCQELegend(0.705,0.73,0.942,0.89)
+	leg.SetNColumns(1)
+	if not noData: leg.AddEntry(h_data,"Data","pe")
+	leg.AddEntry(h_qelike,"QELike",'f')
+	leg.AddEntry(h_1chargedpion,"Single #pi^{+/-} in FS","f")
+	leg.AddEntry(h_multipion,"N#pi in FS","f")
+	leg.AddEntry(h_other,"Other","f")
+
+	stack = THStack("stack","stack")
+	stack.Add(h_qelike)
+	stack.Add(h_1chargedpion)
+	stack.Add(h_multipion)
+	stack.Add(h_other)
+
+	dmax = h_data.GetMaximum()
+	smax = stack.GetMaximum()
+	if noData:
+		dmax = 0.0
+	if smax > dmax:
+		h_data.SetMaximum(smax*1.1)
+		stack.SetMaximum(smax*1.1)
+		tmax = smax
+	else:
+		h_data.SetMaximum(dmax*1.1)
+		stack.SetMaximum(dmax*1.1)
+		tmax = dmax
+
+	if not noData: 
+		h_data.Draw("PE")
+		stack.Draw("hist same")
+		h_data.GetXaxis().SetRangeUser(xmin, xmax)
+	else:
+		h_data.Reset()
+		h_data.Draw("hist")  # need to this to get the axis titles from data
+		stack.Draw("hist same")
+		h_data.GetXaxis().SetRangeUser(xmin, xmax)
+	if not noData: 
+		h_data.Draw("PE same")
+		
+	text = TLatex(0.852,0.714,"MINER#nuA Preliminary")
+	text.SetNDC()
+	text.SetTextAlign(22)
+	text.SetTextColor(ROOT.kRed)
+	text.SetTextFont(13)
+	text.SetTextSize(20)
+
+	text.Draw()
+	leg.Draw()
+	cc.SetLeftMargin(0.12)
+	cc.SetBottomMargin(0.12)
+	cc.RedrawAxis()
+	cc.Draw()
+	cc.Print("SB_NuConfig_bdtg_MAD_2track_me1N_1_testing/2track_"+var+".png")
+	cc.Close()
+
+	del h_data
+	del h_qelike
+	del h_1chargedpion
+	del h_multipion
+	del h_other
+	del stack
+	del leg
+	del text
+	del tmax
+	del dmax
+	del smax
+	del title
+	del cc
 
 
 

@@ -19,7 +19,7 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
 	leg.SetTextSize(0.035)
 	return leg
 
-i = int(sys.argv[1])
+bin_i = int(sys.argv[1])
 filename = "SB_NuConfig_bdtg_MAD_2track_me1N_1_testing.root"
 noData = True;
 
@@ -53,38 +53,13 @@ dataPOT = h_pot.GetBinContent(1)
 mcPOTprescaled = h_pot.GetBinContent(3)
 POTScale = dataPOT / mcPOTprescaled
 
-#h2D_data = f.Get("h2D___2track___data___bdtgQELike_Q2QE___reconstructed")
-#h2D_qelike = f.Get("h2D___2track___qelike___bdtgQELike_Q2QE___reconstructed")
-#h2D_1chargedpion = f.Get("h2D___2track___1chargedpion___bdtgQELike_Q2QE___reconstructed")
-#h2D_multipion = f.Get("h2D___2track___multipion___bdtgQELike_Q2QE___reconstructed")
-#h2D_other = f.Get("h2D___2track___other1neutralpion___bdtgQELike_Q2QE___reconstructed")
-
-#h_data = TH1D()
-#h_qelike = TH1D()
-#h_1chargedpion = TH1D()
-#h_multipion = TH1D()
-#h_other = TH1D()
-
 cc = CCQECanvas("canvas","canvas")
 
-#h_data = h2D_data.Projection("data",1,i,i,"")
-#h_qelike = h2D_qelike.Projection("qelike",1,i,i,"")
-#h_1chargedpion = h2D_1chargedpion.Projection("1chargedpion",1,i,i,"")
-#h_multipion = h2D_multipion.Projection("multipion",1,i,i,"")
-#h_other = h2D_other.Projection("other",1,i,i,"")
-
-h2D_data = f.Get("h2D___2track___data___bdtgQELike_Q2QE___reconstructed")
-lows = {}
-highs = {}
-for j in range(1,h2D_data.GetNbinsY()):
-	lows[j] = h2D_data.GetYaxis().GetBinLowEdge(j)
-	highs[j] = h2D_data.GetYaxis().GetBinLowEdge(j+1)
-
-h_data = f.Get("h2D___2track___data___bdtgQELike_Q2QE___reconstructed").Projection("data",1,i,i,"")
-h_qelike = f.Get("h2D___2track___qelike___bdtgQELike_Q2QE___reconstructed").Projection("qelike",1,i,i,"")
-h_1chargedpion = f.Get("h2D___2track___1chargedpion___bdtgQELike_Q2QE___reconstructed").Projection("1chargedpion",1,i,i,"")
-h_multipion = f.Get("h2D___2track___multipion___bdtgQELike_Q2QE___reconstructed").Projection("multipion",1,i,i,"")
-h_other = f.Get("h2D___2track___other1neutralpion___bdtgQELike_Q2QE___reconstructed").Projection("other",1,i,i,"")
+h_data = f.Get("h2D___2track___data___bdtgQELike_Q2QE___reconstructed").Projection("data",1,bin_i,bin_i,"")
+h_qelike = f.Get("h2D___2track___qelike___bdtgQELike_Q2QE___reconstructed").Projection("qelike",1,bin_i,bin_i,"")
+h_1chargedpion = f.Get("h2D___2track___1chargedpion___bdtgQELike_Q2QE___reconstructed").Projection("1chargedpion",1,bin_i,bin_i,"")
+h_multipion = f.Get("h2D___2track___multipion___bdtgQELike_Q2QE___reconstructed").Projection("multipion",1,bin_i,bin_i,"")
+h_other = f.Get("h2D___2track___other1neutralpion___bdtgQELike_Q2QE___reconstructed").Projection("other",1,bin_i,bin_i,"")
 
 h_qelike.SetLineColor(TColor.GetColor(0,133,173))
 h_1chargedpion.SetLineColor(TColor.GetColor(175,39,47))
@@ -106,35 +81,31 @@ h_1chargedpion.Scale(POTScale,"width")
 h_multipion.Scale(POTScale,"width")
 h_other.Scale(POTScale,"width")
 
-xmin = 0.2
+xmin = 0
 xmax = 1
+
 h_data.GetXaxis().SetRangeUser(xmin,xmax)
 h_qelike.GetXaxis().SetRangeUser(xmin,xmax)
 h_1chargedpion.GetXaxis().SetRangeUser(xmin,xmax)
 h_multipion.GetXaxis().SetRangeUser(xmin,xmax)
 h_other.GetXaxis().SetRangeUser(xmin,xmax)
 
-title = "2track:"+" "+str(lows[i])+" #leq "+"Q_{2}QE"+" < "+str(highs[i])
+title = "2track:"+" "+str(lows[bin_i])+" #leq "+"Q_{2}QE"+" < "+str(highs[bin_i])
 
 h_data.SetTitle(title)
 h_data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
-
 h_data.GetXaxis().CenterTitle(True)
 h_data.GetYaxis().CenterTitle(True)
-
 h_data.SetMarkerStyle(8)
 h_data.SetLineWidth(2)
 h_data.SetLabelFont(42)
 h_data.SetTitleFont(42)
-
 h_data.SetLabelSize(0.03,"x");
 h_data.SetTitleSize(0.04,"x");
 h_data.SetLabelSize(0.03,"y");
 h_data.SetTitleSize(0.04,"y");
-
 h_data.SetTickLength(0.01, "Y");
 h_data.SetTickLength(0.02, "X");
-
 h_data.SetNdivisions(510, "XYZ");
 
 centerX = (xmax+xmin)/2
@@ -190,7 +161,7 @@ cc.SetLeftMargin(0.12)
 cc.SetBottomMargin(0.12)
 cc.RedrawAxis()
 cc.Draw()
-cc.Print("SB_NuConfig_bdtg_MAD_2track_me1N_1_testing/bdtgQELike_"+str(i)+".png")
+cc.Print("SB_NuConfig_bdtg_MAD_2track_me1N_1_testing/bdtgQELike_"+str(bin_i)+".png")
 cc.Close()
 
 del h2D_data
