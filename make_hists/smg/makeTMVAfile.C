@@ -20,6 +20,7 @@
 // Plot and Save
 //==============================================================================
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include "utils/NuConfig.h"
 //#include "utils/gitVersion.h"
@@ -223,29 +224,41 @@ int main(const int argc, const char *argv[] ) {
   std::ifstream mFile (mc_file_list);
   while (mFile.peek()!=EOF) {
   	getline(mFile, line);
-  	TFile *f = new TFile(line.c_str(),"read");
+	//TFile *f = TFile::Open(line.c_str(),"READONLY");
+  	//TFile *f = new TFile::Open(line.c_str(),"read");
   	//TTree *t=(TTree*)f->Get("CCQENu");
-  	TTree *t=(TTree*)f->Get(reco_tree_name.c_str());
-  	file_entries.push_back(t->GetEntries());
-  	delete t;
-  	f->Close();
+  	//TTree *t=(TTree*)f->Get(reco_tree_name.c_str());
+  	//file_entries.push_back(t->GetEntries());
+  	//delete t;
+  	//f->Close();
   	std::string fn = line.c_str();
   	file_names.push_back(fn);
-  	output_names.push_back(fn.substr(fn.find_last_of("_")+1,fn.find_last_of("t")-fn.find_last_of("_")));
+  	//output_names.push_back(fn.substr(fn.find_last_of("_")+1,fn.find_last_of("t")-fn.find_last_of("_")));
+	output_names.push_back("temp_"+fn.substr(fn.find_last_of("/")+1));
   }
   
-  std::cout << std::endl << "Entries per file: { ";
-  for (int i=0; i<file_entries.size()-1; i++) {
-  	std::cout << file_entries[i] << ", ";
-  }
-  std::cout << file_entries[file_entries.size()-1] << " }" << std::endl;
+  //std::cout << std::endl << "Entries per file: { ";
+  //for (int i=0; i<file_entries.size()-1; i++) {
+  // 	std::cout << file_entries[i] << ", ";
+  //}
+  //std::cout << file_entries[file_entries.size()-1] << " }" << std::endl;
   
   for( auto fname : file_names ){
   
   	std::cout << std::endl << "Doing file " << fname << " ..." << std::endl;
 
-		PlotUtils::MacroUtil util(reco_tree_name, fname, data_file_list,
+		std::ofstream temp_mc_file_list;
+		temp_mc_file_list.open("temp_mc_file_list.txt");
+		temp_mc_file_list << fname << std::endl;
+		temp_mc_file_list.close();
+
+		PlotUtils::MacroUtil util(reco_tree_name, "temp_mc_file_list.txt", data_file_list,
 		                          plist_string, do_truth);
+
+		std::string rm_temp_file_list = "rm temp_mc_file_list.txt";
+		gSystem->Exec(rm_temp_file_list.c_str());
+		rm_temp_file_list.clear();
+		rm_temp_file_list.clear();
 
 		//Data, MC reco, and Truth trees
 
@@ -376,7 +389,8 @@ int main(const int argc, const char *argv[] ) {
 		//std::string path(pl);
 		//std::string outNameBase = path.substr(path.find_last_of("/\\") + 1);
 		std::string path(fname);
-		std::string outNameBase = path.substr(path.find_last_of("_") + 1,path.find(".")-path.find_last_of("_")-1);
+		std::string outNameBase = "temp_"+path.substr(path.find_last_of("/")+1,path.find(".root")-(path.find_last_of("/")+1));
+		//std::string outNameBase = path.substr(path.find_last_of("_") + 1,path.find(".")-path.find_last_of("_")-1);
 
 		for (auto sample:samples){
 		  std::map<const std::string, CCQENu::Category> categories = sample.GetCategories();

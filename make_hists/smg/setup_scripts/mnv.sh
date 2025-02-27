@@ -19,13 +19,13 @@ source /cvmfs/larsoft.opensciencegrid.org/spack-packages/setup-env.sh
 spack load gcc@12.2.0
 spack load root@6.28.12%gcc@12.2.0
 spack load cmake@3.27.7
-spack load fife-utils@3.7.0
+spack load fife-utils@3.7.4
 spack load metacat@4.0.0
 spack load sam-web-client@3.4%gcc@12.2.0
 export IFDH_CP_MAXRETRIES=0\0\0\0\0  # no retries
 
 kx509
-voms-proxy-init -rfc --voms=fermilab:/fermilab/minerva/Role=Analysis --noregen -valid 24:00
+voms-proxy-init -rfc --voms=fermilab:/fermilab/minerva/Role=Analysis --noregen -valid 72:00
 source $WHEREIPUTMYCODE/opt/bin/setup_MAT.sh
 source $WHEREIPUTMYCODE/opt/bin/setup_MAT-MINERvA.sh
 source $WHEREIPUTMYCODE/opt/bin/setup_UnfoldUtils.sh

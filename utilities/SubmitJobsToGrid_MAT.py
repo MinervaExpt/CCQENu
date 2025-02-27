@@ -56,7 +56,6 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
     if not opts.debug:
        #writewrap(mywrapper,"echo \"ifdh cp -D ./*.root "+theoutdir+"\"\n")
         writewrap(mywrapper,"ifdh cp -D ./*.root "+theoutdir+"/\n")
-    
         writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
        # writewrap(mywrapper,"echo \"ifdh cp -D "+mylog+ " " + theoutdir +"\"\n")
         writewrap(mywrapper,"ifdh cp -D %s %s/\n"%(mylog, theoutdir))
