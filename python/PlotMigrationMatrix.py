@@ -21,13 +21,13 @@ var_names = {
     "pmu": "p_{#mu}"
 }
 
-def CCQECanvas(name,title,xsize=1000,ysize=750):
+def CCQECanvas(name,title,xsize=1000,ysize=1000):
     c2 = ROOT.TCanvas(name,title,xsize,ysize)
     # c2.SetLeftMargin(0.1)
-    c2.SetRightMargin(0.04)
-    c2.SetLeftMargin(0.11)
+    # c2.SetRightMargin(0.04)
+    # c2.SetLeftMargin(0.05)
     
-    c2.SetBottomMargin(0.14)
+    # c2.SetBottomMargin(0.14)
     return c2
 
 def MakeHistPretty(i_hist,xvar,yvar):
@@ -97,10 +97,10 @@ def main():
     print("Looking at file "+filename1)
     f = ROOT.TFile(filename1, "READONLY")
 
-
+    plotdir = "/Users/nova/git/plots/Winter2025MinervaCollab"
     filebasename1=os.path.basename(filename1)
     # outfilename=filebasename1.replace(".root","_2DPlots")
-    outdirname=filebasename1.replace(".root","_migrationplots")
+    outdirname=os.path.join(plotdir,filebasename1.replace(".root","_migrationplots"))
     if not os.path.exists(outdirname): os.mkdir(outdirname)
 
     # Expects CCQENu naming convention
@@ -150,13 +150,15 @@ def main():
         # print("binning: ", binning)
         binning = array('d',binning)
         norm_matrix = hist_dict[var]["matrix"].Clone()
-        
-        #now the row normalized migration....
-
         nbinsy = hist_dict[var]["matrix"].GetNbinsY()
         nbinsx = hist_dict[var]["matrix"].GetNbinsX()
-        norm_matrix.SetBins(nbinsx,binning,nbinsy,binning)
-        out_matrix = ROOT.TH2D(norm_matrix.GetName(),norm_matrix.GetTitle(),nbinsx,binning,nbinsy,binning)
+
+        #now the row normalized migration....
+        if parse[0] not in ["h2D", "hHD"]:
+            norm_matrix.SetBins(nbinsx,binning,nbinsy,binning)
+            out_matrix = ROOT.TH2D(norm_matrix.GetName(),norm_matrix.GetTitle(),nbinsx,binning,nbinsy,binning)
+        else: 
+            out_matrix = norm_matrix.Clone()
         for i in range(1,nbinsy+1):
             row_norm = 0.0
             for j in range(1,nbinsx+1):
@@ -183,7 +185,7 @@ def main():
         mnv = MnvPlotter()
 
         # mnv.SetBlackbodyPalette()
-        mnv.SetRedHeatPalette()
+        # mnv.SetRedHeatPalette()
         # mnv.SetBlackbodyPalette()
         pix = 1500
         if nbinsx*1.5 > 1000:
@@ -192,7 +194,7 @@ def main():
         canvas = ROOT.TCanvas("c","c",pix,round(1.3*pix))
 
         canvas.cd()
-
+        canvas = CCQECanvas("c","c")
         # norm_matrix.SetMaximum(1.0)
         # norm_matrix.GetYaxis().SetTitle("True E_{Avail} bins")
         # norm_matrix.GetXaxis().SetTitle("Reconstructed Recoil bins")
@@ -205,6 +207,7 @@ def main():
         if parse[0] in ["h2D","hHD"]:
             out_matrix.Draw("colz") 
         else:
+            out_matrix.SetMaximum(1.0)
             out_matrix.GetYaxis().SetTitle("True E_{Avail}")
             out_matrix.GetXaxis().SetTitle("Reconstructed "+var_names[var])
             ROOT.gStyle.SetPaintTextFormat("0.2f")
@@ -212,7 +215,7 @@ def main():
 
         # canvas.SetLogx()
         # canvas.SetLogy()
-        canvas.SetLogz()
+        # canvas.SetLogz()
         if not os.path.exists(outdirname): os.mkdir(outdirname)
 
         canvas.Print(outdirname+"/plotmigration_"+var+".png")

@@ -89,6 +89,9 @@ varstodo= [
 ]
 samplestodo= [
     "QElike",
+    "QElike0Blob",
+    "QElike1Blob",
+    "QElike2Blob"
 ]
 
 # Used to make the labels. See CVUniverse and variables config for binnning
@@ -103,11 +106,38 @@ bin_pid = {
     8: "#mu^{#pm}",
     10: "Other"
 }
+process=["data","QE","RES","DIS","COH","","","","2p2h",""]
+whichcats = ["data","qelike","qelikenot"]
+nproc = len(process)
+for x in range(0,nproc+1):
+    process.append(process[x]+"-not")
+colors = {
+0:ROOT.kBlack,
+1:ROOT.kBlue-6,
+2:ROOT.kMagenta-6,
+3:ROOT.kRed-6,
+4:ROOT.kYellow-6,
+5:ROOT.kWhite,
+6:ROOT.kWhite,
+7:ROOT.kWhite,
+8:ROOT.kGreen-6,
+9:ROOT.kTeal-6,
+10:ROOT.kBlue-1,
+11:ROOT.kBlue-10,
+12:ROOT.kMagenta-10,
+13:ROOT.kRed-10,
+14:ROOT.kYellow-10,
+15:ROOT.kGray,
+16:ROOT.kBlack,
+17:ROOT.kBlack,
+18:ROOT.kGreen-6,
+19:ROOT.kTeal-6}
 
 samplenames = {
     "QElike": "QElike Signal Sample",
     "QElike0Blob": "QElike Signal w/o Blobs",
     "QElike1Blob": "QElike Signal w/ 1 Blob",
+    "QElike2Blob": "QElike Signal w/ 2 Blobs",
     "QElikeOld": "2D Era QElike Signal Sample",
     # "BlobSideband": "1 #pi^{0} Sideband",
     "BlobSideband": "Blob Sideband",
@@ -125,9 +155,10 @@ if len(sys.argv)> 2:
 
 
 f = TFile.Open(filename,"READONLY")
-
 dirname = filename.replace(".root","_FinalStates")
-if not os.path.exists(dirname): os.mkdir(dirname)
+plotdir = "/Users/nova/git/plots/Winter2025MinervaCollab"
+outdirname = os.path.join(plotdir,"dirname")
+if not os.path.exists(outdirname): os.mkdir(outdirname)
 
 keys = f.GetListOfKeys()
 
@@ -359,7 +390,7 @@ for a_hist in groups.keys():
             canvas_name=thename+"_FinalStates"
             if dotuned:
                 canvas_name = thename+"_FinalStates_tuned"
-            cc.Print(dirname+"/"+canvas_name+".png")
+            cc.Print(os.path.join(outdirname,canvas_name+".png"))
             
     
 

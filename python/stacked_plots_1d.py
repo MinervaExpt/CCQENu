@@ -11,7 +11,7 @@ import ROOT
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
 
 TEST=False
-noData=False  # use this to plot MC only types
+noData=True  # use this to plot MC only types
 sigtop=True # use this to place signal on top of background
 dotuned=False
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
@@ -24,9 +24,9 @@ def CCQECanvas(name,title,xsize=1100,ysize=720):
     c2 = ROOT.TCanvas(name,title,xsize,ysize)
     # c2.SetLeftMargin(0.1)
     c2.SetRightMargin(0.04)
-    c2.SetLeftMargin(0.13)
+    c2.SetLeftMargin(0.1)
     c2.SetTopMargin(0.04)
-    c2.SetBottomMargin(0.14)
+    c2.SetBottomMargin(0.1)
     return c2
 
 def CCQELegend(xlow,ylow,xhigh,yhigh):
@@ -81,6 +81,7 @@ catscolors = {
 
 samplenames = {
     "QElike": "QElike Signal Sample",
+    "QElike_2track": "QElike 2 track Sample",
     "QElike0Blob": "QElike Signal w/o Blobs",
     "QElike1Blob": "QElike Signal w/ 1 Blob",
     "QElikeOld": "2D Era QElike Signal Sample",
@@ -101,7 +102,9 @@ if len(sys.argv)> 2:
 
 f = TFile.Open(filename,"READONLY")
 
-dirname = filename.replace(".root","_FinalStates")
+plotdir = "/Users/nova/git/plots/Winter2025MinervaCollab"
+filebasename=os.path.basename(filename)
+dirname = os.path.join(plotdir,filebasename.replace(".root","_FinalStates"))
 if not os.path.exists(dirname): os.mkdir(dirname)
 
 keys = f.GetListOfKeys()

@@ -11,14 +11,14 @@ from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F
 
 TEST=False
 noData=False  # use this to plot MC only types
-sigtop=True # use this to place signal on top of background
-manualrange = True
+sigtop=False # use this to place signal on top of background
+manualrange = False
 
-def CCQECanvas(name,title,xsize=750,ysize=750):
+def CCQECanvas(name,title,xsize=1100,ysize=750):
     c2 = ROOT.TCanvas(name,title,xsize,ysize)
-    c2.SetLeftMargin(0.20)
-    c2.SetRightMargin(0.05)
-    c2.SetBottomMargin(0.15)
+    # c2.SetLeftMargin(0.10)
+    # c2.SetRightMargin(0.05)
+    # c2.SetBottomMargin(0.15)
     return c2
 
 def CCQELegend(xlow,ylow,xhigh,yhigh):
@@ -40,17 +40,34 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
 #     latex.SetTextAlign(22)
 #     return latex
 
+bin_pid = { 
+    1: "n",
+    2: "p",
+    3: "#pi^{0}",
+    4: "#pi^{+}",
+    5: "#pi^{-}",
+    6: "#gamma",
+    7: "e^{#pm}",
+    8: "#mu^{#pm}",
+    10: "Other"
+}
+
 process=["data","QE","RES","DIS","COH","","","","2p2h",""]
 whichcats = ["data","qelike","qelikenot"]
 
 samplenames = {
-    "BlobSideband": "1 #pi^{0} Sideband",
-    "MultipBlobSideband": "Multi #pi Sideband",
-    "QElike": "QElike Signal Sample",
+    "QElike": "QElike 1 track Sample",
+    "QElike_2track": "QElike 2track Sample",
+    "QElike0Blob": "QElike Signal w/o Blobs",
+    "QElike1Blob": "QElike Signal w/ 1 Blob",
+    "QElike2Blob": "QElike Signal w/ 2 Blobs",
     "QElikeOld": "2D Era QElike Signal Sample",
-    "HiPionThetaSideband": "Backwards #pi^{+/-} Sideband",
-    "LoPionThetaSideband": "Forwards #pi^{+/-} Sideband",
-    "TrackSideband": "#pi^{#pm} Sideband"
+    # "BlobSideband": "1 #pi^{0} Sideband",
+    "BlobSideband": "Blob Sideband",
+    "MultipBlobSideband": "Multiple #pi Sideband",
+    "HiPionThetaSideband": "Backward #pi^{#pm} Sideband",
+    "LoPionThetaSideband": "Forward #pi^{#pm} Sideband",
+    "TrackSideband": "Track Sideband"
 }
 
 nproc = len(process)
@@ -90,7 +107,9 @@ if len(sys.argv)> 2:
 f = TFile.Open(filename,"READONLY")
 
 dirname = filename.replace(".root","_types")
-if not os.path.exists(dirname): os.mkdir(dirname)
+plotdir = "/Users/nova/git/plots/Winter2025MinervaCollab"
+outdirname = os.path.join(plotdir,dirname)
+if not os.path.exists(outdirname): os.mkdir(outdirname)
 
 keys = f.GetListOfKeys()
 
@@ -212,35 +231,42 @@ for a_hist in groups.keys():
                 cc.SetLogy()
             
             data = TH1D()
-            if len(groups[a_hist][b_sample][c_var]["data"]) < 1:
-                print (" no data",a_hist,b_sample,c_var)
-                continue
+            # if len(groups[a_hist][b_sample][c_var]["data"]) < 1:
+            #     print (" no data",a_hist,b_sample,c_var)
+            #     continue
             
-            data = TH1D(groups[a_hist][b_sample][c_var]["data"][0])
-            data.SetTitle(samplenames[b_sample])
-            data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
-            dmax = data.GetMaximum()
+
             if noData:
                 dmax = 0.0
             #data.Draw("PE")
-            if not noData: leg.AddEntry(data,"data","pe")
-            
-            data.Print()
+            if not noData: 
+                data = TH1D(groups[a_hist][b_sample][c_var]["data"][0])
+                data.SetTitle(samplenames[b_sample])
+                data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
+                dmax = data.GetMaximum()
+                leg.AddEntry(data,"data","pe")
+                
+                data.Print()
             
             # do the MC
             # move the first category to the top of the plot
 
-            if "QElike" not in b_sample:
-                sigtop = False
-            else:
-                sigtop = True
+            # if "QElike" not in b_sample:
+            #     sigtop = False
+            # else:
+            #     sigtop = True
             if sigtop:
                 bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
                 # assume data = type 0, signal is type 1, rest are after that
                 #print ("pre-bestorder",bestorder)
-                signal = bestorder[1]
-                bestorder = bestorder[2:]
-                bestorder.append(signal)
+                if not noData:
+                    signal = bestorder[1]
+                    bestorder = bestorder[2:]
+                    bestorder.append(signal)
+                else:
+                    signal = bestorder[0]
+                    bestorder = bestorder[1:]
+                    bestorder.append(signal)
             else:
                 bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
             #print ("bestorder",bestorder)
@@ -265,25 +291,53 @@ for a_hist in groups.keys():
                 elif b_sample == "HiPionThetaSideband":
                     data.GetXaxis().SetRangeUser(90.,180.)
             #print ("max",smax,dmax)
-            if smax > dmax:
-                data.SetMaximum(smax*1.5)
-                stack.SetMaximum(smax*1.5)
-            else:
-                data.SetMaximum(dmax*1.5)
-                stack.SetMaximum(dmax*1.5)
-            if c_var=="CosMuonPionAngle":
-                data.SetMaximum(8000)
-                data.SetMinimum(0)
-                data.GetXaxis().SetRangeUser(-1.0,-0.5)
-            if not noData: 
-                data.Draw("PE")
-                stack.Draw("hist same")
-            else:
-                data.Reset()
-                data.Draw("hist")  # need to this to get the axis titles from data
-                stack.Draw("hist same")
-            if not noData: 
-                data.Draw("PE same")
+
+
+            if not noData:
+                if smax > dmax:
+                    data.SetMaximum(smax*1.2)
+                    stack.SetMaximum(smax*1.2)
+                else:
+                    data.SetMaximum(dmax*1.2)
+                    stack.SetMaximum(dmax*1.2)
+                if c_var=="CosMuonPionAngle":
+                    data.SetMaximum(8000)
+                    data.SetMinimum(0)
+                    data.GetXaxis().SetRangeUser(-1.0,-0.5)
+                if c_var == "recoil":
+                    if c_var not in scaleY:
+                        data.SetMinimum(0)
+                        stack.SetMinimum(0)
+                    else:
+                        # stack.Divide(data,1.)
+                        data.SetMinimum(50)
+                        stack.SetMinimum(50)
+                        data.SetMaximum(1000000)
+                        stack.SetMinimum(1000000)
+
+                if not noData: 
+                    data.Draw("PE")
+                    stack.Draw("hist same")
+                else:
+                    data.Reset()
+                    data.Draw("hist")  # need to this to get the axis titles from data
+                    stack.Draw("hist same")
+                if not noData: 
+                    data.Draw("PE same")
+            else: 
+                stack.Draw("")
+                if "IsoBlobsPrimaryMCPID" in c_var:
+                    for bin in bin_pid.keys():
+                        stack.GetXaxis().SetBinLabel(bin, bin_pid[bin])
+                    stack.GetXaxis().SetLabelSize(0.07)
+                    stack.GetXaxis().SetTitle("PID of parent of particle reconstructed as blob")
+                    stack.GetXaxis().CenterTitle()
+                stack.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
+                # stack.SetMaximum(smax*1.5)
+                # stack.SetMinimum(0.0)
+
+                stack.Draw("hist")
+
             leg.Draw()
             # prelim = AddPreliminary(0.1,0.9)
             # prelim.DrawLatexNDC(0.1,0.9,"MINER#nuA Work In Progress")
@@ -295,9 +349,9 @@ for a_hist in groups.keys():
             # if c_var in scaleY:
             #     cc.SetLogy()
             cc.Draw()
-            outname = dirname+"/"+thename+"_"+flag+".png"
+            outname = os.path.join(outdirname,thename+"_"+flag+".png")
             if manualrange: 
-                outname = dirname+"/"+thename+"_"+flag+"_manualxrange.png"
+                outname = os.path.join(outdirname,thename+"_"+flag+"_manualxrange.png")
             cc.Print(outname)
             
     
