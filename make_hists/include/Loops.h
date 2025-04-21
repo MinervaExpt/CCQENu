@@ -99,13 +99,14 @@ void LoopAndFillEventSelection(std::string tag,
                 csvFile << ";" << v->GetName() << ";TrueValue";
             }
         }
-        csvFile << ";Interaction;nFSPart;FSPDGs;FSPartEs;";
+        csvFile << ";Interaction;nFSPart;FSPDGs;FSPartEs";
         /*
         std::vector<std::string> true_particle_counts = {"nFSChargedPion","nFSNeutralPion",
                                                          "nFSProton","nFSNeutron","nFSNegMuon",
                                                          "nFSGamma"};
         for (auto v:true_particle_counts) { csvFile << ";" << v; }
         */
+        csvFile << ";run;subrun;gate;slice";
         csvFile << ";Arachne" << std::endl;
     }
 
@@ -241,7 +242,10 @@ void LoopAndFillEventSelection(std::string tag,
                                                           csvFile << ";" << true_counts_per_pdg[13]; // nFSNegMuon
                                                           csvFile << ";" << true_counts_per_pdg[22]; // nFSGamma
                                                           */
-
+                            csvFile << ";" << universe->GetInt("mc_run");
+                            csvFile << ";" << universe->GetInt("mc_subrun");
+                            csvFile << ";" << universe->GetInt("mc_nthEvtInFile") + 1;
+                            csvFile << ";" << universe->GetVecElem("slice_numbers", 0);
                             csvFile << ";" << universe->StringTrueArachneLink() << std::endl;
                         }
                         // Done Sending MC Reco value to CSV

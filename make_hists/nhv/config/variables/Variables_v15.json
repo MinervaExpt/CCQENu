@@ -38,8 +38,11 @@
     "pzmu_ptmu_recoil": {
       "name": "pzmu_ptmu_recoil",
       "vars": [
-        "pzmuHD",
-        "ptmuHD",
+        // "pzmuHD",
+        // "ptmuHD",
+        // "recoil"
+        "pzmu",
+        "ptmu",
         "recoil"
       ],
       "analysistype": 1
@@ -171,6 +174,11 @@
       "xvar": "NBlobs",
       "yvar": "NNonVtxIsoBlobsAll"
     },
+    "recoil_ptmu": {
+      "name": "recoil_ptmu",
+      "xvar": "recoil",
+      "yvar": "ptmu"
+    }
   },
   "1D": {
     "recoilHD": {
@@ -676,6 +684,30 @@
         "selected_reco"
       ]
     },  
+    "LeadingIsoBlobsPrimaryMCPID": {
+      "reco": "LeadingIsoBlobsPrimaryMCPID",
+      "true": "LeadingIsoBlobsPrimaryMCPID",
+      "name": "LeadingIsoBlobsPrimaryMCPID",
+      "title": "Leading NonvtxIsoBlob primary parent PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecondIsoBlobsPrimaryMCPID": {
+      "reco": "SecondIsoBlobsPrimaryMCPID",
+      "true": "SecondIsoBlobsPrimaryMCPID",
+      "name": "SecondIsoBlobsPrimaryMCPID",
+      "title": "Second NonvtxIsoBlob primary parent PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
     "ThetamuDegrees": {
       "reco": "ThetamuDegrees",
       "true": "TrueThetamuDegrees",

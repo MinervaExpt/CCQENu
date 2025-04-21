@@ -21,7 +21,95 @@
         "legend_entries": {
             "data": "Data",
             "qelike": "QELike",
-            "qelikenot": "QELikeNot",
+            "qelikenot": "QELikeNot"
+        }
+    },
+    "QElike_2track": {
+        "name": "QElike_2track",
+        "reco": "QElike_2track",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["qelikenot"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+             },
+            "qelikenot": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot"
+        }
+    },
+    "QElike_0blob": {
+        "name": "QElike_0blob",
+        "reco": "QElike_0blob",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["qelikenot"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+             },
+            "qelikenot": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot"
+        }
+    },
+    "QElike_1blob": {
+        "name": "QElike_1blob",
+        "reco": "QElike_1blob",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["qelikenot"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+             },
+            "qelikenot": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot"
+        }
+    },
+    "QElike_2blob": {
+        "name": "QElike_2blob",
+        "reco": "QElike_2blob",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["qelikenot"],
+        "categories": {
+            "qelike": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+             },
+            "qelikenot": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot"
         }
     },
     "QElikeNeutrons": {
@@ -43,7 +131,7 @@
         "legend_entries": {
             "data": "Data",
             "qelike": "QELike",
-            "qelikenot": "QELikeNot",
+            "qelikenot": "QELikeNot"
         }
     },
     "QElikeNP": {

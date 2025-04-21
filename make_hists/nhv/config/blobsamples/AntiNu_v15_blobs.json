@@ -6,29 +6,31 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
-  "outRoot": "warptest_2d_recoilonly_0mmrecoil_${MYMODEL}",
+  "outRoot": "types_1track_2track_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale":999,
   "playlist":"minervame5A",
   "MinervaModel":"${MYMODEL}", 
   "recoName":"MasterAnaDev",
-  "tunedmc":"both", 
+  "tunedmc":"untuned", 
   "closure":0,
   "TuneCategories":["qelike", "chargedpion","neutralpion"], 
   "DoResolution": false,
-  "DoTypes": false,
+  "DoTypes": true,
   "pdg":-14,
-  "mcRecoToCSV": false,
+  "mcRecoToCSV": true,
   "runsamples": [
     "QElike",
+    "QElike_2track"
     // "QElikeNeut"
     // "QElike_0blob",
-    // "QElike_1blob"
+    // "QElike_1blob",
+    // "QElike_2blob",
     // "QElikeNeutrons"//,
-    "TrackSideband"
+    // "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband"//,
-    // "BlobSideband",
+    // "BlobSideband"
     // "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
@@ -41,8 +43,8 @@
     // "NChargedPions",
     // "HasMultiPion"
     // "recoilNoBlobs",
-    "Q2QE",
-    "PrimaryProtonScore" //,
+    // "Q2QE",
+    // "PrimaryProtonScore" //,
     // "FitQ2QE",
     // "EAvail",
     // "pzmuHD",
@@ -54,17 +56,18 @@
     // "EAvailWiggled"
     // "EAvailWithNeutrons"
     // "resEAvailWithNeutrons"
-    // "recoil"//,
+    "recoil"//,
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
     // "ptmu"
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
+    // "LeadingIsoBlobsPrimaryMCPID",
+    // "SecondIsoBlobsPrimaryMCPID"
   ],
-  "Analyze2DVariables": [
-    "Q2QE_PrimaryProtonScore"], //,//"Q2QE_recoil"],//["pzmu_ptmu"], 
-  "AnalyzeHyperDVariables": [],//"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
+  "Analyze2DVariables": [],//["recoil_ptmu", "pzmu_ptmu"],// "Q2QE_PrimaryProtonScore"], //,//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "AnalyzeHyperDVariables":[],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "signal": {
     "QElike": "qelike"//,
     // "Background": "qelike",
