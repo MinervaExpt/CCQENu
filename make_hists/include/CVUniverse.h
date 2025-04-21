@@ -390,6 +390,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual int GetPlotNeutCandMCPID() const;
     virtual int GetPlotNeutCandTopMCPID() const;
+    virtual int GetPlotLeadingIsoBlobsPrimaryMCPID() const;
+    virtual int GetPlotSecondIsoBlobsPrimaryMCPID() const;
     // TODO: down to here
 
     // virtual std::vector<double> GetNeutCandEs() const;
@@ -435,6 +437,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetTruthHasSinglePositivePion() const;
     virtual int GetTruthHasSingleNegativePion() const;
     virtual int GetTruthHasSingleNeutralPion() const;
+    
+    virtual int GetTruthHasSingleLambda() const;
 
     virtual double GetPionScore() const;
     virtual double GetPionScore1() const;

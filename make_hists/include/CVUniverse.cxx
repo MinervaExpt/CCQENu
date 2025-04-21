@@ -1760,6 +1760,88 @@ int CVUniverse::GetPlotNeutCandTopMCPID() const {
         return 10;
 }
 
+// nonvtx_isoblobs PID (primary particle that produced the particle contributing most to blob energy i.e., the pi0, not the two gammas)
+int CVUniverse::GetPlotLeadingIsoBlobsPrimaryMCPID() const {
+    int kmax = GetInt("nonvtx_iso_blobs_start_position_z_in_prong_sz");
+    std::vector<double> blob_z_starts = GetVecDouble("nonvtx_iso_blobs_start_position_z_in_prong");
+    // counts blobs with zvertex greater than set value
+    int i_blob = -1;
+    for (int k = 0; k < kmax; ++k) {
+        if (blob_z_starts[k] > m_min_blob_zvtx){
+            i_blob = k;
+            break;
+        } 
+    }
+    if (i_blob < 0)
+        return -9999;
+    int pid = GetVecElem("nonvtx_iso_blobs_primary_particle_pdg_in_prong", i_blob);
+    if (pid == 0)
+        return -9999;
+    if (pid == 2112)  // neutron
+        return 1;
+    else if (pid == 2212)  // proton
+        return 2;
+    else if (pid == 111)  // pi0
+        return 3;
+    else if (pid == 211)  // pi+
+        return 4;
+    else if (pid == -211)  // pi-
+        return 5;
+    else if (pid == 22)  // photon
+        return 6;
+    else if (abs(pid) == 11)  // electron
+        return 7;
+    else if (abs(pid) == 13)  // muon
+        return 8;
+    else
+        return 10;
+}
+
+int CVUniverse::GetPlotSecondIsoBlobsPrimaryMCPID() const {
+    // Check that there's enough blobs in the event
+    if (GetInt("nonvtx_iso_blobs_primary_particle_pdg_in_prong_sz") < 2)
+        return -9999;
+
+    int kmax = GetInt("nonvtx_iso_blobs_start_position_z_in_prong_sz");
+    std::vector<double> blob_z_starts = GetVecDouble("nonvtx_iso_blobs_start_position_z_in_prong");
+    // counts blobs with zvertex greater than set value
+    int i_blob = -1;
+    int first = 0;
+    for (int k = 0; k < kmax; ++k) {
+        if (blob_z_starts[k] > m_min_blob_zvtx) {
+            if (first==0) {
+                first = 1;
+                continue;
+            }
+            i_blob = k;
+            break;
+        }
+    }
+    if (i_blob < 0)
+        return -9999;
+    int pid = GetVecElem("nonvtx_iso_blobs_primary_particle_pdg_in_prong", i_blob);
+    if (pid == 0)
+        return -9999;
+    if (pid == 2112)  // neutron
+        return 1;
+    else if (pid == 2212)  // proton
+        return 2;
+    else if (pid == 111)  // pi0
+        return 3;
+    else if (pid == 211)  // pi+
+        return 4;
+    else if (pid == -211)  // pi-
+        return 5;
+    else if (pid == 22)  // photon
+        return 6;
+    else if (abs(pid) == 11)  // electron
+        return 7;
+    else if (abs(pid) == 13)  // muon
+        return 8;
+    else
+        return 10;
+}
+
 // // Neutron candidate energies
 // std::vector<double> CVUniverse::GetNeutCandEs() const {
 //     return GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str());
@@ -1924,7 +2006,7 @@ double CVUniverse::GetPionScore2() const {
 int CVUniverse::GetTruthHasSingleChargedPion() const {
     int genie_n_charged_pion = 0;
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
-    std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+    // std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
     int mc_nFSPart = GetInt("mc_nFSPart");
 
     for (int i = 0; i < mc_nFSPart; i++) {
@@ -1952,6 +2034,32 @@ int CVUniverse::GetTrueChargedPionCount() const {
     }
 
     return genie_n_charged_pion;
+}
+
+int CVUniverse::GetTruthHasSingleLambda() const {
+    int genie_n_lambda = 0;
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    // std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+    int mc_nFSPart = GetInt("mc_nFSPart");
+
+    for (int i = 0; i < mc_nFSPart; i++) {
+        int pdg = mc_FSPartPDG[i];
+
+        if (abs(pdg) == 3122)
+            genie_n_lambda++;
+        if (genie_n_lambda > 1) 
+            return 0;
+        // if (pdg == 111)
+        //     return 0;  // Neutral pions
+        // else if (abs(pdg) == 211)
+        //     genie_n_charged_pion++;
+        // // Intermediate check of charged pion count
+        // if (genie_n_charged_pion > 1) return 0;
+    }
+
+    if (genie_n_lambda == 1) 
+        return 1;
+    return 0;  // i.e. if genie_n_charged_pion == 0
 }
 
 int CVUniverse::GetTruthCCQELikeExceptForChargedPions() const {
@@ -2027,7 +2135,7 @@ int CVUniverse::GetTruthCCQELikeExceptForChargedPions() const {
 int CVUniverse::GetTruthHasSinglePositivePion() const {
     int genie_n_pos_pion = 0;
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
-    std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+    // std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
     int mc_nFSPart = GetInt("mc_nFSPart");
 
     for (int i = 0; i < mc_nFSPart; i++) {
@@ -2059,7 +2167,7 @@ int CVUniverse::GetTruePositivePionCount() const {
 int CVUniverse::GetTruthHasSingleNegativePion() const {
     int genie_n_neg_pion = 0;
     std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
-    std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+    // std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
     int mc_nFSPart = GetInt("mc_nFSPart");
 
     for (int i = 0; i < mc_nFSPart; i++) {

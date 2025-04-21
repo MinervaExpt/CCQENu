@@ -257,6 +257,16 @@ class CVFunctions {
         truefunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
         trueintfunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
 
+        recofunctions["LeadingIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotLeadingIsoBlobsPrimaryMCPID;
+        recointfunctions["LeadingIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotLeadingIsoBlobsPrimaryMCPID;
+        truefunctions["LeadingIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotLeadingIsoBlobsPrimaryMCPID;
+        trueintfunctions["LeadingIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotLeadingIsoBlobsPrimaryMCPID;
+
+        recofunctions["SecondIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotSecondIsoBlobsPrimaryMCPID;
+        recointfunctions["SecondIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotSecondIsoBlobsPrimaryMCPID;
+        truefunctions["SecondIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotSecondIsoBlobsPrimaryMCPID;
+        trueintfunctions["SecondIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotSecondIsoBlobsPrimaryMCPID;
+
         // truefunctions["TrueNBlobs"] = &CVUNIVERSE::GetTrueNBlobs;
 
         recofunctions["NNeutCands"] = &CVUNIVERSE::GetNNeutCands;
@@ -515,6 +525,8 @@ class CVFunctions {
         trueintfunctions["TruthHasSingleNeutralPion"] = &CVUNIVERSE::GetTruthHasSingleNeutralPion;
         trueintfunctions["TruthHasMultiPion"] = &CVUNIVERSE::GetTruthHasMultiPion;
         truefunctions["TruthHasMultiPion"] = &CVUNIVERSE::GetTruthHasMultiPion;
+
+        trueintfunctions["TruthHasSingleLambda"] = &CVUNIVERSE::GetTruthHasSingleLambda;
 
         truefunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
         trueintfunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
