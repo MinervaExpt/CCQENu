@@ -41,6 +41,25 @@ def isHyperon(mytree):
             hyp_energy = energy - proton_mass
     return [ishyperon,hyp_energy]
 
+# def isSinglePionHyp(mytree, RHC=False):
+#     nfsp = mytree.nfsp
+#     pdg  = mytree.pdg
+
+#     n_muon   = 0
+#     n_meson  = 0
+#     n_baryon = 0
+#     n_gamma  = 0
+#     n_hyperon = 0
+
+#     for p in range(0,nfsp): 
+#         if(abs(pdg[p])==13): n_muon+=1 # doesn't this need to be mu plus?
+#         if(abs(pdg[p]) in badMesons): n_meson+=1
+#         if(abs(pdg[p]) in badBaryons): n_baryon+=1
+#         if(pdg[p]==22 and Efsp[p] > 0.010): n_gamma+=1
+#         if(abs(pdg[p]) in hyperons): n_hyperon+=1
+#         # don't want proton KE stuff anymore
+
+
 def isCCQELikeHyp(mytree, RHC=False):
 
     #need 1 muon and no mesons and photons > 10 MeV in final state
