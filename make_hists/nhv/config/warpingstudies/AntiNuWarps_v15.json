@@ -1,0 +1,44 @@
+{
+    "comments": [
+        "First draft concept 4/21/24"
+    ],
+    "warpfrom": "function", // function takes a tf1, scales takes a th1d, type does something else
+    "category": "qelike", // which cat you're gonna warp, may not be implemented
+    "warptype": "types", // maybe not implemented
+    "warps": {
+        "dummy": {
+            "warpvar": "dummy",
+            "warpvartype": "reco",
+            "warpfile": "dummy.root", // optional if you want a range of values
+            "warpval": 1.0, // optional to have a straight value
+            "check": {
+                "variablenamehere": {
+                    "equals": 0,
+                    "min": 0,
+                    "max": 0,
+                    "type": "reco"
+                }
+            }
+        },
+        "MCIntType": {
+            "variable": "MCIntType",
+            "warpfile": "dummy.root",
+            "tag": "xyz"
+        },
+        "category": {
+            "categories":["qelike", "chargedpion", "neutralpion"],
+            "warpfile": "dummy.root",
+            "tag": "abc"
+        },
+        "fsp":{
+            "categories":[
+                {
+                    "name": "","variable": ""},
+                ],
+            "warpvar":"variablename",
+            "warpfile": "dummy.root",
+            "tag":"xyz"
+        }
+    }
+
+}
