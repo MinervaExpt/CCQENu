@@ -1218,17 +1218,17 @@ double CVUniverse::GetTrueEAvailGeV() const {
         else if (abs(pdg) == 11 || abs(pdg) == 13)
             continue;  // ignore leptons
         else if (abs(pdg) == 211)
-            Eavail += energy - 139.5701;  // subtracting pion mass to get Kinetic energy
+            Eavail += energy - 139.57;  // subtracting pion mass to get Kinetic energy
         else if (pdg == 2212)
-            Eavail += energy - 938.27201;  // proton
+            Eavail += energy - 938.27;  // proton
         else if (pdg == 111)
             Eavail += energy;  // pi0
         else if (pdg == 22)
             Eavail += energy;  // photons
         else if (pdg >= 2000)  // TODO: what is this?
-            Eavail += energy - 938.27201;
+            Eavail += energy - 938.27;
         else if (pdg <= -2000)
-            Eavail += energy + 938.27201;
+            Eavail += energy + 938.27;
         else
             Eavail += energy;
     }
