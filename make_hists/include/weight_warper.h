@@ -49,8 +49,7 @@ class weight_warper {
     typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
 
     // These are pointers to various functions to use when checking classification of event
-    std::map<std::string, PointerToCVUniverseFunction> m_recofun_pointer_map;
-    std::map<std::string, PointerToCVUniverseFunction> m_truefun_pointer_map;
+    std::map<std::string, PointerToCVUniverseFunction> m_fun_pointer_map;
 
     // This is the pointer for hte function warped over 
     PointerToCVUniverseFunction m_warpvar_fun_pointer; 
@@ -84,33 +83,19 @@ class weight_warper {
     std::string m_category;
 
    public:
-    // Constructor that reads in hists from file
-    weight_warper(const TString f);
     // Constructor that reads in hists from file and sets the Cat
     weight_warper(const NuConfig config);
 
     void SetSubwarps(NuConfig subwarp_config);
 
-    void SetSubwarpFuncts();
-    void SetSubwarpHists();
-    // Just take the universe in to do the scaling, esp if you don't care about category
-    double GetScale(const CVUniverse* univ, std::string uni_name, int iuniv); 
-
-    double GetScale(std::string cat, const double q2qe, std::string uni_name, int iuniv);  // q2qe in GeV2
-    double GetScale(std::string cat, const CVUniverse* univ, std::string uni_name, int iuniv);
-
-    void read(TString filename);
-    void SetCat(std::string cat);
-
-   private:
-    double GetScaleInternal(const double q2qe, std::string uni_name, int iuniv);
-
-    // Method to take multiple values on multiple vars
-    double GetScaleInternal(std::map<std::string, const double> var_values, std::string uni_name, int iuniv);
+    int CheckSubwarp(const CVUniverse& univ, subwarp* subwarp);
+    double GetWarpWeight(const CVUniverse& univ, std::string univ_name, int iuniv);
 };
 
 // This is a class that contains a series of checks and the warp corresponding to that set
 class subwarp {
+   private:
+    typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction; 
    public:
     subwarp(const NuConfig);
 
@@ -121,6 +106,8 @@ class subwarp {
     std::map<std::string, double> equals;
     std::map<std::string, double> min;
     std::map<std::string, double> max;
+
+    PointerToCVUniverseFunction m_warpvar_fun_pointer;
 
     // If straight normalization for this warp, can use this
     double m_warpval = -1.0;
@@ -133,7 +120,11 @@ class subwarp {
 
    public:
     int CheckVal(std::string varname, double value);
-    double GetWarpVal(double warpvar_val);
+
+    double GetWarpWeight(double warpvar_val);
+    double GetWarpWeight(const CVUniverse& univ);
+
+    std::vector<std::string> GetCheckVars();
 
    private:
     void SetWarpFunct(TString warp_filename, std::string warp_functname);

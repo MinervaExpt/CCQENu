@@ -1,10 +1,12 @@
 {
     "comments": [
-        "First draft concept 4/21/24"
+        "First draft concept 4/21/24",
+        "Working draft 4/28/25, missing some features like cat tuning etc that might not be super useful"
     ],
     "warpfrom": "function", // function takes a tf1, scales takes a th1d, type does something else
     "category": "qelike", // which cat you're gonna warp, may not be implemented
     "warptype": "types", // maybe not implemented
+    "tag": "warped", // to tag histograms, not yet implemented
     "warps": {
         "dummy": {
             "warpvar": "dummy",
@@ -12,33 +14,19 @@
             "warpfile": "dummy.root", // optional if you want a range of values
             "warpval": 1.0, // optional to have a straight value
             "check": {
-                "variablenamehere": {
+                "checkvarnamehere1": {
                     "equals": 0,
                     "min": 0,
                     "max": 0,
                     "type": "reco"
+                },
+                "checkvarnamehere2": {
+                    "equals": 0,
+                    "min": 0,
+                    "max": 0,
+                    "type": "true"
                 }
             }
-        },
-        "MCIntType": {
-            "variable": "MCIntType",
-            "warpfile": "dummy.root",
-            "tag": "xyz"
-        },
-        "category": {
-            "categories":["qelike", "chargedpion", "neutralpion"],
-            "warpfile": "dummy.root",
-            "tag": "abc"
-        },
-        "fsp":{
-            "categories":[
-                {
-                    "name": "","variable": ""},
-                ],
-            "warpvar":"variablename",
-            "warpfile": "dummy.root",
-            "tag":"xyz"
         }
     }
-
 }
