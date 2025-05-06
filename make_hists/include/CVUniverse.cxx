@@ -1585,6 +1585,25 @@ int CVUniverse::GetTruthIsQELike() const {
         return 0;
 }
 
+// For use in weight_warper cuts (though some other ones will also be used outside of here)
+
+// Check if an event has more than two nucleons in the final state
+int CVUniverse::GetTruthNNucleons() const {
+    // returned value
+    int nnucleons = 0;
+
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    for (int i = 0; i < mc_nFSPart; i++) {
+        int pdg = mc_FSPartPDG[i];
+        // just protons and neutrons
+        if (pdg == abs(2212) || pdg == abs(2122)) {
+            nnucleons++;
+        }
+    }
+    return nnucleons;
+}
+
 // ------------------------------------------------------------------------------
 // ----------------- Added by Sean for Neutrino ---------------------------------
 // ------------------------------------------------------------------------------

@@ -337,6 +337,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual int GetTruthIsQELike() const;
 
+    virtual int GetTruthNNucleons() const;
+
     // ----------------------- Sean Neutrino Functions ------------------------------------------
 
     // Interaction Vertex

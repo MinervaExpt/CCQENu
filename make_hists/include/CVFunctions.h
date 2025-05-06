@@ -193,6 +193,9 @@ class CVFunctions {
 
         trueintfunctions["TruthIsQELike"] = &CVUNIVERSE::GetTruthIsQELike;
 
+        truefunctions["TruthNNucleons"] = &CVUNIVERSE::GetTruthNNucleons;
+        trueintfunctions["TruthNNucleons"] = &CVUNIVERSE::GetTruthNNucleons;
+
         trueintfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
         truefunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
         //recointfunctions["MCIntType"] = &CVUNIVERSE::GetMCIntType;
