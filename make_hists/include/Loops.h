@@ -36,6 +36,7 @@ void LoopAndFillEventSelection(std::string tag,
                                PlotUtils::Cutter<CVUniverse>& selection,
                                PlotUtils::Model<CVUniverse, PlotUtils::detail::empty>& model,
                                PlotUtils::weight_MCreScale mcRescale,
+                               PlotUtils::weight_warper warper,
                                bool closure = false, bool mc_reco_to_csv = false) {
     // Prepare loop
     MinervaUniverse::SetTruth(false);
@@ -45,7 +46,7 @@ void LoopAndFillEventSelection(std::string tag,
     TFile* myFile;
     TTree* mc_tree;
     TTree* data_tree;
-
+    std::cout << "start of loop" << std::endl;
     // future code to dump the outputs.
     // if (data_mc_truth == kData) {
     //     myFile = TFile::Open("data.root", "RECREATE");
@@ -74,10 +75,14 @@ void LoopAndFillEventSelection(std::string tag,
         return;  // don't bother if there are no variables.
     }
 
+    // bool dowarp = false;
+    bool dowarp = warper.GetDoWarp();
+    std::cout << "dowarp " << dowarp << std::endl;
     if (data_mc_truth == kData) {
         nentries = util.GetDataEntries();
     } else if (data_mc_truth == kMC) {
         nentries = util.GetMCEntries();
+        // dowarp = warper.GetDoWarp();
     } else {
         nentries = util.GetTruthEntries();
         MinervaUniverse::SetTruth(true);
@@ -123,7 +128,7 @@ void LoopAndFillEventSelection(std::string tag,
 
         // if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
         //  status bar stuff
-        
+
         // if (((double)(i + 1) / nentries) * 100 >= progress + 2.5) {
         //     progress += 2.5;
         //     std::cout << '\r' << std::flush << "   |";
@@ -153,7 +158,7 @@ void LoopAndFillEventSelection(std::string tag,
 
         if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
-        if (data_mc_truth == kMC || data_mc_truth == kData){
+        if (data_mc_truth == kMC || data_mc_truth == kData) {
             if (!cvUniv->FastFilter()) continue;
         }
         const double cvWeight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*cvUniv, event);  // detail may be used for more complex things
@@ -176,9 +181,13 @@ void LoopAndFillEventSelection(std::string tag,
                 // if (universe->ShortName() == "cv" ) weight = data_mc_truth == kData ? 1. : universe->GetWeight();
 
                 // probably want to move this later on inside the loop
-                const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event);  // Only calculate the per-universe weight for events that will actually use it.
+                // const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event);  // Only calculate the per-universe weight for events that will actually use it.
+                // const double warp = (!dowarp || data_mc_truth == kData) ? 1. : warper.GetWarpWeight(*universe);
+                const double warp = (dowarp && data_mc_truth == kMC) ? warper.GetWarpWeight(*universe) : 1.;
+                const double tmp_weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event);  // Only calculate the per-universe weight for events that will actually use it.
+                const double weight = warp * tmp_weight;
                 // PlotUtils::detail::empty event;
-
+                // std::cout << "weight " << weight << std::endl;
                 //=========================================
                 // Fill
                 //=========================================
@@ -191,6 +200,7 @@ void LoopAndFillEventSelection(std::string tag,
                     }
 #endif
                     if (selection.isMCSelected(*universe, event, weight).all() && selection.isSignal(*universe)) {
+                        // if (warp!=1.) std::cout << "warp " << warp << "  tmp_weight " << tmp_weight << "   weight " << weight << std::endl;
                         // double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
                         const double q2qe = universe->GetQ2QEGeV();
                         double scale = 1.0;
@@ -208,8 +218,7 @@ void LoopAndFillEventSelection(std::string tag,
                             csvFile << i;
                             for (auto v : variables) {
                                 if (v->hasMC[tag]) {
-                                    csvFile << ";" << v->GetRecoValue(*universe, 0) << ";" << v->GetTrueValue(*universe,0);
-
+                                    csvFile << ";" << v->GetRecoValue(*universe, 0) << ";" << v->GetTrueValue(*universe, 0);
                                 }
                             }
 
@@ -233,15 +242,6 @@ void LoopAndFillEventSelection(std::string tag,
                             for (int i = 0; i < nFSParts - 1; i++) csvFile << mc_FSPartE[i] << ",";
                             csvFile << mc_FSPartE[nFSParts - 1] << "}";
 
-                            /*
-                            std::map<int,int> true_counts_per_pdg = universe->GetTrueFSCountsPerPDG();
-                            csvFile << ";" << true_counts_per_pdg[211] + true_counts_per_pdg[-211]; // nFSChargedPion
-                            csvFile << ";" << true_counts_per_pdg[111]; // nFSNeutralPion
-                                                          csvFile << ";" << true_counts_per_pdg[2212]; // nFSProton
-                                                          csvFile << ";" << true_counts_per_pdg[2112]; // nFSNeutron
-                                                          csvFile << ";" << true_counts_per_pdg[13]; // nFSNegMuon
-                                                          csvFile << ";" << true_counts_per_pdg[22]; // nFSGamma
-                                                          */
                             csvFile << ";" << universe->GetInt("mc_run");
                             csvFile << ";" << universe->GetInt("mc_subrun");
                             csvFile << ";" << universe->GetInt("mc_nthEvtInFile") + 1;
@@ -271,8 +271,8 @@ void LoopAndFillEventSelection(std::string tag,
                 }
 
             }  // End universes
-        }      // End error bands
-    }          // End entries loop
+        }  // End error bands
+    }  // End entries loop
     if (data_mc_truth == kMC && mc_reco_to_csv) {
         csvFile.close();
         std::string csvFileName = "mc_reco_entries_" + sample + "_" + cat + ".csv";

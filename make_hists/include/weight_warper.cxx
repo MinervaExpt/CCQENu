@@ -22,74 +22,99 @@
 using namespace PlotUtils;
 
 weight_warper::weight_warper(const NuConfig config) {
-    // Dummy to take care of function stuff
-    CVFunctions<CVUniverse> fun;
+    // Check if you want to do the warp, m_dowarp defaults to false
+    if(config.IsMember("warpedmc")) {
+        if(config.GetString("warpedmc")=="warped" || config.GetString("warpedmc")=="both") {
+            m_dowarp = true;
+            std::cout << "dowarp set to true" << std::endl;
+        } else {
+            std::cout << "dowarp set to false" << std::endl;
+        }
+    }
 
-    // These are used to store the function pointer names. Need to do truth and Reco separate bc the getters are different.
-    std::vector<std::string> recovars;
-    std::vector<std::string> truevars;
+    if (m_dowarp) {
+        // Assumes you're feeding a main config
+        NuConfig warpdriver_config;
+        warpdriver_config.Read(config.GetString("warpdriverFile"));
+        // Dummy to take care of function stuff
+        CVFunctions<CVUniverse> fun;
 
-    // From the config, set up the subwarps and get all the used variable names
-    if (config.IsMember("warps")) {
-        SetSubwarps(config.GetConfig("warps"));
-        NuConfig warp_config = config.GetConfig("warps");
-        for (auto key : warp_config.GetKeys()) {
-            NuConfig subwarp_config = warp_config.GetConfig(key);
-            // First get the warp vars
-            if (subwarp_config.GetString("warpvartype") == "reco")
-                recovars.push_back(warp_config.GetConfig(key).GetString("warpvar"));
-            if (subwarp_config.GetString("warpvartype") == "true")
-                truevars.push_back(warp_config.GetConfig(key).GetString("warpvar"));
-            for (auto check_var : subwarp_config.GetConfig("check").GetKeys()) {
-                if (subwarp_config.GetConfig("check").GetConfig(check_var).GetString("type") == "reco") {
-                    recovars.push_back(check_var);
-                } else {
-                    truevars.push_back(check_var);
+        // These are used to store the function pointer names. Need to do truth and Reco separate bc the getters are different.
+        std::vector<std::string> recovars;
+        std::vector<std::string> truevars;
+
+        // Set the tag if you have it config'd, defaults to "warped"
+        if (warpdriver_config.IsMember("tag")) {
+            m_tag = warpdriver_config.GetString("tag");
+            std::cout << "weight_warper: tag set to " << m_tag << std::endl; 
+        }
+
+        // From the config, set up the subwarps and get all the used variable names
+        if (warpdriver_config.IsMember("subwarps")) {
+            NuConfig warp_config = warpdriver_config.GetConfig("subwarps");
+            SetSubwarps(warpdriver_config);
+            for (auto key : warp_config.GetKeys()) {
+                NuConfig subwarp_config = warp_config.GetConfig(key);
+                // First get the warp vars
+                if (subwarp_config.IsMember("warpvartype")) {
+                    if (subwarp_config.GetString("warpvartype") == "reco")
+                        recovars.push_back(warp_config.GetConfig(key).GetString("warpvar"));
+                    if (subwarp_config.GetString("warpvartype") == "true")
+                        truevars.push_back(warp_config.GetConfig(key).GetString("warpvar"));
+                }
+                for (auto check_var : subwarp_config.GetConfig("check").GetKeys()) {
+                    if (subwarp_config.GetConfig("check").GetConfig(check_var).GetString("type") == "reco") {
+                        recovars.push_back(check_var);
+                    } else {
+                        truevars.push_back(check_var);
+                    }
                 }
             }
         }
-        SetSubwarps(config);
+
+        // Get all the variables found into the function pointer map
+        for (auto var : recovars) m_fun_pointer_map[var] = fun.GetRecoFunction(var);
+        for (auto var : truevars) m_fun_pointer_map[var] = fun.GetTrueFunction(var);
+
+        // if (config.IsMember("subwarps")) {
+        //     SetSubwarps(config.GetConfig("subwarps"));
+        // }
+        // TODO: flexibility to do more general warps?
     }
-
-    // Get all the variables found into the function pointer map
-    for (auto var : recovars) m_fun_pointer_map[var] = fun.GetRecoFunction(var);
-    for (auto var : truevars) m_fun_pointer_map[var] = fun.GetTrueFunction(var);
-
-    // if (config.IsMember("warps")) {
-    //     SetSubwarps(config.GetConfig("warps"));
-    // }
-    // TODO: flexibility to do more general warps?
 }
 
 void weight_warper::SetSubwarps(NuConfig config) {
-    NuConfig warps = config.GetConfig("warps");
+    NuConfig warps = config.GetConfig("subwarps");
     for (auto key : warps.GetKeys()) {
-        PlotUtils::subwarp* subwarp = new PlotUtils::subwarp(warps.GetConfig(key));
-        m_subwarps[key] = subwarp;
+        std::cout << "weight_warper: setting up subwarp " << key << std::endl;
+        subwarp* my_subwarp = new subwarp(warps.GetConfig(key));
+        m_subwarps[key] = my_subwarp;
     }
 }
 
-int weight_warper::CheckSubwarp(const CVUniverse& univ, PlotUtils::subwarp* subwarp) {
+int weight_warper::CheckSubwarp(const CVUniverse& univ, subwarp* my_subwarp) {
     int tmp_check = 1;
-    for (auto var : subwarp->GetCheckVars()) {
+    for (auto var : my_subwarp->GetCheckVars()) {
         PointerToCVUniverseFunction fun = m_fun_pointer_map[var];
-        tmp_check = subwarp->CheckVal(var, fun(univ));
+        tmp_check = my_subwarp->CheckVal(var, fun(univ));
         if (tmp_check == 0) 
             return tmp_check;
     }
     return tmp_check;
 }
 
-double weight_warper::GetWarpWeight(const CVUniverse& univ, std::string univ_name, int iuniv) {
-    // Don't warp systematic universes?
-    // if (univ_name != "cv" || univ_name != "CV") 
-    //     return 1.;
-
+// double weight_warper::GetWarpWeight(const CVUniverse& univ, std::string univ_name, int iuniv) {
+// Don't warp systematic universes?
+// if (univ_name != "cv" || univ_name != "CV")
+//     return 1.;
+double weight_warper::GetWarpWeight(const CVUniverse& univ) {
+    if (!m_dowarp)
+        return 1.;
     double weight = 1.;
-    for (auto subwarp : m_subwarps) {
-        if (CheckSubwarp(univ, subwarp.second)) {
-            weight *= subwarp.second->GetWarpWeight(univ);
-            
+    for (auto my_subwarp : m_subwarps) {
+        if (CheckSubwarp(univ, my_subwarp.second)) {
+            weight *= my_subwarp.second->GetSubwarpWeight(univ);
+
             // this would assume all the warps are exclusive from each other. Would be faster, but relies more on user knowing what they're doing.
             // return tmp_weight
         }
@@ -97,20 +122,21 @@ double weight_warper::GetWarpWeight(const CVUniverse& univ, std::string univ_nam
     return weight;
 }
 
+bool weight_warper::GetDoWarp() {
+    return m_dowarp;
+}
+
+std::string weight_warper::GetTag() {
+    return m_tag;
+}
+
 // ============================ subwarp stuff ==================================
 subwarp::subwarp(NuConfig warp_config) {
     CVFunctions<CVUniverse> fun;
 
-    m_warpvar = warp_config.GetString("warpvar");
     NuConfig checks = warp_config.GetConfig("check");
-
-    if (warp_config.GetString("warpvartype") == "reco")
-        m_warpvar_fun_pointer = fun.GetRecoFunction(warp_config.GetString("warpvar"));
-    if (warp_config.GetString("warpvartype") == "true")
-        m_warpvar_fun_pointer = fun.GetTrueFunction(warp_config.GetString("warpvar"));
-
     for (auto var : checks.GetKeys()) {
-        NuConfig varconfig = warp_config.GetValue(var);
+        NuConfig varconfig = checks.GetConfig(var);
         if (varconfig.IsMember("equals"))
             equals[var] = varconfig.GetDouble("equals");
         if (varconfig.IsMember("min"))
@@ -126,17 +152,23 @@ subwarp::subwarp(NuConfig warp_config) {
         m_warpval = -1.0;
     }
 
+    if (warp_config.IsMember("warpvar")) {
+        m_warpvar = warp_config.GetString("warpvar");
+        if (warp_config.GetString("warpvartype") == "reco")
+            m_warpvar_fun_pointer = fun.GetRecoFunction(warp_config.GetString("warpvar"));
+        if (warp_config.GetString("warpvartype") == "true")
+            m_warpvar_fun_pointer = fun.GetTrueFunction(warp_config.GetString("warpvar"));
+    }
     if (warp_config.IsMember("warpfile")) {
         if (warp_config.IsMember("warpfunct")) {
-            SetWarpFunct(warp_config.GetString("warpfile")), warp_config.GetString("warpfunct");
+            SetWarpFunct(warp_config.GetString("warpfile"), warp_config.GetString("warpfunct"));
             warptype = kFunctWarp;
         }
         else if (warp_config.IsMember("warphist")) {
-            SetWarpHist(warp_config.GetString("warpfile")), warp_config.GetString("warphist");
+            SetWarpHist(warp_config.GetString("warpfile"), warp_config.GetString("warphist"));
             warptype = kHistWarp;
         }
     }
-    // If you're using a function or hist from a file, this is set externally
 }
 
 std::vector<std::string> subwarp::GetCheckVars() {
@@ -150,7 +182,7 @@ void subwarp::SetWarpFunct(TString warp_filename, std::string warp_functname) {
         std::cout << "weight_warper::subwarp: I'm using this file for the warp: " << warp_filename << std::endl;
         m_warpfunct = (TF1*)warpfile->Get(warp_functname.c_str());
     } else {
-        std::cout << "weight_warper::subwarp: WARNING: Cannot find input file for subwarp: " << filename << std::endl;
+        std::cout << "weight_warper::subwarp: WARNING: Cannot find input file for subwarp: " << warp_filename << std::endl;
         std::cout << "  Defaulting to no warp." << std::endl;
         m_warpval = 1.;
     }
@@ -177,10 +209,11 @@ void subwarp::SetWarpHist(TString warp_filename, std::string warp_histname) {
 }
 
 // public functions
-int subwarp::CheckVal(std::string varname, double val) {
+
+bool subwarp::CheckVal(std::string varname, double val) {
     if (equals.find(varname) != equals.end())
         // If equal set, return if equal to it
-        return val = equals[varname];
+        return val == equals[varname];
 
     bool pass_min = 0;
     if (min.find(varname) != min.end())
@@ -203,7 +236,8 @@ double subwarp::GetWarpWeight(double warpvar_val) {
     return -1.;
 }
 
-double subwarp::GetWarpWeight(const CVUniverse& univ) {
+double subwarp::GetSubwarpWeight(const CVUniverse& univ) {
+    // if a straight warp is set, warpval>0, use that 
     if (m_warpval >= 0)
         return m_warpval;
     double warpvar_val = m_warpvar_fun_pointer(univ);

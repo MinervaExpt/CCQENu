@@ -37,6 +37,7 @@
 #include "include/Variable2DFromConfig.h"
 #include "include/VariableHyperDFromConfig.h"
 #include "include/weight_MCreScale.h"
+#include "include/weight_warper.h"
 #include "utils/CoherentPiReweighter.h"
 #include "utils/DiffractiveReweighter.h"
 // #include "include/plotting_pdf.h"

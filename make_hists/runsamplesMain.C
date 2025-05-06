@@ -167,6 +167,13 @@ int main(const int argc, const char *argv[]) {
     PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(config);
 
     //===========================================================================
+    // Warper if you want to do warps
+    //===========================================================================
+
+    PlotUtils::weight_warper warper = weight_warper(config);
+    bool dowarp = warper.GetDoWarp();
+
+    //===========================================================================
     // Systematics
     // GetStandardSystematics in Systematics.h
     //===========================================================================
@@ -269,9 +276,16 @@ int main(const int argc, const char *argv[]) {
 
         for (auto category : categories) {
             std::string cname = category.first;
-            tag = name + "___" + cname;
+            // tag = name + "___" + cname;
+            // std::cout << "make a tag " << tag << std::endl;
+            if (!dowarp) {
+                tag = sample.GetName() + "___" + cname;
+                std::cout << "make a tag " << tag << std::endl;
+            } else {
+                tag = sample.GetName() + "_" + warper.GetTag() + "___" + cname;
+                std::cout << "make a warp tag " << tag << std::endl;
+            }
             tags.push_back(tag);
-            std::cout << "make a tag " << tag << std::endl;
             if (!cutsConfig.IsMember(cname)) {
                 std::cout << " sample category " << cname << " does not have an associated  cut in " << cutsfilename << std::endl;
                 assert(0);
@@ -282,6 +296,18 @@ int main(const int argc, const char *argv[]) {
                 std::move(noSidebands),
                 config_truth::GetCCQESignalFromConfig<CVUniverse>(truecuts),
                 config_truth::GetCCQEPhaseSpaceFromConfig<CVUniverse>(phasespace));
+            // // If you're doing the warp, make these tags
+            // if (dowarp) {
+            //     tag = name + "_" + warper.GetTag() + "___" + cname;
+            //     tags.push_back(tag);
+            //     std::cout << "make a warp tag " << tag << std::endl;
+            //     // Don't need to check if category exists or get the true cuts since that's already done
+            //     selectionCriteria[tag] = new PlotUtils::Cutter<CVUniverse>(
+            //         config_reco::GetCCQECutsFromConfig<CVUniverse>(recocuts),
+            //         std::move(noSidebands),
+            //         config_truth::GetCCQESignalFromConfig<CVUniverse>(truecuts),
+            //         config_truth::GetCCQEPhaseSpaceFromConfig<CVUniverse>(phasespace));
+            // }
         }
     }
 
@@ -298,6 +324,7 @@ int main(const int argc, const char *argv[]) {
 
     // here we decide what histograms to fill
 
+    // TODO: maybe just put into previous loop? Why separate "tags" and the tags for each hist?
     for (auto sample : samples) {
         std::map<const std::string, CCQENu::Category> categories = sample.GetCategories();
         std::string data_tag = sample.GetName() + "___data";
@@ -311,20 +338,40 @@ int main(const int argc, const char *argv[]) {
             }
             std::cout << std::endl;
 
-            std::string tag = sample.GetName() + "___" + cname;
-            std::cout << "make a tag " << tag << std::endl;
+            // std::string tag = sample.GetName() + "___" + cname;
+            // std::cout << "make a tag " << tag << std::endl;
+
+            // std::string warptag;
+            std::string tag;
+            if (dowarp) {
+                // warptag = sample.GetName() + "_" + warper.GetTag() + "___" + cname;
+                // std::cout << "make a warp tag " << warptag << std::endl;
+                tag = sample.GetName() + "_" + warper.GetTag() + "___" + cname;
+                std::cout << "make a warp tag " << tag << std::endl;
+            } else {
+                tag = sample.GetName() + "___" + cname;
+                std::cout << "make a tag " << tag << std::endl;
+            }
 
             if (IsInVector<std::string>("selected_reco", forlist)) {
                 selected_reco_tags.push_back(tag);
+                // if (dowarp)
+                //     selected_reco_tags.push_back(warptag);
             }
             if (IsInVector<std::string>("selected_truth", forlist)) {
                 selected_truth_tags.push_back(tag);
+                // if (dowarp)
+                //     selected_truth_tags.push_back(warptag);
             }
             if (IsInVector<std::string>("truth", forlist)) {
                 truthtags.push_back(tag);
+                // if (dowarp)
+                //     truthtags.push_back(warptag);
             }
             if (IsInVector<std::string>("response", forlist)) {
                 responsetags.push_back(tag);
+                // if (dowarp)
+                //     responsetags.push_back(warptag);
             }
         }
     }
@@ -415,7 +462,7 @@ int main(const int argc, const char *argv[]) {
 
     for (auto tag : datatags) {
         std::cout << "Loop and Fill Data for " << tag << "\n";
-        LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, variablesHD, kData, *selectionCriteria[tag], model, mcRescale, closure, mc_reco_to_csv);
+        LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, variablesHD, kData, *selectionCriteria[tag], model, mcRescale, warper, closure, mc_reco_to_csv);
         std::cout << "\nCut summary for Data:" << tag << "\n"
                   << *selectionCriteria[tag] << "\n";
         selectionCriteria[tag]->resetStats();
@@ -427,7 +474,7 @@ int main(const int argc, const char *argv[]) {
         std::string sample(tag, 0, loc - 3);
         mcRescale.SetCat(cat);
         std::cout << "Loop and Fill MC Reco  for " << tag << "\n";
-        LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, variablesHD, kMC, *selectionCriteria[tag], model, mcRescale, closure, mc_reco_to_csv);
+        LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, variablesHD, kMC, *selectionCriteria[tag], model, mcRescale, warper, closure, mc_reco_to_csv);
         std::cout << "\nCut summary for MC Reco:" << tag << "\n"
                   << *selectionCriteria[tag] << "\n";
         selectionCriteria[tag]->resetStats();
@@ -435,7 +482,7 @@ int main(const int argc, const char *argv[]) {
 
     for (auto tag : truthtags) {
         std::cout << "Loop and Fill MC Truth  for " << tag << "\n";
-        LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, variablesHD, kTruth, *selectionCriteria[tag], model, mcRescale, closure, mc_reco_to_csv);
+        LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, variablesHD, kTruth, *selectionCriteria[tag], model, mcRescale, warper, closure, mc_reco_to_csv);
         std::cout << "\nCut summary for MC Truth:" << tag << "\n";
         // this is a special overload to allow printing truth
         (*selectionCriteria[tag]).summarizeTruthWithStats(std::cout);
