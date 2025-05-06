@@ -6,13 +6,15 @@
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
   "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
-  "outRoot": "warptest_1d_0mmrecoil_${MYMODEL}",
+  "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
+  "outRoot": "warpconfig_multinucleonqeEnhanced_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale":999,
   "playlist":"minervame5A",
   "MinervaModel":"${MYMODEL}", 
   "recoName":"MasterAnaDev",
-  "tunedmc":"both", 
+  "tunedmc":"untuned", 
+  "warpedmc": "both",
   "closure":0,
   "TuneCategories":["qelike", "chargedpion","neutralpion"], 
   "DoResolution": false,
@@ -53,7 +55,7 @@
     // "EAvailWiggled"
     // "EAvailWithNeutrons"
     // "resEAvailWithNeutrons"
-    // "recoil"//,
+    "recoil",
     // "recoilQE"
     // "NeutBlobsRatio"
     "pzmu",

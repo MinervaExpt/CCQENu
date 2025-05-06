@@ -13,9 +13,9 @@
             "neutralpion",
             "chargedpion",
             // // "multipion",
-            "other",
-            "qelikenot",
-            "lambda"
+            "other"//,
+            // "qelikenot",
+            // "lambda"
         ],
         "categories": {
             "qelike": {
@@ -48,18 +48,18 @@
                 "for": [
                     "selected_reco"
                 ]
-            },
-            "qelikenot": {
-                // "for": ["selected_reco", "selected_truth", "truth", "response"]                
-                "for": [
-                    "selected_reco"
-                ]
-            },
-            "lambda": {
-                "for": [
-                    "selected_reco"
-                ]
-            }
+            }//,
+            // "qelikenot": {
+            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // },
+            // "lambda": {
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // }
         },
         "legend_entries": {
             "data": "Data",
@@ -67,9 +67,9 @@
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
             // "multipion": "N#pi",
-            "other": "Other",
-            "qelikenot": "QELike Not",
-            "lambda": "1#Lambda^{0}"
+            "other": "Other"//,
+            // "qelikenot": "QELike Not",
+            // "lambda": "1#Lambda^{0}"
         }
     },
     "QElike_2track": {
