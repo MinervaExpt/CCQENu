@@ -107,6 +107,7 @@ class weight_warper {
 
    private:
     bool m_dowarp = false;
+    std::string m_warpedmc = "";
 
     typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
 
@@ -123,7 +124,9 @@ class weight_warper {
     // double GetWarpWeight(const CVUniverse& univ, std::string univ_name, int iuniv);
     double GetWarpWeight(const CVUniverse& univ);
     bool GetDoWarp();
-    
+
+    std::string GetWarpedMCConfig();
+
     std::string GetTag();
 };
 }  // namespace PlotUtils

@@ -130,6 +130,16 @@ int main(const int argc, const char *argv[]) {
     // }
 
     //===========================================================================
+    // Warper if you want to do warps
+    //===========================================================================
+
+    PlotUtils::weight_warper warper = weight_warper(config);
+    // This is just a yes or no switch to turn on the warper. Set to warpedmc in main config to "warped", "both", or "custom" to make this true
+    bool dowarp = warper.GetDoWarp();
+    // This is the actual string to get you to mess with models specifically, rather than custom warps
+    std::string warpedmc = warper.GetWarpedMC();
+
+    //===========================================================================
     // MODELS TODO: needs a driver
     //===========================================================================
 
@@ -147,7 +157,9 @@ int main(const int argc, const char *argv[]) {
         bool NonResPiReweight = true;
         bool DeuteriumGeniePiTune = false;                                                                                                   // Deut should be 0? for v1?
         MnvTune.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse, PlotUtils::detail::empty>(NonResPiReweight, DeuteriumGeniePiTune));  // Deut should be 0? for v1?
-        MnvTune.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
+        if (warpedmc != "no2p2htune") { // Skip this to do a weird warp
+            MnvTune.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
+        }
         MnvTune.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
         MnvTune.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
     }
@@ -165,13 +177,6 @@ int main(const int argc, const char *argv[]) {
     // Initialize the rescale for tuning MC reco for background subtraction later
 
     PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(config);
-
-    //===========================================================================
-    // Warper if you want to do warps
-    //===========================================================================
-
-    PlotUtils::weight_warper warper = weight_warper(config);
-    bool dowarp = warper.GetDoWarp();
 
     //===========================================================================
     // Systematics

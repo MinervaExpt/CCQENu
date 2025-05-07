@@ -22,9 +22,12 @@
 using namespace PlotUtils;
 
 weight_warper::weight_warper(const NuConfig config) {
-    // Check if you want to do the warp, m_dowarp defaults to false
+    // Check if you want to do the warp, m_dowarp is a switch to turn this mechanism on & defaults to false, can set to other values to be used in other places for model warps
     if(config.IsMember("warpedmc")) {
-        if(config.GetString("warpedmc")=="warped" || config.GetString("warpedmc")=="both") {
+        m_warpedmc = config.GetString("warpedmc");
+    }
+    if(config.IsMember("warpedmc")) {
+        if(config.GetString("warpedmc")=="warped" || config.GetString("warpedmc")=="both" || config.GetString("warpedmc")=="custom") {
             m_dowarp = true;
             std::cout << "dowarp set to true" << std::endl;
         } else {
@@ -124,6 +127,10 @@ double weight_warper::GetWarpWeight(const CVUniverse& univ) {
 
 bool weight_warper::GetDoWarp() {
     return m_dowarp;
+}
+
+std::string weight_warper::GetWarpedMCConfig() {
+    return m_warpedmc;
 }
 
 std::string weight_warper::GetTag() {
