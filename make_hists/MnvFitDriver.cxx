@@ -278,6 +278,9 @@ int main(int argc, char* argv[]) {
     std::cout << " Try to write it out" << std::endl;
     
     outputfile->cd();
+    std::string fitconfig = config.ToString();
+    TNamed fitobj("FitFile", fitconfig.c_str());
+    fitobj.Write();
     int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin, upperLimit);
     
     // set up for plots

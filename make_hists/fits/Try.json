@@ -3,7 +3,7 @@
  "IncludeInFit":["1track","2track"],
     "Categories":["qelike","1chargedpion","1neutralpion","multipion","other"],
     "Backgrounds":["1chargedpion","1neutralpion","multipion","other"],
-    "Span":40,
+    "Span":1,
     "Rebin":4,
     "LowBin":1,
     "UpperLimit":100.0,

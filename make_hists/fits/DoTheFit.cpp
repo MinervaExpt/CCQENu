@@ -150,8 +150,8 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                 for (unsigned int i = 0; i < func2.NDim(); ++i) {
                     std::string name = categories[i];
                     std::cout << " set parameter " << i << " " << name << std::endl;
-                    mini2->SetLowerLimitedVariable(i, name, 1.0, 0.1, 0.0);
-                    mini2->SetUpperLimitedVariable(i, name, 1.0, 0.1, upperLimit);
+                    mini2->SetVariable(i, name, 1.0, 0.1);
+                    //mini2->SetUpperLimitedVariable(i, name, 1.0, 0.1, upperLimit);
                     nextPar++;
                 }
 
@@ -172,6 +172,15 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                 // https://root-forum.cern.ch/t/is-fit-validity-or-minimizer-status-more-important/30637
                 int status = mini2->Status();
                 std::cout << " fit status was " << status << std::endl;
+                const double* dResults = mini2->X();
+                // make it a vector.
+                
+                std::cout << "parameters: ";
+                for (int i = 0; i < ndim; i++) {
+                   
+                    std::cout << i << " " << dResults[i] << " ";
+                }
+                std::cout << std::endl;
                 if (status > 1) {
                     std::cout << "Printing Results." << std::endl;
                     mini2->PrintResults();

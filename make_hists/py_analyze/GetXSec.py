@@ -2,7 +2,7 @@ import os,sys
 from ROOT import TH2D, TMatrixD, RooUnfold
 from PlotUtils import MnvH1D, MnvH2D 
 #from UnfoldUtils import MnvUnfold
-from MatrixUtils import SyncBands, ZeroDiagonal
+from MatrixUtils import SyncBands, ZeroDiagonal, sumHists
 from RebinFlux import GetFluxFlat, GetFluxEbins
 from plotting_pdf import PlotCVAndError, PlotErrorSummary, Plot2DFraction, integrator
 DEBUG = True
@@ -610,6 +610,12 @@ def GetCrossSection(sample, variable, basename,
                     unfold, num_iter, DEBUG, hasbkgsub, usetune, rescale, outname): 
     binwid = True
 
+    print("GetCrossSection",sample, variable, basename,
+                    #histsND,
+                    #responseND,
+                    #configs,  
+                    canvas, norm, POTScale, h_flux_dewidthed,
+                    unfold, num_iter, DEBUG, hasbkgsub, usetune, rescale, outname)
     logscale = 0  # 0 for none, 1 for x, 2 for y, 3 for both
 
     # Get "category" tags set in config. Needs to match ones used in the event loop.
@@ -620,18 +626,26 @@ def GetCrossSection(sample, variable, basename,
     # configs["main"].Print()
     sigkey = configs["main"]["signal"]
     # sigkey.Print() 
+    if sample not in sigkey:
+        print (" this sample is not in sigkey",sample,"giving up")
+        return
     sig = sigkey[sample]
     print(" got sig " , sig )
     bkgkey = []
-
+    bkgcats = []
+    fromfit = "Fit" in configs.keys()
+    print ("fromfit",configs.keys(),fromfit)
     if (not hasbkgsub): 
         # this likely needs to be fixed
-        bkgkey = configs["main"]["background"]
+        if fromfit:
+            bkgcats = configs["Fit"]["Backgrounds"]
+        else:
+            bkgkey = configs["main"]["background"]
         # bkgkey.Print()
-        print(sample in bkgkey )
+            print(sample in bkgkey )
         
-        bkg = bkgkey[sample]
-        print(" got bkg " , bkg )
+            bkg = bkgkey[sample]
+            print(" got bkg " , bkg )
     
     datkey = configs["main"]["data"]
     dat = datkey[sample]
@@ -730,8 +744,26 @@ def GetCrossSection(sample, variable, basename,
     #MnvHistoType* imcbkghist
     #MnvHistoType* ibkgsubhist
     imcbkghist = 0
+    print ("histsND keys",histsND[mctype].keys())
     if (not hasbkgsub): 
-        imcbkghist = histsND[mctype][bkg]
+        if len(bkgcats)!=0:
+            print ("-----------------------------BKG-----------------------")
+            bkghists = []
+            firstcat = bkgcats[0]
+            newname = histsND[mctype][firstcat].GetName().replace(firstcat,"bkg")
+            for cats in bkgcats:
+                print ("new cat",cats,newname)
+                bkghists.append(histsND[mctype][cats])
+                histsND[mctype][cats].Print("ALL")
+            
+            imcbkghist = sumHists(bkghists,newname=newname)
+            SyncBands(imcbkghist)
+            print ("new bkg",imcbkghist.GetNentries())
+            imcbkghist.Print("ALL")
+
+        else:
+            imcbkghist = histsND[mctype]["qelikenot"]
+        imcbkghist.Write()
         print(" using " , imcbkghist.GetName() )
     else:
         ibkgsubhist = histsND["fitted"]["bkgsub"]

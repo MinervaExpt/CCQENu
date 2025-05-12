@@ -202,3 +202,17 @@ def ZeroDiagonal(m):
     for i in range(0,n): 
         newm[i][i] = 0
     return newm
+
+def sumHists(hists,newname="dummy"):
+    print ("called sumHists",newname)
+    if len(hists) < 1:
+        print ("sumHists has no input hists")
+        return 0
+    hists[0].Print()
+    newhist = hists[0].Clone(newname)
+    newhist.Print()
+    for i in range(1,len(hists)):
+        hists[i].Print()
+        newhist.Add(hists[i])
+    newhist.Print()
+    return newhist

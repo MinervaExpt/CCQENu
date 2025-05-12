@@ -98,7 +98,8 @@ MESSAGE("ROOT_LIBRARIES:${ROOT_LIBRARIES} ")
 
 MESSAGE("PROJECT:${PROJECT_NAME}")
 
-target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT}  -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) 
+target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT}  -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) 
+#target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT}  -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict) 
 #target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT} -lplotutils -L$ENV{UNFOLDUTILSROOT} -lunfoldutils -l$ENV{UNFOLDUTILSROOT} -lG__UnfoldUtilsDict.so)
 
 

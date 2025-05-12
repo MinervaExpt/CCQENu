@@ -1,0 +1,17 @@
+{"InputFile":"/Users/schellma/Dropbox/ccqe/p4_run/ccqemadd.root",
+    "%%%InputFile":"/Users/schellma/Dropbox/CCQE/SB_Sean_mnv_Nu_v8_multitrack_1.root",
+    "Sidebands":["QElike"],
+    "IncludeInFit":["QElike"],
+    "Categories":["qelike","qelikenot"],
+ "Backgrounds":["qelikenot"],
+ "Span":1,
+ "Rebin":2,
+ "Variable":"recoil",
+    "FitType":"FastChi2",
+  "OutputFile":"recoilTest.root",
+  "PixDir":"./pix3",
+  "LogPlot":false,
+  "LogMinimum":0.1,
+  "Template":"h___%s___%s___%s___reconstructed",
+  "FitTemplate":"h___%s___%s___%s___fitted"
+}
