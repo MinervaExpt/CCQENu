@@ -61,15 +61,20 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
             }
             if (fType == kSlowChi2){ // use the MC as a better estimator
                 double MCval = fitSum>0?fitSum:-fitSum;
+                
                 diff = fitSum-dataContent;
-                chi2 += (diff*diff)/MCval;
+                if (MCval > 0) {
+                    chi2 += (diff*diff)/MCval;
+                }
+            
+                
             }
             if (fType == kML){
                 diff = fitSum-dataContent;
                 chi2 -= 2.*TMath::Log(TMath::Poisson(dataContent,fitSum));
             }
 #ifdef DEBUG
-            std::cout << whichsample << "Fit Sum: " << fitSum << ", Data: " << dataContent << ", Difference: " << diff << ", Error: " << dataErr << std::endl;
+            std::cout << whichsample << "Fit Sum: " << fitSum << ", Data: " << dataContent << ", Difference: " << diff << ", Error: " << dataErr << ", chi2" << chi2 << std::endl;
 #endif
         }
     }

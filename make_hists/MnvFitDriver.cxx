@@ -389,7 +389,10 @@ int main(int argc, char* argv[]) {
     }
     
     for (auto side:sidebands){
+        double res[1000];
+        double chidof = dataHist[side]->Chi2Test(tot[side], "UW P CHI2/NDF ", res);
         dataHist[side]->SetTitle(dataHist[side]->GetName());
+        std::cout << dataHist[side]->GetTitle() << " "  << chidof << std::endl;
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot[side], 1., "TR");
         TString pixheader = TString("pix/" + side + "_" + varName+"_");
 

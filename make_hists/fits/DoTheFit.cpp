@@ -10,6 +10,7 @@
 #include "utils/SyncBands.h"
 
 #define DEBUG
+
 namespace fit {
 
 TMatrixD  extrabands(const TMatrixDSym cov) {
@@ -108,11 +109,20 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             parameters.AddVertErrorBandAndFillWithCV(univ, nuniv);
             covariance.AddVertErrorBandAndFillWithCV(univ, nuniv);
             correlation.AddVertErrorBandAndFillWithCV(univ, nuniv);
+            mini2->SetPrintLevel(0);
+
         } else {
             nuniv = 1;
+            mini2->SetPrintLevel(3);
         }
+        #ifdef DEBUG
+        if (univ != "CV")continue;
+        #endif
+        
+
         // loop over universes within a band
         for (int iuniv = 0; iuniv < nuniv; iuniv++) {
+           
             std::cout << " now do the fit for " << univ << " " << iuniv << std::endl;
             // make a local TH1F map unfitHistsCV that the fitter expects
             std::map<const std::string, std::vector<TH1D*>> unfitHistsCV;
@@ -208,6 +218,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                 //CovMatrix.Print();
                 for (int i = 0; i < ndim; i++) {
                     ScaleResults.push_back(combScaleResults[i]);
+
                     if (true){
                         for (int j = 0; j < ndim; j++){
                             //std::cout << i << " " << j << std::endl;
