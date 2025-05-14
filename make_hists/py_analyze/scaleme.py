@@ -31,6 +31,9 @@ print ("got here")
 def mergeCategories(mapofstuff,listofcats,newtag):
     ''' merge stuff and give it a new name'''
     print ("merge",newtag,listofcats,mapofstuff.keys())
+    if newtag in mapofstuff:
+        print ("merge has already happened",newtag)
+        return
     first = listofcats[0]
     newhist = MnvH1D()
     if first not in mapofstuff.keys():
@@ -39,6 +42,8 @@ def mergeCategories(mapofstuff,listofcats,newtag):
     if mapofstuff[first].InheritsFrom("MnvH2D"):
         newhist=MnvH2D()
     newname = mapofstuff[first].GetName().replace(first,newtag)
+    
+        
     newhist = mapofstuff[first].Clone(newname)
     newhist.Reset()
     print ("mapofstuff",newtag,mapofstuff.keys())
@@ -341,7 +346,12 @@ for k in f.GetListOfKeys():
     hist.Scale(POTScale)
     after = hist.Integral()
     print ("POTscale",before,after,hist.GetName())
-    
+
+    if "scaledmc" in thetype:
+        print("already rescaled",hist.GetName())
+        goodhists[newname]=hist.GetName()
+        continue
+
     if rescale and category not in noscale:
         newtype = thetype + "_scaledmc"
         newname = key.replace(thetype,newtype)
@@ -366,6 +376,7 @@ for k in f.GetListOfKeys():
         print ("rescaled",after,newres,newres.GetName())
         goodhists[newname]=newres
 
+POTScale = 1.0
         
 # sort into buckets
 
@@ -566,7 +577,7 @@ for x in basetypes:
 
 print ("usetypes",usetypes)
 
-print (" about to rescale ", rescale)
+print (" about to combine samples ", rescale)
 component = {}
 for sample in samples:
     print ("sample",sample)
@@ -576,7 +587,10 @@ for sample in samples:
         #    print (variable,"is not in",AnalyzeVariables)
         #    continue
         for thetype in usetypes:
-            print ("scaling",sample,variable,thetype)
+            # if "reconstructed" not in thetype:
+            #     print ("danger, in test mode")
+            #     continue
+            print ("merging",sample,variable,thetype)
             
             #if not rescale and thetype == "reconstructed_scaled": continue
             status = 1
@@ -596,7 +610,7 @@ for sample in samples:
                 else:
                     print (thetype,"not there for",sample,variable,response1D[sample][variable].keys())
                     continue
-                mergeCategories(response1D[sample][variable][thetype],signals,"sig")
+                #mergeCategories(response1D[sample][variable][thetype],signals,"sig")
                 #mergeCategories(response1D[sample][variable][thetype],categories,"tot")
                 #mergeCategories(response1D[sample][variable][thetype],backs,"bkg")
             else:
@@ -626,9 +640,9 @@ for sample in samples:
                     total.Print()
                 else:
                     bkg=null
-
+                    total=sig
                 sig.Print()
-
+                sig.Write()
         #print ("models",models)
                 if("reconstructed" in thetype):
                     ModelArray = map2TObjArray(models)
@@ -638,9 +652,9 @@ for sample in samples:
                     cF.Print("pix/%s_%s_%s_%s"%(sample,variable,thetype,"ratio.png"))
                     mnvPlotter.DrawDataMCWithErrorBand(data,total, 1., "TR");
                     cF.Print("pix/%s_%s_%s_%s"%(sample,variable,thetype,"dataMC.png"))
-                    if "reconstructed" in "thetype":
-                        mnvPlotter.DrawErrorSummary(bkg);
-                        cF.Print("pix/%s_%s_%s_%s"%(sample,variable,thetype,"bkg_uncertainty.png"))
+                    
+                    mnvPlotter.DrawErrorSummary(bkg);
+                    cF.Print("pix/%s_%s_%s_%s"%(sample,variable,thetype,"bkg_uncertainty.png"))
 
                     s = TexFigure3(name1="pix/%s_%s_%s_%s"%(sample,variable,thetype,"stacked.png"), name2="pix/%s_%s_%s_%s"%(sample,variable,thetype,"ratio.png"),name3="pix/%s_%s_%s_%s"%(sample,variable,thetype,"dataMC.png"),
                     name4="pix/%s_%s_%s_%s"%(sample,variable,thetype,"bkg_uncertainty.png"),caption="%s %s %s"%(sample,variable,thetype),label=None)
@@ -652,34 +666,34 @@ texfile.write("\\end{document}\n")
 texfile.close()        
             
 
-for sample in samples:
-    for variable in variables:
-        if variable not in AnalyzeVariables:
-            continue
-        if variable not in hists1D[sample].keys():
-            print ("no variable in data for ",variable)
-            continue
+# for sample in samples:
+#     for variable in variables:
+#         if variable not in AnalyzeVariables:
+#             continue
+#         if variable not in hists1D[sample].keys():
+#             print ("no variable in data for ",variable)
+#             continue
     
-        print (sample,variable)
+#         print (sample,variable)
         
-        tot = hists1D[sample][variable]["reconstructed"]["data"].Clone()
+#         tot = hists1D[sample][variable]["reconstructed"]["data"].Clone()
         
-        totname =  tot.GetName().replace("data","tot")
-        tot.Reset()
-        tot.SetName(totname)
-        for category in categories:  
-            if category in ["all","bkg","bkgsub"]: 
-                continue
-            tmp = MnvH1D()
-            tmp = hists1D[sample][variable]["reconstructed"][category].Clone()
-            print ("tmp thetype",type(tmp))
-            print (tmp.GetName())
+#         totname =  tot.GetName().replace("data","tot")
+#         tot.Reset()
+#         tot.SetName(totname)
+#         for category in categories:  
+#             if category in ["all","bkg","bkgsub"]: 
+#                 continue
+#             tmp = MnvH1D()
+#             tmp = hists1D[sample][variable]["reconstructed"][category].Clone()
+#             print ("tmp thetype",type(tmp))
+#             print (tmp.GetName())
             
-            if not tmp: continue
-            tot.Add(tmp,1.)
-        addentry(hists1D,sample,variable,"reconstructed","tot",tmp)
-        tmp.Write()
-        tmp.Print()
+#             if not tmp: continue
+#             tot.Add(tmp,1.)
+#         addentry(hists1D,sample,variable,"reconstructed","tot",tmp)
+#         tmp.Write()
+#         tmp.Print()
   
 
 o.cd()

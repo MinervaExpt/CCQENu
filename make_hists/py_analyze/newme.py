@@ -163,9 +163,9 @@ if rescale:
         allconfigs["Fit"] = fitconfig
     if prefit: 
         allconfigs["Fit"] = commentjson.loads((f.Get("Fit").GetTitle()))
+
 allconfigs["main"] = commentjson.loads(mains)
 allconfigs["varsFile"] = commentjson.loads((f.Get("varsFile").GetTitle()))
-
 allconfigs["cutsFile"] = commentjson.loads((f.Get("cutsFile").GetTitle()))
 allconfigs["samplesFile"] = commentjson.loads((f.Get("samplesFile").GetTitle()))
 #allconfigs["FitFile"] = commentjson.loads((f.Get("FitFile").GetTitle()))
@@ -176,6 +176,7 @@ if "AnalyzeVariables2D" in allconfigs["main"]:
 else:
     AnalyzeVariables2D = []
 categoryMap = {}
+signalMap = {}
 count = 0
 if rescale:
     for x in allconfigs["Fit"]["Categories"]:
@@ -184,6 +185,14 @@ if rescale:
 else:
     categoryMap["qelike"] = 0
     categoryMap["qelikenot"] = 1
+
+if rescale:
+    for x in allconfigs["Fit"]["Signal"]:
+        signalMap[x] = count
+        count += 1
+else:
+    signalMap["qelike"] = 0
+    #SignalMap["qelikenot"] = 1
 
 print (categoryMap)
 
@@ -802,6 +811,7 @@ for sample in samples:
                 bkg = typical.Clone()
                 bkg.SetName(data.GetName().replace("data","bkg"))
                 bkg.Reset()
+                
                 for category in categoryMap.keys():
                     models[category] = (hists1D[sample][variable][thetype][category])
                     if models[category] is None: 
@@ -812,13 +822,30 @@ for sample in samples:
                     if rescale and category in allconfigs["Fit"]["Backgrounds"]:
                         bkg.Add(models[category],1.) 
                     elif category == "qelikenot":
-                        bkg.Add(models[category],1.)   
-                
+                        bkg.Add(models[category],1.)  
+                sig = MnvH1D()
+                sig = typical.Clone()
+                sig.SetName(data.GetName().replace("data","bkg"))
+                sig.Reset() 
+                for signal in signalMap.keys():
+                    models[signal] = (hists1D[sample][variable][thetype][signal])
+                    if models[signal] is None: 
+                        print ("nothing here",sample,variable,thetype,signal)
+                        status = 0
+                        break
+                    signal.Add(models[signal],1.)
+                    if rescale and signal in allconfigs["Fit"]["Signal"]:
+                        sig.Add(models[signal],1.) 
+                    elif category == "qelike":
+                        sig.Add(models[signal],1.)   
+
                 if status == 0: continue
                 addentry(hists1D,sample,variable,thetype,"tot",total)
                 addentry(hists1D,sample,variable,thetype,"bkg",bkg)
+                addentry(hists1D,sample,variable,thetype,"sig",sig)
                 total.Print()
                 bkg.Print()
+                sig.Print()
             #print ("models",models)
                 ModelArray = map2TObjArray(models)
                 mnvPlotter.DrawDataStackedMC(data,ModelArray,1.0,"TR")
