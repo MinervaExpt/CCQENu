@@ -9,7 +9,7 @@
 #include "fits/MultiScaleFactors.h"
 #include "utils/SyncBands.h"
 
-#define DEBUG
+//#define DEBUG
 
 namespace fit {
 
@@ -77,7 +77,8 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
         if (acount > 1) continue;
         ahist = sample.second.at(0);
         universes = ahist->GetVertErrorBandNames();
-        universes.push_back("CV");
+        //universes.push_back("CV");
+        universes.insert(universes.begin(),"CV");
         std::cout << " universe names:" ;
         for (auto a:universes){
             std::cout << a << ", ";
@@ -113,7 +114,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
 
         } else {
             nuniv = 1;
-            mini2->SetPrintLevel(3);
+            mini2->SetPrintLevel(1);
         }
         #ifdef DEBUG
         if (univ != "CV")continue;
