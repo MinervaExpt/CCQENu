@@ -1,0 +1,23 @@
+{"Signal":[
+        "qelikeQE",
+        "qelike2p2h",
+        "qelikeRES",
+        "qelikeOther"
+    ],
+    "Categories": [
+        "qelikeQE",
+        "qelikeRES",
+        "qelikeOther",
+        "qelike2p2h",
+        "qelikenotQE",
+        "qelikenotRES",
+        "qelikenotOther",
+        "qelikenot2p2h"
+    ],
+    "Backgrounds": [
+        "qelikenotQE",
+        "qelikenotRES",
+        "qelikenotOther",
+        "qelikenot2p2h"
+    ]
+}

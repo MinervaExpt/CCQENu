@@ -86,17 +86,13 @@ print ("starting main")
 
 targets = 3.23478E30  # nucleons - is this the same for MC or different
 
-inputconfig = "FitAnu.json"
+#inputconfig = "FitAnu.json"
 prefit = False
-if (len(sys.argv) > 1): 
+if (len(sys.argv) > 1) and ("root") in sys.argv[1]: 
     #rescale = True
-    if ("root") in sys.argv[1]:
-        inputname = sys.argv[1]
-        prefit = True
-
-
+    inputname = sys.argv[1]
 else: 
-    print(" arguments are:\n readme  a root file from  a fit")
+    print(" arguments are:\n readme  a root file to analyze")
      
     sys.exit(0)
 
@@ -109,12 +105,16 @@ f = TFile.Open(inputname, "READONLY")
 g = TFile.Open(inputname.replace(".root","_out.root"),"RECREATE")
 
 mains = f.Get("main").GetTitle()
+rescale = f.Get("Fit")
+
+# get the info from the fit if available, otherwise need to read it in. 
 
 if rescale:
-    if not prefit:
-        allconfigs["Fit"] = fitconfig
-    if prefit: 
-        allconfigs["Fit"] = commentjson.loads((f.Get("Fit").GetTitle()))
+    allconfigs["Fit"] = commentjson.loads((f.Get("Fit").GetTitle()))
+else:
+    definitions = open("SignalDef.json",'r')
+    fitconfig = commentjson.load(definitions)
+    allconfigs["Fit"] = fitconfig
 
 allconfigs["main"] = commentjson.loads(mains)
 allconfigs["varsFile"] = commentjson.loads((f.Get("varsFile").GetTitle()))
