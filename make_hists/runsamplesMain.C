@@ -159,6 +159,8 @@ int main(const int argc, const char *argv[]) {
         MnvTune.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse, PlotUtils::detail::empty>(NonResPiReweight, DeuteriumGeniePiTune));  // Deut should be 0? for v1?
         if (warpedmc != "no2p2htune") { // Skip this to do a weird warp
             MnvTune.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
+        } else {
+            std::cout << "weight_warper: warp set to no2p2htune, so turning that off WARNING: no longer using proper MnvTunev1 or v2" << std::endl;
         }
         MnvTune.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
         MnvTune.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());

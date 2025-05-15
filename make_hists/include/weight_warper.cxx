@@ -27,15 +27,16 @@ weight_warper::weight_warper(const NuConfig config) {
         m_warpedmc = config.GetString("warpedmc");
     }
     if(config.IsMember("warpedmc")) {
-        if(config.GetString("warpedmc")=="warped" || config.GetString("warpedmc")=="both" || config.GetString("warpedmc")=="custom") {
-            m_dowarp = true;
+        // if(config.GetString("warpedmc")=="warped" || config.GetString("warpedmc")=="both" || config.GetString("warpedmc")=="custom") {
+        if(config.GetString("warpedmc")!="none") {
+                m_dowarp = true;
             std::cout << "dowarp set to true" << std::endl;
         } else {
             std::cout << "dowarp set to false" << std::endl;
         }
     }
 
-    if (m_dowarp) {
+    if (m_dowarp && m_warpedmc=="custom") {
         // Assumes you're feeding a main config
         NuConfig warpdriver_config;
         warpdriver_config.Read(config.GetString("warpdriverFile"));
