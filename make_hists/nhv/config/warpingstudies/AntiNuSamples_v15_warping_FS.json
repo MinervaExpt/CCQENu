@@ -9,13 +9,13 @@
         "signal": [
             "qelike"
         ],
-        "background": [
+        "background": [],
             // "neutralpion",
             // "chargedpion",
             // // // "multipion",
             // "other",
             // // "qelikenot"
-        ],
+        // ],
         "categories": {
             "qelike": {
                 "for": [
