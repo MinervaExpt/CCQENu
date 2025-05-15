@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "NoWarp_recoil_ptmu_pzmu_1d2d_FineRecoil_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "OneTrackTwoTrack_Q2QE_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale":999,
   "playlist":"${MYPLAYLIST}",
@@ -22,7 +22,8 @@
   "pdg":-14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike"//,
+    "QElike",
+    "QElike_2track"
     // "QElikeNeut"
     // "QElike_0blob",
     // "QElike_1blob"
@@ -43,7 +44,7 @@
     // "NChargedPions",
     // "HasMultiPion"
     // "recoilNoBlobs",
-    // "Q2QE",
+    "Q2QE"//,
     // "FitQ2QE",
     // "EAvail",
     // "pzmuHD",
@@ -55,15 +56,15 @@
     // "EAvailWiggled"
     // "EAvailWithNeutrons"
     // "resEAvailWithNeutrons"
-    "recoil",
+    // "recoil",
     // "recoilQE"
     // "NeutBlobsRatio"
-    "pzmu",
-    "ptmu"
+    // "pzmu",
+    // "ptmu"
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": ["recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "Analyze2DVariables": [],//"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [],//"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "signal": {
     "QElike": "qelike"//,

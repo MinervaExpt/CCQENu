@@ -19,15 +19,15 @@
         ],
         "categories": {
             "qelike": {
-                "for": [
-                    "selected_reco",
-                    "selected_truth",
-                    "truth",
-                    "response"
-                ]
                 // "for": [
-                //     "selected_reco"
+                //     "selected_reco",
+                //     "selected_truth",
+                //     "truth",
+                //     "response"
                 // ]
+                "for": [
+                    "selected_reco"
+                ]
             },
             "neutralpion": {
                 "for": [
@@ -84,19 +84,19 @@
             "chargedpion",
             // // "multipion",
             "other",
-            "qelikenot"
+            // "qelikenot"
         ],
         "categories": {
             "qelike": {
-                "for": [
-                    "selected_reco",
-                    "selected_truth",
-                    "truth",
-                    "response"
-                ]
                 // "for": [
-                //     "selected_reco"
-                // ]
+                //     "selected_reco",
+                //     "selected_truth",
+                //     "truth",
+                //     "response"
+                ]
+                "for": [
+                    "selected_reco"
+                ]
             },
             "neutralpion": {
                 "for": [
@@ -117,13 +117,13 @@
                 "for": [
                     "selected_reco"
                 ]
-            },
-            "qelikenot": {
-                // "for": ["selected_reco", "selected_truth", "truth", "response"]                
-                "for": [
-                    "selected_reco"
-                ]
-            }
+            }//,
+            // "qelikenot": {
+            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // }
         },
         "legend_entries": {
             "data": "Data",
@@ -132,7 +132,7 @@
             "chargedpion": "1#pi^{+/-}",
             // "multipion": "N#pi",
             "other": "Other",
-            "qelikenot": "QELike Not"
+            // "qelikenot": "QELike Not"
         }
     },
     "QElikeNeut": {
