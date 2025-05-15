@@ -137,7 +137,7 @@ int main(const int argc, const char *argv[]) {
     // This is just a yes or no switch to turn on the warper. Set to warpedmc in main config to "warped", "both", or "custom" to make this true
     bool dowarp = warper.GetDoWarp();
     // This is the actual string to get you to mess with models specifically, rather than custom warps
-    std::string warpedmc = warper.GetWarpedMC();
+    std::string warpedmc = warper.GetWarpedMCConfig();
 
     //===========================================================================
     // MODELS TODO: needs a driver
