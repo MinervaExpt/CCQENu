@@ -83,7 +83,7 @@
             "neutralpion",
             "chargedpion",
             // // "multipion",
-            "other",
+            "other"//,
             // "qelikenot"
         ],
         "categories": {
