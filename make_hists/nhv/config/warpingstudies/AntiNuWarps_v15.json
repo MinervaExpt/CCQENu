@@ -3,7 +3,7 @@
         "First draft concept 4/21/24",
         "Working draft 4/28/25, missing some features like cat tuning etc that might not be super useful"
     ],
-    "tag": "testwarp", // to tag histograms, not yet implemented
+    "tag": "testwarp", // to tag histograms
     "subwarps": {
         "QE_3nucleon_enhance": {
             // "warpvar": "dummy",
