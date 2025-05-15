@@ -29,7 +29,7 @@ weight_warper::weight_warper(const NuConfig config) {
     if(config.IsMember("warpedmc")) {
         // if(config.GetString("warpedmc")=="warped" || config.GetString("warpedmc")=="both" || config.GetString("warpedmc")=="custom") {
         if(config.GetString("warpedmc")!="none") {
-                m_dowarp = true;
+            m_dowarp = true;
             std::cout << "dowarp set to true" << std::endl;
         } else {
             std::cout << "dowarp set to false" << std::endl;
