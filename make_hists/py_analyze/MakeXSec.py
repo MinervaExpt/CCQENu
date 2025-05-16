@@ -879,7 +879,7 @@ def GetCrossSection(sample, variable, basename,
     #==================================Make MC=====================================
     #MnvHistoType* mc
     #MnvHistoType* signalFraction
-
+    hasbkgsub = False
     if (not hasbkgsub): 
 
         if (DEBUG): print(" Start MakeMC... " )
@@ -921,6 +921,7 @@ def GetCrossSection(sample, variable, basename,
     if (DEBUG): print(" Start background subtraction... " )
     # bkgsubname = basename+"_bkgsub"
     #MnvHistoType* bkgsub
+    hasbkgsub = False
     if (hasbkgsub): 
         if (ibkgsubhist): 
             bkgsub = ibkgsubhist.Clone((basename + "_bkgsub"))
