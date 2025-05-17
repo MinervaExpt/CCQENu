@@ -13,7 +13,7 @@ g.write("touch "+log + "\n")
 for file in files:
     newloc = file.replace(oldpath,newpath).strip()
     newline = file.replace("root:","xrdcopy root:")
-    newline = newline.replace(".root",".root "+newloc+ " >>& " + log+"\n" )
+    newline = newline.replace(".root",".root "+newloc+"\n" )
     p.write(newloc+"\n")
     g.write(newline)
     print (newline)
