@@ -6,7 +6,7 @@
 
 uname -a 
 
-source /cvmfs/larsoft.opensciencegrid.org/spack-packages/setup-env.sh
+#source /cvmfs/larsoft.opensciencegrid.org/spack-packages/setup-env.sh
 
 export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
@@ -18,10 +18,17 @@ export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 # setup python v3_9_2 -z /cvmfs/larsoft.opensciencegrid.org/products
 
 # get the packages you need to run this
-spack load root@6.28.12%gcc@12.2.0
-spack load cmake
-spack load gcc
-spack load fife-utils@3.7.4
+source /cvmfs/larsoft.opensciencegrid.org/spack-v0.22.0-fermi/setup-env.sh
+
+export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
+
+# get the packages you need to run this
+spack load root@6.28.12 arch=linux-almalinux9-x86_64_v3
+spack load cmake arch=linux-almalinux9-x86_64_v3
+spack load gcc@12.2.0
+spack load ifdhc-config@2.6.20%gcc@11.4.1 arch=linux-almalinux9-x86_64_v2
+#spack load fife-utils@3.7.4
+spack load py-pip@23.1.2 arch=linux-almalinux9-x86_64_v3
 
 #setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
 #setup ifdhc -z /cvmfs/fermilab.opensciencegrid.org/products/common/db
