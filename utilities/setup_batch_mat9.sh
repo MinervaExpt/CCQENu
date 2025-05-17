@@ -26,7 +26,8 @@ export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 spack load root@6.28.12 arch=linux-almalinux9-x86_64_v3
 spack load cmake arch=linux-almalinux9-x86_64_v3
 spack load gcc@12.2.0
-spack load ifdhc-config@2.6.20%gcc@11.4.1 arch=linux-almalinux9-x86_64_v2
+spack load ifdhc@2.6.20%gcc@12.2.0 arch=linux-almalinux9-x86_64_v3
+spack load ifdhc-config@2.6.20%gcc@11.4.1 arch=linux-almalinux9-x86_64_v3
 #spack load fife-utils@3.7.4
 spack load py-pip@23.1.2 arch=linux-almalinux9-x86_64_v3
 
