@@ -33,7 +33,7 @@ def writeEventLoop(mywrapper,outdir):
     writewrap(mywrapper,"root -l -b load.C+ runEventLoop.C+\n")
     writewrap(mywrapper,"echo '------------------------- check locations 2 ---------------'\n")
     writewrap(mywrapper,"pwd;ls -c1;ifdh ls "+outdir)
-    writewrap(mywrapper,"ifdh cp -D ./*.root "+outdir)
+    writewrap(mywrapper,"ifdh cp -D *.root "+outdir)
 
 # this is for CCQEMAT
 def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
@@ -54,8 +54,8 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
     writewrap(mywrapper,"echo \"run returned \" $?\n")
     writewrap(mywrapper,"ls -lrt\n")
     if not opts.debug:
-       #writewrap(mywrapper,"echo \"ifdh cp -D ./*.root "+theoutdir+"\"\n")
-        writewrap(mywrapper,"ifdh cp -D ./*.root "+theoutdir+"/\n")
+       #writewrap(mywrapper,"echo \"ifdh cp -D *.root "+theoutdir+"\"\n")
+        writewrap(mywrapper,"ifdh cp -D *.root "+theoutdir+"/\n")
     
         writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
        # writewrap(mywrapper,"echo \"ifdh cp -D "+mylog+ " " + theoutdir +"\"\n")
