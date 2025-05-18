@@ -18,19 +18,17 @@ export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 # setup python v3_9_2 -z /cvmfs/larsoft.opensciencegrid.org/products
 
 # get the packages you need to run this
-source /cvmfs/larsoft.opensciencegrid.org/spack-v0.22.0-fermi/setup-env.sh
-
+#source /cvmfs/larsoft.opensciencegrid.org/spack-v0.22.0-fermi/setup-env.sh
+source /cvmfs/larsoft.opensciencegrid.org/spack-fnal-develop/spack_env/setup-env.sh
 export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
-# get the packages you need to run this
-spack load root@6.28.12 arch=linux-almalinux9-x86_64_v3
-spack load cmake arch=linux-almalinux9-x86_64_v3
-spack load gcc@12.2.0
-spack load ifdhc@2.7.1%gcc@11.4.1 arch=linux-almalinux9-x86_64_v2
-spack load ifdhc-config@2.6.20%gcc@11.4.1 arch=linux-almalinux9-x86_64_v3
-#spack load fife-utils@3.7.4
-spack load py-pip@23.1.2 arch=linux-almalinux9-x86_64_v3
-
+# get the packages you need to run this - this is a total hack of guesswork
+spack load root@6.28.12/rqkcbbm
+spack load cmake@3.20.2 arch=linux-almalinux9-x86_64_v2 %gcc@11.5.0
+spack load gcc@12.4.0
+spack load ifdhc@2.8.0
+spack load ifdhc-config                          
+spack load py-pip
 #setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
 #setup ifdhc -z /cvmfs/fermilab.opensciencegrid.org/products/common/db
 export IFDH_CP_MAXRETRIES=0\0\0\0\0  # no retries
