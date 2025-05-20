@@ -4,12 +4,13 @@
 TEST = False # only does Enu
 DEBUG = False # even more printout
 STOP1 = False # just does readin
-rescale = False # expect a fit of some sort
+rescale = True # expect a fit of some sort
 
 import os,sys
 from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixDSym, TVectorD
 from PlotUtils import MnvH1D, MnvH2D, MnvPlotter
 import commentjson
+from SyncBands import SyncBands
 
 print ("have imported common packages")
 
@@ -92,7 +93,9 @@ def addentry(thing,one,two,three,four,value):
         thing[one][two][three][four] = value
     if four not in thing[one][two][three]:
         thing[one][two][three][four] = value
-
+    names = value.GetErrorBandNames()
+    if len(names) > 0:
+        SyncBands(value)
     if DEBUG: print ("added",thing[one][two][three][four].GetName(),one,two,three,four,value.GetName())
 
 
@@ -160,11 +163,12 @@ if rescale:
         allconfigs["Fit"] = fitconfig
     if prefit: 
         allconfigs["Fit"] = commentjson.loads((f.Get("Fit").GetTitle()))
+
 allconfigs["main"] = commentjson.loads(mains)
 allconfigs["varsFile"] = commentjson.loads((f.Get("varsFile").GetTitle()))
-
 allconfigs["cutsFile"] = commentjson.loads((f.Get("cutsFile").GetTitle()))
 allconfigs["samplesFile"] = commentjson.loads((f.Get("samplesFile").GetTitle()))
+#allconfigs["FitFile"] = commentjson.loads((f.Get("FitFile").GetTitle()))
 #print(allconfigs)
 AnalyzeVariables = allconfigs["main"]["AnalyzeVariables"]
 if "AnalyzeVariables2D" in allconfigs["main"]:
@@ -172,6 +176,7 @@ if "AnalyzeVariables2D" in allconfigs["main"]:
 else:
     AnalyzeVariables2D = []
 categoryMap = {}
+signalMap = {}
 count = 0
 if rescale:
     for x in allconfigs["Fit"]["Categories"]:
@@ -180,6 +185,14 @@ if rescale:
 else:
     categoryMap["qelike"] = 0
     categoryMap["qelikenot"] = 1
+
+if rescale:
+    for x in allconfigs["Fit"]["Signal"]:
+        signalMap[x] = count
+        count += 1
+else:
+    signalMap["qelike"] = 0
+    #SignalMap["qelikenot"] = 1
 
 print (categoryMap)
 
@@ -387,6 +400,7 @@ for k in f.GetListOfKeys():
 
     hist = f.Get(key)
     goodhists[key] = hist
+    SyncBands(hist)
     print ("the hist is ", hist)
     #hist.Print()
     dim = 0
@@ -396,6 +410,7 @@ for k in f.GetListOfKeys():
 
     if DEBUG and dim==1: 
         print ("errorband",hist.GetName(), hist.GetErrorBandNames())
+        hist.Print("ALL")
         hist.MnvH1DToCSV(hist.GetName(),"./csv", 1., False, True, True, True)
     if DEBUG and dim==2: 
         print ("errorband",hist.GetName(), hist.GetErrorBandNames())
@@ -413,6 +428,9 @@ for k in f.GetListOfKeys():
         newtype = thetype + "_scaledmc"
         newname = key.replace(thetype,newtype)
         print ("dim",dim)
+        if sample not in parameters:
+            print ("sample",sample, "not in parameters")
+            continue
         newres = scaleHist(hist,categoryMap[category], parameters[sample],covariance[sample],newname)
         if newres.InheritsFrom("MnvH1D"):
             print ("band", newres.GetName(), newres.GetErrorBandNames())
@@ -504,6 +522,7 @@ for key in goodhists.keys():
                 #response1D[sample][variable][thetype][category].Scale(POTScale)
                 # response1D[sample][variable][thetype][category].Print()
                 response1D[sample][variable][thetype][category].SetDirectory(0)
+                SyncBands(response1D[sample][variable][thetype][category])
                 #print(" migration " , sample , " " , variable , " " , thetype , " " , category )
                 #delete hist
                 # if rescale and category not in noscale:
@@ -534,6 +553,7 @@ for key in goodhists.keys():
                     #hists1D[sample][variable][thetype][category].Scale(POTScale)
                     #hists1D[sample][variable][thetype][category].Print()
                     res1D[sample][variable][thetype][category].SetDirectory(0)
+                    SyncBands(res1D[sample][variable][thetype][category])
                 elif "type_" in variable or "types_" in variable:
                     addentry(types1D,sample,variable,thetype,category,hist.Clone())
                     #hists1D[sample][variable][thetype][category].Scale(POTScale)
@@ -791,6 +811,7 @@ for sample in samples:
                 bkg = typical.Clone()
                 bkg.SetName(data.GetName().replace("data","bkg"))
                 bkg.Reset()
+                
                 for category in categoryMap.keys():
                     models[category] = (hists1D[sample][variable][thetype][category])
                     if models[category] is None: 
@@ -801,13 +822,30 @@ for sample in samples:
                     if rescale and category in allconfigs["Fit"]["Backgrounds"]:
                         bkg.Add(models[category],1.) 
                     elif category == "qelikenot":
-                        bkg.Add(models[category],1.)   
-                
+                        bkg.Add(models[category],1.)  
+                sig = MnvH1D()
+                sig = typical.Clone()
+                sig.SetName(data.GetName().replace("data","bkg"))
+                sig.Reset() 
+                for signal in signalMap.keys():
+                    models[signal] = (hists1D[sample][variable][thetype][signal])
+                    if models[signal] is None: 
+                        print ("nothing here",sample,variable,thetype,signal)
+                        status = 0
+                        break
+                    signal.Add(models[signal],1.)
+                    if rescale and signal in allconfigs["Fit"]["Signal"]:
+                        sig.Add(models[signal],1.) 
+                    elif category == "qelike":
+                        sig.Add(models[signal],1.)   
+
                 if status == 0: continue
                 addentry(hists1D,sample,variable,thetype,"tot",total)
                 addentry(hists1D,sample,variable,thetype,"bkg",bkg)
+                addentry(hists1D,sample,variable,thetype,"sig",sig)
                 total.Print()
                 bkg.Print()
+                sig.Print()
             #print ("models",models)
                 ModelArray = map2TObjArray(models)
                 mnvPlotter.DrawDataStackedMC(data,ModelArray,1.0,"TR")

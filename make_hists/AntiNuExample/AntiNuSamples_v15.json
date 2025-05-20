@@ -1,0 +1,248 @@
+{
+    "Comments": [
+        "v10 - multiple backgrounds for testing fits"
+    ],
+    "QElike": // this one reproduces the older format
+    {
+        "name": "QElike",
+        "reco": "QElike",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelikeQE",
+            "qelikeRES",
+            "qelikeOther",
+            "qelike2p2h"
+        ],
+        "background": [
+            "qelikenotQE",
+            "qelikenotRES",
+            "qelikenotOther",
+            "qelikenot2p2h"
+        ],
+        "categories": {
+            "qelikeQE": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenotQE": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikeRES": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenotRES": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikeOther": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenotOther": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelike2p2h": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenot2p2h": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        }
+    },
+    "QElikeHighRecoil": // this one reproduces the older format
+    {
+        "name": "QElikeHighRecoil",
+        "reco": "QElikeHighRecoil",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelikeQE",
+            "qelikeRES",
+            "qelikeOther",
+            "qelike2p2h"
+        ],
+        "background": [
+            "qelikenotQE",
+            "qelikenotRES",
+            "qelikenotOther",
+            "qelikenot2p2h"
+        ],
+        "categories": {
+            "qelikeQE": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenotQE": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikeRES": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenotRES": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikeOther": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenotOther": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelike2p2h": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenot2p2h": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        }
+    },
+    "QElikeNot": {
+        "name": "QElikeNot",
+        "reco": "QElikeNot",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        }
+    },
+    "Background": // this one reproduces the older format
+    {
+        "name": "Background",
+        "reco": "NoRecoil",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        }
+    },
+    "QElikeNP": {
+        "name": "QElikeNP",
+        "reco": "QElike",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike_np"
+        ],
+        "background": [
+            "qelikenot_np"
+        ],
+        "categories": {
+            "qelike_np": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenot_np": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        }
+    },
+    "QElikeALLAngles": {
+        "name": "QElikeALLAngles",
+        "reco": "QElike",
+        "phase_space": "phase_space_all_angles",
+        "signal": [
+            "qelike_np"
+        ],
+        "background": [
+            "qelikenot_np"
+        ],
+        "categories": {
+            "qelike_np": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenot_np": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        }
+    }
+}

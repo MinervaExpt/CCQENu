@@ -1,0 +1,197 @@
+{ // reconstruction level definitions
+    "Comments":["v9 - May 28, 2022, remove the FULL cuts and stick with all angles",
+    "also add QElikeNot which is complement to QElike with recoil cut reversed",
+"v10 - split up by MCintype"],
+    "QElike":[
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"Z Vertex","min":5980,"max":8422,"variable":"ZVertex"},
+    {"name":"Has MINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
+    {"name":"Min MuonMomentum","min":1.5,"variable":"PmuGeV"},
+    {"name":"Max MuonMomentum","max":20.0,"variable":"PmuGeV"},
+    {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
+    {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
+  ],
+    "QElikeHighRecoil":[
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"Z Vertex","min":5980,"max":8422,"variable":"ZVertex"},
+    {"name":"Has MINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
+    {"name":"Min MuonMomentum","min":1.5,"variable":"PmuGeV"},
+    {"name":"Max MuonMomentum","max":20.0,"variable":"PmuGeV"},
+    {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
+    {"name":"GoodRecoil","equals":0,"variable":"GoodRecoil"}
+  ],
+  "NoRecoil":[
+      {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+      {"name":"ApothemX","max":850,"variable":"ApothemX"},
+      {"name":"ApothemY","max":850,"variable":"ApothemY"},
+      {"name":"Z Vertex","min":5980,"max":8422,"variable":"ZVertex"},
+      {"name":"Has MINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+      {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+      {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
+      {"name":"Min MuonMomentum","min":1.5,"variable":"PmuGeV"},
+      {"name":"Max MuonMomentum","max":20.0,"variable":"PmuGeV"},
+      {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"}
+    ],
+  // phase space definitions
+  "phase_space":[
+    {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
+    {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
+    {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"},
+    {"name":"TrueMuonMomentumMin","min":1.5,"variable":"TruePmuGeV"},
+    {"name":"TrueMuonMomentumMax","max":20.0,"variable":"TruePmuGeV"},
+    {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"TrueThetamuDegrees"}
+  ],
+  "phase_space_all_angles":[
+    {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
+    {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
+    {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"},
+    {"name":"TrueMuonMomentumMin","min":1.5,"variable":"TruePmuGeV"},
+    {"name":"TrueMuonMomentumMax","max":20.0,"variable":"TruePmuGeV"}
+  ],
+  
+  // signal definitions
+ "qelikeQE":[
+    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.},
+    {
+        "name": "MCIntType",
+        "equals": 1,
+        "variable": "MCIntType"
+    }
+  ],
+  "qelikeRES": [
+    {
+        "name": "PDG",
+        "equals": -14,
+        "variable": "TruthNuPDG"
+    },
+    {
+        "name": "TruthIsCC",
+        "equals": 1,
+        "variable": "TruthIsCC"
+    },
+    {
+        "name": "TruthIsCCQELike",
+        "equals": 1,
+        "variable": "TruthIsCCQELike",
+        "protonKECutMeV":120.
+    },
+    {
+        "name": "MCIntType",
+        "equals": 2,
+        "variable": "MCIntType"
+    }
+],
+"qelike2p2h": [
+    {
+        "name": "PDG",
+        "equals": -14,
+        "variable": "TruthNuPDG"
+    },
+    {
+        "name": "TruthIsCC",
+        "equals": 1,
+        "variable": "TruthIsCC"
+    },
+    {
+        "name": "TruthIsCCQELike",
+        "equals": 1,
+        "variable": "TruthIsCCQELike",
+        "protonKECutMeV":120.
+    },
+    {
+        "name": "MCIntType",
+        "equals": 8,
+        "variable": "MCIntType"
+    }
+],
+"qelikeOther": [
+    {
+        "name": "PDG",
+        "equals": -14,
+        "variable": "TruthNuPDG"
+    },
+    {
+        "name": "TruthIsCC",
+        "equals": 1,
+        "variable": "TruthIsCC"
+    },
+    {
+        "name": "TruthIsCCQELike",
+        "equals": 1,
+        "variable": "TruthIsCCQELike",
+        "protonKECutMeV":120.
+    },
+    {
+        "name": "MCIntType",
+        "min": 3,
+        "max": 7,
+        "variable": "MCIntType"
+    }
+],
+
+  "qelikenotQE":[
+    
+    {"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike","protonKECutMeV":120.},
+    {
+        "name": "MCIntType",
+        "equals": 1,
+        "variable": "MCIntType"
+    }
+  ],
+    "qelikenotRES": [
+        
+        {
+            "name": "TruthIsCCQELike",
+            "equals": 0,
+            "variable": "TruthIsCCQELike",
+            "protonKECutMeV":120.
+        },
+        {
+            "name": "MCIntType",
+            "equals": 2,
+            "variable": "MCIntType"
+        }
+    ],
+    "qelikenot2p2h": [
+        
+        {
+            "name": "TruthIsCCQELike",
+            "equals": 0,
+            "variable": "TruthIsCCQELike",
+            "protonKECutMeV":120.
+        },
+        {
+            "name": "MCIntType",
+            "equals": 8,
+            "variable": "MCIntType"
+        }
+    ],
+    "qelikenotOther": [
+        
+        {
+            "name": "TruthIsCCQELike",
+            "equals": 0,
+            "variable": "TruthIsCCQELike",
+            "protonKECutMeV":120.
+        },
+        {
+            "name": "MCIntType",
+            "min": 3,
+            "max": 7,
+            "variable": "MCIntType"
+        }
+    ],
+
+  "data":[] // data doesn't cut anything at truth level
+}
+
