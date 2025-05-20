@@ -17,7 +17,7 @@
   "varsFile":"${CCQEMAT}/AntiNuExample/Variables_v13.json", // describe the variables, choose them below
   "samplesFile":"${CCQEMAT}/AntiNuExample/AntiNuSamples_v13.json",  // describe the samples, cuts are chosen here
   "runsamples":["${MYSAMPLE}"], // chose which samples to run can provide a list or chose 1 using the batch
-  "outRoot":"P4_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // name for output files
+  "outRoot":"P6_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // name for output files
   "AnalyzeVariables":["Q2QE","Q0QE","pzmu","ptmu","Enu","EnuCCQE","ThetamuDegrees","recoil"], // choose the 1D variables
   "Analyze2DVariables":["pzmu_ptmu"], // choose 2D variables, 1D variables must be chosen
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"}, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
