@@ -297,7 +297,8 @@ ostype = platform.platform()
 if "el7" in ostype:
     #cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
     cmd += " --singularity-image /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-el9:latest "
-cmd += " --auth-methods=token "
+cmd += " --auth-methods=token "  # added 2025-05 to use tokens
+cmd += " -c has_avx2==True" # added 2025-05 to avoid old hardware
 cmd += " --role=Analysis "
 #cmd += " --disk=10GB " # comment out for test
 cmd += " --expected-lifetime " + opts.lifetime
