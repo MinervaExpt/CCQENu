@@ -4,9 +4,14 @@ source /cvmfs/larsoft.opensciencegrid.org/spack-fnal-develop/spack_env/setup-env
 export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
 # get the packages you need to run this - this is a total hack of guesswork
-spack load root@6.28.12/rqkcbbm
+echo "ROOT"
+spack load root@6.28.12
+echo "CMAKE"
 spack load cmake@3.20.2 arch=linux-almalinux9-x86_64_v2 %gcc@11.5.0
+echo "GCC"
 spack load gcc@12.4.0
+echo "IFDHC"
 spack load ifdhc@2.8.0
-spack load ifdhc-config                          
+spack load ifdhc-config   
+echo "PY-PIP"                       
 spack load py-pip
