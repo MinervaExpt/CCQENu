@@ -19,7 +19,7 @@ export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
 # get the packages you need to run this
 #source /cvmfs/larsoft.opensciencegrid.org/spack-v0.22.0-fermi/setup-env.sh
-source setup_spack.sh
+source ${BASEDIR}/CCQENu/utilities/setup_spack.sh
 # source /cvmfs/larsoft.opensciencegrid.org/spack-fnal-develop/spack_env/setup-env.sh
 # export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
