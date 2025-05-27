@@ -40,7 +40,7 @@
     "geant4",
     "response"
   ],
-  "fluxUniverses": 10, // # of flux universes set low to run fast!
+  "fluxUniverses": 100, // # of flux universes set low to run fast!
   "NuEConstraint": 1, // apply constraints to flux
   "Geant4NeutronCV": 1, // set true by default docdb 28556
   "Geant4Elastics": 1 // set to true by default

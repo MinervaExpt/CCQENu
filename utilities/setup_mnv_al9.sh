@@ -4,17 +4,18 @@
 
 #source /cvmfs/larsoft.opensciencegrid.org/spack-packages/setup-env.sh
 # gives you access to root and cmake …
-source /cvmfs/larsoft.opensciencegrid.org/spack-v0.22.0-fermi/setup-env.sh
+#source /cvmfs/larsoft.opensciencegrid.org/spack-v0.22.0-fermi/setup-env.sh
 
-export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
+#export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
 # get the packages you need to run this
-spack load root@6.28.12 arch=linux-almalinux9-x86_64_v3
-spack load cmake arch=linux-almalinux9-x86_64_v3
-spack load gcc@12.2.0
-spack load ifdhc-config@2.6.20%gcc@11.4.1 arch=linux-almalinux9-x86_64_v2
+#spack load root@6.28.12 arch=linux-almalinux9-x86_64_v3
+#spack load cmake arch=linux-almalinux9-x86_64_v3
+#spack load gcc@12.2.0
+#spack load ifdhc-config@2.6.20%gcc@11.4.1 arch=linux-almalinux9-x86_64_v2
 #spack load fife-utils@3.7.4
-spack load py-pip@23.1.2 arch=linux-almalinux9-x86_64_v3
+#spack load py-pip@23.1.2 arch=linux-almalinux9-x86_64_v3
+source setup_spack.sh
 htgettoken -a htvaultprod.fnal.gov -i minerva
 export IFDH_CP_MAXRETRIES=0\0\0\0\0  # no retries
 # set up the MAT

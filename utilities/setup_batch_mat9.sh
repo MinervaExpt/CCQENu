@@ -19,16 +19,17 @@ export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
 # get the packages you need to run this
 #source /cvmfs/larsoft.opensciencegrid.org/spack-v0.22.0-fermi/setup-env.sh
-source /cvmfs/larsoft.opensciencegrid.org/spack-fnal-develop/spack_env/setup-env.sh
-export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
+source ${BASEDIR}/CCQENu/utilities/setup_spack.sh
+# source /cvmfs/larsoft.opensciencegrid.org/spack-fnal-develop/spack_env/setup-env.sh
+# export CVSROOT=minervacvs@cdcvs.fnal.gov:/cvs/mnvsoft
 
-# get the packages you need to run this - this is a total hack of guesswork
-spack load root@6.28.12/rqkcbbm
-spack load cmake@3.20.2 arch=linux-almalinux9-x86_64_v2 %gcc@11.5.0
-spack load gcc@12.4.0
-spack load ifdhc@2.8.0
-spack load ifdhc-config                          
-spack load py-pip
+# # get the packages you need to run this - this is a total hack of guesswork
+# spack load root@6.28.12/rqkcbbm
+# spack load cmake@3.20.2 arch=linux-almalinux9-x86_64_v2 %gcc@11.5.0
+# spack load gcc@12.4.0
+# spack load ifdhc@2.8.0
+# spack load ifdhc-config                          
+# spack load py-pip
 #setup gdb  v8_2_1 -z /cvmfs/larsoft.opensciencegrid.org/products
 #setup ifdhc -z /cvmfs/fermilab.opensciencegrid.org/products/common/db
 export IFDH_CP_MAXRETRIES=0\0\0\0\0  # no retries
