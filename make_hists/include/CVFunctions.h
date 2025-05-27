@@ -592,10 +592,10 @@ public:
 		std::vector<float> vals;
 		float val;
         
-    for (auto name : varlist){
-    	val = recofunctions[name](*univ);
-      vals.emplace_back(val);      
-    }
+		for (auto name : varlist){
+			val = recofunctions[name](*univ);
+		  vals.emplace_back(val);      
+		}
 		
 		return vals;
 	}

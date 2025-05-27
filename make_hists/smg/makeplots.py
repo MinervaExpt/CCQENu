@@ -19,25 +19,39 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
 	leg.SetTextSize(0.035)
 	return leg
 
-filename = "SB_NuConfig_bdtg_MAD_2track_me1N_1_testing.root"
+tracks = sys.argv[1]
+tag = ""
+if len(sys.argv) == 3: 
+	tag = "_"+sys.argv[2]
+	
+if tracks == "2track":
+	#filename = "SB_NuConfig_bdtg_MAD"+tag+"_2track_me1N_1_testing.root"
+	#filename = "SB_NuConfig_bdtg_MAD"+tag+"_2track_me1N_1.root"
+	filename = "SB_NuConfig_bdtg_MAD"+tag+"_2track_me1N_1_multother.root"
+else:
+	#filename = "SB_NuConfig_bdtg_MAD"+tag+"_1track_me1N_1.root"
+	filename = "SB_NuConfig_bdtg_MAD"+tag+"_1track_me1N_1_multother.root"
+	
 noData = True;
 variables = ["ptmu","pzmu","Q2QE","bdtgQELike","bdtg1ChargedPion",
 	"bdtg1NeutralPion","bdtgMultiPion","bdtgOther"]
 
 scaleX = ["Q2QE"]
-scaleY = ["Q2QE","bdtg1NeutralPion","bdtgQELike"]
+scaleY = []#"Q2QE"]#,"bdtg1NeutralPion","bdtgQELike"]
 
 colors = {
-    "qelike":TColor.GetColor(0,133,173),#ROOT.kMagenta-4,
-    "1chargedpion":TColor.GetColor(175,39,47),#ROOT.kBlue-7,
-    "multipion":TColor.GetColor(234,170,0),#ROOT.kRed-4,
-    "other1neutralpion":TColor.GetColor(76,140,43)#ROOT.kGreen-3
+    "qelike":TColor.GetColor(0,133,173),
+    "1chargedpion":TColor.GetColor(175,39,47),
+    "1neutralpion":TColor.GetColor(76,140,43),
+    "multipion":TColor.GetColor(234,170,0),
+    "other":TColor.GetColor(82,37,6)
 }
 legend_labels = {
     "qelike":"QELike",
     "1chargedpion":"Single #pi^{+/-} in FS",
+    "1neutralpion":"Single #pi^{0} in FS",
     "multipion":"N#pi in FS",
-    "other1neutralpion":"Other"
+    "other":"Other"
 }
 
 variable_limits = {
@@ -62,31 +76,45 @@ for var in variables:
 	if var in scaleX: cc.SetLogx()
 	if var in scaleY: cc.SetLogy()
 
-	h_data = f.Get("h___2track___data___"+var+"___reconstructed")
-	h_qelike = f.Get("h___2track___qelike___"+var+"___reconstructed")
-	h_1chargedpion = f.Get("h___2track___1chargedpion___"+var+"___reconstructed")
-	h_multipion = f.Get("h___2track___multipion___"+var+"___reconstructed")
-	h_other = f.Get("h___2track___other1neutralpion___"+var+"___reconstructed")
+	h_data = f.Get("h___"+tracks+tag+"___data___"+var+"___reconstructed")
+	h_qelike = f.Get("h___"+tracks+tag+"___qelike___"+var+"___reconstructed")
+	h_1chargedpion = f.Get("h___"+tracks+tag+"___1chargedpion___"+var+"___reconstructed")
+	h_multipion = f.Get("h___"+tracks+tag+"___multipion___"+var+"___reconstructed")
+	#if tracks == "1track": 
+	h_1neutralpion = f.Get("h___"+tracks+tag+"___1neutralpion___"+var+"___reconstructed")
+	h_other = f.Get("h___"+tracks+tag+"___other___"+var+"___reconstructed")
+	#else:
+	#	h_other = f.Get("h___"+tracks+tag+"___other1neutralpion___"+var+"___reconstructed")
 
-	h_qelike.SetLineColor(TColor.GetColor(0,133,173))
-	h_1chargedpion.SetLineColor(TColor.GetColor(175,39,47))
-	h_multipion.SetLineColor(TColor.GetColor(234,170,0))
-	h_other.SetLineColor(TColor.GetColor(76,140,43))
+	h_data.SetLineColor(TColor.GetColor(0,0,0))
+	h_qelike.SetLineColor(colors["qelike"])
+	h_1chargedpion.SetLineColor(colors["1chargedpion"])
+	#if tracks == "1track": 
+	h_1neutralpion.SetLineColor(colors["1neutralpion"])
+	h_multipion.SetLineColor(colors["multipion"])
+	h_other.SetLineColor(colors["other"])
 
-	h_qelike.SetFillColor(TColor.GetColor(0,133,173))
-	h_1chargedpion.SetFillColor(TColor.GetColor(175,39,47))
-	h_multipion.SetFillColor(TColor.GetColor(234,170,0))
-	h_other.SetFillColor(TColor.GetColor(76,140,43))
+	h_qelike.SetFillColor(colors["qelike"])
+	h_1chargedpion.SetFillColor(colors["1chargedpion"])
+	#if tracks == "1track": 
+	h_1neutralpion.SetFillColor(colors["1neutralpion"])
+	h_multipion.SetFillColor(colors["multipion"])
+	h_other.SetFillColor(colors["other"])
 
 	h_qelike.SetFillStyle(3001)
 	h_1chargedpion.SetFillStyle(3001)
+	#if tracks == "1track": 
+	h_1neutralpion.SetFillStyle(3001)
 	h_multipion.SetFillStyle(3001)
 	h_other.SetFillStyle(3001)
 
+	h_data.Scale(1,"width")
 	h_qelike.Scale(POTScale,"width")
 	h_1chargedpion.Scale(POTScale,"width")
 	h_multipion.Scale(POTScale,"width")
 	h_other.Scale(POTScale,"width")
+	#if tracks == "1track": 
+	h_1neutralpion.Scale(POTScale,"width")
 
 	nbins = h_data.GetNbinsX()
 	if var not in variable_limits.keys():
@@ -97,14 +125,19 @@ for var in variables:
 		xmax = variable_limits[var][1]
 		
 	h_data.GetXaxis().SetRangeUser(xmin,xmax)
+	h_data.SetMinimum(0)
 	h_qelike.GetXaxis().SetRangeUser(xmin,xmax)
 	h_1chargedpion.GetXaxis().SetRangeUser(xmin,xmax)
 	h_multipion.GetXaxis().SetRangeUser(xmin,xmax)
 	h_other.GetXaxis().SetRangeUser(xmin,xmax)
+	#if tracks == "1track": 
+	h_1neutralpion.GetXaxis().SetRangeUser(xmin,xmax)
 		
 	centerX = (xmax+xmin)/2
 
-	title = "2track:"+" "+var
+	title = tracks+": "+var
+	if len(sys.argv) == 3:
+		title = title+" (w/ MultiPion Cut)"
 
 	h_data.SetTitle(title)
 	h_data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
@@ -123,17 +156,22 @@ for var in variables:
 	h_data.SetNdivisions(510, "XYZ");
 
 	#leg = CCQELegend(centerX-0.15,0.73,centerX+0.09,0.89)
-	leg = CCQELegend(0.705,0.73,0.942,0.89)
+	leg = CCQELegend(0.725,0.73,0.942,0.89)
 	leg.SetNColumns(1)
 	if not noData: leg.AddEntry(h_data,"Data","pe")
 	leg.AddEntry(h_qelike,"QELike",'f')
 	leg.AddEntry(h_1chargedpion,"Single #pi^{+/-} in FS","f")
+	#if tracks == "1track": 
+	leg.AddEntry(h_1neutralpion,"Single #pi^{0} in FS","f")
 	leg.AddEntry(h_multipion,"N#pi in FS","f")
 	leg.AddEntry(h_other,"Other","f")
+	leg.SetTextSize(0.03)
 
 	stack = THStack("stack","stack")
 	stack.Add(h_qelike)
 	stack.Add(h_1chargedpion)
+	#if tracks == "1track": 
+	stack.Add(h_1neutralpion)
 	stack.Add(h_multipion)
 	stack.Add(h_other)
 
@@ -175,12 +213,19 @@ for var in variables:
 	cc.SetBottomMargin(0.12)
 	cc.RedrawAxis()
 	cc.Draw()
-	cc.Print("SB_NuConfig_bdtg_MAD_2track_me1N_1_testing/2track_"+var+".png")
+	if tracks == "2track":
+		#cc.Print("SB_NuConfig_bdtg_MAD"+tag+"_"+tracks+"_me1N_1_testing/"+var+"_"+tracks+tag+".png")
+		#cc.Print("SB_NuConfig_bdtg_MAD"+tag+"_"+tracks+"_me1N_1/"+var+"_"+tracks+tag+".png")
+		cc.Print("SB_NuConfig_bdtg_MAD"+tag+"_"+tracks+"_me1N_1_multother/"+var+"_"+tracks+tag+".png")
+	else:
+		#cc.Print("SB_NuConfig_bdtg_MAD"+tag+"_"+tracks+"_me1N_1/"+var+"_"+tracks+tag+".png")
+		cc.Print("SB_NuConfig_bdtg_MAD"+tag+"_"+tracks+"_me1N_1_multother/"+var+"_"+tracks+tag+".png")
 	cc.Close()
 
 	del h_data
 	del h_qelike
 	del h_1chargedpion
+	if tracks == "1track": del h_1neutralpion
 	del h_multipion
 	del h_other
 	del stack

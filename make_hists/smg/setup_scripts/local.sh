@@ -14,4 +14,5 @@ export PLAYLISTDIR=$WHEREIPUTMYCODE/data/playlists/local
 
 export JSONCPP_DIR=/usr/include/jsoncpp/
 #JSONCPP_DIR=$HOME/Minerva/jsoncpp-build/
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JSONCPP_DIR/lib
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JSONCPP_DIR/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JSONCPP_DIR

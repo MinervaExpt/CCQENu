@@ -47,7 +47,6 @@
                       "PrimaryProtonTrackVtxGap","SecProtonTrackVtxGap_1","SecProtonTrackVtxGap_2",
                       "PrimaryProtonTfromdEdx","SecProtonTfromdEdx_1","SecProtonTfromdEdx_2",
                       "TotalPrimaryProtonEnergy","TotalSecProtonEnergy_1","TotalSecProtonEnergy_2",
-                      "PrimaryProtonTrueKE","SecProtonTrueKE_1","SecProtonTrueKE_2",
                       "PrimaryProtonFractionEnergyInCone",
                       "SecProtonFractionEnergyInCone_1",
                       "SecProtonFractionEnergyInCone_2"],

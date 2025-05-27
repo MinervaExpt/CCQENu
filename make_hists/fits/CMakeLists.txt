@@ -28,7 +28,8 @@ find_package(ROOT REQUIRED COMPONENTS RIO Net Minuit2 Minuit)
 #---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 include(${ROOT_USE_FILE})
 #include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include $ENV{PLOTUTILSROOT}/../include $ENV{PLOTUTILSROOT}/../include/PlotUtils $ENV{PLOTUTILSROOT}/../include/UnfoldUtils $ENV{PLOTUTILSROOT}/../include/RooUnfold)
-include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include $ENV{PLOTUTILSROOT}/../include $ENV{PLOTUTILSROOT}/../include/PlotUtils $ENV{PLOTUTILSROOT}/../include/UnfoldUtils $ENV{PLOTUTILSROOT}/../include/RooUnfold $ENV{JSONCPP_DIR}/include)
+include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include $ENV{PLOTUTILSROOT}/../include $ENV{PLOTUTILSROOT}/../include/PlotUtils $ENV{PLOTUTILSROOT}/../include/UnfoldUtils $ENV{PLOTUTILSROOT}/../include/RooUnfold $ENV{JSONCPP_DIR})
+#/include)
 
 link_directories(${ROOT_LIBRARY_DIR})
 
@@ -95,7 +96,7 @@ MESSAGE("ROOT_LIBRARIES:${ROOT_LIBRARIES} ")
 
 MESSAGE("PROJECT:${PROJECT_NAME}")
 
-target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT} -lTMVA -lTMVAGui -lXMLIO -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}/lib  -ljsoncpp) 
+target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT}  -lMAT-MINERvA -lMAT -lMATDict -lMAT-MINERvADict -L$ENV{UNFOLDUTILSROOT} -lTMVA -lTMVAGui -lXMLIO -lUnfoldUtils -L$ENV{UNFOLDUTILSROOT} -lUnfoldUtilsDict -L$ENV{JSONCPP_DIR}  -ljsoncpp) 
 #target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} Unfold MathCore -L$ENV{PLOTUTILSROOT} -lplotutils -L$ENV{UNFOLDUTILSROOT} -lunfoldutils -l$ENV{UNFOLDUTILSROOT} -lG__UnfoldUtilsDict.so)
 
 
@@ -120,6 +121,7 @@ add_executable(aux_sidebands aux_sidebands.C)
 #add_executable(analyze_v8 analyze_v8.C)
 add_executable(analyze_v9 analyze_v9.C)
 add_executable(MnvFitDriver MnvFitDriver.cxx)
+add_executable(MnvFitDriver2D MnvFitDriver2D.cxx)
 add_executable(MnvMateusDriver MnvMateusDriver.cxx)
 #add_executable(stack_SignalBkgd smg/stack_SignalBkgd.C)
 add_executable(getCSVs ../utilities/getCSVs.C)
@@ -140,6 +142,7 @@ add_executable(combineErrors smg/combineErrors.C)
 add_executable(combineHists smg/combineHists.C)
 add_executable(compareHists smg/compareHists.C)
 add_executable(combineROOTfiles smg/combineROOTfiles.C)
+add_executable(applyFits smg/applyFits.C)
 
 
 
@@ -153,6 +156,7 @@ target_link_libraries(aux_sidebands  PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(MnvFitDriver PRIVATE ${PROJECT_NAME} )
+target_link_libraries(MnvFitDriver2D PRIVATE ${PROJECT_NAME} )
 target_link_libraries(MnvMateusDriver PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(stack_SignalBkgd  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(getCSVs PRIVATE ${PROJECT_NAME} )
@@ -173,3 +177,4 @@ target_link_libraries(combineErrors  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(combineHists  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(compareHists  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(combineROOTfiles PRIVATE ${PROJECT_NAME} )
+target_link_libraries(applyFits PRIVATE ${PROJECT_NAME} )

@@ -79,129 +79,129 @@ void LoopAndFillEventSelection(std::string tag,
                                bool closure=false,
                                bool use_prog_bar=false) {
 
-  // Prepare loop
-  MinervaUniverse::SetTruth(false);
-  int nentries = -1;
-  CVFunctions<CVUniverse> fund;
+	// Prepare loop
+	MinervaUniverse::SetTruth(false);
+	int nentries = -1;
+	CVFunctions<CVUniverse> fund;
 
-  // get ready for weights by finding cv universe pointer
+	// get ready for weights by finding cv universe pointer
 
-  assert(!error_bands["cv"].empty() && "\"cv\" error band is empty!  Can't set Model weight.");
-  auto& cvUniv = error_bands["cv"].front();
-  // make a dummy event - may need to make fancier
-  PlotUtils::detail::empty event;
+	assert(!error_bands["cv"].empty() && "\"cv\" error band is empty!  Can't set Model weight.");
+	auto& cvUniv = error_bands["cv"].front();
+	// make a dummy event - may need to make fancier
+	PlotUtils::detail::empty event;
 
-  if ( variables.size() < 1) {
-    std::cout << " no variables to fill " << std::endl;
-    return;  // don't bother if there are no variables.
-  }
+	if ( variables.size() < 1) {
+		std::cout << " no variables to fill " << std::endl;
+		return;  // don't bother if there are no variables.
+	}
 
-  if (data_mc_truth == kData){
-    nentries = util.GetDataEntries();
-  }
-  else if (data_mc_truth == kMC){
-    nentries = util.GetMCEntries();
-  }
-  else{
-    nentries = util.GetTruthEntries();
-    MinervaUniverse::SetTruth(true);
-  }
+	if (data_mc_truth == kData){
+		nentries = util.GetDataEntries();
+	}
+	else if (data_mc_truth == kMC){
+		nentries = util.GetMCEntries();
+	}
+	else{
+		nentries = util.GetTruthEntries();
+		MinervaUniverse::SetTruth(true);
+	}
 
-  unsigned int loc = tag.find("___")+3;
-  std::string cat(tag,loc,string::npos);
-  std::string sample(tag,0,loc-3);
-  
-  std::map<std::string,RReader> *tmva_models = CVUniverse::GetPointerToTMVAModels();
-  std::vector<std::string> var_names = (*tmva_models)[sample].GetVariableExpressions();
+	unsigned int loc = tag.find("___")+3;
+	std::string cat(tag,loc,string::npos);
+	std::string sample(tag,0,loc-3);
+
+	std::map<std::string,RReader> *tmva_models = CVUniverse::GetPointerToTMVAModels();
+	std::vector<std::string> var_names = (*tmva_models)[sample].GetVariableExpressions();
 	int tmva_variable_size = (*tmva_models)[sample].GetVariableNames().size();
 	std::string sample_category = CVUniverse::GetSampleCategory(sample);
 	
 	std::cout << " number of error bands: " << error_bands.size() << std::endl;
-  std::cout << " " << sample << " category " << cat << std::endl;
-  std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
-  const clock_t begin_time = clock();
+	std::cout << " " << sample << " category " << cat << std::endl;
+	std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
+	const clock_t begin_time = clock();
   
-  std::cout << std::endl;
-  for (auto var : var_names) {
-  	std::cout << "   " << var << std::endl;
-  }
-  if (data_mc_truth != kData) {
+	std::cout << std::endl;
+	for (auto var : var_names) {
+		std::cout << "   " << var << std::endl;
+	}
+	if (data_mc_truth != kData) {
 		std::cout << "\nLooping over error bands:\n";
 		for (auto band : error_bands) {
 			std::cout << "   " << (band.second)[0]->ShortName() << std::endl;
 		}
 		std::cout << std::endl;
-  }
+	}
 
 	int counter = 0;
 
 	// Begin entries loop
-  for (int i = 0; i < nentries; i++) {
+	for (int i = 0; i < nentries; i++) {
     		
 		ProgressBar(nentries,i,use_prog_bar,data_mc_truth,prescale);
 		
-    cvUniv->SetEntry(i);
-    //atree->GetEntry(i);
+		cvUniv->SetEntry(i);
+		//atree->GetEntry(i);
 
-    if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
+		if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
 		if (data_mc_truth == kMC || data_mc_truth == kData){
 			if (!cvUniv->FastFilter()) continue;
 		}
 
-    const double cvWeight = (data_mc_truth == kData ||  closure ) ? 1. : model.GetWeight(*cvUniv,event);  // detail may be used for more complex things
-    // TODO: Is this scaled cvWeight necessary?
-    // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
+		const double cvWeight = (data_mc_truth == kData ||  closure ) ? 1. : model.GetWeight(*cvUniv,event);  // detail may be used for more complex things
+		// TODO: Is this scaled cvWeight necessary?
+		// const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
     
-    // Loop bands and universes
-    for (auto band : error_bands) {
-      std::vector<CVUniverse*> error_band_universes = band.second;
-      //  HMS replace with iuniv to access weights more easily
-      //  HMS for (auto universe : error_band_universes) {
-      std::string uni_name = (band.second)[0]->ShortName();
-      for (int iuniv=0; iuniv < error_band_universes.size(); iuniv++){
+   	 // Loop bands and universes
+		for (auto band : error_bands) {
+			std::vector<CVUniverse*> error_band_universes = band.second;
+			//  HMS replace with iuniv to access weights more easily
+			//  HMS for (auto universe : error_band_universes) {
+			std::string uni_name = (band.second)[0]->ShortName();
+			for (int iuniv=0; iuniv < error_band_universes.size(); iuniv++){
 
-        auto universe = error_band_universes[iuniv];
-        universe->SetEntry(i);
+				auto universe = error_band_universes[iuniv];
+				universe->SetEntry(i);
 
-        // Process this event/universe
-        //double weight = 1;
-        //if (universe->ShortName() == "cv" ) weight = data_mc_truth == kData ? 1. : universe->GetWeight();
-        
-        double aux_weight = 1.;
-        
-		if(tmva_variable_size > 0 && data_mc_truth != kTruth){
-			/*v1 = universe->GetMultiplicity();
-			v2 = universe->GetProtonScore1_0();
-			v3 = universe->GetPrimaryProtonTrackVtxGap();
-			v4 = universe->GetMuonToPrimaryProtonAngle();
-			v5 = universe->ProtonRatioTdEdX2TrackLength_0();
-			v6 = universe->GetPrimaryProtonFractionVisEnergyInCone();
-			v7 = universe->GetNumClustsPrimaryProtonEnd();
-			v8 = universe->GetNBlobs();
-			v9 = universe->GetImprovedNMichel();
-			v10 = universe->GetRecoilEnergyGeV();
-			v11 = universe->GetImprovedMichel_Sum_Views();
-			std::vector<float> var_values = {v1,v2,v3,v4,v5,v6,v7,v8,v9,v10,v11};*/
-			std::vector<float> var_values = fund.GetVectorOfValues(universe,var_names);
-			CVUniverse::ComputeTMVAResponse(sample,var_values);
-		}
-		//if(sample_category.size() > 0){
-		//	double tmva_weight = CVUniverse::GetTMVAClassResponse(sample_category);
-		//	aux_weight = aux_weight*tmva_weight;
-		//}
+				// Process this event/universe
+				//double weight = 1;
+				//if (universe->ShortName() == "cv" ) weight = data_mc_truth == kData ? 1. : universe->GetWeight();
+
+				double aux_weight = 1.;
+
+				if(tmva_variable_size > 0 && data_mc_truth != kTruth){
+					/*v1 = universe->GetMultiplicity();
+					v2 = universe->GetProtonScore1_0();
+					v3 = universe->GetPrimaryProtonTrackVtxGap();
+					v4 = universe->GetMuonToPrimaryProtonAngle();
+					v5 = universe->ProtonRatioTdEdX2TrackLength_0();
+					v6 = universe->GetPrimaryProtonFractionVisEnergyInCone();
+					v7 = universe->GetNumClustsPrimaryProtonEnd();
+					v8 = universe->GetNBlobs();
+					v9 = universe->GetImprovedNMichel();
+					v10 = universe->GetRecoilEnergyGeV();
+					v11 = universe->GetImprovedMichel_Sum_Views();
+					std::vector<float> var_values = {v1,v2,v3,v4,v5,v6,v7,v8,v9,v10,v11};*/
+					std::vector<float> var_values = fund.GetVectorOfValues(universe,var_names);
+					CVUniverse::ComputeTMVAResponse(sample,var_values);
+				}
+				//if(sample_category.size() > 0){
+				//	double tmva_weight = CVUniverse::GetTMVAClassResponse(sample_category);
+				//	aux_weight = aux_weight*tmva_weight;
+				//}
 				
-        // probably want to move this later on inside the loop
-        const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event); //Only calculate the per-universe weight for events that will actually use it.
-        //PlotUtils::detail::empty event;
+				// probably want to move this later on inside the loop
+				const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event); //Only calculate the per-universe weight for events that will actually use it.
+				//PlotUtils::detail::empty event;
 
-        //=========================================
-        // Fill
-        //=========================================
+				//=========================================
+				// Fill
+				//=========================================
         
-        if(data_mc_truth == kMC){
+				if(data_mc_truth == kMC){
 #ifdef CLOSUREDETAIL
-          if(closure && universe->ShortName() == "cv" && selection.isMCSelected(*universe, event, weight).all()){
+					if(closure && universe->ShortName() == "cv" && selection.isMCSelected(*universe, event, weight).all()){
           
 						std::cout  << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all() << " " << tag  << selection.isSignal(*universe)  << " " << universe->ShortName() <<  std::endl;
 						universe->Print();
@@ -222,40 +222,40 @@ void LoopAndFillEventSelection(std::string tag,
 						FillResponse(tag, universe, weight, variables, variables2D, scale);
 						FillResolution(tag, universe, weight, variables, variables2D, scale);
 					
-	      	}
+					}
 				}
-      	else if (data_mc_truth == kTruth){
+				else if (data_mc_truth == kTruth){
 
-        	if(selection.isEfficiencyDenom(*universe, weight)){
-	          const double q2qe = universe->GetTrueQ2QEGeV();
-	          double scale = 1.0;
-	          if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
-	          if (closure) scale = 1.0;
-	          FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
-        	}
-    	  }
-        else{ //kData
+					if(selection.isEfficiencyDenom(*universe, weight)){
+						const double q2qe = universe->GetTrueQ2QEGeV();
+						double scale = 1.0;
+						if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv); //Only calculate the per-universe weight for events that will actually use it.
+						if (closure) scale = 1.0;
+						FillSignalTruth(tag, universe, weight, variables, variables2D, scale);
+					}
+				}
+				else{ //kData
 #ifdef CLOSUREDETAIL
-          if (closure && selection.isDataSelected(*universe, event).all() ){
-            std::cout  << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all()  << "  " << tag  << "1" << " " << universe->ShortName() <<  std::endl;
-          }
+					if (closure && selection.isDataSelected(*universe, event).all() ){
+						std::cout  << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all()  << "  " << tag  << "1" << " " << universe->ShortName() <<  std::endl;
+					}
 #endif
-          if(selection.isDataSelected(*universe, event).all()) {
+					if(selection.isDataSelected(*universe, event).all()) {
           
-            FillData(tag, universe, variables, variables2D, aux_weight);
+						FillData(tag, universe, variables, variables2D, aux_weight);
             
-          }
-        }
+					}
+				}
         
-        CVUniverse::ResetTMVAResponse();
+				CVUniverse::ResetTMVAResponse();
         
-      } // End universes
-    } // End error bands
+			} // End universes
+		} // End error bands
     
-    if(data_mc_truth != kData) i+= prescale-1;
+		if(data_mc_truth != kData) i+= prescale-1;
     
-  } // End entries loop
-  std::cout << "Elapsed time: " << float( clock() - begin_time )/1000000 << " s" << std::endl;
+	} // End entries loop
+	std::cout << "Elapsed time: " << float( clock() - begin_time )/1000000 << " s" << std::endl;
 
 }
 

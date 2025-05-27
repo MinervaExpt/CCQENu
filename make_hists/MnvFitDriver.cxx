@@ -22,6 +22,7 @@
 #include <bitset>
 #include <time.h>
 #include <sys/stat.h>
+#include <filesystem>
 
 //ROOT includes
 #include "MnvH1D.h"
@@ -161,9 +162,15 @@ int main(int argc, char* argv[]) {
     std::string inputFileName=config.GetString("InputFile");
     std::string outputFileName = config.GetString("OutputFile");
     bool logPlot = config.GetBool("LogPlot");
+    bool logX = config.GetBool("LogX");
+    NuConfig addLogX = config.GetConfig("AdditionalLogX");
     double logMinimum = config.GetDouble("LogMinimum");
+    double logXMinimum = config.GetDouble("LogXMinimum");
     std::vector<std::string> sidebands = config.GetStringVector("Sidebands");
     std::vector<std::string> categories = config.GetStringVector("Categories");
+    std::string pixdirectory = config.GetString("PixDir");
+    
+    std::filesystem::create_directory(pixdirectory.c_str());
     
     // use this to exclude or include sidebands in the global fit
     std::vector<std::string> include = config.GetStringVector("IncludeInFit");
@@ -176,6 +183,9 @@ int main(int argc, char* argv[]) {
         }
     }
     std::string varName = config.GetString("Variable");
+	std::vector<std::string> addVarNames = config.GetStringVector("AdditionalVariables");
+	std::string varUnit = config.GetString("VariableUnits");
+	NuConfig addVarUnits = config.GetConfig("AdditionalVariablesUnits");
     std::string fitType = config.GetString("FitType");
     std::string h_template = config.GetString("Template");
     std::string f_template = config.GetString("FitTemplate");
@@ -212,12 +222,15 @@ int main(int argc, char* argv[]) {
     // make and fill maps that contain pointers to the histograms you want to fit  uses CCQEMAT template
     
     //std::string h_template = "h___%s___%s___%s___reconstructed";
-    char cname[1000];
-    char fname[1000];
-    std::map<const std::string, PlotUtils::MnvH1D*> dataHist;
-    std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists;
-    std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists;
-    TString name = varName;
+	char cname[1000];
+	char fname[1000];
+	std::map<const std::string, PlotUtils::MnvH1D*> dataHist;
+	std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists;
+	std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists;
+	std::map<const std::string, std::map<const std::string, PlotUtils::MnvH1D*>> addDataHist;
+	std::map<const std::string, std::map<const std::string, std::vector<PlotUtils::MnvH1D*>>> addFitHists;
+	std::map<const std::string, std::map<const std::string, std::vector<PlotUtils::MnvH1D*>>> addUnfitHists;
+	TString name = varName;
     for (auto const side:sidebands){
         std::string cat = "data";
         std::snprintf(cname,1000,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
@@ -228,27 +241,58 @@ int main(int argc, char* argv[]) {
         dataHist[side]->Rebin(rebin);
         std::cout << " nbins " << cname << " " << dataHist[side]->GetXaxis()->GetNbins() << std::endl;
         if (logPlot) dataHist[side]->SetMinimum(logMinimum);
+        
+        for (auto addVarName:addVarNames) {
+        	std::snprintf(cname,1000,h_template.c_str(),side.c_str(), cat.c_str(),addVarName.c_str());
+		    std::snprintf(fname,1000,f_template.c_str(),side.c_str(), cat.c_str(),addVarName.c_str());
+		    std::cout << " look for " << cname << std::endl;
+		    addDataHist[side][addVarName] = (PlotUtils::MnvH1D*)inputFile->Get(cname);
+		    
+		    addDataHist[side][addVarName]->Rebin(rebin);
+		    std::cout << " nbins " << cname << " " << addDataHist[side][addVarName]->GetXaxis()->GetNbins() << std::endl;
+		    if (logPlot) addDataHist[side][addVarName]->SetMinimum(logMinimum);
+        }
+        
         //dataHist[side]->SetNormBinWidth(1.0);
         //dataHist[sidename] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
         for (auto cat:categories){
             std::snprintf(cname,1000,h_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
             std::snprintf(fname,1000,f_template.c_str(),side.c_str(), cat.c_str(),varName.c_str());
             name = TString(cname);
-          std::cout << " look for " << cname << std::endl;
-          MnvH1D* newhist = (PlotUtils::MnvH1D*)inputFile->Get(cname);
-          if (!newhist){
-            std::cout << " no " << cname << std::endl;
-          }
-          newhist->Rebin(rebin);
-          if (logPlot) newhist->SetMinimum(logMinimum);
-          std::cout << "nbins " << cname << " " << newhist->GetXaxis()->GetNbins() << std::endl;
-          newhist->Print();
-          newhist->Scale(POTscale);
-          newhist->Print();
-            unfitHists[side].push_back(newhist);
-            fitHists[side].push_back((PlotUtils::MnvH1D*)newhist->Clone(TString(fname)));
-            
-        }
+			std::cout << " look for " << cname << std::endl;
+			MnvH1D* newhist = (PlotUtils::MnvH1D*)inputFile->Get(cname);
+			if (!newhist){
+				std::cout << " no " << cname << std::endl;
+			}
+			newhist->Rebin(rebin);
+			if (logPlot) newhist->SetMinimum(logMinimum);
+			std::cout << "nbins " << cname << " " << newhist->GetXaxis()->GetNbins() << std::endl;
+			newhist->Print();
+			newhist->Scale(POTscale);
+			newhist->Print();
+			unfitHists[side].push_back(newhist);
+			fitHists[side].push_back((PlotUtils::MnvH1D*)newhist->Clone(TString(fname)));
+		}
+		for (auto addVarName:addVarNames) {
+			for (auto cat:categories){
+		        std::snprintf(cname,1000,h_template.c_str(),side.c_str(), cat.c_str(),addVarName.c_str());
+		        std::snprintf(fname,1000,f_template.c_str(),side.c_str(), cat.c_str(),addVarName.c_str());
+		        name = TString(cname);
+				std::cout << " look for " << cname << std::endl;
+				MnvH1D* newhist = (PlotUtils::MnvH1D*)inputFile->Get(cname);
+				if (!newhist){
+					std::cout << " no " << cname << std::endl;
+				}
+				newhist->Rebin(rebin);
+				if (logPlot) newhist->SetMinimum(logMinimum);
+				std::cout << "nbins " << cname << " " << newhist->GetXaxis()->GetNbins() << std::endl;
+				newhist->Print();
+				newhist->Scale(POTscale);
+				newhist->Print();
+				addUnfitHists[side][addVarName].push_back(newhist);
+				addFitHists[side][addVarName].push_back((PlotUtils::MnvH1D*)newhist->Clone(TString(fname)));
+			}
+		}
         /*for (int i = 0; i < categories.size(); i++){
             unfitHists[side][i]->SetNormBinWidth(1.0);
             fitHists[side][i]->SetNormBinWidth(1.0);
@@ -260,6 +304,10 @@ int main(int argc, char* argv[]) {
     // now have made a common map for all histograms
     int lowBin = 1;
     int hiBin = dataHist[include[0]]->GetXaxis()->GetNbins();
+    std::map<const std::string, int> addHiBin;
+    /*for (auto addVarName:addVarNames) {
+    	addHiBin[addVarName] = dataHist[include[0]][addVarName]->GetXaxis()->GetNbins();
+    }*/
     fit::fit_type type;
     type = fit::kFastChi2;
     if (fitType == "FastChi2")type = fit::kFastChi2;
@@ -269,7 +317,9 @@ int main(int argc, char* argv[]) {
     std::cout << " Try to write it out " << std::endl;
     
     outputfile->cd();
-    int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin);
+    int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, 
+                            addFitHists, addUnfitHists, addDataHist,
+                            includeInFit, categories,  type, lowBin, hiBin, addHiBin);
     
     // set up for plots
     
@@ -277,11 +327,18 @@ int main(int argc, char* argv[]) {
     mnvPlotter.draw_normalized_to_bin_width = false;
     TCanvas cF("fit","fit");
     if (logPlot) gPad->SetLogy(1);
+    if (logX) gPad->SetLogx(1);
     std::map<const std::string, MnvH1D*> tot;
     std::map<const std::string, MnvH1D*> pre;
     std::map<const std::string, MnvH1D*> bkg;
     std::map<const std::string, MnvH1D*> sig;
     std::map<const std::string, MnvH1D*> bkgsub;
+    
+    std::map<const std::string, std::map<const std::string, MnvH1D*>> addTot;
+    std::map<const std::string, std::map<const std::string, MnvH1D*>> addPre;
+    std::map<const std::string, std::map<const std::string, MnvH1D*>> addBkg;
+    std::map<const std::string, std::map<const std::string, MnvH1D*>> addSig;
+    std::map<const std::string, std::map<const std::string, MnvH1D*>> addBkgsub;
     
     for (auto side:sidebands){
         //dataHist[side]->Print();
@@ -306,6 +363,18 @@ int main(int argc, char* argv[]) {
         tot[side]->Print();
         tot[side]->Write();
         
+        for (auto addVarName:addVarNames) {
+        	for (int i = 0; i < categories.size(); i++){
+        		addFitHists[side][addVarName][i]->Write();
+        		std::snprintf(fname, 1000, f_template.c_str(), side.c_str(), "all", addVarName.c_str());
+		        if (i == 0){
+		            addTot[side][addVarName] = (MnvH1D*)addFitHists[side][addVarName][i]->Clone(TString(fname));
+		        }
+		        else{
+		            addTot[side][addVarName]->Add(addFitHists[side][addVarName][i]);
+		        }
+        	}
+        }
     }
     std::cout << "wrote the results " << std::endl;
     
@@ -322,6 +391,21 @@ int main(int argc, char* argv[]) {
         pre[side]->Print();
         pre[side]->Write();
         pre[side]->MnvH1DToCSV(pre[side]->GetName(),"./csv/",1.,false);
+        
+        for (auto addVarName:addVarNames) {
+        	for (int i = 0; i < categories.size(); i++){
+		        std::snprintf(cname,1000, h_template.c_str(),side.c_str(), "all",addVarName.c_str());
+		        if (i == 0){
+		            addPre[side][addVarName] = (MnvH1D*)addUnfitHists[side][addVarName][i]->Clone(TString(cname));
+		        }
+		        else{
+		            addPre[side][addVarName]->Add(addUnfitHists[side][addVarName][i]);
+		        }
+		    }
+		    addPre[side][addVarName]->Print();
+		    addPre[side][addVarName]->Write();
+		    addPre[side][addVarName]->MnvH1DToCSV(pre[side]->GetName(),"./csv/",1.,false);
+        }
     }
     // this loops over, finds the categories that are in the backgrounds and sums those to get a background
     // uses this whole counter thing to avoid having to figure out how to do string searches in a list in C++
@@ -348,6 +432,30 @@ int main(int argc, char* argv[]) {
                 bkg[side]->MnvH1DToCSV(bkg[side]->GetName(),"./csv/",1.,false);
             }
         }
+        
+        for (auto addVarName:addVarNames) {
+        	int count = 0;
+        	for (int i = 0; i < categories.size(); i++){
+		        for (int j = 0; j < backgrounds.size(); j++){
+		            //std::cout << "match " << categories[i] << " " << backgrounds[j] << " " << count << std::endl;
+		            if (categories[i] == backgrounds[j]){
+		            	std::snprintf(fname,1000, f_template.c_str(),side.c_str(),"bkg",addVarName.c_str());
+		                if (count == 0){
+		                    addBkg[side][addVarName] = (MnvH1D*)addFitHists[side][addVarName][i]->Clone(TString(fname));
+		                    count +=1;
+		                }
+		                else{
+		                    addBkg[side][addVarName]->Add(addFitHists[side][addVarName][i]);
+		                }
+		            }
+		        }
+		        if (count > 0){
+		            addBkg[side][addVarName]->Print();
+		            addBkg[side][addVarName]->Write();
+		            addBkg[side][addVarName]->MnvH1DToCSV(addBkg[side][addVarName]->GetName(),"./csv/",1.,false);
+		        }
+		    }
+        }
     }
     for (auto side:sidebands){
         std::snprintf(fname,1000,f_template.c_str(),side.c_str(), "bkgsub",varName.c_str());
@@ -357,6 +465,15 @@ int main(int argc, char* argv[]) {
         bkgsub[side]->Write();
         dataHist[side]->MnvH1DToCSV(dataHist[side]->GetName(),"./csv/",1.,false);
         bkgsub[side]->MnvH1DToCSV(bkgsub[side]->GetName(),"./csv/",1.,false);
+        for (auto addVarName:addVarNames) {
+		    std::snprintf(fname,1000,f_template.c_str(),side.c_str(), "bkgsub",addVarName.c_str());
+		    addBkgsub[side][addVarName]=(MnvH1D*)addDataHist[side][addVarName]->Clone(fname);
+		    addBkgsub[side][addVarName]->AddMissingErrorBandsAndFillWithCV(*(addFitHists[side][addVarName][0]));
+		    addBkgsub[side][addVarName]->Add(addBkg[side][addVarName],-1);
+		    addBkgsub[side][addVarName]->Write();
+		    addDataHist[side][addVarName]->MnvH1DToCSV(addDataHist[side][addVarName]->GetName(),"./csv/",1.,false);
+		    addBkgsub[side][addVarName]->MnvH1DToCSV(addBkgsub[side][addVarName]->GetName(),"./csv/",1.,false);
+        }
     }
     std::cout << "wrote the inputs and outputs " << std::endl;
     
@@ -372,6 +489,17 @@ int main(int argc, char* argv[]) {
             unfitHists[side][i]->Scale(1.,"width");
             fitHists[side][i]->Scale(1.,"width");
         }
+        for (auto addVarName:addVarNames) {
+		    addDataHist[side][addVarName]->Scale(1.,"width");
+		    addTot[side][addVarName]->Scale(1.,"width");
+		    addPre[side][addVarName]->Scale(1.,"width");
+		    addBkg[side][addVarName]->Scale(1.,"width");
+		    addBkgsub[side][addVarName]->Scale(1.,"width");
+		    for (int i = 0; i < categories.size(); i++){
+		        addUnfitHists[side][addVarName][i]->Scale(1.,"width");
+		        addFitHists[side][addVarName][i]->Scale(1.,"width");
+		    }
+        }
     }
     
     mnvPlotter.error_color_map["FitVariations"] = kBlue + 2;
@@ -379,36 +507,206 @@ int main(int argc, char* argv[]) {
     mnvPlotter.error_color_map["GEANT"] = kGreen + 2;
     
     for (auto side:sidebands){
+    	int nbinsX = dataHist[side]->GetXaxis()->GetNbins();
+    	double xMin = dataHist[side]->GetXaxis()->GetBinLowEdge(1);
+    	double xMax = dataHist[side]->GetXaxis()->GetBinUpEdge(nbinsX);
+    	if (logX) {
+    		std::cout << "Setting log minimum for X axis." << std::endl;
+    		gPad->SetLogx(1);
+    		dataHist[side]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+    		tot[side]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+    		pre[side]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+    		//dataHist[side]->SetAxisRange(logXMinimum,xMax,"X");
+    		//tot[side]->SetAxisRange(logXMinimum,xMax,"X");
+    		//pre[side]->SetAxisRange(logXMinimum,xMax,"X");
+    	}
+    	else {
+    		gPad->SetLogx(0);
+    		dataHist[side]->GetXaxis()->SetRangeUser(xMin,xMax);
+    		tot[side]->GetXaxis()->SetRangeUser(xMin,xMax);
+    		pre[side]->GetXaxis()->SetRangeUser(xMin,xMax);
+    		//dataHist[side]->SetAxisRange(xMin,xMax,"X");
+    		//tot[side]->SetAxisRange(xMin,xMax,"X");
+    		//pre[side]->SetAxisRange(xMin,xMax,"X");
+    	}
         dataHist[side]->SetTitle(dataHist[side]->GetName());
+        TString pixheader = TString(pixdirectory + "/" + side + "_" + varName+"_");
+        
+        std::string ytitle;
+    	if (varUnit == "") ytitle = "Counts per bin";
+    	else ytitle = "Counts per "+varUnit;
+    	TText ty(0.05,0.3,ytitle.c_str());
+    	ty.SetTitle(ytitle.c_str());
+        ty.SetNDC(1);
+        ty.SetTextSize(.06);
+        ty.SetTextAngle(90);
+		
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot[side], 1., "TR");
-        TString pixheader = TString("pix/" + side + "_" + varName+"_");
-
+		std::string label1;
+		label1 = side+" compare after fit";
+		TText t1(.3,.95,label1.c_str());
+	    t1.SetTitle(label1.c_str());
+	    t1.SetNDC(1);
+	    t1.SetTextSize(.03);
+	    t1.Draw("same");
+	    ty.Draw("same");
         cF.Print(TString(pixheader + "_postfit_compare.png").Data());
 
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre[side], 1., "TR", false , NULL, NULL, false, true);
+        std::string label2;
+        label2 = side+" compare before fit";
+        TText t2(.3,.95,label2.c_str());
+	    t2.SetTitle(label2.c_str());
+	    t2.SetNDC(1);
+	    t2.SetTextSize(.03);
+	    t2.Draw("same");
+	    ty.Draw("same");
         cF.Print(TString(pixheader + "_prefit_compare.png").Data());
 
         mnvPlotter.DrawDataMCRatio(dataHist[side], tot[side], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
+        std::string label3;
+        label3 = side+" ratio after fit";
+        TText t3(.3,.95,label3.c_str());
+	    t3.SetTitle(label3.c_str());
+	    t3.SetNDC(1);
+	    t3.SetTextSize(.03);
+	    t3.Draw("same");
         cF.Print(TString(pixheader + "_postfit_compare_ratio.png").Data());
 
         mnvPlotter.DrawDataMCRatio(dataHist[side], pre[side], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
+        std::string label4;
+        label4 = side+" ratio before fit";
+        TText t4(.3,.95,label4.c_str());
+	    t4.SetTitle(label4.c_str());
+	    t4.SetNDC(1);
+	    t4.SetTextSize(.03);
+	    t4.Draw("same");
         cF.Print(TString(pixheader + "_prefit_compare_ratio.png").Data());
 
         mnvPlotter.DrawErrorSummary(pre[side]);
+        std::string label5;
+        label5 = side+" errors before fit";
+        TText t5(.3,.95,label5.c_str());
+	    t5.SetTitle(label5.c_str());
+	    t5.SetNDC(1);
+	    t5.SetTextSize(.03);
+	    t5.Draw("same");
         cF.Print(TString(pixheader + "_prefit_errors.png").Data());
 
         mnvPlotter.DrawErrorSummary(tot[side]);
+        std::string label6;
+        label6 = side+" errors after fit";
+        TText t6(.3,.95,label6.c_str());
+	    t6.SetTitle(label6.c_str());
+	    t6.SetNDC(1);
+	    t6.SetTextSize(.03);
+	    t6.Draw("same");
         cF.Print(TString(pixheader + "_postfit_errors.png").Data());
 
         //mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side], fitHists[side][0], 1., "TR");
         //cF.Print(TString(side+"_bkgsub_compare.png").Data());
+        
+        for (auto addVarName:addVarNames) {
+        	addDataHist[side][addVarName]->SetTitle(addDataHist[side][addVarName]->GetName());
+		    TString pixheader = TString(pixdirectory + "/" + side + "_" + addVarName+"_");
+		    
+		    int nbinsX = addDataHist[side][addVarName]->GetXaxis()->GetNbins();
+    		double xMin = addDataHist[side][addVarName]->GetXaxis()->GetBinLowEdge(1);
+    		double xMax = addDataHist[side][addVarName]->GetXaxis()->GetBinUpEdge(nbinsX);
+    		if (addLogX.GetBool(addVarName)) {
+    			std::cout << "Setting log minimum for X axis." << std::endl;
+				gPad->SetLogx(1);
+				addDataHist[side][addVarName]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+				addTot[side][addVarName]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+				addPre[side][addVarName]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+				//addDataHist[side][addVarName]->SetAxisRange(logXMinimum,xMax,"X");
+				//addTot[side][addVarName]->SetAxisRange(logXMinimum,xMax,"X");
+				//addPre[side][addVarName]->SetAxisRange(logXMinimum,xMax,"X");
+			}
+			else {
+				gPad->SetLogx(0);
+				addDataHist[side][addVarName]->GetXaxis()->SetRangeUser(xMin,xMax);
+				addTot[side][addVarName]->GetXaxis()->SetRangeUser(xMin,xMax);
+				addPre[side][addVarName]->GetXaxis()->SetRangeUser(xMin,xMax);
+				//addDataHist[side][addVarName]->SetAxisRange(xMin,xMax,"X");
+				//addTot[side][addVarName]->SetAxisRange(xMin,xMax,"X");
+				//addPre[side][addVarName]->SetAxisRange(xMin,xMax,"X");
+			}
+		    
+		    std::string addVarUnit = addVarUnits.GetString(addVarName);
+        	std::string ytitle;
+			if (addVarUnit == "") ytitle = "Counts per bin";
+			else ytitle = "Counts per "+addVarUnit;
+			TText ty(0.05,0.3,ytitle.c_str());
+			ty.SetTitle(ytitle.c_str());
+		    ty.SetNDC(1);
+		    ty.SetTextSize(.06);
+		    ty.SetTextAngle(90);
+        	
+		    mnvPlotter.DrawDataMCWithErrorBand(addDataHist[side][addVarName], addTot[side][addVarName], 1., "TR");
+			t1.Draw("same");
+	    	ty.Draw("same");
+		    cF.Print(TString(pixheader + "_postfit_compare.png").Data());
+
+		    mnvPlotter.DrawDataMCWithErrorBand(addDataHist[side][addVarName], addPre[side][addVarName], 1., "TR", false , NULL, NULL, false, true);
+		    t2.Draw("same");
+	    	ty.Draw("same");
+		    cF.Print(TString(pixheader + "_prefit_compare.png").Data());
+
+		    mnvPlotter.DrawDataMCRatio(addDataHist[side][addVarName], addTot[side][addVarName], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
+		    t3.Draw("same");
+		    cF.Print(TString(pixheader + "_postfit_compare_ratio.png").Data());
+
+		    mnvPlotter.DrawDataMCRatio(addDataHist[side][addVarName], addPre[side][addVarName], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
+		    t4.Draw("same");
+		    cF.Print(TString(pixheader + "_prefit_compare_ratio.png").Data());
+
+		    mnvPlotter.DrawErrorSummary(addPre[side][addVarName]);
+		    t5.Draw("same");
+		    cF.Print(TString(pixheader + "_prefit_errors.png").Data());
+
+		    mnvPlotter.DrawErrorSummary(addTot[side][addVarName]);
+		    t6.Draw("same");
+		    cF.Print(TString(pixheader + "_postfit_errors.png").Data());
+        }
     }
     
     TObjArray* combmcin;
     TObjArray* combmcout;
     
     for (auto side:sidebands){
-        TString pixheader = TString("pix/" + side + "_" + varName + "_");
+        TString pixheader = TString(pixdirectory + "/" + side + "_" + varName + "_");
+        
+        int nbinsX = dataHist[side]->GetXaxis()->GetNbins();
+    	double xMin = dataHist[side]->GetXaxis()->GetBinLowEdge(1);
+    	double xMax = dataHist[side]->GetXaxis()->GetBinUpEdge(nbinsX);
+    	if (logX) {
+    		std::cout << "Setting log minimum for X axis." << std::endl;
+    		gPad->SetLogx(1);
+    		dataHist[side]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+    		bkgsub[side]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+    		//dataHist[side]->SetAxisRange(logXMinimum,xMax,"X");
+    		//bkgsub[side]->SetAxisRange(logXMinimum,xMax,"X");
+    		for (int i = 0; i < categories.size(); i++) {
+    			unfitHists[side][i]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+    			fitHists[side][i]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+    			//unfitHists[side][i]->SetAxisRange(logXMinimum,xMax,"X");
+    			//fitHists[side][i]->SetAxisRange(logXMinimum,xMax,"X");
+    		}
+    	}
+    	else {
+    		gPad->SetLogx(0);
+    		dataHist[side]->GetXaxis()->SetRangeUser(xMin,xMax);
+    		bkgsub[side]->GetXaxis()->SetRangeUser(xMin,xMax);
+    		//dataHist[side]->SetAxisRange(xMin,xMax,"X");
+    		//bkgsub[side]->SetAxisRange(xMin,xMax,"X");
+    		for (int i = 0; i < categories.size(); i++) {
+				unfitHists[side][i]->GetXaxis()->SetRangeUser(xMin,xMax);
+				fitHists[side][i]->GetXaxis()->SetRangeUser(xMin,xMax);
+				//unfitHists[side][i]->SetAxisRange(xMin,xMax,"X");
+				//fitHists[side][i]->SetAxisRange(xMin,xMax,"X");
+    		}
+    	}
 
         std::string label;
         label = side+" "+varName;
@@ -417,6 +715,17 @@ int main(int argc, char* argv[]) {
         std::cout << " before call to DrawStack" << std::endl;
         PlotUtils::MnvH1D* data = new PlotUtils::MnvH1D(*(dataHist[side]));
         data->SetTitle("Data");
+        
+        std::string ytitle;
+        double ybottom;
+    	if (varUnit == "") ytitle = "Counts per bin";
+    	else ytitle = "Counts per "+varUnit;
+    	TText ty(0.05,0.3,ytitle.c_str());
+    	ty.SetTitle(ytitle.c_str());
+        ty.SetNDC(1);
+        ty.SetTextSize(.06);
+        ty.SetTextAngle(90);
+        
         label = side+" "+varName + " Before fit";
         TText t(.3,.95,label.c_str());
         t.SetTitle(label.c_str());
@@ -425,24 +734,138 @@ int main(int argc, char* argv[]) {
         if (logPlot) data->SetMinimum(logMinimum);
         mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
         t.Draw("same");
+        ty.Draw("same");
         cF.Print(TString(pixheader + "_prefit_combined.png").Data());
+        
         label = side+" "+varName + " After fit";
         TText t2(.3,.95,label.c_str());
         t2.SetTitle(label.c_str());
         t2.SetNDC(1);
         t2.SetTextSize(.03);
-        t2.SetTitle(label.c_str());
         mnvPlotter.DrawDataStackedMC(data,combmcout,1.0,"TR");
+        t2.Draw("same");
+        ty.Draw("same");
         cF.Print(TString(pixheader + "_" + fitType + "_postfit_combined.png").Data());
-        label = side+" "+varName + "Background Subtracted";
         
-        t2.SetTitle(label.c_str());
-        t2.SetNDC(1);
-        t2.SetTextSize(.03);
-        t2.SetTitle(label.c_str());
+        label = side+" "+varName + " Background Subtracted";
+        TText t3(.3,.95,label.c_str());
+        t3.SetTitle(label.c_str());
+        t3.SetNDC(1);
+        t3.SetTextSize(.03);
         bkgsub[side]->SetTitle("bkgsub");
         mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side],(MnvH1D*)fitHists[side][0], 1.0, "TR");
+        t3.Draw("same");
+        ty.Draw("same");
         cF.Print(TString(pixheader + "_" + fitType + "_bkgsub_combined.png").Data());
+        
+        label = side + "errors after background subtraction";
+        TText t4(.2,.95,label.c_str());
+        t4.SetTitle(label.c_str());
+        t4.SetNDC(1);
+        t4.SetTextSize(.03);
+        mnvPlotter.DrawErrorSummary(bkgsub[side]);
+        std::string label6;
+	    t4.Draw("same");
+        cF.Print(TString(pixheader + "_bkgsub_errors.png").Data());
+        
+        for (auto addVarName:addVarNames) {
+		    TString pixheader = TString(pixdirectory + "/" + side + "_" + addVarName + "_");
+		    
+		    int nbinsX = addDataHist[side][addVarName]->GetXaxis()->GetNbins();
+    		double xMin = addDataHist[side][addVarName]->GetXaxis()->GetBinLowEdge(1);
+    		double xMax = addDataHist[side][addVarName]->GetXaxis()->GetBinUpEdge(nbinsX);
+    		if (addLogX.GetBool(addVarName)) {
+    			std::cout << "Setting log minimum for X axis." << std::endl;
+				gPad->SetLogx(1);
+				addDataHist[side][addVarName]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+				addBkgsub[side][addVarName]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+				//addDataHist[side][addVarName]->SetAxisRange(logXMinimum,xMax,"X");
+				//addBkgsub[side][addVarName]->SetAxisRange(logXMinimum,xMax,"X");
+				for (int i = 0; i < categories.size(); i++) {
+					addUnfitHists[side][addVarName][i]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+					addFitHists[side][addVarName][i]->GetXaxis()->SetRangeUser(logXMinimum,xMax);
+					//addUnfitHists[side][addVarName][i]->SetAxisRange(logXMinimum,xMax,"X");
+					//addFitHists[side][addVarName][i]->SetAxisRange(logXMinimum,xMax,"X");
+				}
+			}
+			else {
+				gPad->SetLogx(0);
+				addDataHist[side][addVarName]->GetXaxis()->SetRangeUser(xMin,xMax);
+				addBkgsub[side][addVarName]->GetXaxis()->SetRangeUser(xMin,xMax);
+				//addDataHist[side][addVarName]->SetAxisRange(xMin,xMax,"X");
+				//addBkgsub[side][addVarName]->SetAxisRange(xMin,xMax,"X");
+				for (int i = 0; i < categories.size(); i++) {
+					addUnfitHists[side][addVarName][i]->GetXaxis()->SetRangeUser(xMin,xMax);
+					addFitHists[side][addVarName][i]->GetXaxis()->SetRangeUser(xMin,xMax);
+					//addUnfitHists[side][addVarName][i]->SetAxisRange(xMin,xMax,"X");
+					//addFitHists[side][addVarName][i]->SetAxisRange(xMin,xMax,"X");
+				}
+			}
+
+		    std::string label;
+		    label = side+" "+varName;
+		    combmcin  = Vec2TObjArray(addUnfitHists[side][addVarName],categories);
+		    combmcout = Vec2TObjArray(addFitHists[side][addVarName],categories);
+		    std::cout << " before call to DrawStack" << std::endl;
+		    PlotUtils::MnvH1D* data = new PlotUtils::MnvH1D(*(addDataHist[side][addVarName]));
+		    data->SetTitle("Data");
+		    
+			std::string addVarUnit = addVarUnits.GetString(addVarName);
+		    std::string ytitle;
+		    double ybottom;
+        	if (addVarUnit == "") ytitle = "Counts per bin";
+        	else ytitle = "Counts per "+addVarUnit;
+        	TText ty(0.05,0.3,ytitle.c_str());
+        	ty.SetTitle(ytitle.c_str());
+		    ty.SetNDC(1);
+		    ty.SetTextSize(.06);
+		    ty.SetTextAngle(90);    
+		    
+		    label = side+" "+addVarName + " Before fit";
+		    TText t(.3,.95,label.c_str());
+		    t.SetTitle(label.c_str());
+		    t.SetNDC(1);
+		    t.SetTextSize(.03);
+		    if (logPlot) data->SetMinimum(logMinimum);
+		    
+		    mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
+		    t.Draw("same");
+		    ty.Draw("same");
+		    cF.Print(TString(pixheader + "_prefit_combined.png").Data());
+		    
+		    label = side+" "+addVarName + " After fit";
+		    TText t2(.3,.95,label.c_str());
+		    t2.SetTitle(label.c_str());
+		    t2.SetNDC(1);
+		    t2.SetTextSize(.03);
+		    t2.SetTitle(label.c_str());
+		    mnvPlotter.DrawDataStackedMC(data,combmcout,1.0,"TR");
+		    t2.Draw("same");
+		    ty.Draw("same");
+		    cF.Print(TString(pixheader + "_" + fitType + "_postfit_combined.png").Data());
+		    
+		    label = side+" "+addVarName + " Background Subtracted";
+		    TText t3(.3,.95,label.c_str());
+		    t3.SetTitle(label.c_str());
+		    t3.SetNDC(1);
+		    t3.SetTextSize(.03);
+		    t3.SetTitle(label.c_str());
+		    addBkgsub[side][addVarName]->SetTitle("bkgsub");
+		    mnvPlotter.DrawDataMCWithErrorBand(addBkgsub[side][addVarName],(MnvH1D*)addFitHists[side][addVarName][0], 1.0, "TR");
+		    t3.Draw("same");
+		    ty.Draw("same");
+		    cF.Print(TString(pixheader + "_" + fitType + "_bkgsub_combined.png").Data());
+		    
+		    label = side+" "+addVarName+" errors after background subtraction";
+		    TText t4(.2,.95,label.c_str());
+		    t4.SetTitle(label.c_str());
+		    t4.SetNDC(1);
+		    t4.SetTextSize(.03);
+		    mnvPlotter.DrawErrorSummary(addBkgsub[side][addVarName]);
+		    std::string label6;
+			t4.Draw("same");
+		    cF.Print(TString(pixheader + "_" + fitType + "_postbkgdsubtraction_errors.png").Data());
+        }
     }
     
     //inputFile->Close();

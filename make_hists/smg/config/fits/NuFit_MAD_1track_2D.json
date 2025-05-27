@@ -6,6 +6,7 @@
     "Span":40,
     "Rebin":2,
     "FittingVariable":"bdtgQELike",
+    "AdditionalVariables":["Q2QE","pzmu","ptmu","bdtg1ChargedPion"],
     "BinningVariable":"Q2QE",
     //"FitType":"FastChi2",
     "FitType":"SlowChi2",

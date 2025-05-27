@@ -391,6 +391,12 @@ int main(int argc, char* argv[]) {
     TObjArray* combmcout;
     
     for (auto side:sidebands){
+    
+    	TText ty(0.05,0.2,"Counts per unit");
+        ty.SetTitle("Counts per unit");
+        ty.SetNDC(1);
+        ty.SetTextSize(.05);
+        ty.SetTextAngle(90);
         
         std::string label;
         label = side+" "+varName;
@@ -399,15 +405,17 @@ int main(int argc, char* argv[]) {
         std::cout << " before call to DrawStack" << std::endl;
         PlotUtils::MnvH1D* data = new PlotUtils::MnvH1D(*(dataHist[side]));
         data->SetTitle("Data");
+        
         label = side+" "+varName + " Before fit";
         TText t(.3,.95,label.c_str());
         t.SetTitle(label.c_str());
         t.SetNDC(1);
-        t.SetTextSize(.03);
-        
+        t.SetTextSize(.03);      
         mnvPlotter.DrawDataStackedMC(data,combmcin,1.0,"TR");
         t.Draw("same");
+        ty.Draw("same");
         cF.Print(TString(pixdir+"/"+side+"_prefit_combined.png").Data());
+        
         label = side+" "+varName + " After fit";
         TText t2(.3,.95,label.c_str());
         t2.SetTitle(label.c_str());
@@ -415,15 +423,20 @@ int main(int argc, char* argv[]) {
         t2.SetTextSize(.03);
         t2.SetTitle(label.c_str());
         mnvPlotter.DrawDataStackedMC(data,combmcout,1.0,"TR");
+        t2.Draw("same");
+        ty.Draw("same");
         cF.Print(TString(pixdir+"/"+side+"_"+fitType+"_postfit_combined.png").Data());
-        label = side+" "+varName + "Background Subtracted";
         
-        t2.SetTitle(label.c_str());
-        t2.SetNDC(1);
-        t2.SetTextSize(.03);
-        t2.SetTitle(label.c_str());
+        label = side+" "+varName + "Background Subtracted";
+        TText t3(.3,.95,label.c_str());
+        t3.SetTitle(label.c_str());
+        t3.SetNDC(1);
+        t3.SetTextSize(.03);
+        t3.SetTitle(label.c_str());
         bkgsub[side]->SetTitle("bkgsub");
         mnvPlotter.DrawDataStackedMC(bkgsub[side],combmcout,1.0,"TR");
+        t3.Draw("same");
+        ty.Draw("same");
         cF.Print(TString(pixdir+"/"+side+"_"+fitType+"_bkgsub_combined.png").Data());
     }
     
