@@ -25,6 +25,7 @@ weight_warper::weight_warper(const NuConfig config) {
     // Check if you want to do the warp, m_dowarp is a switch to turn this mechanism on & defaults to false, can set to other values to be used in other places for model warps
     if(config.IsMember("warpedmc")) {
         m_warpedmc = config.GetString("warpedmc");
+        std::cout << "weight_warper: warpedmc set to " << m_warpedmc << std::endl;
     }
     if(config.IsMember("warpedmc")) {
         // if(config.GetString("warpedmc")=="warped" || config.GetString("warpedmc")=="both" || config.GetString("warpedmc")=="custom") {
