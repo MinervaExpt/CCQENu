@@ -248,6 +248,9 @@ MnvHistoType* DoBkgSubtraction(std::string basename, MnvHistoType* idatahist, Mn
     MnvHistoType* databkg = (MnvHistoType*)idatahist->Clone(bkgsubname.c_str());
     databkg->SetDirectory(0);
 
+    // // dummyhist of 1's
+    // MnvHistoType* dummyunithist = (MnvHistoType*)idatahist->Clone("dummyunithist");
+
     bkgsub->AddMissingErrorBandsAndFillWithCV(*mc);
     databkg->AddMissingErrorBandsAndFillWithCV(*mc);
 
@@ -260,6 +263,25 @@ MnvHistoType* DoBkgSubtraction(std::string basename, MnvHistoType* idatahist, Mn
 }
 template MnvH1D* DoBkgSubtraction<MnvH1D>(std::string basename, MnvH1D* idatahist, MnvH1D* mc, MnvH1D* bkgFraction);
 template MnvH2D* DoBkgSubtraction<MnvH2D>(std::string basename, MnvH2D* idatahist, MnvH2D* mc, MnvH2D* bkgFraction);
+
+// Another option to directly subtract mc bkg from data
+template <class MnvHistoType>
+MnvHistoType* DoBkgSubtraction(std::string basename, MnvHistoType* idatahist, MnvHistoType* imcbkghist) {
+    // assumes imcbkghist is POT norm'd
+    std::string bkgsubname = basename + "_bkgsub";
+    // bkgsub is the returned background subtracted data hist
+    MnvHistoType* bkgsub = (MnvHistoType*)idatahist->Clone(bkgsubname.c_str());
+    bkgsub->SetDirectory(0);
+
+    bkgsub->AddMissingErrorBandsAndFillWithCV(*imcbkghist);
+
+    bkgsub->Add(imcbkghist, -1.);
+    SyncBands(bkgsub);
+
+    return bkgsub;
+}
+template MnvH1D* DoBkgSubtraction<MnvH1D>(std::string basename, MnvH1D* idatahist, MnvH1D* imcbkghist);
+template MnvH2D* DoBkgSubtraction<MnvH2D>(std::string basename, MnvH2D* idatahist, MnvH2D* imcbkghist);
 
 //================================ Unfolding ===================================
 
@@ -691,6 +713,11 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
             if (category == "data") hasdata = true;
             if (category.find(dat) == std::string::npos) {
                 if (histsND[type][category] != 0) {
+                    // // Need to make an unscaled copy of the hists for background subtraction and eff correction other things;
+                    // MnvHistoType* noscale_hist = histsND[type][category]->Clone();
+                    // histsND[type][category+"_noPOTScale"] = noscale_hist;
+
+                    // These are POT scaled things for comparison
                     double t = histsND[type][category]->Integral();
                     histsND[type][category]->Scale(POTScale);
                     std::cout << " POTScaled " << histsND[type][category]->GetName() << " " << t << " " << histsND[type][category]->Integral() << std::endl;
@@ -699,6 +726,8 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
         }
     }
     if (!hasdata) return hasdata;
+    
+    // TODO: Does response need to be POT norm'd?
     for (auto types : responseND) {
         std::string type = types.first;
         std::cout << "response key " << type << std::endl;
@@ -718,21 +747,30 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     // MnvHistoType can be MnvH1D or MnvH2D so far. Response is always MnvH2D.
     MnvHistoType* idatahist = histsND["reconstructed"][dat];
     MnvHistoType* imcsighist = histsND["reconstructed"][sig];
+    // MnvHistoType* imcsighist_noscale = histsND["reconstructed"][sig + "_noPOTScale"];
     std::string stuned = "";
     if (histsND.count("reconstructed_tuned") && usetune) {
         stuned = "Tuned ";
         imcsighist = histsND["reconstructed_tuned"][sig];
+        // imcsighist_noscale = histsND["reconstructed_tuned"][sig + "_sigPOTScale"];
         std::cout << " using " << imcsighist->GetName() << std::endl;
     }
     // std::cout << "using signal " << imcsighist->GetName() << std::endl;
     //  Backgrounds come from several channels, so need to loop over them
     std::map<std::string,MnvHistoType*> imcbkghistmap;
     MnvHistoType* ibkgsubhist;  // TODO: does this need a map?
+
+    // // These are not POT scaled
+    // std::map<std::string,MnvHistoType*> imcbkghistmap_noscale;
+    // // MnvHistoType* ibkgsubhist_noscale;  // TODO: is this needed?
+
     if (!hasbkgsub) {
         for (auto bkg : bkglist) {
             imcbkghistmap[bkg] = histsND["reconstructed"][bkg];
+            // imcbkghistmap_noscale[bkg] = histsND["reconstructed"][bkg + "_noPOTScale"];
             if (histsND.count("reconstructed_tuned") && usetune) {
                 imcbkghistmap[bkg] = histsND["reconstructed_tuned"][bkg];
+                // imcbkghistmap_noscale[bkg] = histsND["reconstructed_tuned"][bkg + "_noPOTScale"];
                 std::cout << " using " << imcbkghistmap[bkg]->GetName() << std::endl;
             }
         }
@@ -753,6 +791,8 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     // std::cout << "using background " << imcbkghist->GetName() << std::endl;
 
     // if (hasbkgsub) ibkgsubhist = histsND["fitted"]["bkgsub"];
+
+    // TODO: do I need non POT scaled hists here? 
 
     if (DEBUG) std::cout << "test pointers " << ibkgsubhist << std::endl;
     MnvHistoType* iseltruhist;
@@ -922,7 +962,8 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
         }
     } else {
         // bkgsub = DoBkgSubtraction(basename, idatahist, mc, signalFraction); // Old signal fraction/purity scaling way of doing it
-        bkgsub = DoBkgSubtraction(basename, idatahist, mc, bkgFraction); // New actual background sub
+        // bkgsub = DoBkgSubtraction(basename, idatahist, mc, bkgFraction);  // New actual background sub
+        bkgsub = DoBkgSubtraction(basename, idatahist, mcbkgtothist);  // New actual background sub
     }
     if (DEBUG) bkgsub->Print();
     bkgsub->Write();
