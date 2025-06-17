@@ -455,9 +455,12 @@ bool CVUniverse::FastFilter() const {
     bool result = false;
     // if (GetMultiplicity() < 1) return result;
     if (GetIsMinosMatchTrack() != -1) return result;
-    if (GetZVertex() < 5980 || GetZVertex() > 8422) return result;
-    if (GetApothemX() > 850.) return result;
-    if (GetApothemY() > 850.) return result;
+    // if (GetZVertex() < 5980 || GetZVertex() > 8422) return result;
+    // if (GetApothemX() > 850.) return result;
+    // if (GetApothemY() > 850.) return result;
+    if (GetZVertex() < 5900. || GetZVertex() > 8500.) return result;
+    if (GetApothemX() > 900.) return result;
+    if (GetApothemY() > 900.) return result;
     return true;
 }
 bool CVUniverse::TrueFastFilter() const { return true; }
@@ -1221,14 +1224,17 @@ double CVUniverse::GetTrueEAvailGeV() const {
             Eavail += energy - 139.57;  // subtracting pion mass to get Kinetic energy
         else if (pdg == 2212)
             Eavail += energy - 938.27;  // proton
+            // Eavail += energy - MinervaUnits::M_p;
         else if (pdg == 111)
             Eavail += energy;  // pi0
         else if (pdg == 22)
             Eavail += energy;  // photons
         else if (pdg >= 2000)  // TODO: what is this?
             Eavail += energy - 938.27;
+            // Eavail += energy - MinervaUnits::M_p;
         else if (pdg <= -2000)
             Eavail += energy + 938.27;
+            // Eavail += energy + MinervaUnits::M_p;
         else
             Eavail += energy;
     }
@@ -1243,7 +1249,7 @@ double CVUniverse::GetTrueEAvailWithNeutronsGeV() const {
         int pdg = GetVecElem("mc_FSPartPDG", i);
         double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
         if (pdg == 2112)
-            Eavail += (energy - 939.56542);  // Skip neutrons
+            Eavail += (energy - 939.56);  // DON'T skip neutrons
         else if (abs(pdg) > 1e9)
             continue;  // ignore nuclear fragments
         else if (abs(pdg) == 11 || abs(pdg) == 13)
@@ -1251,15 +1257,15 @@ double CVUniverse::GetTrueEAvailWithNeutronsGeV() const {
         else if (abs(pdg) == 211)
             Eavail += energy - 139.5701;  // subtracting pion mass to get Kinetic energy
         else if (pdg == 2212)
-            Eavail += energy - 938.27201;  // proton
+            Eavail += energy - 938.27;  // proton
         else if (pdg == 111)
             Eavail += energy;  // pi0
         else if (pdg == 22)
             Eavail += energy;  // photons
         else if (pdg >= 2000)  // TODO: what is this?
-            Eavail += energy - 938.27201;
+            Eavail += energy - 938.27;
         else if (pdg <= -2000)
-            Eavail += energy + 938.27201;
+            Eavail += energy + 938.27;
         else
             Eavail += energy;
     }
