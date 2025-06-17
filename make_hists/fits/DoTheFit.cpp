@@ -68,14 +68,25 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
     }
 
     // make objects to contain the fit information
-    PlotUtils::MnvH1D parameters(TString("parameters_" + aname), "fit parameters", ncat, 0.0, double(ncat));
-    PlotUtils::MnvH2D covariance(TString("covariance_" + aname), "fit parameters", ncat, 0.0, double(ncat), ncat, 0.0, double(ncat));
-    PlotUtils::MnvH1D fcn(TString("fcn_" + aname), "fcn", 1, 0., 1.);
+    // PlotUtils::MnvH1D parameters(TString("parameters_" + aname), "fit parameters", ncat, 0.0, double(ncat));
+    // PlotUtils::MnvH2D covariance(TString("covariance_" + aname), "fit parameters", ncat, 0.0, double(ncat), ncat, 0.0, double(ncat));
+    // PlotUtils::MnvH1D fcn(TString("fcn_" + aname), "fcn", 1, 0., 1.);
     // Change names since it doesn't really make since to do that like before -NHV
     // PlotUtils::MnvH1D parameters(TString("h___QElike___fit_parameters___var___reconstructed"), "fit parameters", ncat, 0.0, double(ncat));
     // PlotUtils::MnvH2D covariance(TString("h___QElike___fit_covariance___var___reconstructed"), "fit parameters", ncat, 0.0, double(ncat), ncat, 0.0, double(ncat));
     // PlotUtils::MnvH1D fcn(TString("h___QElike___fit_fcn___var___reconstructed"), "fcn", 1, 0., 1.);
+    
+    // make objects to contain the fit information
+    PlotUtils::MnvH1D parameters(TString("parameters_" + aname), "fit parameters", ncat, 0.0, double(ncat));
+    PlotUtils::MnvH2D covariance(TString("covariance_" + aname), "covariance", ncat, 0.0, double(ncat), ncat, 0.0, double(ncat));
+    // PlotUtils::MnvH2D correlation(TString("correlation_" + aname), "correlation", ncat, 0.0, double(ncat), ncat, 0.0, double(ncat));
+    PlotUtils::MnvH1D fcn(TString("fcn" + aname), "fcn", 1, 0., 1.);
+    std::cout << "covariance" << covariance.GetName() << std::endl;
 
+    TMatrixD variants(ncat, ncat);
+    TVectorD theparameters(ncat);
+    TMatrixDSym CovMatrix(ncat, ncat);
+    CovMatrix.ResizeTo(ncat, ncat);
     // add in the CV so you do a loop over universes
 
     universes.push_back("CV");
@@ -88,7 +99,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             fcn.AddVertErrorBandAndFillWithCV(univ, nuniv);
             parameters.AddVertErrorBandAndFillWithCV(univ, nuniv);
             covariance.AddVertErrorBandAndFillWithCV(univ, nuniv);
-            correlation.AddVertErrorBandAndFillWithCV(univ, nuniv);
+            // correlation.AddVertErrorBandAndFillWithCV(univ, nuniv);
             mini2->SetPrintLevel(0);
 
         } else {
