@@ -1,29 +1,33 @@
 {
-  "version":15,  
-  "mcIn":"${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
-  "dataIn":"${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
-  "cutsFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuCuts_v15_blobs.json", 
-  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json", 
+  "version": 15,
+  "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
+  "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuCuts_v15_blobs.json",
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json",
   "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "OneTrackTwoTrack_Q2QE_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "nowarp_recoil_EAvail_EAvailwithneutrons_tuneduntuned_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
-  "prescale":999,
-  "playlist":"${MYPLAYLIST}",
-  "MinervaModel":"${MYMODEL}", 
-  "recoName":"MasterAnaDev",
-  "tunedmc":"untuned", 
+  "prescale": 999,
+  "playlist": "${MYPLAYLIST}",
+  "MinervaModel": "${MYMODEL}",
+  "recoName": "MasterAnaDev",
+  "tunedmc": "both",
   "warpedmc": "none",
-  "closure":0,
-  "TuneCategories":["qelike", "chargedpion","neutralpion"], 
+  "closure": 0,
+  "TuneCategories": [
+    "qelike",
+    "chargedpion",
+    "neutralpion"
+  ],
   "DoResolution": false,
   "DoTypes": false,
-  "pdg":-14,
+  "pdg": -14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike",
-    "QElike_2track"
+    "QElike"//,
+    // "QElike_2track"
     // "QElikeNeut"
     // "QElike_0blob",
     // "QElike_1blob"
@@ -33,7 +37,7 @@
     // "HiPionThetaSideband"//,
     // "BlobSideband",
     // "MultipBlobSideband"
-  ], 
+  ],
   "AnalyzeVariables": [
     // "NBlobs",
     // "NNeutCands",
@@ -44,7 +48,7 @@
     // "NChargedPions",
     // "HasMultiPion"
     // "recoilNoBlobs",
-    "Q2QE"//,
+    // "Q2QE" //,
     // "FitQ2QE",
     // "EAvail",
     // "pzmuHD",
@@ -54,9 +58,9 @@
     // "CosThetamu",
     // "TotalNeutBlobE"
     // "EAvailWiggled"
-    // "EAvailWithNeutrons"
+    "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"
-    // "recoil",
+    "recoil"//,
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
@@ -64,10 +68,10 @@
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": [],//"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
-  "AnalyzeHyperDVariables": [],//"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
+  "Analyze2DVariables": [], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "signal": {
-    "QElike": "qelike"//,
+    "QElike": "qelike" //,
     // "Background": "qelike",
     // "QElikeNP": "qelike_np",
     // "QElikeALLAngles": "qelike_np"
@@ -83,14 +87,14 @@
     // "QElikeALLAngles": "qelikenot_np"
   },
   "data": {
-    "QElike": "data"//,
+    "QElike": "data" //,
     // "Background": "data",
     // "QElikeNP": "data",
     // "QElikeALLAngles": "data"
-  }, 
+  },
   "responseSystematicsVersion": "2024",
   "systematics": [
-    "Flux"//,
+    "Flux" //,
     // "MuonMINOS",
     // "MuonResolution",
     // "MINOSEfficiency",
@@ -104,8 +108,8 @@
     // "response"
   ],
   "fluxUniverses": 2, //100, //10,
-  "NuEConstraint":1, 
-  "Geant4NeutronCV":1,
-  "Geant4Elastics":1//,
+  "NuEConstraint": 1,
+  "Geant4NeutronCV": 1,
+  "Geant4Elastics": 1 //,
   //"RPAMaterials":0 
 }
