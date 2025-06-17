@@ -963,7 +963,7 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     } else {
         // bkgsub = DoBkgSubtraction(basename, idatahist, mc, signalFraction); // Old signal fraction/purity scaling way of doing it
         // bkgsub = DoBkgSubtraction(basename, idatahist, mc, bkgFraction);  // New actual background sub
-        bkgsub = DoBkgSubtraction(basename, idatahist, mcbkgtothist);  // New actual background sub
+        bkgsub = DoBkgSubtraction(basename, idatahist, mcbkgtothist);  // New actual background sub, assumes mc is pot scaled
     }
     if (DEBUG) bkgsub->Print();
     bkgsub->Write();
