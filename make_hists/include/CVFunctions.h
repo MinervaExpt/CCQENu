@@ -100,6 +100,8 @@ class CVFunctions {
         recofunctions["RecoilEnergyGeV"] = &CVUNIVERSE::GetRecoilEnergyGeV;
         truefunctions["TrueRecoilEnergyGeV"] = &CVUNIVERSE::GetTrueRecoilEnergyGeV;
 
+        recofunctions["CalibRecoilEnergyGeV"] = &CVUNIVERSE::GetCalibRecoilEnergyGeV;
+
         recofunctions["OffsetRecoilEnergyGeV"] = &CVUNIVERSE::GetOffsetRecoilEnergyGeV;
 
         recofunctions["EAvailGeV"] = &CVUNIVERSE::GetEAvailGeV;

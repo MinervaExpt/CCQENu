@@ -578,7 +578,7 @@
       "fluxnorm": false
     },
     "EAvailWithNeutrons": {
-      "reco": "RecoilEnergyGeV",
+      "reco": "CalibRecoilEnergyGeV",
       "true": "TrueEAvailWithNeutronsGeV",
       "name": "EAvailWithNeutrons",
       "title": "E_{Available} + neutrons in GeV",
