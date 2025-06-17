@@ -157,12 +157,17 @@ class ResponseHyperDWrapperMap : public T {
             std::cout << " GetMigrationObjects will now complain because I passed it pointers to uninitiated MnvH2D/1D to fill please ignore" << std::endl;
             // Put the response objects into the hists
             m_response[tag]->GetMigrationObjects(h_migration, h_reco, h_truth);
+            std::cout << " GetMigrationObjects finished" << std::endl;
             std::cout << h_migration << std::endl;
             // Write hists to file
             if (h_reco->GetEntries() > 0) {
+                std::cout << "writing migration" << std::endl;
                 h_migration->Write();
+                std::cout << "writing response reco" << std::endl;
                 h_reco->Write();
+                std::cout << "writing response truth" << std::endl;
                 h_truth->Write();
+                std::cout << "done writing out things" << std::endl;
             }
         }
 
@@ -174,12 +179,17 @@ class ResponseHyperDWrapperMap : public T {
             std::cout << " GetMigrationObjects will now complain because I passed it pointers to uninitiated MnvH2D/1D to fill please ignore" << std::endl;
             // Put the response objects into the hists
             m_response[tag]->GetMigrationObjects(h_migration, h_reco, h_truth);
+            std::cout << " GetMigrationObjects finished" << std::endl;
             std::cout << h_migration << std::endl;
             // Write hists to file
             if (h_reco->GetEntries() > 0) {
+                std::cout << "writing migration" << std::endl;
                 h_migration->Write();
+                std::cout << "writing response reco" << std::endl;
                 h_reco->Write();
+                std::cout << "writing response truth" << std::endl;
                 h_truth->Write();
+                std::cout << "done writing out things" << std::endl;
             }
         }
     };

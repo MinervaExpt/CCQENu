@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "recoil_1D2D_analysis_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "recoil_eavailwithneutrons_coarsebins_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale":999,
   "playlist":"minervame5A",
@@ -53,21 +53,21 @@
     // "CosThetamu",
     // "TotalNeutBlobE"
     // "EAvailWiggled"
-    // "EAvailWithNeutrons"
+    "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"
-    "recoil",
+    "recoil"//,
     // "recoilQE"
     // "NeutBlobsRatio"
-    "pzmu",
-    "ptmu"
+    // "pzmu",
+    // "ptmu"
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": [//],
-    "recoil_ptmu",
-    "pzmu_ptmu"//,
+  "Analyze2DVariables": [],
+    // "recoil_ptmu",
+    // "pzmu_ptmu"//,
     // "Q2QE_recoil"
-  ], 
+  // ], 
   "AnalyzeHyperDVariables": [],
     // "pzmu_ptmu_recoil"//,
     // "pmu_ThetamuDegrees_recoil"
@@ -80,7 +80,7 @@
   }, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
   "background": {
     "QElike": [
-      "charged_pion",
+      "chargedpion",
       "neutralpion",
       "other"
     ] //,
@@ -96,20 +96,20 @@
   }, 
   "responseSystematicsVersion": "2024",
   "systematics": [
-    "Flux",
-    "MuonMINOS",
-    "MuonResolution",
-    "MINOSEfficiency",
-    "Angle",
-    "GENIE",
-    "GenieRvx1pi",
-    "RPA",
-    "2p2h",
-    "MuonMinerva",
-    "geant4",
-    "response"
+    "Flux"//,
+    // "MuonMINOS",
+    // "MuonResolution",
+    // "MINOSEfficiency",
+    // "Angle",
+    // "GENIE",
+    // "GenieRvx1pi",
+    // "RPA",
+    // "2p2h",
+    // "MuonMinerva",
+    // "geant4",
+    // "response"
   ],
-  "fluxUniverses": 100, //100, //10,
+  "fluxUniverses": 2, //100, //10,
   "NuEConstraint":1, 
   "Geant4NeutronCV":1,
   "Geant4Elastics":1//,

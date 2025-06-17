@@ -427,22 +427,22 @@
       "true": "TrueEAvailGeV",
       "name": "recoil",
       "title": "Recoil in GeV",
-      "nbins": 25,
-      "min": 0.0,
-      "max": 0.5,
-      // "bins": [
-      //   0.0,
-      //   0.025, // for finer bin
-      //   0.05,
-      //   0.10,
-      //   0.15,
-      //   0.225, // for finer bin
-      //   // 0.25,
-      //   0.30,
-      //   // 0.35,
-      //   0.50,
-      //   1.0
-      // ],
+      // "nbins": 25,
+      // "min": 0.0,
+      // "max": 0.5,
+      "bins": [
+        0.0,
+        // 0.025, // for finer bin
+        0.05,
+        0.10,
+        0.15,
+        // 0.225, // for finer bin
+        // 0.25,
+        0.30,
+        // 0.35,
+        0.50,
+        1.0
+      ],
       // "for": [
       //   "data",
       //   "selected_reco"
@@ -582,22 +582,22 @@
       "true": "TrueEAvailWithNeutronsGeV",
       "name": "EAvailWithNeutrons",
       "title": "E_{Available} + neutrons in GeV",
-      "nbins": 25,
-      "min": 0.0,
-      "max": 0.5,
-      // "bins": [
-      //   0.0,
-      //   0.0325,
-      //   0.065,
-      //   0.0975,
-      //   0.13,
-      //   0.1625,
-      //   0.2,
-      //   0.2425,
-      //   0.3025,
-      //   0.38,
-      //   0.5
-      // ],
+      // "nbins": 25,
+      // "min": 0.0,
+      // "max": 0.5,
+      "bins": [
+        0.0,
+        // 0.025, // for finer bin
+        0.05,
+        0.10,
+        0.15,
+        // 0.225, // for finer bin
+        // 0.25,
+        0.30,
+        // 0.35,
+        0.50,
+        1.0
+      ],
       "fluxnorm": false
     },
     "EAvailWiggled": {

@@ -12,6 +12,7 @@ sampletodo = "QElike"
 var_names = {
     "recoil": "Recoil",
     "EAvail": "E_{Avail}",
+    "EAvailWithNeutrons": "E_{Avail} w/ neutrons",
     "Q2QE": "Q^{2}_{QE}",
     "ptmu": "p_{T}",
     "pzmu": "p_{||}",
@@ -63,6 +64,10 @@ def MakeHistPretty(i_hist,xvar,yvar):
         xaxis_name = "E_{Available}"
     if(yvar == "EAvail"):
         yaxis_name = "E_{Available}"
+    if(xvar == "EAvailWithNeutrons"):
+        xaxis_name = "E_{Available} w/ neutrons"
+    if(yvar == "EAvailWithNeutrons"):
+        yaxis_name = "E_{Available} w/ neutrons"
 
     
     hist_title = yaxis_name+" vs. "+xaxis_name
@@ -97,7 +102,8 @@ def main():
     print("Looking at file "+filename1)
     f = ROOT.TFile(filename1, "READONLY")
 
-    plotdir = "/Users/nova/git/plots/Winter2025MinervaCollab"
+    plotdir = "/Users/nova/git/plots/eavailneutrontest"
+    if not os.path.exists(plotdir): os.mkdir(plotdir)
     filebasename1=os.path.basename(filename1)
     # outfilename=filebasename1.replace(".root","_2DPlots")
     outdirname=os.path.join(plotdir,filebasename1.replace(".root","_migrationplots"))
