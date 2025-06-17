@@ -256,8 +256,11 @@ int main(int argc, char* argv[]) {
     std::cout << " Try to write it out " << std::endl;
 
     outputfile->cd();
-    int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit, categories, type, lowBin, hiBin, binbybin, outputDir);
-
+    std::string fitconfig = config.ToString();
+    TNamed fitobj("FitFile", fitconfig.c_str());
+    fitobj.Write();
+    int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit,categories,  type,  lowBin, hiBin, upperLimit);
+    
     // set up for plots
 
     PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
@@ -353,8 +356,12 @@ int main(int argc, char* argv[]) {
             fitHists[side][i]->Scale(1., "width");
         }
     }
-
-    for (auto side : sidebands) {
+    
+    for (auto side:sidebands){
+        double res[1000];
+        double chidof = dataHist[side]->Chi2Test(tot[side], "UW P CHI2/NDF ", res);
+        dataHist[side]->SetTitle(dataHist[side]->GetName());
+        std::cout << dataHist[side]->GetTitle() << " "  << chidof << std::endl;
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot[side], 1., "TR");
         cF.Print(TString(outputDir + "/png/" + side + "_postfit_compare.png").Data());
 

@@ -1,0 +1,36 @@
+\documentclass[12pt,landscape]{article}
+\usepackage{csvsimple}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\parindent=0pt
+\setlength{\textwidth=7in}
+\setlength{\oddsidemargin=-.25 in}
+\setlength{\topmargin=0 in}
+\setlength{\textheight=9.5 in}
+\title{DUNE Offline Computing Model Calculations}
+\author{H. Schellman for the Computing Consortium}
+\date{\today}
+
+\makeatletter
+\csvset{
+  autotabularright/.style={
+    file=#1,
+    after head=\csv@pretable\begin{tabular}{|*{\csv@columncount}{r|}}\csv@tablehead,
+    table head=\hline\csvlinetotablerow\\\hline,
+    late after line=\\,
+    table foot=\\\hline,
+    late after last line=\csv@tablefoot\end{tabular}\csv@posttable,
+    command=\csvlinetotablerow},
+  autobooktabularright/.style={
+    file=#1,
+    after head=\csv@pretable\begin{tabular}{*{\csv@columncount}{r}}\csv@tablehead,
+    table head=\toprule\csvlinetotablerow\\\midrule,
+    late after line=\\,
+    table foot=\\\bottomrule,
+    late after last line=\csv@tablefoot\end{tabular}\csv@posttable,
+    command=\csvlinetotablerow},
+}
+\makeatother
+\newcommand{\csvautotabularright}[2][]{\csvloop{autotabularright={#2},#1}}
+\newcommand{\csvautobooktabularright}[2][]{\csvloop{autobooktabularright={#2},#1}}
+\begin{document}

@@ -33,7 +33,7 @@ def writeEventLoop(mywrapper,outdir):
     writewrap(mywrapper,"root -l -b load.C+ runEventLoop.C+\n")
     writewrap(mywrapper,"echo '------------------------- check locations 2 ---------------'\n")
     writewrap(mywrapper,"pwd;ls -c1;ifdh ls "+outdir)
-    writewrap(mywrapper,"ifdh cp -D ./*.root "+outdir)
+    writewrap(mywrapper,"ifdh cp -D *.root "+outdir)
 
 # this is for CCQEMAT
 def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
@@ -54,8 +54,8 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
     writewrap(mywrapper,"echo \"run returned \" $?\n")
     writewrap(mywrapper,"ls -lrt\n")
     if not opts.debug:
-       #writewrap(mywrapper,"echo \"ifdh cp -D ./*.root "+theoutdir+"\"\n")
-        writewrap(mywrapper,"ifdh cp -D ./*.root "+theoutdir+"/\n")
+       #writewrap(mywrapper,"echo \"ifdh cp -D *.root "+theoutdir+"\"\n")
+        writewrap(mywrapper,"ifdh cp -D *.root "+theoutdir+"/\n")
     
         writewrap(mywrapper,"echo \"ifdh returned \" $?\n")
        # writewrap(mywrapper,"echo \"ifdh cp -D "+mylog+ " " + theoutdir +"\"\n")
@@ -100,7 +100,7 @@ def createTarball(tmpdir,tardir,tag,basedirname):
         #cmd = "tar -czf /exp/minerva/app/users/$USER/myareatar_%s.tar.gz %s"%(tag,basedir)
         print (" in directory",os.getcwd())
         tarpath = os.path.join(tmpdir,"myareatar_%s.tar.gz"%(tag))
-        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif,*.csv} -zcf  %s ./%s"%(tarpath,basedirname)
+        cmd = "tar --exclude={*.git,*.png,*.pdf,*.gif,*.csv,*.tbz2} -zcf  %s ./%s"%(tarpath,basedirname)
         print ("Making tar",cmd)
         os.system(cmd)
 
@@ -296,7 +296,9 @@ cmd += " --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC " # remove OFFS
 ostype = platform.platform()
 if "el7" in ostype:
     #cmd += " --lines='+SingularityImage=\\\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\\\"' "
-    cmd += " --singularity-image /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest "
+    cmd += " --singularity-image /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-el9:latest "
+cmd += " --auth-methods=token "  # added 2025-05 to use tokens
+cmd += " -c has_avx2==True" # added 2025-05 to avoid old hardware
 cmd += " --role=Analysis "
 #cmd += " --disk=10GB " # comment out for test
 cmd += " --expected-lifetime " + opts.lifetime

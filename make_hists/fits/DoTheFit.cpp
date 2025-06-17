@@ -6,6 +6,8 @@
 #include "fits/MultiScaleFactors.h"
 #include "utils/SyncBands.h"
 
+//#define DEBUG
+
 namespace fit {
 
 int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists,
@@ -56,6 +58,13 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
         if (acount > 1) continue;
         ahist = sample.second.at(0);
         universes = ahist->GetVertErrorBandNames();
+        //universes.push_back("CV");
+        universes.insert(universes.begin(),"CV");
+        std::cout << " universe names:" ;
+        for (auto a:universes){
+            std::cout << a << ", ";
+        }
+        std::cout << std::endl;
     }
 
     // make objects to contain the fit information
@@ -79,11 +88,21 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             fcn.AddVertErrorBandAndFillWithCV(univ, nuniv);
             parameters.AddVertErrorBandAndFillWithCV(univ, nuniv);
             covariance.AddVertErrorBandAndFillWithCV(univ, nuniv);
+            correlation.AddVertErrorBandAndFillWithCV(univ, nuniv);
+            mini2->SetPrintLevel(0);
+
         } else {
             nuniv = 1;
+            mini2->SetPrintLevel(1);
         }
+        #ifdef DEBUG
+        if (univ != "CV")continue;
+        #endif
+        
+
         // loop over universes within a band
         for (int iuniv = 0; iuniv < nuniv; iuniv++) {
+           
             std::cout << " now do the fit for " << univ << " " << iuniv << std::endl;
             // make a local TH1F map unfitHistsCV that the fitter expects
             std::map<const std::string, std::vector<TH1D*>> unfitHistsCV;
@@ -114,14 +133,16 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             // for (int thebin = lowBin; thebin <= hiBin; thebin++) {
             fit::MultiScaleFactors func2(unfitHistsCV, dataHistCV, includeInFit, type, lowBin, hiBin);
 
-            // set parameters with lower limit of 0
-            int nextPar = 0;
-            for (unsigned int i = 0; i < func2.NDim(); ++i) {
-                std::string name = categories[i];
-                std::cout << " set parameter " << i << " " << name << std::endl;
-                mini2->SetLowerLimitedVariable(i, name, 1.0, 0.1, 0.0);
-                nextPar++;
-            }
+                // set parameters with lower limit of 0
+                int nextPar = 0;
+                int ndim = func2.NDim();
+                for (unsigned int i = 0; i < func2.NDim(); ++i) {
+                    std::string name = categories[i];
+                    std::cout << " set parameter " << i << " " << name << std::endl;
+                    mini2->SetVariable(i, name, 1.0, 0.1);
+                    //mini2->SetUpperLimitedVariable(i, name, 1.0, 0.1, upperLimit);
+                    nextPar++;
+                }
 
             if (nextPar != func2.NDim()) {
                 std::cout << "The number of parameters was unexpected for some reason for fitHists1." << std::endl;
@@ -137,30 +158,55 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             bool success = true;
             mini2->Minimize();
 
-            // https://root-forum.cern.ch/t/is-fit-validity-or-minimizer-status-more-important/30637
-            int status = mini2->Status();
-            std::cout << " fit status was " << status << std::endl;
-            if (status > 1) {
-                std::cout << "Printing Results." << std::endl;
-                mini2->PrintResults();
-                std::cout << "FIT FAILED" << std::endl;
-                success = false;
-                // return 7;
-            } else {
-                std::cout << "Printing Results." << std::endl;
-                mini2->PrintResults();
-                std::cout << "FIT SUCCEEDED" << std::endl;
-                success = true;
-            }
+                // https://root-forum.cern.ch/t/is-fit-validity-or-minimizer-status-more-important/30637
+                int status = mini2->Status();
+                std::cout << " fit status was " << status << std::endl;
+                const double* dResults = mini2->X();
+                // make it a vector.
+                
+                std::cout << "parameters: ";
+                for (int i = 0; i < ndim; i++) {
+                   
+                    std::cout << i << " " << dResults[i] << " ";
+                }
+                std::cout << std::endl;
+                if (status > 1) {
+                    std::cout << "Printing Results." << std::endl;
+                    mini2->PrintResults();
+                    std::cout << "FIT FAILED" << std::endl;
+                    success = false;
+                    // return 7;
+                } else {
+                    std::cout << "Printing Results." << std::endl;
+                    mini2->PrintResults();
+                    std::cout << "FIT SUCCEEDED" << std::endl;
+                    success = true;
+                }
 
             // have done the fit, now rescale all histograms by the appropriate scale factors
 
-            const double* combScaleResults = mini2->X();
-            // make it a vector.
-            std::vector<double> ScaleResults;
-            for (int i = 0; i < func2.NDim(); i++) {
-                ScaleResults.push_back(combScaleResults[i]);
-            }
+                const double* combScaleResults = mini2->X();
+                // make it a vector.
+                std::vector<double> ScaleResults;
+
+                ndim = func2.NDim();
+                //TMatrixDSym CovMatrix(ncat, ncat);
+                //CovMatrix.ResizeTo(ncat,ncat);
+                
+                //std::cout << "ncat" << ncat << std::endl;
+                //CovMatrix.Print();
+                for (int i = 0; i < ndim; i++) {
+                    ScaleResults.push_back(combScaleResults[i]);
+
+                    if (true){
+                        for (int j = 0; j < ndim; j++){
+                            //std::cout << i << " " << j << std::endl;
+                            CovMatrix[i][j] = mini2->CovMatrix(i, j);
+                        }
+                    }
+                }
+                CovMatrix.Print();
+
 
             if (!success) {
                 // if it failed, just scale the components to the data with the original ratios
