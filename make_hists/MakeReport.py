@@ -1,7 +1,7 @@
 import sys,os
 def makereport(path,out):
     samples = [
-        "2track_MultiPionCut"]
+        "QElike"]
     items = ["combined","compare","compare_ratio","errors"]
     timing = ["prefit","postfit"]
     count = 0

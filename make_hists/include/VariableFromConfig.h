@@ -439,7 +439,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                     if (m_doresolution) {
                         std::cout << " write out resolution histogram " << m_resolution.GetHist(tag)->GetName() << std::endl;
                         m_resolution.Write(tag);
-                        m_resolution.GetHist(tag)->Print("ALL");
+                        m_resolution.GetHist(tag)->Print();
                     }
                 }
                 if (hasTunedMC[tag]) {
