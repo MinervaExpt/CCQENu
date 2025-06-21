@@ -6,19 +6,24 @@ from ROOT import gStyle
 from ROOT import SetOwnership
 
 from PlotUtils import MnvH1D
-DEBUG = True
+DEBUG = False
+
+# for now the input file names are hardwired in at the bottom but once that is done, it loops over histograms and plots a page for each. It ignores the ones with filter in their names'''
 
 filter = ["response","types","resolution"]
+logX = ["Q2QE","ptmu"]
 
 def CCQELegend(xlow,ylow,xhigh,yhigh):
-  leg = TLegend(xlow,ylow,xhigh,yhigh)
-  SetOwnership( leg, 1 )
-  leg.SetFillStyle(0)
-  leg.SetBorderSize(0)
-  leg.SetTextSize(0.03)
-  return leg
+    ''' make a legend'''
+    leg = TLegend(xlow,ylow,xhigh,yhigh)
+    SetOwnership( leg, 1 )
+    leg.SetFillStyle(0)
+    leg.SetBorderSize(0)
+    leg.SetTextSize(0.03)
+    return leg
 
 def CCQECanvas(name,title,xsize=750,ysize=750):
+    ''' make a canvas '''
     c2 = TCanvas(name,title,xsize,ysize)
     c2.SetLeftMargin(0.20)
     c2.SetRightMargin(0.05)
@@ -26,6 +31,7 @@ def CCQECanvas(name,title,xsize=750,ysize=750):
     return c2
 
 def text(canvas,h1):
+    ''' not used right now'''
     if not h1.GetTitle(): 
         return
     if "" not in h1.GetTitle():
@@ -33,6 +39,7 @@ def text(canvas,h1):
         h1.GetYaxis().SetTitle("counts/bin")
 
 def loop(outname,canvas,fname,gname):
+    ''' open the files and loop over histograms - calls compare'''
     count = 0
     f = TFile.Open(fname,"READONLY")
     fkey = os.path.basename(fname)[0:2]
@@ -96,6 +103,7 @@ def loop(outname,canvas,fname,gname):
         
 
 def compare(outname,canvas, h1, h2, key1, key2):
+    ''' compares 2 histograms, key1 and key2 are tags to use in the legend'''
     canvas.Divide(1,2,0.01,0.01)
     canvas.cd()
     #pad1 =  TPad("COMP","COMP",0,.5,1,1)
@@ -120,6 +128,9 @@ def compare(outname,canvas, h1, h2, key1, key2):
     leg = CCQELegend(0.65,0.40,1,0.60)
     leg.SetTextSize(0.06)
     #leg = TLegend(0.1,0.,0.48,0.9)
+    for log in logX:
+        if log in h1.GetName():
+            gPad.SetLogx()
     h1.GetXaxis().SetLabelSize(0.06)
     h1.GetYaxis().SetLabelSize(0.06)
     h1.GetXaxis().SetTitleSize(0.06)
@@ -129,6 +140,7 @@ def compare(outname,canvas, h1, h2, key1, key2):
     h1.GetYaxis().CenterTitle(True)
     h1.SetMarkerColor(4)
     h1.SetMarkerStyle(20)
+
     h1.Draw("PE")
     h2.SetMarkerColor(2)
     h2.SetMarkerStyle(21)
@@ -150,6 +162,7 @@ def compare(outname,canvas, h1, h2, key1, key2):
         print ("res",res)
     #pad1.cd()
     #pad1.Draw()
+    
     canvas.Update()
     #pad2 =  TPad("pad2","pad2",0,.3,1,.4)
     #pad2.cd()
@@ -158,6 +171,7 @@ def compare(outname,canvas, h1, h2, key1, key2):
     gPad.SetBottomMargin(0.2)
     gPad.SetLeftMargin(0.2)
     #gPad.SetPad(0,0,1,.4)
+    # leftover code from doing residuals
     resgr = TGraph(nbins,x,res)
     SetOwnership( resgr, 1 )
     resgr.GetYaxis().SetTitle("Normalized Residuals")
@@ -170,6 +184,7 @@ def compare(outname,canvas, h1, h2, key1, key2):
         resgr.Print("ALL")
     #resgr.Draw("PE")
     #h1.Draw("")
+    # you have to make something to plot the residuals onto
     frame = MnvH1D()
     frame = h1.Clone("ratio")
     frame.GetYaxis().SetTitle("%s/%s"%(key1,key2))
@@ -179,22 +194,15 @@ def compare(outname,canvas, h1, h2, key1, key2):
     frame.GetXaxis().CenterTitle(True)
     frame.GetYaxis().CenterTitle(True)
     frame.Draw()
-    #resgr.GetXaxis().SetRangeUser(4,16)
-    #resgr.GetYaxis().SetRangeUser(-3.5,3.5)
     gPad.SetGridy()
     resgr.Draw("same")
-    #Pad.Update()
-    #pad2.Draw()
-    #resgr.Print()
-    #canvas.Modified()
-    #canvas.Update()
     canvas.cd()  
     pad5 =  TPad("all","all",0,.5,1,1)
     pad5.SetFillStyle(4000)  # transparent
     pad5.Draw()
     pad5.cd()
     lat = TLatex()
-    #lat.DrawLatexNDC(.4,.95,"My Title")
+
     
     label = h1.GetName().replace("___",", ")
     label2 = "#bf{#it{KSprob = %6.4f}}"%(kol)
@@ -202,20 +210,16 @@ def compare(outname,canvas, h1, h2, key1, key2):
     lat.DrawLatexNDC(.1,.95,label)
     lat.DrawLatexNDC(.6,.8,label2)
 
-    # t =  TText(.3, .95, h1.GetName()+" \\Chi^2=%6.2f"%chi2)
-    # t.SetNDC(1)
-    # t.SetTextSize(.03)
-    # t.Draw()
     canvas.cd(0)
     canvas.Update()
 
+    # print out the page
     canvas.Print("pix/"+h1.GetName()+".png")
     canvas.Print(outname+"_1D.pdf","pdf")
 
     if DEBUG:
         print ("residuals",res)
-    #canvas.Draw()
-    #canvas.Update()
+    
     
     
 
@@ -229,10 +233,13 @@ def newPage(filename,canvas1D):
     canvas1D.Print(filename + "_1D.pdf","pdf")
 
 def endPDF(filename,canvas1D):
+    ''' end a pdf'''
     pdfend1D = filename + "_1D.pdf)"
     canvas1D.Print(pdfend1D, "pdf")
 
-    
+
+# start of main
+
 gStyle.SetOptTitle(0)
 gStyle.SetOptStat(0)
 
@@ -248,31 +255,34 @@ pot1 = fpot.GetBinContent(1)
 g = TFile.Open(gname,"READONLY")
 gpot = TH2D()
 gpot = g.Get("POT_summary")
-pot2 = gpot.GetBinContent(1)
-if pot1 > 0: 
-    scale = pot2/pot1
-print ("POT",pot1,pot2,scale)
 
-h1 = MnvH1D()
-h1name = "h___QElike___qelike___recoil___selected_truth" 
-h1 = f.Get(h1name)
-h1.Scale(1,"width")
-h2 = MnvH1D()
-h2name = "h___QElike___qelike___recoil___selected_truth"
 
-h2 = g.Get(h2name)
-h2.Scale(scale,"width")
-if DEBUG:
-    h1.Print()
-    h2.Print()
-c1 = CCQECanvas("c1","c1")
+# pot2 = gpot.GetBinContent(1)
+# if pot1 > 0: 
+#     scale = pot2/pot1
+# print ("POT",pot1,pot2,scale)
+
+
+# h1 = MnvH1D()
+# h1name = "h___QElike___qelike___recoil___selected_truth" 
+# h1 = f.Get(h1name)
+# h1.Scale(1,"width")
+# h2 = MnvH1D()
+# h2name = "h___QElike___qelike___recoil___selected_truth"
+
+# h2 = g.Get(h2name)
+# h2.Scale(scale,"width")
+# if DEBUG:
+#     h1.Print()
+#     h2.Print()
+# c1 = CCQECanvas("c1","c1")
 outname=os.path.basename(fname.replace(".root",""))
-startPDF(outname,c1)
-compare(outname,c1,h1,h2,"a","b")
-endPDF(outname,c1)
-c1.Print("pix/test.png")
-f.Close()
-g.Close()
+# startPDF(outname,c1)
+# compare(outname,c1,h1,h2,"a","b")
+# endPDF(outname,c1)
+# c1.Print("pix/test.png")
+# f.Close()
+# g.Close()
 c2 = CCQECanvas("c2","c2")
 startPDF("a_"+outname,c2)
 loop("a_"+outname,c2,fname,gname)
