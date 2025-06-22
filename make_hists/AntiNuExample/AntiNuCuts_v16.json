@@ -86,7 +86,8 @@
         "name": "NuHelicity",
         "equals": 2,
         "variable": "NuHelicity"
-      } // 2 for anti-neutrino
+      },
+       // 2 for anti-neutrino
       // {
       //   "name": "Max Muon Angle in Degrees",
       //   "max": 20.0,
@@ -102,11 +103,11 @@
       //   "max": 15.0,
       //   "variable": "PparMuGeV"
       // },
-      // {
-      //   "name": "Max Multiplicity",
-      //   "max": 1,
-      //   "variable": "Multiplicity"
-      // }
+       {
+         "name": "Max Multiplicity",
+         "min": 1,
+         "variable": "Multiplicity"
+       }
     ],
   // phase space definitions
   "phase_space":[
@@ -125,16 +126,16 @@
     {"name":"TrueMuonMomentumPar Max","max":15.0,"variable":"TruePparMuGeV"}
   ],
   "phase_space_inclusive": [
-    // {
-    //     "name": "TrueApothemX",
-    //     "max": 850,
-    //     "variable": "TrueApothemX"
-    // },
-    // {
-    //     "name": "TrueApothemY",
-    //     "max": 850,
-    //     "variable": "TrueApothemY"
-    // },
+    {
+        "name": "TrueApothemX",
+        "max": 850,
+        "variable": "TrueApothemX"
+    },
+    {
+        "name": "TrueApothemY",
+        "max": 850,
+        "variable": "TrueApothemY"
+    },
     {
         "name": "Z Vertex",
         "min": 5980,
@@ -157,7 +158,7 @@
  "qelike":[
     {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
     {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
-    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.}
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.0}
   ],
   "inclusive": [
     {

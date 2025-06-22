@@ -27,21 +27,20 @@
       "TrueEnuRatio":{"reco":"TrueEnuRatio","true":"TrueEnuRatio","name":"TrueEnuRatio","title":"True E_{#nu}_{QE}/True E_{#nu}","nbins":40,"min":0.5, "max":1.5,"fluxnorm":1,"for":["selected_truth","all_truth"]},
       "RecoTrueEnuRatio":{"reco":"RecoTrueEnuRatio","true":"RecoTrueEnuRatio","name":"RecoTrueEnuRatio","title":"Reco E_{#nu}_{QE}/True E_{#nu}","nbins":40,"min":0.5, "max":1.5,"fluxnorm":1,"for":["selected_reco","selected_truth","all_truth"]},
       
-        "EnuCCQE":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"EnuCCQE","title":"E_{#nu}_{QE} (GeV)","bins":[1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],"fluxnorm":1},
+        "EnuCCQE":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"EnuCCQE","title":"E_{#nu}_{QE} (GeV)","bins":[0.5,1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],"fluxnorm":1},
         "Enu":{
           "reco":"EnuCCQEGeV",
           "true":"TrueEnuGeV",
           "name":"Enu",
           "title":"E_{#nu} (GeV)",
-          "bins":[0,0.5,1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],
+          "bins":[0.5,1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],
           "fluxnorm":1},
         "EnuHad":{
           "reco":"EnuHadGeV",
           "true":"TrueEnuGeV",
           "name":"EnuHad",
           "title":"E_{#nu}_{hadronic} (GeV)",
-          "bins":[0,
-            0.5,
+          "bins":[0.5,
             1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],
           "fluxnorm":1},
         "total":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"total","title":"total for Enu from 2 to 15 GeV","bins":[2.0,15.0],"fluxnorm":0},
@@ -53,12 +52,10 @@
             "fluxnorm":false},
         "pzmu":{"reco":"PparMuGeV","true":"TruePparMuGeV","name":"pzmu","title":"muon p_{||} (GeV/c)",
           "bins":
-          [0,
-            0.5,
+          [ 0.5,
             1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],
           "fluxnorm":false},
-        "pmu":{"reco":"PmuGeV","true":"TruePmuGeV","name":"pmu","title":"muon p (GeV/c)","bins":[0,
-            0.5,
+        "pmu":{"reco":"PmuGeV","true":"TruePmuGeV","name":"pmu","title":"muon p (GeV/c)","bins":[0.5,
             1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],
           "fluxnorm":false},
         "Q2QE":{"reco":"Q2QEGeV","true":"TrueQ2QEGeV","name":"Q2QE",
@@ -79,11 +76,17 @@
         "ThetamuDegrees":{"reco":"ThetamuDegrees","true":"TrueThetamuDegrees","name":"ThetamuDegrees","title":"theta_mu (degrees)","nbins":20,"min":0.0,"max":40.0,"fluxnorm":false},
         "ThetaXmuDegrees":{"reco":"ThetaXmuDegrees","true":"TrueThetaXmuDegrees","name":"ThetaXmuDegrees","title":"theta_mu_x (degrees)","nbins":40,"min":-40.0,"max":40.0,"fluxnorm":false},
         "ThetaYmuDegrees":{"reco":"ThetaYmuDegrees","true":"TrueThetaYmuDegrees","name":"ThetaYmuDegrees","title":"theta_mu_y (degrees)","nbins":40,"min":-40.0,"max":40.0,"fluxnorm":false},
-        "ApothemX":{"reco":"ApothemX","true":"TrueApothemX", "name":"ApothemX","title":"ApothemX (mm)","nbins":50,"min":0.0,"max":1000.0},
-        "ApothemY":{"reco":"ApothemY","true":"TrueApothemY", "name":"ApothemY","title":"ApothemY (mm)","nbins":50,"min":0.0,"max":1000.0},
-        "ZVertex":{"reco":"ZVertex","true":"TrueZVertex", "name":"ZVertex","title":"ZVertex (mm)","nbins":52,"min":5900,"max":8500.0},
+        "ApothemX":{"reco":"ApothemX","true":"TrueApothemX", "name":"ApothemX","title":"ApothemX (mm)","nbins":50,"min":0.0,"max":1000.0,"fluxnorm": false},
+        "ApothemY":{"reco":"ApothemY","true":"TrueApothemY", "name":"ApothemY","title":"ApothemY (mm)","nbins":50,"min":0.0,"max":1000.0,"fluxnorm": false},
+        "ZVertex":{"reco":"ZVertex","true":"TrueZVertex", "name":"ZVertex","title":"ZVertex (mm)","nbins":52,"min":5900,"max":8500.0,"fluxnorm": false},
         "ProtonKE":{"reco":"MaxProtonTrueKE","true":"MaxProtonTrueKE","name":"MaxProtonTrueKE","title":"Maximum Proton KE, MeV","nbins":26,"min":-20,"max":500.0,"for":["selected_truth","truth"]},
-        "Multiplicity":{"reco":"Multiplicity","true":"Multiplicity","name":"Multiplicity","title":"Multiplicity","nbins":20,"min":0,"max":20,"for":["selected_truth"]},
+        "Multiplicity":{
+          "reco":"Multiplicity","true":"TrueNothing","name":"Multiplicity","title":"Multiplicity","nbins":20,"min":0,"max":20,"fluxnorm":false
+          // "for": [
+          //   "data",
+          //   "selected_reco"
+          //
+        },
         "MCIntType":{"reco":"MCIntType","true":"IntType","name":"MCIntType","title":"MCIntType","nbins":20,"min":0,"max":20,"for":["selected_truth","all_truth"]},
         "TruthIsCC":{"reco":"TruthIsCC","true":"TruthIsCC","name":"TruthIsCC","title":"TruthIsCC","nbins":10,"min":-5,"max":5,"for":["selected_truth","all_truth"]},
         "TruthNuPDG":{"reco":"TruthNuPDG","true":"TruthNuPDG","name":"TruthNuPDG","title":"TruthNuPDG","nbins":40,"min":-20,"max":20,"for":["selected_truth","all_truth"]}
