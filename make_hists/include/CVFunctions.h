@@ -37,6 +37,9 @@ class CVFunctions {
 
    public:
     CVFunctions() {
+        recofunctions["Nothing"] = &CVUNIVERSE::GetNothing;
+        truefunctions["TrueNothing"] = &CVUNIVERSE::GetTrueNothing;
+        
         recofunctions["ZVertex"] = &CVUNIVERSE::GetZVertex;
         truefunctions["TrueZVertex"] = &CVUNIVERSE::GetTrueZVertex;
 

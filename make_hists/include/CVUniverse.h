@@ -128,7 +128,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static bool SetProtonScoreConfig(NuConfig protonScoreConfig, bool print);
 
     // ----------------------- Analysis-related Variables ------------------------
-
+    // these are dummies for when you want to plot something that is missing truth or data
+    virtual double GetNothing()const{return 0.0;};
+    virtual double GetTrueNothing()const {return 0.0;};
+    
     virtual int GetIsMinosMatchTrack() const;
 
     virtual double GetEnuHadGeV() const;
