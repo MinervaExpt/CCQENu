@@ -13,6 +13,7 @@ var_names = {
     "recoil": "Recoil",
     "EAvail": "E_{Avail}",
     "EAvailWithNeutrons": "E_{Avail} w/ neutrons",
+    "CalibRecoilWithNeutrons": "E_{Avail} w/ neutrons (calibrated)",
     "Q2QE": "Q^{2}_{QE}",
     "ptmu": "p_{T}",
     "pzmu": "p_{||}",
