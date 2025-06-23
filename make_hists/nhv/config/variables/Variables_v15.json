@@ -580,7 +580,7 @@
     "CalibEAvailWithNeutrons": {
       "reco": "CalibRecoilEnergyGeV",
       "true": "TrueEAvailWithNeutronsGeV",
-      "name": "EAvailWithNeutrons",
+      "name": "CalibRecoilWithNeutrons",
       "title": "E_{Available} + neutrons in GeV",
       "nbins": 50,
       "min": 0.0,

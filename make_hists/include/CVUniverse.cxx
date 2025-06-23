@@ -1149,9 +1149,13 @@ double CVUniverse::GetTrueLog10RecoilEnergyGeV() const { return std::log10(CVUni
 double CVUniverse::GetLog10RecoilEnergyGeV() const { return std::log10(GetRecoilEnergy()) - 3.; }
 
 double CVUniverse::GetCalibRecoilEnergyGeV() const { 
+    // double recoil = 2 * GetRecoilEnergyGeV();
+    // // based off poly fit to EAvail with neutrons, intercept forced to zero
+    // return -1.808 * recoil * recoil * recoil + 1.5041 * recoil * recoil + 0.9963 * recoil;
     double recoil = 2 * GetRecoilEnergyGeV();
     // based off poly fit to EAvail with neutrons, intercept forced to zero
-    return -1.808 * recoil * recoil * recoil + 1.5041 * recoil * recoil + 0.9963 * recoil;
+    return 3.1958 * recoil * recoil * recoil -2.3571 * recoil * recoil + 1.9268 * recoil;
+
 }  // This is really rudimentary, to be used with EAvailWNeutrons
 
 // return CVUniverse::GetCalRecoilEnergy();
