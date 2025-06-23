@@ -427,9 +427,9 @@
       "true": "TrueEAvailGeV",
       "name": "recoil",
       "title": "Recoil in GeV",
-      "nbins": 25,
+      "nbins": 50,
       "min": 0.0,
-      "max": 0.5,
+      "max": 1.0,
       // "bins": [
       //   0.0,
       //   // 0.025, // for finer bin
@@ -582,9 +582,9 @@
       "true": "TrueEAvailWithNeutronsGeV",
       "name": "EAvailWithNeutrons",
       "title": "E_{Available} + neutrons in GeV",
-      "nbins": 25,
+      "nbins": 50,
       "min": 0.0,
-      "max": 0.5,
+      "max": 1.0,
       // "bins": [
       //   0.0,
       //   // 0.025, // for finer bin
@@ -605,9 +605,9 @@
       "true": "TrueEAvailWithNeutronsGeV",
       "name": "EAvailWithNeutrons",
       "title": "E_{Available} + neutrons in GeV",
-      "nbins": 25,
+      "nbins": 50,
       "min": 0.0,
-      "max": 0.5,
+      "max": 1.0,
       // "bins": [
       //   0.0,
       //   // 0.025, // for finer bin
