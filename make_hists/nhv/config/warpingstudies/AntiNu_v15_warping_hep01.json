@@ -4,7 +4,7 @@
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuCuts_v15_blobs.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_blobs_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
   "outRoot": "nowarp_1GeV_fixed_calibrecoilEAvailwithneutrons_tuneduntuned_${MYPLAYLIST}_${MYMODEL}",
@@ -26,11 +26,11 @@
   "pdg": -14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike"//,
+    "QElike",
     // "QElike_2track"
     // "QElikeNeut"
-    // "QElike_0blob",
-    // "QElike_1blob"
+    "QElike_0blob",
+    "QElike_1blob"
     // "QElikeNeutrons"//,
     // "TrackSideband",
     // "LoPionThetaSideband",

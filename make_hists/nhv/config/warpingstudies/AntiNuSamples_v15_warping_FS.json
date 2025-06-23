@@ -9,60 +9,60 @@
         "signal": [
             "qelike"
         ],
-        "background": [],
-            // "neutralpion",
-            // "chargedpion",
-            // // // "multipion",
-            // "other",
-            // // "qelikenot"
-        // ],
+        "background": [
+            "neutralpion",
+            "chargedpion",
+            // "multipion",
+            "other"//,
+            // "qelikenot"
+        ],
         "categories": {
             "qelike": {
                 "for": [
                     "selected_reco",
                     "selected_truth",
-                    // "truth",
+                    "truth",
                     "response"
                 ]
                 // "for": [
                 //     "selected_reco"
                 // ]
+            },
+            "neutralpion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "chargedpion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            // "multipion": {
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // },
+            "other": {
+                "for": [
+                    "selected_reco"
+                ]
             }//,
-            // "neutralpion": {
+            // "qelikenot": {
+            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
             //     "for": [
             //         "selected_reco"
             //     ]
-            // },
-            // "chargedpion": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
-            // // "multipion": {
-            // //     "for": [
-            // //         "selected_reco"
-            // //     ]
-            // // },
-            // "other": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
-            // // "qelikenot": {
-            // //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
-            // //     "for": [
-            // //         "selected_reco"
-            // //     ]
-            // // }
+            // }
         },
         "legend_entries": {
             "data": "Data",
             "qelike": "QElike",
-            // "neutralpion": "1#pi^{0}",
-            // "chargedpion": "1#pi^{+/-}",
-            // // "multipion": "N#pi",
-            // "other": "Other",
-            // // "qelikenot": "QELike Not"
+            "neutralpion": "1#pi^{0}",
+            "chargedpion": "1#pi^{+/-}",
+            // "multipion": "N#pi",
+            "other": "Other"//,
+            // "qelikenot": "QELike Not"
         }
     },
     "QElikeNeut": {
@@ -138,67 +138,9 @@
         "background": [
             "neutralpion",
             "chargedpion",
-            "multipion",
-            "other",
-            "qelikenot"
-        ],
-        "categories": {
-            "qelike": {
-                "for": ["selected_reco", "selected_truth", "truth", "response"]
-                // "for": [
-                //     "selected_reco"
-                // ]
-            },
-            "neutralpion": {
-                "for": [
-                    "selected_reco"
-                ]
-            },
-            "chargedpion": {
-                "for": [
-                    "selected_reco"
-                ]
-            },
-            "multipion": {
-                "for": [
-                    "selected_reco"
-                ]
-            },
-            "other": {
-                "for": [
-                    "selected_reco"
-                ]
-            },
-            "qelikenot": {
-                // "for": ["selected_reco", "selected_truth", "truth", "response"]                
-                "for": [
-                    "selected_reco"
-                ]
-            }
-        },
-        "legend_entries": {
-            "data": "Data",
-            "qelike": "QElike",
-            "neutralpion": "1#pi^{0}",
-            "chargedpion": "1#pi^{+/-}",
-            "multipion": "N#pi",
-            "other": "Other",
-            "qelikenot": "QELike Not"
-        }
-    },
-    "QElike_1blob": {
-        "name": "QElike_1blob",
-        "reco": "QElike_1blob",
-        "phase_space": "phase_space",
-        "signal": [
-            "qelike"
-        ],
-        "background": [
-            "neutralpion",
-            "chargedpion",
-            "multipion",
-            "other",
-            "qelikenot"
+            // "multipion",
+            "other"//,
+            // "qelikenot"
         ],
         "categories": {
             "qelike": {
@@ -222,36 +164,36 @@
                     "selected_reco"
                 ]
             },
-            "multipion": {
-                "for": [
-                    "selected_reco"
-                ]
-            },
+            // "multipion": {
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // },
             "other": {
                 "for": [
                     "selected_reco"
                 ]
-            },
-            "qelikenot": {
-                // "for": ["selected_reco", "selected_truth", "truth", "response"]                
-                "for": [
-                    "selected_reco"
-                ]
-            }
+            }//,
+            // "qelikenot": {
+            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // }
         },
         "legend_entries": {
             "data": "Data",
             "qelike": "QElike",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
-            "multipion": "N#pi",
-            "other": "Other",
-            "qelikenot": "QELike Not"
+            // "multipion": "N#pi",
+            "other": "Other"//,
+            // "qelikenot": "QELike Not"
         }
     },
-    "QElike_0blob": {
-        "name": "QElike_0blob",
-        "reco": "QElike_0blob",
+    "QElike_1blob": {
+        "name": "QElike_1blob",
+        "reco": "QElike_1blob",
         "phase_space": "phase_space",
         "signal": [
             "qelike"
@@ -259,13 +201,18 @@
         "background": [
             "neutralpion",
             "chargedpion",
-            "multipion",
-            "other",
-            "qelikenot"
+            // "multipion",
+            "other"//,
+            // "qelikenot"
         ],
         "categories": {
             "qelike": {
-                "for": ["selected_reco", "selected_truth", "truth", "response"]
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
                 // "for": [
                 //     "selected_reco"
                 // ]
@@ -280,31 +227,31 @@
                     "selected_reco"
                 ]
             },
-            "multipion": {
-                "for": [
-                    "selected_reco"
-                ]
-            },
+            // "multipion": {
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // },
             "other": {
                 "for": [
                     "selected_reco"
                 ]
-            },
-            "qelikenot": {
-                // "for": ["selected_reco", "selected_truth", "truth", "response"]                
-                "for": [
-                    "selected_reco"
-                ]
-            }
+            }//,
+            // "qelikenot": {
+            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // }
         },
         "legend_entries": {
             "data": "Data",
             "qelike": "QElike",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
-            "multipion": "N#pi",
-            "other": "Other",
-            "qelikenot": "QELike Not"
+            // "multipion": "N#pi",
+            "other": "Other"//,
+            // "qelikenot": "QELike Not"
         }
     },
     "QElikeOld": {
