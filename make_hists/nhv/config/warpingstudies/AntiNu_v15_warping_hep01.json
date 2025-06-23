@@ -59,6 +59,7 @@
     // "TotalNeutBlobE"
     // "EAvailWiggled"
     "EAvailWithNeutrons",
+    "CalibEAvailWithNeutrons",
     // "EAvailWithNeutronsCalib",
     // "resEAvailWithNeutrons"
     "recoil"//,
