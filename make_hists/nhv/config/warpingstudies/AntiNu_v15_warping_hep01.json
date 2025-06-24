@@ -13,7 +13,7 @@
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
   "recoName": "MasterAnaDev",
-  "tunedmc": "both",
+  "tunedmc": "untuned",
   "warpedmc": "none",
   "closure": 0,
   "TuneCategories": [
@@ -62,7 +62,7 @@
     "CalibEAvailWithNeutrons",
     // "EAvailWithNeutronsCalib",
     // "resEAvailWithNeutrons"
-    "recoil"//,
+    "recoil" //,
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
