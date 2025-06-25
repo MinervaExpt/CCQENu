@@ -10,8 +10,52 @@
         "background": ["qelikenot"],
         "categories": {
             "qelike": {
+                // "for": ["selected_reco"]
+                "for": ["selected_reco", "selected_truth", "truth", "response"]
+             },
+            "qelikenot": {
                 "for": ["selected_reco"]
                 // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "QElike_0blob": {
+        "name": "QElike_0blob",
+        "reco": "QElike_0blob",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["qelikenot"],
+        "categories": {
+            "qelike": {
+                // "for": ["selected_reco"]
+                "for": ["selected_reco", "selected_truth", "truth", "response"]
+             },
+            "qelikenot": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "QElike_1blob": {
+        "name": "QElike_1blob",
+        "reco": "QElike_1blob",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["qelikenot"],
+        "categories": {
+            "qelike": {
+                // "for": ["selected_reco"]
+                "for": ["selected_reco", "selected_truth", "truth", "response"]
              },
             "qelikenot": {
                 "for": ["selected_reco"]
