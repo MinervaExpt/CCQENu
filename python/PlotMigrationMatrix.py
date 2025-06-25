@@ -8,6 +8,8 @@ plotfiletype = "pdf"
 # QElike
 # QElike0Blob
 sampletodo = "QElike"
+# sampletodo = "QElike_0blob"
+# sampletodo = "QElike_1blob"
 
 var_names = {
     "recoil": "Recoil",
@@ -193,7 +195,7 @@ def main():
 
         # mnv.SetBlackbodyPalette()
         # mnv.SetRedHeatPalette()
-        # mnv.SetBlackbodyPalette()
+        mnv.SetBlackbodyPalette()
         pix = 1500
         if nbinsx*1.5 > 1000:
             print("nbinsx: ", nbinsx )
@@ -217,8 +219,11 @@ def main():
             out_matrix.SetMaximum(1.0)
             out_matrix.GetYaxis().SetTitle("True E_{Avail}")
             out_matrix.GetXaxis().SetTitle("Reconstructed "+var_names[var])
-            ROOT.gStyle.SetPaintTextFormat("0.2f")
-            out_matrix.Draw("colz text") 
+            if nbinsx>=20:
+                out_matrix.Draw("colz")
+            else:
+                ROOT.gStyle.SetPaintTextFormat("0.2f")
+                out_matrix.Draw("colz text") 
 
         # canvas.SetLogx()
         # canvas.SetLogy()
