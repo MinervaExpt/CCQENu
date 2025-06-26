@@ -233,6 +233,9 @@ class CVFunctions {
         recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
         recointfunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
 
+        recofunctions["NNeutBlobs"] = &CVUNIVERSE::GetNNeutBlobs;
+        recointfunctions["NNeutBlobs"] = &CVUNIVERSE::GetNNeutBlobs;
+
         recofunctions["NNonVtxIsoBlobs"] = &CVUNIVERSE::GetNNonVtxIsoBlobs;
         recointfunctions["NNonVtxIsoBlobs"] = &CVUNIVERSE::GetNNonVtxIsoBlobs;
 

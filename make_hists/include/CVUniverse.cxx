@@ -1717,6 +1717,20 @@ int CVUniverse::GetAllBlobCandsNeut() const {
     return 1;
 }
 
+int CVUniverse::GetNNeutBlobs() const {
+    NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
+    int n_neutblobs = 0;
+    if (GetNMADBlobs() == 0) {
+        // std::cout << edep << std::endl;
+        return n_neutblobs;
+    }
+    for (int i = 0; i < GetNMADBlobs(); i++) {
+        if (neutevent->GetCandIsNeut(i) && neutevent->CandIsFiducial(i) && neutevent->CandIsIsolated(i) && neutevent->CandIsOutsideMuonDist(i)) n_neutblobs++;
+    }
+    // if (edep > 0.0) std::cout << edep << std::endl;
+    return n_neutblobs;
+}
+
 double CVUniverse::GetTotNeutBlobEGeV() const {
     NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
     double edep = 0.0;
