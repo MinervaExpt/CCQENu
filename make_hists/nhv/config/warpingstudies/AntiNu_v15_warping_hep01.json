@@ -40,9 +40,9 @@
   ],
   "AnalyzeVariables": [
     "NBlobs",
-    "NNeutCands",
-    "NNonVtxIsoBlobs",
-    "NNonVtxIsoBlobsAll"//,
+    "NNeutCands"//,
+    // "NNonVtxIsoBlobs",
+    // "NNonVtxIsoBlobsAll"//,
     // "Multiplicity",
     // "PionAngle"
     // "NChargedPions",
@@ -70,7 +70,7 @@
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": [], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "Analyze2DVariables": ["NBlobs_NNeutCands"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "signal": {
     "QElike": "qelike" //,
