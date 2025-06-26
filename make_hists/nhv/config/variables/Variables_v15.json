@@ -164,6 +164,11 @@
       "xvar": "NBlobs",
       "yvar": "NNeutCands"
     },
+    "NBlobs_NNeutBlobs": {
+      "name": "NBlobs_NNeutBlobs",
+      "xvar": "NBlobs",
+      "yvar": "NNeutBlobs"
+    }
     "NBlobs_NNonVtxIsoBlobs": {
       "name": "NBlobs_NNonVtxIsoBlobs",
       "xvar": "NBlobs",
@@ -854,6 +859,15 @@
       "true": "TrueNeutronCount",
       "name": "NNeutCands",
       "title": "Number of MAD_Blobs",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "NNeutBlobs": {
+      "reco": "NNeutBlobs",
+      "true": "TrueNeutronCount",
+      "name": "NNeutBlobs",
+      "title": "Number of Neutron Tagged Blobs",
       "nbins": 11,
       "min": -0.5,
       "max": 10.5
