@@ -168,7 +168,7 @@
       "name": "NBlobs_NNeutBlobs",
       "xvar": "NBlobs",
       "yvar": "NNeutBlobs"
-    }
+    },
     "NBlobs_NNonVtxIsoBlobs": {
       "name": "NBlobs_NNonVtxIsoBlobs",
       "xvar": "NBlobs",
