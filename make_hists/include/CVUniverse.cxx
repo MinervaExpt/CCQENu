@@ -1725,7 +1725,8 @@ int CVUniverse::GetNNeutBlobs() const {
         return n_neutblobs;
     }
     for (int i = 0; i < GetNMADBlobs(); i++) {
-        if (neutevent->GetCandIsNeut(i) && neutevent->CandIsFiducial(i) && neutevent->CandIsIsolated(i) && neutevent->CandIsOutsideMuonDist(i)) n_neutblobs++;
+        // if (neutevent->GetCandIsNeut(i) && neutevent->CandIsFiducial(i) && neutevent->CandIsIsolated(i) && neutevent->CandIsOutsideMuonDist(i)) n_neutblobs++;
+        if (neutevent->GetCandIsNeut(i)) n_neutblobs++;
     }
     // if (edep > 0.0) std::cout << edep << std::endl;
     return n_neutblobs;
@@ -1739,7 +1740,8 @@ double CVUniverse::GetTotNeutBlobEGeV() const {
         return edep;
     }
     for (int i = 0; i < GetNMADBlobs(); i++) {
-        if (neutevent->GetCandIsNeut(i) && neutevent->CandIsFiducial(i) && neutevent->CandIsIsolated(i) && neutevent->CandIsOutsideMuonDist(i)) edep += neutevent->GetCand(i)->GetCandRecoEDep();
+        // if (neutevent->GetCandIsNeut(i) && neutevent->CandIsFiducial(i) && neutevent->CandIsIsolated(i) && neutevent->CandIsOutsideMuonDist(i)) edep += neutevent->GetCand(i)->GetCandRecoEDep();
+        if (neutevent->GetCandIsNeut(i)) edep += neutevent->GetCand(i)->GetCandRecoEDep();
     }
     // if (edep > 0.0) std::cout << edep << std::endl;
     return edep * MeVGeV;

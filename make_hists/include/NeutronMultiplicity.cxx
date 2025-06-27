@@ -201,6 +201,7 @@ int NeutEvent::CandIsOutsideMuonAngle(int index) {
 }
 
 int NeutEvent::CandIsOutsideMuonDist(int index) {
+    if (m_muondist_min == 0.0) return 1;
     TVector3 candfp = m_cands[index]->GetCandFlightPath();
     double angle = m_mupath.Angle(candfp);
     double dist = candfp.Mag() * std::sin(angle);
