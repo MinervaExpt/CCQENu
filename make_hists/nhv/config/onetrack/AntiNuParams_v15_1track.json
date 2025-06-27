@@ -30,8 +30,9 @@
         "vtxdist_min": 100.0,
         "zpos_max": 8422.0,
         "zpos_min": 5980.0,
-        "muoncone_min": 15.0,
-        // "muondist_min": 50.0,
-        "edep_min": 10.0
+        // "muoncone_min": 15.0,
+        "muondist_min": 50.0,
+        // "edep_min": 20.0
+        "edep_min": 1.5
     }
 }

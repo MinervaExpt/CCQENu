@@ -432,22 +432,22 @@
       "true": "TrueEAvailGeV",
       "name": "recoil",
       "title": "Recoil in GeV",
-      // "nbins": 50,
-      // "min": 0.0,
-      // "max": 1.0,
-      "bins": [
-        0.0,
-        // 0.025, // for finer bin
-        0.05,
-        0.10,
-        0.15,
-        // 0.225, // for finer bin
-        // 0.25,
-        0.30,
-        // 0.35,
-        0.50,
-        1.0
-      ],
+      "nbins": 50,
+      "min": 0.0,
+      "max": 1.0,
+      // "bins": [
+      //   0.0,
+      //   // 0.025, // for finer bin
+      //   0.05,
+      //   0.10,
+      //   0.15,
+      //   // 0.225, // for finer bin
+      //   // 0.25,
+      //   0.30,
+      //   // 0.35,
+      //   0.50,
+      //   1.0
+      // ],
       // "for": [
       //   "data",
       //   "selected_reco"
@@ -531,22 +531,22 @@
       "true": "TrueEAvailGeV",
       "name": "EAvail",
       "title": "E_{Available} in GeV",
-      // "nbins": 55,
-      // "min": -0.1,
-      // "max": 1.0,
-      "bins": [
-        0.0,
-        // 0.025, // for finer bin
-        0.05,
-        0.10,
-        0.15,
-        // 0.225, // for finer bin
-        // 0.25,
-        0.30,
-        // 0.35,
-        0.50,
-        1.0
-      ],
+      "nbins": 55,
+      "min": -0.1,
+      "max": 1.0,
+      // "bins": [
+      //   0.0,
+      //   // 0.025, // for finer bin
+      //   0.05,
+      //   0.10,
+      //   0.15,
+      //   // 0.225, // for finer bin
+      //   // 0.25,
+      //   0.30,
+      //   // 0.35,
+      //   0.50,
+      //   1.0
+      // ],
       "fluxnorm": false
     },
     "TotalNeutBlobE": {
