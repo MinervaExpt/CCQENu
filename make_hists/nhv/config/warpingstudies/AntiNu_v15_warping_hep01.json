@@ -41,7 +41,7 @@
   "AnalyzeVariables": [
     "NBlobs",
     // "NNeutCands",
-    "NNeutBlobs"
+    "NNeutBlobs",
     // "NNonVtxIsoBlobs",
     // "NNonVtxIsoBlobsAll"//,
     // "Multiplicity",
