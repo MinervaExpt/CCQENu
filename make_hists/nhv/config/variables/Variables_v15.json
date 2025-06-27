@@ -184,7 +184,7 @@
       "xvar": "recoil",
       "yvar": "ptmu"
     },
-    "EAvail_EAvailNoNonVtxBlobsGeV": {
+    "EAvail_EAvailNoNonVtxBlobs": {
       "name": "EAvail_EAvailNoNonVtxBlobs",
       "xvar": "EAvail",
       "yvar": "EAvailNoNonVtxBlobs"
