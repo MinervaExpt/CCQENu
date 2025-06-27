@@ -106,6 +106,8 @@ class CVFunctions {
 
         recofunctions["EAvailGeV"] = &CVUNIVERSE::GetEAvailGeV;
 
+        recofunctions["EAvailNoNonVtxBlobsGeV"] = &CVUNIVERSE::GetEAvailNoNonVtxBlobsGeV;
+
         truefunctions["TrueEAvailGeV"] = &CVUNIVERSE::GetTrueEAvailGeV;
         truefunctions["TrueEAvailWithNeutronsGeV"] = &CVUNIVERSE::GetTrueEAvailWithNeutronsGeV;
         truefunctions["TrueEAvailWiggledGeV"] = &CVUNIVERSE::GetTrueEAvailWiggledGeV;

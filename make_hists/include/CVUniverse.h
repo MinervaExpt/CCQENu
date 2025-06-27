@@ -248,6 +248,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetEAvailGeV() const;
 
+    virtual double GetEAvailNoNonVtxBlobsGeV() const;
+
     // virtual double GetRecoilEnergyMinusNeutBlobsGeV() const;
 
     virtual double GetTrueQ0GeV() const;

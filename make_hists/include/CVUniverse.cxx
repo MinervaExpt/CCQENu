@@ -1180,6 +1180,16 @@ double CVUniverse::GetEAvailGeV() const {
     return (recoil - neutblobE);
 }
 
+// The following is diff from above by using the blobs we cut on 
+double CVUniverse::GetEAvailNoNonVtxBlobsGeV() const {
+    double totblobE = 0.;
+    std::vector<double> blobE = GetVecDouble("nonvtx_iso_blobs_energy_in_prong");
+    for (int i = 0; i < GetInt("nonvtx_iso_blobs_energy_in_prong_sz"); i ++) {
+        totblobE += blobE[i] * MeVGeV;
+    }
+    return GetRecoilEnergyGeV() - totblobE;
+}
+
 // double CVUniverse::GetRecoilEnergyMinusNeutBlobsGeV() const {
 //     // this takes recoil and removes the energy from 3D blobs, which are more likely to be neutrons
 //     double recoil = GetRecoilEnergyGeV(); // regular recoil def
