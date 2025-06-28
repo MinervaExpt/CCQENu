@@ -14,7 +14,7 @@
   "MinervaModel": "${MYMODEL}",
   "recoName": "MasterAnaDev",
   "tunedmc": "both",
-  "warpedmc": "none",
+  "warpedmc": "no2p2htune",
   "closure": 0,
   "TuneCategories": [
     "qelike",
