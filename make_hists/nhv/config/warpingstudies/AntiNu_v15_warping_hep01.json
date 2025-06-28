@@ -7,13 +7,13 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "EAvail_nonvtx_trackeronly_vs_MADBlobs_lowedepthresh_nowarp_tuneduntuned_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "EAvail_EAvailnonvtx_recoil_nowarp_tuneduntuned_20MeVneutblob_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
   "recoName": "MasterAnaDev",
-  "tunedmc": "untuned",
+  "tunedmc": "both",
   "warpedmc": "none",
   "closure": 0,
   "TuneCategories": [
@@ -52,7 +52,7 @@
     // "Q2QE" //,
     // "FitQ2QE",
     "EAvail",
-    "EAvailNoNonVtxBlobs"//,
+    "EAvailNoNonVtxBlobs",
     // "pzmuHD",
     // "ptmuHD",
     // "pmu",
@@ -64,7 +64,7 @@
     // "CalibEAvailWithNeutrons",
     // "EAvailWithNeutronsCalib",
     // "resEAvailWithNeutrons"
-    // "recoil" //,
+    "recoil" //,
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
@@ -72,7 +72,7 @@
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": ["EAvail_EAvailNoNonVtxBlobs"], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "Analyze2DVariables": [], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "signal": {
     "QElike": "qelike" //,
