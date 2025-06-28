@@ -1183,9 +1183,11 @@ double CVUniverse::GetEAvailGeV() const {
 // The following is diff from above by using the blobs we cut on 
 double CVUniverse::GetEAvailNoNonVtxBlobsGeV() const {
     double totblobE = 0.;
+    std::vector<double> blob_z_starts = GetVecDouble("nonvtx_iso_blobs_start_position_z_in_prong");
     std::vector<double> blobE = GetVecDouble("nonvtx_iso_blobs_energy_in_prong");
     for (int i = 0; i < GetInt("nonvtx_iso_blobs_energy_in_prong_sz"); i ++) {
-        totblobE += blobE[i] * MeVGeV;
+        if (blob_z_starts[i] > m_min_blob_zvtx)
+            totblobE += blobE[i] * MeVGeV;
     }
     return GetRecoilEnergyGeV() - totblobE;
 }
