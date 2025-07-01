@@ -184,10 +184,20 @@
       "xvar": "recoil",
       "yvar": "ptmu"
     },
+    "EAvail_ptmu": {
+      "name": "EAvail_ptmu",
+      "xvar": "EAvail",
+      "yvar": "ptmu"
+    },
     "EAvail_EAvailNoNonVtxBlobs": {
       "name": "EAvail_EAvailNoNonVtxBlobs",
       "xvar": "EAvail",
       "yvar": "EAvailNoNonVtxBlobs"
+    },
+    "EAvailNoNonVtxBlobs_ptmu": {
+      "name": "EAvailNoNonVtxBlobs_ptmu",
+      "xvar": "EAvailNoNonVtxBlobs",
+      "yvar": "ptmu"
     }
   },
   "1D": {
