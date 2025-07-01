@@ -179,7 +179,7 @@ def main():
 
             #now the row normalized migration....
             if parse[0] not in ["h2D", "hHD"]:
-                binning = array('d',range(0,nbinsx+1))
+                # binning = array('d',range(0,nbinsx+1))
                 print("norm matrix")
                 norm_matrix.SetBins(nbinsx,binning,nbinsy,binning)
                 print("out matrix")
@@ -211,8 +211,8 @@ def main():
 
             mnv = MnvPlotter()
 
-            mnv.SetBlackbodyPalette()
-            # mnv.SetRedHeatPalette()
+            # mnv.SetBlackbodyPalette()
+            mnv.SetRedHeatPalette()
             # mnv.SetBlackbodyPalette()
             pix = 1500
             if nbinsx*1.5 > 1000:
@@ -248,7 +248,7 @@ def main():
 
             # canvas.SetLogx()
             # canvas.SetLogy()
-            canvas.SetLogz()
+            # canvas.SetLogz()
             if not os.path.exists(outdirname): os.mkdir(outdirname)
 
             canvas.Print(outdirname+"/plotmigration_"+sampletodo+"_"+var+".png")

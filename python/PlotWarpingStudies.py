@@ -97,7 +97,7 @@ def main():
     print("Looking at file "+filename1)
     f = ROOT.TFile(filename1, "READONLY")
 
-    plotdir = "/Users/nova/git/plots/Winter2025MinervaCollab"
+    plotdir = "/Users/nova/git/plots/Summer2025MnvWeek/transwarp"
     filebasename1=os.path.basename(filename1)
     # outfilename=filebasename1.replace(".root","_2DPlots")
     outdirname=os.path.join(plotdir,filebasename1.replace(".root","_warpplots"))
@@ -107,21 +107,31 @@ def main():
     print("Looking for hists...")
     hist_dict = {}
     histkeys_list = f.GetListOfKeys()
-    chi2_hist = f.Get("Chi2_Iteration_Dists").Get("h_chi2_modelData_trueData_iter_chi2_percentile").Clone()
+    chi2dist_hist = f.Get("Chi2_Iteration_Dists").Get("h_chi2_modelData_trueData_iter_chi2_percentile").Clone()
+    chi2med_hist = f.Get("Chi2_Iteration_Dists").Get("h_median_chi2_modelData_trueData_iter_chi2").Clone()
+    chi2avg_hist = f.Get("Chi2_Iteration_Dists").Get("m_avg_chi2_modelData_trueData_iter_chi2").Clone()
+
     canvas = ROOT.TCanvas("c","c",1100,720)
     # canvas.SetLeftMargin(0.1)
     canvas.SetRightMargin(0.2)
     # c2.SetLeftMargin(0.05)
     # canvas.SetBottomMargin(0.14)
-    chi2_hist.GetXaxis().SetTitle("N_{iter}")
-    chi2_hist.GetXaxis().CenterTitle()
-    chi2_hist.GetZaxis().SetTitle("N_{univ}")
-    chi2_hist.GetYaxis().SetTitle("#chi^{2}")
-    chi2_hist.GetYaxis().CenterTitle()
+    chi2dist_hist.GetXaxis().SetTitle("N_{iter}")
+    chi2dist_hist.GetXaxis().CenterTitle()
+    chi2dist_hist.GetZaxis().SetTitle("N_{univ}")
+    chi2dist_hist.GetYaxis().SetTitle("#chi^{2}")
+    chi2dist_hist.GetYaxis().CenterTitle()
 
-    # chi2_hist.GetYaxis().SetRangeUser(0,200)
-    chi2_hist.Draw("COLZ")
-    chi2_hist.Draw("axis, same")
+    chi2med_hist.SetLineColor(ROOT.kBlack)
+    chi2med_hist.SetFillStyle(0)
+    chi2med_hist.SetMarkerColor(ROOT.kBlue)
+    chi2med_hist.SetMarkerStyle(2) # 2 makes it a plus
+
+    # chi2dist_hist.GetYaxis().SetRangeUser(0,200)
+    chi2dist_hist.Draw("COLZ")
+    chi2med_hist.Draw("HIST,same")
+    chi2avg_hist.Draw("PE,same")
+    chi2dist_hist.Draw("axis, same")
     canvas.Print(os.path.join(outdirname,"warp_chi2_niter.png"))
 
 
