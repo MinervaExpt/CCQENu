@@ -90,7 +90,8 @@ class CVFunctions {
         recofunctions["Curvature"] = &CVUNIVERSE::GetCurvature;
         truefunctions["TrueCurvature"] = &CVUNIVERSE::GetTrueCurvature;
 
-        recofunctions["RecoilEnergyGeV"] = &CVUNIVERSE::GetRecoilEnergyGeV;
+        recofunctions["RecoilEnergyGeV"] = &CVUNIVERSE::GetRecoilEnergyGeV; // this one has the 100mm cutout
+        recofunctions["CalRecoilEnergy0mmGeV"] = &CVUNIVERSE::GetCalRecoilEnergy0mmGeV; // special version with no vertex cutout. 
         truefunctions["TrueRecoilEnergyGeV"] = &CVUNIVERSE::GetTrueRecoilEnergyGeV;
 
         recofunctions["Log10RecoilEnergyGeV"] = &CVUNIVERSE::GetLog10RecoilEnergyGeV;
@@ -431,6 +432,11 @@ class CVFunctions {
 
         truefunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
         trueintfunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
+
+        recofunctions["HadronEGeV"] = &CVUNIVERSE::GetHadronEGeV;
+        truefunctions["TrueEAvailWithNeutronsGeV"] = &CVUNIVERSE::GetTrueEAvailWithNeutronsGeV;
+
+        truefunctions["TrueEAvailGeV"] = &CVUNIVERSE::GetTrueEAvailGeV;
     };
 
     std::vector<std::string> GetRecoKeys() const {

@@ -204,7 +204,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetCalRecoilEnergy() const;
     virtual double GetCalRecoilEnergyGeV() const;
-
+    virtual double GetCalRecoilEnergy0mmGeV() const;
     virtual double GetNonCalRecoilEnergy() const;
     virtual double GetNonCalRecoilEnergyGeV() const;
 
@@ -510,5 +510,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     //
 
     virtual void Print() const;
+    virtual double GetTrueEAvailWithNeutronsGeV() const;
+    virtual double GetTrueEAvailGeV() const;
 };
 #endif

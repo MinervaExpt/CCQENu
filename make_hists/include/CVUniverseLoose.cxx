@@ -284,9 +284,9 @@ bool CVUniverse::FastFilter() const {
     bool result = false;
     // if (GetMultiplicity() < 1) return result;
     if (GetIsMinosMatchTrack() != -1) return result;
-    if (GetZVertex() < 5980 || GetZVertex() > 8422) return result;
-    if (GetApothemX() > 850.) return result;
-    if (GetApothemY() > 850.) return result;
+    if (GetZVertex() < 5900 || GetZVertex() > 8500) return result;
+    if (GetApothemX() > 900.) return result;
+    if (GetApothemY() > 900.) return result;
     return true;
 }
 bool CVUniverse::TrueFastFilter() const { return true; }
@@ -850,13 +850,7 @@ double CVUniverse::ApplyCaloTuning(double calRecoilE) const {
 double CVUniverse::GetCalRecoilEnergy() const {
     bool neutrinoMode = GetAnalysisNuPDG() > 0;
     if (neutrinoMode)
-        if (std::string(MinervaUniverse::GetTreeName()) == "CCQENu"){
-        
-            return (GetDouble("nonvtx_iso_blobs_energy") + GetDouble("dis_id_energy")); 
-            }   // several definitions of this, be careful
-        else{
-            return (GetDouble("nonvtx_iso_blobs_energy") + GetDouble("dispr_id_energy"));
-        }
+        return (GetDouble("nonvtx_iso_blobs_energy") + GetDouble("dis_id_energy"));  // several definitions of this, be careful
     else {
         // if(GetVecDouble("recoil_summed_energy").size()==0) return -999.; // protect against bad input,
         // return (GetVecDouble("recoil_summed_energy")[0] - GetDouble("recoil_energy_nonmuon_vtx100mm"));
@@ -864,21 +858,7 @@ double CVUniverse::GetCalRecoilEnergy() const {
     }
 }
 
-double CVUniverse::GetCalRecoilEnergy0mmGeV() const {
-    bool neutrinoMode = GetAnalysisNuPDG() > 0;
-    if (neutrinoMode)
-        if (std::string(MinervaUniverse::GetTreeName()) == "CCQENu") {
-            return (GetDouble("nonvtx_iso_blobs_energy") + GetDouble("dis_id_energy"))*MeVGeV;
-        }  // several definitions of this, be careful
-        else {
-            return (GetDouble("nonvtx_iso_blobs_energy") + GetDouble("dispr_id_energy"))*MeVGeV;
-        }
-    else {
-        // if(GetVecDouble("recoil_summed_energy").size()==0) return -999.; // protect against bad input,
-        // return (GetVecDouble("recoil_summed_energy")[0] - GetDouble("recoil_energy_nonmuon_vtx100mm"));
-        return GetDouble("recoil_energy_nonmuon_nonvtx0mm")*MeVGeV;
-    }
-}
+
 
 double CVUniverse::GetCalRecoilEnergyGeV() const { return CVUniverse::GetCalRecoilEnergy() * MeVGeV; }
 double CVUniverse::GetNonCalRecoilEnergy() const { return 0; }  // not certain why I want to implement this but there ya go.
@@ -1666,71 +1646,6 @@ void CVUniverse::Print() const {
         << GetTruthIsCCQELike() << ", "
         << GetIsMinosMatchTrack() << ", "
         << std::endl;
-}
-
-double CVUniverse::GetTrueEAvailWithNeutronsGeV() const {
-    double Eavail = 0.0;
-    int pdgsize = GetInt("mc_nFSPart");
-    for (int i = 0; i < pdgsize; i++) {
-        int pdg = GetVecElem("mc_FSPartPDG", i);
-        double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
-        if (pdg == 2112)
-            Eavail += (energy - 939.56);  // DON'T skip neutrons
-        else if (abs(pdg) > 1e9)
-            continue;  // ignore nuclear fragments
-        else if (abs(pdg) == 11 || abs(pdg) == 13)
-            continue;  // ignore leptons
-        else if (abs(pdg) == 211)
-            Eavail += energy - 139.5701;  // subtracting pion mass to get Kinetic energy
-        else if (pdg == 2212)
-            Eavail += energy - 938.27;  // proton
-        else if (pdg == 111)
-            Eavail += energy;  // pi0
-        else if (pdg == 22)
-            Eavail += energy;  // photons
-        else if (pdg >= 2000)  // TODO: what is this?
-            Eavail += energy - 938.27;
-        else if (pdg <= -2000)
-            Eavail += energy + 938.27;
-        else
-            Eavail += energy;
-    }
-    // return std::max(0.0, Eavail * MeVGeV);
-    return Eavail * MeVGeV;
-}
-//2 : 42 TrueEavail(without neutrons)(edited) 2 : 42 
-double CVUniverse::GetTrueEAvailGeV() const {
-    double Eavail = 0.0;
-    int pdgsize = GetInt("mc_nFSPart");
-    for (int i = 0; i < pdgsize; i++) {
-        int pdg = GetVecElem("mc_FSPartPDG", i);
-        double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
-        if (pdg == 2112)
-            continue;  // Skip neutrons
-        else if (abs(pdg) > 1e9)
-            continue;  // ignore nuclear fragments
-        else if (abs(pdg) == 11 || abs(pdg) == 13)
-            continue;  // ignore leptons
-        else if (abs(pdg) == 211)
-            Eavail += energy - 139.57;  // subtracting pion mass to get Kinetic energy
-        else if (pdg == 2212)
-            Eavail += energy - 938.27;  // proton
-        // Eavail += energy - MinervaUnits::M_p;
-        else if (pdg == 111)
-            Eavail += energy;  // pi0
-        else if (pdg == 22)
-            Eavail += energy;  // photons
-        else if (pdg >= 2000)  // TODO: what is this?
-            Eavail += energy - 938.27;
-        // Eavail += energy - MinervaUnits::M_p;
-        else if (pdg <= -2000)
-            Eavail += energy + 938.27;
-        // Eavail += energy + MinervaUnits::M_p;
-        else
-            Eavail += energy;
-    }
-    // return std::max(0.0, Eavail * MeVGeV);
-    return Eavail * MeVGeV;
 }
 
 #endif

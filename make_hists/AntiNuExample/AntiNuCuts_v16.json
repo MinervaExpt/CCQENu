@@ -1,3 +1,4 @@
+
 { // reconstruction level definitions
     "Comments":["v13 fix - Apply IsCC and pdg only to signal, not to background",
     "v16 add in Inclusive antiNufor studies",
@@ -16,6 +17,65 @@
     {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
     {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
     {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
+  ],
+  "QElikeNu": [
+    {
+      "name": "NoDeadTime",
+      "max": 1,
+      "variable": "DeadTime"
+    },
+    {
+      "name": "ApothemX",
+      "max": 850,
+      "variable": "ApothemX"
+    },
+    {
+      "name": "ApothemY",
+      "max": 850,
+      "variable": "ApothemY"
+    },
+    {
+      "name": "Z Vertex",
+      "min": 5980,
+      "max": 8422,
+      "variable": "ZVertex"
+    },
+    {
+      "name": "Has MINOS Match",
+      "equals": -1,
+      "variable": "IsMinosMatchTrack"
+    }, // -1 for some reason
+    {
+      "name": "NuHelicity",
+      "equals": 1,
+      "variable": "NuHelicity"
+    }, // 2 for anti-neutrino
+    {
+      "name": "Max Muon Angle in Degrees",
+      "max": 20.0,
+      "variable": "ThetamuDegrees"
+    },
+    // {
+    //   "name": "Min MuonMomentumPar ",
+    //   "min": 1.5,
+    //   "variable": "PparMuGeV"
+    // },
+    // {
+    //   "name": "Max MuonMomentumPar ",
+    //   "max": 15.0,
+    //   "variable": "PparMuGeV"
+    // },
+    {
+      "name": "Max Multiplicity",
+      "min": 1,
+      "max": 2,
+      "variable": "Multiplicity"
+    },
+    {
+      "name": "GoodRecoil",
+      "equals": 1,
+      "variable": "GoodRecoil"
+    }
   ],
     "QElikeAllN":[
     {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
@@ -54,6 +114,63 @@
       {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
       {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
       {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"}
+    ],
+    "EHadronic": [
+      {
+        "name": "NoDeadTime",
+        "max": 1,
+        "variable": "DeadTime"
+      },
+      {
+        "name": "ApothemX",
+        "max": 850,
+        "variable": "ApothemX"
+      },
+      {
+        "name": "ApothemY",
+        "max": 850,
+        "variable": "ApothemY"
+      },
+      {
+        "name": "Z Vertex",
+        "min": 5980,
+        "max": 8422,
+        "variable": "ZVertex"
+      },
+      {
+        "name": "Has MINOS Match",
+        "equals": -1,
+        "variable": "IsMinosMatchTrack"
+      }, // -1 for some reason
+      {
+        "name": "NuHelicity",
+        "equals": 2,
+        "variable": "NuHelicity"
+      }, // 2 for anti-neutrino
+      {
+        "name": "Max Muon Angle in Degrees",
+        "max": 20.0,
+        "variable": "ThetamuDegrees"
+      },
+      {
+        "name": "Min MuonMomentumPar ",
+        "min": 1.5,
+        "variable": "PparMuGeV"
+      },
+      {
+        "name": "Max MuonMomentumPar ",
+        "max": 15.0,
+        "variable": "PparMuGeV"
+      },
+      {
+        "name": "Max Multiplicity",
+        "max": 1,
+        "variable": "Multiplicity"
+      },
+      { "name": "Min Ehadronic",
+        "min":0.050,
+        "variable": "HadronEGeV"
+      }   
     ],
     "Inclusive": [
       {
@@ -109,6 +226,60 @@
          "variable": "Multiplicity"
        }
     ],
+    "InclusiveNu": [ // this selects neutrinos, not antineutrinos
+      {
+        "name": "NoDeadTime",
+        "max": 1,
+        "variable": "DeadTime"
+      },
+      {
+        "name": "ApothemX",
+        "max": 850,
+        "variable": "ApothemX"
+      },
+      {
+        "name": "ApothemY",
+        "max": 850,
+        "variable": "ApothemY"
+      },
+      {
+        "name": "Z Vertex",
+        "min": 5980,
+        "max": 8422,
+        "variable": "ZVertex"
+      },
+      {
+        "name": "Has MINOS Match",
+        "equals": -1,
+        "variable": "IsMinosMatchTrack"
+      }, // -1 for some reason
+      {
+        "name": "NuHelicity",
+        "equals": 1,
+        "variable": "NuHelicity"
+      },
+      // 2 for anti-neutrino
+      // {
+      //   "name": "Max Muon Angle in Degrees",
+      //   "max": 20.0,
+      //   "variable": "ThetamuDegrees"
+      // },
+      // {
+      //   "name": "Min MuonMomentumPar ",
+      //   "min": 1.5,
+      //   "variable": "PparMuGeV"
+      // },
+      // {
+      //   "name": "Max MuonMomentumPar ",
+      //   "max": 15.0,
+      //   "variable": "PparMuGeV"
+      // },
+      {
+        "name": "Max Multiplicity",
+        "min": 1,
+        "variable": "Multiplicity"
+      }
+    ],
   // phase space definitions
   "phase_space":[
     {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
@@ -160,10 +331,40 @@
     {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
     {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.0}
   ],
+  "qelikeNu": [
+    {
+      "name": "PDG",
+      "equals": 14,
+      "variable": "TruthNuPDG"
+    },
+    {
+      "name": "TruthIsCC",
+      "equals": 1,
+      "variable": "TruthIsCC"
+    },
+    {
+      "name": "TruthIsCCQELike",
+      "equals": 1,
+      "variable": "TruthIsCCQELike",
+      "protonKECutMeV": 12000.0
+    }
+  ],
   "inclusive": [
     {
       "name": "PDG",
       "equals": -14,
+      "variable": "TruthNuPDG"
+    },
+    {
+      "name": "TruthIsCC",
+      "equals": 1,
+      "variable": "TruthIsCC"
+    }
+  ],
+  "inclusiveNu": [
+    {
+      "name": "PDG",
+      "equals": 14,
       "variable": "TruthNuPDG"
     },
     {
@@ -196,10 +397,20 @@
     {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.0},
     {"name":"MCIntType","equals":8,"variable":"MCIntType"}
   ],
-  "qelikenot":[
+  "qelikeNunot":[
     //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
     //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
-    {"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike","protonKECutMeV":120.0}
+    {"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike","protonKECutMeV":12000.0}
+  ],
+  "qelikenot": [
+    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {
+      "name": "TruthIsCCQELike",
+      "equals": 0,
+      "variable": "TruthIsCCQELike",
+      "protonKECutMeV": 120.0
+    }
   ],
   "qelike_np":[
   //  {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
