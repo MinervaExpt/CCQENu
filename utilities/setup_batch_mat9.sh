@@ -51,7 +51,7 @@ export MPARAMFILES=$MPARAMFILESROOT/data
 export JSONCPP_DIR=$BASEDIR/jsoncpp-build # need to change this probably
 export LD_LIBRARY_PATH=$RUNDIR:$JSONCPP_DIR/lib:$LD_LIBRARY_PATH
 export PYTHONPATH=$RUNDIR/python:$BASEDIR/MAT-MINERvA/python:$BASEDIR/MAT-MINERvA/python/PlotUtils:$PYTHONPATH
-export DATALOC=remote_p4
+export DATALOC=remote_p6
 echo "------------ CHECK THE VOMS PROXY and the X509"
 voms-proxy-info --all
 echo $X509_USER_PROXY

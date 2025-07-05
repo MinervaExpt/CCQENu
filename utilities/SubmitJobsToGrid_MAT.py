@@ -47,6 +47,7 @@ def writeCCQEMAT(mywrapper,opts,theoutdir,tag):
     writewrap(mywrapper,"export MYPLAYLIST="+opts.playlist+"\n")
     writewrap(mywrapper,"export MYSAMPLE="+opts.sample+"\n")
     writewrap(mywrapper,"export MYMODEL="+opts.model+"\n")
+    writewrap(mywrapper,"export MYWARP="+opts.warp+"\n")
     theexe = opts.theexe
     mylog = "%s_%s_%s.log"%(os.path.basename(opts.theexe),os.path.basename(opts.config),tag)
     writewrap(mywrapper,os.path.join("time $RUNDIR",opts.theexe)+" "+os.path.join("$RUNDIR",opts.config)+" "+opts.prescale+" >& %s \n"%(mylog))
@@ -132,6 +133,7 @@ def writeOptions(parser):
     parser.add_option('--sample', dest='sample', help='[OPTIONAL] Sample type to set $MYSAMPLE when doing 1 sample/job otherwise you can still use a hardcoded list of samples ', default="QElike")
     parser.add_option('--playlist', dest='playlist', help='Playlist type', default="NONE")
     parser.add_option('--model', dest='model', help='[OPTIONAL] Model tune type to set $MYMODEL for MinervaModel. Defaults to MnvTunev1 ', default="MnvTunev1")
+    parser.add_option('--warp', dest='warp', help='[OPTIONAL] Set a warp to $MYWARP for a warp. Defaults to none')
 
     parser.add_option('--prescale', dest='prescale', help='Prescale MC by this factor (CCQEMAT)', default="1")
     ##########################################################################
@@ -207,7 +209,7 @@ if opts.stage not in valid_stages:
 #  Create wrapper
 ##############################################
 
-wrapper_name = "%s_%s_%s_wrapper_%s.sh"%(opts.stage,opts.playlist,opts.model,tag_name)
+wrapper_name = "%s_%s_%s_%s_%s_wrapper_%s.sh"%(opts.stage,opts.playlist,opts.model,opts.warp,opts.sample,tag_name)
 
 mywrapper = open(wrapper_name,"w")
 mywrapper.write("#!/bin/sh\n") # don't wrap this one
