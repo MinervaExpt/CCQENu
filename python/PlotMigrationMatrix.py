@@ -12,23 +12,25 @@ samples = [
     "QElike_0blob",
     "QElike_1blob"
 ]
-sampletodo = "QElike"
+# sampletodo = "QElike"
 # sampletodo = "QElike_0blob"
 # sampletodo = "QElike_1blob"
 
+categorytodo = "qelike"
+
 var_names = {
-    "recoil": "Recoil",
-    "EAvail": "E_{Avail}",
-    "EAvailWithNeutrons": "E_{Avail} w/ neutrons",
-    "EAvailNoNonVtxBlobs": "E_{Avail} (recoil - nonvtx_iso_blobs)",
-    "CalibRecoilWithNeutrons": "E_{Avail} w/ neutrons (calibrated)",
-    "Q2QE": "Q^{2}_{QE}",
-    "ptmu": "p_{T}",
-    "pzmu": "p_{||}",
-    "ptmuHD": "p_{T}",
-    "pzmuHD": "p_{||}",
-    "ThetamuDegrees": "#theta_{#mu}",
-    "pmu": "p_{#mu}"
+    "recoil": "Recoil (GeV)",
+    "EAvail": "E_{Avail} (GeV)",
+    "EAvailWithNeutrons": "E_{Avail} w/ neutrons (GeV)",
+    "EAvailNoNonVtxBlobs": "E_{Avail} (recoil - nonvtx_iso_blobs) (GeV)",
+    "CalibRecoilWithNeutrons": "E_{Avail} w/ neutrons (calibrated) (GeV)",
+    "Q2QE": "Q^{2}_{QE} (GeV^{2})",
+    "ptmu": "p_{T} (GeV)",
+    "pzmu": "p_{||} (GeV)",
+    "ptmuHD": "p_{T} (GeV)",
+    "pzmuHD": "p_{||} (GeV)",
+    "ThetamuDegrees": "#theta_{#mu} (GeV)",
+    "pmu": "p_{#mu} (GeV)"
 }
 
 def CCQECanvas(name,title,xsize=1000,ysize=1000):
@@ -40,71 +42,11 @@ def CCQECanvas(name,title,xsize=1000,ysize=1000):
     # c2.SetBottomMargin(0.14)
     return c2
 
-def MakeHistPretty(i_hist,xvar,yvar):
-    hist = i_hist.Clone()
-
-    xaxis_name = hist.GetXaxis().GetName()
-    hist.GetXaxis().CenterTitle()
-
-    yaxis_name = hist.GetYaxis().GetName()
-    hist.GetYaxis().CenterTitle()
-
-    # hist.GetZaxis().SetTitle("Events")
-
-    if(xvar == "Q2QE"):
-        ROOT.gPad.SetLogx(1)
-        xaxis_name= "Q^{2}_{QE}"
-    if(yvar=="Q2QE"):
-        ROOT.gPad.SetLogy(1)
-        yaxis_name= "Q^{2}_{QE}"
-    if(xvar == "recoil"):
-        xaxis_name = "Recoil"
-    if(yvar == "recoil"):
-        yaxis_name = "Recoil"
-    if(xvar == "ptmu"):
-        xaxis_name = "p_{T}"
-    if(yvar == "ptmu"):
-        yaxis_name = "p_{T}"
-    if(xvar == "pzmu"):
-        xaxis_name = "p_{||}"
-    if(yvar == "pzmu"):
-        yaxis_name = "p_{||}"
-    if(xvar == "EAvail"):
-        xaxis_name = "E_{Available}"
-    if(yvar == "EAvail"):
-        yaxis_name = "E_{Available}"
-    if(xvar == "EAvailWithNeutrons"):
-        xaxis_name = "E_{Available} w/ neutrons"
-    if(yvar == "EAvailWithNeutrons"):
-        yaxis_name = "E_{Available} w/ neutrons"
-
-    
-    hist_title = yaxis_name+" vs. "+xaxis_name
-    hist.SetTitle(hist_title)
-
-    return hist
-
-
-def Plot2D(canvas,i_hist,xvar,yvar,color="COLZ"):
-    hist = MakeHistPretty(i_hist,xvar,yvar)
-    ROOT.gStyle.SetPalette(ROOT.kBird)
-    # ROOT.gPad.SetLogx(1)
-    # ROOT.gPad.SetLogz(1)
-    ROOT.gStyle.SetOptStat("e")
-    # stats_pave = i_mc_hist.FindObject("stats")
-    hist = MakeHistPretty(i_hist,xvar,yvar)
-    hist.Draw(color)
-
-    canvas.Print(canvas.GetName(), str("Title: " + hist.GetTitle()))
-    ROOT.gPad.SetLogx(0)
-    ROOT.gPad.SetLogz(0)
-
-
 def main():
     ROOT.TH1.AddDirectory(ROOT.kFALSE)
 
     if len(sys.argv) < 2:
-        print("python Plot2DHist.py <infile.root>")
+        print("python PlotMigrationMatrix.py <infile.root>")
     else:
         filename1 = sys.argv[1]
 
@@ -140,7 +82,7 @@ def main():
                 continue
             if parse[1]==sampletodo:
                 foundsample = True
-            if parse[2]!="qelike":
+            if parse[2]!=categorytodo:
                 continue
             if "response" not in parse[4]:
                 continue
