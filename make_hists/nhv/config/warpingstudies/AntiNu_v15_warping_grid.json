@@ -40,42 +40,16 @@
     // "MultipBlobSideband"
   ],
   "AnalyzeVariables": [
-    // "NBlobs",
-    // "NNeutCands",
-    // "NNeutBlobs",
-    // "NNonVtxIsoBlobs",
-    // "NNonVtxIsoBlobsAll"//,
-    // "Multiplicity",
-    // "PionAngle"
-    // "NChargedPions",
-    // "HasMultiPion"
-    // "recoilNoBlobs",
-    // "Q2QE" //,
-    // "FitQ2QE",
     "EAvail",
     "EAvailNoNonVtxBlobs",
-    // "pzmuHD",
-    // "ptmuHD",
-    // "pmu",
-    // "ThetamuDegrees",
-    // "CosThetamu",
-    // "TotalNeutBlobE"
-    // "EAvailWiggled"
-    "EAvailWithNeutrons",
-    "CalibEAvailWithNeutrons",
-    // "EAvailWithNeutronsCalib",
-    // "resEAvailWithNeutrons"
+    // "EAvailWithNeutrons",
+    // "CalibEAvailWithNeutrons",
     "recoil",
-    // "recoilQE"
-    // "NeutBlobsRatio"
-    // "pzmu",
     "ptmu"
-    // "NeutCandMCPID",
-    // "NeutCandTopMCPID"
   ],
   "Analyze2DVariables": [
     "recoil_ptmu",
-    "EAvail_ptmu",
+    // "EAvail_ptmu",
     "EAvailNoNonVtxBlobs_ptmu"
   ], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 

@@ -68,11 +68,15 @@
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
-    // "ptmu"
+    "ptmu"
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": [], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "Analyze2DVariables": [
+    "recoil_ptmu",
+    "EAvail_ptmu",
+    "EAvailNoNonVtxBlobs_ptmu"
+  ],
   "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "signal": {
     "QElike": "qelike" //,
