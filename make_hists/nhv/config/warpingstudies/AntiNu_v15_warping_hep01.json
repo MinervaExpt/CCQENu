@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "EAvail_EAvailnonvtx_recoil_CalibEAvailWithNeutrons_nowarp_tuneduntuned_20MeVneutblob_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "EAvail_EAvailNoNonVtxBlobs_recoil_1GeV_50bins_QElikeandblobsamps_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -60,23 +60,23 @@
     // "CosThetamu",
     // "TotalNeutBlobE"
     // "EAvailWiggled"
-    "EAvailWithNeutrons",
-    "CalibEAvailWithNeutrons",
+    // "EAvailWithNeutrons",
+    // "CalibEAvailWithNeutrons",
     // "EAvailWithNeutronsCalib",
     // "resEAvailWithNeutrons"
     "recoil" //,
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
-    "ptmu"
+    // "ptmu"
     // "NeutCandMCPID",
     // "NeutCandTopMCPID"
   ],
-  "Analyze2DVariables": [
-    "recoil_ptmu",
-    "EAvail_ptmu",
-    "EAvailNoNonVtxBlobs_ptmu"
-  ],
+  "Analyze2DVariables": [],
+  //   "recoil_ptmu",
+  //   "EAvail_ptmu",
+  //   "EAvailNoNonVtxBlobs_ptmu"
+  // ],
   "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "signal": {
     "QElike": "qelike" //,
