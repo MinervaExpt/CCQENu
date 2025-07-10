@@ -200,11 +200,11 @@ int main(const int argc, const char *argv[]) {
 
     data_error_bands["cv"] = data_band;
 
+    NuConfig paramsConfig;
     // Selection Criteria
     if (config.IsMember("paramsFile")) {
         std::cout << " configuring cvuniverse parameters" << std::endl;
         std::string paramsfilename = config.GetString("paramsFile");
-        NuConfig paramsConfig;
         paramsConfig.Read(paramsfilename);
         // Print applicable configurables?
         bool printConfigs = 0;
@@ -519,18 +519,25 @@ int main(const int argc, const char *argv[]) {
 
     // dump the json files
 
-  std::string top = config.ToString();
-  TNamed topobj("main",top.c_str());
-  topobj.Write();
-  std::string var = configvar.ToString();
-  TNamed varobj("varsFile",var.c_str());
-  varobj.Write();
-  std::string cuts = cutsConfig.ToString();
-  TNamed cutsobj("cutsFile",cuts.c_str());
-  cutsobj.Write();
-  std::string sam = samplesConfig.ToString();
-  TNamed samobj("samplesFile",sam.c_str());
-  samobj.Write();
+    std::string top = config.ToString();
+    TNamed topobj("main", top.c_str());
+    topobj.Write();
+    std::string var = configvar.ToString();
+    TNamed varobj("varsFile", var.c_str());
+    varobj.Write();
+    std::string cuts = cutsConfig.ToString();
+    TNamed cutsobj("cutsFile", cuts.c_str());
+    cutsobj.Write();
+    std::string sam = samplesConfig.ToString();
+    TNamed samobj("samplesFile", sam.c_str());
+    samobj.Write();
+
+    if (config.IsMember("paramsFile")) {
+        std::string params = paramsConfig.ToString();
+        TNamed paramsobj("paramsFile", params.c_str());
+        paramsobj.Write();
+    }
+
   //std::string git = git::commitHash();
   //TNamed gitobj("gitVersion",git.c_str());
   //gitobj.Write();
