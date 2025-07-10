@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "forplots_EAvail_EAvailNoNonVtxBlobs_recoil_1GeV_50bins_QElikeandblobsamps_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "forplots_EAvail_EAvailNoNonVtxBlobs_recoil_500MeV_25bins_QElikeandblobsamps_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
