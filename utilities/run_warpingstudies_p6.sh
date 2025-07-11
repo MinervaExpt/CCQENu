@@ -12,7 +12,7 @@ export MYWARP=none
 # export MYSAMPLE=QElike
 export MYMODEL=MnvTunev1
 
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/Summer25Collab/eventloopout/ \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/Summer25Collab/eventloopout/recoilstudy \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=EAvailWarpFill_recoilstudy \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=5000   #--sample=${MYSAMPLE} --debug --notimestamp
@@ -21,7 +21,7 @@ export MYWARP=no2p2htune
 # export MYSAMPLE=QElike
 export MYMODEL=MnvTunev1
 
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/Summer25Collab/eventloopout/ \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/Summer25Collab/eventloopout/recoilstudy \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=EAvailWarpFill_recoilstudy \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=5000   #--sample=${MYSAMPLE} --debug --notimestamp
@@ -30,7 +30,7 @@ export MYWARP=none
 # export MYSAMPLE=QElike
 export MYMODEL=MnvTunev2
 
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/Summer25Collab/eventloopout/ \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/Summer25Collab/eventloopout/recoilstudy \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=EAvailWarpFill_recoilstudy \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=5000   #--sample=${MYSAMPLE} --debug --notimestamp
