@@ -12,6 +12,7 @@ int main(const int argc, const char *argv[]) {
     std::string configfilename(pl + ".json");
     NuConfig config;
     config.Read(configfilename);
+    std::string top = config.ToString(); // used later for printing out, moved up here to trip any unset environ errors to avoid crashes at the end of the loop
 
     if (argc > 2) {
         prescale = std::stoi(argv[2]);
@@ -238,11 +239,14 @@ int main(const int argc, const char *argv[]) {
     std::string cutsfilename = config.GetString("cutsFile");
     NuConfig cutsConfig;
     cutsConfig.Read(cutsfilename);
+    std::string cuts = cutsConfig.ToString();  // used later for printing out, moved up here to trip any unset environ errors to avoid crashes at the end of the loop
+
 
     std::string samplesfilename = config.GetString("samplesFile");
     NuConfig samplesConfig;
     std::vector<string> samplesToDo = config.GetStringVector("runsamples");  // get the master list.
     samplesConfig.Read(samplesfilename);
+    std::string sam = samplesConfig.ToString();  // used later for printing out, moved up here to trip any unset environ errors to avoid crashes at the end of the loop
 
     std::vector<CCQENu::Sample> samples;
 
@@ -396,6 +400,7 @@ int main(const int argc, const char *argv[]) {
         std::cout << " no varsFile" << std::endl;
         exit(1);
     }
+    std::string var = configvar.ToString();  
 
     // new way
     std::vector<std::string> vars1D = config.GetStringVector("AnalyzeVariables");
@@ -519,16 +524,17 @@ int main(const int argc, const char *argv[]) {
 
     // dump the json files
 
-    std::string top = config.ToString();
+    // moved the ToStrings further up to trip any unset environ variables before the loop starts
+    // std::string top = config.ToString();
     TNamed topobj("main", top.c_str());
     topobj.Write();
-    std::string var = configvar.ToString();
+    // std::string var = configvar.ToString();
     TNamed varobj("varsFile", var.c_str());
     varobj.Write();
-    std::string cuts = cutsConfig.ToString();
+    // std::string cuts = cutsConfig.ToString();
     TNamed cutsobj("cutsFile", cuts.c_str());
     cutsobj.Write();
-    std::string sam = samplesConfig.ToString();
+    // std::string sam = samplesConfig.ToString();
     TNamed samobj("samplesFile", sam.c_str());
     samobj.Write();
 
