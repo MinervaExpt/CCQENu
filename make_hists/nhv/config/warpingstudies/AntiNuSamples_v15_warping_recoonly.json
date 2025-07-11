@@ -29,7 +29,99 @@
             "qelikenot": "QELikeNot",
         }
     },
-    "QElike_0blob": {
+    "QElike_maxrecoil": {
+        "name": "QElike_maxrecoil",
+        "reco": "QElike_maxrecoil",
+        "phase_space": "phase_space",
+        "signal": ["qelike"],
+        "background": ["qelikenot"],
+        "categories": {
+            "qelike": {
+                // "for": ["selected_reco"]
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    // "truth",
+                    "response"
+                ]
+            },
+            "qelikenot": {
+                "for": ["selected_reco"]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },    
+    "QElike_minrecoil": {
+        "name": "QElike_minrecoil",
+        "reco": "QElike_minrecoil",
+        "phase_space": "phase_space_minEAvail",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                // "for": ["selected_reco"]
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    // "truth",
+                    "response"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco"
+                ]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },
+    "QElike_maxrecoil_hiEAvail": {
+        "name": "QElike_maxrecoil_hiEAvail",
+        "reco": "QElike_maxrecoil_hiEAvail",
+        "phase_space": "phase_space_minEAvail",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                // "for": ["selected_reco"]
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    // "truth",
+                    "response"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco"
+                ]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QELike",
+            "qelikenot": "QELikeNot",
+        }
+    },    "QElike_0blob": {
         "name": "QElike_0blob",
         "reco": "QElike_0blob",
         "phase_space": "phase_space",
