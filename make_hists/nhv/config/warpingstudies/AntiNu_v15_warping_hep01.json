@@ -22,7 +22,7 @@
     "neutralpion"
   ],
   "DoResolution": false,
-  "DoTypes": false,
+  "DoTypes": true,
   "pdg": -14,
   "mcRecoToCSV": false,
   "runsamples": [
