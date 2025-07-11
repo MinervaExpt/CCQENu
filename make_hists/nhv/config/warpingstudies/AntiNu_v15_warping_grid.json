@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "EAvail_recoil_remove1GeVbin_norecoilcut_warpingstudies_20MeVBlobs_baserecoilbranchEAvail_${MYWARP}warp_${MYSAMPLE}_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "warpingstudies_no1GeVrecoilbin_20MeVBlobs_baserecoilbranchEAvail_QElike_maxrecoil_maxrecoil_hiEAvail_${MYWARP}warp_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -26,10 +26,9 @@
   "pdg": -14,
   "mcRecoToCSV": false,
   "runsamples": [ 
-    "${MYSAMPLE}"
-    // "QElike",
-    // "QElike_maxrecoil",
-    // "QElike_maxrecoil_hiEAvail"
+    "QElike",
+    "QElike_maxrecoil",
+    "QElike_maxrecoil_hiEAvail"
     // "QElike_2track"
     // "QElikeNeut"
     // "QElike_0blob",
