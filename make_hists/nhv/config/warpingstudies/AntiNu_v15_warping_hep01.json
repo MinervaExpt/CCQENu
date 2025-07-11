@@ -2,12 +2,12 @@
   "version": 15,
   "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
-  "cutsFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuCuts_v15_blobs.json",
+  "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json",
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "forplots_EAvail_EAvailNoNonVtxBlobs_recoil_500MeV_25bins_QElikeandblobsamps_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "forplots_BlobParentPlots_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -26,11 +26,11 @@
   "pdg": -14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike",
+    "QElike"//,
     // "QElike_2track"
     // "QElikeNeut"
-    "QElike_0blob",
-    "QElike_1blob"
+    // "QElike_0blob",
+    // "QElike_1blob"
     // "QElikeNeutrons"//,
     // "TrackSideband",
     // "LoPionThetaSideband",
@@ -39,6 +39,8 @@
     // "MultipBlobSideband"
   ],
   "AnalyzeVariables": [
+    "NeutCandMCPID",
+    "LeadingIsoBlobsPrimaryMCPID"
     // "NBlobs",
     // "NNeutCands",
     // "NNeutBlobs",
@@ -51,8 +53,8 @@
     // "recoilNoBlobs",
     // "Q2QE" //,
     // "FitQ2QE",
-    "EAvail",
-    "EAvailNoNonVtxBlobs",
+    // "EAvail",
+    // "EAvailNoNonVtxBlobs",
     // "pzmuHD",
     // "ptmuHD",
     // "pmu",
@@ -64,7 +66,7 @@
     // "CalibEAvailWithNeutrons",
     // "EAvailWithNeutronsCalib",
     // "resEAvailWithNeutrons"
-    "recoil" //,
+    // "recoil" //,
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
