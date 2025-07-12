@@ -4,7 +4,6 @@
 # hms 9-10-2023
 
 
-
 from re import L
 import sys,os
 import ROOT
@@ -13,20 +12,22 @@ from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F
 TEST=False
 noData=True  # use this to plot MC only types
 sigtop=True # use this to place signal on top of background
+dotypes=True
 dotuned=False
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
 
 legendfontsize = 0.042
 
 
-
 def CCQECanvas(name,title,xsize=1100,ysize=720):
-    c2 = ROOT.TCanvas(name,title,xsize,ysize)
-    # c2.SetLeftMargin(0.1)
-    c2.SetRightMargin(0.04)
-    c2.SetLeftMargin(0.13)
-    c2.SetTopMargin(0.04)
-    c2.SetBottomMargin(0.14)
+    c2 = ROOT.TCanvas(name,title)
+
+    # c2 = ROOT.TCanvas(name,title,xsize,ysize)
+    # # c2.SetLeftMargin(0.1)
+    # c2.SetRightMargin(0.04)
+    # c2.SetLeftMargin(0.13)
+    # c2.SetTopMargin(0.04)
+    # c2.SetBottomMargin(0.14)
     return c2
 
 def CCQELegend(xlow,ylow,xhigh,yhigh):
@@ -58,40 +59,44 @@ def MakeTitleOnPlot():
 catstodo = [
     # "data",
     "qelike",
-    "chargedpion",
-    "neutralpion",
-    "multipion",
-    "other"
+    "qelikenot",
+    # "chargedpion",
+    # "neutralpion",
+    # "multipion",
+    # "other"
 ]
 
 catsnames = {
     # "data":"data", 
     "qelike":"QElike",
-    "chargedpion":"1#pi^{#pm}",
-    "neutralpion":"1#pi^{0}",
-    "multipion":"N#pi",
-    "other":"Other"
+    "qelikenot":"QElikeNot"
+    # "chargedpion":"1#pi^{#pm}",
+    # "neutralpion":"1#pi^{0}",
+    # "multipion":"N#pi",
+    # "other":"Other"
 }
 
 catscolors = {
-    # "data":ROOT.kBlack, 
-    "qelike":ROOT.kBlue-6,
-    "chargedpion":ROOT.kMagenta-6,
-    "neutralpion":ROOT.kRed-6,
-    "multipion":ROOT.kGreen-6,
-    "other":ROOT.kYellow-6
+    # "data":ROOT.kBlack,
+    "qelike": ROOT.kBlue - 6,
+    "qelikenot": ROOT.kRed - 6,
+    "chargedpion": ROOT.kMagenta - 6,
+    "neutralpion": ROOT.kRed - 6,
+    "multipion": ROOT.kGreen - 6,
+    "other": ROOT.kYellow - 6,
 }
 
 #  These are the vars that fill into bins
 varstodo= [
     "NeutCandMCPID",
-    "NeutCandTopMCPID"
+    # "NeutCandTopMCPID"
+    "LeadingIsoBlobsPrimaryMCPID"
 ]
 samplestodo= [
     "QElike",
-    "QElike0Blob",
-    "QElike1Blob",
-    "QElike2Blob"
+    # "QElike0Blob",
+    # "QElike1Blob",
+    # "QElike2Blob"
 ]
 
 # Used to make the labels. See CVUniverse and variables config for binnning
@@ -172,8 +177,6 @@ groups = {}
 scaleX = ["Q2QE"]
 scaleY = ["recoil","EAvail"]
 
-
-
 # find all the valid histogram and group by keywords
 for k in keys:
     name = k.GetName()
@@ -189,7 +192,7 @@ for k in keys:
     sample = parse[1]
     cat = parse[2]
     variable = parse[3]
-    if "types" in parse[4]:
+    if "types" in parse[4] and not dotypes:
         continue
     if "simulfit" in parse[4]:
         continue
@@ -216,8 +219,10 @@ for k in keys:
 # now that the structure is created, stuff histograms into it after scaling for POT
 for k in keys:
     name = k.GetName()
+    if "___" not in name:
+        continue
     parse = name.split("___")
-    if len(parse) < 5: continue
+    # if len(parse) < 5: continue
     hist = parse[0]
     if hist == "h2D": continue # only 1d
     sample = parse[1]
@@ -228,9 +233,14 @@ for k in keys:
     if cat not in catstodo: continue
     if variable not in varstodo: continue
     if sample not in samplestodo: continue
-    if "reconstructed" not in parse[4]: continue
-    if "types" in parse[4]:
-        continue
+    if not dotypes:
+        if "types" in parse[4]:
+            continue
+        if "reconstructed" not in parse[4]: continue
+    else:
+        if "types" not in parse[4]:
+            continue
+    
     if "simulfit" in parse[4]:
         continue
     if "tuned" not in parse[4] and dotuned and cat!="data":
@@ -240,28 +250,43 @@ for k in keys:
     # these are stacked histos
     h = f.Get(name).Clone()
     if h.GetEntries() <= 0: continue
-    h.SetFillColor(catscolors[cat])
-    h.SetLineColor(catscolors[cat]+1)
-    
-    if "data" in cat:
-        index = 0
-        h = f.Get(name)
-        if h.GetEntries() <= 0: continue
-        # h.Scale(1.,"width")
-        h.Scale(0.001,"width")
-        h.SetMarkerStyle(20)
-        h.SetMarkerSize(1.5)
-    if "data" not in cat:
-        print("scaling hist ",h.GetName())
-        # print("POTscale: ", POTScale)
-        h.Scale(POTScale*0.001,"width") #scale to data
-        # h.Scale(POTScale,"width") #scale to data
-    # if cat in ["chargedpion", "neutralpion", "multipion", "other"]:
-    #     h.SetFillStyle(3244)
-    groups[hist][sample][variable][cat]=h
+    if not dotypes:
+        print("here")
+        h.SetFillColor(catscolors[cat])
+        h.SetLineColor(catscolors[cat]+1)
+        if "data" in cat:
+            index = 0
+            h = f.Get(name)
+            if h.GetEntries() <= 0: continue
+            # h.Scale(1.,"width")
+            h.Scale(0.001,"width")
+            h.SetMarkerStyle(20)
+            h.SetMarkerSize(1.5)
+        if "data" not in cat:
+            print("scaling hist ",h.GetName())
+            # print("POTscale: ", POTScale)
+            h.Scale(POTScale*0.001,"width") #scale to data
+            # h.Scale(POTScale,"width") #scale to data
+        # if cat in ["chargedpion", "neutralpion", "multipion", "other"]:
+        #     h.SetFillStyle(3244)
+        groups[hist][sample][variable][cat]=h
 
-        #print ("data",groups[hist][sample][variable][c])
-    
+    else: # if dotypes:
+        if "types_" in parse[4]:
+            index = int(parse[4].replace("types_",""))
+            h.SetFillColor(colors[index])
+            if cat == "qelikenot":
+                index += 10
+                h.SetFillStyle(3244)
+            h.Scale(0.0001)
+            groups[hist][sample][variable][cat][index]=h
+            h.Print()
+
+            print("here")
+
+
+        # print ("data",groups[hist][sample][variable][c])
+
 # "h___MultiplicitySideband___qelike___pzmu___reconstructed"
 # h___MultipBlobSideband___other___pzmu___reconstructed
 # do the plotting
@@ -275,31 +300,31 @@ template = "%s___%s___%s___%s"
 
 for a_hist in groups.keys():
     if a_hist != "h": continue # no 2D
-    #print ("a is",a)
+    # print ("a is",a)
     for b_sample in groups[a_hist].keys():
         for c_var in groups[a_hist][b_sample].keys():
-        
+
             first = 0
-            leg = CCQELegend(0.6,0.75,1.,0.95)
+            leg = CCQELegend(0.5,0.55,0.9,0.75)
             leg.SetNColumns(2)
             thename = "%s_%s"%(b_sample,c_var)
             thetitle = "%s %s"%(b_sample,c_var)
 
-            cc = CCQECanvas(name,name)
+            cc = CCQECanvas(thename, thename)
 
             # do the data first
             # if c_var in scaleX:
             #     cc.SetLogx()
             # if c_var in scaleY:
             #     cc.SetLogy()
-            
+
             # hist = TH1D(groups[a_hist][b_sample][c_var]["qelike"])
 
             # data = TH1D()
             # if len(groups[a_hist][b_sample][c_var]["data"]) < 1:
             #     print (" no data",a_hist,b_sample,c_var)
             #     continue
-            
+
             # data = TH1D(groups[a_hist][b_sample][c_var]["data"])
             plottitle=samplenames[b_sample]
             if dotuned:
@@ -315,7 +340,7 @@ for a_hist in groups.keys():
 
             # # data.GetXaxis().SetTitle("Recoil in GeV")
             # data.GetXaxis().CenterTitle()
-            # data.GetXaxis().SetTitleSize(0.05)    
+            # data.GetXaxis().SetTitleSize(0.05)
             # data.GetXaxis().SetLabelSize(0.04)
 
             # dmax = data.GetMaximum()
@@ -323,27 +348,46 @@ for a_hist in groups.keys():
             #     dmax = 0.0
             # #data.Draw("PE")
             # if not noData: leg.AddEntry(data,"data","pe")
-            
-            # data.Print()
-            
-            bestorder = list([
-                "other",
-                # "multipion",
-                "neutralpion",
-                "chargedpion",
-                "qelike"
-            ])
 
-            for d_cat in bestorder:
-                if d_cat == "data": continue
-                if first == 0: # make a stack
-                    stack = THStack(name.replace("reconstructed","stack"),"")
-                first+=1
-                h = groups[a_hist][b_sample][c_var][d_cat]
-                stack.Add(h)
-                leg.AddEntry(h,catsnames[d_cat],"f")
+            # data.Print()
+
+            if not dotypes:
+                bestorder = list([
+                    "other",
+                    # "multipion",
+                    "neutralpion",
+                    "chargedpion",
+                    "qelike"
+                ])
+                for d_cat in bestorder:
+                    if d_cat == "data": continue
+                    if first == 0: # make a stack
+                        stack = THStack(name.replace("reconstructed","stack"),"")
+                    first+=1
+                    h = groups[a_hist][b_sample][c_var][d_cat]
+                    stack.Add(h)
+                    leg.AddEntry(h,catsnames[d_cat],"f")
+            else:
+                # bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
+                bestorder = list(["qelikenot","qelike"]).copy()
+                # signal = bestorder[1]
+                # bestorder = bestorder[2:]
+                # bestorder.append(signal)
+                for d_type in bestorder:
+                    if first==0:
+                        stack = THStack(name.replace("types","stack"),"")
+                        first+=1
+                    for index in groups[a_hist][b_sample][c_var][d_type].keys(): #fill the stack
+                        if index == 0:
+                            continue
+                        if index not in groups[a_hist][b_sample][c_var][d_type]:
+                            continue
+
+                        h = groups[a_hist][b_sample][c_var][d_type][index]
+                        stack.Add(h)
+                        leg.AddEntry(h,process[index],'f')
             smax = stack.GetMaximum()
-            #print ("max",smax,dmax)
+            # print ("max",smax,dmax)
             max_multiplier = 1.4
 
             stack.SetTitle("")
@@ -353,11 +397,13 @@ for a_hist in groups.keys():
             stack.GetYaxis().CenterTitle()
             stack.GetYaxis().SetTitleSize(0.05)
             stack.GetYaxis().SetLabelSize(0.05)
-            
+
             for bin in bin_pid.keys():
                 stack.GetXaxis().SetBinLabel(bin, bin_pid[bin])
             stack.GetXaxis().SetTitle("PID of particle reconstructed as blob")
             stack.GetXaxis().CenterTitle()
+            stack.GetXaxis().SetTitleSize(0.05)
+            stack.GetXaxis().SetLabelSize(0.05)
             # if c_var in scaleY:
             #     max_multiplier = 2.0
             #     data.SetMinimum(500.)
@@ -368,7 +414,7 @@ for a_hist in groups.keys():
             # else:
             #     data.SetMaximum(dmax*max_multiplier)
             #     stack.SetMaximum(dmax*max_multiplier)
-            # if not noData: 
+            # if not noData:
             #     data.Draw("PE")
             #     stack.Draw("hist same")
             # else:
@@ -376,14 +422,14 @@ for a_hist in groups.keys():
             #     data.Draw("hist")  # need to this to get the axis titles from data
             #     stack.Draw("hist same")
             #     data.Draw("AXIS same")
-            # if not noData: 
+            # if not noData:
             #     data.Draw("AXIS same")
             #     data.Draw("PE same")
             stack.Draw("hist")
 
             leg.Draw()
             prelim = AddPreliminary()
-            prelim.DrawLatex(0.6,0.72,"MINER#nuA Work In Progress")
+            prelim.DrawLatex(0.5,0.52,"MINER#nuA Work In Progress")
             titleonplot = MakeTitleOnPlot()
             titleonplot.DrawLatex(0.37,0.85,plottitle)
             cc.Draw()
@@ -391,7 +437,5 @@ for a_hist in groups.keys():
             if dotuned:
                 canvas_name = thename+"_FinalStates_tuned"
             cc.Print(os.path.join(outdirname,canvas_name+".png"))
-            
-    
 
 

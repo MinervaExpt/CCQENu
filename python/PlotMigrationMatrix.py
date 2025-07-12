@@ -1,40 +1,89 @@
 import ROOT
 from PlotUtils import MnvH1D, MnvH2D, MnvPlotter
+# import PlotUtils
 import os
 import sys
 from array import array
 
-plotfiletype = "pdf"
-# QElike
-# QElike0Blob
-samples = [
-    "QElike",
-    "QElike_0blob",
-    "QElike_1blob"
-]
-# sampletodo = "QElike"
-# sampletodo = "QElike_0blob"
-# sampletodo = "QElike_1blob"
-
+# Set this to make bins with no content with some content for plotting purposes only (does not affect normalization)
+set_nozero = True
+set_logz = False
+# do_manual = False
+do_manual = False
 categorytodo = "qelike"
 
+
 var_names = {
-    "recoil": "Recoil (GeV)",
-    "EAvail": "E_{Avail} (GeV)",
-    "EAvailWithNeutrons": "E_{Avail} w/ neutrons (GeV)",
-    "EAvailNoNonVtxBlobs": "E_{Avail} (recoil - nonvtx_iso_blobs) (GeV)",
-    "CalibRecoilWithNeutrons": "E_{Avail} w/ neutrons (calibrated) (GeV)",
-    "Q2QE": "Q^{2}_{QE} (GeV^{2})",
-    "ptmu": "p_{T} (GeV)",
-    "pzmu": "p_{||} (GeV)",
-    "ptmuHD": "p_{T} (GeV)",
-    "pzmuHD": "p_{||} (GeV)",
-    "ThetamuDegrees": "#theta_{#mu} (GeV)",
-    "pmu": "p_{#mu} (GeV)"
+    "recoil": {
+        "reco": "Recoil",
+        "truth": "E_{Avail}",
+        "units": "(GeV)"
+    },
+    "EAvail": {
+        "reco": "E_{Avail} (MADBlobs)",
+        "truth": "E_{Avail}",
+        "units": "(GeV)"
+    },
+    "EAvailLeadingBlob": {
+        "reco": "E_{Avail} (Leading MADBlob)",
+        "truth": "E_{Avail}",
+        "units": "(GeV)"
+    },
+    "EAvailNoNonVtxBlobs": {
+        "reco": "E_{Avail} (nonvtx blobs)",
+        "truth": "E_{Avail}",
+        "units": "(GeV)"
+    },
+    "EAvailWithNeutrons": {
+        "reco": "Recoil",
+        "truth": "E_{Avail} w/ neutrons",
+        "units": "(GeV)"
+    },
+    "CalibRecoilWithNeutrons": {
+        "reco": "Recoil (calibrated)",
+        "truth": "E_{Avail} w/ neutrons",
+        "units": "(GeV)"
+    },
+    "Q2QE": {
+        "reco":"Q^{2}_{QE}",
+        "truth":"Q^{2}_{QE}",
+        "units": "(GeV^{2})"
+    },
+    "ptmu": {
+        "reco":"p_{T}",
+        "truth": "p_{T}",
+        "units": "(GeV)"
+    },
+    "pzmu": {
+        "reco":"p_{||}",
+        "truth": "p_{||}",
+        "units": "(GeV)"
+    },
+    "ptmuHD": {
+        "reco":"p_{T}",
+        "truth": "p_{T}",
+        "units": "(GeV)"
+    },
+    "pzmuHD": {
+        "reco":"p_{||}",
+        "truth": "p_{||}",
+        "units": "(GeV)"
+    },
+    "ThetamuDegrees": {
+        "reco":"#theta_{#mu}",
+        "truth":"#theta_{#mu}",
+        "units": "(deg)"
+    },
+    "pmu": {
+        "reco":"p_{#mu}",
+        "truth": "p_{#mu}",
+        "units": "(GeV)"
+    }
 }
 
 def CCQECanvas(name,title,xsize=1000,ysize=1000):
-    c2 = ROOT.TCanvas(name,title,xsize,ysize)
+    c2 = ROOT.TCanvas()
+    # c2 = ROOT.TCanvas(name,title,xsize,ysize)
     # c2.SetLeftMargin(0.1)
     # c2.SetRightMargin(0.04)
     # c2.SetLeftMargin(0.05)
@@ -53,161 +102,206 @@ def main():
     print("Looking at file "+filename1)
     f = ROOT.TFile(filename1, "READONLY")
 
-    plotdir = "/Users/nova/git/plots/eavailneutrontest"
+    base_plotdir = os.environ.get('PLOTSLOC')
+    if base_plotdir != None:
+        plotdir = base_plotdir
+    else:
+        plotdir = "/Users/nova/git/plots/Summer2025MnvWeek/MigrationMatrices/"
     if not os.path.exists(plotdir): os.mkdir(plotdir)
     filebasename1=os.path.basename(filename1)
     # outfilename=filebasename1.replace(".root","_2DPlots")
-    outdirname=os.path.join(plotdir,filebasename1.replace(".root","_migrationplots"))
+    outdirname=os.path.join(plotdir,"Summer2025MnvWeek/MigrationPlots/localtest/",filebasename1.replace(".root","_migrationplots"))
     if not os.path.exists(outdirname): os.mkdir(outdirname)
-    
-    firstprint = True
-    for sampletodo in samples:
-        # Expects CCQENu naming convention
-        print("Looking for hists...")
-        hist_dict = {}
-        histkeys_list = f.GetListOfKeys()
-        foundsample = False
-        for key in histkeys_list:
-            hist_name = key.GetName()
-            if firstprint:
-                print(hist_name)
-            # Get rid of non-hist branches.
-            if hist_name.find("___") == -1:
-                continue
-            parse = hist_name.split('___')
-            # Looking only for 2D hists
-            # if parse[0]!="h":
-            #     continue
-            if parse[1]!= sampletodo:
-                continue
-            if parse[1]==sampletodo:
-                foundsample = True
-            if parse[2]!=categorytodo:
-                continue
-            if "response" not in parse[4]:
-                continue
-            if parse[3] not in hist_dict.keys():
-                hist_dict[parse[3]]={"matrix":None,"reco":None,"truth":None}
 
-            hist = f.Get(hist_name)
-            if "migration" in parse[4]:
-                hist_dict[parse[3]]["matrix"]=hist
-                # hist.Print()
-                continue
-            if "reco" in parse[4]:
-                hist_dict[parse[3]]["reco"]=hist
-                # hist.Print()
-                continue        
-            if "truth" in parse[4]:
-                hist_dict[parse[3]]["truth"]=hist
-                # hist.Print()
-                continue
-        print("Done looking for hists.")
-        firstprint=False
-        if not foundsample:
+    hist_dict = {}
+    print("Looking for hists...")
+    for key in f.GetListOfKeys():
+        hist_name = key.GetName()
+        if "migration" not in hist_name or "noPOTscale" in hist_name:
             continue
-        
-        for var in hist_dict.keys():
-            print("making normd matrix for ", var)
-            binning = [hist_dict[var]["reco"].GetXaxis().GetBinLowEdge(1)]
-            for bin in range(1,hist_dict[var]["reco"].GetNbinsX()+1):
-                binning.append(hist_dict[var]["reco"].GetXaxis().GetBinUpEdge(bin))
-            binning = array('d',binning)
-            norm_matrix = hist_dict[var]["matrix"].Clone()
-            nbinsy = hist_dict[var]["matrix"].GetNbinsY()
-            nbinsx = hist_dict[var]["matrix"].GetNbinsX()
-            print("binning: ", binning)
-            print("binning size: ", len(binning), "\tnbinsx, nbinsy: ",nbinsx," ",nbinsy)
+        print("Found hist ", hist_name)
+        hist_dict[hist_name] = f.Get(hist_name).Clone()
 
-            #now the row normalized migration....
-            if parse[0] not in ["h2D", "hHD"]:
-                # binning = array('d',range(0,nbinsx+1))
-                print("norm matrix")
-                norm_matrix.SetBins(nbinsx,binning,nbinsy,binning)
-                print("out matrix")
-                out_matrix = ROOT.TH2D(norm_matrix.GetName(),norm_matrix.GetTitle(),nbinsx,binning,nbinsy,binning)
-            else: 
-                out_matrix = norm_matrix.Clone()
+    for response_name in hist_dict.keys():
+        print("looking at migration ",response_name)
+        parse = response_name.split("___")
+        sample = parse[1]
+        category = parse[2]
+        var = parse[3]
+        # tuned = ("tuned" in parse[4])
+        tuned_tag = "untuned"
+        if("tuned" in parse[4]):
+            tuned_tag = "tuned"
+            continue
+        if not do_manual:
+            print("in do_mnvplotter")
+            mnv_canvas_title = "Migration Row norm'd, " + sample + "_"+ tuned_tag
+            mnv_canvas = ROOT.TCanvas("norm_canvas_" + response_name, mnv_canvas_title)
+            print("here")
+
+            mnv = MnvPlotter()
+            if set_logz:
+                mnv_canvas.SetLogz()
+            # mnv.SetBlackbodyPalette()
+            # mnv.SetWhiteRainbowPalette()
+            # mnv.SetRedHeatPalette()
+            mnv.SetROOT6Palette(ROOT.kBird)
+
+            hist = hist_dict[response_name].Clone()
+            hist.GetXaxis().CenterTitle()
+            hist.GetYaxis().CenterTitle()
+            text_opt = False
+            if hist_dict[response_name].GetNbinsX()>=20:
+                text_opt = True
+            mnv.DrawNormalizedMigrationHistogram(
+                hist, True, False, False, text_opt
+            )
+            raw_outname = os.path.join(outdirname,"mnv_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
+
+            mnv_canvas.Print(raw_outname)
+        if do_manual:
+            raw_matrix_name = response_name+"_unnormed"
+            norm_matrix_name = response_name+"_rownormed"
+
+            norm_matrix = hist_dict[response_name].Clone(norm_matrix_name)
+            raw_matrix = norm_matrix.Clone(raw_matrix_name)
+            reco_hist_name = response_name.replace("migration","reco")
+            true_hist_name = response_name.replace("migration","truth")
+            if "noPOTscale" in response_name:
+                continue
+                # reco_hist_name = response_name.replace("migration_noPOTscale","reco")
+                # true_hist_name = response_name.replace("migration_noPOTscale","truth")
+            # print("\t",reco_hist_name,"\t",true_hist_name)
+
+            reco_hist = f.Get(reco_hist_name)
+            true_hist = f.Get(true_hist_name)
+
+            nbinsy = hist_dict[response_name].GetNbinsY()
+            nbinsx = hist_dict[response_name].GetNbinsX()
+            # If 1D, use the binning of the hists
+            if parse[0] not in ["h2D","hHD"]:
+                reco_binning = [reco_hist.GetXaxis().GetBinLowEdge(1)]
+                true_binning = [true_hist.GetXaxis().GetBinLowEdge(1)]
+
+                for bin in range(1,reco_hist.GetNbinsX()+1):
+                    reco_binning.append(reco_hist.GetXaxis().GetBinUpEdge(bin))
+                for bin in range(1,true_hist.GetNbinsX()+1):
+                    true_binning.append(true_hist.GetXaxis().GetBinUpEdge(bin))
+                reco_binning = array('d', reco_binning)
+                true_binning = array('d',true_binning)
+                raw_matrix.SetBins(nbinsx, reco_binning, nbinsy, true_binning)
+
+            norm_matrix = raw_matrix.Clone(norm_matrix_name)
+
             for i in range(1,nbinsy+1):
-                row_norm = 0.0
+                row_norm = 0.
                 for j in range(1,nbinsx+1):
-                    row_norm += hist_dict[var]["matrix"].GetBinContent(j,i)
-                # for j in range(0,nbinsy+1):
+                    row_norm += hist_dict[response_name].GetBinContent(j,i)
                 for j in range(1,nbinsx+1):
                     if row_norm!=0.0:
                         _cont = norm_matrix.GetBinContent(j,i)
-                        # norm_matrix.SetBinContent(j,i,_cont/row_norm)
-                        # out_matrix.SetBinContent(j,i,0.5*_cont/row_norm)
-                        out_matrix.SetBinContent(j,i,_cont/row_norm)
-            # for i in range(0,nbinsx+1):
-            #     row_norm = 0.0
-            #     for j in range(0,nbinsy+1):
-            #         row_norm += hist_dict["matrix"].GetBinContent(i,j)
-            #     # for j in range(0,nbinsy+1):
-            #     for j in range(0,nbinsy+1):
-            #         _cont = norm_matrix.GetBinContent(i,j)
-            #         if row_norm!=0.0:
-            #             # norm_matrix.SetBinContent(j,i,_cont/row_norm)
-            #             out_matrix.SetBinContent(i,j,_cont/row_norm)
-            # out_matrix.Rebin2D()
+                        if _cont == 0:# and set_nozero:
+                            _cont == 1
+                        norm_matrix.SetBinContent(j,i,_cont/row_norm)
+                        raw_matrix.SetBinContent(j,i,_cont)
+            print("\tfinished making matrices, now plotting")
+
+            # Make the hists pretty
+            # norm_matrix.SetMaximum(1.0)
+
+            norm_canvas_title = "Migration Row norm'd, " + sample
+            raw_canvas_title = "Migration, no norm, " + sample
+
+            x_title = "Reco"
+            y_title = "True"
+            if parse[0] in ["h2D","hHD"]:
+                var_parse = var.split("_")
+                for var in var_parse:
+                    x_title+= " "+ var_names[var]["reco"]
+                    y_title+= " "+ var_names[var]["truth"]
+                norm_matrix.GetXaxis().SetTitle(x_title)
+                norm_matrix.GetYaxis().SetTitle(y_title)
+                raw_matrix.GetXaxis().SetTitle(x_title)
+                raw_matrix.GetYaxis().SetTitle(y_title)
+
+            else:
+                # norm_matrix.SetMaximum(1.0)
+                norm_matrix.GetXaxis().SetTitle(x_title+" "+var_names[var]["reco"]+" "+var_names[var]["units"])
+                norm_matrix.GetYaxis().SetTitle(y_title+" "+var_names[var]["truth"]+" "+var_names[var]["units"])
+                raw_matrix.GetXaxis().SetTitle(x_title+" "+var_names[var]["reco"]+" "+var_names[var]["units"])
+                raw_matrix.GetYaxis().SetTitle(y_title+" "+var_names[var]["truth"]+" "+var_names[var]["units"])
+            norm_matrix.GetXaxis().CenterTitle()
+            norm_matrix.GetYaxis().CenterTitle()
+            raw_matrix.GetXaxis().CenterTitle()
+            raw_matrix.GetYaxis().CenterTitle()
 
             mnv = MnvPlotter()
 
             # mnv.SetBlackbodyPalette()
-            mnv.SetRedHeatPalette()
-            # mnv.SetBlackbodyPalette()
+            # mnv.SetWhiteRainbowPalette()
+            mnv.SetROOT6Palette(ROOT.kBird)
+            # mnv.SetRedHeatPalette()
+            # mnv.SetWhiteRainbowPalette()
+            norm_matrix.SetTitle(norm_canvas_title)
+            raw_matrix.SetTitle(raw_canvas_title)
+
+            # This is used for hyperdim migrations which can be big
             pix = 1500
             if nbinsx*1.5 > 1000:
                 print("nbinsx: ", nbinsx )
                 pix = 5000
-            canvas = ROOT.TCanvas("c","c",pix,round(1.3*pix))
 
-            canvas.cd()
-            canvas = CCQECanvas("c","c")
-            # norm_matrix.SetMaximum(1.0)
-            # norm_matrix.GetYaxis().SetTitle("True E_{Avail} bins")
-            # norm_matrix.GetXaxis().SetTitle("Reconstructed Recoil bins")
-            # norm_matrix.Draw("colz text")
-
-            # out_matrix.SetMaximum(1.0)
-
-            hist_name= hist_dict[var]["matrix"].GetName()
-            parse = hist_name.split('___')
-            canvas.SetTitle(str("Migration Row norm'd, "+sampletodo))
-            # canvas.SetTitleSize(20.0)
+            # Do the norm'd ones first
+            # if parse[0] != "hHD":
+            #     norm_canvas = CCQECanvas("norm_canvas_"+response_name, norm_canvas_title)
+            # else:
+            #     norm_canvas = ROOT.TCanvas("norm_canvas_"+response_name, norm_canvas_title,pix,round(1.3*pix))
+            norm_canvas = ROOT.TCanvas("norm_canvas_"+response_name, norm_canvas_title)
+            norm_canvas.cd()
 
             if parse[0] in ["h2D","hHD"]:
-                out_matrix.Draw("colz") 
+                norm_canvas.cd()
+                norm_matrix.Draw("colz")
             else:
-                out_matrix.SetMaximum(1.0)
-                out_matrix.GetYaxis().SetTitle("True E_{Avail}")
-                out_matrix.GetXaxis().SetTitle("Reconstructed "+var_names[var])
                 if nbinsx>=20:
-                    out_matrix.Draw("colz")
+                    norm_canvas.cd()
+                    norm_matrix.Draw("colz")
                 else:
                     ROOT.gStyle.SetPaintTextFormat("0.2f")
-                    out_matrix.Draw("colz text") 
+                    norm_canvas.cd()
+                    norm_matrix.Draw("colz text")
 
-            # canvas.SetLogx()
-            # canvas.SetLogy()
-            # canvas.SetLogz()
-            if not os.path.exists(outdirname): os.mkdir(outdirname)
+            if "Q2QE" in var:
+                norm_canvas.SetLogx()
+                norm_canvas.SetLogy()        
+            if set_logz:
+                norm_canvas.SetLogz()
 
-            canvas.Print(outdirname+"/plotmigration_"+sampletodo+"_"+var+".png")
-            # canvas.Print("plotresponse_"+outfilename+".png")
+            norm_outname = os.path.join(outdirname,"normd_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
+            norm_canvas.Print(norm_outname)
 
-            # canvas.Print("plotmigration_"+hist_dict["matrix"].GetName()+".png")
+            # Do the raw ones now
+            # mnv.SetROOT6Palette(ROOT.kNeon)
 
-            # print("Making plots...")
-            # for key in hist_dict.keys():
-            #     hist = hist_dict[key]["hist"]
-            #     xvar = hist_dict[key]["xvar"]
-            #     yvar = hist_dict[key]["yvar"]
-            #     Plot2D(canvas,hist,xvar,yvar)
-            # print("Done making plots.")
-            
-            # print("Writing hists to file "+outfilename+".pdf")
-            # canvas.Print(str(outfilename+".pdf]"), "pdf")
+            # if parse[0] != "hHD":
+            #     raw_canvas = CCQECanvas("raw_canvas_"+response_name, raw_canvas_title)
+            # else:
+            #     raw_canvas = ROOT.TCanvas("raw_canvas_"+response_name, raw_canvas_title,pix,round(1.3*pix))
+            raw_canvas = ROOT.TCanvas("raw_canvas_"+response_name, raw_canvas_title)
+
+            raw_canvas.cd()
+            raw_matrix.Draw("colz")
+
+            if "Q2QE" in var:
+                raw_canvas.SetLogx()
+                raw_canvas.SetLogy()        
+            if set_logz:
+                raw_canvas.SetLogz()
+            # raw_canvas.SetLogz()
+
+            raw_outname = os.path.join(outdirname,"raw_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
+            raw_canvas.Print(raw_outname)
+
     print("All done! uwu")
 
 
