@@ -366,7 +366,7 @@
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
     {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"},
     // {"name": "TruthIsCCQELike", "equals": 1, "variable": "TruthIsCCQELike", "protonKECutMeV": 10000000.0},
-    {"name": "MinEAvail","min": 0.01, "variable": "TrueEAvailGeV"}
+    {"name": "MinEAvail","min": 0.0015, "variable": "TrueEAvailGeV"}
   ],
   "qelike_np": [
     {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
@@ -379,7 +379,7 @@
   ],
   "qelikenot_minEAvail": [
     {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"},
-    {"name": "MinEAvail","min": 0.01, "variable": "TrueEAvailGeV"}
+    {"name": "MinEAvail","min": 0.0015, "variable": "TrueEAvailGeV"}
     // {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike"}//, "protonKECutMeV": 120.0}
   ],
   "qelikenot_np": [
