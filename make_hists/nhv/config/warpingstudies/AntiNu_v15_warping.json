@@ -1,28 +1,35 @@
 {
-  "version":15,  
+  "version": 15,
   "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
-  "cutsFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuCuts_v15_blobs.json",
-  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/blobsamples/AntiNuSamples_v15_blobs_FS.json",
+  "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_local.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "recoil_eavailwithneutrons_coarsebins_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "forplots_EAvail_variations_migration_20MeVblobs_coarsebins_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
-  "prescale":999,
-  "playlist":"minervame5A",
-  "MinervaModel":"${MYMODEL}", 
-  "recoName":"MasterAnaDev",
-  "tunedmc":"tuned", 
+  "prescale": 999,
+  "playlist": "${MYPLAYLIST}",
+  "MinervaModel": "${MYMODEL}",
+  "recoName": "MasterAnaDev",
+  "tunedmc": "both",
   "warpedmc": "none",
-  "closure":0,
-  "TuneCategories":["qelike", "chargedpion","neutralpion"], 
+  "closure": 0,
+  "TuneCategories": [
+    "qelike",
+    "chargedpion",
+    "neutralpion"
+  ],
   "DoResolution": false,
   "DoTypes": false,
-  "pdg":-14,
+  "pdg": -14,
   "mcRecoToCSV": false,
   "runsamples": [
     "QElike"//,
+    // "QElike_maxrecoil"//,
+    // "QElike_maxrecoil_hiEAvail",
+    // "QElike_hiEAvail"
     // "QElikeNeut"
     // "QElike_0blob",
     // "QElike_1blob"
@@ -45,7 +52,9 @@
     // "recoilNoBlobs",
     // "Q2QE",
     // "FitQ2QE",
-    // "EAvail",
+    "EAvail",
+    "EAvailNoNonVtxBlobs",
+    "EAvailLeadingBlob",
     // "pzmuHD",
     // "ptmuHD",
     // "pmu",
@@ -53,7 +62,7 @@
     // "CosThetamu",
     // "TotalNeutBlobE"
     // "EAvailWiggled"
-    "EAvailWithNeutrons",
+    // "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"
     "recoil"//,
     // "recoilQE"
