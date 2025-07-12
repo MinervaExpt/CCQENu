@@ -1,0 +1,1044 @@
+{
+  "Comments": [
+    "4-4-2023 added analysistype to HyperD vars",
+    "2-13-2023 add multidim options",
+    "10-9-2022 reproduce PRD",
+    "7-5-2022 change to Amit's binning,Q2 and pzmu change",
+    "6-5-2022 change the zstart cut to include the start",
+    "add log10recoil"
+  ],
+  "HyperD": {
+    "pmu_CosThetamu_recoil": {
+      "name": "pmu_CosThetamu_recoil",
+      "vars": [
+        "pmu",
+        "CosThetamu",
+        "recoil"
+      ],
+      "analysistype": 1
+    },
+    "pmu_ThetamuDegrees_recoil": {
+      "name": "pmu_ThetamuDegrees_recoil",
+      "vars": [
+        "pmu",
+        "ThetamuDegrees",
+        "recoil"
+      ],
+      "analysistype": 1
+    },
+    "pzmu_ptmu_EAvail": {
+      "name": "pzmu_ptmu_EAvail",
+      "vars": [
+        "pzmu",
+        "ptmu",
+        "EAvail"
+      ],
+      "analysistype": 1
+    },
+    "pzmu_ptmu_recoil": {
+      "name": "pzmu_ptmu_recoil",
+      "vars": [
+        // "pzmuHD",
+        // "ptmuHD",
+        // "recoil"
+        "pzmu",
+        "ptmu",
+        "recoil"
+      ],
+      "analysistype": 1
+    },
+    "recoil_ptmu_pzmu":{
+      "name": "recoil_ptmu_pzmu",
+      "vars": [
+        "recoilHD",
+        "ptmuHD",
+        "pzmuHD"
+      ]
+    },
+    "ptmu_pzmu_recoil": {
+      "name": "ptmu_pzmu_recoil",
+      "vars": [
+        "ptmuHD",
+        "pzmuHD",
+        "recoilHD"
+      ]
+    }
+    // "pzmu_ptmu_recoil_k2d": {
+    //   "name": "pzmu_ptmu_recoil",
+    //   "vars": [
+    //     "pzmu",
+    //     "ptmu",
+    //     "recoil"
+    //   ],
+    //   "analysistype": 0
+    // }
+  },
+  "2D": {
+    "XVertex_YVertex": {
+      "name": "XVertex_YVertex",
+      "xvar": "XVertex",
+      "yvar": "YVertex"
+    },
+    "ApothemX_ApothemY": {
+      "name": "ApothemX_ApothemY",
+      "xvar": "ApothemX",
+      "yvar": "ApothemY"
+    },
+    "FitQ2QE_recoil": {
+      "name": "FitQ2QE_recoil",
+      "xvar": "FitQ2QE",
+      "yvar": "recoil"
+    },
+    "FitQ2QE_Fitrecoil": {
+      "name": "FitQ2QE_Fitrecoil",
+      "xvar": "FitQ2QE",
+      "yvar": "Fitrecoil"
+    },
+    "pzmu_ptmu": {
+      "name": "pzmu_ptmu",
+      "xvar": "pzmu",
+      "yvar": "ptmu"
+    },
+    "pzmu_Q2QE": {
+      "name": "pzmu_Q2QE",
+      "xvar": "pzmu",
+      "yvar": "Q2QE"
+    },
+    "EnuCCQE_Enu": {
+      "name": "EnuCCQE_Enu",
+      "xvar": "EnuCCQE",
+      "yvar": "Enu"
+    },
+    "EnuCCQE_Q2QE": {
+      "name": "EnuCCQE_Q2QE",
+      "xvar": "EnuCCQE",
+      "yvar": "Q2QE"
+    },
+    "Q2QE_recoil": {
+      "name": "Q2QE_recoil",
+      "xvar": "Q2QE",
+      "yvar": "recoil"
+    },
+    "Q2QE_Log10recoil": {
+      "name": "Q2QE_Log10recoil",
+      "xvar": "Q2QE",
+      "yvar": "Log10recoil"
+    },
+    "EnuCCQE_ThetamuDegrees": {
+      "name": "EnuCCQE_ThetamuDegrees",
+      "xvar": "EnuCCQE",
+      "yvar": "ThetamuDegrees"
+    },
+    "pmu_ThetamuDegrees": {
+      "name": "pmu_ThetamuDegrees",
+      "xvar": "pmu",
+      "yvar": "ThetamuDegrees"
+    },
+    "Q2QE_PrimaryProtonScore": {
+      "name": "Q2QE_PrimaryProtonScore",
+      "xvar": "Q2QE",
+      "yvar": "PrimaryProtonScore"
+    },
+    "Q2QE_PrimaryProtonScore1": {
+      "name": "Q2QE_PrimaryProtonScore1",
+      "xvar": "Q2QE",
+      "yvar": "PrimaryProtonScore1"
+    },
+    "PionAngle_ThetamuDegrees": {
+      "name": "PionAngle_ThetamuDegrees",
+      "xvar": "PionAngle",
+      "yvar": "ThetamuDegrees"
+    },
+    "Multiplicty_NumberOfProtonCandidates": {
+      "name": "Multiplicty_NumberOfProtonCandidates",
+      "xvar": "Multiplicity",
+      "yvar": "NumberOfProtonCandidates"
+    },
+    "recoil_EAvail": {
+      "name": "recoil_EAvail",
+      "xvar": "recoil",
+      "yvar": "EAvail"
+    },
+    "NBlobs_NNeutCands": {
+      "name": "NBlobs_NNeutCands",
+      "xvar": "NBlobs",
+      "yvar": "NNeutCands"
+    },
+    "NBlobs_NNeutBlobs": {
+      "name": "NBlobs_NNeutBlobs",
+      "xvar": "NBlobs",
+      "yvar": "NNeutBlobs"
+    },
+    "NBlobs_NNonVtxIsoBlobs": {
+      "name": "NBlobs_NNonVtxIsoBlobs",
+      "xvar": "NBlobs",
+      "yvar": "NNonVtxIsoBlobs"
+    },
+    "NBlobs_NNonVtxIsoBlobsAll": {
+      "name": "NBlobs_NNonVtxIsoBlobsAll",
+      "xvar": "NBlobs",
+      "yvar": "NNonVtxIsoBlobsAll"
+    },
+    "recoil_ptmu": {
+      "name": "recoil_ptmu",
+      "xvar": "recoil",
+      "yvar": "ptmu"
+    },
+    "EAvail_ptmu": {
+      "name": "EAvail_ptmu",
+      "xvar": "EAvail",
+      "yvar": "ptmu"
+    },
+    "EAvail_EAvailNoNonVtxBlobs": {
+      "name": "EAvail_EAvailNoNonVtxBlobs",
+      "xvar": "EAvail",
+      "yvar": "EAvailNoNonVtxBlobs"
+    },
+    "EAvailNoNonVtxBlobs_ptmu": {
+      "name": "EAvailNoNonVtxBlobs_ptmu",
+      "xvar": "EAvailNoNonVtxBlobs",
+      "yvar": "ptmu"
+    }
+  },
+  "1D": {
+    "recoilHD": {
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueRecoilEnergyGeV",
+      "name": "recoilHD",
+      "title": "Recoil in GeV",
+      "nbins": 10,
+      "min": 0.0,
+      "max": 0.5,
+      "for": [
+        "data",
+        "selected_reco"
+      ],
+      "fluxnorm": false
+    },
+    "ptmuHD": {
+      "reco": "PperpMuGeV",
+      "true": "TruePperpMuGeV",
+      "name": "ptmuHD",
+      "title": "muon p_{T} (GeV/c)",
+            "bins": [
+              0,
+              0.075,
+              0.15,
+              0.25,
+              0.325,
+              0.4,
+              0.475,
+              0.55,
+              0.7,
+              0.85,
+              // 1,
+              1.25,
+              // 1.5,
+              2.5
+            ],
+      // "bins":[0,0.1,0.3,0.7,1.25,2.5],
+      "fluxnorm": false
+    },
+    "pzmuHD": {
+      "reco": "PparMuGeV",
+      "true": "TruePparMuGeV",
+      "name": "pzmuHD",
+      "title": "muon p_{||} (GeV/c)",
+            "bins": [
+              1.5,
+              // 2,
+              2.5,
+              // 3,
+              3.5,
+              // 4,
+              4.5,
+              5,
+              5.5,
+              6,
+              7,
+              // 8,
+              // 9,
+              10,
+              15
+            ],
+      // "bins": [1.5, 3, 6, 10, 15],
+      "fluxnorm": false
+    },
+    "EnuCCQE": {
+      "reco": "EnuCCQEGeV",
+      "true": "TrueEnuCCQEGeV",
+      "name": "EnuCCQE",
+      "title": "E_{#nu}_{QE} (GeV)",
+      "bins": [1.5, 2, 2.5,
+        3,
+        3.5,
+        4,
+        4.5,
+        5,
+        5.5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        15
+      ],
+      "fluxnorm": 1
+    },
+    "Enu": {
+      "reco": "EnuCCQEGeV",
+      "true": "TrueEnuGeV",
+      "name": "Enu",
+      "title": "E_{#nu} (GeV)",
+      "bins": [
+        1.5,
+        2,
+        2.5,
+        3,
+        3.5,
+        4,
+        4.5,
+        5,
+        5.5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        15
+      ],
+      "fluxnorm": 1
+    },
+    "EnuHad": {
+      "reco": "EnuHadGeV",
+      "true": "TrueEnuGeV",
+      "name": "EnuHad",
+      "title": "E_{#nu}_{hadronic} (GeV)",
+      "bins": [
+        1.5,
+        2,
+        2.5,
+        3,
+        3.5,
+        4,
+        4.5,
+        5,
+        5.5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        15
+      ],
+      "fluxnorm": 1
+    },
+    "total": {
+      "reco": "EnuCCQEGeV",
+      "true": "TrueEnuCCQEGeV",
+      "name": "total",
+      "title": "total for Enu from 2 to 15 GeV",
+      "bins": [
+        2.0,
+        15.0
+      ],
+      "fluxnorm": 0
+    },
+    "ptmu": {
+      "reco": "PperpMuGeV",
+      "true": "TruePperpMuGeV",
+      "name": "ptmu",
+      "title": "muon p_{T} (GeV/c)",
+      "bins": [
+        0,
+        0.075,
+        0.15,
+        0.25,
+        0.325,
+        0.4,
+        0.475,
+        0.55,
+        0.7,
+        0.85,
+        1,
+        1.25,
+        1.5,
+        2.5
+      ],
+      "fluxnorm": false
+    },
+    "pzmu": {
+      "reco": "PparMuGeV",
+      "true": "TruePparMuGeV",
+      "name": "pzmu",
+      "title": "muon p_{||} (GeV/c)",
+      "bins": [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 7, 8, 9, 10, 15],
+      "fluxnorm": false
+    },
+    "pmu": {
+      "reco": "PmuGeV",
+      "true": "TruePmuGeV",
+      "name": "pmu",
+      "title": "muon p (GeV/c)",
+      "bins": [
+        1.5,
+        // 2,
+        2.5,
+        // 3,
+        3.5,
+        // 4,
+        4.5,
+        // 5,
+        5.5,
+        // 6,
+        7,
+        // 8,
+        9,
+        // 10,
+        15
+      ],
+      "fluxnorm": false
+    },
+    "Q2QE": {
+      "reco": "Q2QEGeV",
+      "true": "TrueQ2QEGeV",
+      "name": "Q2QE",
+      "title": "Q^{2} (QE)(GeV^{2})",
+      "bins": [
+        0.001,
+        0.0125,
+        0.025,
+        0.05,
+        0.1,
+        0.2,
+        0.4,
+        0.8,
+        1.6,
+        4.0
+      ],
+      "fluxnorm": false
+    },
+    "FitQ2QE": {
+      // "dofitFill": true,
+      "reco": "Q2QEGeV",
+      "true": "TrueQ2QEGeV",
+      "name": "Q2QE",
+      "title": "Q^{2} (QE)(GeV^{2})",
+      // "bins": [
+      //   0.001,
+      //   0.0125,
+      //   0.025,
+      //   0.05,
+      //   0.1,
+      //   0.2,
+      //   0.4,
+      //   0.8,
+      //   1.6,
+      //   4.0
+      // ],
+      "bins": [
+        0.001,
+        0.0111,
+        0.0333,
+        0.1,
+        0.3,
+        0.9,
+        // 1.8,
+        4.0
+      ],
+      // "bins": [
+      //   0.001,
+      //   0.0125,
+      //   0.05,
+      //   0.2,
+      //   0.8,
+      //   4
+      // ],
+      "fluxnorm": false
+    },
+    "recoil": {
+      // "dofitFill": true,
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueEAvailGeV",
+      "name": "recoil",
+      "title": "Recoil in GeV",
+      "nbins": 25,
+      "min": 0,
+      "max": 1.0,
+      // "bins": [
+      //   0.0,
+      //   // 0.025, // for finer bin
+      //   0.05,
+      //   0.10,
+      //   0.15,
+      //   // 0.225, // for finer bin
+      //   0.25,
+      //   // 0.30,
+      //   0.35,
+      //   0.50//,
+      //   // 1.0
+      // ],
+      // "for": [
+      //   "data",
+      //   "selected_reco"
+      // ],
+      "fluxnorm": false
+    },
+    "Fitrecoil": {
+      "dofitFill": true,
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueEAvailGeV",
+      "name": "recoil",
+      "title": "Recoil in GeV",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 0.5,
+      // "bins": [
+      //   0.0,
+      //   0.05,
+      //   0.10,
+      //   0.15,
+      //   // 0.25,
+      //   0.30,
+      //   // 0.35,
+      //   0.50
+      // ],
+      // "for": [
+      //   "data",
+      //   "selected_reco"
+      // ],
+      "fluxnorm": false
+    },
+    "VertexEnergy": {
+      "reco": "VertexEnergy",
+      "true": "",
+      "name": "vertex energy",
+      "title": "Vertex Energy in GeV",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 100.,
+      "fluxnorm": false
+    },
+    "recoilQE": {
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueQ0QEGeV",
+      "name": "recoil, true q0qe",
+      "title": "RecoilQE in GeV",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 0.5,
+      // "for": [
+      //   "data",
+      //   "selected_reco"
+      // ],
+      "fluxnorm": false
+    },
+    "recoilNoBlobs": {
+      "reco": "RecoilEnergyMinusNeutBlobsGeV",
+      "true": "TrueEAvailGeV",
+      "name": "recoilNoBlobs",
+      "title": "recoil without 3d blobs or E_{Avail} in GeV",
+      // "nbins": 208,
+      // "min": -0.02,
+      // "max": 0.5,
+      "bins": [
+        -0.0025,
+        0.0025,
+        0.005,
+        0.0075,
+        0.01,
+        0.0125,
+        0.015,
+        0.0375,
+        0.085,
+        0.1725,
+        0.5
+      ],      
+      "fluxnorm": false
+    },
+    "EAvail": {
+      "reco": "EAvailGeV",
+      "true": "TrueEAvailGeV",
+      "name": "EAvail",
+      "title": "E_{Available} in GeV",
+      "nbins": 25,
+      "min": 0,
+      "max": 1.0,
+      // "bins": [
+      //   0.0,
+      //   // 0.025, // for finer bin
+      //   0.05,
+      //   0.10,
+      //   0.15,
+      //   // 0.225, // for finer bin
+      //   0.25,
+      //   // 0.30,
+      //   0.35,
+      //   0.50//,
+      //   // 1.0
+      // ],
+      "fluxnorm": false
+    },
+    "EAvailNoNonVtxBlobs": {
+      "reco": "EAvailNoNonVtxBlobsGeV",
+      "true": "TrueEAvailGeV",
+      "name": "EAvailNoNonVtxBlobs",
+      "title": "E_{Available} in GeV nonvtx_iso_blobs",
+      "nbins": 25,
+      "min": 0,
+      "max": 1.0,
+      // "bins": [
+      //   0.0,
+      //   // 0.025, // for finer bin
+      //   0.05,
+      //   0.10,
+      //   0.15,
+      //   // 0.225, // for finer bin
+      //   0.25,
+      //   // 0.30,
+      //   0.35,
+      //   0.50//,
+      //   // 1.0
+      // ],
+      "fluxnorm": false
+    },
+    "TotalNeutBlobE": {
+      "reco": "TotNeutBlobEGeV",
+      "true": "TotNeutBlobEGeV",
+      "name": "TotalNeutBlobE",
+      "title": "Total Neutron Blob Energy",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 0.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvailOffset": {
+      "reco": "OffsetRecoilEnergyGeV",
+      "true": "TrueEAvailGeV",
+      "name": "EAvailOffset",
+      "title": "E_{Available} (reco Offset) in GeV",
+      // "nbins": 208,
+      // "min": -0.02,
+      // "max": 0.5,
+      "bins": [
+        -0.0025,
+        0.0,
+        0.00001,
+        0.0025,
+        0.005,
+        0.01,
+        0.015,
+        0.0375,
+        0.085,
+        0.1725,
+        0.5
+      ],
+      "fluxnorm": false
+    },
+    "CalibEAvailWithNeutrons": {
+      "reco": "CalibRecoilEnergyGeV",
+      "true": "TrueEAvailWithNeutronsGeV",
+      "name": "CalibRecoilWithNeutrons",
+      "title": "E_{Available} + neutrons in GeV",
+      "nbins": 25,
+      "min": 0,
+      "max": 1.0,
+      // "bins": [
+      //   0.0,
+      //   // 0.025, // for finer bin
+      //   0.05,
+      //   0.10,
+      //   0.15,
+      //   // 0.225, // for finer bin
+      //   0.25,
+      //   // 0.30,
+      //   0.35,
+      //   0.50//,
+      //   // 1.0
+      // ],
+      "fluxnorm": false
+    },
+    "EAvailWithNeutrons": {
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueEAvailWithNeutronsGeV",
+      "name": "EAvailWithNeutrons",
+      "title": "E_{Available} + neutrons in GeV",
+      "nbins": 25,
+      "min": 0,
+      "max": 1.0,
+      // "bins": [
+      //   0.0,
+      //   // 0.025, // for finer bin
+      //   0.05,
+      //   0.10,
+      //   0.15,
+      //   // 0.225, // for finer bin
+      //   0.25,
+      //   // 0.30,
+      //   0.35,
+      //   0.50//,
+      //   // 1.0
+      // ],
+      "fluxnorm": false
+    },
+    "EAvailWiggled": {
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueEAvailWiggledGeV",
+      "name": "EAvailWiggled",
+      "title": "E_{Available} or recoil in GeV",
+      "nbins": 26,
+      "min": -0.02,
+      "max": 0.5,
+      // "bins": [
+      //   0.0,
+      //   // 0.0000000000001,
+      //   0.002,
+      //   0.005,
+      //   0.0125,
+      //   0.031,
+      //   0.075,
+      //   0.2,
+      //   0.16,
+      //   0.5
+      // ],
+      "fluxnorm": false
+    },
+    "resEAvail": {
+      "reco": "EAvailResolutionGeV",
+      "true": "EAvailResolutionGeV",
+      "name": "resEAvail",
+      "title": "E_{Available} in GeV",
+      "nbins": 50,
+      "min": -0.1,
+      "max": 0.1,
+      "fluxnorm": false,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "resEAvailWithNeutrons": {
+      "reco": "EAvailWithNeutronsResolutionGeV",
+      "true": "EAvailWithNeutronsResolutionGeV",
+      "name": "resEAvailWithNeutrons",
+      "title": "E_{Available} + nuetrons in GeV",
+      "nbins": 50,
+      "min": -0.5,
+      "max": 0.5,
+      "fluxnorm": false,
+      "for": [
+        "selected_reco"
+      ]
+    },    
+    "Log10recoil": {
+      "reco": "Log10RecoilEnergyGeV",
+      "true": "TrueLog10RecoilEnergyGeV",
+      "name": "Log10recoil",
+      "title": "Log10Recoil in GeV",
+      "nbins": 24,
+      "min": -3,
+      "max": 0.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ],
+      "fluxnorm": false
+    },
+    "NeutCandMCPID": {
+      "reco": "NeutCandMCPID",
+      "true": "NeutCandMCPID",
+      "name": "NeutCandMCPID",
+      "title": "Blob parent PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "NeutCandTopMCPID": {
+      "reco": "NeutCandTopMCPID",
+      "true": "NeutCandTopMCPID",
+      "name": "NeutCandTopMCPID",
+      "title": "Blob parent Top PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },  
+    "LeadingIsoBlobsPrimaryMCPID": {
+      "reco": "LeadingIsoBlobsPrimaryMCPID",
+      "true": "LeadingIsoBlobsPrimaryMCPID",
+      "name": "LeadingIsoBlobsPrimaryMCPID",
+      "title": "Leading NonvtxIsoBlob primary parent PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecondIsoBlobsPrimaryMCPID": {
+      "reco": "SecondIsoBlobsPrimaryMCPID",
+      "true": "SecondIsoBlobsPrimaryMCPID",
+      "name": "SecondIsoBlobsPrimaryMCPID",
+      "title": "Second NonvtxIsoBlob primary parent PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "ThetamuDegrees": {
+      "reco": "ThetamuDegrees",
+      "true": "TrueThetamuDegrees",
+      "name": "ThetamuDegrees",
+      "title": "theta_mu (degrees)",
+      "nbins": 10,
+      "min":0.0,
+      "max": 20.0,
+      // "max": 40.0,
+      "fluxnorm": false
+    },
+    "CosThetamu": {
+      "reco": "CosThetamu",
+      "true": "TrueCosThetamu",
+      "name": "CosThetamu",
+      "title": "cos(thetamu)",
+      "nbins": 10,
+      "min": 0.9,
+      "max": 1.0,
+      // "max": 40.0,
+      "fluxnorm": false
+    },    
+    "ThetaXmuDegrees": {
+      "reco": "ThetaXmuDegrees",
+      "true": "TrueThetaXmuDegrees",
+      "name": "ThetaXmuDegrees",
+      "title": "theta_mu_x (degrees)",
+      "nbins": 40,
+      "min":-40.0,
+      "max":40.0,
+      "fluxnorm": false
+    },
+    "ThetaYmuDegrees": {
+      "reco": "ThetaYmuDegrees",
+      "true": "TrueThetaYmuDegrees",
+      "name": "ThetaYmuDegrees",
+      "title": "theta_mu_y (degrees)",
+      "nbins": 40,
+      "min":-40.0,
+      "max":40.0,
+      "fluxnorm": false
+    },
+    "ApothemX": {
+      "reco": "ApothemX",
+      "true": "TrueApothemX",
+      "name": "ApothemX",
+      "title": "ApothemX (mm)",
+      "nbins": 50,
+      "min":-1000.0,
+      "max":1000.0
+    },
+    "ApothemY": {
+      "reco": "ApothemY",
+      "true": "TrueApothemY",
+      "name": "ApothemY",
+      "title": "ApothemY (mm)",
+      "nbins": 50,
+      "min":-1000.0,
+      "max":1000.0
+    },
+    "XVertex": {
+      "reco": "XVertex",
+      "true": "TrueXVertex",
+      "name": "XVertex",
+      "title": "XVertex (mm)",
+      "nbins": 50,
+      "min": -1000.0,
+      "max": 1000.0
+    },
+    "YVertex": {
+      "reco": "YVertex",
+      "true": "TrueYVertex",
+      "name": "YVertex",
+      "title": "YVertex (mm)",
+      "nbins": 50,
+      "min": -1000.0,
+      "max": 1000.0
+    },
+    "ZVertex": {
+      "reco": "ZVertex",
+      "true": "TrueZVertex",
+      "name": "ZVertex",
+      "title": "ZVertex (mm)",
+      "nbins": 13,
+      "min": 5900,
+      "max":8500.0
+    },
+    "NBlobs": {
+      "reco" : "NBlobs",
+      "true": "TrueNeutralPionCount",
+      "name": "NBlobs",
+      "title" : "Number of Blobs",
+      "nbins" : 11,
+      "min" : -0.5,
+      "max" : 10.5
+    },
+    "NNonVtxIsoBlobs": {
+      "reco": "NNonVtxIsoBlobs",
+      "true": "TrueNeutralPionCount",
+      "name": "NNonVtxIsoBlobs",
+      "title": "Number of NonVtxIsoBlobs",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "NNonVtxIsoBlobsAll": {
+      "reco": "NNonVtxIsoBlobsAll",
+      "true": "TrueNeutralPionCount",
+      "name": "NNonVtxIsoBlobsAll",
+      "title": "Number of NonVtxIsoBlobsAll",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "NNeutCands": {
+      "reco": "NNeutCands",
+      "true": "TrueNeutronCount",
+      "name": "NNeutCands",
+      "title": "Number of MAD_Blobs",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "NNeutBlobs": {
+      "reco": "NNeutBlobs",
+      "true": "TrueNeutronCount",
+      "name": "NNeutBlobs",
+      "title": "Number of Neutron Tagged Blobs",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "NeutBlobsRatio": {
+      "reco": "NeutBlobsRatio",
+      "true": "NeutBlobsRatio",
+      "name": "NeutBlobsRatio",
+      "title": "N neutrons over N 3D Blobs",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 5.0,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "Multiplicity": {
+      "reco": "Multiplicity",
+      "true": "TrueFSPartCount",
+      "name": "Multiplicity",
+      "title": "Multiplicity",
+      "nbins": 7,
+      "min": -0.5,
+      "max": 6.5
+    },
+    "NMichel": {
+      "reco": "ImprovedNMichel",
+      "true": "TrueChargedPionCount",
+      "name": "ImprovedNMichel",
+      "title": "N_{Michel}",
+      "nbins": 6,
+      "min": -0.5,
+      "max": 5.5
+    },
+    "PrimaryProtonScore": {
+      "reco": "PrimaryProtonScore",
+      "true": "TruthHasSingleProton",
+      "name": "PrimaryProtonScore",
+      "title": "Proton Score of Primary non-Muon Track",
+      "nbins": 20,
+      "min":0.0,
+      "max":1.0,
+      "fluxnorm": false
+    },
+    "PrimaryProtonScore1": {
+      "reco": "PrimaryProtonScore1",
+      "true": "TruthHasSingleProton",
+      "name": "PrimaryProtonScore",
+      "title": "Proton Score 1 of Primary non-Muon Track",
+      "nbins": 20,
+      "min":0.0,
+      "max":1.0,
+      "fluxnorm": false
+    },
+    "PionAngle":{
+      "reco": "ChargedPionAngle",
+      "true": "TruePionAngle",
+      "name": "PionAngle",
+      "title": "Pion Angle",
+      "nbins": 20,
+      // "min": 0.0,
+      "min": 160.0,
+      "max": 180.0,
+      "fluxnorm":false
+    },
+    "NChargedPions":{
+      "reco": "NPionTracks",
+      "true": "TrueChargedPionCount",
+      "name": "NChargedPions",
+      "title": "N_{#pi^{#pm}}",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "HasMultiPion":{
+      "reco": "HasMultiPion",
+      "true": "TruthHasMultiPion",
+      "name": "HasMultiPion",
+      "title": "Has multipion?",
+      "nbins": 5,
+      "min": -1.5,
+      "max": 3.5
+    },
+    "NumberOfProtonCandidates": {
+      "reco": "NumberOfProtonCandidates",
+      "true": "NumberOfProtonCandidates",
+      "name": "NumberOfProtonCandidates",
+      "title": "N_{proton cand}",
+      "nbins": 5,
+      "min": -0.5,
+      "max": 4.5
+    },
+    "CosMuonPionAngle": {
+      "reco": "CosMuonPionAngle",
+      "true": "CosMuonPionAngle",
+      "name": "CosMuonPionAngle",
+      "title": "cos(#theta_{#mu, #pi})",
+      "nbins": 40,
+      "min": -1.0,
+      "max": 1.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "TrueNeutronEnergy": {
+      "reco": "TrueNeutronEGeV",
+      "true": "TrueNeutronEGeV",
+      "name": "TrueNeutronEGeV",
+      "title": "True Neutron Energy (GeV)",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 2.0,
+      "for": [
+        "selected_reco",
+        "selected_truth"
+      ]
+    }
+  }
+}
+
