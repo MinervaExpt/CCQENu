@@ -59,7 +59,7 @@
     "QElike_minrecoil": {
         "name": "QElike_minrecoil",
         "reco": "QElike_minrecoil",
-        "phase_space": "phase_space_minEAvail",
+        "phase_space": "phase_space",
         "signal": [
             "qelike"
         ],
@@ -91,16 +91,16 @@
     },
     "QElike_maxrecoil_hiEAvail": {
         "name": "QElike_maxrecoil_hiEAvail",
-        "reco": "QElike_maxrecoil_hiEAvail",
+        "reco": "QElike_maxrecoil",
         "phase_space": "phase_space_minEAvail",
         "signal": [
-            "qelike"
+            "qelike_minEAvail"
         ],
         "background": [
-            "qelikenot"
+            "qelikenot_minEAvail"
         ],
         "categories": {
-            "qelike": {
+            "qelike_minEAvail": {
                 // "for": ["selected_reco"]
                 "for": [
                     "selected_reco",
@@ -109,7 +109,7 @@
                     "response"
                 ]
             },
-            "qelikenot": {
+            "qelikenot_minEAvail": {
                 "for": [
                     "selected_reco"
                 ]
@@ -118,10 +118,44 @@
         },
         "legend_entries": {
             "data": "Data",
-            "qelike": "QELike",
-            "qelikenot": "QELikeNot",
+            "qelike_minEAvail": "QELike",
+            "qelikenot_minEAvail": "QELikeNot",
         }
-    },    "QElike_0blob": {
+    },    
+    "QElike_hiEAvail": {
+        "name": "QElike_hiEAvail",
+        "reco": "QElike",
+        "phase_space": "phase_space_minEAvail",
+        "signal": [
+            "qelike_minEAvail"
+        ],
+        "background": [
+            "qelikenot_minEAvail"
+        ],
+        "categories": {
+            "qelike_minEAvail": {
+                // "for": ["selected_reco"]
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    // "truth",
+                    "response"
+                ]
+            },
+            "qelikenot_minEAvail": {
+                "for": [
+                    "selected_reco"
+                ]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike_minEAvail": "QELike",
+            "qelikenot_minEAvail": "QELikeNot",
+        }
+    },
+    "QElike_0blob": {
         "name": "QElike_0blob",
         "reco": "QElike_0blob",
         "phase_space": "phase_space",

@@ -73,26 +73,6 @@
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
   ],
-  "QElike_maxrecoil_hiEAvail": [
-    // {"name": "Max Recoil 100mm", "max": 0.5, "variable": "RecoilEnergy100mmGeV"},
-    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
-    // {"name": "AllBlobCandsNeut", "equals":1, "variable": "AllBlobCandsNeut"},
-    {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
-    // {"name": "Max Multiplicity", "max": 2, "variable": "Multiplicity"},
-    {"name": "Max Multiplicity", "max": 1, "variable": "Multiplicity"},
-    // {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
-    {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
-    {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
-    {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},
-    {"name": "ApothemX", "max": 850, "variable": "ApothemX"},
-    {"name": "ApothemY", "max": 850, "variable": "ApothemY"},
-    {"name": "ZVertex", "min": 5980, "max": 8410, "variable": "ZVertex"},
-    {"name": "HasMINOSMatch", "equals":-1, "variable": "IsMinosMatchTrack"}, 
-    {"name": "NuHelicity", "equals": 2, "variable": "NuHelicity"},  
-    {"name": "MaxMuonAngleInDegrees", "max": 20.0, "variable": "ThetamuDegrees"},
-    {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
-    {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
-  ],  
   "QElike_2track": [
     // {"name": "Max Recoil 100mm", "max": 0.5, "variable": "RecoilEnergy100mmGeV"},
     // {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
@@ -381,6 +361,13 @@
     {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"}
     // {"name": "TruthIsCCQELike", "equals": 1, "variable": "TruthIsCCQELike", "protonKECutMeV": 10000000.0}
   ],
+  "qelike_minEAvail": [
+    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
+    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
+    {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"},
+    // {"name": "TruthIsCCQELike", "equals": 1, "variable": "TruthIsCCQELike", "protonKECutMeV": 10000000.0},
+    {"name": "MinEAvail","min": 0.01, "variable": "TrueEAvailGeV"}
+  ],
   "qelike_np": [
     {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
@@ -388,6 +375,11 @@
   ],
   "qelikenot": [
     {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"}
+    // {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike"}//, "protonKECutMeV": 120.0}
+  ],
+  "qelikenot_minEAvail": [
+    {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"},
+    {"name": "MinEAvail","min": 0.01, "variable": "TrueEAvailGeV"}
     // {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike"}//, "protonKECutMeV": 120.0}
   ],
   "qelikenot_np": [
