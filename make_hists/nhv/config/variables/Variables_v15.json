@@ -466,16 +466,35 @@
       // "min": 0,
       // "max": 0.5,
       "bins": [
+        // 0.0,
+        // 0.05,
+        // 0.10,
+        // 0.15,
+        // 0.25,
+        // 0.35,
+        // 0.50 //,
+        // 0.0,
+        // 0.05,
+        // 0.125,
+        // 0.225,
+        // 0.325,
+        // // 0.35,
+        // // 0.25,
+        // // 0.35,
+        // 0.50
+        // 1.0
+        // 0.0,
+        // 0.045,
+        // 0.1125,
+        // 0.2025,
+        // 0.315,
+        // 0.5
         0.0,
-        // 0.025, // for finer bin
-        0.05,
-        0.10,
-        0.15,
-        // 0.225, // for finer bin
-        0.25,
-        // 0.30,
-        0.35,
-        0.50//,
+        0.045,
+        0.1125,
+        0.2025,
+        0.315,
+        0.5//,
         // 1.0
       ],
       // "for": [
@@ -484,100 +503,72 @@
       // ],
       "fluxnorm": false
     },
-    "Fitrecoil": {
-      "dofitFill": true,
-      "reco": "RecoilEnergyGeV",
-      "true": "TrueEAvailGeV",
-      "name": "recoil",
-      "title": "Recoil in GeV",
-      "nbins": 25,
-      "min": 0.0,
-      "max": 0.5,
-      // "bins": [
-      //   0.0,
-      //   0.05,
-      //   0.10,
-      //   0.15,
-      //   // 0.25,
-      //   0.30,
-      //   // 0.35,
-      //   0.50
-      // ],
-      // "for": [
-      //   "data",
-      //   "selected_reco"
-      // ],
-      "fluxnorm": false
-    },
-    "VertexEnergy": {
-      "reco": "VertexEnergy",
-      "true": "",
-      "name": "vertex energy",
-      "title": "Vertex Energy in GeV",
-      "nbins": 20,
-      "min": 0.0,
-      "max": 100.,
-      "fluxnorm": false
-    },
-    "recoilQE": {
-      "reco": "RecoilEnergyGeV",
-      "true": "TrueQ0QEGeV",
-      "name": "recoil, true q0qe",
-      "title": "RecoilQE in GeV",
-      "nbins": 25,
-      "min": 0.0,
-      "max": 0.5,
-      // "for": [
-      //   "data",
-      //   "selected_reco"
-      // ],
-      "fluxnorm": false
-    },
-    "recoilNoBlobs": {
-      "reco": "RecoilEnergyMinusNeutBlobsGeV",
-      "true": "TrueEAvailGeV",
-      "name": "recoilNoBlobs",
-      "title": "recoil without 3d blobs or E_{Avail} in GeV",
-      // "nbins": 208,
-      // "min": -0.02,
-      // "max": 0.5,
-      "bins": [
-        -0.0025,
-        0.0025,
-        0.005,
-        0.0075,
-        0.01,
-        0.0125,
-        0.015,
-        0.0375,
-        0.085,
-        0.1725,
-        0.5
-      ],      
-      "fluxnorm": false
-    },
     "EAvail": {
       "reco": "EAvailGeV",
       "true": "TrueEAvailGeV",
       "name": "EAvail",
       "title": "E_{Available} in GeV",
-      // "nbins": 55,
-      // "min": -0.1,
-      // "max": 1.0,
       // "nbins": 25,
       // "min": 0,
       // "max": 0.5,
       "bins": [
+        // 0.0,
+        // 0.05,
+        // 0.10,
+        // 0.15,
+        // 0.25,
+        // 0.35,
+        // 0.50 //,
+        // 0.0,
+        // 0.05,
+        // 0.125,
+        // 0.225,
+        // 0.35,
+        // // 0.25,
+        // // 0.35,
+        // 0.50
+        // // 1.0
         0.0,
-        // 0.025, // for finer bin
-        0.05,
-        0.10,
-        0.15,
-        // 0.225, // for finer bin
-        0.25,
-        // 0.30,
-        0.35,
-        0.50//,
+        0.045,
+        0.1125,
+        0.2025,
+        0.315,
+        0.5//,
+        // 1.0
+      ],
+      "fluxnorm": false
+    },
+    "EAvailLeadingBlob": {
+      "reco": "EAvailLeadingBlobGeV",
+      "true": "TrueEAvailGeV",
+      "name": "EAvailLeadingBlob",
+      "title": "E_{Available} in GeV (Leading blob)",
+      // "nbins": 25,
+      // "min": 0,
+      // "max": 0.5,
+      "bins": [
+        // 0.0,
+        // 0.05,
+        // 0.10,
+        // 0.15,
+        // 0.25,
+        // 0.35,
+        // 0.50 //,
+        // 0.0,
+        // 0.05,
+        // 0.125,
+        // 0.225,
+        // 0.35,
+        // // 0.25,
+        // // 0.35,
+        // 0.50
+        // // 1.0
+        0.0,
+        0.045,
+        0.1125,
+        0.2025,
+        0.315,
+        0.5//,
         // 1.0
       ],
       "fluxnorm": false
@@ -591,6 +582,41 @@
       // "min": 0,
       // "max": 0.5,
       "bins": [
+        // 0.0,
+        // 0.05,
+        // 0.10,
+        // 0.15,
+        // 0.25,
+        // 0.35,
+        // 0.50 //,
+        // 0.0,
+        // 0.05,
+        // 0.125,
+        // 0.225,
+        // 0.35,
+        // // 0.25,
+        // // 0.35,
+        // 0.50
+        // // 1.0
+        0.0,
+        0.045,
+        0.1125,
+        0.2025,
+        0.315,
+        0.5//,
+        // 1.0
+      ],
+      "fluxnorm": false
+    },
+    "CalibEAvailWithNeutrons": {
+      "reco": "CalibRecoilEnergyGeV",
+      "true": "TrueEAvailWithNeutronsGeV",
+      "name": "CalibRecoilWithNeutrons",
+      "title": "E_{Available} + neutrons in GeV",
+      // "nbins": 25,
+      // "min": 0,
+      // "max": 0.5,
+      "bins": [
         0.0,
         // 0.025, // for finer bin
         0.05,
@@ -600,65 +626,7 @@
         0.25,
         // 0.30,
         0.35,
-        0.50//,
-        // 1.0
-      ],
-      "fluxnorm": false
-    },
-    "TotalNeutBlobE": {
-      "reco": "TotNeutBlobEGeV",
-      "true": "TotNeutBlobEGeV",
-      "name": "TotalNeutBlobE",
-      "title": "Total Neutron Blob Energy",
-      "nbins": 50,
-      "min": 0.0,
-      "max": 0.5,
-      "for": [
-        "selected_reco"
-      ]
-    },
-    "EAvailOffset": {
-      "reco": "OffsetRecoilEnergyGeV",
-      "true": "TrueEAvailGeV",
-      "name": "EAvailOffset",
-      "title": "E_{Available} (reco Offset) in GeV",
-      // "nbins": 208,
-      // "min": -0.02,
-      // "max": 0.5,
-      "bins": [
-        -0.0025,
-        0.0,
-        0.00001,
-        0.0025,
-        0.005,
-        0.01,
-        0.015,
-        0.0375,
-        0.085,
-        0.1725,
-        0.5
-      ],
-      "fluxnorm": false
-    },
-    "CalibEAvailWithNeutrons": {
-      "reco": "CalibRecoilEnergyGeV",
-      "true": "TrueEAvailWithNeutronsGeV",
-      "name": "CalibRecoilWithNeutrons",
-      "title": "E_{Available} + neutrons in GeV",
-      // "nbins": 50,
-      // "min": 0.0,
-      // "max": 1.0,
-      "bins": [
-        0.0,
-        // 0.025, // for finer bin
-        0.05,
-        0.10,
-        0.15,
-        // 0.225, // for finer bin
-        // 0.25,
-        0.30,
-        // 0.35,
-        0.50//,
+        0.50 //,
         // 1.0
       ],
       "fluxnorm": false
@@ -668,9 +636,9 @@
       "true": "TrueEAvailWithNeutronsGeV",
       "name": "EAvailWithNeutrons",
       "title": "E_{Available} + neutrons in GeV",
-      // "nbins": 50,
-      // "min": 0.0,
-      // "max": 1.0,
+      // "nbins": 25,
+      // "min": 0,
+      // "max": 0.5,
       "bins": [
         0.0,
         // 0.025, // for finer bin
@@ -678,10 +646,10 @@
         0.10,
         0.15,
         // 0.225, // for finer bin
-        // 0.25,
-        0.30,
-        // 0.35,
-        0.50//,
+        0.25,
+        // 0.30,
+        0.35,
+        0.50 //,
         // 1.0
       ],
       "fluxnorm": false
@@ -1041,6 +1009,113 @@
         "selected_reco",
         "selected_truth"
       ]
+    },
+    "TotalNeutBlobE": {
+      "reco": "TotNeutBlobEGeV",
+      "true": "TotNeutBlobEGeV",
+      "name": "TotalNeutBlobE",
+      "title": "Total Neutron Blob Energy",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 0.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvailOffset": {
+      "reco": "OffsetRecoilEnergyGeV",
+      "true": "TrueEAvailGeV",
+      "name": "EAvailOffset",
+      "title": "E_{Available} (reco Offset) in GeV",
+      // "nbins": 208,
+      // "min": -0.02,
+      // "max": 0.5,
+      "bins": [
+        -0.0025,
+        0.0,
+        0.00001,
+        0.0025,
+        0.005,
+        0.01,
+        0.015,
+        0.0375,
+        0.085,
+        0.1725,
+        0.5
+      ],
+      "fluxnorm": false
+    },
+    "Fitrecoil": {
+      "dofitFill": true,
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueEAvailGeV",
+      "name": "recoil",
+      "title": "Recoil in GeV",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 0.5,
+      // "bins": [
+      //   0.0,
+      //   0.05,
+      //   0.10,
+      //   0.15,
+      //   // 0.25,
+      //   0.30,
+      //   // 0.35,
+      //   0.50
+      // ],
+      // "for": [
+      //   "data",
+      //   "selected_reco"
+      // ],
+      "fluxnorm": false
+    },
+    "VertexEnergy": {
+      "reco": "VertexEnergy",
+      "true": "",
+      "name": "vertex energy",
+      "title": "Vertex Energy in GeV",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 100.,
+      "fluxnorm": false
+    },
+    "recoilQE": {
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueQ0QEGeV",
+      "name": "recoil, true q0qe",
+      "title": "RecoilQE in GeV",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 0.5,
+      // "for": [
+      //   "data",
+      //   "selected_reco"
+      // ],
+      "fluxnorm": false
+    },
+    "recoilNoBlobs": {
+      "reco": "RecoilEnergyMinusNeutBlobsGeV",
+      "true": "TrueEAvailGeV",
+      "name": "recoilNoBlobs",
+      "title": "recoil without 3d blobs or E_{Avail} in GeV",
+      // "nbins": 208,
+      // "min": -0.02,
+      // "max": 0.5,
+      "bins": [
+        -0.0025,
+        0.0025,
+        0.005,
+        0.0075,
+        0.01,
+        0.0125,
+        0.015,
+        0.0375,
+        0.085,
+        0.1725,
+        0.5
+      ],
+      "fluxnorm": false
     }
   }
 }

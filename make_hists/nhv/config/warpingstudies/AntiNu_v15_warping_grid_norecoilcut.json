@@ -1,0 +1,101 @@
+{
+  "version": 15,
+  "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
+  "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_local.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
+  "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
+  "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
+  "outRoot": "warpingstudies_no1GeVrecoilbin_20MeVBlobs_baserecoilbranchEAvail_${MYSAMPLE}_${MYWARP}warp_${MYPLAYLIST}_${MYMODEL}",
+  "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
+  "prescale": 999,
+  "playlist": "${MYPLAYLIST}",
+  "MinervaModel": "${MYMODEL}",
+  "recoName": "MasterAnaDev",
+  "tunedmc": "both",
+  "warpedmc": "${MYWARP}",
+  "closure": 0,
+  "TuneCategories": [
+    "qelike",
+    "chargedpion",
+    "neutralpion"
+  ],
+  "DoResolution": false,
+  "DoTypes": false,
+  "pdg": -14,
+  "mcRecoToCSV": false,
+  "runsamples": [ 
+    "${MYSAMPLE}"
+    // "QElike"//,
+    // "QElike_maxrecoil"//,
+    // "QElike_maxrecoil_hiEAvail"
+    // "QElike_2track"
+    // "QElikeNeut"
+    // "QElike_0blob",
+    // "QElike_1blob"
+    // "QElikeNeutrons"//,
+    // "TrackSideband",
+    // "LoPionThetaSideband",
+    // "HiPionThetaSideband"//,
+    // "BlobSideband",
+    // "MultipBlobSideband"
+  ],
+  "AnalyzeVariables": [
+    "EAvail",
+    "EAvailNoNonVtxBlobs",
+    // "EAvailWithNeutrons",
+    "EAvailLeadingBlob",
+    // "CalibEAvailWithNeutrons",
+    "recoil",
+    "ptmu"
+  ],
+  "Analyze2DVariables": [],
+  //   "recoil_ptmu",
+  //   "EAvail_ptmu",
+  //   "EAvailNoNonVtxBlobs_ptmu"
+  // ], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
+  "signal": {
+    "QElike": "qelike" //,
+    // "Background": "qelike",
+    // "QElikeNP": "qelike_np",
+    // "QElikeALLAngles": "qelike_np"
+  }, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
+  "background": {
+    "QElike": [
+      "charged_pion",
+      "neutralpion",
+      "other"
+    ] //,
+    // "Background": "qelikenot",
+    // "QElikeNP": "qelikenot_np",
+    // "QElikeALLAngles": "qelikenot_np"
+  },
+  "data": {
+    "QElike": "data" //,
+    // "Background": "data",
+    // "QElikeNP": "data",
+    // "QElikeALLAngles": "data"
+  },
+  "responseSystematicsVersion": "2024",
+  "systematics": [
+    "Flux" //,
+    // "MuonMINOS",
+    // "MuonResolution",
+    // "MINOSEfficiency",
+    // "Angle",
+    // "GENIE",
+    // "GenieRvx1pi",
+    // "RPA",
+    // "2p2h",
+    // "MuonMinerva",
+    // "geant4",
+    // "response"
+  ],
+  "fluxUniverses": 2, //100, //10,
+  "NuEConstraint": 1,
+  "Geant4NeutronCV": 1,
+  "Geant4Elastics": 1 //,
+  //"RPAMaterials":0 
+}
