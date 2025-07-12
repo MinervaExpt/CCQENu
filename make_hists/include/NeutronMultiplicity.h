@@ -33,6 +33,7 @@ class NeutCand {
     NeutCand();  // default
     NeutCand(int blobID, int is3D, int recoEDep, TVector3 position);
 
+    ~NeutCand() = default;
     // reco functions
     void SetReco(int blobID, int is3D, int recoEDep, TVector3 position, TVector3 flightpath); 
     
@@ -81,6 +82,11 @@ class NeutEvent {
     NeutEvent(int n_neutcands, TVector3 vtx, TVector3 mupath);
     NeutEvent(NuConfig config);  // would need to set up cands separately using SetCands
     NeutEvent();
+    ~NeutEvent(){
+        for (auto cand: m_cands){
+            delete cand;
+        }
+    }
 
     // NeutEvent();
     void SetCands(int n_neutcands, TVector3 vtx, TVector3 mupath);
