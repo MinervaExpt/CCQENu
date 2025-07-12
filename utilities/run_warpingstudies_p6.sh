@@ -49,7 +49,7 @@ python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT
 export MYWARP=no2p2htune
 export MYMODEL=MnvTunev1
 
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/Summer25Collab/eventloopout/recoilstudy \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/Summer25Collab/eventloopout/recoilstudy_newbinning \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame6B --model=${MYMODEL} --warp=${MYWARP} --tag=recoilstudy_newbinning_recoilcut \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_recoilcut --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=5000   --sample=${MYSAMPLE} #--debug --notimestamp
