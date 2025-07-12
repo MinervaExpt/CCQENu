@@ -94,8 +94,9 @@ class NeutEvent {
     // Get the candidates
     std::vector<NeutronMultiplicity::NeutCand*> GetNeutCands();  
     NeutronMultiplicity::NeutCand* GetMaxNeutCand();
+    double GetMaxNeutCandE();
     NeutCand* GetCand(int index);
-    
+
     int GetCandIsNeut(int index); // checks all the following 
 
     int CandIsOutsideMuonAngle(int index);  // check if outside angle from muon track

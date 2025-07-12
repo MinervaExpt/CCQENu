@@ -182,6 +182,17 @@ NeutronMultiplicity::NeutCand* NeutEvent::GetMaxNeutCand() {
     return m_cands[max_index];
 }
 
+double NeutEvent::GetMaxNeutCandE() {
+    int max_index;
+    double max_edep = 0.0;
+    // std::pair<int, double> max_edep(0, 0.0);
+    for (int i = 0; i < m_nneutcands; i++) {
+        if (m_cands[i]->m_recoEDep > max_edep && GetCandIsNeut(i))
+            max_edep = m_cands[i]->m_recoEDep;
+        max_index = i;
+    }
+    return max_edep;
+}
 NeutCand* NeutEvent::GetCand(int index) {
     return m_cands[index];
 }

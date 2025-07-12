@@ -1180,6 +1180,14 @@ double CVUniverse::GetEAvailGeV() const {
     return (recoil - neutblobE);
 }
 
+double CVUniverse::GetEAvailLeadingBlobGeV() const {
+    // Take recoil and remove the neutron blob energy from it
+    double recoil = GetRecoilEnergyGeV();  // regular recoil
+    NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
+    double neutblobE = (neutevent->GetMaxNeutCandE())*MeVGeV;
+    return (recoil - neutblobE);
+}
+
 // The following is diff from above by using the blobs we cut on 
 double CVUniverse::GetEAvailNoNonVtxBlobsGeV() const {
     double totblobE = 0.;
