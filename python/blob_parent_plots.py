@@ -88,9 +88,9 @@ catscolors = {
 
 #  These are the vars that fill into bins
 varstodo= [
-    "NeutCandMCPID",
-    # "NeutCandTopMCPID"
-    "LeadingIsoBlobsPrimaryMCPID"
+    # "NeutCandMCPID",
+    "NeutCandTopMCPID"
+    # "LeadingIsoBlobsPrimaryMCPID"
 ]
 samplestodo= [
     "QElike",
@@ -100,7 +100,7 @@ samplestodo= [
 ]
 
 # Used to make the labels. See CVUniverse and variables config for binnning
-bin_pid = { 
+bin_pid = {
     1: "n",
     2: "p",
     3: "#pi^{0}",
@@ -109,34 +109,35 @@ bin_pid = {
     6: "#gamma",
     7: "e^{#pm}",
     8: "#mu^{#pm}",
-    10: "Other"
+    10: "Other",
 }
-process=["data","QE","RES","DIS","COH","","","","2p2h",""]
-whichcats = ["data","qelike","qelikenot"]
+process = ["data", "QE", "RES", "DIS", "COH", "", "", "", "2p2h", ""]
+whichcats = ["data", "qelike", "qelikenot"]
 nproc = len(process)
-for x in range(0,nproc+1):
-    process.append(process[x]+"-not")
+for x in range(0, nproc + 1):
+    process.append(process[x] + "-not")
 colors = {
-0:ROOT.kBlack,
-1:ROOT.kBlue-6,
-2:ROOT.kMagenta-6,
-3:ROOT.kRed-6,
-4:ROOT.kYellow-6,
-5:ROOT.kWhite,
-6:ROOT.kWhite,
-7:ROOT.kWhite,
-8:ROOT.kGreen-6,
-9:ROOT.kTeal-6,
-10:ROOT.kBlue-1,
-11:ROOT.kBlue-10,
-12:ROOT.kMagenta-10,
-13:ROOT.kRed-10,
-14:ROOT.kYellow-10,
-15:ROOT.kGray,
-16:ROOT.kBlack,
-17:ROOT.kBlack,
-18:ROOT.kGreen-6,
-19:ROOT.kTeal-6}
+    0: ROOT.kBlack,
+    1: ROOT.kBlue - 6,
+    2: ROOT.kMagenta - 6,
+    3: ROOT.kRed - 6,
+    4: ROOT.kYellow - 6,
+    5: ROOT.kWhite,
+    6: ROOT.kWhite,
+    7: ROOT.kWhite,
+    8: ROOT.kGreen - 6,
+    9: ROOT.kTeal - 6,
+    10: ROOT.kBlue - 1,
+    11: ROOT.kBlue - 10,
+    12: ROOT.kMagenta - 10,
+    13: ROOT.kRed - 10,
+    14: ROOT.kYellow - 10,
+    15: ROOT.kGray,
+    16: ROOT.kBlack,
+    17: ROOT.kBlack,
+    18: ROOT.kGreen - 6,
+    19: ROOT.kTeal - 6,
+}
 
 samplenames = {
     "QElike": "QElike Signal Sample",
@@ -192,6 +193,8 @@ for k in keys:
     sample = parse[1]
     cat = parse[2]
     variable = parse[3]
+    print("checking hist ", name)
+
     if "types" in parse[4] and not dotypes:
         continue
     if "simulfit" in parse[4]:
@@ -203,7 +206,7 @@ for k in keys:
     if variable not in varstodo:
         continue
     if sample not in samplestodo: continue
-    
+    print("adding hist to the list ", name)
     if hist not in groups.keys():
         groups[hist] = {}
         #legs[parse[0]] = {}
@@ -437,5 +440,3 @@ for a_hist in groups.keys():
             if dotuned:
                 canvas_name = thename+"_FinalStates_tuned"
             cc.Print(os.path.join(outdirname,canvas_name+".png"))
-
-
