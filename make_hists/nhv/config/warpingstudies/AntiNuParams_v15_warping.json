@@ -1,0 +1,38 @@
+{
+    "comments": ["Added to config proton scores 6/17/2024",
+                 "Added recoil var config and started blob config, 8/2/24"],
+    "ProtonScoreConfig": {
+        "pass_proton_score_min": 0.3
+    },
+    // "ProtonScoreConfig": {
+    //     "band1": {
+    //         "Q2QE_max": 0.2,
+    //         "pass_proton_score_min": 0.3
+    //     },
+    //     "band2": {
+    //         "Q2QE_range": [
+    //             0.2,
+    //             0.6
+    //         ],
+    //         "pass_proton_score_min": 0.2
+    //     },
+    //     "band3": {
+    //         "Q2QE_min": 0.6,
+    //         "pass_proton_score_min": 0.1
+    //     }
+    // }
+    "RecoilBranchConfig": {
+        "vertex_dist": 0, //"100", "150"
+        "recoil_branch": "recoil_energy_nonmuon_nonvtx0mm"
+    }, 
+    "NeutronConfig": {
+        "vtxdist_max": 10000.0,
+        "vtxdist_min": 100.0,
+        "zpos_max": 8422.0,
+        "zpos_min": 5980.0,
+        // "muoncone_min": 15.0,
+        "muondist_min": 50.0,
+        "edep_min": 20.0
+        // "edep_min": 1.5
+    }
+}

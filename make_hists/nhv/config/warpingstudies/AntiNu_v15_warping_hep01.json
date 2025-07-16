@@ -26,11 +26,11 @@
   "pdg": -14,
   "mcRecoToCSV": false,
   "runsamples": [
-    "QElike",
+    "QElike"//,
     // "QElike_2track"
     // "QElikeNeut"
-    "QElike_0blob",
-    "QElike_1blob"
+    // "QElike_0blob",
+    // "QElike_1blob"
     // "QElikeNeutrons"//,
     // "TrackSideband",
     // "LoPionThetaSideband",
@@ -53,8 +53,8 @@
     // "recoilNoBlobs",
     // "Q2QE" //,
     // "FitQ2QE",
-    "EAvail",
-    "EAvailNoNonVtxBlobs",
+    // "EAvail",
+    // "EAvailNoNonVtxBlobs",
     // "pzmuHD",
     // "ptmuHD",
     // "pmu",
@@ -62,17 +62,17 @@
     // "CosThetamu",
     // "TotalNeutBlobE"
     // "EAvailWiggled"
-    "EAvailWithNeutrons",
-    "CalibEAvailWithNeutrons",
+    // "EAvailWithNeutrons",
+    // "CalibEAvailWithNeutrons",
     // "EAvailWithNeutronsCalib",
     // "resEAvailWithNeutrons"
-    "recoil" //,
+    // "recoil" //,
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
     // "ptmu"
     // "NeutCandMCPID",
-    // "NeutCandTopMCPID"
+    "NeutCandTopMCPID"
   ],
   "Analyze2DVariables": [],
   //   "recoil_ptmu",
