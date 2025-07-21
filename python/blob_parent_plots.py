@@ -162,8 +162,8 @@ if len(sys.argv)> 2:
 
 f = TFile.Open(filename,"READONLY")
 dirname = filename.replace(".root","_FinalStates")
-plotdir = "/Users/nova/git/plots/Winter2025MinervaCollab"
-outdirname = os.path.join(plotdir,"dirname")
+plotdir = "~/git/output/Summer25Collab/for_illus"
+outdirname = os.path.join(plotdir,dirname)
 if not os.path.exists(outdirname): os.mkdir(outdirname)
 
 keys = f.GetListOfKeys()
@@ -403,7 +403,7 @@ for a_hist in groups.keys():
 
             for bin in bin_pid.keys():
                 stack.GetXaxis().SetBinLabel(bin, bin_pid[bin])
-            stack.GetXaxis().SetTitle("PID of particle reconstructed as blob")
+            stack.GetXaxis().SetTitle("PID of blob's earliest ancestor")
             stack.GetXaxis().CenterTitle()
             stack.GetXaxis().SetTitleSize(0.05)
             stack.GetXaxis().SetLabelSize(0.05)

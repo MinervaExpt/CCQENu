@@ -21,249 +21,151 @@ plotfiletype = "pdf"
 #     "pmu": "p_{#mu}"
 # }
 
-def CCQECanvas(name,title,xsize=1000,ysize=1000):
-    c2 = ROOT.TCanvas(name,title,xsize,ysize)
-    # c2.SetLeftMargin(0.1)
-    # c2.SetRightMargin(0.04)
-    # c2.SetLeftMargin(0.05)
-    
-    # c2.SetBottomMargin(0.14)
-    return c2
+# bins = {
+#     "recoil": 5,
+#     "EAvail": 5,
+#     "EAvailNoNonVtxBlobs": 5,
+#     "ptmu": 13,
+#     "EAvailLeadingBlob": 5,
+# }
+max_chi2_dict = {
+    "recoil": {
+        "MnvTunev2": 350,
+        "no2p2htune": 1500,
+    },
+    "EAvail": {
+        "MnvTunev2": 350,
+        "no2p2htune": 1500,
+    },
+    "EAvailNoNonVtxBlobs": {
+        "MnvTunev2": 350,
+        "no2p2htune": 1500,
+    },
+    "ptmu": {
+        "MnvTunev2": 50,
+        "no2p2htune": 100,
+    },
+    "EAvailLeadingBlob": {
+        "MnvTunev2": 350,
+        "no2p2htune": 1500,
+    },
+}
 
-def MakeHistPretty(i_hist,xvar,yvar):
-    hist = i_hist.Clone()
-
-    xaxis_name = hist.GetXaxis().GetName()
-    hist.GetXaxis().CenterTitle()
-
-    yaxis_name = hist.GetYaxis().GetName()
-    hist.GetYaxis().CenterTitle()
-
-    # hist.GetZaxis().SetTitle("Events")
-
-    if(xvar == "Q2QE"):
-        ROOT.gPad.SetLogx(1)
-        xaxis_name= "Q^{2}_{QE}"
-    if(yvar=="Q2QE"):
-        ROOT.gPad.SetLogy(1)
-        yaxis_name= "Q^{2}_{QE}"
-    if(xvar == "recoil"):
-        xaxis_name = "Recoil"
-    if(yvar == "recoil"):
-        yaxis_name = "Recoil"
-    if(xvar == "ptmu"):
-        xaxis_name = "p_{T}"
-    if(yvar == "ptmu"):
-        yaxis_name = "p_{T}"
-    if(xvar == "pzmu"):
-        xaxis_name = "p_{||}"
-    if(yvar == "pzmu"):
-        yaxis_name = "p_{||}"
-    if(xvar == "EAvail"):
-        xaxis_name = "E_{Available}"
-    if(yvar == "EAvail"):
-        yaxis_name = "E_{Available}"
-
-    
-    hist_title = yaxis_name+" vs. "+xaxis_name
-    hist.SetTitle(hist_title)
-
-    return hist
-
-
-def Plot2D(canvas,i_hist,xvar,yvar,color="COLZ"):
-    hist = MakeHistPretty(i_hist,xvar,yvar)
-    ROOT.gStyle.SetPalette(ROOT.kBird)
-    # ROOT.gPad.SetLogx(1)
-    # ROOT.gPad.SetLogz(1)
-    ROOT.gStyle.SetOptStat("e")
-    # stats_pave = i_mc_hist.FindObject("stats")
-    hist = MakeHistPretty(i_hist,xvar,yvar)
-    hist.Draw(color)
-
-    canvas.Print(canvas.GetName(), str("Title: " + hist.GetTitle()))
-    ROOT.gPad.SetLogx(0)
-    ROOT.gPad.SetLogz(0)
-
-
+lineWidth = 5
 def main():
     ROOT.TH1.AddDirectory(ROOT.kFALSE)
 
     if len(sys.argv) < 2:
-        print("python Plot2DHist.py <infile.root>")
+        print("python PlotWarpingStudies.py <dir_with_warped_files>")
     else:
-        filename1 = sys.argv[1]
+        filedir = sys.argv[1]
 
-    print("Looking at file "+filename1)
-    f = ROOT.TFile(filename1, "READONLY")
+    print("Looking at files in " + filedir)
 
-    plotdir = "/Users/nova/git/plots/Summer2025MnvWeek/transwarp"
-    filebasename1=os.path.basename(filename1)
-    # outfilename=filebasename1.replace(".root","_2DPlots")
-    outdirname=os.path.join(plotdir,filebasename1.replace(".root","_warpplots"))
-    if not os.path.exists(outdirname): os.mkdir(outdirname)
+    plotdir = filedir
+    outdirname = os.path.join(plotdir, "transwarp_plots")
+    if not os.path.exists(outdirname):
+        os.mkdir(outdirname)
+    canvas = ROOT.TCanvas("chi2", "chi2")
+    canvas.SetRightMargin(0.17)
+    # canvas.SetLogx()
+    # canvas.SetLogy()
+    for file_name in os.listdir(filedir):
+        if ".root" not in file_name or "TransWarpOut_" not in file_name:
+            continue
+        print("looking at file",file_name)
+        f = ROOT.TFile(os.path.join(filedir,file_name), "READONLY")
 
-    # Expects CCQENu naming convention
-    print("Looking for hists...")
-    hist_dict = {}
-    histkeys_list = f.GetListOfKeys()
-    chi2dist_hist = f.Get("Chi2_Iteration_Dists").Get("h_chi2_modelData_trueData_iter_chi2_percentile").Clone()
-    chi2med_hist = f.Get("Chi2_Iteration_Dists").Get("h_median_chi2_modelData_trueData_iter_chi2").Clone()
-    chi2avg_hist = f.Get("Chi2_Iteration_Dists").Get("m_avg_chi2_modelData_trueData_iter_chi2").Clone()
+        ymax = -1.
+        # filebasename1=os.path.basename(filename1)
+        for var in max_chi2_dict.keys():
+            if "_"+var+"_" not in file_name: continue
+            for study in max_chi2_dict[var].keys():
+                if "_"+study+"_" not in file_name: continue
+                ymax = max_chi2_dict[var][study]
+        # Expects CCQENu naming convention
 
-    canvas = ROOT.TCanvas("c","c",1100,720)
-    # canvas.SetLeftMargin(0.1)
-    canvas.SetRightMargin(0.2)
-    # c2.SetLeftMargin(0.05)
-    # canvas.SetBottomMargin(0.14)
-    chi2dist_hist.GetXaxis().SetTitle("N_{iter}")
-    chi2dist_hist.GetXaxis().CenterTitle()
-    chi2dist_hist.GetZaxis().SetTitle("N_{univ}")
-    chi2dist_hist.GetYaxis().SetTitle("#chi^{2}")
-    chi2dist_hist.GetYaxis().CenterTitle()
+        print("Looking for hists...")
+        chi2summary_hist = (
+            f.Get("Chi2_Iteration_Dists")
+            .Get("h_chi2_modelData_trueData_iter_chi2_percentile")
+            .Clone()
+        )
+        chi2med_hist = (
+            f.Get("Chi2_Iteration_Dists")
+            .Get("h_median_chi2_modelData_trueData_iter_chi2")
+            .Clone()
+        )
+        chi2avg_hist = (
+            f.Get("Chi2_Iteration_Dists")
+            .Get("m_avg_chi2_modelData_trueData_iter_chi2_truncated")
+            .Clone()
+        )
+        axisTitle = chi2summary_hist.GetYaxis().GetTitle()
+        yNDF = int(axisTitle[axisTitle.find("ndf=") + 4 : axisTitle.find(")")])
 
-    chi2med_hist.SetLineColor(ROOT.kBlack)
-    chi2med_hist.SetFillStyle(0)
-    chi2med_hist.SetMarkerColor(ROOT.kBlue)
-    chi2med_hist.SetMarkerStyle(2) # 2 makes it a plus
+        # canvas = ROOT.TCanvas("c", "c", 1100, 720)
+        # canvas.SetLeftMargin(0.1)
+        # canvas.SetRightMargin(0.2)
+        # c2.SetLeftMargin(0.05)
+        # canvas.SetBottomMargin(0.14)
+        # ROOT.gStyle.SetColorPalette(ROOT.kBird)
 
-    # chi2dist_hist.GetYaxis().SetRangeUser(0,200)
-    chi2dist_hist.Draw("COLZ")
-    chi2med_hist.Draw("HIST,same")
-    chi2avg_hist.Draw("PE,same")
-    chi2dist_hist.Draw("axis, same")
-    canvas.Print(os.path.join(outdirname,"warp_chi2_niter.png"))
+        chi2summary_hist.GetXaxis().SetTitle("N_{iter}")
+        chi2summary_hist.GetXaxis().CenterTitle()
+        chi2summary_hist.GetYaxis().SetTitle("#chi^{2}")
+        chi2summary_hist.GetYaxis().CenterTitle()
+        chi2summary_hist.GetZaxis().SetTitle("N_{univ}")
+        chi2summary_hist.GetZaxis().CenterTitle()
 
+        chi2summary_hist.SetTitleOffset(0.75, "X")
+        chi2summary_hist.SetTitleOffset(0.65, "Y")
+        chi2summary_hist.SetTitleOffset(0.85, "Z")
 
-    # # for key in histkeys_list:
-    # #     if key "Chi2_Iteration_Dists":
-    # #         f.cd("Chi2_Iteration_Dists")
-    # #     hist_name = key.GetName()
-    # #     print(hist_name)
-    # #     # Get rid of non-hist branches.
-    # #     if hist_name.find("___") == -1:
-    # #         continue
-    # #     parse = hist_name.split('___')
-    # #     # Looking only for 2D hists
-    # #     # if parse[0]!="h":
-    # #     #     continue
-    # #     if parse[1]!= sampletodo:
-    # #         continue
-    # #     if parse[2]!="qelike":
-    # #         continue
-    # #     if "response" not in parse[4]:
-    # #         continue
-    # #     if parse[3] not in hist_dict.keys():
-    # #         hist_dict[parse[3]]={"matrix":None,"reco":None,"truth":None}
+        if ymax > 0:
+            chi2summary_hist.GetYaxis().SetRangeUser(0,ymax)
+        chi2med_hist.SetLineColor(ROOT.kBlack)
+        chi2med_hist.SetLineWidth(lineWidth)
+        chi2med_hist.SetTitle("Median Chi2")
 
-    # #     hist = f.Get(hist_name)
-    # #     if "migration" in parse[4]:
-    # #         hist_dict[parse[3]]["matrix"]=hist
-    # #         # hist.Print()
-    # #         continue
-    # #     if "reco" in parse[4]:
-    # #         hist_dict[parse[3]]["reco"]=hist
-    # #         # hist.Print()
-    # #         continue        
-    # #     if "truth" in parse[4]:
-    # #         hist_dict[parse[3]]["truth"]=hist
-    # #         # hist.Print()
-    # #         continue
-    # # print("Done looking for hists.")
+        chi2avg_hist.SetTitle("Mean Chi2")
+        chi2avg_hist.SetLineWidth(lineWidth)
+        chi2avg_hist.SetLineColor(ROOT.kViolet)
+        chi2avg_hist.SetMarkerStyle(0)
 
+        # chi2summary_hist.GetYaxis().SetRangeUser(0,200)
+        chi2summary_hist.Draw("COLZ")
+        chi2avg_hist.Draw("same")
+        chi2med_hist.Draw("HIST,same")
+        chi2summary_hist.Draw("axis, same")
+        if "_Clousure_" in file_name:
+            chi2summary_hist.getYaxis().SetRangeUser(0,ymax*1.2)
+        # if "Clousure" not in file_name:
+        #     ndfLine = ROOT.TLine(1, yNDF, chi2summary_hist.GetXaxis().GetXmax(), yNDF)
+        #     ndfLine.SetLineWidth(lineWidth-2)
+        #     ndfLine.SetLineStyle(ROOT.kDashed)
+        #     ndfLine.Draw()
 
-    # for var in hist_dict.keys():
-    #     print("making normd matrix for ", var)
-    #     binning = [hist_dict[var]["reco"].GetXaxis().GetBinLowEdge(1)]
-    #     for bin in range(1,hist_dict[var]["reco"].GetNbinsX()+1):
-    #         binning.append(hist_dict[var]["reco"].GetXaxis().GetBinUpEdge(bin))
-    #     # print("binning: ", binning)
-    #     binning = array('d',binning)
-    #     norm_matrix = hist_dict[var]["matrix"].Clone()
-    #     nbinsy = hist_dict[var]["matrix"].GetNbinsY()
-    #     nbinsx = hist_dict[var]["matrix"].GetNbinsX()
+        #     doubleNDFLine = ROOT.TLine(
+        #         1, 2 * yNDF, chi2summary_hist.GetXaxis().GetXmax(), 2 * yNDF
+        #     )
+        #     print("yNDF=",yNDF)
+        #     doubleNDFLine.SetLineColor(ROOT.kRed)
+        #     doubleNDFLine.SetLineWidth(lineWidth-2)
+        #     doubleNDFLine.SetLineStyle(ROOT.kDashed)
+        #     doubleNDFLine.Draw()
 
-    #     #now the row normalized migration....
-    #     if parse[0] not in ["h2D", "hHD"]:
-    #         norm_matrix.SetBins(nbinsx,binning,nbinsy,binning)
-    #         out_matrix = ROOT.TH2D(norm_matrix.GetName(),norm_matrix.GetTitle(),nbinsx,binning,nbinsy,binning)
-    #     else: 
-    #         out_matrix = norm_matrix.Clone()
-    #     for i in range(1,nbinsy+1):
-    #         row_norm = 0.0
-    #         for j in range(1,nbinsx+1):
-    #             row_norm += hist_dict[var]["matrix"].GetBinContent(j,i)
-    #         # for j in range(0,nbinsy+1):
-    #         for j in range(1,nbinsx+1):
-    #             if row_norm!=0.0:
-    #                 _cont = norm_matrix.GetBinContent(j,i)
-    #                 # norm_matrix.SetBinContent(j,i,_cont/row_norm)
-    #                 # out_matrix.SetBinContent(j,i,0.5*_cont/row_norm)
-    #                 out_matrix.SetBinContent(j,i,_cont/row_norm)
-    #     # for i in range(0,nbinsx+1):
-    #     #     row_norm = 0.0
-    #     #     for j in range(0,nbinsy+1):
-    #     #         row_norm += hist_dict["matrix"].GetBinContent(i,j)
-    #     #     # for j in range(0,nbinsy+1):
-    #     #     for j in range(0,nbinsy+1):
-    #     #         _cont = norm_matrix.GetBinContent(i,j)
-    #     #         if row_norm!=0.0:
-    #     #             # norm_matrix.SetBinContent(j,i,_cont/row_norm)
-    #     #             out_matrix.SetBinContent(i,j,_cont/row_norm)
-    #     # out_matrix.Rebin2D()
-
-    #     mnv = MnvPlotter()
-
-    #     # mnv.SetBlackbodyPalette()
-    #     # mnv.SetRedHeatPalette()
-    #     # mnv.SetBlackbodyPalette()
-    #     pix = 1500
-    #     if nbinsx*1.5 > 1000:
-    #         print("nbinsx: ", nbinsx )
-    #         pix = 5000
-    #     canvas = ROOT.TCanvas("c","c",pix,round(1.3*pix))
-
-    #     canvas.cd()
-    #     canvas = CCQECanvas("c","c")
-    #     # norm_matrix.SetMaximum(1.0)
-    #     # norm_matrix.GetYaxis().SetTitle("True E_{Avail} bins")
-    #     # norm_matrix.GetXaxis().SetTitle("Reconstructed Recoil bins")
-    #     # norm_matrix.Draw("colz text")
-
-    #     # out_matrix.SetMaximum(1.0)
-
-    #     hist_name= hist_dict[var]["matrix"].GetName()
-    #     parse = hist_name.split('___')
-    #     if parse[0] in ["h2D","hHD"]:
-    #         out_matrix.Draw("colz") 
-    #     else:
-    #         out_matrix.SetMaximum(1.0)
-    #         out_matrix.GetYaxis().SetTitle("True E_{Avail}")
-    #         out_matrix.GetXaxis().SetTitle("Reconstructed "+var_names[var])
-    #         ROOT.gStyle.SetPaintTextFormat("0.2f")
-    #         out_matrix.Draw("colz text") 
-
-    #     # canvas.SetLogx()
-    #     # canvas.SetLogy()
-    #     # canvas.SetLogz()
-    #     if not os.path.exists(outdirname): os.mkdir(outdirname)
-
-    #     canvas.Print(outdirname+"/plotmigration_"+var+".png")
-    #     # canvas.Print("plotresponse_"+outfilename+".png")
-
-    #     # canvas.Print("plotmigration_"+hist_dict["matrix"].GetName()+".png")
-
-    #     # print("Making plots...")
-    #     # for key in hist_dict.keys():
-    #     #     hist = hist_dict[key]["hist"]
-    #     #     xvar = hist_dict[key]["xvar"]
-    #     #     yvar = hist_dict[key]["yvar"]
-    #     #     Plot2D(canvas,hist,xvar,yvar)
-    #     # print("Done making plots.")
-        
-    #     # print("Writing hists to file "+outfilename+".pdf")
-    #     # canvas.Print(str(outfilename+".pdf]"), "pdf")
-    # print("All done! uwu")
+        # leg = ROOT.TLegend(0.6, 0.6, 0.9, 0.9)
+        leg = ROOT.TLegend(0.52, 0.6, 0.82, 0.9)
+        leg.AddEntry(chi2avg_hist)
+        leg.AddEntry(chi2med_hist)
+        # if "_Clousure_" not in file_name:
+        #     leg.AddEntry(ndfLine, "Number of Bins", "l")
+        #     leg.AddEntry(doubleNDFLine, "2x Number of Bins", "l")
+        # leg.AddEntry(iterLine, str(iterChosen) + " iterations", "l")
+        leg.Draw()
+        out_file_name = "plots_"+file_name.replace(".root", "warp_chi2_niter.png")
+        canvas.Print(os.path.join(outdirname, out_file_name))
 
 
 if __name__=="__main__":

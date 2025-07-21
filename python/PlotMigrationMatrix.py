@@ -8,8 +8,8 @@ from array import array
 # Set this to make bins with no content with some content for plotting purposes only (does not affect normalization)
 set_nozero = True
 set_logz = False
+do_manual = True
 # do_manual = False
-do_manual = False
 categorytodo = "qelike"
 
 
@@ -107,10 +107,11 @@ def main():
         plotdir = base_plotdir
     else:
         plotdir = "/Users/nova/git/plots/Summer2025MnvWeek/MigrationMatrices/"
+    print("outdir ", plotdir)
     if not os.path.exists(plotdir): os.mkdir(plotdir)
     filebasename1=os.path.basename(filename1)
     # outfilename=filebasename1.replace(".root","_2DPlots")
-    outdirname=os.path.join(plotdir,"Summer2025MnvWeek/MigrationPlots/localtest/",filebasename1.replace(".root","_migrationplots"))
+    outdirname=os.path.join(plotdir,"Summer2025MnvWeek/MigrationPlots/lowbins/",filebasename1.replace(".root","_migrationplots"))
     if not os.path.exists(outdirname): os.mkdir(outdirname)
 
     hist_dict = {}
@@ -142,10 +143,10 @@ def main():
             mnv = MnvPlotter()
             if set_logz:
                 mnv_canvas.SetLogz()
-            # mnv.SetBlackbodyPalette()
+            mnv.SetBlackbodyPalette()
             # mnv.SetWhiteRainbowPalette()
             # mnv.SetRedHeatPalette()
-            mnv.SetROOT6Palette(ROOT.kBird)
+            # mnv.SetROOT6Palette(ROOT.kBird)
 
             hist = hist_dict[response_name].Clone()
             hist.GetXaxis().CenterTitle()
@@ -235,6 +236,8 @@ def main():
             raw_matrix.GetXaxis().CenterTitle()
             raw_matrix.GetYaxis().CenterTitle()
 
+            norm_matrix.GetZaxis().SetTitle("Fraction of events")
+            norm_matrix.GetZaxis().CenterTitle()
             mnv = MnvPlotter()
 
             # mnv.SetBlackbodyPalette()
@@ -260,15 +263,15 @@ def main():
             norm_canvas.cd()
 
             if parse[0] in ["h2D","hHD"]:
-                norm_canvas.cd()
+                # norm_canvas.cd()
                 norm_matrix.Draw("colz")
             else:
                 if nbinsx>=20:
-                    norm_canvas.cd()
+                    # norm_canvas.cd()
                     norm_matrix.Draw("colz")
                 else:
                     ROOT.gStyle.SetPaintTextFormat("0.2f")
-                    norm_canvas.cd()
+                    # norm_canvas.cd()
                     norm_matrix.Draw("colz text")
 
             if "Q2QE" in var:
