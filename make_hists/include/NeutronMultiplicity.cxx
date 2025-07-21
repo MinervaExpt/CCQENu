@@ -86,11 +86,14 @@ NeutEvent::NeutEvent(NuConfig config, int n_neutcands, TVector3 vtx, TVector3 mu
                                                                                         m_nneutcands(n_neutcands) {
     if (config.IsMember("vtxdist_max")) m_vtxdist_max = config.GetDouble("vtxdist_max");
     if (config.IsMember("vtxdist_min")) m_vtxdist_min = config.GetDouble("vtxdist_min");
+    if (config.IsMember("vtx_zdist_min")) m_vtx_zdist_min = config.GetDouble("vtx_zdist_min");
     if (config.IsMember("zpos_max")) m_zpos_max = config.GetDouble("zpos_max");
     if (config.IsMember("zpos_min")) m_zpos_min = config.GetDouble("zpos_min");
     if (config.IsMember("muoncone_min")) m_muoncone_min = config.GetDouble("muoncone_min");
     if (config.IsMember("muondist_min")) m_muondist_min = config.GetDouble("muondist_min");
     if (config.IsMember("edep_min")) m_edep_min = config.GetDouble("edep_min");
+    if (config.IsMember("Is3D")) m_req3D = config.GetBool("Is3D");
+
     for (int i = 0; i < n_neutcands; i++) {
         NeutCand* cand = new NeutCand();
         m_cands.push_back(cand);
@@ -112,11 +115,13 @@ NeutEvent::NeutEvent(NuConfig config) {
     std::cout << "WARNING: NeutronMultiplicity::NeutEvent: you are setting a neutevent without setting up candidates.\nYou will need to use NeutronMultiplicity::NeutEvent::SetCands()." << std::endl;
     if (config.IsMember("vtxdist_max")) m_vtxdist_max = config.GetDouble("vtxdist_max");
     if (config.IsMember("vtxdist_min")) m_vtxdist_min = config.GetDouble("vtxdist_min");
+    if (config.IsMember("vtx_zdist_min")) m_vtx_zdist_min = config.GetDouble("vtx_zdist_min");
     if (config.IsMember("zpos_max")) m_zpos_max = config.GetDouble("zpos_max");
     if (config.IsMember("zpos_min")) m_zpos_min = config.GetDouble("zpos_min");
     if (config.IsMember("muoncone_min")) m_muoncone_min = config.GetDouble("muoncone_min");
     if (config.IsMember("muondist_min")) m_muondist_min = config.GetDouble("muondist_min");
     if (config.IsMember("edep_min")) m_edep_min = config.GetDouble("edep_min");
+    if (config.IsMember("Is3D")) m_req3D = config.GetBool("Is3D");
 }
 
 NeutEvent::NeutEvent() {}
@@ -200,38 +205,53 @@ NeutCand* NeutEvent::GetCand(int index) {
 int NeutEvent::GetCandIsNeut(int index) {
     // return (CandIsOutsideMuonDist(index) && CandIsFiducial(index) && CandIsIsolated(index) && CandIsHighE(index));
     // return (CandIsOutsideMuonAngle(index) && CandIsOutsideMuonDist(index) && CandIsFiducial(index) && CandIsIsolated(index) && CandIsHighE(index));
-    return (CandIsOutsideMuonAngle(index) && CandIsOutsideMuonDist(index) && CandIsFiducial(index) && CandIsIsolated(index) && CandIsHighE(index) && m_cands[index]->GetCandIs3D());
+    return (CandPassMuonAngle(index) && 
+            CandPassMuonDist(index) && 
+            CandPassFiducial(index) && 
+            CandPassVtxDist(index) && 
+            CandPassEDep(index) && 
+            CandPassIs3D(index);
+            // m_cands[index]->GetCandIs3D());
     // return (CandIsHighE(index) && m_cands[index]->GetCandIs3D());
 }
 
-int NeutEvent::CandIsOutsideMuonAngle(int index) {
+int NeutEvent::CandPassMuonAngle(int index) {
     if (m_muoncone_min < 0.0) return 1;
     TVector3 candfp = m_cands[index]->GetCandFlightPath();
     double angle = m_mupath.Angle(candfp) * 180. / M_PI; // need this in deg (for user configurability)
     return angle > m_muoncone_min;
 }
 
-int NeutEvent::CandIsOutsideMuonDist(int index) {
-    if (m_muondist_min == 0.0) return 1;
+int NeutEvent::CandPassMuonDist(int index) {
+    if (m_muondist_min <= 0.0) return 1;
     TVector3 candfp = m_cands[index]->GetCandFlightPath();
     double angle = m_mupath.Angle(candfp);
     double dist = candfp.Mag() * std::sin(angle);
     return dist >= m_muondist_min;
 }
 
-int NeutEvent::CandIsFiducial(int index) {
+int NeutEvent::CandPassFiducial(int index) {
+    if (m_zpos_min < 0. &&  m_zpos_max < 0.) return 11;
     TVector3 candpos = m_cands[index]->GetCandPosition();
     return (candpos.Z() >= m_zpos_min && candpos.Z() <= m_zpos_max);
 }
 
-int NeutEvent::CandIsIsolated(int index) {
+int NeutEvent::CandPassVtxDist(int index) {
+    if (m_vtxdist_min <= 0) return 1;
     double dist = m_cands[index]->GetCandVtxDist();
     return dist >= m_vtxdist_min;
 }
 
-int NeutEvent::CandIsHighE(int index) {
+int NeutEvent::CandPassEDep(int index) {
+    if (m_edep_min <=0 ) return true;
     double edep = m_cands[index]->GetCandRecoEDep();
     return edep >= m_edep_min;
+}
+
+int NeutEvent::CandPassIs3D(int index) {
+    if (m_req3D <= 0) return true;
+    int is3D = m_cands[index]->GetCandIs3D();
+    return is3D;
 }
 
 int NeutEvent::GetCandTruthPID(int index) {
@@ -241,6 +261,7 @@ int NeutEvent::GetCandTruthPID(int index) {
 int NeutEvent::GetCandTruthTopPID(int index) {
     return m_cands[index]->GetCandTruthTopPID();
 }
+
 
 // int NeutEvent::GetCandIsNeut(int index) {
 //     NeutCand* cand = m_cands[index];

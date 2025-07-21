@@ -61,13 +61,15 @@ class NeutCand {
 class NeutEvent {
    private:
     // set up via config, contain info to check cands by
-    double m_vtxdist_max = 10000.;  // in mm
-    double m_vtxdist_min = 100.;    // in mm
-    double m_zpos_min = 5980.0;      // in mm
-    double m_zpos_max = 8422.0;      // in mm
-    double m_muoncone_min = -1.0;    // in deg
+    double m_vtxdist_max = -1.;  // in mm
+    double m_vtxdist_min = -1.;    // in mm
+    double m_vtx_zdist_min = -1.;  // in mm
+    double m_zpos_min = -1.;     // in mm, 5980
+    double m_zpos_max = -1.;     // in mm, 8422
+    double m_muoncone_min = -1.0;   // in deg
     double m_muondist_min = 0.0;    // in mm
     double m_edep_min = 0.;         // in MeV
+    int m_req3D = -1;            // Set requirement to 3D blob
 
     int m_nneutcands;
     TVector3 m_vtx;
@@ -105,11 +107,12 @@ class NeutEvent {
 
     int GetCandIsNeut(int index); // checks all the following 
 
-    int CandIsOutsideMuonAngle(int index);  // check if outside angle from muon track
-    int CandIsOutsideMuonDist(int index);   // check if outside distance from muon track
-    int CandIsFiducial(int index);          // check if inside z bounds
-    int CandIsIsolated(int index);          // check if far from vertex
-    int CandIsHighE(int index);             // check if Edep is high enough
+    int CandPassMuonAngle(int index);  // check if outside angle from muon track
+    int CandPassMuonDist(int index);   // check if outside distance from muon track
+    int CandPassFiducial(int index);   // check if inside z bounds
+    int CandPassVtxDist(int index);             // check if far from vertex
+    int CandPassEDep(int index);             // check if Edep is high enough
+    int CandPassIs3D(int index);
 
     int GetCandTruthPID(int index);
     int GetCandTruthTopPID(int index);
