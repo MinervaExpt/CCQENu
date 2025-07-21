@@ -82,7 +82,7 @@ double MultiScaleFactors::DoEval(const double* parameters) const{
 #endif
         }
     }
-    
+
     
 #ifdef DEBUG
     //chi2 += nuisance;

@@ -21,15 +21,20 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
 
 tracks = sys.argv[1]
 bin_i = int(sys.argv[2])
-tag = ""
-if len(sys.argv) == 4: 
-	tag = "_"+sys.argv[3]
+tag1 = ""
+tag1p = ""
+tag2 = ""
+tag2p = ""
+if len(sys.argv) >= 4: 
+	tag1 = sys.argv[3]
+	tag1p = "_"+sys.argv[3]
+if len(sys.argv) >= 5: 
+	tag2 = sys.argv[4]
+	tag2p = "_"+sys.argv[4]
 print(tag)
 
-if tracks == "2track":
-	filename = "SB_NuConfig_bdtg_MAD"+tag+"_2track_me1N_1_testing.root"
-if tracks == "1track":
-	filename = "SB_NuConfig_bdtg_MAD"+tag+"_1track_me1N_1.root"
+filename = "SB_NuConfig_bdtg_MAD"+tag2p+"_"+tracks+"_me1N_1"+tag1p+".root"
+
 noData = True;
 
 scaleX = ["Q2QE"]
@@ -64,19 +69,23 @@ POTScale = dataPOT / mcPOTprescaled
 
 cc = CCQECanvas("canvas","canvas")
 
-if tracks == "2track":
-	pad_qelike       = TPad("qelike",       "qelike",       0.0, 0.45, 0.50, 0.90, 21)
-	pad_1chargedpion = TPad("1chargedpion", "1chargedpion", 0.5, 0.45, 1.00, 0.90, 21)
-	pad_multipion    = TPad("multipion",    "multipion",    0.0, 0.00, 0.50, 0.45, 21)
-	pad_other        = TPad("other",        "other",        0.5, 0.00, 1.00, 0.45, 21)
-	pad_title        = TPad("title",        "title",        0.0, 0.90, 1.00, 1,00, 21)
-else:
+if tag1 == "":
 	pad_qelike       = TPad("qelike",       "qelike",       0.000, 0.45, 0.333, 0.90, 21)
 	pad_1chargedpion = TPad("1chargedpion", "1chargedpion", 0.333, 0.45, 0.666, 0.90, 21)
 	pad_1neutralpion = TPad("1neutralpion", "1neutralpion", 0.666, 0.45, 1.000, 0.90, 21)
 	pad_multipion    = TPad("multipion",    "multipion",    0.167, 0.00, 0.500, 0.45, 21)
 	pad_other        = TPad("other",        "other",        0.500, 0.00, 0.833, 0.45, 21)
 	pad_title        = TPad("title",        "title",        0.000, 0.90, 1.000, 1,00, 21)
+else if tag1 = "multother":
+	pad_qelike       = TPad("qelike",         "qelike",         0.0, 0.45, 0.50, 0.90, 21)
+	pad_1chargedpion = TPad("1chargedpion",   "1chargedpion",   0.5, 0.45, 1.00, 0.90, 21)
+	pad_other        = TPad("1neutralpion",   "1neutralpion",   0.5, 0.00, 1.00, 0.45, 21)
+	pad_multipion    = TPad("multipionother", "multipionother", 0.0, 0.00, 0.50, 0.45, 21)
+	pad_title        = TPad("title",          "title",          0.0, 0.90, 1.00, 1,00, 21)
+else:
+	print("Innappropriate variable tag")
+	break
+	
 
 pad_qelike.SetFillColor(0)
 pad_1chargedpion.SetFillColor(0)
@@ -100,15 +109,14 @@ for j in range(1,nbinY):
 	lows[j] = h2D_data.GetYaxis().GetBinLowEdge(j)
 	highs[j] = h2D_data.GetYaxis().GetBinLowEdge(j+1)
 
-h_data = f.Get("h2D___"+tracks+tag+"___data___bdtgQELike_Q2QE___reconstructed").Projection("data",1,bin_i,bin_i,"")
-h_qelike = f.Get("h2D___"+tracks+tag+"___qelike___bdtgQELike_Q2QE___reconstructed").Projection("qelike",1,bin_i,bin_i,"")
-h_1chargedpion = f.Get("h2D___"+tracks+tag+"___1chargedpion___bdtgQELike_Q2QE___reconstructed").Projection("1chargedpion",1,bin_i,bin_i,"")
-h_multipion = f.Get("h2D___"+tracks+tag+"___multipion___bdtgQELike_Q2QE___reconstructed").Projection("multipion",1,bin_i,bin_i,"")
-if tracks == "1track":
-	h_1neutralpion = f.Get("h2D___"+tracks+tag+"___1neutralpion___bdtgQELike_Q2QE___reconstructed").Projection("1neutralpion",1,bin_i,bin_i,"")
-	h_other = f.Get("h2D___"+tracks+tag+"___other___bdtgQELike_Q2QE___reconstructed").Projection("other",1,bin_i,bin_i,"")
+h_data = f.Get("h2D___"+tracks+tag2p+"___data___bdtgQELike_Q2QE___reconstructed").Projection("data",1,bin_i,bin_i,"")
+h_qelike = f.Get("h2D___"+tracks+tag2p+"___qelike___bdtgQELike_Q2QE___reconstructed").Projection("qelike",1,bin_i,bin_i,"")
+h_1chargedpion = f.Get("h2D___"+tracks+tag2p+"___1chargedpion___bdtgQELike_Q2QE___reconstructed").Projection("1chargedpion",1,bin_i,bin_i,"")
+if tag1 == "multother":
+	h_multother = f.Get("h2D___"+tracks+tag2p+"___multipionother___bdtgQELike_Q2QE___reconstructed").Projection("multipion",1,bin_i,bin_i,"")
 else:
-	h_other = f.Get("h2D___"+tracks+tag+"___other1neutralpion___bdtgQELike_Q2QE___reconstructed").Projection("other",1,bin_i,bin_i,"")
+	h_multipion = f.Get("h2D___"+tracks+tag2p+"___multipion___bdtgQELike_Q2QE___reconstructed").Projection("multipion",1,bin_i,bin_i,"")
+	h_other = f.Get("h2D___"+tracks+tag2p+"___other___bdtgQELike_Q2QE___reconstructed").Projection("other",1,bin_i,bin_i,"")
 	
 
 h_qelike.SetLineColor(TColor.GetColor(0,133,173))
@@ -173,90 +181,117 @@ h_1chargedpion.SetTickLength(0.02, "X")
 h_1chargedpion.SetNdivisions(510, "XYZ")
 h_1chargedpion.SetStats(0)
 
-if tracks == "1track":
-	h_1neutralpion.SetTitle("")
-	h_1neutralpion.GetYaxis().SetTitle("Cumulative Counts")
-	h_1neutralpion.GetYaxis().SetRangeUser(0,1.005)
-	h_1neutralpion.GetXaxis().CenterTitle(True)
-	h_1neutralpion.GetYaxis().CenterTitle(True)
-	h_1neutralpion.SetMarkerStyle(8)
-	h_1neutralpion.SetLineWidth(2)
-	h_1neutralpion.SetLabelFont(42)
-	h_1neutralpion.SetTitleFont(42)
-	h_1neutralpion.SetLabelSize(0.03,"x")
-	h_1neutralpion.SetTitleSize(0.05,"x")
-	h_1neutralpion.SetLabelSize(0.03,"y")
-	h_1neutralpion.SetTitleSize(0.05,"y")
-	h_1neutralpion.SetTickLength(0.01, "Y")
-	h_1neutralpion.SetTickLength(0.02, "X")
-	h_1neutralpion.SetNdivisions(510, "XYZ")
-	h_1neutralpion.SetStats(0)
+h_1neutralpion.SetTitle("")
+h_1neutralpion.GetYaxis().SetTitle("Cumulative Counts")
+h_1neutralpion.GetYaxis().SetRangeUser(0,1.005)
+h_1neutralpion.GetXaxis().CenterTitle(True)
+h_1neutralpion.GetYaxis().CenterTitle(True)
+h_1neutralpion.SetMarkerStyle(8)
+h_1neutralpion.SetLineWidth(2)
+h_1neutralpion.SetLabelFont(42)
+h_1neutralpion.SetTitleFont(42)
+h_1neutralpion.SetLabelSize(0.03,"x")
+h_1neutralpion.SetTitleSize(0.05,"x")
+h_1neutralpion.SetLabelSize(0.03,"y")
+h_1neutralpion.SetTitleSize(0.05,"y")
+h_1neutralpion.SetTickLength(0.01, "Y")
+h_1neutralpion.SetTickLength(0.02, "X")
+h_1neutralpion.SetNdivisions(510, "XYZ")
+h_1neutralpion.SetStats(0)
 
-h_multipion.SetTitle("")
-h_multipion.GetYaxis().SetTitle("Cumulative Counts")
-h_multipion.GetYaxis().SetRangeUser(0,1.005)
-h_multipion.GetXaxis().CenterTitle(True)
-h_multipion.GetYaxis().CenterTitle(True)
-h_multipion.SetMarkerStyle(8)
-h_multipion.SetLineWidth(2)
-h_multipion.SetLabelFont(42)
-h_multipion.SetTitleFont(42)
-h_multipion.SetLabelSize(0.03,"x")
-h_multipion.SetTitleSize(0.05,"x")
-h_multipion.SetLabelSize(0.03,"y")
-h_multipion.SetTitleSize(0.05,"y")
-h_multipion.SetTickLength(0.01, "Y")
-h_multipion.SetTickLength(0.02, "X")
-h_multipion.SetNdivisions(510, "XYZ")
-h_multipion.SetStats(0)
+if tag1 == "multother":
+	h_multother.SetTitle("")
+	h_multother.GetYaxis().SetTitle("Cumulative Counts")
+	h_multother.GetYaxis().SetRangeUser(0,1.005)
+	h_multother.GetXaxis().CenterTitle(True)
+	h_multother.GetYaxis().CenterTitle(True)
+	h_multother.SetMarkerStyle(8)
+	h_multother.SetLineWidth(2)
+	h_multother.SetLabelFont(42)
+	h_multother.SetTitleFont(42)
+	h_multother.SetLabelSize(0.03,"x")
+	h_multother.SetTitleSize(0.05,"x")
+	h_multother.SetLabelSize(0.03,"y")
+	h_multother.SetTitleSize(0.05,"y")
+	h_multother.SetTickLength(0.01, "Y")
+	h_multother.SetTickLength(0.02, "X")
+	h_multother.SetNdivisions(510, "XYZ")
+	h_multother.SetStats(0)
+else:
+	h_multipion.SetTitle("")
+	h_multipion.GetYaxis().SetTitle("Cumulative Counts")
+	h_multipion.GetYaxis().SetRangeUser(0,1.005)
+	h_multipion.GetXaxis().CenterTitle(True)
+	h_multipion.GetYaxis().CenterTitle(True)
+	h_multipion.SetMarkerStyle(8)
+	h_multipion.SetLineWidth(2)
+	h_multipion.SetLabelFont(42)
+	h_multipion.SetTitleFont(42)
+	h_multipion.SetLabelSize(0.03,"x")
+	h_multipion.SetTitleSize(0.05,"x")
+	h_multipion.SetLabelSize(0.03,"y")
+	h_multipion.SetTitleSize(0.05,"y")
+	h_multipion.SetTickLength(0.01, "Y")
+	h_multipion.SetTickLength(0.02, "X")
+	h_multipion.SetNdivisions(510, "XYZ")
+	h_multipion.SetStats(0)
 
-h_other.SetTitle("")
-h_other.GetYaxis().SetTitle("Cumulative Counts")
-h_other.GetYaxis().SetRangeUser(0,1.005)
-h_other.GetXaxis().CenterTitle(True)
-h_other.GetYaxis().CenterTitle(True)
-h_other.SetMarkerStyle(8)
-h_other.SetLineWidth(2)
-h_other.SetLabelFont(42)
-h_other.SetTitleFont(42)
-h_other.SetLabelSize(0.03,"x")
-h_other.SetTitleSize(0.05,"x")
-h_other.SetLabelSize(0.03,"y")
-h_other.SetTitleSize(0.05,"y")
-h_other.SetTickLength(0.01, "Y")
-h_other.SetTickLength(0.02, "X")
-h_other.SetNdivisions(510, "XYZ")
-h_other.SetStats(0)
+	h_other.SetTitle("")
+	h_other.GetYaxis().SetTitle("Cumulative Counts")
+	h_other.GetYaxis().SetRangeUser(0,1.005)
+	h_other.GetXaxis().CenterTitle(True)
+	h_other.GetYaxis().CenterTitle(True)
+	h_other.SetMarkerStyle(8)
+	h_other.SetLineWidth(2)
+	h_other.SetLabelFont(42)
+	h_other.SetTitleFont(42)
+	h_other.SetLabelSize(0.03,"x")
+	h_other.SetTitleSize(0.05,"x")
+	h_other.SetLabelSize(0.03,"y")
+	h_other.SetTitleSize(0.05,"y")
+	h_other.SetTickLength(0.01, "Y")
+	h_other.SetTickLength(0.02, "X")
+	h_other.SetNdivisions(510, "XYZ")
+	h_other.SetStats(0)
 
 total_qelike = h_qelike.Integral(1,nbinX+1)
 total_1chargedpion = h_1chargedpion.Integral(1,nbinX+1)
-total_multipion = h_multipion.Integral(1,nbinX+1)
-total_other = h_other.Integral(1,nbinX+1)
-if tracks == "1track": 
-	total_1neutralpion = h_1neutralpion.Integral(1,nbinX+1)
+total_1neutralpion = h_1neutralpion.Integral(1,nbinX+1)
+if tag1 == "multother":
+	total_multother = h_multother.Integral(1,nbinX+1)
+else:
+	total_multipion = h_multipion.Integral(1,nbinX+1)
+	total_other = h_other.Integral(1,nbinX+1)
 
 sums_qelike = {}
 sums_1chargedpion = {}
-sums_multipion = {}
-sums_other = {}
-if tracks == "1track": 
-	sums_1neutralpion = {}
+sums_1neutralpion = {}
+if tag1 == "multother":
+	sums_multother = {}
+else:
+	sums_multipion = {}
+	sums_other = {}
 
 for i in range(1,nbinX+1):
 	sums_qelike[i] = h_qelike.Integral(i,nbinX+1)
 	sums_1chargedpion[i] = h_1chargedpion.Integral(i,nbinX+1)
-	sums_multipion[i] = h_multipion.Integral(i,nbinX+1)
-	sums_other[i] = h_other.Integral(i,nbinX+1)
-	if tracks == "1track": 
-		sums_1neutralpion[i] = h_1neutralpion.Integral(i,nbinX+1)
+	sums_1neutralpion[i] = h_1neutralpion.Integral(i,nbinX+1)
+	if tag1 == "multother": 
+		sums_multother[i] = h_multother.Integral(i,nbinX+1)
+	else:
+		sums_multipion[i] = h_multipion.Integral(i,nbinX+1)
+		sums_other[i] = h_other.Integral(i,nbinX+1)
 
 for i in range(1,nbinX+1):	
 	h_qelike.SetBinContent(i,sums_qelike[i]/total_qelike)
 	h_1chargedpion.SetBinContent(i,sums_1chargedpion[i]/total_1chargedpion)
-	h_multipion.SetBinContent(i,sums_multipion[i]/total_multipion)
-	h_other.SetBinContent(i,sums_other[i]/total_other)
-	if tracks == "1track":
-		h_1neutralpion.SetBinContent(i,sums_1neutralpion[i]/total_1neutralpion)
+	h_1neutralpion.SetBinContent(i,sums_1neutralpion[i]/total_1neutralpion)
+	if tag1 == "multother":
+		h_multother.SetBinContent(i,sums_multother[i]/total_multipion)
+	else:
+		h_multipion.SetBinContent(i,sums_multipion[i]/total_multipion)
+		h_other.SetBinContent(i,sums_other[i]/total_other)
+		
 
 
 pad_qelike.cd()
@@ -285,45 +320,58 @@ title_1chargedpion.SetTextAlign(21)
 title_1chargedpion.SetTextFont(42)
 title_1chargedpion.Draw()
 
-if tracks == "1track":
-	pad_1neutralpion.cd()
-	pad_1neutralpion.SetLeftMargin(0.1)
-	pad_1neutralpion.SetBottomMargin(0.12)
-	pad_1neutralpion.SetRightMargin(0.05)
-	pad_1neutralpion.SetTopMargin(0.1)
-	#h_1neutralpion.GetCumulative(False).Draw("hist")
-	h_1neutralpion.Draw("hist")
-	title_1neutralpion = TLatex(0.5,1.06,legend_labels["1chargedpion"])
-	title_1neutralpion.SetTextSize(0.06)
-	title_1neutralpion.SetTextAlign(21)
-	title_1neutralpion.SetTextFont(42)
-	title_1neutralpion.Draw()
+pad_1neutralpion.cd()
+pad_1neutralpion.SetLeftMargin(0.1)
+pad_1neutralpion.SetBottomMargin(0.12)
+pad_1neutralpion.SetRightMargin(0.05)
+pad_1neutralpion.SetTopMargin(0.1)
+#h_1neutralpion.GetCumulative(False).Draw("hist")
+h_1neutralpion.Draw("hist")
+title_1neutralpion = TLatex(0.5,1.06,legend_labels["1chargedpion"])
+title_1neutralpion.SetTextSize(0.06)
+title_1neutralpion.SetTextAlign(21)
+title_1neutralpion.SetTextFont(42)
+title_1neutralpion.Draw()
 
-pad_multipion.cd()
-pad_multipion.SetLeftMargin(0.1)
-pad_multipion.SetBottomMargin(0.12)
-pad_multipion.SetRightMargin(0.05)
-pad_multipion.SetTopMargin(0.1)
-#h_multipion.GetCumulative(False).Draw("hist")
-h_multipion.Draw("hist")
-title_multipion = TLatex(0.5,1.06,legend_labels["multipion"])
-title_multipion.SetTextSize(0.06)
-title_multipion.SetTextAlign(21)
-title_multipion.SetTextFont(42)
-title_multipion.Draw()
+if tag1 == "multother":
+	pad_multother.cd()
+	pad_multother.SetLeftMargin(0.1)
+	pad_multother.SetBottomMargin(0.12)
+	pad_multother.SetRightMargin(0.05)
+	pad_multother.SetTopMargin(0.1)
+	#h_multipion.GetCumulative(False).Draw("hist")
+	h_multother.Draw("hist")
+	title_multother = TLatex(0.5,1.06,legend_labels["multipionother"])
+	title_multother.SetTextSize(0.06)
+	title_multother.SetTextAlign(21)
+	title_multother.SetTextFont(42)
+	title_multother.Draw()
+else:
+	pad_multipion.cd()
+	pad_multipion.SetLeftMargin(0.1)
+	pad_multipion.SetBottomMargin(0.12)
+	pad_multipion.SetRightMargin(0.05)
+	pad_multipion.SetTopMargin(0.1)
+	#h_multipion.GetCumulative(False).Draw("hist")
+	h_multipion.Draw("hist")
+	title_multipion = TLatex(0.5,1.06,legend_labels["multipion"])
+	title_multipion.SetTextSize(0.06)
+	title_multipion.SetTextAlign(21)
+	title_multipion.SetTextFont(42)
+	title_multipion.Draw()
 
-pad_other.cd()
-pad_other.SetLeftMargin(0.1)
-pad_other.SetBottomMargin(0.12)
-pad_other.SetRightMargin(0.05)
-pad_other.SetTopMargin(0.1)
-#h_other.GetCumulative(False).Draw("hist")
-h_other.Draw("hist")
-title_other = TLatex(0.5,1.06,legend_labels["other"])
-title_other.SetTextSize(0.06)
-title_other.SetTextAlign(21)
-title_other.SetTextFont(42)
-title_other.Draw()
+	pad_other.cd()
+	pad_other.SetLeftMargin(0.1)
+	pad_other.SetBottomMargin(0.12)
+	pad_other.SetRightMargin(0.05)
+	pad_other.SetTopMargin(0.1)
+	#h_other.GetCumulative(False).Draw("hist")
+	h_other.Draw("hist")
+	title_other = TLatex(0.5,1.06,legend_labels["other"])
+	title_other.SetTextSize(0.06)
+	title_other.SetTextAlign(21)
+	title_other.SetTextFont(42)
+	title_other.Draw()
 	
 #text = TLatex(xmin+0.875*(xmax-xmin),0.975*1.1*tmax,"MINER#nuA Preliminary")
 #text.SetTextAlign(22)
@@ -348,9 +396,9 @@ title_text.Draw()
 cc.RedrawAxis()
 cc.Draw()
 if tracks == "1track":
-	cc.Print("SB_NuConfig_bdtg_MAD"+tag+"_"+tracks+"_me1N_1/bdtgQELike_reverseCumulatives_"+tracks+"_"+str(bin_i)+".png")
+	cc.Print("SB_NuConfig_bdtg_MAD"+tag2p+"_"+tracks+"_me1N_1"+tag1p+"/bdtgQELike_reverseCumulatives"+tag2p+"_"+tracks+tag1p+"_"+str(bin_i)+".png")
 else:
-	cc.Print("SB_NuConfig_bdtg_MAD"+tag+"_"+tracks+"_me1N_1_testing/bdtgQELike_reverseCumulatives_"+tracks+"_"+str(bin_i)+".png")
+	cc.Print("SB_NuConfig_bdtg_MAD"+tag2p+"_"+tracks+"_me1N_1"+tag1p+"/bdtgQELike_reverseCumulatives_"+tracks+"_"+str(bin_i)+".png")
 pad_qelike.Close()
 pad_1chargedpion.Close()
 if tracks == "1track": pad_1neutralpion.Close()

@@ -179,7 +179,7 @@ int main(const int argc, const char *argv[] ) {
   while (mFile.peek()!=EOF) {
   	getline(mFile, line);
   	TFile *f = new TFile(line.c_str(),"read");
-  	TTree *t=(TTree*)f->Get("CCQENu");
+  	TTree *t=(TTree*)f->Get("MasterAnaDev");
   	file_entries.push_back(t->GetEntries());
   	delete t;
   	f->Close();
@@ -214,7 +214,9 @@ int main(const int argc, const char *argv[] ) {
   //PlotUtils::MinervaUniverse::SetNonResPiReweight(config.GetInt("NonResPiReweight"));
 
   //PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune (config.GetInt("DeuteriumGeniePiTune"));
-
+  
+  PlotUtils::MinervaUniverse::RPAMaterials(true);
+	
   PlotUtils::MinervaUniverse::SetNuEConstraint(config.GetInt("NuEConstraint")); //Needs to be on to match Dan's ME 2D inclusive analysis
 
   PlotUtils::MinervaUniverse::SetNFluxUniverses(config.GetInt("fluxUniverses"));

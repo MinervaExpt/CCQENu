@@ -1,0 +1,13 @@
+{
+	"infiles":["SB_NuConfig_bdtg_MAD_MultiPionCut_1track_1of10_1.root",
+	           "SB_NuConfig_bdtg_MAD_MultiPionCut_1track_2of10_1.root",
+	           "SB_NuConfig_bdtg_MAD_MultiPionCut_1track_3of10_1.root",
+	           "SB_NuConfig_bdtg_MAD_MultiPionCut_1track_4of10_1.root",
+	           "SB_NuConfig_bdtg_MAD_MultiPionCut_1track_5of10_1.root",
+	           "SB_NuConfig_bdtg_MAD_MultiPionCut_1track_6of10_1.root",
+	           "SB_NuConfig_bdtg_MAD_MultiPionCut_1track_7of10_1.root",
+	           "SB_NuConfig_bdtg_MAD_MultiPionCut_1track_8of10_1.root",
+	           "SB_NuConfig_bdtg_MAD_MultiPionCut_1track_9of10_1.root",
+	           "SB_NuConfig_bdtg_MAD_MultiPionCut_1track_10of10_1.root"],
+	"outfile":"SB_NuConfig_bdtg_MAD_MultiPionCut_1track_me1N_1.root"
+}

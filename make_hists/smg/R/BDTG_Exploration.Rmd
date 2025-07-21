@@ -16,7 +16,7 @@ library(viridis)
 library(fitdistrplus)
 library(purrr)
 library(ggforce)
-library(ggpattern)
+#library(ggpattern)
 library(xgboost)
 library(caret)
 library(Ckmeans.1d.dp)
@@ -24,16 +24,17 @@ library(archdata)
 library(jcolors)
 library(ggpp)
 library(MASS)
-library(tidymodels)
+#library(tidymodels)
 ```
 
 ```{r, message = F, warning = F, echo = F}
-events <- read.csv("CSV_CCQENu_minervame1N.csv", sep=";")
+events <- read.csv("../CSV_minervame1N_p4_MC.csv", sep=";")
 ```
 
 ```{r, message = F, warning = F, echo = F}
 colnames(events)[which(colnames(events) == "X1chargedpionBDTG")] <- "1chargedpionBDTG"
 colnames(events)[which(colnames(events) == "X1neutralpionBDTG")] <- "1neutralpionBDTG"
+
 events$Truth = gsub("Mult1p___", "", events$Truth)
 
 events <- events %>% mutate(tracks = case_when((NumberOfProtonCandidates == 0) ~ "1track",
@@ -42,6 +43,525 @@ events <- events %>% mutate(tracks = case_when((NumberOfProtonCandidates == 0) ~
                                                 .default = "other"))
 
 cbind(colnames(events))
+```
+```{r}
+isproton <- function(Q2QE,score) {
+  if((Q2QE<=0.2 & score >= 0.2) || (Q2QE > 0.2 & Q2QE <= 0.6 & score >= 0.1) || Q2QE > 0.6 || score < 0){
+    return(TRUE)
+  }
+  else {
+    return(FALSE)
+  }
+}
+
+
+```
+
+```{r}
+events <- events %>% 
+  mutate(bdtg_band = case_when(qelikeBDTG <= 0.2 ~ "[0.0,0.2]",
+                               qelikeBDTG <= 0.4 ~ "(0.2,0.4]",
+                               qelikeBDTG <= 0.6 ~ "(0.4,0.6]",
+                               qelikeBDTG <= 0.8 ~ "(0.6,0.8]",
+                               qelikeBDTG <= 1.0 ~ "(0.8,1.0]"))
+events$bdtg_band <- factor(events$bdtg_band, levels = c("[0.0,0.2]","(0.2,0.4]","(0.4,0.6]","(0.6,0.8]","(0.8,1.0]"))
+
+events <- events %>% 
+  mutate(bdtg_split = case_when(qelikeBDTG <= 0.5 ~ "[0.0,0.5]",
+                                qelikeBDTG > 0.5 ~ "(0.5,1.0]"))
+events$bdtg_split <- factor(events$bdtg_split, levels = c("[0.0,0.5]","(0.5,1.0]"))
+
+events <- events %>%
+  rowwise() %>%
+  mutate(IsProton = isproton(Q2QE,PrimaryProtonScore1))
+
+events <- events %>% 
+  mutate(Sideband = case_when(IsProton == TRUE & BlobCount <= 1 & ImprovedMichelCount == 0 ~ "QELike",
+                              BlobCount <= 1 & ImprovedMichelCount > 0 ~ "Michel",
+                              BlobCount > 1 & ImprovedMichelCount == 0 ~ "Blob",
+                              BlobCount > 1 & ImprovedMichelCount > 0 ~ "MicBlob",
+                              TRUE ~ "Other"))
+
+events$Sideband <- factor(events$Sideband, levels = c("QELike","Michel","Blob","MicBlob","Other"))
+
+events %>% count(Sideband)
+events %>% count(Truth)
+
+events$Truth <- factor(events$Truth, levels = rev(c("qelike","1chargedpion","1neutralpion","multipion","other")))
+truth_colors = rev(c("#0085ad","#af272f","#4c8c2b","#eaaa00","#522506"))
+```
+
+```{r}
+nrow(events %>% filter(Q2QE <= 4) %>% 
+  filter(Q2QE >= 0.01) %>%
+  filter(multipionBDTG < 0.2) %>%
+    filter(Truth=="qelike") %>%
+  filter(qelikeBDTG > 0.5) %>%
+  filter(tracks=="2track"))/nrow(events %>% filter(Q2QE <= 4) %>% 
+  filter(Q2QE >= 0.01) %>%
+    filter(Truth=="qelike") %>%
+  filter(multipionBDTG < 0.2)  %>%
+  filter(tracks=="2track"))
+```
+```{r, fig.height=6, fig.width=12}
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0),
+                n.breaks = 5) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("QELike BDTG Response bands") +
+  facet_wrap(vars(bdtg_split), scales = "free")
+#ggsave("qelikeBDTG_bands_vs_Q2QE_2track_freescale.png")
+```
+
+```{r, fig.height=6, fig.width=12}
+multipion_cut <- 0.5
+np_cut = 0.15
+qe_cut = 0.4
+
+events <- events %>% 
+  mutate(bdtg_sides = case_when(qelikeBDTG <= qe_cut & multipionBDTG > multipion_cut ~ "qelike [0.0,qe_cut] multipion (cut,1]",
+                                qelikeBDTG <= qe_cut & multipionBDTG <= multipion_cut ~ "qelike [0.0,qe_cut] multipion [0.0,cut]",
+                                qelikeBDTG > qe_cut ~ "(qe_cut,1.0]"))
+
+
+
+events <- events %>% 
+  mutate(bdtg_sides = case_when(qelikeBDTG <= qe_cut & multipionBDTG > multipion_cut ~ "qelike [0.0,0.5] multipion (cut,1]",
+                                qelikeBDTG <= qe_cut & multipionBDTG <= multipion_cut ~ "qelike [0.0,0.5] multipion [0.0,cut]",
+                                qelikeBDTG > qe_cut ~ "(0.5,1.0]"))
+
+events$bdtg_sides <- factor(events$bdtg_sides, levels = c("(0.5,1.0]",
+                                                          "qelike [0.0,0.5] multipion [0.0,cut]",
+                                                          "qelike [0.0,0.5] multipion (cut,1]"))
+
+events <- events %>% 
+  mutate(bdtg_sides = case_when(qelikeBDTG <= qe_cut & multipionBDTG > multipion_cut ~ "qelike [0.0,qe_cut] multipion (cut,1]",
+                                qelikeBDTG <= qe_cut & multipionBDTG <= multipion_cut & `1neutralpionBDTG` <= np_cut ~ "qelike [0.0,qe_cut] multipion [0.0,cut] 1neutralpion [0.0,np_cut]",
+                                qelikeBDTG <= qe_cut & multipionBDTG <= multipion_cut & `1neutralpionBDTG` > np_cut ~ "qelike [0.0,qe_cut] multipion [0.0,cut] 1neutralpion (np_cut,1.0]",
+                                qelikeBDTG > qe_cut ~ "(qe_cut,1.0]"))
+
+events$bdtg_sides <- factor(events$bdtg_sides, levels = c("(qe_cut,1.0]",
+                                                          "qelike [0.0,qe_cut] multipion [0.0,cut] 1neutralpion [0.0,np_cut]",
+                                                          "qelike [0.0,qe_cut] multipion [0.0,cut] 1neutralpion (np_cut,1.0]",
+                                                          "qelike [0.0,qe_cut] multipion (cut,1]"))
+
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+  scale_fill_manual(values = truth_colors) +
+  facet_wrap(vars(bdtg_sides), scales = "free")
+#ggsave("qelikeBDTG_bands_vs_Q2QE_2track.png")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(Sideband != "Other") %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+  scale_fill_manual(values = truth_colors) +
+  facet_wrap(vars(Sideband), scales = "free")
+
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+  scale_fill_manual(values = truth_colors) +
+  facet_wrap(vars(bdtg_sides))
+#ggsave("qelikeBDTG_bands_vs_Q2QE_2track.png")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(Sideband != "Other") %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+  scale_fill_manual(values = truth_colors) +
+  facet_wrap(vars(Sideband))
+
+
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(tracks=="2track"), 
+       aes(`1chargedpionBDTG`,fill=Truth)) +
+  stat_bin(breaks=seq(0,1,0.1)) + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+  scale_fill_manual(values = truth_colors) +
+  facet_wrap(vars(bdtg_sides))
+
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(tracks=="2track"), 
+       aes(`1neutralpionBDTG`,fill=Truth)) +
+  stat_bin(breaks=seq(0,1,0.1)) + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+  scale_fill_manual(values = truth_colors) +
+  facet_wrap(vars(bdtg_sides))
+
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(bdtg_sides =="qelike [0.0,0.5] multipion [0.0,cut]") %>%
+         filter(tracks=="2track"), 
+       aes(x=`1chargedpionBDTG`,y=`1neutralpionBDTG`)) +
+  stat_bin2d() + theme_bw() +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+  facet_wrap(vars(Truth))
+```
+
+```{r, fig.height=6, fig.width=12}
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0),
+                n.breaks = 5) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("QELike BDTG Response bands") +
+  facet_wrap(vars(bdtg_band), scales = "free")
+ggsave("qelikeBDTG_bands_vs_Q2QE_2track_freescale.png")
+
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("QELike BDTG Response bands") +
+  facet_wrap(vars(bdtg_band))
+ggsave("qelikeBDTG_bands_vs_Q2QE_2track.png")
+```
+```{r, fig.height=4, fig.width=7}
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(limits=c(0,10000),expand = expansion(mult = c(0,.1))) +
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - No Cut")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.1) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(limits=c(0,10000),expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.1")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.2) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(limits=c(0,10000),expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.2")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.3) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(limits=c(0,10000),expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.3")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.4) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(limits=c(0,10000),expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.4")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.5) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(limits=c(0,10000),expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.5")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.6) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(limits=c(0,10000),expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.6")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.7) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(limits=c(0,10000),expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.7")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.8) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(limits=c(0,10000),expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.8")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.9) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(limits=c(0,10000),expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors[2:5]) +
+  ggtitle("2track - QELike BDT Response > 0.9")
+```
+```{r, fig.height=4, fig.width=7}
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - No Cut")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.1) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.1")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.2) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.2")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.3) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.3")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.4) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.4")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.5) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.5")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.6) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.6")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.7) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.7")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.8) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors) +
+  ggtitle("2track - QELike BDT Response > 0.8")
+ggplot(events %>% 
+         filter(Q2QE <= 4) %>% 
+         filter(Q2QE >= 0.01) %>%
+         filter(multipionBDTG < 0.2) %>%
+         filter(qelikeBDTG > 0.9) %>%
+         filter(tracks=="2track"), 
+       aes(Q2QE,fill=Truth)) +
+  stat_bin(breaks=c(0.01,0.03,0.05,0.1,0.2,0.4,0.6,0.8,1,1.2,2,3,4)) + theme_bw() +
+  scale_x_log10(expand = c(0,0)) +
+  scale_y_continuous(expand = expansion(mult = c(0,.1)))+
+  scale_fill_manual(values = truth_colors[2:5]) +
+  ggtitle("2track - QELike BDT Response > 0.9")
+```
+
+```{r}
+events %>%
+  filter(qelikeBDTG < 0.4) %>%
+  filter(qelikeBDTG >= 0.1) %>%
+  ggplot(mapping = aes(x=PrimaryProtonScore1,fill=Truth)) +
+    stat_bin(bins = 20) + theme_bw() +
+    ggtitle("0.1 <= qelikeBDTG < 0.4") +
+    scale_x_continuous(expand = c(0,0)) +
+    scale_y_continuous(expand = expansion(mult = c(0,.1)))
+
+events %>%
+  filter(qelikeBDTG < 0.4) %>%
+  filter(qelikeBDTG >= 0.1) %>%
+  ggplot(aes(x=PrimaryProtonScore1,fill=Truth)) +
+    geom_histogram(position="fill",bins = 20) + 
+    ggtitle("0.1 <= qelikeBDTG < 0.4") +
+    theme_bw() +
+    scale_x_continuous(expand = c(0,0)) +
+    scale_y_continuous(expand = c(0,0))
+```
+
+```{r}
+events %>%
+  filter(qelikeBDTG < 0.4) %>%
+  filter(qelikeBDTG >= 0.1) %>%
+  filter(PrimaryProtonTrackVtxGap <= 300) %>%
+  ggplot(mapping = aes(x=PrimaryProtonTrackVtxGap,fill=Truth)) +
+    stat_bin(bins = 20) + theme_bw() +
+    scale_x_continuous(expand = c(0,0)) +
+    scale_y_continuous(expand = expansion(mult = c(0,.1)))
+
+events %>%
+  filter(qelikeBDTG < 0.4) %>%
+  filter(qelikeBDTG >= 0.1) %>%
+  filter(PrimaryProtonTrackVtxGap <= 300) %>%
+  ggplot(aes(x=PrimaryProtonTrackVtxGap,fill=Truth)) +
+    geom_histogram(position="fill",bins = 20) + 
+    theme_bw() +
+    scale_x_continuous(expand = c(0,0)) +
+    scale_y_continuous(expand = c(0,0))
+```
+```{r}
+events %>%
+  filter(Q2QE < 0.03) %>%
+  filter(Q2QE > 0.0) %>%
+  ggplot(mapping = aes(x=Q2QE,fill=Truth)) +
+    stat_bin(bins = 20) + theme_bw() +
+    scale_y_continuous(expand = expansion(mult = c(0,.1))) +
+    scale_x_log10()
+    scale_x_continuous(expand = c(0,0))
+```
+```{r}
+events %>%
+  filter(qelikeBDTG < 0.4) %>%
+  filter(qelikeBDTG >= 0.1) %>%
+  filter(Truth == "qelike") %>% 
+  pull(Arachne)
 ```
 
 ```{r}
@@ -85,12 +605,9 @@ percent <- function(x, digits = 2, format = "f", ...) {
   paste0(formatC(x * 100, format = format, digits = digits, ...), "%")
 }
 
-events$Truth <- factor(events$Truth, levels = c("qelike","1chargedpion","1neutralpion","multipion","other"))
-truth_colors = c("#0085ad","#af272f","#4c8c2b","#eaaa00","#522506")
-
 diffplot <- function(evts, x, xbreaks = seq(0,1,0.2), title, bin_width, units = "", wgt = 1) {
   ggplot() +
-    geom_histogram_pattern(evts, position = position_stacknudge(x=bin_width),
+    geom_histogram(evts, position = position_stacknudge(x=bin_width),
              mapping = aes({{x}}, pattern_fill = Truth, weight = {{wgt}}*weight/bin_width),
              pattern = "magick", fill = "white", pattern_type = "hs_diagcross", pattern_scale = 0.45,
              binwidth = bin_width, center = bin_width/2) +
@@ -106,7 +623,7 @@ diffplot <- function(evts, x, xbreaks = seq(0,1,0.2), title, bin_width, units = 
 
 propplot <- function(evts, x, xbreaks = seq(0,1,0.2), title, bin_width, units = "", wgt = 1) {
   ggplot() +
-    geom_histogram_pattern(evts, position = position_fillnudge(x=bin_width),
+    geom_histogram(evts, position = position_fillnudge(x=bin_width),
              mapping = aes({{x}}, pattern_fill = Truth, weight = {{wgt}}*weight/bin_width),
              pattern = "magick", fill = "white", pattern_type = "hs_diagcross", pattern_scale = 0.45,
              binwidth = bin_width, origin = 0) +
@@ -1849,3 +2366,22 @@ head(importance_matrix)
 gp = xgb.ggplot.importance(importance_matrix)
 print(gp) 
 ```
+
+```{r}
+rs = 31411
+bchest = 2269
+pchest = 14
+gchest = 108
+
+
+(rs*10^3 + bchest*158.4*10^3 + pchest*1.2*10^6 + gchest*3.8*10^6)/10^6 + 136.6
+```
+```{r}
+f = 1036.751
+w = 954.6206
+
+(exp(1))
+```
+
+
+

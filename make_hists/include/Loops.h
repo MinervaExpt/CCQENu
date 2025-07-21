@@ -272,35 +272,35 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 	gROOT->ProcessLine("#include <vector>");
 
 	// Prepare loop
-  MinervaUniverse::SetTruth(false);
+	MinervaUniverse::SetTruth(false);
 
-  // get ready for weights by finding cv universe pointer
+	// get ready for weights by finding cv universe pointer
 
-  assert(!error_bands["cv"].empty() && "\"cv\" error band is empty!  Can't set Model weight.");
-  auto& cvUniv = error_bands["cv"].front();
-  // make a dummy event - may need to make fancier
-  PlotUtils::detail::empty event;
+	assert(!error_bands["cv"].empty() && "\"cv\" error band is empty!  Can't set Model weight.");
+	auto& cvUniv = error_bands["cv"].front();
+	// make a dummy event - may need to make fancier
+	PlotUtils::detail::empty event;
 
-  if ( variables.size() < 1) {
-    std::cout << " no variables to fill " << std::endl;
-    return;  // don't bother if there are no variables.
-  }
+	if ( variables.size() < 1) {
+		std::cout << " no variables to fill " << std::endl;
+		return;  // don't bother if there are no variables.
+	}
 
 	// CSV setup
-  std::string csvFileName = "CSV_"+outNameBase+".csv";
-  std::cout << "Making CSV file " << csvFileName << std::endl;
+	std::string csvFileName = "CSV_"+outNameBase+".csv";
+	std::cout << "Making CSV file " << csvFileName << std::endl;
 	std::ofstream csvFile;
-  csvFile.open(csvFileName);
-  csvFile << "Entry";
-  for (auto v : variables) {
+	csvFile.open(csvFileName);
+	csvFile << "Entry";
+	for (auto v : variables) {
 		csvFile << ";" << v->GetName();
-  }
+	}
 	csvFile << ";Truth;Interaction;mc_intType;qelikeBDTG;1chargedpionBDTG;1neutralpionBDTG;multipionBDTG;otherBDTG;model;weight;ProngTrajID;nERParts;ERIDs;nFSPart;FSPDGs;FSPartEs;Arachne" << std::endl;
 	std::vector<std::string> interaction = {"None","QE","RES","DIS","COHPI","AMNUGAMMA","IMD","NUEEL","2P2H","NA","Unknown"};
 	
 	RReader model_1track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_1track_BDTG.weights.xml"));
-  RReader model_2track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_2track_BDTG.weights.xml"));
-  RReader model_3ptrack(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml"));
+	RReader model_2track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_2track_BDTG.weights.xml"));
+	RReader model_3ptrack(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml"));
 	
 	// Begin loop over entries
 	std::cout << std::endl << "Beginning loop over " << nentries << " entries\n" << std::endl;
@@ -332,13 +332,13 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 					float proton_score1_1 = universe->GetProtonScore1_1();
 					float proton_score1_2 = universe->GetProtonScore1_2();
 					float proton_track_vtx_gap_0 = universe->GetPrimaryProtonTrackVtxGap();
-					float proton_track_vtx_gap_1 = universe->GetSecProtonTrackVtxGap_1();
-					float proton_track_vtx_gap_2 = universe->GetSecProtonTrackVtxGap_2();
+					//float proton_track_vtx_gap_1 = universe->GetSecProtonTrackVtxGap_1();
+					//float proton_track_vtx_gap_2 = universe->GetSecProtonTrackVtxGap_2();
 					float proton_T_from_dEdX_0 = universe->GetPrimaryProtonTfromdEdx();
 					float proton_T_from_dEdX_1 = universe->GetSecProtonTfromdEdx_1();
 					float proton_T_from_dEdX_2 = universe->GetSecProtonTfromdEdx_2();
 					float proton_ratio_T_to_tracklength_0 = universe->ProtonRatioTdEdX2TrackLength_0();
-					float proton_ratio_T_to_tracklength_1 = universe->ProtonRatioTdEdX2TrackLength_1();
+					//float proton_ratio_T_to_tracklength_1 = universe->ProtonRatioTdEdX2TrackLength_1();
 					float proton_clusters_0 = universe->GetNumClustsPrimaryProtonEnd();
 					float proton_clusters_1 = universe->GetNumClustsSecProtonEnd_1();
 					float proton_clusters_2 = universe->GetNumClustsSecProtonEnd_2();
@@ -359,7 +359,7 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 					
 					input_vars.emplace_back(multiplicity);
 					if (proton_score1_0 >= 0) {
-						if (proton_cand_count == 1) {
+						//if (proton_cand_count == 1) {
 							input_vars.emplace_back(proton_score1_0);
 							input_vars.emplace_back(proton_track_vtx_gap_0);
 							input_vars.emplace_back(proton_ratio_T_to_tracklength_0);
@@ -378,14 +378,14 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 								response_vec = {0,0,0,0,0};
 								std::cout << "WARNING: INPUT VECTOR SIZE DOES NOT MATCH 2 TRACK MODEL EXPECTATION" << std::endl;
 							}
-						}
-						else {
+						//}
+						/*else {
 							input_vars.emplace_back(proton_score1_0);
 							input_vars.emplace_back(proton_score1_1);
 							input_vars.emplace_back(proton_track_vtx_gap_0);
-							input_vars.emplace_back(proton_track_vtx_gap_1);
+							//input_vars.emplace_back(proton_track_vtx_gap_1);
 							input_vars.emplace_back(proton_ratio_T_to_tracklength_0);
-							input_vars.emplace_back(proton_ratio_T_to_tracklength_1);
+							//input_vars.emplace_back(proton_ratio_T_to_tracklength_1);
 							input_vars.emplace_back(proton_clusters_0);
 							input_vars.emplace_back(proton_clusters_1);
 							input_vars.emplace_back(proton_fraction_vis_energy_in_cone_0);
@@ -404,7 +404,7 @@ void LoopAndFillCSV(std::vector<int> file_entries,
 								response_vec = {0,0,0,0,0};
 								std::cout << "WARNING: INPUT VECTOR SIZE DOES NOT MATCH 3+ TRACK MODEL EXPECTATION" << std::endl;
 							}
-						}
+						}*/
 					}
 					else {
 						input_vars.emplace_back(blob_count);

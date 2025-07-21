@@ -20,6 +20,9 @@ int DoTheFit(std::map<const std::string, std::vector< PlotUtils::MnvH1D*>> fitHi
 int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector< PlotUtils::MnvH1D*>>> fitHists, 
                    std::map<const int, std::map<const std::string, std::vector< PlotUtils::MnvH1D*>>> unfitHists, 
                    const std::map<const int, std::map<const std::string, PlotUtils::MnvH1D*>>  dataHist,
+	               std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists_combined,
+	               std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists_combined,
+                   const std::map<const std::string, PlotUtils::MnvH1D*> dataHist_combined,
                    const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type = kML, 
                    const int lowBin = 1, const int hiBin = -1, 
                    const double upperLimit=1000., const bool binbybin=false);

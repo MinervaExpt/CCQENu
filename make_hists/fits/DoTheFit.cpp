@@ -510,6 +510,9 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
 int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<PlotUtils::MnvH1D*>>> fitHists, 
                    std::map<const int, std::map<const std::string, std::vector<PlotUtils::MnvH1D*>>> unfitHists, 
                    const std::map<const int, std::map<const std::string, PlotUtils::MnvH1D*>> dataHist, 
+	               std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists_combined,
+	               std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists_combined,
+                   const std::map<const std::string, PlotUtils::MnvH1D*> dataHist_combined,
                    const std::map<const std::string, bool> includeInFit, 
                    const std::vector<std::string> categories, const fit_type type, 
                    const int lowBin, const int hiBin, 
@@ -521,6 +524,15 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
     auto* mini2 = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kCombined);
 
     int ncat = categories.size();
+    
+    std::map<std::string,int> nperuniv;
+    
+    std::vector<TMatrixD> variants_all;
+	std::vector<TVectorD> theparameters_all;
+	std::map<int,std::map<std::string,std::vector<TMatrixDSym>>> CovMatrix_all;
+	std::vector<std::vector<double>> ScaleResults_all;
+	
+	std::vector<std::string> universes;
 	
 	for (auto slice : dataHist){
 		// the fit code wants TH1D so make a copy of the data for that purpose
@@ -540,7 +552,6 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		// could make this in to a consistency check later.
 		// this assumes that all histograms have the same universes, which they really should
 
-		std::vector<std::string> universes;
 		PlotUtils::MnvH1D* ahist;
 		int acount = 0;
 
@@ -552,7 +563,9 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		    universes.push_back("CV");
 		    std::cout << " universe names:" ;
 		    for (auto a:universes){
-		        std::cout << a << ", ";
+		        std::cout << a;
+		        if (a == "CV") std::cout << "";
+		        else std::cout << ", ";
 		    }
 		    std::cout << std::endl;
 		}
@@ -563,11 +576,11 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		PlotUtils::MnvH2D correlation(TString("correlation_" + aname), "fit parameters", ncat, 0.0, double(ncat), ncat, 0.0, double(ncat));
 		PlotUtils::MnvH1D fcn(TString("fcn" + aname), "fcn", 1, 0., 1.);
 
-		
 		TMatrixD variants(ncat,ncat);
 		TVectorD theparameters(ncat);
 		TMatrixDSym CovMatrix(ncat,ncat);
 		CovMatrix.ResizeTo(ncat,ncat);
+		
 		//int ndim;//
 
 		// add in the CV so you do a loop over universes
@@ -583,6 +596,9 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		        correlation.AddVertErrorBandAndFillWithCV(univ, nuniv);
 		    } else {
 		        nuniv = 1;
+		    }	
+		    if(slice.first==1) {
+		    	nperuniv[univ] = nuniv;
 		    }
 		    // loop over universes within a band
 		    for (int iuniv = 0; iuniv < nuniv; iuniv++) {
@@ -665,8 +681,6 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		            std::vector<double> ScaleResults;
 
 		            ndim = func2.NDim();
-		            //TMatrixDSym CovMatrix(ncat, ncat);
-		            //CovMatrix.ResizeTo(ncat,ncat);
 		            
 		            //std::cout << "ncat" << ncat << std::endl;
 		            //CovMatrix.Print();
@@ -680,7 +694,10 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		                //}
 		            }
 		            CovMatrix.Print();
-
+					//CovMatrix_all[slice.first] = CovMatrix;
+					CovMatrix_all[slice.first][univ].push_back(CovMatrix);
+		            //ScaleResults_all[slice.first] = ScaleResults;
+		            ScaleResults_all.push_back(ScaleResults);
 
 		            if (!success) {
 		                // if it failed, just scale the components to the data with the original ratios
@@ -719,6 +736,8 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		                    double err = std::sqrt(covariance.GetBinContent(i + 1, i + 1));
 		                    parameters.SetBinError(i+1,err);
 		                }
+		                //theparameters_all[slice.first] = theparameters;
+		                theparameters_all.push_back(theparameters);
 		                for (int i = 0; i < func2.NDim(); i++) {
 		                    double erri = parameters.GetBinError(i+1);
 		                    for (int j = 0; j < func2.NDim(); j++) {
@@ -745,6 +764,15 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		                            fitHists[myslice][myname][i]->SetBinContent(j, unfitHists[myslice][myname][i]->GetBinContent(j) * ScaleResults[i]);
 		                            fitHists[myslice][myname][i]->SetBinError(j, unfitHists[myslice][myname][i]->GetBinError(j) * ScaleResults[i]);
 		                        }
+		                    }
+		                }
+		                for (auto sample : fitHists_combined) {
+		                    const std::string myname = sample.first;
+		                    for (int i = 0; i < func2.NDim(); i++) {
+		                        int nbins = fitHists_combined[sample.first][i]->GetNbinsX();
+		                        std::cout << "scale CV" << myname << " " << i << " " << ScaleResults[i] << std::endl;
+	                            fitHists_combined[myname][i]->SetBinContent(slice.first, unfitHists_combined[myname][i]->GetBinContent(slice.first) * ScaleResults[i]);
+	                            fitHists_combined[myname][i]->SetBinError(slice.first, unfitHists_combined[myname][i]->GetBinError(slice.first) * ScaleResults[i]);
 		                    }
 		                }
 		            } 
@@ -774,9 +802,9 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 
 		                    for (int i = 0; i < ncat; i++) {
 		                        PlotUtils::MnvVertErrorBand* errorband = unfitHists.at(slice.first).at(sample.first).at(i)->GetVertErrorBand(univ);
-		                        PlotUtils::MnvVertErrorBand* newerrorband = fitHists.at(slice.first).at(sample.first).at(i)->GetVertErrorBand(univ);
+		                        PlotUtils::MnvVertErrorBand* newerrorband = fitHists.at(slice.first).at(sample.first).at(i)->GetVertErrorBand(univ); 
+		                                        
 		                        TH1D* hist = errorband->GetHist(iuniv);
-
 		                        TH1D* newhist = newerrorband->GetHist(iuniv);
 
 		                        for (int j = lowBin; j <= hiBin; j++) {
@@ -793,8 +821,20 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		                    }
 		                    // hist->Scale(ScaleResults[i]);
 		                }
+		                for (auto sample : unfitHists_combined) {
+		                    for (int i = 0; i < ncat; i++) {
+		                    	PlotUtils::MnvVertErrorBand* errorband_combined = unfitHists_combined.at(sample.first).at(i)->GetVertErrorBand(univ);
+		                        PlotUtils::MnvVertErrorBand* newerrorband_combined = fitHists_combined.at(sample.first).at(i)->GetVertErrorBand(univ);
+		                                      
+		                        TH1D* hist_combined = errorband_combined->GetHist(iuniv);
+		                        TH1D* newhist_combined = newerrorband_combined->GetHist(iuniv);
+		                        
+		                        newhist_combined->SetBinContent(slice.first, hist_combined->GetBinContent(slice.first) * ScaleResults[i]);
+		                        newhist_combined->SetBinError(slice.first, hist_combined->GetBinError(slice.first) * ScaleResults[i]);
+		                    }
+						}
 		            }
-		        }
+				}
 		    }  // end of nuniv loop
 		    
 		}  // end of universes loop
@@ -806,11 +846,13 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		    TVectorD tmp = variants[var];
 		    tmp.Print();
 		}
+		//variants_all[slice.first] = variants;
+		variants_all.push_back(variants);
 
 		for (auto sample : fitHists.at(slice.first)){ //loop over samples
 		    
 		    for (int i = 0; i < ncat; i++){  // loop over categories for that sample
-		        fitHists.at(slice.first).at(sample.first).at(i)->AddVertErrorBandAndFillWithCV(std::string("FitVariations"), ncat * 2);
+		        fitHists.at(slice.first).at(sample.first).at(i)->AddVertErrorBandAndFillWithCV(std::string("FitVariations"), neigen * 2);
 		        PlotUtils::MnvVertErrorBand* errorband = fitHists.at(slice.first).at(sample.first).at(i)->GetVertErrorBand("FitVariations");
 		        for (int var = 0; var < neigen; var++){ // loop over variations
 		            for (int k = 0; k < 2; k++){
@@ -854,6 +896,50 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		covariance.Write();
 		correlation.Write();
     }
+    
+	
+	/*std::cout << std::endl << std::endl << "Covariance Matrices:" << std::endl;
+	for (auto slice : CovMatrix_all) {
+		for (auto univ : slice.second) {
+			for (int i=0; i<univ.second.size(); i++) {
+				std::cout << slice.first << " " << univ.first << " " << i << std::endl;
+				univ.second[i].Print();
+				std::cout << std::endl;
+			}
+		}
+	}
+	std::cout << std::endl;*/
+	
+	/*std::cout << std::endl << std::endl << "variants_all.size() = " << variants_all.size() << std::endl;
+	std::cout << "theparameters_all.size() = " << theparameters_all.size() << std::endl;
+	std::cout << "hiBin = " << hiBin << std::endl << std::endl;*/
+	
+	int neigen = 3;
+    for (auto sample : fitHists_combined){ //loop over samples  
+	    for (int i = 0; i < ncat; i++){  // loop over categories for that sample
+	        fitHists_combined.at(sample.first).at(i)->AddVertErrorBandAndFillWithCV(std::string("FitVariations"), neigen * 2);
+	        PlotUtils::MnvVertErrorBand* errorband_combined = fitHists_combined.at(sample.first).at(i)->GetVertErrorBand("FitVariations");
+	        for (int var = 0; var < neigen; var++){ // loop over variations
+	            for (int k = 0; k < 2; k++){
+	                int iuniv = var*2+k;
+					TH1D* hist_combined = errorband_combined->GetHist(iuniv);
+		            int sign = (2*k)-1;
+	                for (int j=0; j<theparameters_all.size(); j++) {
+			            // central value already scaled by the fit parameter so have to back it off. 
+			            double variation = (1. + variants_all[j][var][i] * sign/theparameters_all[j][i]);
+	                    hist_combined->SetBinContent(j+1, hist_combined->GetBinContent(j+1)*variation);
+	                    
+	                    std::cout << "bin " << j+1 << " varied by " << sample.first << " " << i << " " << iuniv << " " << theparameters_all[j][i] << " " << variants_all[j][var][i] << " " << variation << " " << theparameters_all[j][i]*variation << std::endl;
+	                }
+	             }      
+	        }
+	    }
+	}
+	for (auto sample : fitHists_combined) {
+	    for (int i = 0; i < ncat; i++) {
+	        SyncBands(fitHists_combined[sample.first][i]);
+	    }
+	}
     
     return 0;
 }

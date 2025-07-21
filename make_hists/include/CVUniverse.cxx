@@ -2373,7 +2373,7 @@ namespace {
 		int gate = GetInt("mc_nthEvtInFile") + 1;
 		int slice = GetVecElem("slice_numbers", 0);
 		sprintf(link,
-			      "https://minerva05.fnal.gov/Arachne/"
+			      "https://mnvevdgpvm02.fnal.gov/Arachne/"
 			      "arachne.html\?det=SIM_minerva&recoVer=v21r1p1&run=%d&subrun=%d&gate="
 			      "%d&slice=%d", run, subrun, gate, slice);
 		std::cout << link << std::endl;
@@ -2394,7 +2394,7 @@ namespace {
 		int gate = GetInt("mc_nthEvtInFile") + 1;
 		int slice = GetVecElem("slice_numbers", 0);
 		sprintf(link,
-			      "https://minerva05.fnal.gov/Arachne/"
+			      "https://mnvevdgpvm02.fnal.gov/Arachne/"
 			      "arachne.html\?det=SIM_minerva&recoVer=v21r1p1&run=%d&subrun=%d&gate="
 			      "%d&slice=%d", run, subrun, gate, slice);
 		return link;
@@ -2409,7 +2409,7 @@ namespace {
 		int gate = GetInt("ev_gate");
 		int slice = GetVecElem("slice_numbers", 0);
 		sprintf(link,
-			      "https://minerva05.fnal.gov/Arachne/"
+			      "https://mnvevdgpvm02.fnal.gov/Arachne/"
 			      "arachne.html\?det=MV&recoVer=v21r1p1&run=%d&subrun=%d&gate="
 			      "%d&slice=%d", run, subrun, gate, slice);
 		std::cout << link << std::endl;
@@ -2424,7 +2424,7 @@ namespace {
 		int gate = GetInt("ev_gate");
 		int slice = GetVecElem("slice_numbers", 0);
 		sprintf(link,
-			      "https://minerva05.fnal.gov/Arachne/"
+			      "https://mnvevdgpvm02.fnal.gov/Arachne/"
 			      "arachne.html\?det=MV&recoVer=v21r1p1&run=%d&subrun=%d&gate="
 			      "%d&slice=%d", run, subrun, gate, slice);
 		return link;
