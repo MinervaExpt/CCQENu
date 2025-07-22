@@ -50,7 +50,6 @@ include/GetHyperDVariablesFromConfig.cxx
 include/CVUniverse.cxx
 include/weight_MCreScale.cxx
 include/weight_warper.cxx
-# include/NeutCands.cxx
 include/NeutronMultiplicity.cxx
 fits/ScaleFactors.cpp
 fits/MultiScaleFactors.cpp
@@ -84,7 +83,6 @@ include/VariableFromConfig.h
 # include/plotting_pdf.h
 include/weight_MCreScale.h
 include/weight_warper.h
-# include/NeutCands.h
 include/NeutronMultiplicity.h
 fits/ScaleFactors.h
 fits/MultiScaleFactors.h

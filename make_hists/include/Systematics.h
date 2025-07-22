@@ -23,7 +23,7 @@
 #include "PlotUtils/MnvTuneSystematics.h"
 #include "PlotUtils/MuonResolutionSystematics.h"
 #include "PlotUtils/MuonSystematics.h"
-// #include "PlotUtils/NeutronInelasticReweighter.h"
+#include "PlotUtils/NeutronInelasticReweighter.h"
 #include "PlotUtils/ResponseSystematics.h"
 #include "utils/NuConfig.h"
 
@@ -213,23 +213,30 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
         std::cout << "Warning: response systematics are turned off" << std::endl;
     }
 
-    // // MoNA reweight systematic universe
-    // if (std::find(flags.begin(), flags.end(), "MoNANeutronInelastic") != flags.end()) {
-    //     std::map<std::string, std::vector<int>> MonaMapDefault = {{"nGamma", {1000060120, 2112}},
-    //                                                               {"threeAlpha", {1000020040, 100002040, 100002040, 2112}},
-    //                                                               {"Bnp", {1000050110, 2112, 2212}}};
 
-    //     UniverseMap mona_systematics;
-    //     // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), 1.0));
-    //     // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), -1.0));
-    //     mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), 1.0));
-    //     mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), -1.0));
-    //     error_bands.insert(mona_systematics.begin(), mona_systematics.end());
-    //     std::cout << " do MoNA systematics " << std::endl;
 
-    // } else {
-    //     std::cout << "WARNING: MoNA systematic turned off" << std::endl;
-    // }
+    // MoNA reweight systematic universe
+    if (std::find(flags.begin(), flags.end(), "MoNANeutronInelastic") != flags.end()) {
+        std::map<std::string, std::vector<int>> MonaMapDefault = {{"nGamma", {1000060120, 2112}},
+                                                                  {"threeAlpha", {1000020040, 100002040, 100002040, 2112}},
+                                                                  {"Bnp", {1000050110, 2112, 2212}}};
+
+        UniverseMap mona_systematics;
+        // // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), 1.0));
+        // // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), -1.0));
+        // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), 1.0));
+        // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), -1.0));
+
+        // This mode sets up NeutronInealsticReweighter according to David's scheme, using 0 for Tracker, 1 for targets.
+        int mode = 0;
+        mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault, 0)), 1.0));
+        // UniverseMap mona_systematics = GetMonaSystematicMap(chain);
+        error_bands.insert(mona_systematics.begin(), mona_systematics.end());
+        std::cout << " do MoNA systematics with mode " << std::to_string(mode) << std::endl;
+
+    } else {
+        std::cout << "WARNING: MoNA systematic turned off" << std::endl;
+    }
 
     // at the end
     return error_bands;

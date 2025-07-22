@@ -210,7 +210,7 @@ int NeutEvent::GetCandIsNeut(int index) {
             CandPassFiducial(index) && 
             CandPassVtxDist(index) && 
             CandPassEDep(index) && 
-            CandPassIs3D(index);
+            CandPassIs3D(index));
             // m_cands[index]->GetCandIs3D());
     // return (CandIsHighE(index) && m_cands[index]->GetCandIs3D());
 }
