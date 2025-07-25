@@ -563,11 +563,11 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     // Get "category" tags set in config. Needs to match ones used in the event loop.
     // TODO: Make this a map in config.
 
-    std::cout << " at the top of GetXsec" << sample << std::endl;
+    std::cout << " at the top of GetXsec " << sample << std::endl;
     // this can come out of the sample information:
     // configs["main"]->Print();
     NuConfig sigkey = configs["main"]->GetConfig("signal");
-    // sigkey.Print();
+    sigkey.Print();
     std::string sig = sigkey.GetString(sample);
     std::cout << " got sig " << sig << std::endl;
     NuConfig bkgkey;
@@ -595,6 +595,10 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     // Check if not 2D then make logscale for plotting if looking at Q^2_QE
     if (basename.find("h2D_") == std::string::npos) {
         if (variable.find("Q2QE") != std::string::npos) logscale = 1;
+        if (variable.find("ptmu") != std::string::npos) logscale = 1;
+        if (variable.find("pzmu") != std::string::npos) logscale = 1;
+        if (variable.find("Enu") != std::string::npos) logscale = 1;
+        if (variable.find("EnuCCQE") != std::string::npos) logscale = 1;
     }
     // If 2D, then set log scale for each axis if needed
     else {

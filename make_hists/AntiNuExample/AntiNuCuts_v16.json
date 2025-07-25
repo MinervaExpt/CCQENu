@@ -14,7 +14,7 @@
     {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
     {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
-    {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
+    {"name":"Max MuonMomentumPar ","max":50.0,"variable":"PparMuGeV"},
     {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
     {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
   ],
@@ -86,7 +86,7 @@
     {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
     {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
-    {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
+    {"name":"Max MuonMomentumPar ","max":50.0,"variable":"PparMuGeV"},
     {"name":"Max Multiplicity","max":100,"variable":"Multiplicity"},
     {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
   ],
@@ -99,7 +99,7 @@
     {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
     {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
     {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
-    {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
+    {"name":"Max MuonMomentumPar ","max":50.0,"variable":"PparMuGeV"},
     {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
     {"name":"GoodRecoil","equals":0,"variable":"GoodRecoil"}
   ],
@@ -112,7 +112,7 @@
       {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
       {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
       {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
-      {"name":"Max MuonMomentumPar ","max":15.0,"variable":"PparMuGeV"},
+      {"name":"Max MuonMomentumPar ","max":50.0,"variable":"PparMuGeV"},
       {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"}
     ],
     "EHadronic": [
@@ -159,7 +159,7 @@
       },
       {
         "name": "Max MuonMomentumPar ",
-        "max": 15.0,
+        "max": 50.0,
         "variable": "PparMuGeV"
       },
       {
@@ -168,8 +168,8 @@
         "variable": "Multiplicity"
       },
       { "name": "Min Ehadronic",
-        "min":0.050,
-        "variable": "HadronEGeV"
+        "min":0.100,
+        "variable": "CalRecoilEnergyGeVCalibrated"
       }   
     ],
     "Inclusive": [
@@ -286,7 +286,7 @@
     {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
     {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"},
     {"name":"TrueMuonMomentumPar Min","min":1.5,"variable":"TruePparMuGeV"},
-    {"name":"TrueMuonMomentumPar Max","max":15.0,"variable":"TruePparMuGeV"},
+    {"name":"TrueMuonMomentumPar Max","max":50.0,"variable":"TruePparMuGeV"},
     {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"TrueThetamuDegrees"}
   ],
   "phase_space_all_angles":[
@@ -294,7 +294,7 @@
     {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
     {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"},
     {"name":"TrueMuonMomentumPar Min","min":1.5,"variable":"TruePparMuGeV"},
-    {"name":"TrueMuonMomentumPar Max","max":15.0,"variable":"TruePparMuGeV"}
+    {"name":"TrueMuonMomentumPar Max","max":50.0,"variable":"TruePparMuGeV"}
   ],
   "phase_space_inclusive": [
     {

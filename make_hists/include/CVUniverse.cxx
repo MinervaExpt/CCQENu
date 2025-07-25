@@ -51,6 +51,31 @@ double CVUniverse::m_min_blob_zvtx = 4750.0;
 double CVUniverse::m_photon_energy_cut = 10.0;                             // in MeV
 double CVUniverse::m_proton_ke_cut = NSFDefaults::TrueProtonKECutCentral;  // Default value
 
+NuConfig CVUniverse::mainConfig = Json::Value::null; // you can use this to access configs in the main config
+std::string CVUniverse::recoilDefinition = "";
+
+void CVUniverse::SetMainConfig(const NuConfig config) { 
+            CVUniverse::mainConfig=config;
+            
+            if (config.IsMember("RecoilDefinitions")) {
+                NuConfig recoilDefinitions = config.GetConfig("RecoilDefinitions");
+                std::vector<std::string> samples = config.GetStringVector("runsamples");
+                if (samples.size() != 1){
+                    std::cout << "recoil defintions only works for single samples" << std::endl;
+                    hasrecoildefinitions = false;
+                }
+                else{
+                    std::string thesample=samples[0];
+                    if (recoilDefinitions.IsMember(thesample)){
+                        CVUniverse::recoilDefinition = recoilDefinitions.GetString(thesample);
+                        std::cout << " recoil definitions loaded" << CVUniverse::recoilDefinition << std::endl;
+                        hasrecoildefinitions = true;
+                    }
+                }
+            }
+        };
+
+
 NuConfig CVUniverse::m_proton_score_config = Json::Value::null;
 std::vector<double> CVUniverse::m_proton_score_Q2QEs = {0.2, 0.6};
 std::vector<double> CVUniverse::m_proton_score_mins = {0.2, 0.1, 0.0};
@@ -137,6 +162,7 @@ bool CVUniverse::_is_photon_energy_cut_set = false;
 bool CVUniverse::_is_proton_ke_cut_set = false;
 bool CVUniverse::_is_proton_score_config_set = false;
 
+
 ///////////////// Incoming Neutrino PDG /////////////////
 int CVUniverse::GetAnalysisNeutrinoPDG() { return m_analysis_neutrino_pdg; }
 bool CVUniverse::SetAnalysisNeutrinoPDG(int neutrino_pdg, bool print) {
@@ -151,6 +177,8 @@ bool CVUniverse::SetAnalysisNeutrinoPDG(int neutrino_pdg, bool print) {
         return 1;
     }
 }
+
+bool CVUniverse::hasrecoildefinitions=false;
 
 ///////////////// Blob minimum Z vertex in order to be counted /////////////////
 double CVUniverse::GetMinBlobZVtx() { return m_min_blob_zvtx; }
@@ -296,6 +324,9 @@ int CVUniverse::GetMultiplicity() const { return GetInt("multiplicity"); }
 int CVUniverse::GetDeadTime() const { return GetInt("phys_n_dead_discr_pair_upstream_prim_track_proj"); }
 
 // ----------------------- Analysis-related Variables ------------------------
+
+
+
 
 int CVUniverse::GetIsMinosMatchTrack() const { return GetInt("muon_is_minos_match_track"); }
 double CVUniverse::GetEnuHadGeV() const { return CVUniverse::GetEmuGeV() + CVUniverse::GetHadronEGeV(); }  // GetEnuGeV()?
@@ -860,32 +891,44 @@ double CVUniverse::GetCalRecoilEnergy() const {
     else {
         // if(GetVecDouble("recoil_summed_energy").size()==0) return -999.; // protect against bad input,
         // return (GetVecDouble("recoil_summed_energy")[0] - GetDouble("recoil_energy_nonmuon_vtx100mm"));
-        return GetDouble("recoil_energy_nonmuon_nonvtx100mm");
+        if (CVUniverse::hasrecoildefinitions){
+            return GetDouble(recoilDefinition.c_str());
+        }
+        else{
+            return GetDouble("recoil_energy_nonmuon_nonvtx100mm");
+        }
     }
 }
 
-double CVUniverse::GetCalRecoilEnergy0mmGeV() const {
-    bool neutrinoMode = GetAnalysisNuPDG() > 0;
-    if (neutrinoMode)
-        if (std::string(MinervaUniverse::GetTreeName()) == "CCQENu") {
-            return (GetDouble("nonvtx_iso_blobs_energy") + GetDouble("dis_id_energy"))*MeVGeV;
-        }  // several definitions of this, be careful
-        else {
-            return (GetDouble("nonvtx_iso_blobs_energy") + GetDouble("dispr_id_energy"))*MeVGeV;
-        }
-    else {
-        // if(GetVecDouble("recoil_summed_energy").size()==0) return -999.; // protect against bad input,
-        // return (GetVecDouble("recoil_summed_energy")[0] - GetDouble("recoil_energy_nonmuon_vtx100mm"));
-        return GetDouble("recoil_energy_nonmuon_nonvtx0mm")*MeVGeV;
-    }
+double CVUniverse::GetCalRecoilEnergyGeVCalibrated() const {
+    return GetCalRecoilEnergyGeV()*2.0;
+    // bool neutrinoMode = GetAnalysisNuPDG() > 0;
+    // if (neutrinoMode)
+    //     if (std::string(MinervaUniverse::GetTreeName()) == "CCQENu") {
+    //         return (GetDouble("nonvtx_iso_blobs_energy") + GetDouble("dis_id_energy"))*MeVGeV;
+    //     }  // several definitions of this, be careful
+    //     else {
+    //         return (GetDouble("nonvtx_iso_blobs_energy") + GetDouble("dispr_id_energy"))*MeVGeV;
+    //     }
+    // else {
+    //     // if(GetVecDouble("recoil_summed_energy").size()==0) return -999.; // protect against bad input,
+    //     // return (GetVecDouble("recoil_summed_energy")[0] - GetDouble("recoil_energy_nonmuon_vtx100mm"));
+    //     return GetDouble("recoil_energy_nonmuon_nonvtx0mm")*MeVGeV*2.0;
+    // }
 }
 
 double CVUniverse::GetCalRecoilEnergyGeV() const { return CVUniverse::GetCalRecoilEnergy() * MeVGeV; }
+
 double CVUniverse::GetNonCalRecoilEnergy() const { return 0; }  // not certain why I want to implement this but there ya go.
+
 double CVUniverse::GetNonCalRecoilEnergyGeV() const { return GetNonCalRecoilEnergy() * MeVGeV; }
+
 double CVUniverse::GetRecoilEnergyGeV() const { return GetRecoilEnergy() * MeVGeV; }                       // GetCalRecoilEnergy()?
+
 double CVUniverse::GetTrueRecoilEnergyGeV() const { return CVUniverse::GetTrueQ0GeV(); }                   // need this?
+
 double CVUniverse::GetTrueLog10RecoilEnergyGeV() const { return std::log10(CVUniverse::GetTrueQ0GeV()); }  // need this?
+
 double CVUniverse::GetLog10RecoilEnergyGeV() const { return std::log10(GetRecoilEnergy()) - 3.; }
 
 

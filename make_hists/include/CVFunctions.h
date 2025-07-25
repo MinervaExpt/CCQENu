@@ -90,8 +90,8 @@ class CVFunctions {
         recofunctions["Curvature"] = &CVUNIVERSE::GetCurvature;
         truefunctions["TrueCurvature"] = &CVUNIVERSE::GetTrueCurvature;
 
-        recofunctions["RecoilEnergyGeV"] = &CVUNIVERSE::GetRecoilEnergyGeV; // this one has the 100mm cutout
-        recofunctions["CalRecoilEnergy0mmGeV"] = &CVUNIVERSE::GetCalRecoilEnergy0mmGeV; // special version with no vertex cutout. 
+        recofunctions["RecoilEnergyGeV"] = &CVUNIVERSE::GetRecoilEnergyGeV; // this one has the 00mm cutout
+        recofunctions["CalRecoilEnergyGeVCalibrated"] = &CVUNIVERSE::GetCalRecoilEnergyGeVCalibrated; // special version with no vertex cutout. 
         truefunctions["TrueRecoilEnergyGeV"] = &CVUNIVERSE::GetTrueRecoilEnergyGeV;
 
         recofunctions["Log10RecoilEnergyGeV"] = &CVUNIVERSE::GetLog10RecoilEnergyGeV;

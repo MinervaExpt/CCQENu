@@ -74,7 +74,7 @@ def loop(outname,canvas,fname,gname,fkey,gkey):
         gpot = TH2D()
         gpot = g.Get("POT_summary")
         pot2 = gpot.GetBinContent(1)
-        if pot1 > 0: 
+        if pot2 > 0: 
             scaleData = pot1/pot2
             scaleMC = fpot.GetBinContent(3)/gpot.GetBinContent(3)
         print ("POT",pot1,pot2,scaleData,scaleMC)
@@ -85,31 +85,31 @@ def loop(outname,canvas,fname,gname,fkey,gkey):
         print("POT rescaling discabled")
     
     for k in f.GetListOfKeys():
-        
+         
         key = k.GetName()
-        badkey = False
-        for fil in filter:
-            if fil in key:
-                badkey = True
-        if badkey: continue
+        key2 = key.replace("__QElike__","__Multiplicity1__")
+        key2 = key2.replace("__qelikenot__","__qelikenot_np__")
+        key2 = key2.replace("__qelike__","__qelike_np__")
         canvas = CCQECanvas(key,key)
         h1 = MnvH1D()
         h2 = MnvH1D()
         h1 = f.Get(key)
-        h2 = g.Get(key)
-        
-        if not h1.InheritsFrom("TH1D"):
-            continue
+        h2 = g.Get(key2)
         if not h1:
             print("could not find",h1)
             continue
-        if h1.InheritsFrom("TH2D"):
+        
+        if not h1.InheritsFrom("TH1D"):
             continue
-        if not h2:
-            print("could not find",h2)
+        
+        if h1.InheritsFrom("TH2D"):
             continue
         if h1.GetEntries() == 0: 
             continue
+        if not h2:
+            print("could not find",key2)
+            continue
+        
         # look for things that need width correctin
         for test in widthcorr:
             #if "sigma" in key and "Enu" not in key:
@@ -123,8 +123,8 @@ def loop(outname,canvas,fname,gname,fkey,gkey):
                                
                 break
         # POT scale the original histograms
-        if "___" in key:
-            if "data" in key:
+        if "___" in key2:
+            if "data" in key2:
                 h2.Scale(scaleData)
             else:
                 h2.Scale(scaleMC)
@@ -143,6 +143,7 @@ def loop(outname,canvas,fname,gname,fkey,gkey):
 
 def compare(outname,canvas, h1, h2, tag1, tag2):
     ''' compares 2 histograms, tag1 and tag2 are tags to use in the legend'''
+    print ("compare", h1.GetName(),h2.GetName())
     canvas.Divide(1,2,0.01,0.01)
     canvas.cd()
     #pad1 =  TPad("COMP","COMP",0,.5,1,1)
@@ -309,13 +310,21 @@ gStyle.SetOptStat(0)
 
 
 
-#fname = "/Users/schellma/Dropbox/CCQE/p6_test/P6_minervame6A_MnvTunev2_QElike_p6_run_1.root"
+# fname = "/Users/schellma/Dropbox/CCQE/p6_test/P6_minervame6A_MnvTunev2_QElike_p6_run_1.root"
 
-#gname = "/Users/schellma/Dropbox/CCQE/p6_test/P4_minervame6A_MnvTunev2_QElike_p4_run_1.root"
+# gname = "/Users/schellma/Dropbox/CCQE/p6_test/P4_minervame6A_MnvTunev2_QElike_p4_run_1.root"
 
-fname = "/Users/schellma/Dropbox/newForge/CCQENu/make_hists/P6_inclusive_minervame5A_MnvTunev1_Inclusive_p6_inclusive_1_untuned_analyze9.root"
+# fname = "/Users/schellma/Dropbox/newForge/CCQENu/make_hists/P6_inclusive_minervame5A_MnvTunev1_Inclusive_p6_inclusive_1_untuned_analyze9.root"
 
-gname = "/Users/schellma/Dropbox/newForge/CCQENu/make_hists/P6_inclusive_minervame5A_MnvTunev2_Inclusive_p6_inclusive_1_untuned_analyze9.root"
+# gname = "/Users/schellma/Dropbox/newForge/CCQENu/make_hists/P6_inclusive_minervame5A_MnvTunev2_Inclusive_p6_inclusive_1_untuned_analyze9.root"
+
+# fname = "/Users/schellma/Dropbox/newForge/CCQENu/make_hists/P6_inclusive_minervame5A_MnvTunev1_Inclusive_p6_inclusive_1_untuned_analyze9.root"
+
+# gname = "/Users/schellma/Dropbox/newForge/CCQENu/make_hists/P4_inclusive_minervame5A_MnvTunev1_Inclusive_p4_inclusive_1_untuned_analyze9.root"
+
+fname="/Users/schellma/Dropbox/newForge/CCQENu/make_hists/P6_minervame5A_MnvTunev2_QElike_p6_qelike_1.root"
+
+gname="/Users/schellma/Dropbox/newForge/CCQENu/make_hists/P6_minervame5A_MnvTunev2_Multiplicity1_p6_mult1_1.root"
 
 tag1,tag2 = stringdiff(fname,gname)
 print (fname)
@@ -328,7 +337,7 @@ if not os.path.exists(fname):
     exit(1)
 
 if not os.path.exists(gname):
-    print (name," was not found")
+    print (gname," was not found")
     exit(1)
 
 # f = TFile.Open(fname,"READONLY")

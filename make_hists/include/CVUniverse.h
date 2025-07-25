@@ -48,6 +48,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static NuConfig m_proton_score_config;
     static std::vector<double> m_proton_score_Q2QEs;
     static std::vector<double> m_proton_score_mins;
+    static NuConfig mainConfig;
+
+    static bool hasrecoildefinitions;
+    static std::string recoilDefinition;
 
     // initially set to false
     static bool _is_analysis_neutrino_pdg_set;
@@ -57,6 +61,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static bool _is_proton_score_config_set;
 
    public:
+   
 // #ifndef HAZMAT
 // #include "PlotUtils/SystCalcs/MuonFunctions.h"
 // #include "PlotUtils/SystCalcs/RecoilEnergyFunctions.h"
@@ -67,7 +72,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 #include "PlotUtils/RecoilEnergyFunctions.h"
 #include "PlotUtils/TruthFunctions.h"
 #include "PlotUtils/WeightFunctions.h"
-// #endif
+    // #endif
 
     // ========================================================================
     // Constructor/Destructor
@@ -127,6 +132,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static NuConfig GetProtonScoreConfig(bool print);
     static bool SetProtonScoreConfig(NuConfig protonScoreConfig, bool print);
 
+
+    static void SetMainConfig(const NuConfig config);
+    
     // ----------------------- Analysis-related Variables ------------------------
     // these are dummies for when you want to plot something that is missing truth or data
     virtual double GetNothing()const{return 0.0;};
@@ -201,10 +209,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // } ;
 
     virtual double ApplyCaloTuning(double calRecoilE) const;
-
+    
     virtual double GetCalRecoilEnergy() const;
     virtual double GetCalRecoilEnergyGeV() const;
-    virtual double GetCalRecoilEnergy0mmGeV() const;
+    virtual double GetCalRecoilEnergyGeVCalibrated() const;
     virtual double GetNonCalRecoilEnergy() const;
     virtual double GetNonCalRecoilEnergyGeV() const;
 

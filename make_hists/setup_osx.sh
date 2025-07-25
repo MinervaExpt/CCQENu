@@ -18,4 +18,5 @@ sed s+GIT_COMMIT_HASH+`git rev-parse --verify HEAD`+ utils/gitVersion.h.in > uti
 export MYPLAYLIST=minervame5A
 export PRESCALE=100
 export DATALOC=local
-export MYMODEL=MnvTunev1
+export MYMODEL=MnvTunev2
+export MYSAMPLE=Multiplicity1
