@@ -569,6 +569,7 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		    }
 		    std::cout << std::endl;
 		}
+		
 
 		// make objects to contain the fit information
 		PlotUtils::MnvH1D parameters(TString("parameters_" + aname), "fit parameters", ncat, 0.0, double(ncat));
@@ -610,6 +611,7 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		                for (int i = 0; i < ncat; i++) {
 		                    TString name = unfitHists.at(slice.first).at(sample.first).at(i)->GetName() + TString("_" + univ);
 		                    TH1D* hist = (TH1D*)unfitHists.at(slice.first).at(sample.first).at(i)->Clone(name);
+		                    hist->Print();
 		                    unfitHistsCV[sample.first].push_back(hist);
 		                }
 		            }
@@ -623,6 +625,7 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		                    TString name = errorband->GetName();
 		                    name += TString("_" + univ);
 		                    TH1D* hist = (TH1D*)errorband->GetHist(iuniv)->Clone(name);
+		                    hist->Print();
 		                    unfitHistsCV[sample.first].push_back(hist);
 		                }
 		            }
@@ -879,6 +882,8 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		for (auto sample : fitHists.at(slice.first)) {
 		    for (int i = 0; i < ncat; i++) {
 		        SyncBands(fitHists[slice.first][sample.first][i]);
+		        std::string fitname = sample.first + "_" + std::to_string(slice.first) + "_" + std::to_string(i);
+		        fitHists[slice.first][sample.first][i]->MnvH1DToCSV(fitname, "./csv/", 1.0, false);
 		    }
 		}
 

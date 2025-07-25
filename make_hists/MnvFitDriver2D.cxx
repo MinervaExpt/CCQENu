@@ -62,6 +62,7 @@
 #include "PlotUtils/MnvH1D.h"
 #include "PlotUtils/MnvPlotter.h"
 #include "utils/NuConfig.h"
+#include "utils/SyncBands.h"
 #include "fits/DoTheFit.h"
 
 
@@ -293,9 +294,11 @@ int main(int argc, char* argv[]) {
 			//newhist->RebinX(rebin);
 			if (logPlot) newhist->SetMinimum(logMinimum);
 			std::cout << "nbins " << cname << " " << newhist->GetXaxis()->GetNbins() << std::endl;
+			SyncBands(newhist);
 			newhist->Print();
 			newhist->Scale(POTscale);
 			newhist->Print();
+			newhist->MnvH2DToCSV(std::string(cname)+"_unfit", "./csv/", 1.0, false);
 			unfitHists2D[side].push_back(newhist);
 			fitHists2D[side].push_back((PlotUtils::MnvH2D*)newhist->Clone(TString(fname)));
 			
@@ -307,6 +310,7 @@ int main(int argc, char* argv[]) {
 			//PlotUtils::MnvH1D* newhist_combined = (PlotUtils::MnvH1D*)inputFile->Get(cname);
 			std::cout << " projecting " << cname << " to get " << cname_combined << std::endl;
 			PlotUtils::MnvH1D* newhist_combined = (PlotUtils::MnvH1D*)newhist->ProjectionY(cname_combined,lowVarBinCut,20);
+			SyncBands(newhist_combined);
 			if (!newhist_combined){
 				std::cout << " no " << cname_combined << std::endl;
 			}
@@ -317,6 +321,7 @@ int main(int argc, char* argv[]) {
 			//newhist_combined->Scale(POTscale);
 			newhist_combined->Print();
 			unfitHists_combined[side].push_back(newhist_combined);
+			newhist_combined->MnvH1DToCSV(std::string(cname_combined)+"_unfit", "./csv/");
 			fitHists_combined[side].push_back((PlotUtils::MnvH1D*)newhist_combined->Clone(TString(fname_combined)));
 			
 			// Slices
@@ -326,6 +331,9 @@ int main(int argc, char* argv[]) {
 				name = TString(cname_combined);
 				PlotUtils::MnvH1D* newhist_slice = (PlotUtils::MnvH1D*)newhist->ProjectionX(cname_slice,i,i);
 				newhist_slice->Rebin(rebin);
+				SyncBands(newhist_slice);
+				std::string cname_slice_num = std::string(cname_slice)+"_unfit_"+std::to_string(i);
+				newhist_slice->MnvH1DToCSV(cname_slice_num, "./csv/");
 				unfitHists_slices[i][side].push_back(newhist_slice);
 				fitHists_slices[i][side].push_back((PlotUtils::MnvH1D*)newhist_slice->Clone(TString(fname_slice)));
 			}

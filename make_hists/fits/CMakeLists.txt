@@ -142,7 +142,7 @@ add_executable(combineErrors smg/combineErrors.C)
 add_executable(combineHists smg/combineHists.C)
 add_executable(compareHists smg/compareHists.C)
 add_executable(combineROOTfiles smg/combineROOTfiles.C)
-add_executable(applyFits smg/applyFits.C)
+#add_executable(applyFits smg/applyFits.C)
 
 
 
@@ -177,4 +177,4 @@ target_link_libraries(combineErrors  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(combineHists  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(compareHists  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(combineROOTfiles PRIVATE ${PROJECT_NAME} )
-target_link_libraries(applyFits PRIVATE ${PROJECT_NAME} )
+#target_link_libraries(applyFits PRIVATE ${PROJECT_NAME} )
