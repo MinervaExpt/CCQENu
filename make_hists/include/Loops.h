@@ -116,42 +116,11 @@ void LoopAndFillEventSelection(std::string tag,
     }
 
     // status bar stuff
-    std::cout << std::endl;
-    std::cout << "  0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%" << std::endl;
-    std::cout << "   \\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\ " << std::endl;
-    std::cout << "   |________________________________________|   [__0.0%]";
     double progress = 0;
 
     // Begin entries loop
     for (int i = 0; i < nentries; i++) {
         if (data_mc_truth != kData) i += prescale - 1;
-
-        // if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
-        //  status bar stuff
-
-        // if (((double)(i + 1) / nentries) * 100 >= progress + 2.5) {
-        //     progress += 2.5;
-        //     std::cout << '\r' << std::flush << "   |";
-        //     // std::cout << std::endl << "   |";
-
-        //     for (int j = 0; j < progress / 2.5; j++) std::cout << "\e[0;31;47m \e[0m";
-        //     for (int j = 40; j > progress / 2.5; j--) std::cout << "_";
-
-        //     std::cout << "|   [";
-        //     if (progress < 10) std::cout << "_";
-        //     if (progress < 100) std::cout << "_";
-        //     std::cout << progress;
-        //     if (((int)(0.5 + progress / 2.5)) % 2 == 0) std::cout << ".0";
-        //     std::cout << "%]";
-        //     std::cout << "   ( ";
-        //     for (int j = ((int)log10(nentries) - (int)log10(i + 1)); j > 0; j--) {
-        //         std::cout << "_";
-        //     }
-        //     std::cout << i + 1 << " / " << nentries << " )";
-
-        //     if (progress == 100) std::cout << std::endl
-        //                                    << std::endl;
-        // }
 
         cvUniv->SetEntry(i);
         // HMS fund.Dump(cvUniv,data_mc_truth==kData,data_mc_truth==kTruth);
@@ -161,10 +130,41 @@ void LoopAndFillEventSelection(std::string tag,
         if (data_mc_truth == kMC || data_mc_truth == kData) {
             if (!cvUniv->FastFilter()) continue;
         }
-        const double cvWeight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*cvUniv, event);  // detail may be used for more complex things
+        // const double cvWeight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*cvUniv, event);  // detail may be used for more complex things
         // TODO: Is this scaled cvWeight necessary?
         // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
 
+        // if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
+
+        //  status bar stuff
+        if (i == 1) {
+            // status bar stuff
+            std::cout << std::endl;
+            std::cout << "  0%  5% 10% 15% 20% 25% 30% 35% 40% 45% 50% 55% 60% 65% 70% 75% 80% 85% 90% 95% 100%" << std::endl;
+            std::cout << "   \\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\ " << std::endl;
+            std::cout << "   |________________________________________________________________________________|   [__0.0%]";
+        }
+        if (((double)(i + 1) / nentries) * 100 >= progress + 1.25) {
+            progress += 1.25;
+            std::cout << '\r' << std::flush << "   |";
+
+            for (int j = 0; j < progress / 1.25; j++) std::cout << "\e[0;31;47m \e[0m";
+            for (int j = 80; j > progress / 1.25; j--) std::cout << "_";
+
+            std::cout << "|   [";
+            if (progress < 10) std::cout << "_";
+            if (progress < 100) std::cout << "_";
+            std::cout << setprecision(2) << std::fixed << progress;
+            std::cout << "%]";
+            std::cout << "   ( ";
+            for (int j = ((int)log10(nentries) - (int)log10(i + 1)); j > 0; j--) {
+                std::cout << "_";
+            }
+            std::cout << i + 1 << " / " << nentries << " )";
+
+            if (progress == 100) std::cout << std::endl
+                                           << std::endl;
+        }
         // Loop bands and universes
         for (auto band : error_bands) {
             std::vector<CVUniverse*> error_band_universes = band.second;
@@ -183,8 +183,14 @@ void LoopAndFillEventSelection(std::string tag,
                 // probably want to move this later on inside the loop
                 // const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event);  // Only calculate the per-universe weight for events that will actually use it.
                 // const double warp = (!dowarp || data_mc_truth == kData) ? 1. : warper.GetWarpWeight(*universe);
+
                 const double warp = (dowarp && data_mc_truth == kMC) ? warper.GetWarpWeight(*universe) : 1.;
                 const double tmp_weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event);  // Only calculate the per-universe weight for events that will actually use it.
+                if (data_mc_truth == kMC && i == 2666) {
+                    std::cout << uni_name << std::endl;
+                    std::cout << " event " << i << std::endl;
+                    std::cout << " weight " << tmp_weight << std::endl;
+                }
                 const double weight = warp * tmp_weight;
                 // PlotUtils::detail::empty event;
                 // std::cout << "weight " << weight << std::endl;
