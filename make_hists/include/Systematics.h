@@ -17,14 +17,15 @@
 #include "PlotUtils/ChainWrapper.h"
 #include "PlotUtils/FluxSystematics.h"
 #include "PlotUtils/GeantHadronSystematics.h"
-#include "PlotUtils/GenericVerticalSystematic.h"
+// #include "PlotUtils/GenericVerticalSystematic.h"
 #include "PlotUtils/GenieSystematics.h"
 #include "PlotUtils/MinosEfficiencySystematics.h"
 #include "PlotUtils/MnvTuneSystematics.h"
 #include "PlotUtils/MuonResolutionSystematics.h"
 #include "PlotUtils/MuonSystematics.h"
-#include "PlotUtils/NeutronInelasticReweighter.h"
+// #include "PlotUtils/NeutronInelasticReweighter.h"
 #include "PlotUtils/ResponseSystematics.h"
+#include "include/MonaSystematics.h"
 #include "utils/NuConfig.h"
 
 namespace systematics {
@@ -222,17 +223,20 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
                                                                   {"Bnp", {1000050110, 2112, 2212}}};
 
         UniverseMap mona_systematics;
+        // // // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), 1.0));
+        // // // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), -1.0));
         // // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), 1.0));
         // // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), -1.0));
-        // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), 1.0));
-        // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), -1.0));
 
-        // This mode sets up NeutronInealsticReweighter according to David's scheme, using 0 for Tracker, 1 for targets.
-        int mode = 0;
-        mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault, 0)), 1.0));
+        // // This mode sets up NeutronInealsticReweighter according to David's scheme, using 0 for Tracker, 1 for targets.
+        // int mode = 0;
+        // mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault, 1)), 1.0));
+        // this uses the old version of the inelastic reweighter
+        mona_systematics["NeutronInelasticsReweight"].push_back(new PlotUtils::GenericVerticalUniverse<CVUniverse, PlotUtils::detail::empty>(chain, std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>(new NeutronInelasticReweighter<CVUniverse>(MonaMapDefault)), 1.0));
         // UniverseMap mona_systematics = GetMonaSystematicMap(chain);
         error_bands.insert(mona_systematics.begin(), mona_systematics.end());
-        std::cout << " do MoNA systematics with mode " << std::to_string(mode) << std::endl;
+        // std::cout << " do MoNA systematics with mode " << std::to_string(mode) << std::endl;
+        std::cout << " do MoNA systematics " << std::endl;
 
     } else {
         std::cout << "WARNING: MoNA systematic turned off" << std::endl;
