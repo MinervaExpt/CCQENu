@@ -34,7 +34,7 @@
         // "muoncone_min": 15.0,
         // "muondist_min": 50.0,
         "muondist_min": 0.0,
-        "edep_min": 0.0
+        "edep_min": 1.5
         // "edep_min": 10.0
         // "edep_min": 1.5
         // "edep_min": 10.
