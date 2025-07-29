@@ -71,12 +71,12 @@ double NeutCand::GetCandVtxDist() {
 
 int NeutCand::GetCandTruthPID() {
     if (!m_truthset) return -1;
-    return m_truthTopMCPID;
+    return m_truthPID;
 }
 
 int NeutCand::GetCandTruthTopPID() {
     if (!m_truthset) return -1;
-    return m_truthPID;
+    return m_truthTopMCPID;
 }
 
 // NeutEvent stuff
