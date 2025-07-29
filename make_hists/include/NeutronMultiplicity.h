@@ -61,15 +61,15 @@ class NeutCand {
 class NeutEvent {
    private:
     // set up via config, contain info to check cands by
-    double m_vtxdist_max = -1.;  // in mm
+    double m_vtxdist_max = -1.;    // in mm
     double m_vtxdist_min = -1.;    // in mm
     double m_vtx_zdist_min = -1.;  // in mm
-    double m_zpos_min = -1.;     // in mm, 5980
-    double m_zpos_max = -1.;     // in mm, 8422
-    double m_muoncone_min = -1.0;   // in deg
-    double m_muondist_min = 0.0;    // in mm
-    double m_edep_min = 0.;         // in MeV
-    int m_req3D = -1;            // Set requirement to 3D blob
+    double m_zpos_min = -1.;       // in mm, 5980
+    double m_zpos_max = -1.;       // in mm, 8422
+    double m_muoncone_min = -1.0;  // in deg
+    double m_muondist_min = 0.0;   // in mm
+    double m_edep_min = 0.;        // in MeV
+    int m_req3D = -1;              // Set requirement to 3D blob
 
     int m_nneutcands;
     TVector3 m_vtx;
@@ -77,6 +77,9 @@ class NeutEvent {
 
     std::vector<NeutronMultiplicity::NeutCand*> m_cands;  // the candidates it contains
     bool _is_cands_set = false;
+
+    bool _recoset = false;
+    bool _truthset = false;
 
    public:
     // TOOD: make neutron config vars in CVUniverse
@@ -98,20 +101,22 @@ class NeutEvent {
     // Set the reco variables for reco and truth. This is necessary to handle both data and MC without issues
     void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<TVector3> positions);
     void SetTruth(std::vector<int> truthPIDs, std::vector<int> TopMCPIDs);
+    bool GetIsTruthSet();
 
     // Get the candidates
-    std::vector<NeutronMultiplicity::NeutCand*> GetNeutCands();  
+    std::vector<NeutronMultiplicity::NeutCand*> GetNeutCands();
     NeutronMultiplicity::NeutCand* GetMaxNeutCand();
     double GetMaxNeutCandE();
     NeutCand* GetCand(int index);
 
-    int GetCandIsNeut(int index); // checks all the following 
+    int GetCandIsNeut(int index);  // checks all the following
 
     int CandPassMuonAngle(int index);  // check if outside angle from muon track
     int CandPassMuonDist(int index);   // check if outside distance from muon track
     int CandPassFiducial(int index);   // check if inside z bounds
-    int CandPassVtxDist(int index);             // check if far from vertex
-    int CandPassEDep(int index);             // check if Edep is high enough
+    int CandPassVtxDist(int index);    // check if pass vtx spherical dist min
+    int CandPassVtxZDist(int index);   // check if pass vtx z dist min
+    int CandPassEDep(int index);       // check if Edep is high enough
     int CandPassIs3D(int index);
 
     int GetCandTruthPID(int index);

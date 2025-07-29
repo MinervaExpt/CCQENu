@@ -159,6 +159,7 @@ void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::v
         TVector3 flightpath = positions[i] - m_vtx;
         m_cands[i]->SetReco(blobIDs[i], is3Ds[i], EDeps[i], positions[i], flightpath);
     }
+    _recoset = true;
 }
 
 void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs) {
@@ -169,10 +170,15 @@ void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMC
     for (int i = 0; i < m_nneutcands; i++) {
         m_cands[i]->SetTruth(truthPIDs[i], truthTopMCPIDs[i]);
     }
+    _truthset = true;
 }
 
 std::vector<NeutronMultiplicity::NeutCand*> NeutEvent::GetNeutCands() {
     return m_cands;
+}
+
+bool NeutEvent::GetIsTruthSet() {
+    return _truthset;
 }
 
 NeutronMultiplicity::NeutCand* NeutEvent::GetMaxNeutCand() {
@@ -209,6 +215,7 @@ int NeutEvent::GetCandIsNeut(int index) {
             CandPassMuonDist(index) && 
             CandPassFiducial(index) && 
             CandPassVtxDist(index) && 
+            CandPassVtxZDist(index) &&
             CandPassEDep(index) && 
             CandPassIs3D(index));
             // m_cands[index]->GetCandIs3D());
@@ -240,6 +247,13 @@ int NeutEvent::CandPassVtxDist(int index) {
     if (m_vtxdist_min <= 0) return 1;
     double dist = m_cands[index]->GetCandVtxDist();
     return dist >= m_vtxdist_min;
+}
+
+int NeutEvent::CandPassVtxZDist(int index) {
+    if (m_vtx_zdist_min <= 0) return 1;
+    double zdist = m_cands[index]->m_flightpath.Z();
+
+    return zdist >= m_vtx_zdist_min;
 }
 
 int NeutEvent::CandPassEDep(int index) {
