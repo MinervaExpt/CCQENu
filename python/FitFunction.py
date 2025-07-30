@@ -7,6 +7,7 @@ import numpy as np
 #import json
 import array
 import ROOT
+import math
 
 DEBUG = False
 class FitFunction:
@@ -30,7 +31,7 @@ class FitFunction:
         # ("parameters",parameters)
         self.fnpars = len(parameters["1"]) # number of parameters to fit
         self.fparameters = parameters
-        print (self.fparameters["1"])
+        #print (self.fparameters["1"])
         self.fcovariance = covariances 
         self.InvertCovariance() # invert the covariance matrices
         self.fybins = np.array(ybins)
@@ -69,8 +70,9 @@ class FitFunction:
         #value = sum(fitpars[i] * (x ** i) for i in range(offset, offset + order + 1))
         value = 0.0
         for i in range(0,order+1):
-            value += fitpars[i+offset] * (x ** i) 
+            value += fitpars[i+offset] * ((x) ** i) 
             #print ("pol",x, i, fitpars[i],value)
+            
         return value
 
     def DoEval(self, fitparameters):

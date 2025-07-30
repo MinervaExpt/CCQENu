@@ -12,7 +12,7 @@ TEST = False
 kFastChi2 = 1
 kSlowChi2 = 0
 
-def ParameterFit(order = 1, inparameters = None, incovariances = None, inybins=None, fit_type=kSlowChi2 , first_bin=1, last_bin=None):
+def ParameterFit(order = 1, fromFile = None, fit_type=kSlowChi2 , first_bin=1, last_bin=None):
         mini2 = ROOT.Minuit2.Minuit2Minimizer(0)
         mini2.SetPrintLevel(1)
         mini2.SetErrorDef(0.1)
@@ -20,12 +20,13 @@ def ParameterFit(order = 1, inparameters = None, incovariances = None, inybins=N
         mini2.SetMaxFunctionCalls(1000)
         mini2.SetMaxIterations(100)
         mini2.SetTolerance(1e-4)
-        parameters = inparameters
-        covariances = incovariances
-        ybins = inybins
-        if inparameters is None:
+        
+        if fromFile:
                 print ("read in from file")
-                inputs = json.load(open("parameters.json"))
+                if not os.path.exists(fromFile):
+                        print ("could not open",fromFile)
+                        sys.exit(1)
+                inputs = json.load(open(fromFile))
                 if DEBUG: print (inputs)
 
                 if "parameters" not in inputs or "covariances" not in inputs or "ybins" not in inputs:
@@ -34,17 +35,18 @@ def ParameterFit(order = 1, inparameters = None, incovariances = None, inybins=N
                 parameters = inputs["parameters"]
                 covariances = inputs["covariances"]
                 ybins = inputs["ybins"]
+        else:
+                print ("need to have a file to read from")
         
         print ("parameters",parameters)                
         npars = len(parameters["1"])
         nybins = len(ybins)
-        order = 1
 
         #fitpars = np.array('d', [1.])
         func2 = FitFunction.FitFunction()
         func2.SetVals(order = order, parameters = parameters, covariances = covariances, ybins=ybins, fit_type=kSlowChi2 , first_bin=1, last_bin=None)
         functor = func2.to_root_math_functor()
-        fitparams = array.array('d',[]) 
+        fitparams = np.zeros((order+1)*npars)
         #print ("test",2., func2.DoEval(fitparams))
         mini2.SetFunction(functor)
         mini2.SetPrintLevel(1)
@@ -54,7 +56,7 @@ def ParameterFit(order = 1, inparameters = None, incovariances = None, inybins=N
                         name = "pol%02d_par%02d" % (term,par)
                         print ("name",name)
                         mini2.SetVariable(par*(order+1)+term, name, 1.0, 0.1)
-                        fitparams.append(1.0)
+                        fitparams[par*(order+1)+term] = 1
         nfitpars = len(fitparams)
         test = func2.DoEval(fitparams)
         print ("test", test)
@@ -69,6 +71,7 @@ def ParameterFit(order = 1, inparameters = None, incovariances = None, inybins=N
 
         mini2.PrintResults()
         chisq = mini2.MinValue()
+        status = mini2.Status()
         Results = np.zeros(nfitpars)
         Errors = np.zeros(nfitpars)
         CovMatrix = np.zeros((nfitpars,nfitpars))
@@ -84,8 +87,8 @@ def ParameterFit(order = 1, inparameters = None, incovariances = None, inybins=N
                         CorMatrix[i][j] = CovMatrix[i][j]/math.sqrt(CovMatrix[i][i]*CovMatrix[j][j])
         print ("Covariance",CovMatrix)
         print ("Correlation",CorMatrix)
-        return chisq,Results,Errors,CovMatrix,CorMatrix
+        return chisq, status, Results,Errors,CovMatrix,CorMatrix
         
 if __name__ == '__main__':
-        chisq, Results, Errors, CovMatrix, CorMatrix = ParameterFit(order = 1, inparameters = None, incovariances = None, inybins=None, fit_type=kSlowChi2 , first_bin=1, last_bin=None)
+        chisq, status, Results, Errors, CovMatrix, CorMatrix = ParameterFit(order = 1, fromFile="parameters.json", fit_type=kSlowChi2 , first_bin=1, last_bin=None)
         print ("Results",Results,Errors)
