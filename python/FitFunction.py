@@ -8,7 +8,7 @@ import numpy as np
 import array
 import ROOT
 
-
+DEBUG = False
 class FitFunction:
     kFastChi2 = 1
     kSlowChi2 = 0
@@ -17,7 +17,7 @@ class FitFunction:
     def __init__(self):
         self.fNDim = 0
     
-    def SetVals(self, order, parameters, covariances, ybins, fit_type, first_bin=1, last_bin=None):
+    def SetVals(self, order, parameters, covariances, ybins, fit_type=kSlowChi2, first_bin=1, last_bin=None):
         """
         parameters: dict of unfit histograms for each sample
         covariances: dict of covariance matrices for each sample
@@ -32,6 +32,7 @@ class FitFunction:
         self.fparameters = parameters
         print (self.fparameters["1"])
         self.fcovariance = covariances 
+        self.InvertCovariance() # invert the covariance matrices
         self.fybins = np.array(ybins)
         self.fnbins = len(ybins) - 1
         self.fType = fit_type
@@ -44,7 +45,17 @@ class FitFunction:
         if self.fLastBin <= self.fFirstBin:
             raise ValueError("Last bin must be greater than first bin")
         print ("full fit dimension is", self.fNdim)
+        print ("Fit type is", self.fType)
 
+    def InvertCovariance(self):
+        """ Invert the covariance matrix for the fit """
+        self.finvCov = {}
+        for sbin in self.fcovariance:
+            cov = self.fcovariance[sbin]
+            if len(cov) != self.fnpars:
+                raise ValueError("Covariance matrix size does not match number of parameters")
+            inv_cov = np.linalg.inv(np.array(cov))
+            self.finvCov[sbin] = inv_cov
 
     def NDim(self):
         if not self.fDoFit:
@@ -54,40 +65,36 @@ class FitFunction:
         
     def Polynomial(self,x,fitpars,offset,order=None)   :    
         """Evaluate a polynomial at x with coefficients fitpars"""
-        
-        value = sum(fitpars[i] * (x ** i) for i in range(offset, offset + order + 1))
-        #print (value)
+
+        #value = sum(fitpars[i] * (x ** i) for i in range(offset, offset + order + 1))
+        value = 0.0
+        for i in range(0,order+1):
+            value += fitpars[i+offset] * (x ** i) 
+            #print ("pol",x, i, fitpars[i],value)
         return value
 
     def DoEval(self, fitparameters):
         """ parameters are """
-        print ("Eval fitparameters", fitparameters  )
+        if DEBUG: print ("Eval fitparameters", fitparameters  )
         
         chi2 = 0.0
         
         for bin in range(self.fFirstBin, self.fLastBin):
-            x = self.fybins[bin]
+            x = self.fybins[bin-1] + (self.fybins[bin] - self.fybins[bin-1]) / 2.0
             #print ("bin,x",bin,x)
             sbin = "%d" % bin
-            
+            polvals = np.zeros(self.fnpars)
             for i in range(self.fnpars):
-                paroffset = i*self.forder
-                #print ("paroffset", i, paroffset,paroffset+self.forder+1)
-                #slice = fitparameters[paroffset:paroffset+self.forder+1]
-                #print ("slice", slice)
-                #if len(slice) != self.forder + 1:
-                 #   raise ValueError("Slice length does not match order + 1")
-                polval  = self.Polynomial(x,fitparameters,paroffset,self.forder)
-                print ("polval",x,polval)
+                paroffset = i*(self.forder + 1)              
+                polvals[i] = self.Polynomial(x,fitparameters,paroffset,self.forder)
+            if DEBUG: print ("polvals", self.forder, self.fnpars, bin, x, polvals)
+            for i in range(self.fnpars):            
                 if self.fType == FitFunction.kFastChi2:
                     # Fast Chi2 calculation - only uses diagonal - have to invert the covariance to use it propery
-                    chi2 += (polval - self.fparameters[sbin][i]) ** 2 / self.fcovariance[sbin][i][i]
-                # elif self.fType == FitFunction.kSlowChi2:
-                #     # Slow Chi2 calculation
-                #     chi2 += (self.Polynomial(bin, parameters[i]) - self.fparameters[i][bin]) ** 2 / self.fcovariance[i][bin]
-                # elif self.fType == FitFunction.kML:
-                #     # Maximum Likelihood calculation
-                #     chi2 += poisson.logpmf(self.fparameters[i][bins], self.Polynomial(bins, parameters[i]))
+                    chi2 += (polvals[i] - self.fparameters[sbin][i]) ** 2 / self.fcovariance[sbin][i][i]
+                elif self.fType == FitFunction.kSlowChi2:
+                    for j in range(self.fnpars):
+                        chi2 += (polvals[i]- self.fparameters[sbin][i]) * (polvals[j] - self.fparameters[sbin][j]) * self.finvCov[sbin][i][j]
                 else:
                     raise ValueError("Unknown fit type")
         return chi2
