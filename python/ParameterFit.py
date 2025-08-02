@@ -14,11 +14,11 @@ kSlowChi2 = 0
 
 def ParameterFit(order = 1, fromFile = None, fit_type=kSlowChi2 , first_bin=1, last_bin=None):
         mini2 = ROOT.Minuit2.Minuit2Minimizer(0)
-        mini2.SetPrintLevel(1)
-        mini2.SetErrorDef(0.1)
+        mini2.SetPrintLevel(2)
+        #mini2.SetErrorDef(0.1)
         #mini2.SetStrategy(2)
-        mini2.SetMaxFunctionCalls(1000)
-        mini2.SetMaxIterations(100)
+        #mini2.SetMaxFunctionCalls(1000)
+        #mini2.SetMaxIterations(100)
         mini2.SetTolerance(1e-4)
         
         if fromFile:
@@ -92,3 +92,4 @@ def ParameterFit(order = 1, fromFile = None, fit_type=kSlowChi2 , first_bin=1, l
 if __name__ == '__main__':
         chisq, status, Results, Errors, CovMatrix, CorMatrix = ParameterFit(order = 1, fromFile="parameters.json", fit_type=kSlowChi2 , first_bin=1, last_bin=None)
         print ("Results",Results,Errors)
+        #print (CorMatrix)

@@ -17,6 +17,12 @@ class FitFunction:
 
     def __init__(self):
         self.fNDim = 0
+
+    def parMap(self,subpar):  # map parameters for series of subfits
+        ''' order goes pol ... pol ... pol '''
+        return subpar*(self.forder+1)
+
+
     
     def SetVals(self, order, parameters, covariances, ybins, fit_type=kSlowChi2, first_bin=1, last_bin=None):
         """
@@ -64,15 +70,13 @@ class FitFunction:
         else:
             return self.fNdim
         
-    def Polynomial(self,x,fitpars,offset,order=None)   :    
+    def Polynomial(self,x,fitpars,subpar)   :    
         """Evaluate a polynomial at x with coefficients fitpars"""
-
-        #value = sum(fitpars[i] * (x ** i) for i in range(offset, offset + order + 1))
         value = 0.0
-        for i in range(0,order+1):
+        offset = self.parMap(subpar)
+        for i in range(0,self.forder+1):
             value += fitpars[i+offset] * ((x) ** i) 
-            #print ("pol",x, i, fitpars[i],value)
-            
+            if DEBUG: print ("pol",x, i, fitpars[i],value)         
         return value
 
     def DoEval(self, fitparameters):
@@ -83,16 +87,16 @@ class FitFunction:
         
         for bin in range(self.fFirstBin, self.fLastBin):
             x = self.fybins[bin-1] + (self.fybins[bin] - self.fybins[bin-1]) / 2.0
-            #print ("bin,x",bin,x)
             sbin = "%d" % bin
+            
+            # determine polynomials first to save time
             polvals = np.zeros(self.fnpars)
             for i in range(self.fnpars):
-                paroffset = i*(self.forder + 1)              
-                polvals[i] = self.Polynomial(x,fitparameters,paroffset,self.forder)
+                polvals[i] = self.Polynomial(x,fitparameters,i)
             if DEBUG: print ("polvals", self.forder, self.fnpars, bin, x, polvals)
             for i in range(self.fnpars):            
                 if self.fType == FitFunction.kFastChi2:
-                    # Fast Chi2 calculation - only uses diagonal - have to invert the covariance to use it propery
+                    # Fast Chi2 calculation - only uses diagonal errors
                     chi2 += (polvals[i] - self.fparameters[sbin][i]) ** 2 / self.fcovariance[sbin][i][i]
                 elif self.fType == FitFunction.kSlowChi2:
                     for j in range(self.fnpars):

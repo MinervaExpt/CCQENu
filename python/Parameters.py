@@ -149,6 +149,7 @@ order = 1
 chisq, status, Results, Errors, CovMatrix, CorMatrix = ParameterFit(order , fromFile=outputjson, fit_type=0 , first_bin=1, last_bin=None)
 
 print ("Results",chisq,status,Results,Errors)
+print (CorMatrix)
 functions = {}
 
 
@@ -187,7 +188,7 @@ for par in range(0,npars):
     legend.AddEntry(localpol,"Local Fit chisq/dof = %4.1f/%d"%(localchisq,localdof),'l')
     parhists[par].Draw()
     functions[par].Draw("same")
-    dof = (nybins-order -1)*npars 
+    dof = (nybins-order-1)*npars 
     legend.AddEntry(functions[par],"Multi Fit chisq/dof = %4.1f/%d"%(chisq,dof),'l')
     legend.Draw()
     gPad.Update()
