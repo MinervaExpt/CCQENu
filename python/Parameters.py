@@ -1,3 +1,15 @@
+''' take parameters from BDT fits to Q2 bins from Sean Gilligan
+This program plots and does local fits using the ROOT TH1 fitting.
+It stores the parameters in a json file by bin index (which gets changed into a string by json writing).
+It calls ParameterFit which sets up the fit with the goodness being calculated by FitFunction
+
+Fun facts - root passes the parameters to the fit function as a pointer to double in memory - you can access elements via [] but not via most other methods fail miserably. 
+
+Author: Heidi Schellman - based loosely on the MINERvA fitting code. 
+Date: 2025-07-29
+
+'''
+
 import os, sys
 from ROOT import TFile, TH1D, TH2D, TText, TGraph, TLatex, gPad, TLegend, TF1
 from ROOT import TCanvas, gStyle, gROOT, TPad
@@ -9,6 +21,7 @@ from PlotUtils import MnvH1D, MnvH2D
 import numpy as np
 import json
 from ParameterFit import ParameterFit
+
 
 
 DEBUG = False

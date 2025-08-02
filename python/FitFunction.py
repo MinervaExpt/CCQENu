@@ -1,13 +1,12 @@
 # File: FitFunction.py
 # Info: Python version of FitFunction class for minimization.
-# Author: Translated from C++ by GitHub Copilot
+# Author: H. Schellman with some VSCode turning. 
 
 import sys,os,string
 import numpy as np
-#import json
 import array
-import ROOT
 import math
+from ROOT import Math
 
 DEBUG = False
 class FitFunction:
@@ -17,42 +16,54 @@ class FitFunction:
 
     def __init__(self):
         self.fNDim = 0
+        
 
     def parMap(self,subpar):  # map parameters for series of subfits
         ''' order goes pol ... pol ... pol '''
         return subpar*(self.forder+1)
-
-
     
-    def SetVals(self, order, parameters, covariances, ybins, fit_type=kSlowChi2, first_bin=1, last_bin=None):
+    def SetVals(self, order, parameters, covariances, ybins, fit_type=None, first_bin=1, last_bin=None):
         """
-        parameters: dict of unfit histograms for each sample
-        covariances: dict of covariance matrices for each sample
-        ybins: array of y-bin edges
-        fit_type: type of fit (kFastChi2, kSlowChi2, kML)
-        first_bin: first bin to consider in the fit
-        last_bin: last bin to consider in the fit (default is None, meaning all bins
+        Initialize fit function parameters and configuration.
+
+        Args:
+            order (int): Order of the polynomial.
+            parameters (dict): Dict of parameter arrays for each sample/bin.
+            covariances (dict): Dict of covariance matrices for each sample/bin.
+            ybins (array-like): Array of y-bin edges.
+            fit_type (int, optional): Fit type (kFastChi2, kSlowChi2, kML). Defaults to kSlowChi2.
+            first_bin (int, optional): First bin index (inclusive). Defaults to 1.
+            last_bin (int, optional): Last bin index (exclusive). Defaults to None (all bins).
         """
-        self.forder = order # order of polynomials
-        # ("parameters",parameters)
-        self.fnpars = len(parameters["1"]) # number of parameters to fit
+        self.forder = order
         self.fparameters = parameters
-        #print (self.fparameters["1"])
-        self.fcovariance = covariances 
-        self.InvertCovariance() # invert the covariance matrices
+        self.fcovariance = covariances
         self.fybins = np.array(ybins)
-        self.fnbins = len(ybins) - 1
-        self.fType = fit_type
-        self.fNdim = self.fnpars*(self.forder + 1)
+        self.fnbins = len(self.fybins) - 1
+
+        # Determine number of parameters per bin
+        
+        self.fnpars = len(parameters["1"])
+
+        # Fit type default
+        if fit_type is None:
+            self.fType = FitFunction.kSlowChi2
+        else:
+            self.fType = fit_type
+
+        self.fNdim = self.fnpars * (self.forder + 1)
         self.fFirstBin = first_bin
-        self.fLastBin = last_bin
-        if last_bin is None:
-            self.fLastBin = self.fnbins 
+        self.fLastBin = last_bin if last_bin is not None else self.fnbins
         self.fDoFit = True
+
         if self.fLastBin <= self.fFirstBin:
             raise ValueError("Last bin must be greater than first bin")
-        print ("full fit dimension is", self.fNdim)
-        print ("Fit type is", self.fType)
+
+        self.InvertCovariance()
+
+        if DEBUG:
+            print("Full fit dimension is", self.fNdim)
+            print("Fit type is", self.fType)
 
     def InvertCovariance(self):
         """ Invert the covariance matrix for the fit """
@@ -72,43 +83,50 @@ class FitFunction:
         
     def Polynomial(self,x,fitpars,subpar)   :    
         """Evaluate a polynomial at x with coefficients fitpars"""
+        # copilot made several suggestions that crashed the program
         value = 0.0
         offset = self.parMap(subpar)
+        
         for i in range(0,self.forder+1):
             value += fitpars[i+offset] * ((x) ** i) 
             if DEBUG: print ("pol",x, i, fitpars[i],value)         
         return value
 
     def DoEval(self, fitparameters):
-        """ parameters are """
-        if DEBUG: print ("Eval fitparameters", fitparameters  )
-        
-        chi2 = 0.0
-        
-        for bin in range(self.fFirstBin, self.fLastBin):
-            x = self.fybins[bin-1] + (self.fybins[bin] - self.fybins[bin-1]) / 2.0
-            sbin = "%d" % bin
-            
-            # determine polynomials first to save time
-            polvals = np.zeros(self.fnpars)
-            for i in range(self.fnpars):
-                polvals[i] = self.Polynomial(x,fitparameters,i)
-            if DEBUG: print ("polvals", self.forder, self.fnpars, bin, x, polvals)
-            for i in range(self.fnpars):            
-                if self.fType == FitFunction.kFastChi2:
-                    # Fast Chi2 calculation - only uses diagonal errors
-                    chi2 += (polvals[i] - self.fparameters[sbin][i]) ** 2 / self.fcovariance[sbin][i][i]
-                elif self.fType == FitFunction.kSlowChi2:
-                    for j in range(self.fnpars):
-                        chi2 += (polvals[i]- self.fparameters[sbin][i]) * (polvals[j] - self.fparameters[sbin][j]) * self.finvCov[sbin][i][j]
-                else:
-                    raise ValueError("Unknown fit type")
+        """Evaluate the chi-squared (or likelihood) for the current fit parameters."""
+        # copilot did improve the algorithm
+        if DEBUG:
+            print("Eval fitparameters", fitparameters)
+
+        chi2 = 0.0      
+
+        for bin_idx in range(self.fFirstBin, self.fLastBin):
+            x = self.fybins[bin_idx - 1] + (self.fybins[bin_idx] - self.fybins[bin_idx - 1]) / 2.0
+            sbin = str(bin_idx)
+
+            # Evaluate all polynomials for this bin at once
+            polvals = np.array([self.Polynomial(x, fitparameters, i) for i in range(self.fnpars)])
+            if DEBUG:
+                print("polvals", self.forder, self.fnpars, bin_idx, x, polvals)
+
+            diff = polvals - np.array(self.fparameters[sbin])
+
+            if self.fType == FitFunction.kFastChi2:
+                # Only diagonal elements
+                diag = np.diag(self.fcovariance[sbin])
+                chi2 += np.sum((diff ** 2) / diag)
+            elif self.fType == FitFunction.kSlowChi2:
+                # Full covariance
+                chi2 += diff @ self.finvCov[sbin] @ diff
+            else:
+                raise ValueError("Unknown fit type")
+
         return chi2
 
     def to_root_math_functor(self):
         # keep the callable alive for the functor:
         self._do_eval_callable = self.DoEval
-        functor = ROOT.Math.Functor(self._do_eval_callable, self.NDim())
+        functor = Math.Functor(self._do_eval_callable, self.NDim())
         return functor
     
     
