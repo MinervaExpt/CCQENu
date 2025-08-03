@@ -22,7 +22,7 @@ class FitFunction:
         ''' order goes pol ... pol ... pol '''
         return subpar*(self.forder+1)
     
-    def SetVals(self, order, parameters, covariances, ybins, fit_type=None, first_bin=1, last_bin=None):
+    def SetVals(self, order, hists, categories, xbins, ybins, fit_type=None, first_bin=1, last_bin=None):
         """
         Initialize fit function parameters and configuration.
 
