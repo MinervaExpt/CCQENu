@@ -515,7 +515,7 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
                    const std::map<const std::string, PlotUtils::MnvH1D*> dataHist_combined,
                    const std::map<const std::string, bool> includeInFit, 
                    const std::vector<std::string> categories, const fit_type type, 
-                   const int lowBin, const int hiBin, 
+                   const int lowBin, const int hiBin, const std::vector<int> binSliceMap,
                    const double upperLimit, const bool binbybin) {
     // takes the histograms in unfitHists[slice][sample][category], fits to dataHist by combining all the samples by changing the normalization of the category templates and then makes fitHists[slice][sample][category] which contains the best template fit for each universe.
     // writes the chi2 value, parameters and covariance of the parameters into the output root file but does not return them.
@@ -774,8 +774,12 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		                    for (int i = 0; i < func2.NDim(); i++) {
 		                        int nbins = fitHists_combined[sample.first][i]->GetNbinsX();
 		                        std::cout << "scale CV" << myname << " " << i << " " << ScaleResults[i] << std::endl;
-	                            fitHists_combined[myname][i]->SetBinContent(slice.first, unfitHists_combined[myname][i]->GetBinContent(slice.first) * ScaleResults[i]);
-	                            fitHists_combined[myname][i]->SetBinError(slice.first, unfitHists_combined[myname][i]->GetBinError(slice.first) * ScaleResults[i]);
+		                        for (int j=0; j<binSliceMap.size(); j++) {
+		                        	if( binSliceMap[j] == slice.first) {
+			                        	fitHists_combined[myname][i]->SetBinContent(j+1, unfitHists_combined[myname][i]->GetBinContent(j+1) * ScaleResults[i]);
+			                        	fitHists_combined[myname][i]->SetBinError(j+1, unfitHists_combined[myname][i]->GetBinError(j+1) * ScaleResults[i]);
+	                            	}
+	                            }
 		                    }
 		                }
 		            } 
@@ -832,8 +836,14 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		                        TH1D* hist_combined = errorband_combined->GetHist(iuniv);
 		                        TH1D* newhist_combined = newerrorband_combined->GetHist(iuniv);
 		                        
-		                        newhist_combined->SetBinContent(slice.first, hist_combined->GetBinContent(slice.first) * ScaleResults[i]);
-		                        newhist_combined->SetBinError(slice.first, hist_combined->GetBinError(slice.first) * ScaleResults[i]);
+		                        for (int j=0; j<binSliceMap.size(); j++) {
+		                        	if( binSliceMap[j] == slice.first) {
+		                        		newhist_combined->SetBinContent(j+1, hist_combined->GetBinContent(j+1) * ScaleResults[i]);
+		                        		newhist_combined->SetBinError(j+1, hist_combined->GetBinError(j+1) * ScaleResults[i]);
+	                            	}
+	                            }
+		                        //newhist_combined->SetBinContent(slice.first, hist_combined->GetBinContent(slice.first) * ScaleResults[i]);
+		                        //newhist_combined->SetBinError(slice.first, hist_combined->GetBinError(slice.first) * ScaleResults[i]);
 		                    }
 						}
 		            }

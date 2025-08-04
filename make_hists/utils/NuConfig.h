@@ -163,6 +163,17 @@ public:
     }
     return a;
   };
+	std::vector <int> GetIntVector(const std::string key)const{
+    assert(CheckMember(key));
+    std::vector<int>  a;
+    Json::Value array = f_config.get(key,0);
+    for (const auto &el  : array){
+      if (el.isInt()){
+        a.push_back(el.asInt());
+      }
+    }
+    return a;
+  };
 
   // get a vector of subconfigs
 

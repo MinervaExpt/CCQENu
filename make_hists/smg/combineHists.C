@@ -92,15 +92,15 @@ int main(const int argc, const char *argv[]) {
 			else {
 				MnvH2D *h_i = (MnvH2D*)infile_i->Get(name.c_str());
 				if(i == 0) {
-					MnvH2D *h = (MnvH2D*)h_i->Clone();
-					outfile->WriteObject(h,name.c_str());
-					delete h;
+					MnvH2D *h2d = (MnvH2D*)h_i->Clone();
+					outfile->WriteObject(h2d,name.c_str());
+					delete h2d;
 				}
 				else {
-					MnvH2D *h = (MnvH2D*)outfile->Get(name.c_str());
-					h->Add(h_i);
-					outfile->WriteObject(h,name.c_str(),"Overwrite");
-					delete h;
+					MnvH2D *h2d = (MnvH2D*)outfile->Get(name.c_str());
+					h2d->Add(h_i);
+					outfile->WriteObject(h2d,name.c_str(),"Overwrite");
+					delete h2d;
 				}
 				delete h_i;
 			}

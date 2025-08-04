@@ -24,7 +24,7 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector< 
 	               std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists_combined,
                    const std::map<const std::string, PlotUtils::MnvH1D*> dataHist_combined,
                    const std::map<const std::string, bool> includeInFit, const std::vector<std::string> categories, const fit_type type = kML, 
-                   const int lowBin = 1, const int hiBin = -1, 
+                   const int lowBin = 1, const int hiBin = -1, const std::vector<int> binSliceMap = {},
                    const double upperLimit=1000., const bool binbybin=false);
 };
 #endif

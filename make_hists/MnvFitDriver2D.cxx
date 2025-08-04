@@ -185,11 +185,24 @@ int main(int argc, char* argv[]) {
 	int lowVarBinCut = config.GetInt("LowestVariableBinCut");
 	std::string binVarName = config.GetString("BinningVariable");
 	std::string binVarUnit = config.GetString("BinningVariableUnits");
+	std::vector<int> lowBin = config.GetIntVector("LowBin");
+	std::vector<int> highBin = config.GetIntVector("HighBin");
     std::string fitType = config.GetString("FitType");
     std::string h_template = config.GetString("Template");
     std::string f_template = config.GetString("FitTemplate");
     std::string h_template2D = config.GetString("Template2D");
     std::string f_template2D = config.GetString("FitTemplate2D");
+    
+    std::vector<int> binSliceMap;
+    std::cout << std::endl << std::endl << "{ ";
+    for (int i=0; i<lowBin.size(); i++) {
+    	int bins = highBin[i]-lowBin[i]+1;
+    	for(int j=0; j<bins; j++) {
+    		binSliceMap.push_back(i);
+    		std::cout << i << " ";
+    	}
+    }
+    std::cout << "}" << std::endl << std::endl;
     
     pixdirectory = pixdirectory+"_"+binVarName;
     std::filesystem::create_directory(pixdirectory.c_str());
@@ -236,8 +249,8 @@ int main(int argc, char* argv[]) {
 	std::vector<double> sliceLow;
 	std::vector<double> sliceHigh;
 	bool sliceboundariesfilled = 0;
-	std::string h_template_slice = h_template + "_%s_%d";
-	std::string f_template_slice = f_template + "_%s_%d";
+	std::string h_template_slice = h_template + "_%s_%02d";
+	std::string f_template_slice = f_template + "_%s_%02d";
 	std::string h_template_combined = h_template + "_combined";
 	std::string f_template_combined = f_template + "_combined";
 	std::map<const std::string, PlotUtils::MnvH2D*> dataHist2D;
@@ -262,7 +275,7 @@ int main(int argc, char* argv[]) {
         nbinsy = dataHist2D[side]->GetYaxis()->GetNbins();
         if (logPlot) dataHist2D[side]->SetMinimum(logMinimum);
         
-        for (int i=1; i<=nbinsy; i++){
+        /*for (int i=1; i<=nbinsy; i++){
         	std::snprintf(cname_slice,1000,h_template_slice.c_str(),side.c_str(),cat.c_str(),varName.c_str(),binVarName.c_str(),i);
         	PlotUtils::MnvH1D* newhist_data_slice = (PlotUtils::MnvH1D*)dataHist2D[side]->ProjectionX(cname_slice,i,i);
         	newhist_data_slice->Rebin(rebin);
@@ -270,6 +283,16 @@ int main(int argc, char* argv[]) {
         	if (!sliceboundariesfilled) {
         		sliceLow.push_back(dataHist2D[side]->GetYaxis()->GetBinLowEdge(i));
         		sliceHigh.push_back(dataHist2D[side]->GetYaxis()->GetBinUpEdge(i));
+        	}
+        }*/
+        for (int i=0; i<lowBin.size(); i++){
+        	std::snprintf(cname_slice,1000,h_template_slice.c_str(),side.c_str(),cat.c_str(),varName.c_str(),binVarName.c_str(),i);
+        	PlotUtils::MnvH1D* newhist_data_slice = (PlotUtils::MnvH1D*)dataHist2D[side]->ProjectionX(cname_slice,lowBin[i],highBin[i]);
+        	//newhist_data_slice->Rebin(rebin);
+        	dataHist_slices[i][side] = newhist_data_slice;
+        	if (!sliceboundariesfilled) {
+        		sliceLow.push_back(dataHist2D[side]->GetYaxis()->GetBinLowEdge(lowBin[i]));
+        		sliceHigh.push_back(dataHist2D[side]->GetYaxis()->GetBinUpEdge(highBin[i]));
         	}
         }
         sliceboundariesfilled = 1;
@@ -325,11 +348,23 @@ int main(int argc, char* argv[]) {
 			fitHists_combined[side].push_back((PlotUtils::MnvH1D*)newhist_combined->Clone(TString(fname_combined)));
 			
 			// Slices
-			for (int i=1; i<=nbinsy; i++){
+			/*for (int i=1; i<=nbinsy; i++){
 				std::snprintf(cname_slice,1000,h_template_slice.c_str(),side.c_str(),cat.c_str(),varName.c_str(),binVarName.c_str(),i);
 				std::snprintf(fname_slice,1000,f_template_slice.c_str(),side.c_str(),cat.c_str(),varName.c_str(),binVarName.c_str(),i);
 				name = TString(cname_combined);
 				PlotUtils::MnvH1D* newhist_slice = (PlotUtils::MnvH1D*)newhist->ProjectionX(cname_slice,i,i);
+				newhist_slice->Rebin(rebin);
+				SyncBands(newhist_slice);
+				std::string cname_slice_num = std::string(cname_slice)+"_unfit_"+std::to_string(i);
+				newhist_slice->MnvH1DToCSV(cname_slice_num, "./csv/");
+				unfitHists_slices[i][side].push_back(newhist_slice);
+				fitHists_slices[i][side].push_back((PlotUtils::MnvH1D*)newhist_slice->Clone(TString(fname_slice)));
+			}*/
+			for (int i=0; i<lowBin.size(); i++){
+				std::snprintf(cname_slice,1000,h_template_slice.c_str(),side.c_str(),cat.c_str(),varName.c_str(),binVarName.c_str(),i);
+				std::snprintf(fname_slice,1000,f_template_slice.c_str(),side.c_str(),cat.c_str(),varName.c_str(),binVarName.c_str(),i);
+				name = TString(cname_combined);
+				PlotUtils::MnvH1D* newhist_slice = (PlotUtils::MnvH1D*)newhist->ProjectionX(cname_slice,lowBin[i],highBin[i]);
 				newhist_slice->Rebin(rebin);
 				SyncBands(newhist_slice);
 				std::string cname_slice_num = std::string(cname_slice)+"_unfit_"+std::to_string(i);
@@ -343,8 +378,8 @@ int main(int argc, char* argv[]) {
     std::cout << "have extracted the inputs" << std::endl;
     
     // now have made a common map for all histograms
-    int lowBin = 1;
-    int hiBin = dataHist2D[include[0]]->GetXaxis()->GetNbins();
+    int lowXbin = 1;
+    int highXbin = dataHist2D[include[0]]->GetXaxis()->GetNbins();
 
     fit::fit_type type;
     type = fit::kFastChi2;
@@ -357,7 +392,7 @@ int main(int argc, char* argv[]) {
     outputfile->cd();
 	int ret = fit::DoTheFitSlices(fitHists_slices, unfitHists_slices, dataHist_slices, 
 	                              fitHists_combined, unfitHists_combined, dataHist_combined, 
-	                              includeInFit, categories, type, lowBin, hiBin);
+	                              includeInFit, categories, type, lowXbin, highXbin, binSliceMap);
     
     // set up for plots
     
@@ -389,7 +424,7 @@ int main(int argc, char* argv[]) {
     }
     
     for (auto side:sidebands){
-		for (int i=1; i<=nbinsy; i++){
+		for (int i=0; i<lowBin.size(); i++){
 		    for (int j=0; j<categories.size(); j++){
 		        fitHists_slices[i][side][j]->Write();
 		        std::snprintf(fname_slice,1000,f_template_slice.c_str(),side.c_str(),"all",varName.c_str(),binVarName.c_str(),i);
@@ -425,7 +460,7 @@ int main(int argc, char* argv[]) {
     
     
     for (auto side:sidebands){
-    	for (int i=1; i<=nbinsy; i++){
+    	for (int i=0; i<lowBin.size(); i++){
 		    for (int j=0; j<categories.size(); j++){
 		        std::snprintf(cname,1000, h_template_slice.c_str(),side.c_str(),"all",varName.c_str(),binVarName.c_str(),i);
 		        if (j == 0){
@@ -456,7 +491,7 @@ int main(int argc, char* argv[]) {
     // uses this whole counter thing to avoid having to figure out how to do string searches in a list in C++
     
     for (auto side:sidebands){
-    	for (int i=1; i<=nbinsy; i++){
+    	for (int i=0; i<lowBin.size(); i++){
 		    int count = 0;
 		    for (int j=0; j<categories.size(); j++){
 		        for (int k=0; k<backgrounds.size(); k++){
@@ -502,7 +537,7 @@ int main(int argc, char* argv[]) {
 	    }
     }
     for (auto side:sidebands){
-    	for (int i=1; i<=nbinsy; i++){
+    	for (int i=0; i<lowBin.size(); i++){
 		    std::snprintf(fname_slice,1000,f_template_slice.c_str(),side.c_str(),"bkgsub",varName.c_str(),binVarName.c_str(),i);
 		    bkgsub_slices[side][i]=(MnvH1D*)dataHist_slices[i][side]->Clone(fname_slice);
 		    bkgsub_slices[side][i]->AddMissingErrorBandsAndFillWithCV(*(fitHists_slices[i][side][0]));
@@ -522,7 +557,7 @@ int main(int argc, char* argv[]) {
     std::cout << "wrote the inputs and outputs " << std::endl;
     
     for (auto side:sidebands){
-    	for (int i=1; i<=nbinsy; i++){
+    	for (int i=0; i<lowBin.size(); i++){
 		    //dataHist[side]->Print("ALL");
 		    dataHist_slices[i][side]->Scale(1.,"width");
 		    //dataHist[side]->Print("ALL");
@@ -553,7 +588,7 @@ int main(int argc, char* argv[]) {
     mnvPlotter.error_color_map["GEANT"] = kGreen + 2;
     
     for (auto side:sidebands){
-    	for (int i=1; i<=nbinsy; i++){
+    	for (int i=0; i<lowBin.size(); i++){
 			int nbinsX = dataHist_slices[i][side]->GetXaxis()->GetNbins();
 			double xMin = dataHist_slices[i][side]->GetXaxis()->GetBinLowEdge(1);
 			double xMax = dataHist_slices[i][side]->GetXaxis()->GetBinUpEdge(nbinsX);
@@ -592,7 +627,7 @@ int main(int argc, char* argv[]) {
 			//std::string label1;
 			//label1 = side+" compare after fit, "+sliceLow[i-1]+" < Q2QE < "+sliceHigh[i-1];
 			char label1[1000];
-			std::snprintf(label1,1000,"%s compare after fit, %g < %s <= %g",side.c_str(),sliceLow[i-1],binVarName.c_str(),sliceHigh[i-1]);
+			std::snprintf(label1,1000,"%s compare after fit, %g < %s <= %g",side.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
 			TText t1(.5,.95,label1);
 			t1.SetTitle(label1);
 			t1.SetTextAlign(22);
@@ -604,7 +639,7 @@ int main(int argc, char* argv[]) {
 
 		    mnvPlotter.DrawDataMCWithErrorBand(dataHist_slices[i][side], pre_slices[side][i], 1., "TR", false , NULL, NULL, false, true);
 			char label2[1000];
-			std::snprintf(label2,1000,"%s compare before fit, %g < %s <= %g",side.c_str(),sliceLow[i-1],binVarName.c_str(),sliceHigh[i-1]);
+			std::snprintf(label2,1000,"%s compare before fit, %g < %s <= %g",side.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
 		    TText t2(.5,.95,label2);
 			t2.SetTitle(label2);
 			t2.SetTextAlign(22);
@@ -616,7 +651,7 @@ int main(int argc, char* argv[]) {
 		    
 		    mnvPlotter.DrawDataMCRatio(dataHist_slices[i][side], tot_slices[side][i], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
 			char label3[1000];
-			std::snprintf(label3,1000,"%s ratio after fit, %g < %s <= %g",side.c_str(),sliceLow[i-1],binVarName.c_str(),sliceHigh[i-1]);
+			std::snprintf(label3,1000,"%s ratio after fit, %g < %s <= %g",side.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
 		    TText t3(.5,.95,label3);
 			t3.SetTitle(label3);
 			t3.SetTextAlign(22);
@@ -627,7 +662,7 @@ int main(int argc, char* argv[]) {
 
 		    mnvPlotter.DrawDataMCRatio(dataHist_slices[i][side], pre_slices[side][i], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
 			char label4[1000];
-			std::snprintf(label4,1000,"%s ratio before fit, %g < %s <= %g",side.c_str(),sliceLow[i-1],binVarName.c_str(),sliceHigh[i-1]);
+			std::snprintf(label4,1000,"%s ratio before fit, %g < %s <= %g",side.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
 		    TText t4(.5,.95,label4);
 			t4.SetTitle(label4);
 			t4.SetTextAlign(22);
@@ -638,7 +673,7 @@ int main(int argc, char* argv[]) {
 
 		    mnvPlotter.DrawErrorSummary(pre_slices[side][i]);
 			char label5[1000];
-			std::snprintf(label5,1000,"%s errors before fit, %g < %s <= %g",side.c_str(),sliceLow[i-1],binVarName.c_str(),sliceHigh[i-1]);
+			std::snprintf(label5,1000,"%s errors before fit, %g < %s <= %g",side.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
 		    TText t5(.5,.95,label5);
 			t5.SetTitle(label5);
 			t5.SetTextAlign(22);
@@ -649,7 +684,7 @@ int main(int argc, char* argv[]) {
 
 		    mnvPlotter.DrawErrorSummary(tot_slices[side][i]);
 			char label6[1000];
-			std::snprintf(label6,1000,"%s errors after fit, %g < %s <= %g",side.c_str(),sliceLow[i-1],binVarName.c_str(),sliceHigh[i-1]);
+			std::snprintf(label6,1000,"%s errors after fit, %g < %s <= %g",side.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
 		    TText t6(.5,.95,label6);
 			t6.SetTitle(label6);
 			t6.SetTextAlign(22);
@@ -771,7 +806,7 @@ int main(int argc, char* argv[]) {
     
     for (auto side:sidebands){
         TString pixheader = TString(pixdirectory + "/" + side + "_" + varName + "_");
-        for (int i=1; i<=nbinsy; i++){
+        for (int i=0; i<lowBin.size(); i++){
 		    int nbinsX = dataHist_slices[i][side]->GetXaxis()->GetNbins();
 			double xMin = dataHist_slices[i][side]->GetXaxis()->GetBinLowEdge(1);
 			double xMax = dataHist_slices[i][side]->GetXaxis()->GetBinUpEdge(nbinsX);
@@ -822,7 +857,7 @@ int main(int argc, char* argv[]) {
 		    ty.SetTextAngle(90);
 		    
 			char label1[1000];
-			std::snprintf(label1,1000,"%s %s before fit, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i-1],binVarName.c_str(),sliceHigh[i-1]);
+			std::snprintf(label1,1000,"%s %s before fit, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
 		    TText t(.5,.95,label1);
 		    t.SetTitle(label1);
 		    t.SetTextAlign(22);
@@ -835,7 +870,7 @@ int main(int argc, char* argv[]) {
 		    cF.Print(TString(pixheader + "_prefit_combined_"+binVarName+"_slice"+i+".png").Data());
 		    
 			char label2[1000];
-			std::snprintf(label2,1000,"%s %s after fit, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i-1],binVarName.c_str(),sliceHigh[i-1]);
+			std::snprintf(label2,1000,"%s %s after fit, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
 		    TText t2(.5,.95,label2);
 		    t2.SetTitle(label2);
 		    t2.SetTextAlign(22);
@@ -847,7 +882,7 @@ int main(int argc, char* argv[]) {
 		    cF.Print(TString(pixheader + "_" + fitType + "_postfit_combined_"+binVarName+"_slice"+i+".png").Data());
 		    
 			char label3[1000];
-			std::snprintf(label3,1000,"%s %s Background Subtracted, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i-1],binVarName.c_str(),sliceHigh[i-1]);
+			std::snprintf(label3,1000,"%s %s Background Subtracted, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
 		    TText t3(.5,.95,label3);
 		    t3.SetTitle(label3);
 		    t3.SetTextAlign(22);
@@ -870,7 +905,7 @@ int main(int argc, char* argv[]) {
 		    cF.Print(TString(pixheader + "_bkgsub_compare_ratio_slice"+i+".png").Data());*/
 		    
 			char label5[1000];
-			std::snprintf(label5,1000,"%s %s errors after Background Subtracted, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i-1],binVarName.c_str(),sliceHigh[i-1]);
+			std::snprintf(label5,1000,"%s %s errors after Background Subtracted, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
 		    TText t5(.5,.95,label5);
 		    t5.SetTitle(label5);
 		    t5.SetTextAlign(22);

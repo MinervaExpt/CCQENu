@@ -11,6 +11,7 @@ export PLAYLISTDIR=$WHEREIPUTMYCODE/data/playlists/local
 
 #Get PlotUtils into Python path
 #export PYTHONPATH=$WHEREIPUTMYCODE/MAT-MINERvA/python:$WHEREIPUTMYCODE/MAT-MINERvA/python/PlotUtils
+export PYTHONPATH=$CCQEMAT/python:$WHEREIPUTMYCODE/MAT-MINERvA/python:$WHEREIPUTMYCODE/MAT-MINERvA/python/PlotUtils:$PYTHONPATH
 
 export JSONCPP_DIR=/usr/include/jsoncpp/
 #JSONCPP_DIR=$HOME/Minerva/jsoncpp-build/
