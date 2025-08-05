@@ -1,0 +1,565 @@
+{
+  "Comments": [
+    "4-4-2023 added analysistype to HyperD vars",
+    "2-13-2023 add multidim options",
+    "10-9-2022 reproduce PRD",
+    "7-5-2022 change to Amit's binning,Q2 and pzmu change",
+    "6-5-2022 change the zstart cut to include the start",
+    "add log10recoil"
+  ],
+  "HyperD": {
+    "pmu_CosThetamu_recoil": {
+      "name": "pmu_CosThetamu_recoil",
+      "vars": [
+        "pmu",
+        "CosThetamu",
+        "recoil"
+      ],
+      "analysistype": 1
+    },
+    "pmu_ThetamuDegrees_recoil": {
+      "name": "pmu_ThetamuDegrees_recoil",
+      "vars": [
+        "pmu",
+        "ThetamuDegrees",
+        "recoil"
+      ],
+      "analysistype": 1
+    },
+    "pzmu_ptmu_EAvail": {
+      "name": "pzmu_ptmu_EAvail",
+      "vars": [
+        "pzmu",
+        "ptmu",
+        "EAvail"
+      ],
+      "analysistype": 1
+    },
+    "pzmu_ptmu_recoil": {
+      "name": "pzmu_ptmu_recoil",
+      "vars": [
+        // "pzmuHD",
+        // "ptmuHD",
+        // "recoil"
+        "pzmu",
+        "ptmu",
+        "recoil"
+      ],
+      "analysistype": 1
+    },
+    "recoil_ptmu_pzmu":{
+      "name": "recoil_ptmu_pzmu",
+      "vars": [
+        "recoilHD",
+        "ptmuHD",
+        "pzmuHD"
+      ]
+    },
+    "ptmu_pzmu_recoil": {
+      "name": "ptmu_pzmu_recoil",
+      "vars": [
+        "ptmuHD",
+        "pzmuHD",
+        "recoilHD"
+      ]
+    }
+
+  },
+  "2D": {
+    "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID",
+      "xvar": "LeadingNeutCandvtxZDist",
+      "yvar": "LeadingNeutCandTopMCPID"
+    },
+    "LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+      "xvar": "LeadingNeutCandvtxSphereDist",
+      "yvar": "LeadingNeutCandTopMCPID"
+    },
+    "LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+      "xvar": "LeadingNeutCandEdep",
+      "yvar": "LeadingNeutCandTopMCPID"
+    },
+    "SecNeutCandvtxZDist_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandvtxZDist_SecNeutCandTopMCPID",
+      "xvar": "SecNeutCandvtxZDist",
+      "yvar": "SecNeutCandTopMCPID"
+    },
+    "SecNeutCandvtxSphereDist_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
+      "xvar": "SecNeutCandvtxSphereDist",
+      "yvar": "SecNeutCandTopMCPID"
+    },
+    "SecNeutCandEdep_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandEdep_SecNeutCandTopMCPID",
+      "xvar": "SecNeutCandEdep",
+      "yvar": "SecNeutCandTopMCPID"
+    },
+    "ThirdNeutCandvtxZDist_ThirdNeutCandTopMCPID": {
+      "name": "ThirdNeutCandvtxZDist_ThirdNeutCandTopMCPID",
+      "xvar": "ThirdNeutCandvtxZDist",
+      "yvar": "ThirdNeutCandTopMCPID"
+    },
+    "ThirdNeutCandvtxSphereDist_ThirdNeutCandTopMCPID": {
+      "name": "ThirdNeutCandvtxSphereDist_ThirdNeutCandTopMCPID",
+      "xvar": "ThirdNeutCandvtxSphereDist",
+      "yvar": "ThirdNeutCandTopMCPID"
+    },
+    "ThirdNeutCandEdep_ThirdNeutCandTopMCPID": {
+      "name": "ThirdNeutCandEdep_ThirdNeutCandTopMCPID",
+      "xvar": "ThirdNeutCandEdep",
+      "yvar": "ThirdNeutCandTopMCPID"
+    },
+    "LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID",
+      "xvar": "LeadingNeutCandvtxBoxDist",
+      "yvar": "LeadingNeutCandTopMCPID"
+    },
+    "SecNeutCandvtxBoxDist_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandvtxBoxDist_SecNeutCandTopMCPID",
+      "xvar": "SecNeutCandvtxBoxDist",
+      "yvar": "SecNeutCandTopMCPID"
+    },
+    "ThirdNeutCandvtxBoxDist_ThirdNeutCandTopMCPID": {
+      "name": "ThirdNeutCandvtxBoxDist_ThirdNeutCandTopMCPID",
+      "xvar": "ThirdNeutCandvtxBoxDist",
+      "yvar": "ThirdNeutCandTopMCPID"
+    },
+    "LeadingNeutCandMuonDist_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandMuonDist_LeadingNeutCandTopMCPID",
+      "xvar": "LeadingNeutCandMuonDist",
+      "yvar": "LeadingNeutCandTopMCPID"
+    },
+    "SecNeutCandMuonDist_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandMuonDist_SecNeutCandTopMCPID",
+      "xvar": "SecNeutCandMuonDist",
+      "yvar": "SecNeutCandTopMCPID"
+    },
+    "ThirdNeutCandMuonDist_ThirdNeutCandTopMCPID": {
+      "name": "ThirdNeutCandMuonDist_ThirdNeutCandTopMCPID",
+      "xvar": "ThirdNeutCandMuonDist",
+      "yvar": "ThirdNeutCandTopMCPID"
+    },
+    "LeadingNeutCandMuonAngle_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandMuonAngle_LeadingNeutCandTopMCPID",
+      "xvar": "LeadingNeutCandMuonAngle",
+      "yvar": "LeadingNeutCandTopMCPID"
+    },
+    "SecNeutCandMuonAngle_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandMuonAngle_SecNeutCandTopMCPID",
+      "xvar": "SecNeutCandMuonAngle",
+      "yvar": "SecNeutCandTopMCPID"
+    },
+    "ThirdNeutCandMuonAngle_ThirdNeutCandTopMCPID": {
+      "name": "ThirdNeutCandMuonAngle_ThirdNeutCandTopMCPID",
+      "xvar": "ThirdNeutCandMuonAngle",
+      "yvar": "ThirdNeutCandTopMCPID"
+    },
+    "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID",
+      "xvar": "LeadingNeutCandClusterMaxE",
+      "yvar": "LeadingNeutCandTopMCPID"
+    },
+    "SecNeutCandClusterMaxE_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandClusterMaxE_SecNeutCandTopMCPID",
+      "xvar": "SecNeutCandClusterMaxE",
+      "yvar": "SecNeutCandTopMCPID"
+    },
+    "ThirdNeutCandClusterMaxE_ThirdNeutCandTopMCPID": {
+      "name": "ThirdNeutCandClusterMaxE_ThirdNeutCandTopMCPID",
+      "xvar": "ThirdNeutCandClusterMaxE",
+      "yvar": "ThirdNeutCandTopMCPID"
+    }
+  },
+  "1D": {
+    "LeadingNeutCandTopMCPID": {
+      "reco": "LeadingNeutCandTopMCPID",
+      "true": "LeadingNeutCandTopMCPID",
+      "name": "LeadingNeutCandTopMCPID",
+      "title": "1st Blob parent Top PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },  
+    "SecNeutCandTopMCPID": {
+      "reco": "SecNeutCandTopMCPID",
+      "true": "SecNeutCandTopMCPID",
+      "name": "SecNeutCandTopMCPID",
+      "title": "2nd Blob parent Top PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandTopMCPID": {
+      "reco": "ThirdNeutCandTopMCPID",
+      "true": "ThirdNeutCandTopMCPID",
+      "name": "ThirdNeutCandTopMCPID",
+      "title": "3rd Blob parent Top PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandvtxZDist": {
+      "reco": "LeadingNeutCandvtxZDist",
+      "true": "LeadingNeutCandvtxZDist",
+      "name": "LeadingNeutCandvtxZDist",
+      "title": "Leading Blob zdist from vtx",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 898.02561210692,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandvtxZDist": {
+      "reco": "SecNeutCandvtxZDist",
+      "true": "SecNeutCandvtxZDist",
+      "name": "SecNeutCandvtxZDist",
+      "title": "Second Blob zdist from vtx",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 500,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandvtxZDist": {
+      "reco": "ThirdNeutCandvtxZDist",
+      "true": "ThirdNeutCandvtxZDist",
+      "name": "ThirdNeutCandvtxZDist",
+      "title": "Third Blob zdist from vtx",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 500,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandvtxSphereDist": {
+      "reco": "LeadingNeutCandvtxSphereDist",
+      "true": "LeadingNeutCandvtxSphereDist",
+      "name": "LeadingNeutCandvtxSphereDist",
+      "title": "Leading Blob spherical dist from vtx",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 1000.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandvtxSphereDist": {
+      "reco": "SecNeutCandvtxSphereDist",
+      "true": "SecNeutCandvtxSphereDist",
+      "name": "SecNeutCandvtxSphereDist",
+      "title": "Second Blob spherical dist from vtx",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 1000.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandvtxSphereDist": {
+      "reco": "ThirdNeutCandvtxSphereDist",
+      "true": "ThirdNeutCandvtxSphereDist",
+      "name": "ThirdNeutCandvtxSphereDist",
+      "title": "Third Blob spherical dist from vtx",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 1000.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandvtxBoxDist": {
+      "reco": "LeadingNeutCandvtxBoxDist",
+      "true": "LeadingNeutCandvtxBoxDist",
+      "name": "LeadingNeutCandvtxBoxDist",
+      "title": "Leading Blob box dist from vtx",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 1000.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandvtxBoxDist": {
+      "reco": "SecNeutCandvtxBoxDist",
+      "true": "SecNeutCandvtxBoxDist",
+      "name": "SecNeutCandvtxBoxDist",
+      "title": "Second Blob box dist from vtx",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 1000.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandvtxBoxDist": {
+      "reco": "ThirdNeutCandvtxBoxDist",
+      "true": "ThirdNeutCandvtxBoxDist",
+      "name": "ThirdNeutCandvtxBoxDist",
+      "title": "Third Blob box dist from vtx",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 1000.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandEdep": {
+      "reco": "LeadingNeutCandEdep",
+      "true": "LeadingNeutCandEdep",
+      "name": "LeadingNeutCandEdep",
+      "title": "Leading Blob Total E",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 100.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandEdep": {
+      "reco": "SecNeutCandEdep",
+      "true": "SecNeutCandEdep",
+      "name": "SecNeutCandEdep",
+      "title": "Second Blob Total E",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 100.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandEdep": {
+      "reco": "ThirdNeutCandEdep",
+      "true": "ThirdNeutCandEdep",
+      "name": "ThirdNeutCandEdep",
+      "title": "Third Blob Total E",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 100.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandClusterMaxE": {
+      "reco": "LeadingNeutCandClusterMaxE",
+      "true": "LeadingNeutCandClusterMaxE",
+      "name": "LeadingNeutCandClusterMaxE",
+      "title": "Leading Blob Total E",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 100.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandClusterMaxE": {
+      "reco": "SecNeutCandClusterMaxE",
+      "true": "SecNeutCandClusterMaxE",
+      "name": "SecNeutCandClusterMaxE",
+      "title": "Second Blob Total E",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 100.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandClusterMaxE": {
+      "reco": "ThirdNeutCandClusterMaxE",
+      "true": "ThirdNeutCandClusterMaxE",
+      "name": "ThirdNeutCandClusterMaxE",
+      "title": "Third Blob Total E",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 100.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandMuonDist": {
+      "reco": "LeadingNeutCandMuonDist",
+      "true": "LeadingNeutCandMuonDist",
+      "name": "LeadingNeutCandMuonDist",
+      "title": "Leading Blob Dist from muon track",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandMuonDist": {
+      "reco": "SecNeutCandMuonDist",
+      "true": "SecNeutCandMuonDist",
+      "name": "SecNeutCandMuonDist",
+      "title": "Second Blob Dist from muon track",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandMuonDist": {
+      "reco": "ThirdNeutCandMuonDist",
+      "true": "ThirdNeutCandMuonDist",
+      "name": "ThirdNeutCandMuonDist",
+      "title": "Third Blob Dist from muon track",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandMuonAngle": {
+      "reco": "LeadingNeutCandMuonAngle",
+      "true": "LeadingNeutCandMuonAngle",
+      "name": "LeadingNeutCandMuonAngle",
+      "title": "Leading Blob Angle from muon track",
+      "nbins": 36,
+      "min": 0,
+      "max": 180.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandMuonAngle": {
+      "reco": "SecNeutCandMuonAngle",
+      "true": "SecNeutCandMuonAngle",
+      "name": "SecNeutCandMuonAngle",
+      "title": "Second Blob Angle from muon track",
+      "nbins": 36,
+      "min": 0,
+      "max": 180.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandMuonAngle": {
+      "reco": "ThirdNeutCandMuonAngle",
+      "true": "ThirdNeutCandMuonAngle",
+      "name": "ThirdNeutCandMuonAngle",
+      "title": "Third Blob Angle from muon track",
+      "nbins": 36,
+      "min": 0,
+      "max": 180.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingIsoBlobsPrimaryMCPID": {
+      "reco": "LeadingIsoBlobsPrimaryMCPID",
+      "true": "LeadingIsoBlobsPrimaryMCPID",
+      "name": "LeadingIsoBlobsPrimaryMCPID",
+      "title": "Leading NonvtxIsoBlob primary parent PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecondIsoBlobsPrimaryMCPID": {
+      "reco": "SecondIsoBlobsPrimaryMCPID",
+      "true": "SecondIsoBlobsPrimaryMCPID",
+      "name": "SecondIsoBlobsPrimaryMCPID",
+      "title": "Second NonvtxIsoBlob primary parent PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NNonVtxIsoBlobs": {
+      "reco": "NNonVtxIsoBlobs",
+      "true": "TrueNeutralPionCount",
+      "name": "NNonVtxIsoBlobs",
+      "title": "Number of NonVtxIsoBlobs",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "NNonVtxIsoBlobsAll": {
+      "reco": "NNonVtxIsoBlobsAll",
+      "true": "TrueNeutralPionCount",
+      "name": "NNonVtxIsoBlobsAll",
+      "title": "Number of NonVtxIsoBlobsAll",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "NNeutCands": {
+      "reco": "NNeutCands",
+      "true": "TrueNNeutCands",
+      "name": "NNeutCands",
+      "title": "Number of blobs tagged as neutrons",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "TrueNeutronEnergy": {
+      "reco": "TrueNeutronEGeV",
+      "true": "TrueNeutronEGeV",
+      "name": "TrueNeutronEGeV",
+      "title": "True Neutron Energy (GeV)",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 2.0,
+      "for": [
+        "selected_reco",
+        "selected_truth"
+      ]
+    },
+    "TotalNeutBlobE": {
+      "reco": "TotNeutBlobEGeV",
+      "true": "TotNeutBlobEGeV",
+      "name": "TotalNeutBlobE",
+      "title": "Total Neutron Blob Energy",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 0.5,
+      "for": [
+        "selected_reco"
+      ]
+    }
+  }
+}
+

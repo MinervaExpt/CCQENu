@@ -361,6 +361,15 @@
     {"name": "TruthIsCCQELikeAll", "equals": 1, "variable": "TruthIsCCQELikeAll"}
     // {"name": "TruthIsCCQELike", "equals": 1, "variable": "TruthIsCCQELike", "protonKECutMeV": 10000000.0}
   ],
+  "qelike_old": [
+    {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
+    {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
+    {"name": "TruthIsCCQELike", "equals": 1, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0}
+  ],
+  "qelikenot_old": [
+    // {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"}
+    {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0}
+  ],
   "qelike_minEAvail": [
     {"name": "PDG", "equals":-14, "variable": "TruthNuPDG"},
     {"name": "TruthIsCC", "equals": 1, "variable": "TruthIsCC"},
@@ -441,7 +450,12 @@
     {"name": "TruthHasSingleChargedPion", "equals": 0, "variable": "TruthHasSingleChargedPion"},
     {"name": "TruthHasSingleNeutralPion", "equals": 0, "variable": "TruthHasSingleNeutralPion"},
     {"name": "TruthIsCCQELikeAll", "equals": 0, "variable": "TruthIsCCQELikeAll"}
-    // {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike","protonKECutMeV":10000000.0} //, "protonKECutMeV": 120.0}
+  ],
+  "other_old": [
+    // {"name": "TruthHasMultiplePions", "equals": 0, "variable": "TruthHasMultiPion"},
+    {"name": "TruthHasSingleChargedPion", "equals": 0, "variable": "TruthHasSingleChargedPion"},
+    {"name": "TruthHasSingleNeutralPion", "equals": 0, "variable": "TruthHasSingleNeutralPion"},
+    {"name": "TruthIsCCQELike", "equals": 0, "variable": "TruthIsCCQELike", "protonKECutMeV": 120.0}
   ],
   "lambda": [
     {"name": "TruthHasSingleLambda", "equals":1,"variable":"TruthHasSingleLambda"}

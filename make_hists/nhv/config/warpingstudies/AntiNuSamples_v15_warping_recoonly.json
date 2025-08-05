@@ -29,6 +29,39 @@
             "qelikenot": "QELikeNot",
         }
     },
+    "QElike_old": {
+        "name": "QElike_old",
+        "reco": "QElike",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike_old"
+        ],
+        "background": [
+            "qelikenot_old"
+        ],
+        "categories": {
+            "qelike_old": {
+                // "for": ["selected_reco"]
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    // "truth",
+                    "response"
+                ]
+            },
+            "qelikenot_old": {
+                "for": [
+                    "selected_reco"
+                ]
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]
+            }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike_old": "QELike",
+            "qelikenot_old": "QELikeNot",
+        }
+    },
     "QElike_maxrecoil": {
         "name": "QElike_maxrecoil",
         "reco": "QElike_maxrecoil",

@@ -21,7 +21,7 @@
                 "for": [
                     "selected_reco",
                     "selected_truth",
-                    "truth",
+                    // "truth",
                     "response"
                 ]
                 // "for": [
@@ -63,6 +63,69 @@
             // "multipion": "N#pi",
             "other": "Other"//,
             // "qelikenot": "QELike Not"
+        }
+    },
+    "QElike_old": {
+        "name": "QElike_old",
+        "reco": "QElike",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike_old"
+        ],
+        "background": [
+            "neutralpion",
+            "chargedpion",
+            // "multipion",
+            "other_old"//,
+            // "qelikenot_old"
+        ],
+        "categories": {
+            "qelike": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    // "truth",
+                    "response"
+                ]
+                // "for": [
+                //     "selected_reco"
+                // ]
+            },
+            "neutralpion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "chargedpion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            // "multipion": {
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // },
+            "other_old": {
+                "for": [
+                    "selected_reco"
+                ]
+            } //,
+            // "qelikenot_old": {
+            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // }
+        },
+        "legend_entries": {
+            "data": "Data",
+            "qelike": "QElike",
+            "neutralpion": "1#pi^{0}",
+            "chargedpion": "1#pi^{+/-}",
+            // "multipion": "N#pi",
+            "other_old": "Other" //,
+            // "qelikenot_old": "QELike Not"
         }
     },
     "QElikeNeut": {

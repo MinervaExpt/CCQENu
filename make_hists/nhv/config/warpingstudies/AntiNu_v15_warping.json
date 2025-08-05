@@ -3,17 +3,17 @@
   "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
-  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_local.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
-  "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
+  "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "monareweight_test_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "neutronnuisance_tuning_p4_is3D_fiducial_minedep1p5MeV_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
   "recoName": "MasterAnaDev",
-  "tunedmc": "untuned",
+  "tunedmc": "both",
   "warpedmc": "none",
   "closure": 0,
   "TuneCategories": [
@@ -25,8 +25,10 @@
   "DoTypes": false,
   "pdg": -14,
   "mcRecoToCSV": false,
+  "statusbar": true,
   "runsamples": [
     "QElike"//,
+    // "QElike_old"
     // "QElike_maxrecoil"//,
     // "QElike_maxrecoil_hiEAvail",
     // "QElike_hiEAvail"
@@ -52,9 +54,9 @@
     // "recoilNoBlobs",
     // "Q2QE",
     // "FitQ2QE",
-    "EAvail",
-    "EAvailNoNonVtxBlobs",
-    "EAvailLeadingBlob",
+    // "EAvail"//,
+    // "EAvailNoNonVtxBlobs",
+    // "EAvailLeadingBlob",
     // "pzmuHD",
     // "ptmuHD",
     // "pmu",
@@ -64,15 +66,60 @@
     // "EAvailWiggled"
     // "EAvailWithNeutrons",
     // "resEAvailWithNeutrons"
-    "recoil"//,
+    // "recoil"//,
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
     // "ptmu"
     // "NeutCandMCPID",
-    // "NeutCandTopMCPID"
+    // "LeadingNeutCandTopMCPID",
+    // "SecNeutCandTopMCPID",
+    // "ThirdNeutCandTopMCPID",
+    "LeadingNeutCandvtxZDist",
+    "SecNeutCandvtxZDist",
+    "ThirdNeutCandvtxZDist",
+    "LeadingNeutCandEdep",
+    "SecNeutCandEdep",
+    "ThirdNeutCandEdep",
+    "LeadingNeutCandvtxSphereDist",
+    "SecNeutCandvtxSphereDist",
+    "ThirdNeutCandvtxSphereDist",
+    "LeadingNeutCandvtxBoxDist",
+    "SecNeutCandvtxBoxDist",
+    "ThirdNeutCandvtxBoxDist",
+    "LeadingNeutCandMuonDist",
+    "SecNeutCandMuonDist",
+    "ThirdNeutCandMuonDist",
+    "LeadingNeutCandMuonAngle",
+    "SecNeutCandMuonAngle",
+    "ThirdNeutCandMuonAngle",
+    "LeadingNeutCandClusterMaxE",
+    "SecNeutCandClusterMaxE",
+    "ThirdNeutCandClusterMaxE"
   ],
-  "Analyze2DVariables": [],
+  "Analyze2DVariables": [
+    "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID",
+    "SecNeutCandvtxZDist_SecNeutCandTopMCPID",
+    "ThirdNeutCandvtxZDist_ThirdNeutCandTopMCPID",
+    "LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+    "SecNeutCandEdep_SecNeutCandTopMCPID",
+    "ThirdNeutCandEdep_ThirdNeutCandTopMCPID",
+    "LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+    "SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
+    "ThirdNeutCandvtxSphereDist_ThirdNeutCandTopMCPID",
+    "LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID",
+    "SecNeutCandvtxBoxDist_SecNeutCandTopMCPID",
+    "ThirdNeutCandvtxBoxDist_ThirdNeutCandTopMCPID",
+    "LeadingNeutCandMuonDist_LeadingNeutCandTopMCPID",
+    "SecNeutCandMuonDist_SecNeutCandTopMCPID",
+    "ThirdNeutCandMuonDist_ThirdNeutCandTopMCPID",
+    "LeadingNeutCandMuonAngle_LeadingNeutCandTopMCPID",
+    "SecNeutCandMuonAngle_SecNeutCandTopMCPID",
+    "ThirdNeutCandMuonAngle_ThirdNeutCandTopMCPID",
+    "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID",
+    "SecNeutCandClusterMaxE_SecNeutCandTopMCPID",
+    "ThirdNeutCandClusterMaxE_ThirdNeutCandTopMCPID"
+  ],
     // "recoil_ptmu",
     // "pzmu_ptmu"//,
     // "Q2QE_recoil"
@@ -82,30 +129,30 @@
     // "pmu_ThetamuDegrees_recoil"
   // ],
   "signal": {
-    "QElike": "qelike"//,
-    // "Background": "qelike",
-    // "QElikeNP": "qelike_np",
-    // "QElikeALLAngles": "qelike_np"
+    "QElike": "qelike",
+    "QElike_old": "qelike_old" //,
   }, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
   "background": {
     "QElike": [
+      "qelikenot",
       "chargedpion",
       "neutralpion",
       "other"
-    ] //,
-    // "Background": "qelikenot",
-    // "QElikeNP": "qelikenot_np",
-    // "QElikeALLAngles": "qelikenot_np"
+    ],
+    "QElike_old": [
+      "qelikenot_old",
+      "chargedpion",
+      "neutralpion",
+      "other_old"
+    ]//,
   },
   "data": {
-    "QElike": "data"//,
-    // "Background": "data",
-    // "QElikeNP": "data",
-    // "QElikeALLAngles": "data"
+    "QElike": "data",
+    "QElike_old": "data" //,
   }, 
   "responseSystematicsVersion": "2024",
   "systematics": [
-    "Flux",
+    "Flux"//,
     // "MuonMINOS",
     // "MuonResolution",
     // "MINOSEfficiency",
@@ -117,7 +164,7 @@
     // "MuonMinerva",
     // "geant4",
     // "response",
-    "MoNANeutronInelastic"
+    // "MoNANeutronInelastic"
   ],
   "fluxUniverses": 2, //100, //10,
   "NuEConstraint":1, 
