@@ -236,9 +236,6 @@ class CVFunctions {
         recofunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
         recointfunctions["NBlobs"] = &CVUNIVERSE::GetNBlobs;
 
-        recofunctions["NNeutBlobs"] = &CVUNIVERSE::GetNNeutBlobs;
-        recointfunctions["NNeutBlobs"] = &CVUNIVERSE::GetNNeutBlobs;
-
         recofunctions["NNonVtxIsoBlobs"] = &CVUNIVERSE::GetNNonVtxIsoBlobs;
         recointfunctions["NNonVtxIsoBlobs"] = &CVUNIVERSE::GetNNonVtxIsoBlobs;
 
@@ -263,10 +260,69 @@ class CVFunctions {
         truefunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
         trueintfunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
 
-        recofunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
-        recointfunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
-        truefunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
-        trueintfunctions["NeutCandTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
+        recofunctions["LeadingNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotLeadingNeutCandTopMCPID;
+        recointfunctions["LeadingNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotLeadingNeutCandTopMCPID;
+        truefunctions["LeadingNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotLeadingNeutCandTopMCPID;
+        trueintfunctions["LeadingNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotLeadingNeutCandTopMCPID;
+
+        recofunctions["SecNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotSecNeutCandTopMCPID;
+        recointfunctions["SecNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotSecNeutCandTopMCPID;
+        truefunctions["SecNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotSecNeutCandTopMCPID;
+        trueintfunctions["SecNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotSecNeutCandTopMCPID;
+
+        recofunctions["ThirdNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotThirdNeutCandTopMCPID;
+        recointfunctions["ThirdNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotThirdNeutCandTopMCPID;
+        truefunctions["ThirdNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotThirdNeutCandTopMCPID;
+        trueintfunctions["ThirdNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotThirdNeutCandTopMCPID;
+
+        recofunctions["LeadingNeutCandvtxZDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxZDist;
+        truefunctions["LeadingNeutCandvtxZDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxZDist;
+        recofunctions["SecNeutCandvtxZDist"] = &CVUNIVERSE::GetSecNeutCandvtxZDist;
+        truefunctions["SecNeutCandvtxZDist"] = &CVUNIVERSE::GetSecNeutCandvtxZDist;
+        recofunctions["ThirdNeutCandvtxZDist"] = &CVUNIVERSE::GetThirdNeutCandvtxZDist;
+        truefunctions["ThirdNeutCandvtxZDist"] = &CVUNIVERSE::GetThirdNeutCandvtxZDist;
+
+        recofunctions["LeadingNeutCandvtxSphereDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxSphereDist;
+        truefunctions["LeadingNeutCandvtxSphereDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxSphereDist;
+        recofunctions["SecNeutCandvtxSphereDist"] = &CVUNIVERSE::GetSecNeutCandvtxSphereDist;
+        truefunctions["SecNeutCandvtxSphereDist"] = &CVUNIVERSE::GetSecNeutCandvtxSphereDist;
+        recofunctions["ThirdNeutCandvtxSphereDist"] = &CVUNIVERSE::GetThirdNeutCandvtxSphereDist;
+        truefunctions["ThirdNeutCandvtxSphereDist"] = &CVUNIVERSE::GetThirdNeutCandvtxSphereDist;
+
+        recofunctions["LeadingNeutCandvtxBoxDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxBoxDist;
+        truefunctions["LeadingNeutCandvtxBoxDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxBoxDist;
+        recofunctions["SecNeutCandvtxBoxDist"] = &CVUNIVERSE::GetSecNeutCandvtxBoxDist;
+        truefunctions["SecNeutCandvtxBoxDist"] = &CVUNIVERSE::GetSecNeutCandvtxBoxDist;
+        recofunctions["ThirdNeutCandvtxBoxDist"] = &CVUNIVERSE::GetThirdNeutCandvtxBoxDist;
+        truefunctions["ThirdNeutCandvtxBoxDist"] = &CVUNIVERSE::GetThirdNeutCandvtxBoxDist;
+
+        recofunctions["LeadingNeutCandEdep"] = &CVUNIVERSE::GetLeadingNeutCandEdepMeV;
+        truefunctions["LeadingNeutCandEdep"] = &CVUNIVERSE::GetLeadingNeutCandEdepMeV;
+        recofunctions["SecNeutCandEdep"] = &CVUNIVERSE::GetSecNeutCandEdepMeV;
+        truefunctions["SecNeutCandEdep"] = &CVUNIVERSE::GetSecNeutCandEdepMeV;
+        recofunctions["ThirdNeutCandEdep"] = &CVUNIVERSE::GetThirdNeutCandEdepMeV;
+        truefunctions["ThirdNeutCandEdep"] = &CVUNIVERSE::GetThirdNeutCandEdepMeV;
+
+        recofunctions["LeadingNeutCandClusterMaxE"] = &CVUNIVERSE::GetLeadingNeutCandClusterMaxEMeV;
+        truefunctions["LeadingNeutCandClusterMaxE"] = &CVUNIVERSE::GetLeadingNeutCandClusterMaxEMeV;
+        recofunctions["SecNeutCandClusterMaxE"] = &CVUNIVERSE::GetSecNeutCandClusterMaxEMeV;
+        truefunctions["SecNeutCandClusterMaxE"] = &CVUNIVERSE::GetSecNeutCandClusterMaxEMeV;
+        recofunctions["ThirdNeutCandClusterMaxE"] = &CVUNIVERSE::GetThirdNeutCandClusterMaxEMeV;
+        truefunctions["ThirdNeutCandClusterMaxE"] = &CVUNIVERSE::GetThirdNeutCandClusterMaxEMeV;
+
+        recofunctions["LeadingNeutCandMuonDist"] = &CVUNIVERSE::GetLeadingNeutCandMuonDist;
+        truefunctions["LeadingNeutCandMuonDist"] = &CVUNIVERSE::GetLeadingNeutCandMuonDist;
+        recofunctions["SecNeutCandMuonDist"] = &CVUNIVERSE::GetSecNeutCandMuonDist;
+        truefunctions["SecNeutCandMuonDist"] = &CVUNIVERSE::GetSecNeutCandMuonDist;
+        recofunctions["ThirdNeutCandMuonDist"] = &CVUNIVERSE::GetThirdNeutCandMuonDist;
+        truefunctions["ThirdNeutCandMuonDist"] = &CVUNIVERSE::GetThirdNeutCandMuonDist;
+
+        recofunctions["LeadingNeutCandMuonAngle"] = &CVUNIVERSE::GetLeadingNeutCandMuonAngle;
+        truefunctions["LeadingNeutCandMuonAngle"] = &CVUNIVERSE::GetLeadingNeutCandMuonAngle;
+        recofunctions["SecNeutCandMuonAngle"] = &CVUNIVERSE::GetSecNeutCandMuonAngle;
+        truefunctions["SecNeutCandMuonAngle"] = &CVUNIVERSE::GetSecNeutCandMuonAngle;
+        recofunctions["ThirdNeutCandMuonAngle"] = &CVUNIVERSE::GetThirdNeutCandMuonAngle;
+        truefunctions["ThirdNeutCandMuonAngle"] = &CVUNIVERSE::GetThirdNeutCandMuonAngle;
 
         recofunctions["LeadingIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotLeadingIsoBlobsPrimaryMCPID;
         recointfunctions["LeadingIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotLeadingIsoBlobsPrimaryMCPID;
@@ -282,12 +338,14 @@ class CVFunctions {
 
         recofunctions["NNeutCands"] = &CVUNIVERSE::GetNNeutCands;
         recointfunctions["NNeutCands"] = &CVUNIVERSE::GetNNeutCands;
+        truefunctions["TrueNNeutCands"] = &CVUNIVERSE::GetTrueNNeutCands;
+        trueintfunctions["TrueNNeutCands"] = &CVUNIVERSE::GetTrueNNeutCands;
 
         truefunctions["TrueNeutronEGeV"] = &CVUNIVERSE::GetTrueNeutronEGeV;
         recofunctions["TrueNeutronEGeV"] = &CVUNIVERSE::GetTrueNeutronEGeV;
 
-        recofunctions["3DBlobsRatio"] = &CVUNIVERSE::Get3DBlobsRatio;
-        truefunctions["3DBlobsRatio"] = &CVUNIVERSE::Get3DBlobsRatio;
+        // recofunctions["3DBlobsRatio"] = &CVUNIVERSE::Get3DBlobsRatio;
+        // truefunctions["3DBlobsRatio"] = &CVUNIVERSE::Get3DBlobsRatio;
 
         // Michel Electrons
 

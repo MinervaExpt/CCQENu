@@ -1,4 +1,4 @@
-#include "include/NeutronMultiplicity.h"
+// #include "include/NeutronMultiplicity.h"
 #include "NeutronMultiplicity.h"
 
 // TODO: Universe templating
@@ -17,18 +17,19 @@ NeutCand::NeutCand() {};
 //     // TODO: set flight path                                
 // }
 
-NeutCand::NeutCand(int blobID, int is3D, int recoEDep, TVector3 position) : m_blobID(blobID),
+NeutCand::NeutCand(int blobID, int is3D, double recoEDep, TVector3 position) : m_blobID(blobID),
                                                                             m_is3D(is3D),
                                                                             m_recoEDep(recoEDep),
                                                                             m_position(position) {
 }
 
 // Reco functions
-void NeutCand::SetReco(int blobID, int is3D, int recoEDep, TVector3 position, TVector3 flightpath) {
+void NeutCand::SetReco(int blobID, int is3D, double recoEDep, double clusterMaxE, TVector3 position, TVector3 flightpath) {
     m_recoset = true;
     m_blobID = blobID;
     m_is3D = is3D;
     m_recoEDep = recoEDep;
+    m_clusterMaxE = clusterMaxE;
     m_position = position;
     m_flightpath = flightpath;
 }
@@ -81,22 +82,13 @@ int NeutCand::GetCandTruthTopPID() {
 
 // NeutEvent stuff
 // CTORS
-NeutEvent::NeutEvent(NuConfig config, int n_neutcands, TVector3 vtx, TVector3 mupath) : m_vtx(vtx),
-                                                                                        m_mupath(mupath),
-                                                                                        m_nneutcands(n_neutcands) {
-    if (config.IsMember("vtxdist_max")) m_vtxdist_max = config.GetDouble("vtxdist_max");
-    if (config.IsMember("vtxdist_min")) m_vtxdist_min = config.GetDouble("vtxdist_min");
-    if (config.IsMember("vtx_zdist_min")) m_vtx_zdist_min = config.GetDouble("vtx_zdist_min");
-    if (config.IsMember("zpos_max")) m_zpos_max = config.GetDouble("zpos_max");
-    if (config.IsMember("zpos_min")) m_zpos_min = config.GetDouble("zpos_min");
-    if (config.IsMember("muoncone_min")) m_muoncone_min = config.GetDouble("muoncone_min");
-    if (config.IsMember("muondist_min")) m_muondist_min = config.GetDouble("muondist_min");
-    if (config.IsMember("edep_min")) m_edep_min = config.GetDouble("edep_min");
-    if (config.IsMember("Is3D")) m_req3D = config.GetBool("Is3D");
-
+NeutEvent::NeutEvent(NuConfig config, int n_neutcands, TVector3 vtx, TVector3 mupath, std::vector<int> order) : m_vtx(vtx),
+                                                                                                                m_mupath(mupath),
+                                                                                                                m_nneutcands(n_neutcands) {
+    SetConfig(config);
     for (int i = 0; i < n_neutcands; i++) {
         NeutCand* cand = new NeutCand();
-        m_cands.push_back(cand);
+        m_cands.emplace_back(cand);
     }
     _is_cands_set = true;
 }
@@ -106,16 +98,23 @@ NeutEvent::NeutEvent(int n_neutcands, TVector3 vtx, TVector3 mupath) : m_vtx(vtx
                                                                        m_nneutcands(n_neutcands) {
     for (int i = 0; i < n_neutcands; i++) {
         NeutCand* cand = new NeutCand();
-        m_cands.push_back(cand);
+        m_cands.emplace_back(cand);
     }
     _is_cands_set = true;
 }
 
 NeutEvent::NeutEvent(NuConfig config) {
     std::cout << "WARNING: NeutronMultiplicity::NeutEvent: you are setting a neutevent without setting up candidates.\nYou will need to use NeutronMultiplicity::NeutEvent::SetCands()." << std::endl;
+    SetConfig(config);
+}
+
+NeutEvent::NeutEvent() {}
+
+void NeutEvent::SetConfig(NuConfig config) {
     if (config.IsMember("vtxdist_max")) m_vtxdist_max = config.GetDouble("vtxdist_max");
     if (config.IsMember("vtxdist_min")) m_vtxdist_min = config.GetDouble("vtxdist_min");
     if (config.IsMember("vtx_zdist_min")) m_vtx_zdist_min = config.GetDouble("vtx_zdist_min");
+    if (config.IsMember("vtx_box")) m_vtx_box = config.GetDoubleVector("vtx_box");
     if (config.IsMember("zpos_max")) m_zpos_max = config.GetDouble("zpos_max");
     if (config.IsMember("zpos_min")) m_zpos_min = config.GetDouble("zpos_min");
     if (config.IsMember("muoncone_min")) m_muoncone_min = config.GetDouble("muoncone_min");
@@ -123,8 +122,6 @@ NeutEvent::NeutEvent(NuConfig config) {
     if (config.IsMember("edep_min")) m_edep_min = config.GetDouble("edep_min");
     if (config.IsMember("Is3D")) m_req3D = config.GetBool("Is3D");
 }
-
-NeutEvent::NeutEvent() {}
 
 void NeutEvent::SetCands(int n_neutcands, TVector3 vtx, TVector3 mupath) {
     m_nneutcands = n_neutcands;
@@ -136,7 +133,7 @@ void NeutEvent::SetCands(int n_neutcands, TVector3 vtx, TVector3 mupath) {
     }
     for (int i = 0; i < n_neutcands; i++) {
         NeutCand* cand = new NeutCand();
-        m_cands.push_back(cand);
+        m_cands.emplace_back(cand);
     }
     _is_cands_set = true;
 }
@@ -150,16 +147,18 @@ void NeutEvent::ClearCands() {
     _is_cands_set = false;
 }
 
-void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<TVector3> positions) {
+void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<double> clusterMaxE, std::vector<TVector3> positions) {
     if (blobIDs.size() != m_nneutcands) {
         std::cout << "ERROR: NeutronMultiplicity - number of blobs doesn't match input." << std::endl;
         exit(1);
     }
     for (int i = 0; i < m_nneutcands; i++) {
         TVector3 flightpath = positions[i] - m_vtx;
-        m_cands[i]->SetReco(blobIDs[i], is3Ds[i], EDeps[i], positions[i], flightpath);
+        m_cands[i]->SetReco(blobIDs[i], is3Ds[i], EDeps[i], clusterMaxE[i], positions[i], flightpath);
     }
+    std::sort(m_cands.begin(), m_cands.end(), compare_cands);
     _recoset = true;
+    return;
 }
 
 void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs) {
@@ -168,104 +167,113 @@ void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMC
         exit(1);
     }
     for (int i = 0; i < m_nneutcands; i++) {
-        m_cands[i]->SetTruth(truthPIDs[i], truthTopMCPIDs[i]);
+        m_cands[i]->SetTruth(truthPIDs[m_cands[i]->m_blobID], truthTopMCPIDs[m_cands[i]->m_blobID]);
     }
     _truthset = true;
+    return;
+}
+
+std::vector<NeutronMultiplicity::NeutCand*> NeutEvent::GetCands() {
+    return m_cands;
 }
 
 std::vector<NeutronMultiplicity::NeutCand*> NeutEvent::GetNeutCands() {
-    return m_cands;
+    std::vector<NeutronMultiplicity::NeutCand*> neutcands;
+    for (int i = 0; i < m_nneutcands; i++) {
+        if (GetCandIsNeut(i))
+            neutcands.push_back(m_cands[i]);
+    }
+    return neutcands;
+}
+
+std::vector<NeutronMultiplicity::NeutCand*> NeutEvent::GetTrueNeutCands() {
+    std::vector<NeutronMultiplicity::NeutCand*> trueneutcands;
+    for (int i = 0; i < m_nneutcands; i++) {
+        // Only check if it's fiducial and is a true neutron
+        if (CandPassFiducial(i) && m_cands[i]->GetCandTruthTopPID() == 2112)
+            trueneutcands.push_back(m_cands[i]);
+    }
+    return trueneutcands;
 }
 
 bool NeutEvent::GetIsTruthSet() {
     return _truthset;
 }
 
-NeutronMultiplicity::NeutCand* NeutEvent::GetMaxNeutCand() {
-    int max_index;
-    double max_edep = 0.0;
-    // std::pair<int, double> max_edep(0, 0.0);
-    for (int i = 0; i < m_nneutcands; i++) {
-        if (m_cands[i]->m_recoEDep > max_edep && GetCandIsNeut(i))
-            max_edep = m_cands[i]->m_recoEDep;
-            max_index = i;
-    }
-    return m_cands[max_index];
-}
-
-double NeutEvent::GetMaxNeutCandE() {
-    int max_index;
-    double max_edep = 0.0;
-    // std::pair<int, double> max_edep(0, 0.0);
-    for (int i = 0; i < m_nneutcands; i++) {
-        if (m_cands[i]->m_recoEDep > max_edep && GetCandIsNeut(i))
-            max_edep = m_cands[i]->m_recoEDep;
-        max_index = i;
-    }
-    return max_edep;
-}
 NeutCand* NeutEvent::GetCand(int index) {
     return m_cands[index];
 }
 
-int NeutEvent::GetCandIsNeut(int index) {
-    // return (CandIsOutsideMuonDist(index) && CandIsFiducial(index) && CandIsIsolated(index) && CandIsHighE(index));
-    // return (CandIsOutsideMuonAngle(index) && CandIsOutsideMuonDist(index) && CandIsFiducial(index) && CandIsIsolated(index) && CandIsHighE(index));
+bool NeutEvent::GetCandIsNeut(int index) {
     return (CandPassMuonAngle(index) && 
             CandPassMuonDist(index) && 
             CandPassFiducial(index) && 
             CandPassVtxDist(index) && 
             CandPassVtxZDist(index) &&
             CandPassEDep(index) && 
-            CandPassIs3D(index));
-            // m_cands[index]->GetCandIs3D());
-    // return (CandIsHighE(index) && m_cands[index]->GetCandIs3D());
+            CandPassIs3D(index)) &&
+            CandPassVtxBox(index);
 }
 
-int NeutEvent::CandPassMuonAngle(int index) {
-    if (m_muoncone_min < 0.0) return 1;
-    TVector3 candfp = m_cands[index]->GetCandFlightPath();
+
+bool NeutEvent::CandPassMuonAngle(int index) {
+    if (m_muoncone_min <= 0.0) return 1;
+    TVector3 candfp = m_cands[index]->m_flightpath;
     double angle = m_mupath.Angle(candfp) * 180. / M_PI; // need this in deg (for user configurability)
-    return angle > m_muoncone_min;
+    return angle >= m_muoncone_min;
 }
 
-int NeutEvent::CandPassMuonDist(int index) {
+bool NeutEvent::CandPassMuonDist(int index) {
     if (m_muondist_min <= 0.0) return 1;
-    TVector3 candfp = m_cands[index]->GetCandFlightPath();
+    TVector3 candfp = m_cands[index]->m_flightpath;
     double angle = m_mupath.Angle(candfp);
     double dist = candfp.Mag() * std::sin(angle);
     return dist >= m_muondist_min;
 }
 
-int NeutEvent::CandPassFiducial(int index) {
+bool NeutEvent::CandPassFiducial(int index) {
     if (m_zpos_min < 0. &&  m_zpos_max < 0.) return 11;
     TVector3 candpos = m_cands[index]->GetCandPosition();
     return (candpos.Z() >= m_zpos_min && candpos.Z() <= m_zpos_max);
 }
 
-int NeutEvent::CandPassVtxDist(int index) {
+bool NeutEvent::CandPassVtxDist(int index) {
     if (m_vtxdist_min <= 0) return 1;
     double dist = m_cands[index]->GetCandVtxDist();
     return dist >= m_vtxdist_min;
 }
 
-int NeutEvent::CandPassVtxZDist(int index) {
+bool NeutEvent::CandPassVtxZDist(int index) {
     if (m_vtx_zdist_min <= 0) return 1;
     double zdist = m_cands[index]->m_flightpath.Z();
 
     return zdist >= m_vtx_zdist_min;
 }
 
-int NeutEvent::CandPassEDep(int index) {
+bool NeutEvent::CandPassVtxBox(int index) {
+    if (m_vtx_box[0] < 0. || m_vtx_box[1] < 0.) return true;  // default value
+    TVector3 fp = m_cands[index]->m_flightpath;
+    if (fp.Z() <= m_vtx_box[0] && fp.Perp() <= m_vtx_box[1]) return false;
+    return true;
+}
+
+bool NeutEvent::CandPassEDep(int index) {
     if (m_edep_min <=0 ) return true;
     double edep = m_cands[index]->GetCandRecoEDep();
     return edep >= m_edep_min;
 }
 
-int NeutEvent::CandPassIs3D(int index) {
-    if (m_req3D <= 0) return true;
+bool NeutEvent::CandPassIs3D(int index) {
+    if (m_req3D == 0) return true;  // m_req3D should only be set to 1 (3D only), -1 (2D only), 0 (both, default)
     int is3D = m_cands[index]->GetCandIs3D();
-    return is3D;
+    if (is3D < 0) return false;
+    if (m_req3D == 1)
+        return is3D == 1;
+    if (m_req3D == -1)
+        return is3D == 0;
+    return false;
+    // int pass = m_req3D == 1 ? is3D == 1 : is3D == 0;
+    // return pass;
 }
 
 int NeutEvent::GetCandTruthPID(int index) {
@@ -276,10 +284,54 @@ int NeutEvent::GetCandTruthTopPID(int index) {
     return m_cands[index]->GetCandTruthTopPID();
 }
 
+void NeutEvent::Configure(NuConfig config) {
+    if (config.IsMember("selection")) {
+        NuConfig selection_config = config.GetValue("selection");
+        for (auto var : config.GetKeys()) {
+            NuConfig varconfig = config.GetConfig(var);
+            if (varconfig.IsMember("equals"))
+                m_equals[var] = varconfig.GetDouble("equals");
+            if (varconfig.IsMember("min"))
+                m_min[var] = varconfig.GetDouble("min");
+            if (varconfig.IsMember("max"))
+                m_max[var] = varconfig.GetDouble("max");
+            m_selectionvars.push_back(std::string(var));
+            m_plotvars.push_back(std::string(var));
+        }
+    }
+    if (config.IsMember("plot")) {
+        std::vector<std::string> i_plotvars = config.GetStringVector("i_plotvars");
+        for (auto var : i_plotvars) {
+            m_plotvars.push_back(var);
+        }
+    }
+}
 
-// int NeutEvent::GetCandIsNeut(int index) {
-//     NeutCand* cand = m_cands[index];
-//     return (cand->GetCandIs3D() == 1 && (cand->GetCandPosition().Z() < m_zpos_max && cand->GetCandPosition().Z() > m_zpos_min) && (cand->GetCandVtxDist() > m_vtxdist_min && cand->GetCandVtxDist() < m_vtxdist_max) && )
-// }
+bool NeutEvent::CheckVal(std::string varname, double val) {
+    if (std::find(m_selectionvars.begin(), m_selectionvars.end(), varname) == m_selectionvars.end()) {
+        return 1;
+    }
+    if (m_equals.find(varname) != m_equals.end())
+        // If equal set, return if equal to it
+        return val == m_equals[varname];
+    bool pass_min = 0;
+    if (m_min.find(varname) != m_min.end())
+        // If  if min set and lower than minimum, return 0
+        if (val < m_min[varname])
+            return 0;
+    // else, pass minimum
+    pass_min = 1;
+    if (m_max.find(varname) != m_max.end())
+        // If max set, return pass at or if below it
+        return val <= m_max[varname];
+    // If no max set, return pass_min (default 0)
+    return pass_min;
+}
+
+void NeutEvent::SetReco(std::map<std::string, std::vector<int>> intVals, std::map<std::string, std::vector<double>> doubleVals) {
+}
+
+void NeutEvent::SetTruth(std::map<std::string, std::vector<int>> intVals, std::map<std::string, std::vector<double>> doubleVals) {
+}
 
 }  // namespace NeutronMultiplicity

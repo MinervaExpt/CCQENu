@@ -364,6 +364,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual int GetNNeutCands() const;
 
+    virtual int GetTrueNNeutCands() const;
+
     // All blobs
     virtual int GetNMADBlobs() const;
 
@@ -372,8 +374,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // access nhv's reco neutron classes TODO: un comment these
     // NeutronMultiplicity::NeutEvent m_neut_event;
     virtual NeutronMultiplicity::NeutEvent* GetNeutEvent() const;
+    virtual std::vector<NeutronMultiplicity::NeutCand*> GetTruthNeutCands() const;
     virtual int GetAllBlobCandsNeut() const;
-    virtual int GetNNeutBlobs() const;
+    virtual void PrintMADBlobs() const;
     virtual std::vector<TVector3> GetBlobsBegPos() const;
     // virtual NeutronMultiplicity::NeutCand GetNeutCand() const;
 
@@ -394,11 +397,43 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // virtual double GetNeutBlobEGeV(int index) const;
     virtual double GetTotNeutBlobEGeV() const;
-    virtual int GetTruthMaxNeutCandMCPID() const;
-    virtual int GetTruthMaxNeutCandTopMCPID() const;
-
     virtual int GetPlotNeutCandMCPID() const;
-    virtual int GetPlotNeutCandTopMCPID() const;
+    virtual int GetPlotNeutCandTopMCPID(int index) const;
+    virtual int GetPlotLeadingNeutCandTopMCPID() const;
+    virtual int GetPlotSecNeutCandTopMCPID() const;
+    virtual int GetPlotThirdNeutCandTopMCPID() const;
+    virtual double GetNeutCandvtxZDist(int index) const;
+    virtual double GetLeadingNeutCandvtxZDist() const;
+    virtual double GetSecNeutCandvtxZDist() const;
+    virtual double GetThirdNeutCandvtxZDist() const;
+    virtual double GetNeutCandvtxSphereDist(int index) const;
+    virtual double GetLeadingNeutCandvtxSphereDist() const;
+    virtual double GetSecNeutCandvtxSphereDist() const;
+    virtual double GetThirdNeutCandvtxSphereDist() const;
+    virtual double GetNeutCandvtxBoxDist(int index) const;
+    virtual double GetLeadingNeutCandvtxBoxDist() const;
+    virtual double GetSecNeutCandvtxBoxDist() const;
+    virtual double GetThirdNeutCandvtxBoxDist() const;
+    virtual double GetNeutCandEdepMeV(int index) const;
+    virtual double GetLeadingNeutCandEdepMeV() const;
+    virtual double GetSecNeutCandEdepMeV() const;
+    virtual double GetThirdNeutCandEdepMeV() const;
+
+    virtual double GetNeutCandClusterMaxEMeV(int index) const;
+
+    virtual double GetLeadingNeutCandClusterMaxEMeV() const;
+    virtual double GetSecNeutCandClusterMaxEMeV() const;
+    virtual double GetThirdNeutCandClusterMaxEMeV() const;
+
+    virtual double GetNeutCandMuonDist(int index) const;
+    virtual double GetLeadingNeutCandMuonDist() const;
+    virtual double GetSecNeutCandMuonDist() const;
+    virtual double GetThirdNeutCandMuonDist() const;
+    virtual double GetNeutCandMuonAngle(int index) const;
+    virtual double GetLeadingNeutCandMuonAngle() const;
+    virtual double GetSecNeutCandMuonAngle() const;
+    virtual double GetThirdNeutCandMuonAngle() const;
+
     virtual int GetPlotLeadingIsoBlobsPrimaryMCPID() const;
     virtual int GetPlotSecondIsoBlobsPrimaryMCPID() const;
     // TODO: down to here
@@ -410,7 +445,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // virtual int GetNNonNeutBlobs();
     // virtual double GetTotNeutBlobEGeV() const;
     virtual double GetTrueNeutronEGeV() const;
-    virtual double Get3DBlobsRatio() const;
+    // virtual double Get3DBlobsRatio() const;
     virtual int GetTrueNBlobs() const;  // This is just N_pi0*2
 
     // Michel Electrons
