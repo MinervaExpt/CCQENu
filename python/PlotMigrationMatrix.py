@@ -14,71 +14,44 @@ categorytodo = "qelike"
 
 
 var_names = {
-    "recoil": {
-        "reco": "Recoil",
-        "truth": "E_{Avail}",
-        "units": "(GeV)"
-    },
-    "EAvail": {
-        "reco": "E_{Avail} (MADBlobs)",
-        "truth": "E_{Avail}",
-        "units": "(GeV)"
-    },
+    "recoil": {"reco": "Recoil", "truth": "E_{Avail}", "units": "(GeV)"},
+    "EAvail": {"reco": "E_{Avail} (MADBlobs)", "truth": "E_{Avail}", "units": "(GeV)"},
     "EAvailLeadingBlob": {
         "reco": "E_{Avail} (Leading MADBlob)",
         "truth": "E_{Avail}",
-        "units": "(GeV)"
+        "units": "(GeV)",
     },
     "EAvailNoNonVtxBlobs": {
         "reco": "E_{Avail} (nonvtx blobs)",
         "truth": "E_{Avail}",
-        "units": "(GeV)"
+        "units": "(GeV)",
     },
     "EAvailWithNeutrons": {
         "reco": "Recoil",
         "truth": "E_{Avail} w/ neutrons",
-        "units": "(GeV)"
+        "units": "(GeV)",
     },
     "CalibRecoilWithNeutrons": {
         "reco": "Recoil (calibrated)",
         "truth": "E_{Avail} w/ neutrons",
-        "units": "(GeV)"
+        "units": "(GeV)",
     },
-    "Q2QE": {
-        "reco":"Q^{2}_{QE}",
-        "truth":"Q^{2}_{QE}",
-        "units": "(GeV^{2})"
-    },
-    "ptmu": {
-        "reco":"p_{T}",
-        "truth": "p_{T}",
-        "units": "(GeV)"
-    },
-    "pzmu": {
-        "reco":"p_{||}",
-        "truth": "p_{||}",
-        "units": "(GeV)"
-    },
-    "ptmuHD": {
-        "reco":"p_{T}",
-        "truth": "p_{T}",
-        "units": "(GeV)"
-    },
-    "pzmuHD": {
-        "reco":"p_{||}",
-        "truth": "p_{||}",
-        "units": "(GeV)"
-    },
+    "Q2QE": {"reco": "Q^{2}_{QE}", "truth": "Q^{2}_{QE}", "units": "(GeV^{2})"},
+    "ptmu": {"reco": "p_{T}", "truth": "p_{T}", "units": "(GeV)"},
+    "pzmu": {"reco": "p_{||}", "truth": "p_{||}", "units": "(GeV)"},
+    "ptmuHD": {"reco": "p_{T}", "truth": "p_{T}", "units": "(GeV)"},
+    "pzmuHD": {"reco": "p_{||}", "truth": "p_{||}", "units": "(GeV)"},
     "ThetamuDegrees": {
-        "reco":"#theta_{#mu}",
-        "truth":"#theta_{#mu}",
-        "units": "(deg)"
+        "reco": "#theta_{#mu}",
+        "truth": "#theta_{#mu}",
+        "units": "(deg)",
     },
-    "pmu": {
-        "reco":"p_{#mu}",
-        "truth": "p_{#mu}",
-        "units": "(GeV)"
-    }
+    "pmu": {"reco": "p_{#mu}", "truth": "p_{#mu}", "units": "(GeV)"},
+    "NNeutCands": {
+        "reco": "# blobs tagged as neutrons",
+        "truth": "# blobs whose parents are neutrons",
+        "units": "",
+    },
 }
 
 def CCQECanvas(name,title,xsize=1000,ysize=1000):

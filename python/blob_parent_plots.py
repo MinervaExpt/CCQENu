@@ -87,11 +87,20 @@ catscolors = {
 }
 
 #  These are the vars that fill into bins
-varstodo= [
-    # "NeutCandMCPID",
-    "NeutCandTopMCPID"
+varstodo = [
+    "NeutCandMCPID",
+    "NeutCandTopMCPID",
+    "SecNeutCandTopMCPID",
+    "ThirdNeutCandTopMCPID",
     # "LeadingIsoBlobsPrimaryMCPID"
 ]
+
+titles = {
+    "NeutCandTopMCPID": "PID of leading blob's earliest ancestor",
+    "SecNeutCandTopMCPID": "PID of second blob's earliest ancestor",
+    "ThirdNeutCandTopMCPID": "PID of third blob's earliest ancestor",
+}
+
 samplestodo= [
     "QElike",
     # "QElike0Blob",
@@ -162,9 +171,11 @@ if len(sys.argv)> 2:
 
 f = TFile.Open(filename,"READONLY")
 dirname = filename.replace(".root","_FinalStates")
-plotdir = "~/git/output/Summer25Collab/for_illus"
+plotdir = "/Users/nova/git/output/mad-blob-studies"
 outdirname = os.path.join(plotdir,dirname)
-if not os.path.exists(outdirname): os.mkdir(outdirname)
+if not os.path.exists(outdirname): 
+    print(outdirname)
+    os.mkdir(outdirname)
 
 keys = f.GetListOfKeys()
 
@@ -283,7 +294,7 @@ for k in keys:
                 h.SetFillStyle(3244)
             h.Scale(0.0001)
             groups[hist][sample][variable][cat][index]=h
-            h.Print()
+            # h.Print()
 
             print("here")
 
@@ -403,7 +414,7 @@ for a_hist in groups.keys():
 
             for bin in bin_pid.keys():
                 stack.GetXaxis().SetBinLabel(bin, bin_pid[bin])
-            stack.GetXaxis().SetTitle("PID of blob's earliest ancestor")
+            stack.GetXaxis().SetTitle(titles[c_var])
             stack.GetXaxis().CenterTitle()
             stack.GetXaxis().SetTitleSize(0.05)
             stack.GetXaxis().SetLabelSize(0.05)
