@@ -20,6 +20,46 @@ enum EDataMCTruth { kData,
                     kTruth,
                     kNDataMCTruthTypes };
 
+void status_bar(int i, int nentries, double& bar_progress, double& perc_progress) {
+    double bar_length = 40.;  // how long you want your bar
+    double perc_step = 0.1;
+    if (i == 0) {  // Used to be first event, but weighters end up cutting it off
+        std::cout << std::endl;
+        std::cout << "   |";
+        for (int j = 0; j < bar_length; j++) std::cout << "_";
+        std::cout << "|   [__";
+        std::cout << setprecision(-(int)log10(perc_step)) << std::fixed << perc_progress;
+        std::cout << "%]";
+    }
+    if ((((double)(i + 1) * bar_length) / nentries) >= bar_progress + 1) {
+        bar_progress += 1;
+    }
+    if (((double)(i + 1) * 100.) / nentries >= perc_progress + perc_step) {
+        perc_progress += perc_step;
+        std::cout << '\r' << std::flush << "   |";
+
+        for (int j = 0; j < bar_progress; j++) std::cout << "\e[0;31;47m \e[0m";
+        for (int j = bar_length; j > bar_progress; j--) std::cout << "_";
+
+        std::cout << "|   [";
+        if (perc_progress <= 10. - perc_step) std::cout << "_";
+        if (perc_progress <= 100. - perc_step) std::cout << "_";
+        std::cout << setprecision(-(int)log10(perc_step)) << std::fixed << perc_progress;
+        std::cout << "%]";
+        std::cout << "   ( ";
+        for (int j = ((int)log10(nentries) - (int)log10(i + 1)); j > 0; j--) {
+            std::cout << "_";
+        }
+        std::cout << i + 1 << " / " << nentries << " ) ";
+    }
+    if (i + 1 == nentries) {
+        std::cout << '\r' << std::flush << "   |";
+        for (int j = 0; j < bar_length; j++) std::cout << "\e[0;31;47m \e[0m";
+        std::cout << "|   [100.0%]";
+        std::cout << i + 1 << " / " << nentries << " )";
+    }
+}
+
 // #define CLOSUREDETAIL
 
 //==============================================================================
@@ -37,7 +77,8 @@ void LoopAndFillEventSelection(std::string tag,
                                PlotUtils::Model<CVUniverse, PlotUtils::detail::empty>& model,
                                PlotUtils::weight_MCreScale mcRescale,
                                PlotUtils::weight_warper warper,
-                               bool closure = false, bool mc_reco_to_csv = false) {
+                               bool closure = false, bool mc_reco_to_csv = false,
+                               bool dostatusbar = false) {
     // Prepare loop
     MinervaUniverse::SetTruth(false);
     int nentries = -1;
@@ -105,25 +146,18 @@ void LoopAndFillEventSelection(std::string tag,
             }
         }
         csvFile << ";Interaction;nFSPart;FSPDGs;FSPartEs";
-        /*
-        std::vector<std::string> true_particle_counts = {"nFSChargedPion","nFSNeutralPion",
-                                                         "nFSProton","nFSNeutron","nFSNegMuon",
-                                                         "nFSGamma"};
-        for (auto v:true_particle_counts) { csvFile << ";" << v; }
-        */
         csvFile << ";run;subrun;gate;slice";
         csvFile << ";Arachne" << std::endl;
     }
 
     // status bar stuff
-    double progress = 0;
-
+    double bar_progress = 0.;   // how many chars has the bar progressed
+    double perc_progress = 0.;  // percentage progression of entries
     // Begin entries loop
     for (int i = 0; i < nentries; i++) {
         if (data_mc_truth != kData) i += prescale - 1;
 
         cvUniv->SetEntry(i);
-        // HMS fund.Dump(cvUniv,data_mc_truth==kData,data_mc_truth==kTruth);
 
         if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
@@ -133,38 +167,9 @@ void LoopAndFillEventSelection(std::string tag,
         // const double cvWeight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*cvUniv, event);  // detail may be used for more complex things
         // TODO: Is this scaled cvWeight necessary?
         // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
+        
+        if (dostatusbar) status_bar(i, nentries, bar_progress, perc_progress);
 
-        // if (i+1 % 1000 == 0) std::cout << (i / 1000) << "k " << std::endl;
-
-        //  status bar stuff
-        if (i == 1) {
-            // status bar stuff
-            std::cout << std::endl;
-            std::cout << "  0%  5% 10% 15% 20% 25% 30% 35% 40% 45% 50% 55% 60% 65% 70% 75% 80% 85% 90% 95% 100%" << std::endl;
-            std::cout << "   \\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\___\\ " << std::endl;
-            std::cout << "   |________________________________________________________________________________|   [__0.0%]";
-        }
-        if (((double)(i + 1) / nentries) * 100 >= progress + 1.25) {
-            progress += 1.25;
-            std::cout << '\r' << std::flush << "   |";
-
-            for (int j = 0; j < progress / 1.25; j++) std::cout << "\e[0;31;47m \e[0m";
-            for (int j = 80; j > progress / 1.25; j--) std::cout << "_";
-
-            std::cout << "|   [";
-            if (progress < 10) std::cout << "_";
-            if (progress < 100) std::cout << "_";
-            std::cout << setprecision(2) << std::fixed << progress;
-            std::cout << "%]";
-            std::cout << "   ( ";
-            for (int j = ((int)log10(nentries) - (int)log10(i + 1)); j > 0; j--) {
-                std::cout << "_";
-            }
-            std::cout << i + 1 << " / " << nentries << " )";
-
-            if (progress == 100) std::cout << std::endl
-                                           << std::endl;
-        }
         // Loop bands and universes
         for (auto band : error_bands) {
             std::vector<CVUniverse*> error_band_universes = band.second;
@@ -184,20 +189,14 @@ void LoopAndFillEventSelection(std::string tag,
                 // const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event);  // Only calculate the per-universe weight for events that will actually use it.
                 // const double warp = (!dowarp || data_mc_truth == kData) ? 1. : warper.GetWarpWeight(*universe);
 
-                const double warp = (dowarp && data_mc_truth == kMC) ? warper.GetWarpWeight(*universe) : 1.;
+                const double warp = (dowarp && data_mc_truth == kMC && universe->ShortName() == "cv") ? warper.GetWarpWeight(*universe) : 1.;
                 const double tmp_weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event);  // Only calculate the per-universe weight for events that will actually use it.
-                if (data_mc_truth == kMC && i == 2666) {
-                    std::cout << uni_name << std::endl;
-                    std::cout << " event " << i << std::endl;
-                    std::cout << " weight " << tmp_weight << std::endl;
-                }
                 const double weight = warp * tmp_weight;
                 // PlotUtils::detail::empty event;
                 // std::cout << "weight " << weight << std::endl;
                 //=========================================
                 // Fill
                 //=========================================
-
                 if (data_mc_truth == kMC) {
 #ifdef CLOSUREDETAIL
                     if (closure && universe->ShortName() == "cv" && selection.isMCSelected(*universe, event, weight).all()) {
@@ -211,6 +210,8 @@ void LoopAndFillEventSelection(std::string tag,
                         const double q2qe = universe->GetQ2QEGeV();
                         double scale = 1.0;
                         if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv);  // Only calculate the per-universe weight for events that will actually use it.
+                        
+                        // universe->PrintMADBlobs();
 
                         FillMC(tag, universe, weight, variables, variables2D, variablesHD, scale);
                         FillResponse(tag, universe, weight, variables, variables2D, variablesHD, scale);
@@ -275,7 +276,6 @@ void LoopAndFillEventSelection(std::string tag,
                         FillData(tag, universe, variables, variables2D, variablesHD);
                     }
                 }
-
             }  // End universes
         }  // End error bands
     }  // End entries loop

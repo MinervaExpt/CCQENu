@@ -2,14 +2,15 @@
 int main(const int argc, const char *argv[]) {
     gROOT->ProcessLine("gErrorIgnoreLevel = kWarning;");
     //+++++++++++++++++++++++++++++  Initialization +++++++++++++++++++++++++++++
-    std::string pl = "5A";
+    std::string in_configfilename;
     if (argc > 1) {
-        pl = std::string(argv[1]);
+        in_configfilename = std::string(argv[1]);
     } else {
         std::cout << " arguments are:\n loop <config> [<prescale from config file>] " << std::endl;
         exit(0);
     }
-    std::string configfilename(pl + ".json");
+    std::string configfilename = in_configfilename.find(".json") != std::string::npos ? in_configfilename : in_configfilename + ".json";
+    // std::string configfilename(in_configfilename + ".json");
     NuConfig config;
     config.Read(configfilename);
     std::string top = config.ToString(); // used later for printing out, moved up here to trip any unset environ errors to avoid crashes at the end of the loop
@@ -71,6 +72,11 @@ int main(const int argc, const char *argv[]) {
     if (dotypes)
         std::cout << " Will fill MC int types for all variables" << std::endl;
 
+    bool dostatusbar = false;
+    if (config.IsMember("statusbar"))
+        dostatusbar = config.GetBool("statusbar");
+    if (dostatusbar)
+        std::cout << " Will print out status bar. Not recommended for grid jobs..." << std::endl;
     //===========================================================================
     // MacroUtil (makes your anatuple chains)
     //===========================================================================
@@ -208,7 +214,7 @@ int main(const int argc, const char *argv[]) {
         std::string paramsfilename = config.GetString("paramsFile");
         paramsConfig.Read(paramsfilename);
         // Print applicable configurables?
-        bool printConfigs = 0;
+        bool printConfigs = 1;
         if (paramsConfig.IsMember("printConfigs")) printConfigs = paramsConfig.GetBool("printConfigs");
         // Set applicable configurables
         if (paramsConfig.IsMember("MinimumBlobZVtx")) {
@@ -223,8 +229,11 @@ int main(const int argc, const char *argv[]) {
         if (paramsConfig.IsMember("ProtonKECut")) {
             CVUniverse::SetProtonKECut(paramsConfig.GetConfig("ProtonKECut").GetDouble("energy"), printConfigs);
         }
+
+        std::cout << " checking neutron config " << std::endl;
         if (paramsConfig.IsMember("NeutronConfig")) {
             CVUniverse::SetNeutronConfig(paramsConfig.GetConfig("NeutronConfig"), printConfigs);
+            std::cout << " finished setting neutron config " << std::endl;
         }
         std::cout << " setting recoil branch." << std::endl;
 
@@ -409,7 +418,8 @@ int main(const int argc, const char *argv[]) {
 
     std::vector<std::string> vars2D = config.GetStringVector("Analyze2DVariables");
     std::vector<CCQENu::Variable2DFromConfig *> variables2D;
-    std::map<std::string, CCQENu::Variable2DFromConfig *> variablesmap2D = Get2DVariablesFromConfig(vars2D, variablesmap1D, tags, configvar);
+    // std::map<std::string, CCQENu::Variable2DFromConfig *> variablesmap2D = Get2DVariablesFromConfig(vars2D, variablesmap1D, tags, configvar);
+    std::map<std::string, CCQENu::Variable2DFromConfig *> variablesmap2D = Get2DVariablesFromConfig(vars2D, tags, configvar, doresolution, dotypes, tunedmc, samplesToDo);
 
     std::vector<std::string> varsHD = config.GetStringVector("AnalyzeHyperDVariables");
     std::vector<CCQENu::VariableHyperDFromConfig *> variablesHD;
@@ -474,7 +484,11 @@ int main(const int argc, const char *argv[]) {
 
     for (auto tag : datatags) {
         std::cout << "Loop and Fill Data for " << tag << "\n";
-        LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, variablesHD, kData, *selectionCriteria[tag], model, mcRescale, warper, closure, mc_reco_to_csv);
+        LoopAndFillEventSelection(tag, util, data_error_bands,
+                                  variables1D, variables2D, variablesHD,
+                                  kData, *selectionCriteria[tag], model,
+                                  mcRescale, warper,
+                                  closure, mc_reco_to_csv, dostatusbar);
         std::cout << "\nCut summary for Data:" << tag << "\n"
                   << *selectionCriteria[tag] << "\n";
         selectionCriteria[tag]->resetStats();
@@ -486,7 +500,11 @@ int main(const int argc, const char *argv[]) {
         std::string sample(tag, 0, loc - 3);
         mcRescale.SetCat(cat);
         std::cout << "Loop and Fill MC Reco  for " << tag << "\n";
-        LoopAndFillEventSelection(tag, util, mc_error_bands, variables1D, variables2D, variablesHD, kMC, *selectionCriteria[tag], model, mcRescale, warper, closure, mc_reco_to_csv);
+        LoopAndFillEventSelection(tag, util, mc_error_bands,
+                                  variables1D, variables2D, variablesHD,
+                                  kMC, *selectionCriteria[tag], model,
+                                  mcRescale, warper,
+                                  closure, mc_reco_to_csv, dostatusbar);
         std::cout << "\nCut summary for MC Reco:" << tag << "\n"
                   << *selectionCriteria[tag] << "\n";
         selectionCriteria[tag]->resetStats();
@@ -494,7 +512,11 @@ int main(const int argc, const char *argv[]) {
 
     for (auto tag : truthtags) {
         std::cout << "Loop and Fill MC Truth  for " << tag << "\n";
-        LoopAndFillEventSelection(tag, util, truth_error_bands, variables1D, variables2D, variablesHD, kTruth, *selectionCriteria[tag], model, mcRescale, warper, closure, mc_reco_to_csv);
+        LoopAndFillEventSelection(tag, util, truth_error_bands,
+                                  variables1D, variables2D, variablesHD,
+                                  kTruth, *selectionCriteria[tag], model,
+                                  mcRescale, warper,
+                                  closure, mc_reco_to_csv, dostatusbar);
         std::cout << "\nCut summary for MC Truth:" << tag << "\n";
         // this is a special overload to allow printing truth
         (*selectionCriteria[tag]).summarizeTruthWithStats(std::cout);
@@ -514,12 +536,12 @@ int main(const int argc, const char *argv[]) {
 
     std::cout << "Done filling. Begin plotting.\n";
 
-    std::string path(pl);
+    std::string path(in_configfilename);
 
     std::string base = path.substr(path.find_last_of("/\\") + 1);
     std::string outname = Form("%s_%s_%d.root", config.GetString("outRoot").c_str(), base.c_str(), prescale);
     std::cout << " outname is " << outname << " prescale was " << prescale << std::endl;
-    // std::string outname = config.GetString("outRoot")+"_"+pl+"_"+prescale+".root";
+    // std::string outname = config.GetString("outRoot")+"_"+in_configfilename+"_"+prescale+".root";
     TFile *out = TFile::Open((dir.append(outname)).c_str(), "RECREATE");
 
     // dump the json files
