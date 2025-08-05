@@ -149,9 +149,9 @@ subwarp::subwarp(NuConfig warp_config) {
         if (varconfig.IsMember("equals"))
             equals[var] = varconfig.GetDouble("equals");
         if (varconfig.IsMember("min"))
-            equals[var] = varconfig.GetDouble("min");
+            min[var] = varconfig.GetDouble("min");
         if (varconfig.IsMember("max"))
-            equals[var] = varconfig.GetDouble("max");
+            max[var] = varconfig.GetDouble("max");
         m_checkvars.push_back(var);
     }
 
