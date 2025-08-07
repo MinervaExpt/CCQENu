@@ -13,8 +13,8 @@
             "neutralpion",
             "chargedpion",
             // "multipion",
-            "other"//,
-            // "qelikenot"
+            "other",
+            "qelikenot"
         ],
         "categories": {
             "qelike": {
@@ -47,13 +47,13 @@
                 "for": [
                     "selected_reco"
                 ]
-            }//,
-            // "qelikenot": {
-            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // }
+            },
+            "qelikenot": {
+                // "for": ["selected_reco", "selected_truth", "truth", "response"]                
+                "for": [
+                    "selected_reco"
+                ]
+            }
         },
         "legend_entries": {
             "data": "Data",
@@ -61,8 +61,8 @@
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
             // "multipion": "N#pi",
-            "other": "Other"//,
-            // "qelikenot": "QELike Not"
+            "other": "Other",
+            "qelikenot": "QELike Not"
         }
     },
     "QElike_old": {

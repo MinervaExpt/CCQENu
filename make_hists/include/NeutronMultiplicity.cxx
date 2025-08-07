@@ -34,10 +34,11 @@ void NeutCand::SetReco(int blobID, int is3D, double recoEDep, double clusterMaxE
     m_flightpath = flightpath;
 }
 
-void NeutCand::SetTruth(int truthPID, int truthTopMCPID) {
+void NeutCand::SetTruth(int truthPID, int truthTopMCPID, TVector3 TopMomentum) {
     m_truthset = true;
     m_truthPID = truthPID;
     m_truthTopMCPID = truthTopMCPID;
+    m_TopMomentum = TopMomentum;
 }
 
 int NeutCand::GetCandBlobID() {
@@ -80,6 +81,11 @@ int NeutCand::GetCandTruthTopPID() {
     return m_truthTopMCPID;
 }
 
+double NeutCand::GetCandTruthAngleFromParent() {
+    if (!m_truthset) return -1.;
+    return m_TopMomentum.Angle(m_flightpath) * 180 / M_PI;
+}
+
 // NeutEvent stuff
 // CTORS
 NeutEvent::NeutEvent(NuConfig config, int n_neutcands, TVector3 vtx, TVector3 mupath, std::vector<int> order) : m_vtx(vtx),
@@ -120,7 +126,7 @@ void NeutEvent::SetConfig(NuConfig config) {
     if (config.IsMember("muoncone_min")) m_muoncone_min = config.GetDouble("muoncone_min");
     if (config.IsMember("muondist_min")) m_muondist_min = config.GetDouble("muondist_min");
     if (config.IsMember("edep_min")) m_edep_min = config.GetDouble("edep_min");
-    if (config.IsMember("Is3D")) m_req3D = config.GetBool("Is3D");
+    if (config.IsMember("Is3D")) m_req3D = config.GetInt("Is3D");
 }
 
 void NeutEvent::SetCands(int n_neutcands, TVector3 vtx, TVector3 mupath) {
@@ -161,13 +167,15 @@ void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::v
     return;
 }
 
-void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs) {
+void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ) {
     if (truthPIDs.size() != m_nneutcands) {
         std::cout << "ERROR: NeutronMultiplicity - number of blobs doesn't match input." << std::endl;
         exit(1);
     }
     for (int i = 0; i < m_nneutcands; i++) {
-        m_cands[i]->SetTruth(truthPIDs[m_cands[i]->m_blobID], truthTopMCPIDs[m_cands[i]->m_blobID]);
+        int blobID(m_cands[i]->m_blobID);
+        TVector3 TopMomentum(truthTopMomentumsX[blobID], truthTopMomentumsY[blobID], truthTopMomentumsZ[blobID]);
+        m_cands[i]->SetTruth(truthPIDs[blobID], truthTopMCPIDs[blobID], TopMomentum);
     }
     _truthset = true;
     return;

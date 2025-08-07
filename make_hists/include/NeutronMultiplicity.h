@@ -25,6 +25,7 @@ class NeutCand {
     // Truth vars
     int m_truthPID = -1;       // what is it in truth?
     int m_truthTopMCPID = -1;  // what is mc pid?
+    TVector3 m_TopMomentum;     // which direction did it travel from the vtx????
 
     bool m_recoset = false;
     bool m_truthset = false;
@@ -40,7 +41,7 @@ class NeutCand {
     // SetBlobID(int index);
 
     // truth functions
-    void SetTruth(int truthPID, int TopMCPID);
+    void SetTruth(int truthPID, int truthTopMCPID, TVector3 TopMomentum);
 
     int GetCandBlobID();
     int GetCandIs3D();
@@ -52,6 +53,8 @@ class NeutCand {
 
     int GetCandTruthPID();
     int GetCandTruthTopPID();
+
+    double GetCandTruthAngleFromParent();
 
     bool operator>(const NeutCand& cand) const {
         return (this->m_recoEDep > cand.m_recoEDep);
@@ -110,7 +113,8 @@ class NeutEvent {
    public:
     // Set the reco variables for reco and truth. This is necessary to handle both data and MC without issues
     void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<TVector3> positions);
-    void SetTruth(std::vector<int> truthPIDs, std::vector<int> TopMCPIDs);
+    void SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ);
+
     bool GetIsTruthSet();
 
     std::vector<NeutronMultiplicity::NeutCand*> GetCands();      // Get all blobs

@@ -123,7 +123,7 @@ double weight_MCreScale::GetScaleInternal(const double checkval, std::string uni
         } else {
             errcount++;
             if (!m_mnvh_Scale->HasVertErrorBand(uni_name)) {
-                if (errcount < 100) std::cout << " MCreScale could not find error band  " << uni_name << " at all, returning CV" << std::endl;
+                if (errcount < 1) std::cout << " MCreScale could not find error band  " << uni_name << " at all, returning CV" << std::endl;
                 m_h_scale = hcv;
                 return m_h_scale->GetBinContent(xbin);
             }

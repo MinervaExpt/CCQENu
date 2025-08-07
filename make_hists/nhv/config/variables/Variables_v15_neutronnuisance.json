@@ -170,6 +170,21 @@
       "name": "ThirdNeutCandClusterMaxE_ThirdNeutCandTopMCPID",
       "xvar": "ThirdNeutCandClusterMaxE",
       "yvar": "ThirdNeutCandTopMCPID"
+    },
+    "LeadingNeutCandAngleToParent_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandAngleToParent_LeadingNeutCandTopMCPID",
+      "xvar": "LeadingNeutCandAngleToParent",
+      "yvar": "LeadingNeutCandTopMCPID"
+    },
+    "SecNeutCandAngleToParent_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandAngleToParent_SecNeutCandTopMCPID",
+      "xvar": "SecNeutCandAngleToParent",
+      "yvar": "SecNeutCandTopMCPID"
+    },
+  "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID",
+      "xvar": "LeadingNeutCandCosThetaToParent",
+      "yvar": "LeadingNeutCandTopMCPID"
     }
   },
   "1D": {
@@ -214,9 +229,9 @@
       "true": "LeadingNeutCandvtxZDist",
       "name": "LeadingNeutCandvtxZDist",
       "title": "Leading Blob zdist from vtx",
-      "nbins": 25,
+      "nbins": 10,
       "min": 0.0,
-      "max": 898.02561210692,
+      "max": 1000.0,
       "for": [
         "data",
         "selected_reco"
@@ -227,9 +242,9 @@
       "true": "SecNeutCandvtxZDist",
       "name": "SecNeutCandvtxZDist",
       "title": "Second Blob zdist from vtx",
-      "nbins": 25,
+      "nbins": 10,
       "min": 0.0,
-      "max": 500,
+      "max": 1000.0,
       "for": [
         "data",
         "selected_reco"
@@ -240,9 +255,9 @@
       "true": "ThirdNeutCandvtxZDist",
       "name": "ThirdNeutCandvtxZDist",
       "title": "Third Blob zdist from vtx",
-      "nbins": 25,
+      "nbins": 10,
       "min": 0.0,
-      "max": 500,
+      "max": 1000.0,
       "for": [
         "data",
         "selected_reco"
@@ -253,7 +268,7 @@
       "true": "LeadingNeutCandvtxSphereDist",
       "name": "LeadingNeutCandvtxSphereDist",
       "title": "Leading Blob spherical dist from vtx",
-      "nbins": 100,
+      "nbins": 50,
       "min": 0.0,
       "max": 1000.0,
       "for": [
@@ -266,7 +281,7 @@
       "true": "SecNeutCandvtxSphereDist",
       "name": "SecNeutCandvtxSphereDist",
       "title": "Second Blob spherical dist from vtx",
-      "nbins": 100,
+      "nbins": 50,
       "min": 0.0,
       "max": 1000.0,
       "for": [
@@ -279,7 +294,7 @@
       "true": "ThirdNeutCandvtxSphereDist",
       "name": "ThirdNeutCandvtxSphereDist",
       "title": "Third Blob spherical dist from vtx",
-      "nbins": 100,
+      "nbins": 50,
       "min": 0.0,
       "max": 1000.0,
       "for": [
@@ -333,7 +348,7 @@
       "title": "Leading Blob Total E",
       "nbins": 100,
       "min": 0.0,
-      "max": 100.0,
+      "max": 500.0,
       "for": [
         "data",
         "selected_reco"
@@ -344,7 +359,7 @@
       "true": "SecNeutCandEdep",
       "name": "SecNeutCandEdep",
       "title": "Second Blob Total E",
-      "nbins": 100,
+      "nbins": 50,
       "min": 0.0,
       "max": 100.0,
       "for": [
@@ -357,7 +372,7 @@
       "true": "ThirdNeutCandEdep",
       "name": "ThirdNeutCandEdep",
       "title": "Third Blob Total E",
-      "nbins": 100,
+      "nbins": 50,
       "min": 0.0,
       "max": 100.0,
       "for": [
@@ -370,7 +385,7 @@
       "true": "LeadingNeutCandClusterMaxE",
       "name": "LeadingNeutCandClusterMaxE",
       "title": "Leading Blob Total E",
-      "nbins": 100,
+      "nbins": 50,
       "min": 0.0,
       "max": 100.0,
       "for": [
@@ -383,7 +398,7 @@
       "true": "SecNeutCandClusterMaxE",
       "name": "SecNeutCandClusterMaxE",
       "title": "Second Blob Total E",
-      "nbins": 100,
+      "nbins": 50,
       "min": 0.0,
       "max": 100.0,
       "for": [
@@ -396,7 +411,7 @@
       "true": "ThirdNeutCandClusterMaxE",
       "name": "ThirdNeutCandClusterMaxE",
       "title": "Third Blob Total E",
-      "nbins": 100,
+      "nbins": 50,
       "min": 0.0,
       "max": 100.0,
       "for": [
@@ -508,6 +523,42 @@
         "selected_reco"
       ]
     },
+    "LeadingNeutCandAngleToParent": {
+      "reco": "LeadingNeutCandAngleToParent",
+      "true": "LeadingNeutCandAngleToParent",
+      "name": "LeadingNeutCandAngleToParent",
+      "title": "Leadning Cand angle to parent",
+      "nbins": 36,
+      "min": 0.0,
+      "max": 180.0,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandAngleToParent": {
+      "reco": "SecNeutCandAngleToParent",
+      "true": "SecNeutCandAngleToParent",
+      "name": "SecNeutCandAngleToParent",
+      "title": "Leadning Cand angle to parent",
+      "nbins": 36,
+      "min": 0.0,
+      "max": 180.0,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandCosThetaToParent": {
+      "reco": "LeadingNeutCandCosThetaToParent",
+      "true": "LeadingNeutCandCosThetaToParent",
+      "name": "LeadingNeutCandCosThetaToParent",
+      "title": "Leadning Cand CosTheta to parent",
+      "nbins": 50,
+      "min": -1.0,
+      "max": 1.0,
+      "for": [
+        "selected_reco"
+      ]
+    },
     "NNonVtxIsoBlobs": {
       "reco": "NNonVtxIsoBlobs",
       "true": "TrueNeutralPionCount",
@@ -559,7 +610,25 @@
       "for": [
         "selected_reco"
       ]
+    },
+    "EAvail": {
+      "reco": "EAvailGeV",
+      "true": "TrueEAvailGeV",
+      "name": "EAvail",
+      "title": "E_{Available} in GeV",
+      "bins": [
+        -0.1,
+        0.0,
+        0.045,
+        0.1125,
+        0.2025,
+        0.315,
+        0.5,
+        1.0
+      ],
+      "fluxnorm": false
     }
+
   }
 }
 

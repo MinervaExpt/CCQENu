@@ -1732,7 +1732,11 @@ NeutronMultiplicity::NeutEvent* CVUniverse::GetNeutEvent() const {
 // Gives you the selected neutron candidates with true information filled
 std::vector<NeutronMultiplicity::NeutCand*> CVUniverse::GetTruthNeutCands() const {
     NeutronMultiplicity::NeutEvent* neutevent = CVUniverse::GetNeutEvent();
-    neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()));
+    neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()),
+                        GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()),
+                        GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPx").c_str()),
+                        GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPy").c_str()),
+                        GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPz").c_str()));
     std::vector<NeutronMultiplicity::NeutCand*> neutcands = neutevent->GetNeutCands();
     // std::cout << "from gettruthneutcands: ";
     // for (auto cand : neutcands) {
@@ -1751,8 +1755,13 @@ int CVUniverse::GetNNeutCands() const {
 
 // Gives you the number of blobs that come from true neutrons
 int CVUniverse::GetTrueNNeutCands() const {
+    // return GetTruthNeutCands().size();
     NeutronMultiplicity::NeutEvent* neutevent = CVUniverse::GetNeutEvent();
-    neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()));
+    neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()),
+                        GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()),
+                        GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPx").c_str()),
+                        GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPy").c_str()),
+                        GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPz").c_str()));
     return neutevent->GetTrueNeutCands().size();  // These are cands that are fiducial and have neutron PID
 }
 
@@ -1768,7 +1777,11 @@ int CVUniverse::GetAllBlobCandsNeut() const {
 void CVUniverse::PrintMADBlobs() const {
     if (GetNMADBlobs() != 0) {
         NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
-        neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()));
+        neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()),
+                            GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()),
+                            GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPx").c_str()), 
+                            GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPy").c_str()), 
+                            GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPz").c_str()));
         std::cout << "from cand      : ";
         for (auto cand : neutevent->GetCands()) {
             std::cout << "\t" << cand->m_blobID << " " << cand->m_recoEDep;
@@ -2022,6 +2035,27 @@ double CVUniverse::GetSecNeutCandMuonAngle() const {
 }
 double CVUniverse::GetThirdNeutCandMuonAngle() const {
     return GetNeutCandMuonAngle(2);
+}
+
+double CVUniverse::GetNeutCandAngleToParent(int index) const {
+    if (CVUniverse::GetNMADBlobs() < index + 1)
+        return -99999.;
+    std::vector<NeutronMultiplicity::NeutCand*> cands = GetTruthNeutCands();
+    if (cands.size() < index + 1)
+        return -99999.;
+    return cands[index]->GetCandTruthAngleFromParent();
+}
+
+double CVUniverse::GetLeadingNeutCandAngleToParent() const {
+    return GetNeutCandAngleToParent(0);
+}
+
+double CVUniverse::GetSecondNeutCandAngleToParent() const {
+    return GetNeutCandAngleToParent(1);
+}
+
+double CVUniverse::GetLeadingNeutCandCosThetaToParent() const {
+    return std::cos(GetNeutCandAngleToParent(0) * M_PI / 180.);
 }
 
 // nonvtx_isoblobs PID (primary particle that produced the particle contributing most to blob energy i.e., the pi0, not the two gammas)

@@ -434,6 +434,12 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetSecNeutCandMuonAngle() const;
     virtual double GetThirdNeutCandMuonAngle() const;
 
+    virtual double GetNeutCandAngleToParent(int index) const;
+    virtual double GetLeadingNeutCandAngleToParent() const;
+    virtual double GetSecondNeutCandAngleToParent() const;
+
+    virtual double GetLeadingNeutCandCosThetaToParent() const;
+
     virtual int GetPlotLeadingIsoBlobsPrimaryMCPID() const;
     virtual int GetPlotSecondIsoBlobsPrimaryMCPID() const;
     // TODO: down to here
