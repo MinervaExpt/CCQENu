@@ -4,23 +4,6 @@
     "ProtonScoreConfig": {
         "pass_proton_score_min": 0.3
     },
-    // "ProtonScoreConfig": {
-    //     "band1": {
-    //         "Q2QE_max": 0.2,
-    //         "pass_proton_score_min": 0.3
-    //     },
-    //     "band2": {
-    //         "Q2QE_range": [
-    //             0.2,
-    //             0.6
-    //         ],
-    //         "pass_proton_score_min": 0.2
-    //     },
-    //     "band3": {
-    //         "Q2QE_min": 0.6,
-    //         "pass_proton_score_min": 0.1
-    //     }
-    // }
     "RecoilBranchConfig": {
         "vertex_dist": 0, //"100", "150"
         "recoil_branch": "recoil_energy_nonmuon_nonvtx0mm"
@@ -36,7 +19,7 @@
         "zpos_min": 5980.0,
         // "muoncone_min": 20.0,
         // "muondist_min": 100.0,
-        "edep_min": 1.5,
+        "edep_min": 10,
         "Is3D": 1
     }
 }

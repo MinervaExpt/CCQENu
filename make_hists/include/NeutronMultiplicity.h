@@ -23,9 +23,9 @@ class NeutCand {
     TVector3 m_flightpath;  // which direction did it travel from the vtx????
 
     // Truth vars
-    int m_truthPID = -1;       // what is it in truth?
-    int m_truthTopMCPID = -1;  // what is mc pid?
-    TVector3 m_TopMomentum;     // which direction did it travel from the vtx????
+    int m_truthPID = -1;       // PID of most recent GEANT Parent
+    int m_truthTopMCPID = -1;  // PID of the GENIE parent
+    TVector3 m_TopMomentum;    // which direction did it travel from the vtx????
 
     bool m_recoset = false;
     bool m_truthset = false;

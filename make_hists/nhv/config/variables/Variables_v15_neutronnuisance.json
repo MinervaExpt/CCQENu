@@ -627,6 +627,23 @@
         1.0
       ],
       "fluxnorm": false
+    },
+      "EAvail_nohi": {
+      "reco": "EAvailGeV",
+      "true": "TrueEAvailGeV",
+      "name": "EAvail_nohi",
+      "title": "E_{Available} in GeV",
+      "bins": [
+        -0.1,
+        0.0,
+        0.045,
+        0.1125,
+        0.2025,
+        0.315,
+        0.5//,
+        // 1.0
+      ],
+      "fluxnorm": false
     }
 
   }

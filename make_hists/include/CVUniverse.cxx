@@ -1176,9 +1176,30 @@ double CVUniverse::GetOffsetRecoilEnergyGeV() const { return CVUniverse::GetReco
 double CVUniverse::GetEAvailGeV() const {
     // Take recoil and remove the neutron blob energy from it
     double recoil = GetRecoilEnergyGeV(); // regular recoil
-    double neutblobE = GetTotNeutBlobEGeV();
-    return (recoil - neutblobE);
+    if (GetNMADBlobs() == 0) {
+        // std::cout << edep << std::endl;
+        return recoil;
+    }
+    double edep = 0.0;
+
+    NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
+    // These are all the blobs that pass blob selection
+    std::vector<NeutronMultiplicity::NeutCand*> cands = neutevent->GetNeutCands();
+    for (unsigned int i = 0; i < cands.size(); i ++){
+        edep += cands[i]->m_recoEDep;
+        if (i == 2) {
+            break;
+        }
+    }
+    return recoil - edep;
 }
+
+// double CVUniverse::GetEAvailGeV() const {
+//     // Take recoil and remove the neutron blob energy from it
+//     double recoil = GetRecoilEnergyGeV();  // regular recoil
+//     double neutblobE = GetTotNeutBlobEGeV();
+//     return (recoil - neutblobE);
+// }
 
 double CVUniverse::GetEAvailLeadingBlobGeV() const {
     // Take recoil and remove the neutron blob energy from it
@@ -1782,28 +1803,44 @@ void CVUniverse::PrintMADBlobs() const {
                             GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPx").c_str()), 
                             GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPy").c_str()), 
                             GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPz").c_str()));
-        std::cout << "from cand      : ";
-        for (auto cand : neutevent->GetCands()) {
-            std::cout << "\t" << cand->m_blobID << " " << cand->m_recoEDep;
+        // std::cout << "from cand      : ";
+        // for (auto cand : neutevent->GetCands()) {
+        //     std::cout << "\t" << cand->m_blobID << " " << cand->m_recoEDep;
+        // }
+        // std::cout << std::endl;
+        // std::vector<int> totalE_order = GetVec<int>((GetAnaToolName() + "_BlobTotalE_order").c_str());
+        // std::cout << "from blob order: ";
+        // for (int i = 0; i < GetInt((GetAnaToolName() + "_BlobTotalE_order_sz").c_str()); i++) {
+        //     // std::cout << totalE_order[i] << GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()).at(i);
+        //     int blobid = GetVec<int>((GetAnaToolName() + "_BlobTotalE_order").c_str()).at(i);
+        //     std::cout << "\t" << blobid << " "
+        //               << GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()).at(blobid);
+        // }
+        // std::cout << std::endl;
+        // std::cout << "raw order      : ";
+        // for (int i = 0; i < GetInt((GetAnaToolName() + "_BlobID_sz").c_str()); i++) {
+        //     // std::cout << totalE_order[i] << GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()).at(i);
+        //     int blobid = GetVec<int>((GetAnaToolName() + "_BlobID").c_str()).at(i);
+        //     std::cout << "\t" << blobid << " "
+        //               << GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()).at(i);
+        // }
+        // std::cout << std::endl;
+        std::vector<NeutronMultiplicity::NeutCand*> cands = neutevent->GetNeutCands();
+        // std::cout << "PID            : ";
+        bool nl = false;
+        for (int i = 0; i < cands.size(); i++) {
+            int toppid = GetPlotNeutCandTopMCPID(i);
+            if (toppid == 10) {  // other pid
+                std::cout << "\ttoppid: " << cands[i]->m_blobID << " " << cands[i]->GetCandTruthTopPID() << " " << cands[i]->GetCandRecoEDep();
+                nl = true;
+            }
+            if (toppid == 9) {  // pid of 0, no genie parent
+                std::cout << "\tgeantparent: " << cands[i]->m_blobID << " " << cands[i]->GetCandTruthPID() << " " << cands[i]->GetCandRecoEDep();
+                nl = true;
+            }
         }
-        std::cout << std::endl;
-        std::vector<int> totalE_order = GetVec<int>((GetAnaToolName() + "_BlobTotalE_order").c_str());
-        std::cout << "from blob order: ";
-        for (int i = 0; i < GetInt((GetAnaToolName() + "_BlobTotalE_order_sz").c_str()); i++) {
-            // std::cout << totalE_order[i] << GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()).at(i);
-            int blobid = GetVec<int>((GetAnaToolName() + "_BlobTotalE_order").c_str()).at(i);
-            std::cout << "\t" << blobid << " "
-                      << GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()).at(blobid);
-        }
-        std::cout << std::endl;
-        std::cout << "raw order      : ";
-        for (int i = 0; i < GetInt((GetAnaToolName() + "_BlobID_sz").c_str()); i++) {
-            // std::cout << totalE_order[i] << GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()).at(i);
-            int blobid = GetVec<int>((GetAnaToolName() + "_BlobID").c_str()).at(i);
-            std::cout << "\t" << blobid << " "
-                      << GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()).at(i);
-        }
-        std::cout << "\n" << std::endl;
+        if (nl) std::cout << "\n"
+                          << std::endl;
     }
 }
 
@@ -1832,7 +1869,8 @@ int CVUniverse::GetPlotNeutCandMCPID() const {
         return -9999;
     int pid = neutcands[0]->GetCandTruthPID();
 
-    if (pid == 0 || pid == -1)
+    // if (pid == 0 || pid == -1) // is zero for blobs with no genie parent?
+    if (pid == -1)
         return -9999;
     if (pid == 2112)          // neutron
         return 1;  
@@ -1863,7 +1901,8 @@ int CVUniverse::GetPlotNeutCandTopMCPID(int index) const {
         return -9999;
     int pid = neutcands[index]->GetCandTruthTopPID();
 
-    if (pid == 0 || pid == -1)
+    // if (pid == 0 || pid == -1) // is zero for blobs with no genie parent?
+    if (pid == -1)
         return -9999;
     if (pid == 2112)          // neutron
         return 1;  
@@ -1881,6 +1920,8 @@ int CVUniverse::GetPlotNeutCandTopMCPID(int index) const {
         return 7; 
     else if (abs(pid) == 13)  // muon
         return 8; 
+    else if (pid == 0)        // no genie parent
+        return 9;
     else
         return 10;
 }
