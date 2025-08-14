@@ -1176,10 +1176,9 @@ double CVUniverse::GetOffsetRecoilEnergyGeV() const { return CVUniverse::GetReco
 double CVUniverse::GetEAvailGeV() const {
     // Take recoil and remove the neutron blob energy from it
     double recoil = GetRecoilEnergyGeV(); // regular recoil
-    if (GetNMADBlobs() == 0) {
-        // std::cout << edep << std::endl;
+    if (GetNMADBlobs() == 0)
         return recoil;
-    }
+
     double edep = 0.0;
 
     NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
@@ -1714,7 +1713,7 @@ int CVUniverse::GetNMADBlobs() const {
 }
 
 std::vector<TVector3> CVUniverse::GetBlobsBegPos() const {
-    std::vector<TVector3> positions;
+    std::vector<TVector3> positions = {};
     for (int i = 0; i < GetNMADBlobs(); i++) {
         TVector3 begpos(GetVecElem((GetAnaToolName() + "_BlobBegX").c_str(), i),
                         GetVecElem((GetAnaToolName() + "_BlobBegY").c_str(), i),
@@ -1727,18 +1726,20 @@ std::vector<TVector3> CVUniverse::GetBlobsBegPos() const {
 NeutronMultiplicity::NeutEvent* CVUniverse::GetNeutEvent() const {
     TVector3 pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
     TVector3 vtx(GetVec<double>("vtx").at(0), GetVec<double>("vtx").at(1), GetVec<double>("vtx").at(2));
+    std::vector<TVector3> blobpositions = GetBlobsBegPos();
     // if (_is_neut_event_set) { // if you use the global neutevent
     //     m_neutevent->SetCands(CVUniverse::GetNMADBlobs(), vtx, pmu);
     //     m_neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()), GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()), GetBlobsBegPos());
     //     return m_neutevent;
     // }
+
     if (!_is_neutron_config_set) { // if the global config is not set
         NeutronMultiplicity::NeutEvent* neutevent = new NeutronMultiplicity::NeutEvent(CVUniverse::GetNMADBlobs(), vtx, pmu);  // default vals
         neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()),
                            GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()),
                            GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()),
                            GetVec<double>((GetAnaToolName() + "_BlobClusterMaxE").c_str()),
-                           GetBlobsBegPos());
+                           blobpositions);
         return neutevent;
     } // else, if the global config is set without setting global neut event
     NeutronMultiplicity::NeutEvent* neutevent = new NeutronMultiplicity::NeutEvent(CVUniverse::m_neutron_config, CVUniverse::GetNMADBlobs(), vtx, pmu);
@@ -1746,7 +1747,7 @@ NeutronMultiplicity::NeutEvent* CVUniverse::GetNeutEvent() const {
                        GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()),
                        GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()),
                        GetVec<double>((GetAnaToolName() + "_BlobClusterMaxE").c_str()),
-                       GetBlobsBegPos());
+                       blobpositions);
     return neutevent;
 }
 
@@ -1770,6 +1771,7 @@ std::vector<NeutronMultiplicity::NeutCand*> CVUniverse::GetTruthNeutCands() cons
 
 // Gives you the number of blobs selected as neutron candidates
 int CVUniverse::GetNNeutCands() const {
+    if (GetNMADBlobs() == 0) return 0;
     NeutronMultiplicity::NeutEvent* neutevent = CVUniverse::GetNeutEvent();
     return neutevent->GetNeutCands().size(); // These are events that pass blob selection cuts
 }
@@ -1777,6 +1779,7 @@ int CVUniverse::GetNNeutCands() const {
 // Gives you the number of blobs that come from true neutrons
 int CVUniverse::GetTrueNNeutCands() const {
     // return GetTruthNeutCands().size();
+    if (GetNMADBlobs() == 0) return 0;
     NeutronMultiplicity::NeutEvent* neutevent = CVUniverse::GetNeutEvent();
     neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()),
                         GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()),

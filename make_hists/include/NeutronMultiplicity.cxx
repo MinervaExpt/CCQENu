@@ -158,13 +158,18 @@ void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::v
         std::cout << "ERROR: NeutronMultiplicity - number of blobs doesn't match input." << std::endl;
         exit(1);
     }
+    // Avoid filling with uninited memory
+    if (m_nneutcands == 0) {
+        _recoset = true;
+        return;
+    }
     for (int i = 0; i < m_nneutcands; i++) {
         TVector3 flightpath = positions[i] - m_vtx;
         m_cands[i]->SetReco(blobIDs[i], is3Ds[i], EDeps[i], clusterMaxE[i], positions[i], flightpath);
     }
     std::sort(m_cands.begin(), m_cands.end(), compare_cands);
     _recoset = true;
-    return;
+    // return;
 }
 
 void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ) {
