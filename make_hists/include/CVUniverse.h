@@ -381,8 +381,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // NeutronMultiplicity::NeutEvent m_neut_event;
     // virtual NeutronMultiplicity::NeutEvent* GetNeutEvent() const;
     virtual std::unique_ptr<NeutronMultiplicity::NeutEvent> GetNeutEvent() const;
-    // virtual std::vector<NeutronMultiplicity::NeutCand*> GetTruthNeutCands() const;
-    virtual std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& GetTruthNeutCands() const;
+    virtual std::unique_ptr<NeutronMultiplicity::NeutEvent> GetTruthNeutEvent() const;
     virtual int GetAllBlobCandsNeut() const;
     virtual void PrintMADBlobs() const;
     virtual std::vector<ROOT::Math::XYZVector> GetBlobsBegPos() const;
