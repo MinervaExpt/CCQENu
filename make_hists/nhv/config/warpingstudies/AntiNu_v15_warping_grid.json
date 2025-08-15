@@ -3,11 +3,11 @@
   "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
-  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json",
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance.json",
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
-  "paramsFile": "${CCQEMAT}/nhv/config/onetrack/AntiNuParams_v15_1track.json",
+  "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "warpingstudies_no1GeVrecoilbin_20MeVBlobs_baserecoilbranchEAvail_${MYSAMPLE}_${MYWARP}warp_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "warpingstudies_EAvail_EAvailnohi_is3D_100mmvtx_min10MeV_${MYSAMPLE}_${MYWARP}warp_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -25,6 +25,7 @@
   "DoTypes": false,
   "pdg": -14,
   "mcRecoToCSV": false,
+  "statusbar": false,
   "runsamples": [ 
     "${MYSAMPLE}"
     // "QElike",
@@ -43,10 +44,11 @@
   ],
   "AnalyzeVariables": [
     "EAvail",
-    "EAvailNoNonVtxBlobs",
-    "EAvailWithNeutrons",
-    "CalibEAvailWithNeutrons",
-    "recoil",
+    "EAvail_nohi"
+    // "EAvailNoNonVtxBlobs",
+    // "EAvailWithNeutrons",
+    // "CalibEAvailWithNeutrons",
+    // "recoil",
     "ptmu"
   ],
   "Analyze2DVariables": [],

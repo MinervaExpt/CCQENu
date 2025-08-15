@@ -62,8 +62,12 @@
         "pzmuHD",
         "recoilHD"
       ]
+    },
+    "EAvail_ptmu": {
+      "name": "EAvail_ptmu",
+      "xvar": "EAvail",
+      "yvar": "ptmu"
     }
-
   },
   "2D": {
     "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID": {
@@ -644,8 +648,30 @@
         // 1.0
       ],
       "fluxnorm": false
-    }
-
+    },
+    "ptmu": {
+      "reco": "PperpMuGeV",
+      "true": "TruePperpMuGeV",
+      "name": "ptmu",
+      "title": "muon p_{T} (GeV/c)",
+      "bins": [
+        0,
+        0.075,
+        0.15,
+        0.25,
+        0.325,
+        0.4,
+        0.475,
+        0.55,
+        0.7,
+        0.85,
+        1,
+        1.25,
+        1.5,
+        2.5
+      ],
+      "fluxnorm": false
+    },
   }
 }
 

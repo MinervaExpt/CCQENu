@@ -25,7 +25,7 @@
   "DoTypes": false,
   "pdg": -14,
   "mcRecoToCSV": false,
-  "statusbar": false,
+  "statusbar": true,
   "runsamples": [
     "QElike"//,
     // "QElike_old"
@@ -44,7 +44,7 @@
   ], 
   "AnalyzeVariables": [
     // "NBlobs",
-    // "NNeutCands",
+    "NNeutCands",
     // "NNonVtxIsoBlobs",
     // "NNonVtxIsoBlobsAll",
     // "Multiplicity",
@@ -73,13 +73,13 @@
     // "pzmu",
     // "ptmu"
     // "NeutCandMCPID",
-    "LeadingNeutCandTopMCPID"//,
+    "LeadingNeutCandTopMCPID",
     // "SecNeutCandTopMCPID",
     // "ThirdNeutCandTopMCPID",
     // "LeadingNeutCandvtxZDist",
     // "SecNeutCandvtxZDist",
     // // "ThirdNeutCandvtxZDist",
-    // "LeadingNeutCandEdep"//,
+    "LeadingNeutCandEdep"//,
     // "SecNeutCandEdep",
     // // "ThirdNeutCandEdep",
     // "LeadingNeutCandvtxSphereDist",
@@ -98,11 +98,11 @@
     // "SecNeutCandClusterMaxE"//,
     // // "ThirdNeutCandClusterMaxE"
   ],
-  "Analyze2DVariables": [],
+  "Analyze2DVariables": [//],
     // "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID",
     // "SecNeutCandvtxZDist_SecNeutCandTopMCPID",
     // // "ThirdNeutCandvtxZDist_ThirdNeutCandTopMCPID",
-    // "LeadingNeutCandEdep_LeadingNeutCandTopMCPID"//,
+    "LeadingNeutCandEdep_LeadingNeutCandTopMCPID"//,
     // "SecNeutCandEdep_SecNeutCandTopMCPID",
     // // "ThirdNeutCandEdep_ThirdNeutCandTopMCPID",
     // "LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
@@ -123,7 +123,7 @@
     // "LeadingNeutCandAngleToParent_LeadingNeutCandTopMCPID"//,
     // "SecNeutCandAngleToParent_SecNeutCandTopMCPID",
     // "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID"
-  // ],
+  ],
     // "recoil_ptmu",
     // "pzmu_ptmu"//,
     // "Q2QE_recoil"
