@@ -44,7 +44,7 @@
   ],
   "AnalyzeVariables": [
     "EAvail",
-    "EAvail_nohi"
+    "EAvail_nohi",
     // "EAvailNoNonVtxBlobs",
     // "EAvailWithNeutrons",
     // "CalibEAvailWithNeutrons",
