@@ -154,9 +154,6 @@ void NeutEvent::SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZV
 
 void NeutEvent::ClearCands() {
     if (!_is_cands_set) return;
-    // for (auto cand : m_cands){
-    //     delete cand;
-    // }
     m_cands.clear();
     _is_cands_set = false;
 }

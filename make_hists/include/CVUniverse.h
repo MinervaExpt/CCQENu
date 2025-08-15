@@ -59,7 +59,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static std::string m_recoil_branch;
 
     static NuConfig m_neutron_config;
-    // static NeutronMultiplicity::NeutEvent* m_neutevent;
+    // static std::unique_ptr<NeutronMultiplicity::NeutEvent> m_neutevent;
+    // std::unique_ptr<NeutronMultiplicity::NeutEvent> m_neutevent;
 
     // initially set to false
     static bool _is_analysis_neutrino_pdg_set;
@@ -367,7 +368,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual int GetNNeutCands() const;
 
-    virtual int GetNNeutCandsFromEvt(NeutronMultiplicity::NeutEvent* neutevent) const;
+    // virtual int GetNNeutCandsFromEvt(NeutronMultiplicity::NeutEvent* neutevent) const;
 
     virtual int GetTrueNNeutCands() const;
 
@@ -378,7 +379,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // access nhv's reco neutron classes TODO: un comment these
     // NeutronMultiplicity::NeutEvent m_neut_event;
-    virtual NeutronMultiplicity::NeutEvent* GetNeutEvent() const;
+    // virtual NeutronMultiplicity::NeutEvent* GetNeutEvent() const;
+    virtual std::unique_ptr<NeutronMultiplicity::NeutEvent> GetNeutEvent() const;
     // virtual std::vector<NeutronMultiplicity::NeutCand*> GetTruthNeutCands() const;
     virtual std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& GetTruthNeutCands() const;
     virtual int GetAllBlobCandsNeut() const;
