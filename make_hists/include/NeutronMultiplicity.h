@@ -5,9 +5,13 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+// #include <Math.h>
+#include "Math/Vector3D.h"
+#include "Math/VectorUtil.h"
+
 
 #include "TLorentzVector.h"
-#include "TVector3.h"
+// #include "TVector3.h"
 #include "stdlib.h"
 #include "utils/NuConfig.h"
 // #include "include/CVUniverse.h"
@@ -19,35 +23,36 @@ class NeutCand {
     int m_is3D;             // is it 3D?
     double m_recoEDep;      // how much energy does it deposit?
     double m_clusterMaxE;   // Max cluster Energy
-    TVector3 m_position;    // where is it?
-    TVector3 m_flightpath;  // which direction did it travel from the vtx????
+    ROOT::Math::XYZVector m_position;    // where is it?
+    ROOT::Math::XYZVector m_flightpath;  // which direction did it travel from the vtx????
 
     // Truth vars
     int m_truthPID = -1;       // PID of most recent GEANT Parent
     int m_truthTopMCPID = -1;  // PID of the GENIE parent
-    TVector3 m_TopMomentum;    // which direction did it travel from the vtx????
+    ROOT::Math::XYZVector m_TopMomentum;    // which direction did it travel from the vtx????
 
     bool m_recoset = false;
     bool m_truthset = false;
 
     // CTORs
     NeutCand();  // default
-    NeutCand(int blobID, int is3D, double recoEDep, TVector3 position);
+    NeutCand(int blobID, int is3D, double recoEDep, ROOT::Math::XYZVector position);
+    // NeutCand(NeutCand& cand);
 
     ~NeutCand() = default;
     // reco functions
-    void SetReco(int blobID, int is3D, double recoEDep, double clusterMaxE, TVector3 position, TVector3 flightpath);
+    void SetReco(int blobID, int isD, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector position, ROOT::Math::XYZVector flightpath);
 
     // SetBlobID(int index);
 
     // truth functions
-    void SetTruth(int truthPID, int truthTopMCPID, TVector3 TopMomentum);
+    void SetTruth(int truthPID, int truthTopMCPID, ROOT::Math::XYZVector TopMomentum);
 
     int GetCandBlobID();
     int GetCandIs3D();
     double GetCandRecoEDep();
-    TVector3 GetCandPosition();
-    TVector3 GetCandFlightPath();
+    ROOT::Math::XYZVector GetCandPosition();
+    ROOT::Math::XYZVector GetCandFlightPath();
 
     double GetCandVtxDist();  // TODO: Andrew does something weird with this
 
@@ -80,49 +85,61 @@ class NeutEvent {
     double m_edep_min = 0.;                    // in MeV
     int m_req3D = 0;                           // Set requirement to 3D blob, set to 1 for 3D only, -1 for 2D only, 0 for both
 
-    int m_nneutcands;
-    TVector3 m_vtx;
-    TVector3 m_mupath;
+    // int m_nneutcands;
+    ROOT::Math::XYZVector m_vtx;
+    ROOT::Math::XYZVector m_mupath;
 
-    std::vector<NeutronMultiplicity::NeutCand*> m_cands;  // the candidates it contains
+    // std::vector<NeutronMultiplicity::NeutCand*> m_cands;  // the candidates it contains //moved to public?
     bool _is_cands_set = false;
 
     bool _recoset = false;
     bool _truthset = false;
 
    public:
+    int m_ncands;                                        // total number of cands in event
+    int m_nneutcands;                                    // total number of cands passing neutron selection
+    std::vector<std::unique_ptr<NeutCand>> m_cands = {};      // the candidates the event has
+    std::vector<std::unique_ptr<NeutCand>> m_neutcands = {};  // the candidates that pass neutron selection
+    std::vector<std::unique_ptr<NeutCand>> m_trueneutcands = {};  // the candidates that pass neutron selection
+
+   public:
     // TOOD: make neutron config vars in CVUniverse
-    NeutEvent(NuConfig config, int n_neutcands, TVector3 vtx, TVector3 mupath, std::vector<int> order = {});  // configure number of cands and set up the cands internally based off how many there are
-    NeutEvent(int n_neutcands, TVector3 vtx, TVector3 mupath);
+    NeutEvent(NuConfig config, int n_neutcands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, std::vector<int> order = {});  // configure number of cands and set up the cands internally based off how many there are
+    NeutEvent(int n_neutcands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath);
     NeutEvent(NuConfig config);  // would need to set up cands separately using SetCands
     NeutEvent();
-    ~NeutEvent() {
-        for (auto cand : m_cands) {
-            delete cand;
-        }
-        m_cands.clear();
-    }
+    ~NeutEvent() = default; //{
+
+    // ~NeutEvent() {
+    //     for (auto cand : m_cands) {
+    //         delete cand;
+    //     }
+    //     m_cands.clear();
+    // }
 
     void SetConfig(NuConfig config);
     // NeutEvent();
-    void SetCands(int n_neutcands, TVector3 vtx, TVector3 mupath);
+    void SetCands(int n_neutcands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath);
 
    private:
     void ClearCands();  // This is to clean up, called internally in SetCands if some cands are set.
 
    public:
     // Set the reco variables for reco and truth. This is necessary to handle both data and MC without issues
-    void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<TVector3> positions);
+    void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<ROOT::Math::XYZVector> positions);
     void SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ);
 
     bool GetIsTruthSet();
+    // std::vector<NeutronMultiplicity::NeutCand*> GetCands();          // Get all blobs
+    // std::vector<NeutronMultiplicity::NeutCand*> GetNeutCands();      // Get just the ones passing neutron cuts
+    // std::vector<NeutronMultiplicity::NeutCand*> GetTrueNeutCands();  // Get cands that are actually neutrons (need truth set)
+    // NeutronMultiplicity::NeutCand* GetCand(int index);
 
-    std::vector<NeutronMultiplicity::NeutCand*> GetCands();      // Get all blobs
-    std::vector<NeutronMultiplicity::NeutCand*> GetNeutCands();  // Get just the ones passing neutron cuts
+    // std::vector<std::unique_ptr<NeutCand>> GetCands();          // Get all blobs
+    std::vector<std::unique_ptr<NeutCand>>& GetNeutCands();      // Get just the ones passing neutron cuts
+    std::vector<std::unique_ptr<NeutCand>>& GetTrueNeutCands();  // Get cands that are actually neutrons (need truth set)
+    // std::unique_ptr<NeutCand> GetCand(int index);               // TODO this doesn't work with the new unique_ptr's, but maybe don't need it anyway?
 
-    std::vector<NeutronMultiplicity::NeutCand*> GetTrueNeutCands();
-
-    NeutronMultiplicity::NeutCand* GetCand(int index);
     bool GetCandIsNeut(int index);  // checks all the following
 
     bool CandPassMuonAngle(int index);  // check if outside angle from muon track
@@ -137,9 +154,10 @@ class NeutEvent {
     int GetCandTruthPID(int index);     // GEANT parent
     int GetCandTruthTopPID(int index);  // GENIE parent
     // Helper for ordering the cands
-    static bool compare_cands(NeutronMultiplicity::NeutCand* cand1, NeutronMultiplicity::NeutCand* cand2) {
-        return (*cand1 > *cand2);
-    }
+    // static bool compare_cands(NeutronMultiplicity::NeutCand* cand1, NeutronMultiplicity::NeutCand* cand2) {
+    //     return (*cand1 > *cand2);
+    // }
+    static bool compare_cands(std::unique_ptr<NeutCand>& cand1, std::unique_ptr<NeutCand>& cand2) {return (cand1 > cand2);}
 
     // TODO: Something more flexible in development
    private:

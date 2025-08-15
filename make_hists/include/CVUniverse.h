@@ -30,6 +30,9 @@
 #include <string>
 #include <vector>
 
+// #include <Vector3D.h>
+#include "Math/Vector3D.h"
+#include "Math/VectorUtil.h"
 #include "PlotUtils/CaloCorrection.h"
 #include "PlotUtils/ChainWrapper.h"
 #include "PlotUtils/GeantHadronSystematics.h"
@@ -364,6 +367,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual int GetNNeutCands() const;
 
+    virtual int GetNNeutCandsFromEvt(NeutronMultiplicity::NeutEvent* neutevent) const;
+
     virtual int GetTrueNNeutCands() const;
 
     // All blobs
@@ -374,10 +379,11 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // access nhv's reco neutron classes TODO: un comment these
     // NeutronMultiplicity::NeutEvent m_neut_event;
     virtual NeutronMultiplicity::NeutEvent* GetNeutEvent() const;
-    virtual std::vector<NeutronMultiplicity::NeutCand*> GetTruthNeutCands() const;
+    // virtual std::vector<NeutronMultiplicity::NeutCand*> GetTruthNeutCands() const;
+    virtual std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& GetTruthNeutCands() const;
     virtual int GetAllBlobCandsNeut() const;
     virtual void PrintMADBlobs() const;
-    virtual std::vector<TVector3> GetBlobsBegPos() const;
+    virtual std::vector<ROOT::Math::XYZVector> GetBlobsBegPos() const;
     // virtual NeutronMultiplicity::NeutCand GetNeutCand() const;
 
     // // Count number of blobs id'd as neutrons

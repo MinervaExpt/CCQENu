@@ -1181,9 +1181,10 @@ double CVUniverse::GetEAvailGeV() const {
 
     double edep = 0.0;
 
-    NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
-    // These are all the blobs that pass blob selection
-    std::vector<NeutronMultiplicity::NeutCand*> cands = neutevent->GetNeutCands();
+    // NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
+    // // These are all the blobs that pass blob selection
+    // std::vector<NeutronMultiplicity::NeutCand*> cands = neutevent->GetNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = GetNeutEvent()->GetNeutCands();
     for (unsigned int i = 0; i < cands.size(); i ++){
         edep += cands[i]->m_recoEDep;
         if (i == 2) {
@@ -1204,7 +1205,8 @@ double CVUniverse::GetEAvailLeadingBlobGeV() const {
     // Take recoil and remove the neutron blob energy from it
     double recoil = GetRecoilEnergyGeV();  // regular recoil
     // NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
-    std::vector<NeutronMultiplicity::NeutCand*> neutcands =  GetNeutEvent()->GetNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> neutcands = GetNeutEvent()->GetNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& neutcands = GetNeutEvent()->GetNeutCands();
     double neutblobE = neutcands[0]->m_recoEDep * MeVGeV;
     return (recoil - neutblobE);
 }
@@ -1712,21 +1714,27 @@ int CVUniverse::GetNMADBlobs() const {
     return GetInt((MinervaUniverse::GetTreeName() + "_BlobIs3D_sz").c_str());
 }
 
-std::vector<TVector3> CVUniverse::GetBlobsBegPos() const {
-    std::vector<TVector3> positions = {};
+std::vector<ROOT::Math::XYZVector> CVUniverse::GetBlobsBegPos() const {
+    std::vector<ROOT::Math::XYZVector> positions = {};
+    if (GetInt((GetAnaToolName() + "_BlobBegX_sz").c_str()) == 0)
+        return positions;
+    std::vector<double> BlobBegX = GetVec<double>((GetAnaToolName() + "_BlobBegX").c_str());
+    std::vector<double> BlobBegY = GetVec<double>((GetAnaToolName() + "_BlobBegY").c_str());
+    std::vector<double> BlobBegZ = GetVec<double>((GetAnaToolName() + "_BlobBegZ").c_str());
     for (int i = 0; i < GetNMADBlobs(); i++) {
-        TVector3 begpos(GetVecElem((GetAnaToolName() + "_BlobBegX").c_str(), i),
-                        GetVecElem((GetAnaToolName() + "_BlobBegY").c_str(), i),
-                        GetVecElem((GetAnaToolName() + "_BlobBegZ").c_str(), i));
+        // ROOT::Math::XYZVector begpos(GetVecElem((GetAnaToolName() + "_BlobBegX").c_str(), i),
+        //                 GetVecElem((GetAnaToolName() + "_BlobBegY").c_str(), i),
+        //                 GetVecElem((GetAnaToolName() + "_BlobBegZ").c_str(), i));
+        ROOT::Math::XYZVector begpos(BlobBegX[i],BlobBegY[i],BlobBegZ[i]);
         positions.push_back(begpos);
     }
     return positions;
 }
 
 NeutronMultiplicity::NeutEvent* CVUniverse::GetNeutEvent() const {
-    TVector3 pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
-    TVector3 vtx(GetVec<double>("vtx").at(0), GetVec<double>("vtx").at(1), GetVec<double>("vtx").at(2));
-    std::vector<TVector3> blobpositions = GetBlobsBegPos();
+    ROOT::Math::XYZVector pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
+    ROOT::Math::XYZVector vtx(GetVec<double>("vtx").at(0), GetVec<double>("vtx").at(1), GetVec<double>("vtx").at(2));
+    std::vector<ROOT::Math::XYZVector> blobpositions = GetBlobsBegPos();
     // if (_is_neut_event_set) { // if you use the global neutevent
     //     m_neutevent->SetCands(CVUniverse::GetNMADBlobs(), vtx, pmu);
     //     m_neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()), GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()), GetBlobsBegPos());
@@ -1752,14 +1760,16 @@ NeutronMultiplicity::NeutEvent* CVUniverse::GetNeutEvent() const {
 }
 
 // Gives you the selected neutron candidates with true information filled
-std::vector<NeutronMultiplicity::NeutCand*> CVUniverse::GetTruthNeutCands() const {
+std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& CVUniverse::GetTruthNeutCands() const {
+    // std::vector<NeutronMultiplicity::NeutCand*> CVUniverse::GetTruthNeutCands() const {
     NeutronMultiplicity::NeutEvent* neutevent = CVUniverse::GetNeutEvent();
     neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()),
                         GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()),
                         GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPx").c_str()),
                         GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPy").c_str()),
                         GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPz").c_str()));
-    std::vector<NeutronMultiplicity::NeutCand*> neutcands = neutevent->GetNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> cands = neutevent->GetNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& neutcands = neutevent->GetNeutCands();
     // std::cout << "from gettruthneutcands: ";
     // for (auto cand : neutcands) {
     //     std::cout << "\t" << cand->m_blobID << " " << cand->m_recoEDep;
@@ -1773,7 +1783,14 @@ std::vector<NeutronMultiplicity::NeutCand*> CVUniverse::GetTruthNeutCands() cons
 int CVUniverse::GetNNeutCands() const {
     if (GetNMADBlobs() == 0) return 0;
     NeutronMultiplicity::NeutEvent* neutevent = CVUniverse::GetNeutEvent();
-    return neutevent->GetNeutCands().size(); // These are events that pass blob selection cuts
+    return GetNNeutCandsFromEvt(neutevent);
+    // return neutevent->GetNeutCands().size();  // These are events that pass blob selection cuts
+}
+
+int CVUniverse::GetNNeutCandsFromEvt(NeutronMultiplicity::NeutEvent* neutevent) const {
+    if (GetNMADBlobs() == 0) return 0;
+    // NeutronMultiplicity::NeutEvent* neutevent = CVUniverse::GetNeutEvent();
+    return neutevent->GetNeutCands().size();  // These are events that pass blob selection cuts
 }
 
 // Gives you the number of blobs that come from true neutrons
@@ -1828,7 +1845,8 @@ void CVUniverse::PrintMADBlobs() const {
         //               << GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()).at(i);
         // }
         // std::cout << std::endl;
-        std::vector<NeutronMultiplicity::NeutCand*> cands = neutevent->GetNeutCands();
+        // std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+        std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = CVUniverse::GetNeutEvent()->GetNeutCands();
         // std::cout << "PID            : ";
         bool nl = false;
         for (int i = 0; i < cands.size(); i++) {
@@ -1849,15 +1867,23 @@ void CVUniverse::PrintMADBlobs() const {
 
 // TODO: Still need calo correction on this.
 double CVUniverse::GetTotNeutBlobEGeV() const {
-    NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
     double edep = 0.0;
     if (GetNMADBlobs() == 0) {
         // std::cout << edep << std::endl;
         return edep;
     }
     // These are all the blobs that pass blob selection
-    std::vector<NeutronMultiplicity::NeutCand*> cands = neutevent->GetNeutCands();
-    for (auto cand : cands) { 
+    // NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
+    // std::vector<NeutronMultiplicity::NeutCand*> cands = neutevent->GetNeutCands();
+    // for (auto cand : cands) {
+    //     edep += cand->GetCandRecoEDep();
+    // }
+    // std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>> cands = neutevent->GetNeutCands();
+    // for (int i = 0; i < GetNNeutCandsFromEvt(neutevent); i++) {
+    //     edep += cands[i]->GetCandRecoEDep();
+    // }
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = GetNeutEvent()->GetNeutCands();
+    for (auto& cand : cands) {
         edep += cand->GetCandRecoEDep();
     }
     return edep * MeVGeV;
@@ -1867,7 +1893,8 @@ int CVUniverse::GetPlotNeutCandMCPID() const {
     if (GetNMADBlobs() < 1) {
         return -9999;
     }
-    std::vector<NeutronMultiplicity::NeutCand*> neutcands = GetTruthNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> neutcands = GetTruthNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& neutcands = GetTruthNeutCands();
     if (neutcands.size() < 1)
         return -9999;
     int pid = neutcands[0]->GetCandTruthPID();
@@ -1899,7 +1926,8 @@ int CVUniverse::GetPlotNeutCandTopMCPID(int index) const {
     if (GetNMADBlobs() < index + 1) {
         return -9999;
     }
-    std::vector<NeutronMultiplicity::NeutCand*> neutcands = GetTruthNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> neutcands = GetTruthNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& neutcands = GetTruthNeutCands();
     if (neutcands.size() < index + 1)
         return -9999;
     int pid = neutcands[index]->GetCandTruthTopPID();
@@ -1944,7 +1972,8 @@ int CVUniverse::GetPlotThirdNeutCandTopMCPID() const {
 double CVUniverse::GetNeutCandvtxZDist(int index) const {
     if (CVUniverse::GetNMADBlobs() < index + 1)
         return -99999.;
-    std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = CVUniverse::GetNeutEvent()->GetNeutCands();
     if (cands.size() < index + 1)
         return -99999.;
     return abs(cands[index]->m_flightpath.Z());
@@ -1963,10 +1992,12 @@ double CVUniverse::GetThirdNeutCandvtxZDist() const {
 double CVUniverse::GetNeutCandvtxSphereDist(int index) const {
     if (CVUniverse::GetNMADBlobs() < index + 1)
         return -99999.;
-    std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = CVUniverse::GetNeutEvent()->GetNeutCands();
     if (cands.size() < index + 1)
         return -99999.;
-    return cands[index]->m_flightpath.Mag();
+    // return cands[index]->m_flightpath.Mag();
+    return cands[index]->m_flightpath.Rho();
 }
 
 double CVUniverse::GetLeadingNeutCandvtxSphereDist() const {
@@ -1982,11 +2013,14 @@ double CVUniverse::GetThirdNeutCandvtxSphereDist() const {
 double CVUniverse::GetNeutCandvtxBoxDist(int index) const {
     if (CVUniverse::GetNMADBlobs() < index + 1)
         return -99999.;
-    std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = CVUniverse::GetNeutEvent()->GetNeutCands();
     if (cands.size() < index + 1)
         return -99999.;
-    TVector3 fp = cands[index]->m_flightpath;
-    return std::max(abs(fp.Z()), abs(fp.Perp()));
+    // TVector3 fp = cands[index]->m_flightpath;
+    // return std::max(abs(fp.Z()), abs(fp.Perp()));
+    ROOT::Math::XYZVector fp = cands[index]->m_flightpath;
+    return std::max(abs(fp.Z()), abs(fp.Rho()));
 }
 
 double CVUniverse::GetLeadingNeutCandvtxBoxDist() const {
@@ -2003,7 +2037,8 @@ double CVUniverse::GetThirdNeutCandvtxBoxDist() const {
 double CVUniverse::GetNeutCandEdepMeV(int index) const {
     if (CVUniverse::GetNMADBlobs() < index + 1)
         return -99999.;
-    std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = CVUniverse::GetNeutEvent()->GetNeutCands();
     if (cands.size() < index + 1)
         return -99999.;
     return cands[index]->m_recoEDep;
@@ -2022,7 +2057,8 @@ double CVUniverse::GetThirdNeutCandEdepMeV() const {
 double CVUniverse::GetNeutCandClusterMaxEMeV(int index) const {
     if (CVUniverse::GetNMADBlobs() < index + 1)
         return -99999.;
-    std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = CVUniverse::GetNeutEvent()->GetNeutCands();
     if (cands.size() < index + 1)
         return -99999.;
     return cands[index]->m_clusterMaxE;
@@ -2041,13 +2077,16 @@ double CVUniverse::GetThirdNeutCandClusterMaxEMeV() const {
 double CVUniverse::GetNeutCandMuonDist(int index) const {
     if (CVUniverse::GetNMADBlobs() < index + 1)
         return -99999.;
-    std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = CVUniverse::GetNeutEvent()->GetNeutCands();
     if (cands.size() < index + 1)
         return -99999.;
-    TVector3 pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
-    TVector3 fp = cands[index]->m_flightpath;
-    double angle = pmu.Angle(fp);
-    return abs(fp.Mag() * std::sin(angle));
+    ROOT::Math::XYZVector pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
+    ROOT::Math::XYZVector fp = cands[index]->m_flightpath;
+    // double angle = pmu.Angle(fp);
+    // return abs(fp.Mag() * std::sin(angle));
+    double angle = ROOT::Math::VectorUtil::Angle(pmu, fp);
+    return abs(fp.Rho() * std::sin(angle));
 }
 
 double CVUniverse::GetLeadingNeutCandMuonDist() const {
@@ -2063,12 +2102,14 @@ double CVUniverse::GetThirdNeutCandMuonDist() const {
 double CVUniverse::GetNeutCandMuonAngle(int index) const {
     if (CVUniverse::GetNMADBlobs() < index + 1)
         return -99999.;
-    std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> cands = CVUniverse::GetNeutEvent()->GetNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = CVUniverse::GetNeutEvent()->GetNeutCands();
     if (cands.size() < index + 1)
         return -99999.;
-    TVector3 pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
-    TVector3 fp = cands[index]->m_flightpath;
-    return pmu.Angle(fp) * 180. / M_PI;
+    ROOT::Math::XYZVector pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
+    ROOT::Math::XYZVector fp = cands[index]->m_flightpath;
+    // return pmu.Angle(fp) * 180. / M_PI;
+    return ROOT::Math::VectorUtil::Angle(pmu,fp) * 180. / M_PI;
 }
 
 double CVUniverse::GetLeadingNeutCandMuonAngle() const {
@@ -2084,7 +2125,8 @@ double CVUniverse::GetThirdNeutCandMuonAngle() const {
 double CVUniverse::GetNeutCandAngleToParent(int index) const {
     if (CVUniverse::GetNMADBlobs() < index + 1)
         return -99999.;
-    std::vector<NeutronMultiplicity::NeutCand*> cands = GetTruthNeutCands();
+    // std::vector<NeutronMultiplicity::NeutCand*> cands = GetTruthNeutCands();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = GetTruthNeutCands();
     if (cands.size() < index + 1)
         return -99999.;
     return cands[index]->GetCandTruthAngleFromParent();
