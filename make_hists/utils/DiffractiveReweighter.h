@@ -27,9 +27,9 @@ class DiffractiveReweighter : public Reweighter<UNIVERSE, EVENT> {
     virtual double GetWeight(const UNIVERSE& univ, const EVENT& myevent /*event*/) const override {
         return univ.GetDiffractiveWeight();
     };
-    virtual std::string GetName() const { return "DiffractiveReweighter"; }
+    virtual std::string GetName() const override { return "DiffractiveReweighter"; }
 
-    virtual bool DependsReco() const { return false; }
+    virtual bool DependsReco() const override { return false; }
     // virtual bool DependsTruth() const {return true;}; //Not needed as of time of writing.
     // PlotUtils::PionReweighter& PionReweighter();
     // virtual bool IsCompatible(const PionReweighter& /*other*/) const { return true; }

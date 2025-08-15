@@ -25,9 +25,9 @@ class CoherentPiReweighter : public Reweighter<UNIVERSE, EVENT> {
         } else
             return 1.0;
     };
-    virtual std::string GetName() const { return "COHPionReweighter"; }
+    virtual std::string GetName() const override { return "COHPionReweighter"; }
 
-    virtual bool DependsReco() const { return false; }
+    virtual bool DependsReco() const override { return false; }
     // virtual bool DependsTruth() const {return true;}; //Not needed as of time of writing.
     // PlotUtils::PionReweighter& PionReweighter();
     // virtual bool IsCompatible(const PionReweighter& /*other*/) const { return true; }
