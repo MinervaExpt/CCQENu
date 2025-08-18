@@ -114,7 +114,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
     template <typename T>
     void InitializeMCHistograms(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "selected_reco") < 1) {
-            std::cout << "VariableHyperDFromConfig::InitializeMCHistograms: WARNING selected_reco is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableHyperDFromConfig::InitializeMCHistograms: WARNING selected_reco is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags)
                 hasMC[tag] = false;
             return;
@@ -123,7 +123,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
             hasMC[tag] = true;
 
         if (m_tunedmc == "tuned") {
-            std::cout << "VariableHyperDFromConfig::InitializeMCHistograms: WARNING untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
+            // std::cout << "VariableHyperDFromConfig::InitializeMCHistograms: WARNING untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
             return;
         }
         std::vector<double> xrecolinbins = GetRecoBinVec();  // TODO: set this up in VariableHyperDBase
@@ -146,7 +146,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
     template <typename T>
     void InitializeSelectedTruthHistograms(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "selected_truth") < 1) {
-            std::cout << "VariableHyperDFromConfig::InitializeSelectedTruthHistograms: WARNING selected_truth is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableHyperDFromConfig::InitializeSelectedTruthHistograms: WARNING selected_truth is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags) {
                 hasSelectedTruth[tag] = false;
             }
@@ -157,7 +157,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
         }
 
         if (m_tunedmc == "tuned") {
-            std::cout << "VariableHyperDFromConfig::InitializeSelectedTruthHistograms: WARNING untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
+            // std::cout << "VariableHyperDFromConfig::InitializeSelectedTruthHistograms: WARNING untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
             return;
         }
 
@@ -179,7 +179,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
     template <typename T>
     void InitializeTruthHistograms(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "truth") < 1) {
-            std::cout << "VariableHyperDFromConfig::InitializeTruthHistograms: WARNING truth is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableHyperDFromConfig::InitializeTruthHistograms: WARNING truth is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags)
                 hasTruth[tag] = false;
             return;
@@ -189,7 +189,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
             hasTruth[tag] = true;
 
         if (m_tunedmc == "tuned") {
-            std::cout << "VariableHyperDFromConfig::InitializeTruthHistograms: WARNING untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
+            // std::cout << "VariableHyperDFromConfig::InitializeTruthHistograms: WARNING untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
             return;
         }
 
@@ -212,7 +212,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
     template <typename T>
     void InitializeDataHistograms(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "data") < 1) {
-            std::cout << "VariableHyperDFromConfig::InitializeDataHistograms: WARNING data is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableHyperDFromConfig::InitializeDataHistograms: WARNING data is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags)
                 hasData[tag] = false;
             return;
@@ -239,7 +239,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
     template <typename T>
     void InitializeTunedMCHistograms(T reco_univs, T truth_univs, const std::vector<std::string> tuned_tags, const std::vector<std::string> response_tags) {
         if (m_tunedmc == "untuned") {
-            std::cout << "VariableHyperDFromConfig::InitializeTunedMCHistograms: WARNING tunedmc is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableHyperDFromConfig::InitializeTunedMCHistograms: WARNING tunedmc is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tuned_tags)
                 hasTunedMC[tag] = false;
             return;
@@ -299,7 +299,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
     void InitializeResponse(T reco_univs, const std::vector<std::string> tags, std::string tail = "") {
         // Check if response is configured for this var
         if (std::count(m_for.begin(), m_for.end(), "response") < 1) {
-            std::cout << "VariableHyperDFromConfig::InitializeResponse: WARNING response is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableHyperDFromConfig::InitializeResponse: WARNING response is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags)
                 hasResponse[tag] = false;
             return;

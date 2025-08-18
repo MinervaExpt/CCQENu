@@ -135,3 +135,72 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFrom
 
     return variablesHDmap;
 }
+
+std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFromConfig(std::vector<std::string> varsHD, const std::vector<std::string> tags, const NuConfig configraw, const bool doresolution, const bool dotypes, const std::string tunedmc, const std::vector<std::string> fitsamples) {
+    std::map<std::string, CCQENu::VariableHyperDFromConfig *> variablesHDmap;
+
+    NuConfig configHD = Json::Value::null;
+    if (configraw.IsMember("HyperD")) {
+        configHD = configraw.GetValue("HyperD");
+    } else {
+        std::cout << "GetHyperDVariablesFromConfig: Warning: No HyperD variables configured." << std::endl;
+        exit(1);
+    }
+    // Get the configs for all 1D variables in your Variables config (these likely contain more info than hyperD that you need)
+    NuConfig config1D = Json::Value::null;
+    if (configraw.IsMember("1D")) {
+        config1D = configraw.GetValue("1D");
+    } else {
+        std::cout << "GetHyperDVariablesFromConfig: Warning: No 1D variables configured." << std::endl;
+        assert(0);
+    }
+
+    std::vector<std::string> keys = configHD.GetKeys();
+    for (auto v : varsHD) {
+        if (!configHD.IsMember(v)) {
+            std::cout << "GetHDVariablesFromConfig: ERROR - have requested an unimplemented HyperDim variable in GetHDVariablesFromConfig " << v << std::endl;
+            assert(configHD.IsMember(v));
+        } else {
+            NuConfig varconfig = configHD.GetValue(v);
+            std::string nameHD = varconfig.GetString("name");
+            std::vector<std::string> axisvarnamevec = varconfig.GetStringVector("vars");
+            int dim = axisvarnamevec.size();
+            std::vector<std::string> fors = {};  // What you want to fill hists of (e.g. data, selected_reco), defaults to all<-TODO in VariableHyperDFromConfig
+
+            if (varconfig.IsMember("for"))
+                fors = varconfig.GetStringVector("for");
+
+            EAnalysisType analysis_type = k1D;
+            if (varconfig.IsMember("analysistype")) analysis_type = (EAnalysisType)varconfig.GetInt("analysistype");
+
+            // std::vector<std::unique_ptr<CCQENu::VariableFromConfig>> vars1D = {};
+            std::vector<CCQENu::VariableFromConfig *> vars1D = {};
+            for (auto var1D_name : axisvarnamevec) {
+                if (!config1D.IsMember(var1D_name)) {
+                    std::cout << "GetHDVariablesFromConfig: ERROR - have requested an unimplemented 1D variable in GetHDVariablesFromConfig " << var1D_name << std::endl;
+                    assert(0);
+                }
+                CCQENu::VariableFromConfig *tmp_var1D = new CCQENu::VariableFromConfig(config1D.GetValue(var1D_name));
+
+                tmp_var1D->SetDoResolution(doresolution);
+                tmp_var1D->SetDoTypes(dotypes);
+                tmp_var1D->SetTunedMC(tunedmc);
+                tmp_var1D->SetFitSamples(fitsamples);
+                tmp_var1D->AddTags(tags);
+
+                // for (auto f : tmp_var1D->m_for)
+                //     if (std::find(fors.begin(), fors.end(), f) != fors.end()) fors.push_back(f);
+                
+                vars1D.emplace_back(tmp_var1D);
+            }
+            CCQENu::VariableHyperDFromConfig *varHD = new CCQENu::VariableHyperDFromConfig(nameHD, vars1D, fors, analysis_type);
+            varHD->AddTags(tags);
+            std::cout << "GetHyperDVariablesFromConfig: set up HyperDim variable " << nameHD << " of dimension " << dim << std::endl;
+            variablesHDmap[nameHD] = varHD;
+            for (auto var1D: vars1D) {
+                delete var1D;
+            }
+        }
+    }
+    return variablesHDmap;
+}

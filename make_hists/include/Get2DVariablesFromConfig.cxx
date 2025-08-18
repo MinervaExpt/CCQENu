@@ -174,17 +174,25 @@ std::map<std::string, CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(s
 
             
             std::vector<std::string> fors = {};
-            if (xvar->m_for.size() == 0) {
-                fors = xvar->m_for;
-            } else if (yvar->m_for.size() == 0) {
-                fors = yvar->m_for;
-            } else if (xvar->m_for.size() > 0 && yvar->m_for.size() > 0) {
-                fors = intersection(xvar->m_for, yvar->m_for);
+            if (varconfig.IsMember("for")) {
+                fors = varconfig.GetStringVector("for");
+            } else {
+                if (xvar->m_for.size() == 0) {
+                    fors = xvar->m_for;
+                } else if (yvar->m_for.size() == 0) {
+                    fors = yvar->m_for;
+                } else if (xvar->m_for.size() > 0 && yvar->m_for.size() > 0) {
+                    fors = intersection(xvar->m_for, yvar->m_for);
+                }
             }
             CCQENu::Variable2DFromConfig *var2D = new CCQENu::Variable2DFromConfig(name2D, *xvar, *yvar, fors);
             var2D->AddTags(tags);
             std::cout << "GetVariables2DFromConfig: set up 2D variable " << name2D << std::endl;
             variables2Dmap[name2D] = var2D;
+
+            delete xvar;
+            delete yvar;
+            
         } else {
             std::cout << "Get2DVariablesFromConfig: ERROR - have requested an unimplemented 2D variable in Get2DVariablesFromConfig " << v << std::endl;
             assert(0);

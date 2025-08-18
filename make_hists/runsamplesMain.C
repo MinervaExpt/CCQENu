@@ -423,7 +423,8 @@ int main(const int argc, const char *argv[]) {
 
     std::vector<std::string> varsHD = config.GetStringVector("AnalyzeHyperDVariables");
     std::vector<CCQENu::VariableHyperDFromConfig *> variablesHD;
-    std::map<std::string, CCQENu::VariableHyperDFromConfig *> variablesmapHD = GetHyperDVariablesFromConfig(varsHD, variablesmap1D, tags, configvar);
+    // std::map<std::string, CCQENu::VariableHyperDFromConfig *> variablesmapHD = GetHyperDVariablesFromConfig(varsHD, variablesmap1D, tags, configvar);
+    std::map<std::string, CCQENu::VariableHyperDFromConfig *> variablesmapHD = GetHyperDVariablesFromConfig(varsHD, tags, configvar, doresolution, dotypes, tunedmc, samplesToDo);
 
     // here we initialist ghem
 #ifdef HYPERDIMAND1D2D

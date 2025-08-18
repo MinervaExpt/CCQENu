@@ -1343,12 +1343,12 @@
     },
     "TotalNeutBlobE": {
       "reco": "TotNeutBlobEGeV",
-      "true": "TotNeutBlobEGeV",
+      "true": "TrueTotNeutBlobEGeV",
       "name": "TotalNeutBlobE",
       "title": "Total Neutron Blob Energy",
-      "nbins": 50,
+      "nbins": 30,
       "min": 0.0,
-      "max": 0.5,
+      "max": 0.6,
       "for": [
         "selected_reco"
       ]

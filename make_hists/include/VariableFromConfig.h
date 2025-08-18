@@ -210,8 +210,8 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
             // }
         }
 
-        std::cout << " Check Binning For" << config.GetString("name") << std::endl;
-        PrintBinning();
+        // std::cout << " Check Binning For" << config.GetString("name") << std::endl;
+        // PrintBinning();
         // wPrintRecoBinning();
     }
 
@@ -264,7 +264,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
     void SetTunedMC(std::string tunedmc) {
         if (tunedmc != "both" && tunedmc != "tuned" && tunedmc != "untuned") {
-            std::cout << "VariableFromConfig::SetTunedMC: Warning: invalid value for \'tunedmc\' " << tunedmc << ". Defaulting to \'untuned\'." << std::endl;
+            // std::cout << "VariableFromConfig::SetTunedMC: Warning: invalid value for \'tunedmc\' " << tunedmc << ". Defaulting to \'untuned\'." << std::endl;
             tunedmc = "untuned";
             return;
         }
@@ -285,7 +285,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     template <typename T>
     void InitializeMCHistograms(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "selected_reco") < 1) {
-            std::cout << "VariableFromConfig Warning: selected_reco is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableFromConfig Warning: selected_reco is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags) {
                 hasMC[tag] = false;
             }
@@ -296,7 +296,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         }
 
         if (m_tunedmc == "tuned") {
-            std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable" << GetName() << std::endl;
+            // std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable" << GetName() << std::endl;
             return;
         }
 
@@ -340,7 +340,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     template <typename T>
     void InitializeSelectedTruthHistograms(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "selected_truth") < 1) {
-            std::cout << "VariableFromConfig Warning: selected_truth is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableFromConfig Warning: selected_truth is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags) {
                 hasSelectedTruth[tag] = false;
             }
@@ -351,7 +351,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         }
 
         if (m_tunedmc == "tuned") {
-            std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable" << GetName() << std::endl;
+            // std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable" << GetName() << std::endl;
             return;
         }
 
@@ -371,7 +371,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     template <typename T>
     void InitializeTruthHistograms(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "truth") < 1) {
-            std::cout << "VariableFromConfig Warning: truth is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableFromConfig Warning: truth is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags) {
                 hasTruth[tag] = false;
             }
@@ -382,7 +382,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         }
 
         if (m_tunedmc == "tuned") {
-            std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable" << GetName() << std::endl;
+            // std::cout << "VariableFromConfig Warning: untuned MC disabled for this variable" << GetName() << std::endl;
             return;
         }
 
@@ -395,7 +395,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     template <typename T>
     void InitializeDataHistograms(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "data") < 1) {
-            std::cout << "VariableFromConfig Warning: data is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableFromConfig Warning: data is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags) {
                 hasData[tag] = false;
             }
@@ -418,7 +418,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     template <typename T>
     void InitializeTunedMCHistograms(T reco_univs, T truth_univs, const std::vector<std::string> tuned_tags, const std::vector<std::string> response_tags) {
         if (m_tunedmc == "untuned") {
-            std::cout << "VariableFromConfig Warning: tunedmc is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableFromConfig Warning: tunedmc is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tuned_tags) {
                 hasTunedMC[tag] = false;
             }
@@ -487,7 +487,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     void InitializeResponse(T reco_univs, const std::vector<std::string> tags, std::string tail = "") {
         // Check if response is configured for this var
         if (std::count(m_for.begin(), m_for.end(), "response") < 1) {
-            std::cout << "VariableFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "VariableFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags) {
                 hasResponse[tag] = false;
             }

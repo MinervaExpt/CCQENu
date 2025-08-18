@@ -96,13 +96,13 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         if (x_tunedmc == y_tunedmc)  // If they're the same, set to that value
             m_tunedmc = x_tunedmc;
         else if (x_tunedmc == "both" && y_tunedmc != "both") {  // If x is set to both, but y isn't => do what y does
-            std::cout << "Variable2DFromConfig: tunedmc for x and y incompatible. Defaulting to y tunedmc of " << y_tunedmc << std::endl;
+            // std::cout << "Variable2DFromConfig: tunedmc for x and y incompatible. Defaulting to y tunedmc of " << y_tunedmc << std::endl;
             m_tunedmc = y_tunedmc;
         } else if (x_tunedmc != "both" && y_tunedmc == "both") {  // If y is set to both, but x isn't => do what x does
-            std::cout << "Variable2DFromConfig: tunedmc for x and y incompatible. Defaulting to x tunedmc of " << x_tunedmc << std::endl;
+            // std::cout << "Variable2DFromConfig: tunedmc for x and y incompatible. Defaulting to x tunedmc of " << x_tunedmc << std::endl;
             m_tunedmc = x_tunedmc;
         } else
-            std::cout << "Variable2DFromConfig: tunedmc for x and y incompatible. Defaulting to both. " << std::endl;
+            // std::cout << "Variable2DFromConfig: tunedmc for x and y incompatible. Defaulting to both. " << std::endl;
         m_dofitFill_x = x.GetDoFitFill();
         m_dofitFill_y = y.GetDoFitFill();
         m_fitbinning_x = x.GetFitBinVec();
@@ -168,7 +168,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     template <typename T>
     void InitializeMCHistograms2D(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "selected_reco") < 1) {
-            std::cout << "Variable2DFromConfig Warning: selected_reco is disabled for this 2D variable " << GetName() << std::endl;
+            // std::cout << "Variable2DFromConfig Warning: selected_reco is disabled for this 2D variable " << GetName() << std::endl;
             for (auto tag : tags) {
                 hasMC[tag] = false;
             }
@@ -179,7 +179,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         }
 
         if (m_tunedmc == "tuned") {
-            std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
+            // std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
             return;
         }
 
@@ -200,7 +200,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     template <typename T>
     void InitializeSelectedTruthHistograms2D(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "selected_truth") < 1) {
-            std::cout << "Variable2DFromConfig Warning: selected_truth is disabled for this 2D variable " << GetName() << std::endl;
+            // std::cout << "Variable2DFromConfig Warning: selected_truth is disabled for this 2D variable " << GetName() << std::endl;
             for (auto tag : tags) {
                 hasSelectedTruth[tag] = false;
             }
@@ -211,7 +211,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         }
 
         if (m_tunedmc == "tuned") {
-            std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
+            // std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
             return;
         }
 
@@ -225,7 +225,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     template <typename T>
     void InitializeTruthHistograms2D(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "truth") < 1) {
-            std::cout << "Variable2DFromConfig Warning: truth is disabled for this 2D variable " << GetName() << std::endl;
+            // std::cout << "Variable2DFromConfig Warning: truth is disabled for this 2D variable " << GetName() << std::endl;
             for (auto tag : tags) {
                 hasTruth[tag] = false;
             }
@@ -236,7 +236,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         }
 
         if (m_tunedmc == "tuned") {
-            std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
+            // std::cout << "Variable2DFromConfig Warning: untuned MC disabled for this variable, only filling tuned MC " << GetName() << std::endl;
             return;
         }
 
@@ -250,7 +250,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     template <typename T>
     void InitializeDataHistograms2D(T univs, const std::vector<std::string> tags) {
         if (std::count(m_for.begin(), m_for.end(), "data") < 1) {
-            std::cout << "Variable2DFromConfig Warning: data is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "Variable2DFromConfig Warning: data is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags) {
                 hasData[tag] = false;
             }
@@ -273,7 +273,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     template <typename T>
     void InitializeTunedMCHistograms2D(T reco_univs, T truth_univs, const std::vector<std::string> tuned_tags, const std::vector<std::string> response_tags) {
         if (m_tunedmc == "untuned") {
-            std::cout << "Variable2DFromConfig Warning: tunedmc is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "Variable2DFromConfig Warning: tunedmc is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tuned_tags) {
                 hasTunedMC[tag] = false;
             }
@@ -315,7 +315,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     template <typename T>
     void InitializeResponse2D(T reco_univs, const std::vector<std::string> tags, std::string tail = "") {
         if (std::count(m_for.begin(), m_for.end(), "response") < 1) {
-            std::cout << "Variable2DFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
+            // std::cout << "Variable2DFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tags) {
                 hasResponse[tag] = false;
             }

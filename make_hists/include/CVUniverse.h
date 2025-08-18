@@ -51,6 +51,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     static double m_min_blob_zvtx;
     static double m_photon_energy_cut;
     static double m_proton_ke_cut;
+    static int m_maxNCands_neutron;
     static NuConfig m_proton_score_config;
     static std::vector<double> m_proton_score_Q2QEs;
     static std::vector<double> m_proton_score_mins;
@@ -404,6 +405,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // virtual double GetNeutBlobEGeV(int index) const;
     virtual double GetTotNeutBlobEGeV() const;
+    virtual double GetTrueTotNeutBlobEGeV() const;
     virtual int GetPlotNeutCandMCPID() const;
     virtual int GetPlotNeutCandTopMCPID(int index) const;
     virtual int GetPlotLeadingNeutCandTopMCPID() const;

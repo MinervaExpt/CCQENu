@@ -73,12 +73,18 @@ double NeutCand::GetCandVtxDist() {
 }
 
 int NeutCand::GetCandTruthPID() {
-    if (!m_truthset) return -1;
+    if (!m_truthset) {
+        std::cout << "no truth set" << std::endl;
+        return -1;
+    }
     return m_truthPID;
 }
 
 int NeutCand::GetCandTruthTopPID() {
-    if (!m_truthset) return -1;
+    if (!m_truthset) {
+        std::cout << "no truth set" << std::endl;
+        return -1;
+    }
     return m_truthTopMCPID;
 }
 
@@ -160,7 +166,7 @@ void NeutEvent::ClearCands() {
 
 void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<double> clusterMaxE, std::vector<ROOT::Math::XYZVector> positions) {
     if (blobIDs.size() != m_ncands) {
-        std::cout << "ERROR: NeutronMultiplicity - number of blobs doesn't match input." << std::endl;
+        std::cout << "ERROR: NeutronMultiplicity::NeutEvent::SetReco number of blobs doesn't match input.\n\tblobIDs.size() " << blobIDs.size() << "m_ncands " << m_ncands << std::endl;
         exit(1);
     }
     // Avoid filling with uninited memory
@@ -179,7 +185,7 @@ void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::v
 
 void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ) {
     if (truthPIDs.size() != m_ncands) {
-        std::cout << "ERROR: NeutronMultiplicity - number of blobs doesn't match input." << std::endl;
+        std::cout << "ERROR: NeutronMultiplicity::NeutEvent::SetTruth number of blobs doesn't match input.\n\truthPIDs.size() " << truthPIDs.size() << "m_ncands " << m_ncands << std::endl;
         exit(1);
     }
     // Avoid filling with uninited memory
@@ -196,32 +202,20 @@ void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMC
     return;
 }
 
-// TODO this doesn't work with unique pointers
-// std::vector<std::unique_ptr<NeutCand>> NeutEvent::GetCands() {
-//     return m_cands;
-// }
-// std::vector<NeutronMultiplicity::NeutCand*> NeutEvent::GetCands() {
-//     return m_cands;
-// }
+std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetCands() {
+    return m_cands;
+}
 
 std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetNeutCands() {
-    // std::vector<std::unique_ptr<NeutCand>> neutcands = {};
+    // Moved this inside SetReco, since you get these cands basically everytime anyway
+    std::vector<std::unique_ptr<NeutCand>> neutcands = {};
     for (int i = 0; i < m_ncands; i++) {
         if (GetCandIsNeut(i))
             m_neutcands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
-            m_nneutcands+=1;
+        m_nneutcands += 1;
     }
     return m_neutcands;
 }
-
-// std::vector<NeutronMultiplicity::NeutCand*> NeutEvent::GetNeutCands() {
-//     std::vector<NeutronMultiplicity::NeutCand*> neutcands = {};
-//     for (int i = 0; i < m_ncands; i++) {
-//         if (GetCandIsNeut(i))
-//             neutcands.push_back(m_cands[i]);
-//     }
-//     return neutcands;
-// }
 
 std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetTrueNeutCands() {
     // std::vector<std::unique_ptr<NeutCand>> trueneutcands;
@@ -233,24 +227,26 @@ std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetTrueNeutCands() {
     }
     return m_trueneutcands;
 }
-// std::vector<NeutronMultiplicity::NeutCand*> NeutEvent::GetTrueNeutCands() {
-//     std::vector<NeutronMultiplicity::NeutCand*> trueneutcands;
-//     for (int i = 0; i < m_ncands; i++) {
-//         // Only check if it's fiducial and is a true neutron
-//         if (CandPassFiducial(i) && m_cands[i]->GetCandTruthTopPID() == 2112)
-//             trueneutcands.push_back(m_cands[i]);
-//     }
-//     return trueneutcands;
-// }
 
 bool NeutEvent::GetIsTruthSet() {
     return _truthset;
 }
 
-// TODO this doesn't work with the new unique_ptr's, but maybe don't need it anyway?
-// std::unique_ptr<NeutCand> NeutEvent::GetCand(int index) {
-//     std::unique_ptr<NeutCand> cand =  m_cands[index];
-// }
+// TODO maybe don't need this
+std::unique_ptr<NeutCand> NeutEvent::GetCand(int index) {
+    std::unique_ptr<NeutCand> cand =  std::make_unique<NeutCand>(NeutCand(*m_cands[index]));
+    return cand;
+}
+
+double NeutEvent::GetTotNeutCandEDep(int max_ncands) {
+    if (m_nneutcands == 0) return 0.;
+    double edep = 0.;
+    for (unsigned int i = 0; i < m_nneutcands; i++) {
+        if (i == max_ncands) break;
+        edep += m_cands[i]->m_recoEDep;
+    }
+    return edep;
+}
 
 // NeutCand* NeutEvent::GetCand(int index) {
 //     return m_cands[index];

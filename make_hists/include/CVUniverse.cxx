@@ -52,7 +52,7 @@ int CVUniverse::m_analysis_neutrino_pdg = -14;
 double CVUniverse::m_min_blob_zvtx = 5980.0;
 double CVUniverse::m_photon_energy_cut = 10.0;                             // in MeV
 double CVUniverse::m_proton_ke_cut = NSFDefaults::TrueProtonKECutCentral;  // Default value
-
+int CVUniverse::m_maxNCands_neutron = 9999;                                // Default of 2, set in params file with NeutronConfig
 // recoil variable
 NuConfig CVUniverse::m_recoil_branch_config = Json::Value::null;
 std::string CVUniverse::m_recoil_branch = "recoil_energy_nonmuon_nonvtx0mm";
@@ -308,10 +308,14 @@ bool CVUniverse::SetNeutronConfig(NuConfig neutron_config, bool print) {
                   << "THIS IS NOT ALLOWED FOR CONSISTENCY." << std::endl;
         return 0;
     } else {
-        std::cout << "\nUsing neutron configuration provided by user configuration file.\n\n";
+        std::cout << "\nUsing neutron configuration provided by user configuration file.\n"; //\n\n";
         _is_neutron_config_set = true;
         m_neutron_config = neutron_config;
         if (print) m_neutron_config.Print();
+        if (m_neutron_config.IsMember("maxNCands")) {
+            m_maxNCands_neutron = m_neutron_config.GetInt("maxNCands");
+            std::cout << " \tSet max number of neutron blob candidates for removal (m_maxNCands_neutron) to " << m_maxNCands_neutron << "\n\n";
+        }
         // m_neutevent = std::make_unique<NeutronMultiplicity::NeutEvent>(NeutronMultiplicity::NeutEvent(m_neutron_config));
     }
     return 1;
@@ -1179,31 +1183,25 @@ double CVUniverse::GetEAvailGeV() const {
     double recoil = GetRecoilEnergyGeV(); // regular recoil
     if (GetNMADBlobs() == 0)
         return recoil;
+    double edepGeV = GetTotNeutBlobEGeV();
+    return recoil - edepGeV;
 
-    double edep = 0.0;
-
-    // NeutronMultiplicity::NeutEvent* neutevent = CVUniverse::GetNeutEvent();
-    std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetNeutEvent();
-    // // These are all the blobs that pass blob selection
-    // std::vector<NeutronMultiplicity::NeutCand*> cands = neutevent->GetNeutCands();
-    // std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = GetNeutEvent()->GetNeutCands();
-    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = neutevent->GetNeutCands();
-    for (unsigned int i = 0; i < cands.size(); i++) {
-        edep += cands[i]->m_recoEDep;
-        if (i == 2) {
-            break;
-        }
-    }
-    // if (edep != 0) std::cout << "edep: " << edep << std::endl;
-    return recoil - edep;
+    // double edep = 0.0;
+    // // if (GetNMADBlobs() == 0) {
+    // //     // std::cout << edep << std::endl;
+    // //     return edep;
+    // // }
+    // std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetNeutEvent();
+    // std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = neutevent->GetNeutCands();
+    // // int maxNCands_neutron = m_maxNCands_neutron;
+    // if (recoil > 0.3) return recoil - (cands[0]->m_recoEDep) * MeVGeV;
+    // for (unsigned int i = 0; i < cands.size(); i++) {
+    //         // if (i == 2)
+    //         if (i == m_maxNCands_neutron) break;  // defaults to 9999
+    //         edep += cands[i]->m_recoEDep;
+    //     }
+    // return recoil - edep * MeVGeV;
 }
-
-// double CVUniverse::GetEAvailGeV() const {
-//     // Take recoil and remove the neutron blob energy from it
-//     double recoil = GetRecoilEnergyGeV();  // regular recoil
-//     double neutblobE = GetTotNeutBlobEGeV();
-//     return (recoil - neutblobE);
-// }
 
 double CVUniverse::GetEAvailLeadingBlobGeV() const {
     // Take recoil and remove the neutron blob energy from it
@@ -1803,6 +1801,7 @@ int CVUniverse::GetNNeutCands() const {
 int CVUniverse::GetTrueNNeutCands() const {
     if (GetNMADBlobs() == 0) return 0;
     std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetTruthNeutEvent();
+    // std::cout << "True NNeutCands " << neutevent->GetTrueNeutCands().size() << std::endl;
     return neutevent->GetTrueNeutCands().size();  // These are cands that are fiducial and have neutron PID
 }
 
@@ -1867,20 +1866,32 @@ double CVUniverse::GetTotNeutBlobEGeV() const {
         // std::cout << edep << std::endl;
         return edep;
     }
-    // These are all the blobs that pass blob selection
-    // NeutronMultiplicity::NeutEvent* neutevent = GetNeutEvent();
-    // std::vector<NeutronMultiplicity::NeutCand*> cands = neutevent->GetNeutCands();
-    // for (auto cand : cands) {
-    //     edep += cand->GetCandRecoEDep();
-    // }
-    // std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>> cands = neutevent->GetNeutCands();
-    // for (int i = 0; i < GetNNeutCandsFromEvt(neutevent); i++) {
-    //     edep += cands[i]->GetCandRecoEDep();
-    // }
-    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = GetNeutEvent()->GetNeutCands();
-    for (auto& cand : cands) {
-        edep += cand->GetCandRecoEDep();
+    std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetNeutEvent();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = neutevent->GetNeutCands();
+    // int maxNCands_neutron = m_maxNCands_neutron;
+    for (unsigned int i = 0; i < cands.size(); i++) {
+        // if (i == 2)
+        if (i == m_maxNCands_neutron) break;  // defaults to 9999
+        edep += cands[i]->m_recoEDep;
     }
+    return edep * MeVGeV;
+}
+
+double CVUniverse::GetTrueTotNeutBlobEGeV() const {
+    double edep = 0.0;
+    if (GetNMADBlobs() == 0) {
+        // std::cout << edep << std::endl;
+        return edep;
+    }
+    std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetTruthNeutEvent();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& cands = neutevent->GetTrueNeutCands();
+    for (unsigned int i = 0; i < cands.size(); i++) {
+        // TODO drop cands?
+        // if (i == m_maxNCands_neutron)  // defaults to 2
+        //     break;
+        edep += cands[i]->m_recoEDep;
+    }
+    // if (edep != 0) std::cout << "true edep " << edep << std::endl;
     return edep * MeVGeV;
 }
 

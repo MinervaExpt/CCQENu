@@ -248,9 +248,10 @@ class CVFunctions {
         recofunctions["LeadingNonVtxIsoBlobPrimaryPDG"] = &CVUNIVERSE::GetLeadingNonVtxIsoBlobPrimaryPDG;
         recointfunctions["LeadingNonVtxIsoBlobPrimaryPDG"] = &CVUNIVERSE::GetLeadingNonVtxIsoBlobPrimaryPDG;
 
-        // recofunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
-        // truefunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
-        // recofunctions["RecoilEnergyMinusNeutBlobsGeV"] = &CVUNIVERSE::GetRecoilEnergyMinusNeutBlobsGeV;
+        recofunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
+        truefunctions["TrueTotNeutBlobEGeV"] = &CVUNIVERSE::GetTrueTotNeutBlobEGeV;
+        recofunctions["TrueTotNeutBlobEGeV"] = &CVUNIVERSE::GetTrueTotNeutBlobEGeV;
+        truefunctions["TotNeutBlobEGeV"] = &CVUNIVERSE::GetTotNeutBlobEGeV;
 
         recofunctions["AllBlobCandsNeut"] = &CVUNIVERSE::GetAllBlobCandsNeut;
         recointfunctions["AllBlobCandsNeut"] = &CVUNIVERSE::GetAllBlobCandsNeut;
@@ -348,6 +349,8 @@ class CVFunctions {
         recointfunctions["NNeutCands"] = &CVUNIVERSE::GetNNeutCands;
         truefunctions["TrueNNeutCands"] = &CVUNIVERSE::GetTrueNNeutCands;
         trueintfunctions["TrueNNeutCands"] = &CVUNIVERSE::GetTrueNNeutCands;
+        recofunctions["TrueNNeutCands"] = &CVUNIVERSE::GetTrueNNeutCands;
+        recointfunctions["TrueNNeutCands"] = &CVUNIVERSE::GetTrueNNeutCands;
 
         truefunctions["TrueNeutronEGeV"] = &CVUNIVERSE::GetTrueNeutronEGeV;
         recofunctions["TrueNeutronEGeV"] = &CVUNIVERSE::GetTrueNeutronEGeV;

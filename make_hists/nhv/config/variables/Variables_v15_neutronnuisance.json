@@ -8,32 +8,65 @@
     "add log10recoil"
   ],
   "HyperD": {
-    "pmu_CosThetamu_recoil": {
-      "name": "pmu_CosThetamu_recoil",
+    "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name":"LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
       "vars": [
-        "pmu",
-        "CosThetamu",
-        "recoil"
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandTopMCPID"
       ],
-      "analysistype": 1
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
     },
-    "pmu_ThetamuDegrees_recoil": {
-      "name": "pmu_ThetamuDegrees_recoil",
+    "ptmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name": "ptmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
       "vars": [
-        "pmu",
-        "ThetamuDegrees",
-        "recoil"
-      ],
-      "analysistype": 1
-    },
-    "pzmu_ptmu_EAvail": {
-      "name": "pzmu_ptmu_EAvail",
-      "vars": [
-        "pzmu",
         "ptmu",
-        "EAvail"
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandTopMCPID"
       ],
-      "analysistype": 1
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "ptmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+      "name": "ptmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+      "vars": [
+        "ptmu",
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name": "EAvail_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+      "name": "EAvail_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
     },
     "pzmu_ptmu_recoil": {
       "name": "pzmu_ptmu_recoil",
@@ -45,31 +78,15 @@
         "ptmu",
         "recoil"
       ],
-      "analysistype": 1
-    },
-    "recoil_ptmu_pzmu":{
-      "name": "recoil_ptmu_pzmu",
-      "vars": [
-        "recoilHD",
-        "ptmuHD",
-        "pzmuHD"
-      ]
-    },
-    "ptmu_pzmu_recoil": {
-      "name": "ptmu_pzmu_recoil",
-      "vars": [
-        "ptmuHD",
-        "pzmuHD",
-        "recoilHD"
-      ]
-    },
-    "EAvail_ptmu": {
-      "name": "EAvail_ptmu",
-      "xvar": "EAvail",
-      "yvar": "ptmu"
+      "analysistype": 3
     }
   },
   "2D": {
+    "recoil_ptmu": {
+      "name": "recoil_ptmu",
+      "xvar": "recoil",
+      "yvar": "ptmu"
+    },
     "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID": {
       "name": "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID",
       "xvar": "LeadingNeutCandvtxZDist",
@@ -185,10 +202,80 @@
       "xvar": "SecNeutCandAngleToParent",
       "yvar": "SecNeutCandTopMCPID"
     },
-  "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID": {
+    "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID": {
       "name": "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID",
       "xvar": "LeadingNeutCandCosThetaToParent",
       "yvar": "LeadingNeutCandTopMCPID"
+    },
+    "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist":{
+      "name":"LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist",
+      "xvar":"LeadingNeutCandEdep",
+      "yvar":"LeadingNeutCandvtxSphereDist",
+      "for": [
+        "data"
+      ]
+    },
+    "ptmu_LeadingNeutCandvtxSphereDist": {
+      "name": "ptmu_LeadingNeutCandvtxSphereDist",
+      "xvar": "ptmu",
+      "yvar": "LeadingNeutCandvtxSphereDist",
+      "for": [
+        "data"
+      ]
+    },
+    "EAvail_LeadingNeutCandvtxSphereDist": {
+      "name": "EAvail_LeadingNeutCandvtxSphereDist",
+      "xvar": "EAvail",
+      "yvar": "LeadingNeutCandvtxSphereDist",
+      "for": [
+        "data"
+      ]
+    },
+    "ptmu_LeadingNeutCandEdep": {
+      "name": "ptmu_LeadingNeutCandEdep",
+      "xvar": "ptmu",
+      "yvar": "LeadingNeutCandEdep",
+      "for": [
+        "data"
+      ]
+    },
+    "EAvail_LeadingNeutCandEdep": {
+      "name": "EAvail_LeadingNeutCandEdep",
+      "xvar": "EAvail",
+      "yvar": "LeadingNeutCandEdep",
+      "for": [
+        "data"
+      ]
+    },
+    "EAvail_TotalNeutBlobE": {
+      "name": "EAvail_TotalNeutBlobE",
+      "xvar": "EAvail",
+      "yvar": "TotalNeutBlobE"
+    },
+    "recoil_TotalNeutBlobE": {
+      "name": "recoil_TotalNeutBlobE",
+      "xvar": "recoil",
+      "yvar": "TotalNeutBlobE"
+    },
+    "EAvail_RecoTotalNeutBlobE": {
+      "name": "EAvail_RecoTotalNeutBlobE",
+      "xvar": "EAvail",
+      "yvar": "RecoTotalNeutBlobE"
+    },
+    "recoil_RecoTotalNeutBlobE": {
+      "name": "recoil_RecoTotalNeutBlobE",
+      "xvar": "recoil",
+      "yvar": "RecoTotalNeutBlobE"
+    },
+    "EAvail_TrueTotalNeutBlobE": {
+      "name": "EAvail_TrueTotalNeutBlobE",
+      "xvar": "EAvail",
+      "yvar": "TrueTotalNeutBlobE"
+    },
+    "recoil_TrueTotalNeutBlobE": {
+      "name": "recoil_TrueTotalNeutBlobE",
+      "xvar": "recoil",
+      "yvar": "TrueTotalNeutBlobE"
     }
   },
   "1D": {
@@ -272,7 +359,7 @@
       "true": "LeadingNeutCandvtxSphereDist",
       "name": "LeadingNeutCandvtxSphereDist",
       "title": "Leading Blob spherical dist from vtx",
-      "nbins": 50,
+      "nbins": 10,
       "min": 0.0,
       "max": 1000.0,
       "for": [
@@ -350,9 +437,18 @@
       "true": "LeadingNeutCandEdep",
       "name": "LeadingNeutCandEdep",
       "title": "Leading Blob Total E",
-      "nbins": 100,
-      "min": 0.0,
-      "max": 500.0,
+      "bins": [
+        1.5,
+        11.5,
+        31.5,
+        71.5,
+        151.5,
+        310.5,
+        500.0
+      ],
+      // "nbins": 10,
+      // "min": 0.0,
+      // "max": 500.0,
       "for": [
         "data",
         "selected_reco"
@@ -590,6 +686,19 @@
       "min": -0.5,
       "max": 10.5
     },
+    "TrueNNeutCands": {
+      "reco": "TrueNNeutCands",
+      "true": "TrueNNeutCands",
+      "name": "TrueNNeutCands",
+      "title": "Number of blobs tagged as neutrons",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5,
+      "for": [
+        "selected_reco",
+        "selected_truth"
+      ]
+    },
     "TrueNeutronEnergy": {
       "reco": "TrueNeutronEGeV",
       "true": "TrueNeutronEGeV",
@@ -605,14 +714,44 @@
     },
     "TotalNeutBlobE": {
       "reco": "TotNeutBlobEGeV",
-      "true": "TotNeutBlobEGeV",
+      "true": "TrueTotNeutBlobEGeV",
       "name": "TotalNeutBlobE",
       "title": "Total Neutron Blob Energy",
-      "nbins": 50,
+      "nbins": 30,
       "min": 0.0,
-      "max": 0.5,
+      "max": 0.6,
       "for": [
-        "selected_reco"
+        "selected_reco",
+        "selected_truth",
+        "response"
+      ]
+    },
+    "RecoTotalNeutBlobE": {
+      "reco": "TotNeutBlobEGeV",
+      "true": "TotNeutBlobEGeV",
+      "name": "RecoTotalNeutBlobE",
+      "title": "Total Neutron Blob Energy",
+      "nbins": 30,
+      "min": 0.0,
+      "max": 0.6,
+      "for": [
+        "selected_reco",
+        "selected_truth",
+        "response"
+      ]
+    },
+    "TrueTotalNeutBlobE": {
+      "reco": "TrueTotNeutBlobEGeV",
+      "true": "TrueTotNeutBlobEGeV",
+      "name": "TrueTotalNeutBlobE",
+      "title": "Total Neutron Blob Energy",
+      "nbins": 30,
+      "min": 0.0,
+      "max": 0.6,
+      "for": [
+        "selected_reco",
+        "selected_truth",
+        "response"
       ]
     },
     "EAvail": {
@@ -621,7 +760,7 @@
       "name": "EAvail",
       "title": "E_{Available} in GeV",
       "bins": [
-        -0.1,
+        // -1.0,
         0.0,
         0.045,
         0.1125,
@@ -638,7 +777,7 @@
       "name": "EAvail_nohi",
       "title": "E_{Available} in GeV",
       "bins": [
-        -0.1,
+        // -1.0,
         0.0,
         0.045,
         0.1125,
@@ -647,6 +786,47 @@
         0.5//,
         // 1.0
       ],
+      "fluxnorm": false
+    },
+    "recoil": {
+      // "dofitFill": true,
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueEAvailGeV",
+      "name": "recoil",
+      "title": "Recoil in GeV",
+      "bins": [
+        0.0,
+        0.045,
+        0.1125,
+        0.2025,
+        0.315,
+        0.5,
+        1.0
+      ],
+      // "for": [
+      //   "data",
+      //   "selected_reco"
+      // ],
+      "fluxnorm": false
+    },
+    "recoil_nohi": {
+      // "dofitFill": true,
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueEAvailGeV",
+      "name": "recoil_nohi",
+      "title": "Recoil in GeV",
+      "bins": [
+        0.0,
+        0.045,
+        0.1125,
+        0.2025,
+        0.315,
+        0.5
+      ],
+      // "for": [
+      //   "data",
+      //   "selected_reco"
+      // ],
       "fluxnorm": false
     },
     "ptmu": {
@@ -672,6 +852,29 @@
       ],
       "fluxnorm": false
     },
+    "pzmu": {
+      "reco": "PparMuGeV",
+      "true": "TruePparMuGeV",
+      "name": "pzmu",
+      "title": "muon p_{||} (GeV/c)",
+      "bins": [
+        1.5,
+        2,
+        2.5,
+        3,
+        3.5,
+        4,
+        4.5,
+        5,
+        5.5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        15
+      ],
+      "fluxnorm": false
+    },
   }
 }
-

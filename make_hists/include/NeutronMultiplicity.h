@@ -130,15 +130,13 @@ class NeutEvent {
     void SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ);
 
     bool GetIsTruthSet();
-    // std::vector<NeutronMultiplicity::NeutCand*> GetCands();          // Get all blobs
-    // std::vector<NeutronMultiplicity::NeutCand*> GetNeutCands();      // Get just the ones passing neutron cuts
-    // std::vector<NeutronMultiplicity::NeutCand*> GetTrueNeutCands();  // Get cands that are actually neutrons (need truth set)
-    // NeutronMultiplicity::NeutCand* GetCand(int index);
 
-    // std::vector<std::unique_ptr<NeutCand>> GetCands();          // Get all blobs
-    std::vector<std::unique_ptr<NeutCand>>& GetNeutCands();      // Get just the ones passing neutron cuts
-    std::vector<std::unique_ptr<NeutCand>>& GetTrueNeutCands();  // Get cands that are actually neutrons (need truth set)
-    // std::unique_ptr<NeutCand> GetCand(int index);               // TODO this doesn't work with the new unique_ptr's, but maybe don't need it anyway?
+    std::vector<std::unique_ptr<NeutCand>>& GetCands();                 // Get all blobs
+    std::vector<std::unique_ptr<NeutCand>>& GetNeutCands();             // Get just the ones passing neutron cuts
+    std::vector<std::unique_ptr<NeutCand>>& GetTrueNeutCands();         // Get cands that are actually neutrons (need truth set)
+    std::unique_ptr<NeutronMultiplicity::NeutCand> GetCand(int index);  // This makes a copy of a cand to access info outside of neutevent
+
+    double GetTotNeutCandEDep(int max_ncands);
 
     bool GetCandIsNeut(int index);  // checks all the following
 
@@ -154,9 +152,6 @@ class NeutEvent {
     int GetCandTruthPID(int index);     // GEANT parent
     int GetCandTruthTopPID(int index);  // GENIE parent
     // Helper for ordering the cands
-    // static bool compare_cands(NeutronMultiplicity::NeutCand* cand1, NeutronMultiplicity::NeutCand* cand2) {
-    //     return (*cand1 > *cand2);
-    // }
     static bool compare_cands(std::unique_ptr<NeutCand>& cand1, std::unique_ptr<NeutCand>& cand2) {return (cand1 > cand2);}
 
     // TODO: Something more flexible in development
