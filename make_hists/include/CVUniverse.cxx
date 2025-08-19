@@ -1724,10 +1724,21 @@ std::vector<ROOT::Math::XYZVector> CVUniverse::GetBlobsBegPos() const {
     std::vector<double> BlobBegY = GetVec<double>((GetAnaToolName() + "_BlobBegY").c_str());
     std::vector<double> BlobBegZ = GetVec<double>((GetAnaToolName() + "_BlobBegZ").c_str());
     for (int i = 0; i < GetNMADBlobs(); i++) {
-        // ROOT::Math::XYZVector begpos(GetVecElem((GetAnaToolName() + "_BlobBegX").c_str(), i),
-        //                 GetVecElem((GetAnaToolName() + "_BlobBegY").c_str(), i),
-        //                 GetVecElem((GetAnaToolName() + "_BlobBegZ").c_str(), i));
         ROOT::Math::XYZVector begpos(BlobBegX[i],BlobBegY[i],BlobBegZ[i]);
+        positions.push_back(begpos);
+    }
+    return positions;
+}
+
+std::vector<ROOT::Math::XYZVector> CVUniverse::GetBlobsEndPos() const {
+    std::vector<ROOT::Math::XYZVector> positions = {};
+    if (GetInt((GetAnaToolName() + "_BlobEndX_sz").c_str()) == 0)
+        return positions;
+    std::vector<double> BlobBegX = GetVec<double>((GetAnaToolName() + "_BlobEndX").c_str());
+    std::vector<double> BlobBegY = GetVec<double>((GetAnaToolName() + "_BlobEndY").c_str());
+    std::vector<double> BlobBegZ = GetVec<double>((GetAnaToolName() + "_BlobEndZ").c_str());
+    for (int i = 0; i < GetNMADBlobs(); i++) {
+        ROOT::Math::XYZVector begpos(BlobBegX[i], BlobBegY[i], BlobBegZ[i]);
         positions.push_back(begpos);
     }
     return positions;
@@ -1739,34 +1750,27 @@ std::unique_ptr<NeutronMultiplicity::NeutEvent> CVUniverse::GetNeutEvent() const
     ROOT::Math::XYZVector vtx(GetVec<double>("vtx").at(0), GetVec<double>("vtx").at(1), GetVec<double>("vtx").at(2));
     if (GetNMADBlobs() == 0) {
         std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent(new NeutronMultiplicity::NeutEvent(CVUniverse::m_neutron_config, CVUniverse::GetNMADBlobs(), vtx, pmu));
-        neutevent->SetReco(std::vector<int>(), std::vector<int>(), std::vector<double>(), std::vector<double>(), std::vector<ROOT::Math::XYZVector>());
+        neutevent->SetReco(std::vector<int>(), std::vector<int>(), std::vector<double>(), std::vector<double>(), std::vector<ROOT::Math::XYZVector>(), std::vector<ROOT::Math::XYZVector>());
         return std::move(neutevent);
     }
-    std::vector<ROOT::Math::XYZVector> blobpositions = GetBlobsBegPos();
-    // if (_is_neut_event_set) { // if you use the global neutevent
-    //     m_neutevent->SetCands(CVUniverse::GetNMADBlobs(), vtx, pmu);
-    //     m_neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()), GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()), GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()), GetBlobsBegPos());
-    //     return m_neutevent;
-    // }
-
+    std::vector<ROOT::Math::XYZVector> blobbegpositions = GetBlobsBegPos();
+    std::vector<ROOT::Math::XYZVector> blobendpositions = GetBlobsEndPos();
     if (!_is_neutron_config_set) { // if the global config is not set
-        // NeutronMultiplicity::NeutEvent* neutevent = new NeutronMultiplicity::NeutEvent(CVUniverse::GetNMADBlobs(), vtx, pmu);  // default vals
         std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent(new NeutronMultiplicity::NeutEvent(CVUniverse::GetNMADBlobs(), vtx, pmu));  // default vals
         neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()),
                            GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()),
                            GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()),
                            GetVec<double>((GetAnaToolName() + "_BlobClusterMaxE").c_str()),
-                           blobpositions);
+                           blobbegpositions, blobendpositions);
         // return neutevent;
         return std::move(neutevent);
     }  // else, if the global config is set without setting global neut event
-    // NeutronMultiplicity::NeutEvent* neutevent = new NeutronMultiplicity::NeutEvent(CVUniverse::m_neutron_config, CVUniverse::GetNMADBlobs(), vtx, pmu);
     std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent(new NeutronMultiplicity::NeutEvent(CVUniverse::m_neutron_config, CVUniverse::GetNMADBlobs(), vtx, pmu));
     neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()),
                        GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()),
                        GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()),
                        GetVec<double>((GetAnaToolName() + "_BlobClusterMaxE").c_str()),
-                       blobpositions);
+                       blobbegpositions, blobendpositions);
     return std::move(neutevent);
     // return neutevent;
 }
@@ -2143,6 +2147,24 @@ double CVUniverse::GetSecondNeutCandAngleToParent() const {
 
 double CVUniverse::GetLeadingNeutCandCosThetaToParent() const {
     return std::cos(GetNeutCandAngleToParent(0) * M_PI / 180.);
+}
+
+double CVUniverse::GetNeutCandLength(int index) const {
+    if (CVUniverse::GetNMADBlobs() < index + 1)
+        return -99999.;
+    std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetNeutEvent();
+    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& neutcands = neutevent->GetNeutCands();
+    if (neutcands.size() < index + 1)
+        return -99999.;
+    return neutcands[index]->GetCandLength();
+}
+
+double CVUniverse::GetLeadingNeutCandLength() const {
+    return GetNeutCandLength(0);
+}
+
+double CVUniverse::GetSecondNeutCandLength() const {
+    return GetNeutCandLength(1);
 }
 
 // nonvtx_isoblobs PID (primary particle that produced the particle contributing most to blob energy i.e., the pi0, not the two gammas)
@@ -2757,6 +2779,14 @@ int CVUniverse::GetNPionTracks() const {
     }
 
     return n_pions;  // Return how many pions there are
+}
+
+int CVUniverse::GetNProtonPionTraks() const {
+    int n_part = 0;
+    if (CVUniverse::GetPrimaryProtonScore() < 0) return 0;
+    n_part+=1;
+    n_part += GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
+    return n_part;
 }
 
 int CVUniverse::GetHasMultiPion() const {

@@ -386,6 +386,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetAllBlobCandsNeut() const;
     virtual void PrintMADBlobs() const;
     virtual std::vector<ROOT::Math::XYZVector> GetBlobsBegPos() const;
+    virtual std::vector<ROOT::Math::XYZVector> GetBlobsEndPos() const;
     // virtual NeutronMultiplicity::NeutCand GetNeutCand() const;
 
     // // Count number of blobs id'd as neutrons
@@ -449,6 +450,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetLeadingNeutCandCosThetaToParent() const;
 
+    virtual double GetNeutCandLength(int index) const;
+    virtual double GetLeadingNeutCandLength() const;
+    virtual double GetSecondNeutCandLength() const;
+
     virtual int GetPlotLeadingIsoBlobsPrimaryMCPID() const;
     virtual int GetPlotSecondIsoBlobsPrimaryMCPID() const;
     // TODO: down to here
@@ -485,6 +490,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetChargedPionAngle() const;
     virtual double GetCosMuonPionAngle() const;
     virtual int GetNPionTracks() const;
+    virtual int GetNProtonPionTraks() const;
     virtual int GetTruthHasMultiPion() const;
     virtual double GetExtraTrackAngle() const;  // This just does the leading/primary proton candidate
 

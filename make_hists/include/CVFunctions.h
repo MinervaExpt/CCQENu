@@ -333,6 +333,11 @@ class CVFunctions {
         recofunctions["LeadingNeutCandCosThetaToParent"] = &CVUNIVERSE::GetLeadingNeutCandCosThetaToParent;
         truefunctions["LeadingNeutCandCosThetaToParent"] = &CVUNIVERSE::GetLeadingNeutCandCosThetaToParent;
 
+        recofunctions["LeadingNeutCandLength"] = &CVUNIVERSE::GetLeadingNeutCandLength;
+        truefunctions["LeadingNeutCandLength"] = &CVUNIVERSE::GetLeadingNeutCandLength;
+        recofunctions["SecondNeutCandLength"] = &CVUNIVERSE::GetSecondNeutCandLength;
+        truefunctions["SecondNeutCandLength"] = &CVUNIVERSE::GetSecondNeutCandLength;
+
         recofunctions["LeadingIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotLeadingIsoBlobsPrimaryMCPID;
         recointfunctions["LeadingIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotLeadingIsoBlobsPrimaryMCPID;
         truefunctions["LeadingIsoBlobsPrimaryMCPID"] = &CVUNIVERSE::GetPlotLeadingIsoBlobsPrimaryMCPID;
@@ -377,6 +382,11 @@ class CVFunctions {
         recointfunctions["NPionTracks"] = &CVUNIVERSE::GetNPionTracks;
         recofunctions["NPionTracks"] = &CVUNIVERSE::GetNPionTracks;
         recofunctions["ChargedPionAngle"] = &CVUNIVERSE::GetChargedPionAngle;  // This is just the leading pion candidate
+
+        recointfunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTraks;
+        recofunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTraks;
+        trueintfunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTraks;
+        truefunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTraks;
 
         recofunctions["CosMuonPionAngle"] = &CVUNIVERSE::GetCosMuonPionAngle;
         truefunctions["CosMuonPionAngle"] = &CVUNIVERSE::GetCosMuonPionAngle;

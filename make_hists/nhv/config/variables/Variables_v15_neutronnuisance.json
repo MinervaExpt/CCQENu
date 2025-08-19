@@ -9,7 +9,7 @@
   ],
   "HyperD": {
     "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
-      "name":"LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+      "name": "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
       "vars": [
         "LeadingNeutCandEdep",
         "LeadingNeutCandvtxSphereDist",
@@ -60,6 +60,30 @@
       "name": "EAvail_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
       "vars": [
         "EAvail",
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+      "name": "recoil_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "pzmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+      "name": "pzmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+      "vars": [
+        "pzmu",
         "LeadingNeutCandEdep",
         "LeadingNeutCandTopMCPID"
       ],
@@ -239,6 +263,22 @@
         "data"
       ]
     },
+    "pzmu_LeadingNeutCandEdep": {
+      "name": "pzmu_LeadingNeutCandEdep",
+      "xvar": "pzmu",
+      "yvar": "LeadingNeutCandEdep",
+      "for": [
+        "data"
+      ]
+    },
+    "recoil_LeadingNeutCandEdep": {
+      "name": "recoil_LeadingNeutCandEdep",
+      "xvar": "recoil",
+      "yvar": "LeadingNeutCandEdep",
+      "for": [
+        "data"
+      ]
+    },
     "EAvail_LeadingNeutCandEdep": {
       "name": "EAvail_LeadingNeutCandEdep",
       "xvar": "EAvail",
@@ -276,6 +316,22 @@
       "name": "recoil_TrueTotalNeutBlobE",
       "xvar": "recoil",
       "yvar": "TrueTotalNeutBlobE"
+    },
+    "LeadingNeutCandLength_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandLength_LeadingNeutCandTopMCPID",
+      "xvar": "LeadingNeutCandLength",
+      "yvar": "LeadingNeutCandTopMCPID",
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecondNeutCandLength_SecondNeutCandTopMCPID": {
+      "name": "SecondNeutCandLength_SecondNeutCandTopMCPID",
+      "xvar": "SecondNeutCandLength",
+      "yvar": "SecNeutCandTopMCPID",
+      "for": [
+        "selected_reco"
+      ]
     }
   },
   "1D": {
@@ -657,6 +713,45 @@
       "max": 1.0,
       "for": [
         "selected_reco"
+      ]
+    },
+    "NProtonPionTracks": {
+      "reco": "NProtonPionTracks",
+      "true": "NProtonPionTracks",
+      "name": "NProtonPionTracks",
+      "title": "NProtonPionTracks",
+      "nbins": 10,
+      "min": 0,
+      "max": 10,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandLength": {
+      "reco": "LeadingNeutCandLength",
+      "true": "LeadingNeutCandLength",
+      "name": "LeadingNeutCandLength",
+      "title": "Leadning Cand length",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 10000.0,
+      "for": [
+        "selected_reco",
+        "data"
+      ]
+    },
+    "SecondNeutCandLength": {
+      "reco": "SecondNeutCandLength",
+      "true": "SecondNeutCandLength",
+      "name": "SecondNeutCandLength",
+      "title": "Second Cand length",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 10000.0,
+      "for": [
+        "selected_reco",
+        "data"
       ]
     },
     "NNonVtxIsoBlobs": {

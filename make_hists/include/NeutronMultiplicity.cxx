@@ -14,24 +14,25 @@ NeutCand::NeutCand() {};
 //                                 m_truthPID(GetBlobMCPID(index)),
 //                                 m_truthTopMCPID(GetBlobTopMCPID(index)),
 //                                 m_position(GetBlobBegPosition(index)) {
-//     // TODO: set flight path                                
+//     // TODO: set flight path
 // }
 
-NeutCand::NeutCand(int blobID, int is3D, double recoEDep, ROOT::Math::XYZVector position) : m_blobID(blobID),
-                                                                            m_is3D(is3D),
-                                                                            m_recoEDep(recoEDep),
-                                                                            m_position(position) {
+NeutCand::NeutCand(int blobID, int is3D, double recoEDep, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition) : m_blobID(blobID),
+                                                                                                                                  m_is3D(is3D),
+                                                                                                                                  m_recoEDep(recoEDep),
+                                                                                                                                  m_begposition(begposition),
+                                                                                                                                  m_endposition(endposition) {
 }
 
-
 // Reco functions
-void NeutCand::SetReco(int blobID, int is3D, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector position, ROOT::Math::XYZVector flightpath) {
+void NeutCand::SetReco(int blobID, int is3D, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath) {
     m_recoset = true;
     m_blobID = blobID;
     m_is3D = is3D;
     m_recoEDep = recoEDep;
     m_clusterMaxE = clusterMaxE;
-    m_position = position;
+    m_begposition = begposition;
+    m_endposition = endposition;
     m_flightpath = flightpath;
 }
 
@@ -59,7 +60,12 @@ double NeutCand::GetCandRecoEDep() {
 
 ROOT::Math::XYZVector NeutCand::GetCandPosition() {
     if (!m_recoset) return ROOT::Math::XYZVector();
-    return m_position;
+    return m_begposition;
+}
+
+double NeutCand::GetCandLength() {
+    if (!m_recoset) return -1;
+    return abs((m_begposition - m_endposition).Rho());
 }
 
 ROOT::Math::XYZVector NeutCand::GetCandFlightPath() {
@@ -139,6 +145,7 @@ void NeutEvent::SetConfig(NuConfig config) {
     if (config.IsMember("muondist_min")) m_muondist_min = config.GetDouble("muondist_min");
     if (config.IsMember("edep_min")) m_edep_min = config.GetDouble("edep_min");
     if (config.IsMember("Is3D")) m_req3D = config.GetInt("Is3D");
+    if (config.IsMember("maxlength")) m_maxlength = config.GetDouble("maxlength");
 }
 
 void NeutEvent::SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath) {
@@ -164,7 +171,7 @@ void NeutEvent::ClearCands() {
     _is_cands_set = false;
 }
 
-void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<double> clusterMaxE, std::vector<ROOT::Math::XYZVector> positions) {
+void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<double> clusterMaxE, std::vector<ROOT::Math::XYZVector> begpositions, std::vector<ROOT::Math::XYZVector> endpositions) {
     if (blobIDs.size() != m_ncands) {
         std::cout << "ERROR: NeutronMultiplicity::NeutEvent::SetReco number of blobs doesn't match input.\n\tblobIDs.size() " << blobIDs.size() << "m_ncands " << m_ncands << std::endl;
         exit(1);
@@ -175,8 +182,8 @@ void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::v
         return;
     }
     for (int i = 0; i < m_ncands; i++) {
-        ROOT::Math::XYZVector flightpath = positions[i] - m_vtx;
-        m_cands[i]->SetReco(blobIDs[i], is3Ds[i], EDeps[i], clusterMaxE[i], positions[i], flightpath);
+        ROOT::Math::XYZVector flightpath = begpositions[i] - m_vtx;
+        m_cands[i]->SetReco(blobIDs[i], is3Ds[i], EDeps[i], clusterMaxE[i], begpositions[i], endpositions[i], flightpath);
     }
     std::sort(m_cands.begin(), m_cands.end(), compare_cands);
     _recoset = true;
@@ -332,6 +339,11 @@ bool NeutEvent::CandPassIs3D(int index) {
     return false;
     // int pass = m_req3D == 1 ? is3D == 1 : is3D == 0;
     // return pass;
+}
+
+bool NeutEvent::CandPassLength(int index) {
+    if (m_maxlength <= 0) return true;
+    return false;
 }
 
 int NeutEvent::GetCandTruthPID(int index) {

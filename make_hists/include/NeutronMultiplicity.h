@@ -19,12 +19,13 @@
 namespace NeutronMultiplicity {
 class NeutCand {
    public:
-    int m_blobID;           // which blob
-    int m_is3D;             // is it 3D?
-    double m_recoEDep;      // how much energy does it deposit?
-    double m_clusterMaxE;   // Max cluster Energy
-    ROOT::Math::XYZVector m_position;    // where is it?
-    ROOT::Math::XYZVector m_flightpath;  // which direction did it travel from the vtx????
+    int m_blobID;                         // which blob
+    int m_is3D;                           // is it 3D?
+    double m_recoEDep;                    // how much energy does it deposit?
+    double m_clusterMaxE;                 // Max cluster Energy
+    ROOT::Math::XYZVector m_begposition;  // where is it?
+    ROOT::Math::XYZVector m_endposition;  // where does it end
+    ROOT::Math::XYZVector m_flightpath;   // which direction did it travel from the vtx????
 
     // Truth vars
     int m_truthPID = -1;       // PID of most recent GEANT Parent
@@ -36,12 +37,12 @@ class NeutCand {
 
     // CTORs
     NeutCand();  // default
-    NeutCand(int blobID, int is3D, double recoEDep, ROOT::Math::XYZVector position);
+    NeutCand(int blobID, int is3D, double recoEDep, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition);
     // NeutCand(NeutCand& cand);
 
     ~NeutCand() = default;
     // reco functions
-    void SetReco(int blobID, int isD, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector position, ROOT::Math::XYZVector flightpath);
+    void SetReco(int blobID, int isD, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath);
 
     // SetBlobID(int index);
 
@@ -52,6 +53,7 @@ class NeutCand {
     int GetCandIs3D();
     double GetCandRecoEDep();
     ROOT::Math::XYZVector GetCandPosition();
+    double GetCandLength();
     ROOT::Math::XYZVector GetCandFlightPath();
 
     double GetCandVtxDist();  // TODO: Andrew does something weird with this
@@ -84,7 +86,7 @@ class NeutEvent {
     double m_muondist_min = 0.0;               // in mm
     double m_edep_min = 0.;                    // in MeV
     int m_req3D = 0;                           // Set requirement to 3D blob, set to 1 for 3D only, -1 for 2D only, 0 for both
-
+    double m_maxlength = -1.;
     // int m_nneutcands;
     ROOT::Math::XYZVector m_vtx;
     ROOT::Math::XYZVector m_mupath;
@@ -126,7 +128,7 @@ class NeutEvent {
 
    public:
     // Set the reco variables for reco and truth. This is necessary to handle both data and MC without issues
-    void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<ROOT::Math::XYZVector> positions);
+    void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<ROOT::Math::XYZVector> begpositions, std::vector<ROOT::Math::XYZVector> endpositions);
     void SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ);
 
     bool GetIsTruthSet();
@@ -148,6 +150,8 @@ class NeutEvent {
     bool CandPassVtxBox(int index);     // check if cand is outside a box around vtx
     bool CandPassEDep(int index);       // check if Edep is high enough
     bool CandPassIs3D(int index);       // check if cand is 3D or 2D
+    bool CandPassLength(int index);     // how long is the blob
+
 
     int GetCandTruthPID(int index);     // GEANT parent
     int GetCandTruthTopPID(int index);  // GENIE parent
