@@ -463,7 +463,7 @@ bool CVUniverse::FastFilter() const {
     // if (GetZVertex() < 5980 || GetZVertex() > 8422) return result;
     // if (GetApothemX() > 850.) return result;
     // if (GetApothemY() > 850.) return result;
-    if (GetZVertex() < 5900. || GetZVertex() > 8500.) return result;
+    if (GetZVertex() < 5800. || GetZVertex() > 8500.) return result;
     if (GetApothemX() > 900.) return result;
     if (GetApothemY() > 900.) return result;
     return true;
