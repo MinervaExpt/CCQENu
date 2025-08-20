@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "warpingstudies_fixed_binning_EAvail_EAvailnohi_is3D_100mmvtx_min10MeV_${MYSAMPLE}_${MYWARP}warp_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "warpingstudies_fixed_binning_EAvail_EAvailnohi_is3D_100mmvtx_min1_5MeV_20degmuon_2cands_300MeV1cand_500MeV0Cand_${MYSAMPLE}_${MYWARP}warp_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -44,11 +44,11 @@
   ],
   "AnalyzeVariables": [
     "EAvail",
-    "EAvail_nohi",
+    // "EAvail_nohi",
     // "EAvailNoNonVtxBlobs",
     // "EAvailWithNeutrons",
     // "CalibEAvailWithNeutrons",
-    // "recoil",
+    "recoil",
     "ptmu"
   ],
   "Analyze2DVariables": [],
