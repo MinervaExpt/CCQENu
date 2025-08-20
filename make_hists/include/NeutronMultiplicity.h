@@ -19,18 +19,18 @@
 namespace NeutronMultiplicity {
 class NeutCand {
    public:
-    int m_blobID;                         // which blob
-    int m_is3D;                           // is it 3D?
-    double m_recoEDep;                    // how much energy does it deposit?
-    double m_clusterMaxE;                 // Max cluster Energy
-    ROOT::Math::XYZVector m_begposition;  // where is it?
-    ROOT::Math::XYZVector m_endposition;  // where does it end
-    ROOT::Math::XYZVector m_flightpath;   // which direction did it travel from the vtx????
+    int m_blobID = -1;                         // which blob
+    int m_is3D = -1;                           // is it 3D?
+    double m_recoEDep = 0.0;                    // how much energy does it deposit?
+    double m_clusterMaxE = 0.0;                 // Max cluster Energy
+    ROOT::Math::XYZVector m_begposition = ROOT::Math::XYZVector();  // where is it?
+    ROOT::Math::XYZVector m_endposition = ROOT::Math::XYZVector();  // where does it end
+    ROOT::Math::XYZVector m_flightpath = ROOT::Math::XYZVector();   // which direction did it travel from the vtx????
 
     // Truth vars
     int m_truthPID = -1;       // PID of most recent GEANT Parent
     int m_truthTopMCPID = -1;  // PID of the GENIE parent
-    ROOT::Math::XYZVector m_TopMomentum;    // which direction did it travel from the vtx????
+    ROOT::Math::XYZVector m_TopMomentum = ROOT::Math::XYZVector();  // which direction did it travel from the vtx????
 
     bool m_recoset = false;
     bool m_truthset = false;
@@ -103,6 +103,9 @@ class NeutEvent {
     std::vector<std::unique_ptr<NeutCand>> m_cands = {};          // the candidates the event has
     std::vector<std::unique_ptr<NeutCand>> m_neutcands = {};      // the candidates that pass neutron selection
     std::vector<std::unique_ptr<NeutCand>> m_trueneutcands = {};  // the candidates that pass neutron selection
+    // std::vector<std::shared_ptr<NeutCand>> m_cands = {};          // the candidates the event has
+    // std::vector<std::shared_ptr<NeutCand>> m_neutcands = {};      // the candidates that pass neutron selection
+    // std::vector<std::shared_ptr<NeutCand>> m_trueneutcands = {};  // the candidates that pass neutron selection
 
    public:
     // TOOD: make neutron config vars in CVUniverse
@@ -137,6 +140,10 @@ class NeutEvent {
     std::vector<std::unique_ptr<NeutCand>>& GetNeutCands();             // Get just the ones passing neutron cuts
     std::vector<std::unique_ptr<NeutCand>>& GetTrueNeutCands();         // Get cands that are actually neutrons (need truth set)
     std::unique_ptr<NeutronMultiplicity::NeutCand> GetCand(int index);  // This makes a copy of a cand to access info outside of neutevent
+    // std::vector<std::shared_ptr<NeutCand>>& GetCands();                 // Get all blobs
+    // std::vector<std::shared_ptr<NeutCand>>& GetNeutCands();             // Get just the ones passing neutron cuts
+    // std::vector<std::shared_ptr<NeutCand>>& GetTrueNeutCands();         // Get cands that are actually neutrons (need truth set)
+    // std::shared_ptr<NeutronMultiplicity::NeutCand> GetCand(int index);  // This makes a copy of a cand to access info outside of neutevent
 
     double GetTotNeutCandEDep(int max_ncands);
 
@@ -156,7 +163,8 @@ class NeutEvent {
     int GetCandTruthPID(int index);     // GEANT parent
     int GetCandTruthTopPID(int index);  // GENIE parent
     // Helper for ordering the cands
-    static bool compare_cands(std::unique_ptr<NeutCand>& cand1, std::unique_ptr<NeutCand>& cand2) {return (cand1 > cand2);}
+    static bool compare_cands(std::unique_ptr<NeutCand>& cand1, std::unique_ptr<NeutCand>& cand2) { return (cand1 > cand2); }
+    // static bool compare_cands(std::shared_ptr<NeutCand> cand1, std::shared_ptr<NeutCand> cand2) { return (cand1 > cand2); }
 
     // TODO: Something more flexible in development
    private:

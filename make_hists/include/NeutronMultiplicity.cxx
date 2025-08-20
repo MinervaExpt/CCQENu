@@ -58,6 +58,7 @@ int NeutCand::GetCandIs3D() {
 
 double NeutCand::GetCandRecoEDep() {
     if (!m_recoset) return -1.0;
+    // if (!m_recoset) return 0;
     return m_recoEDep;
 }
 
@@ -114,6 +115,7 @@ NeutEvent::NeutEvent(NuConfig config, int ncands, ROOT::Math::XYZVector vtx, ROO
         // std::unique_ptr<NeutCand> cand(new NeutCand());
         // m_cands.emplace_back(cand);
         m_cands.emplace_back(std::make_unique<NeutCand>(NeutCand()));
+        // m_cands.emplace_back(std::make_shared<NeutCand>(NeutCand()));
     }
     _is_cands_set = true;
 }
@@ -126,6 +128,7 @@ NeutEvent::NeutEvent(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVecto
         // std::unique_ptr<NeutCand> cand(new NeutCand());
         // m_cands.emplace_back(cand);
         m_cands.emplace_back(std::make_unique<NeutCand>(NeutCand()));
+        // m_cands.emplace_back(std::make_shared<NeutCand>(NeutCand()));
     }
     _is_cands_set = true;
 }
@@ -164,6 +167,7 @@ void NeutEvent::SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZV
         // std::unique_ptr<NeutCand> cand(new NeutCand());
         // m_cands.emplace_back(cand);
         m_cands.emplace_back(std::make_unique<NeutCand>(NeutCand()));
+        // m_cands.emplace_back(std::make_shared<NeutCand>(NeutCand()));
     }
     _is_cands_set = true;
 }
@@ -238,15 +242,47 @@ std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetTrueNeutCands() {
     return m_trueneutcands;
 }
 
+// TODO maybe don't need this
+std::unique_ptr<NeutCand> NeutEvent::GetCand(int index) {
+    std::unique_ptr<NeutCand> cand = std::make_unique<NeutCand>(NeutCand(*m_cands[index]));
+    return cand;
+}
+// std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetCands() {
+//     return m_cands;
+// }
+
+// std::vector<std::shared_ptr<NeutCand>>& NeutEvent::GetNeutCands() {
+//     // Moved this inside SetReco, since you get these cands basically everytime anyway
+//     std::vector<std::unique_ptr<NeutCand>> neutcands = {};
+//     for (int i = 0; i < m_ncands; i++) {
+//         if (GetCandIsNeut(i))
+//             m_neutcands.emplace_back(std::make_shared<NeutCand>(NeutCand(*m_cands[i])));
+//         m_nneutcands += 1;
+//     }
+//     return m_neutcands;
+// }
+
+// std::vector<std::shared_ptr<NeutCand>>& NeutEvent::GetTrueNeutCands() {
+//     // std::vector<std::unique_ptr<NeutCand>> trueneutcands;
+//     assert(_truthset);
+//     for (int i = 0; i < m_ncands; i++) {
+//         // Only check if it's fiducial and is a true neutron
+//         if (CandPassFiducial(i) && m_cands[i]->GetCandTruthTopPID() == 2112)
+//             m_trueneutcands.emplace_back(std::make_shared<NeutCand>(NeutCand(*m_cands[i])));
+//     }
+//     return m_trueneutcands;
+// }
+
+// // TODO maybe don't need this
+// std::shared_ptr<NeutCand> NeutEvent::GetCand(int index) {
+//     std::shared_ptr<NeutCand> cand = std::make_shared<NeutCand>(NeutCand(*m_cands[index]));
+//     return cand;
+// }
+
 bool NeutEvent::GetIsTruthSet() {
     return _truthset;
 }
 
-// TODO maybe don't need this
-std::unique_ptr<NeutCand> NeutEvent::GetCand(int index) {
-    std::unique_ptr<NeutCand> cand =  std::make_unique<NeutCand>(NeutCand(*m_cands[index]));
-    return cand;
-}
 
 double NeutEvent::GetTotNeutCandEDep(int max_ncands) {
     if (m_nneutcands == 0) return 0.;

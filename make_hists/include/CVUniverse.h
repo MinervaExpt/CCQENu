@@ -380,9 +380,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // access nhv's reco neutron classes TODO: un comment these
     // NeutronMultiplicity::NeutEvent m_neut_event;
-    // virtual NeutronMultiplicity::NeutEvent* GetNeutEvent() const;
     virtual std::unique_ptr<NeutronMultiplicity::NeutEvent> GetNeutEvent() const;
     virtual std::unique_ptr<NeutronMultiplicity::NeutEvent> GetTruthNeutEvent() const;
+    // virtual std::shared_ptr<NeutronMultiplicity::NeutEvent> GetNeutEvent() const;
+    // virtual std::shared_ptr<NeutronMultiplicity::NeutEvent> GetTruthNeutEvent() const;
     virtual int GetAllBlobCandsNeut() const;
     virtual void PrintMADBlobs() const;
     virtual std::vector<ROOT::Math::XYZVector> GetBlobsBegPos() const;
@@ -406,6 +407,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // virtual double GetNeutBlobEGeV(int index) const;
     virtual double GetTotNeutBlobEGeV() const;
+    // virtual double GetTotNeutBlobEGeV(double recoil) const;
     virtual double GetTrueTotNeutBlobEGeV() const;
     virtual int GetPlotNeutCandMCPID() const;
     virtual int GetPlotNeutCandTopMCPID(int index) const;
