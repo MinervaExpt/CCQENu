@@ -165,16 +165,14 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFrom
             std::string nameHD = varconfig.GetString("name");
             std::vector<std::string> axisvarnamevec = varconfig.GetStringVector("vars");
             int dim = axisvarnamevec.size();
-            std::vector<std::string> fors = {};  // What you want to fill hists of (e.g. data, selected_reco), defaults to all<-TODO in VariableHyperDFromConfig
-
-            if (varconfig.IsMember("for"))
-                fors = varconfig.GetStringVector("for");
 
             EAnalysisType analysis_type = k1D;
             if (varconfig.IsMember("analysistype")) analysis_type = (EAnalysisType)varconfig.GetInt("analysistype");
 
             // std::vector<std::unique_ptr<CCQENu::VariableFromConfig>> vars1D = {};
             std::vector<CCQENu::VariableFromConfig *> vars1D = {};
+            std::vector<std::string> tmp_fors = {};  // What you want to fill hists of (e.g. data, selected_reco), defaults to all<-TODO in VariableHyperDFromConfig
+
             for (auto var1D_name : axisvarnamevec) {
                 if (!config1D.IsMember(var1D_name)) {
                     std::cout << "GetHDVariablesFromConfig: ERROR - have requested an unimplemented 1D variable in GetHDVariablesFromConfig " << var1D_name << std::endl;
@@ -188,11 +186,26 @@ std::map<std::string, CCQENu::VariableHyperDFromConfig *> GetHyperDVariablesFrom
                 tmp_var1D->SetFitSamples(fitsamples);
                 tmp_var1D->AddTags(tags);
 
-                // for (auto f : tmp_var1D->m_for)
-                //     if (std::find(fors.begin(), fors.end(), f) != fors.end()) fors.push_back(f);
-                
+                for (auto f : tmp_var1D->m_for)
+                    if (std::find(tmp_fors.begin(), tmp_fors.end(), f) != tmp_fors.end()) tmp_fors.push_back(f);
+
                 vars1D.emplace_back(tmp_var1D);
             }
+            for (auto var1D_name : axisvarnamevec) {
+                if (!config1D.IsMember(var1D_name)) {
+                    std::cout << "GetHDVariablesFromConfig: ERROR - have requested an unimplemented 1D variable in GetHDVariablesFromConfig " << var1D_name << std::endl;
+                    assert(0);
+                }
+                CCQENu::VariableFromConfig *tmp_var1D = new CCQENu::VariableFromConfig(config1D.GetValue(var1D_name));
+                std::vector<std::string> var1d_fors = tmp_var1D->m_for;
+                for (auto f : tmp_fors) {
+                    if (std::find(var1d_fors.begin(), var1d_fors.end(), f) != var1d_fors.end())
+                        tmp_fors.erase(std::find(tmp_fors.begin(), tmp_fors.end(), f));
+                }
+            }
+            std::vector<std::string> fors = {};  // What you want to fill hists of (e.g. data, selected_reco), defaults to all<-TODO in VariableHyperDFromConfig
+            fors = varconfig.IsMember("for") ? varconfig.GetStringVector("for"): tmp_fors;
+
             CCQENu::VariableHyperDFromConfig *varHD = new CCQENu::VariableHyperDFromConfig(nameHD, vars1D, fors, analysis_type);
             varHD->AddTags(tags);
             std::cout << "GetHyperDVariablesFromConfig: set up HyperDim variable " << nameHD << " of dimension " << dim << std::endl;

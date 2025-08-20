@@ -107,7 +107,7 @@ class NeutEvent {
    public:
     // TOOD: make neutron config vars in CVUniverse
     NeutEvent(NuConfig config, int n_neutcands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, std::vector<int> order = {});  // configure number of cands and set up the cands internally based off how many there are
-    NeutEvent(int n_neutcands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath);
+    NeutEvent(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath);
     NeutEvent(NuConfig config);  // would need to set up cands separately using SetCands
     NeutEvent();
     ~NeutEvent() = default; //{

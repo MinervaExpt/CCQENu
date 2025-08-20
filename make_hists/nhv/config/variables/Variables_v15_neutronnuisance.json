@@ -103,6 +103,30 @@
         "recoil"
       ],
       "analysistype": 3
+    },
+    "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+      "vars": [
+        "LeadingNeutCandMuonCosTheta",
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandMuonCosTheta_SecNeutCandEdep_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandMuonCosTheta_SecNeutCandEdep_SecNeutCandTopMCPID",
+      "vars": [
+        "SecNeutCandMuonCosTheta",
+        "SecNeutCandEdep",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
     }
   },
   "2D": {
@@ -200,6 +224,16 @@
       "name": "ThirdNeutCandMuonAngle_ThirdNeutCandTopMCPID",
       "xvar": "ThirdNeutCandMuonAngle",
       "yvar": "ThirdNeutCandTopMCPID"
+    },
+    "LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      "xvar": "LeadingNeutCandMuonCosTheta",
+      "yvar": "LeadingNeutCandTopMCPID"
+    },
+    "SecNeutCandMuonCosTheta_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandMuonCosTheta_SecNeutCandTopMCPID",
+      "xvar": "SecNeutCandMuonCosTheta",
+      "yvar": "SecNeutCandTopMCPID"
     },
     "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID": {
       "name": "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID",
@@ -317,20 +351,36 @@
       "xvar": "recoil",
       "yvar": "TrueTotalNeutBlobE"
     },
-    "LeadingNeutCandLength_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandLength_LeadingNeutCandTopMCPID",
+    "LeadingNeutCandLength_LeadingNeutCandEdep": {
+      "name": "LeadingNeutCandLength_LeadingNeutCandEdep",
       "xvar": "LeadingNeutCandLength",
       "yvar": "LeadingNeutCandTopMCPID",
       "for": [
         "selected_reco"
       ]
     },
-    "SecondNeutCandLength_SecondNeutCandTopMCPID": {
-      "name": "SecondNeutCandLength_SecondNeutCandTopMCPID",
+    "SecondNeutCandLength_LeadingNeutCandEdep": {
+      "name": "SecondNeutCandLength_LeadingNeutCandEdep",
       "xvar": "SecondNeutCandLength",
       "yvar": "SecNeutCandTopMCPID",
       "for": [
         "selected_reco"
+      ]
+    },
+    "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep": {
+      "name": "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep",
+      "xvar": "LeadingNeutCandMuonCosTheta",
+      "yvar": "LeadingNeutCandEdep",
+      "for": [
+        "data"
+      ]
+    },
+    "SecNeutCandMuonCosTheta_SecNeutCandEdep": {
+      "name": "SecNeutCandMuonCosTheta_SecNeutCandEdep",
+      "xvar": "SecNeutCandMuonCosTheta",
+      "yvar": "SecNeutCandEdep",
+      "for": [
+        "data"
       ]
     }
   },
@@ -653,6 +703,32 @@
         "selected_reco"
       ]
     },
+    "LeadingNeutCandMuonCosTheta": {
+      "reco": "LeadingNeutCandMuonCosTheta",
+      "true": "LeadingNeutCandMuonCosTheta",
+      "name": "LeadingNeutCandMuonCosTheta",
+      "title": "Leading Blob CosTheta from muon track",
+      "nbins": 50,
+      "min": 0,
+      "max": 1.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandMuonCosTheta": {
+      "reco": "SecNeutCandMuonCosTheta",
+      "true": "SecNeutCandMuonCosTheta",
+      "name": "SecNeutCandMuonCosTheta",
+      "title": "Second Blob CosTheta from muon track",
+      "nbins": 50,
+      "min": 0,
+      "max": 1.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
     "LeadingIsoBlobsPrimaryMCPID": {
       "reco": "LeadingIsoBlobsPrimaryMCPID",
       "true": "LeadingIsoBlobsPrimaryMCPID",
@@ -856,11 +932,18 @@
       "title": "E_{Available} in GeV",
       "bins": [
         // -1.0,
+        // 0.0,
+        // 0.045,
+        // 0.1125,
+        // 0.2025, 5 6 8 11 15  4 5 7 10 14
+        // 0.315,
+        // 0.5,
+        // 1.0
         0.0,
-        0.045,
-        0.1125,
-        0.2025,
-        0.315,
+        0.04,
+        0.1,
+        0.18,
+        0.3,
         0.5,
         1.0
       ],
@@ -890,11 +973,18 @@
       "name": "recoil",
       "title": "Recoil in GeV",
       "bins": [
+        // 0.0,
+        // 0.045,
+        // 0.1125,
+        // 0.2025,
+        // 0.315,
+        // 0.5,
+        // 1.0
         0.0,
-        0.045,
-        0.1125,
-        0.2025,
-        0.315,
+        0.04,
+        0.1,
+        0.18,
+        0.3,
         0.5,
         1.0
       ],

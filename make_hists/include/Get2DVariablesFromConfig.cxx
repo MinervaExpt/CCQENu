@@ -122,7 +122,7 @@ std::map<std::string, CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(s
 }
 
 std::map<std::string, CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(std::vector<std::string> vars2D, const std::vector<std::string> tags, const NuConfig configraw, const bool doresolution, const bool dotypes, const std::string tunedmc, const std::vector<std::string> fitsamples) {
-    std::map<std::string, CCQENu::Variable2DFromConfig *> variables2Dmap;  // this is the 2D set that actually gets returned
+    std::map<std::string, CCQENu::Variable2DFromConfig *> variables2Dmap = {};  // this is the 2D set that actually gets returned
 
     // configraw.Print();
     NuConfig config2D;
@@ -141,8 +141,8 @@ std::map<std::string, CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(s
     std::vector<std::string> keys = config2D.GetKeys();
     for (auto v : vars2D) {
         NuConfig tmp_varconfig;
-        CCQENu::VariableFromConfig *xvar;
-        CCQENu::VariableFromConfig *yvar;
+        // CCQENu::VariableFromConfig *xvar;
+        // CCQENu::VariableFromConfig *yvar;
 
         if (config2D.IsMember(v)) {
             NuConfig varconfig = config2D.GetValue(v);
@@ -158,14 +158,14 @@ std::map<std::string, CCQENu::Variable2DFromConfig *> Get2DVariablesFromConfig(s
                 assert(0);
             }
             // CCQENu::VariableFromConfig *xvar = new CCQENu::VariableFromConfig(config1D.GetValue(xvar_name));
-            xvar = new CCQENu::VariableFromConfig(config1D.GetValue(xvar_name));
+            CCQENu::VariableFromConfig *xvar = new CCQENu::VariableFromConfig(config1D.GetValue(xvar_name));
             xvar->SetDoResolution(doresolution);
             xvar->SetDoTypes(dotypes);
             xvar->SetTunedMC(tunedmc);
             xvar->SetFitSamples(fitsamples);
             xvar->AddTags(tags);
             // CCQENu::VariableFromConfig *yvar = new CCQENu::VariableFromConfig(config1D.GetValue(xvar_name));
-            yvar = new CCQENu::VariableFromConfig(config1D.GetValue(yvar_name));
+            CCQENu::VariableFromConfig *yvar = new CCQENu::VariableFromConfig(config1D.GetValue(yvar_name));
             yvar->SetDoResolution(doresolution);
             yvar->SetDoTypes(dotypes);
             yvar->SetTunedMC(tunedmc);

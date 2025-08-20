@@ -325,6 +325,11 @@ class CVFunctions {
         recofunctions["ThirdNeutCandMuonAngle"] = &CVUNIVERSE::GetThirdNeutCandMuonAngle;
         truefunctions["ThirdNeutCandMuonAngle"] = &CVUNIVERSE::GetThirdNeutCandMuonAngle;
 
+        recofunctions["LeadingNeutCandMuonCosTheta"] = &CVUNIVERSE::GetLeadingNeutCandMuonCosTheta;
+        truefunctions["LeadingNeutCandMuonCosTheta"] = &CVUNIVERSE::GetLeadingNeutCandMuonCosTheta;
+        recofunctions["SecNeutCandMuonCosTheta"] = &CVUNIVERSE::GetSecNeutCandMuonCosTheta;
+        truefunctions["SecNeutCandMuonCosTheta"] = &CVUNIVERSE::GetSecNeutCandMuonCosTheta;
+
         recofunctions["LeadingNeutCandAngleToParent"] = &CVUNIVERSE::GetLeadingNeutCandAngleToParent;
         truefunctions["LeadingNeutCandAngleToParent"] = &CVUNIVERSE::GetLeadingNeutCandAngleToParent;
         recofunctions["SecNeutCandAngleToParent"] = &CVUNIVERSE::GetSecondNeutCandAngleToParent;

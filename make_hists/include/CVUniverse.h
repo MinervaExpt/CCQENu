@@ -444,6 +444,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetSecNeutCandMuonAngle() const;
     virtual double GetThirdNeutCandMuonAngle() const;
 
+    virtual double GetNeutCandMuonCosTheta(int index) const;
+    virtual double GetLeadingNeutCandMuonCosTheta() const;
+    virtual double GetSecNeutCandMuonCosTheta() const;
+
     virtual double GetNeutCandAngleToParent(int index) const;
     virtual double GetLeadingNeutCandAngleToParent() const;
     virtual double GetSecondNeutCandAngleToParent() const;

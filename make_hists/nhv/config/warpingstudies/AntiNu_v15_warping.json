@@ -4,10 +4,10 @@
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_sigonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "HdNeutVar_pztest_tighterblobselection_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "EAvailTest_excluderemoval500mev_1removal300mev_2cands_100mmvtx_1_5MeV_15degmuon_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -54,9 +54,9 @@
     // "recoilNoBlobs",
     // "Q2QE",
     // "FitQ2QE",
-    // "EAvail",
+    "EAvail",
     // "EAvail_nohi",
-    // "recoil",
+    "recoil"//,
     // "recoil_nohi",
     // "EAvailNoNonVtxBlobs",
     // "EAvailLeadingBlob",
@@ -95,17 +95,18 @@
     // "LeadingNeutCandMuonAngle",
     // "SecNeutCandMuonAngle",
     // // "ThirdNeutCandMuonAngle",
+    // "LeadingNeutCandMuonCosTheta",
+    // "SecNeutCandMuonCosTheta"//,
     // "LeadingNeutCandClusterMaxE"//,
     // "SecNeutCandClusterMaxE"//,
     // // "ThirdNeutCandClusterMaxE"
     // "LeadingNeutCandLength",
     // "SecondNeutCandLength"
-    "NProtonPionTracks"
+    // "NProtonPionTracks"
   ],
-  "Analyze2DVariables": [
-        // "LeadingNeutCandLength_LeadingNeutCandTopMCPID",
-        // "SecondNeutCandLength_SecondNeutCandTopMCPID"
-  // ],
+  "Analyze2DVariables": [ ],
+      // "LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      // "SecNeutCandMuonCosTheta_SecNeutCandTopMCPID",
     // "EAvail_TotalNeutBlobE",
     // "EAvail_RecoTotalNeutBlobE",
     // "EAvail_TrueTotalNeutBlobE",
@@ -129,6 +130,8 @@
     // // "ThirdNeutCandMuonDist_ThirdNeutCandTopMCPID",
     // "LeadingNeutCandMuonAngle_LeadingNeutCandTopMCPID",
     // "SecNeutCandMuonAngle_SecNeutCandTopMCPID",
+    // "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep",
+    // "SecNeutCandMuonCosTheta_SecNeutCandEdep"//,
     // // "ThirdNeutCandMuonAngle_ThirdNeutCandTopMCPID",
     // "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID"//,
     // "SecNeutCandClusterMaxE_SecNeutCandTopMCPID",
@@ -136,31 +139,33 @@
     // "LeadingNeutCandAngleToParent_LeadingNeutCandTopMCPID"//,
     // "SecNeutCandAngleToParent_SecNeutCandTopMCPID",
     // "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID"
-  // ],
     // "recoil_ptmu",
-    "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist",
+    // "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist",
     // "ptmu_LeadingNeutCandvtxSphereDist",
     // "EAvail_LeadingNeutCandvtxSphereDist",
-    "ptmu_LeadingNeutCandEdep",
-    "EAvail_LeadingNeutCandEdep",
-    "recoil_LeadingNeutCandEdep",
-    "pzmu_LeadingNeutCandEdep"
-    // "pzmu_ptmu"//,
-    // "Q2QE_recoil"
-  ], 
-  "AnalyzeHyperDVariables": [
+  //   "ptmu_LeadingNeutCandEdep",
+  //   "EAvail_LeadingNeutCandEdep",
+  //   "recoil_LeadingNeutCandEdep",
+  //   "pzmu_LeadingNeutCandEdep"
+  //   // "pzmu_ptmu"//,
+  //   // "Q2QE_recoil"
+  // ], 
+  "AnalyzeHyperDVariables": [],
+    // "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+    // "SecNeutCandMuonCosTheta_SecNeutCandEdep_SecNeutCandTopMCPID"
+  // ],
     // "pzmu_ptmu_recoil" ,
-    "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
-    // "ptmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
-    "ptmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
-    // "EAvail_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
-    "EAvail_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
-    "recoil_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
-    "pzmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID"
+    // "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+    // // "ptmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+    // "ptmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+    // // "EAvail_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+    // "EAvail_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+    // "recoil_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+    // "pzmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID"
 
   // ],
     // "pmu_ThetamuDegrees_recoil"
-  ],
+  // ],
   "signal": {
     "QElike": "qelike",
     "QElike_old": "qelike_old" //,

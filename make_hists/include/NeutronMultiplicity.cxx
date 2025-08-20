@@ -17,11 +17,14 @@ NeutCand::NeutCand() {};
 //     // TODO: set flight path
 // }
 
-NeutCand::NeutCand(int blobID, int is3D, double recoEDep, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition) : m_blobID(blobID),
-                                                                                                                                  m_is3D(is3D),
-                                                                                                                                  m_recoEDep(recoEDep),
-                                                                                                                                  m_begposition(begposition),
-                                                                                                                                  m_endposition(endposition) {
+NeutCand::NeutCand(int blobID, int is3D,
+                   double recoEDep,
+                   ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition)
+    : m_blobID(blobID),
+      m_is3D(is3D),
+      m_recoEDep(recoEDep),
+      m_begposition(begposition),
+      m_endposition(endposition) {
 }
 
 // Reco functions

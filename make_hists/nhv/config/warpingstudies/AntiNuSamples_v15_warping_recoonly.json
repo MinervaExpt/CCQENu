@@ -13,9 +13,9 @@
                 // "for": ["selected_reco"]
                 "for": [
                     "selected_reco",
-                    "selected_truth"//,
+                    "selected_truth",
                     // "truth",
-                    // "response"
+                    "response"
                 ]
             },
             "qelikenot": {
