@@ -465,7 +465,8 @@
       "true": "LeadingNeutCandvtxSphereDist",
       "name": "LeadingNeutCandvtxSphereDist",
       "title": "Leading Blob spherical dist from vtx",
-      "nbins": 10,
+      // "nbins": 10,
+      "nbins": 50,
       "min": 0.0,
       "max": 1000.0,
       "for": [
@@ -543,18 +544,18 @@
       "true": "LeadingNeutCandEdep",
       "name": "LeadingNeutCandEdep",
       "title": "Leading Blob Total E",
-      "bins": [
-        1.5,
-        11.5,
-        31.5,
-        71.5,
-        151.5,
-        310.5,
-        500.0
-      ],
-      // "nbins": 10,
-      // "min": 0.0,
-      // "max": 500.0,
+      // "bins": [
+      //   1.5,
+      //   11.5,
+      //   31.5,
+      //   71.5,
+      //   151.5,
+      //   310.5,
+      //   500.0
+      // ],
+      "nbins": 50,
+      "min": 0.0,
+      "max": 100.0,
       "for": [
         "data",
         "selected_reco"
@@ -709,7 +710,7 @@
       "name": "LeadingNeutCandMuonCosTheta",
       "title": "Leading Blob CosTheta from muon track",
       "nbins": 50,
-      "min": 0,
+      "min": -1.0,
       "max": 1.0,
       "for": [
         "data",
@@ -722,7 +723,7 @@
       "name": "SecNeutCandMuonCosTheta",
       "title": "Second Blob CosTheta from muon track",
       "nbins": 50,
-      "min": 0,
+      "min": -1.0,
       "max": 1.0,
       "for": [
         "data",

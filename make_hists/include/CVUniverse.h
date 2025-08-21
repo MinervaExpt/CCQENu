@@ -251,6 +251,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetOffsetRecoilEnergyGeV() const;
 
+    virtual double GetEAvailDropCandsGeV() const;
+
     virtual double GetEAvailGeV() const;
 
     virtual double GetEAvailLeadingBlobGeV() const;

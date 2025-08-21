@@ -58,8 +58,12 @@ int NeutCand::GetCandIs3D() {
 
 double NeutCand::GetCandRecoEDep() {
     if (!m_recoset) return -1.0;
-    // if (!m_recoset) return 0;
     return m_recoEDep;
+}
+
+double NeutCand::GetCandMaxClusterE() {
+    if (!m_recoset) return -1.0;
+    return m_clusterMaxE;
 }
 
 ROOT::Math::XYZVector NeutCand::GetCandPosition() {
@@ -111,11 +115,7 @@ NeutEvent::NeutEvent(NuConfig config, int ncands, ROOT::Math::XYZVector vtx, ROO
                                                                                                                 m_ncands(ncands) {
     SetConfig(config);
     for (int i = 0; i < ncands; i++) {
-        // NeutCand* cand = new NeutCand();
-        // std::unique_ptr<NeutCand> cand(new NeutCand());
-        // m_cands.emplace_back(cand);
         m_cands.emplace_back(std::make_unique<NeutCand>(NeutCand()));
-        // m_cands.emplace_back(std::make_shared<NeutCand>(NeutCand()));
     }
     _is_cands_set = true;
 }
@@ -124,11 +124,7 @@ NeutEvent::NeutEvent(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVecto
                                                                                              m_mupath(mupath),
                                                                                              m_ncands(ncands) {
     for (int i = 0; i < ncands; i++) {
-        // NeutCand* cand = new NeutCand();
-        // std::unique_ptr<NeutCand> cand(new NeutCand());
-        // m_cands.emplace_back(cand);
         m_cands.emplace_back(std::make_unique<NeutCand>(NeutCand()));
-        // m_cands.emplace_back(std::make_shared<NeutCand>(NeutCand()));
     }
     _is_cands_set = true;
 }
@@ -163,11 +159,7 @@ void NeutEvent::SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZV
         this->ClearCands();
     }
     for (int i = 0; i < ncands; i++) {
-        // NeutCand* cand = new NeutCand();
-        // std::unique_ptr<NeutCand> cand(new NeutCand());
-        // m_cands.emplace_back(cand);
         m_cands.emplace_back(std::make_unique<NeutCand>(NeutCand()));
-        // m_cands.emplace_back(std::make_shared<NeutCand>(NeutCand()));
     }
     _is_cands_set = true;
 }
@@ -194,7 +186,8 @@ void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::v
     }
     std::sort(m_cands.begin(), m_cands.end(), compare_cands);
     _recoset = true;
-    // return;
+
+    this->SetNeutCands();
 }
 
 void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ) {
@@ -212,72 +205,96 @@ void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMC
         ROOT::Math::XYZVector TopMomentum(truthTopMomentumsX[blobID], truthTopMomentumsY[blobID], truthTopMomentumsZ[blobID]);
         m_cands[i]->SetTruth(truthPIDs[blobID], truthTopMCPIDs[blobID], TopMomentum);
     }
+    if (_is_neutcands_set) {
+        for (auto &cand : m_neutcands) {
+            int blobID(cand->m_blobID);
+            // std::cout << "neutblobid " << blobID << std::endl;
+            ROOT::Math::XYZVector TopMomentum(truthTopMomentumsX[blobID], truthTopMomentumsY[blobID], truthTopMomentumsZ[blobID]);
+            cand->SetTruth(truthPIDs[blobID], truthTopMCPIDs[blobID], TopMomentum);
+        }
+    }
+    
     _truthset = true;
-    return;
+    this->SetTrueNeutCands();
 }
 
+void NeutEvent::SetNeutCands() {
+    assert(_recoset);
+    if(_is_neutcands_set) {
+        std::cout << " m_neutcands set already. Clearing..." << std::endl;
+        m_neutcands.clear();
+    }
+    for (int i = 0; i < m_ncands; i++) {
+        if (GetCandIsNeut(i)) {
+            m_neutcands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
+            m_nneutcands += 1;
+        }
+    }
+    _is_neutcands_set = true;
+}
+
+void NeutEvent::SetTrueNeutCands() {
+    assert(_truthset);
+    if (_is_trueneutcands_set) m_trueneutcands.clear();
+    for (int i = 0; i < m_ncands; i++) {
+        // Only check if it's fiducial and is a true neutron
+        if (CandPassFiducial(i) && m_cands[i]->GetCandTruthTopPID() == 2112) {
+            m_trueneutcands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
+            m_ntrueneutcands +=1;
+        }
+    }
+    _is_trueneutcands_set = true;
+}
+
+
 std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetCands() {
+    // Be careful with this, it doesn't necessarily have anything in those cands
+    assert(_is_cands_set);
     return m_cands;
 }
 
 std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetNeutCands() {
-    // Moved this inside SetReco, since you get these cands basically everytime anyway
-    std::vector<std::unique_ptr<NeutCand>> neutcands = {};
-    for (int i = 0; i < m_ncands; i++) {
-        if (GetCandIsNeut(i))
-            m_neutcands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
-        m_nneutcands += 1;
-    }
+    assert(_is_neutcands_set);
     return m_neutcands;
 }
 
 std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetTrueNeutCands() {
-    // std::vector<std::unique_ptr<NeutCand>> trueneutcands;
-    assert(_truthset);
-    for (int i = 0; i < m_ncands; i++) {
-        // Only check if it's fiducial and is a true neutron
-        if (CandPassFiducial(i) && m_cands[i]->GetCandTruthTopPID() == 2112)
-            m_trueneutcands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
-    }
+    assert(_is_trueneutcands_set);
     return m_trueneutcands;
 }
 
-// TODO maybe don't need this
-std::unique_ptr<NeutCand> NeutEvent::GetCand(int index) {
-    std::unique_ptr<NeutCand> cand = std::make_unique<NeutCand>(NeutCand(*m_cands[index]));
-    return cand;
+const std::unique_ptr<NeutCand>& NeutEvent::GetCand(int index) {
+    assert(_is_cands_set);
+    assert(index < m_ncands);
+    return m_cands[index];
 }
-// std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetCands() {
-//     return m_cands;
-// }
 
-// std::vector<std::shared_ptr<NeutCand>>& NeutEvent::GetNeutCands() {
-//     // Moved this inside SetReco, since you get these cands basically everytime anyway
-//     std::vector<std::unique_ptr<NeutCand>> neutcands = {};
-//     for (int i = 0; i < m_ncands; i++) {
-//         if (GetCandIsNeut(i))
-//             m_neutcands.emplace_back(std::make_shared<NeutCand>(NeutCand(*m_cands[i])));
-//         m_nneutcands += 1;
-//     }
-//     return m_neutcands;
-// }
+const std::unique_ptr<NeutCand>& NeutEvent::GetNeutCand(int index) {
+    assert(_is_neutcands_set);
+    assert(index < m_nneutcands);
+    return m_neutcands[index];
+}
 
-// std::vector<std::shared_ptr<NeutCand>>& NeutEvent::GetTrueNeutCands() {
-//     // std::vector<std::unique_ptr<NeutCand>> trueneutcands;
-//     assert(_truthset);
-//     for (int i = 0; i < m_ncands; i++) {
-//         // Only check if it's fiducial and is a true neutron
-//         if (CandPassFiducial(i) && m_cands[i]->GetCandTruthTopPID() == 2112)
-//             m_trueneutcands.emplace_back(std::make_shared<NeutCand>(NeutCand(*m_cands[i])));
-//     }
-//     return m_trueneutcands;
-// }
+const std::unique_ptr<NeutCand>& NeutEvent::GetTrueNeutCand(int index) {
+    assert(_is_trueneutcands_set);
+    assert(index < m_ntrueneutcands);
+    return m_trueneutcands[index];
+}
 
-// // TODO maybe don't need this
-// std::shared_ptr<NeutCand> NeutEvent::GetCand(int index) {
-//     std::shared_ptr<NeutCand> cand = std::make_shared<NeutCand>(NeutCand(*m_cands[index]));
-//     return cand;
-// }
+int NeutEvent::GetNCands() {
+    // assert(_is_cands_set);
+    return m_ncands;
+}
+
+int NeutEvent::GetNNeutCands() {
+    // assert(_is_cands_set);
+    return m_nneutcands;
+}
+
+int NeutEvent::GetNTrueNeutCands() {
+    // assert(_is_cands_set);
+    return m_ntrueneutcands;
+}
 
 bool NeutEvent::GetIsTruthSet() {
     return _truthset;
@@ -294,10 +311,6 @@ double NeutEvent::GetTotNeutCandEDep(int max_ncands) {
     return edep;
 }
 
-// NeutCand* NeutEvent::GetCand(int index) {
-//     return m_cands[index];
-// }
-
 bool NeutEvent::GetCandIsNeut(int index) {
     if (m_ncands == 0) return true;
     return (CandPassMuonAngle(index) && 
@@ -306,8 +319,9 @@ bool NeutEvent::GetCandIsNeut(int index) {
             CandPassVtxDist(index) && 
             CandPassVtxZDist(index) &&
             CandPassEDep(index) && 
-            CandPassIs3D(index)) &&
-            CandPassVtxBox(index);
+            CandPassIs3D(index) &&
+            CandPassVtxBox(index)
+        );
 }
 
 
@@ -349,14 +363,14 @@ bool NeutEvent::CandPassVtxDist(int index) {
 
 bool NeutEvent::CandPassVtxZDist(int index) {
     if (m_vtx_zdist_min <= 0) return true;
-    double zdist = m_cands[index]->m_flightpath.Z();
+    double zdist = m_cands[index]->GetCandFlightPath().Z();
 
     return zdist >= m_vtx_zdist_min;
 }
 
 bool NeutEvent::CandPassVtxBox(int index) {
     if (m_vtx_box[0] < 0. || m_vtx_box[1] < 0.) return true;  // default value
-    ROOT::Math::XYZVector fp = m_cands[index]->m_flightpath;
+    ROOT::Math::XYZVector fp = m_cands[index]->GetCandFlightPath();
     if (fp.Z() <= m_vtx_box[0] && fp.Rho() <= m_vtx_box[1]) return false;
     return true;
 }

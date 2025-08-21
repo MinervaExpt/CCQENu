@@ -52,6 +52,7 @@ class NeutCand {
     int GetCandBlobID();
     int GetCandIs3D();
     double GetCandRecoEDep();
+    double GetCandMaxClusterE();
     ROOT::Math::XYZVector GetCandPosition();
     double GetCandLength();
     ROOT::Math::XYZVector GetCandFlightPath();
@@ -63,10 +64,13 @@ class NeutCand {
 
     double GetCandTruthAngleFromParent();
 
-    bool operator>(const NeutCand& cand) const {
-        return (this->m_recoEDep > cand.m_recoEDep);
-    }
+    // bool operator>(const NeutCand& cand) const {
+    //     return (this->m_recoEDep > cand.m_recoEDep);
+    // }
 
+    // bool operator>(const std::unique_ptr<NeutCand> cand) const {
+    //     return (this->m_recoEDep > cand->GetCandRecoEDep());
+    // }
     // TODO: Something more flexible in development
 
     // NeutCand(int index);  // give index, intialize internally
@@ -93,13 +97,15 @@ class NeutEvent {
 
     // std::vector<NeutronMultiplicity::NeutCand*> m_cands;  // the candidates it contains //moved to public?
     bool _is_cands_set = false;
-
+    bool _is_neutcands_set = false;
+    bool _is_trueneutcands_set = false;
     bool _recoset = false;
     bool _truthset = false;
 
    public:
     int m_ncands = 0;                                             // total number of cands in event
     int m_nneutcands = 0;                                         // total number of cands passing neutron selection
+    int m_ntrueneutcands = 0;                                         // total number of cands passing neutron selection
     std::vector<std::unique_ptr<NeutCand>> m_cands = {};          // the candidates the event has
     std::vector<std::unique_ptr<NeutCand>> m_neutcands = {};      // the candidates that pass neutron selection
     std::vector<std::unique_ptr<NeutCand>> m_trueneutcands = {};  // the candidates that pass neutron selection
@@ -128,7 +134,8 @@ class NeutEvent {
 
    private:
     void ClearCands();  // This is to clean up, called internally in SetCands if some cands are set.
-
+    void SetNeutCands();
+    void SetTrueNeutCands();
    public:
     // Set the reco variables for reco and truth. This is necessary to handle both data and MC without issues
     void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<ROOT::Math::XYZVector> begpositions, std::vector<ROOT::Math::XYZVector> endpositions);
@@ -139,11 +146,14 @@ class NeutEvent {
     std::vector<std::unique_ptr<NeutCand>>& GetCands();                 // Get all blobs
     std::vector<std::unique_ptr<NeutCand>>& GetNeutCands();             // Get just the ones passing neutron cuts
     std::vector<std::unique_ptr<NeutCand>>& GetTrueNeutCands();         // Get cands that are actually neutrons (need truth set)
-    std::unique_ptr<NeutronMultiplicity::NeutCand> GetCand(int index);  // This makes a copy of a cand to access info outside of neutevent
-    // std::vector<std::shared_ptr<NeutCand>>& GetCands();                 // Get all blobs
-    // std::vector<std::shared_ptr<NeutCand>>& GetNeutCands();             // Get just the ones passing neutron cuts
-    // std::vector<std::shared_ptr<NeutCand>>& GetTrueNeutCands();         // Get cands that are actually neutrons (need truth set)
-    // std::shared_ptr<NeutronMultiplicity::NeutCand> GetCand(int index);  // This makes a copy of a cand to access info outside of neutevent
+    
+    const std::unique_ptr<NeutronMultiplicity::NeutCand>& GetCand(int index);  // This makes a copy of a cand to access info outside of neutevent
+    const std::unique_ptr<NeutCand>& GetNeutCand(int index);
+    const std::unique_ptr<NeutCand>& GetTrueNeutCand(int index);
+
+    int GetNCands();
+    int GetNNeutCands();
+    int GetNTrueNeutCands();
 
     double GetTotNeutCandEDep(int max_ncands);
 
@@ -163,7 +173,10 @@ class NeutEvent {
     int GetCandTruthPID(int index);     // GEANT parent
     int GetCandTruthTopPID(int index);  // GENIE parent
     // Helper for ordering the cands
-    static bool compare_cands(std::unique_ptr<NeutCand>& cand1, std::unique_ptr<NeutCand>& cand2) { return (cand1 > cand2); }
+    // static bool compare_cands(const std::unique_ptr<NeutCand>& cand1, const std::unique_ptr<NeutCand>& cand2) { return (cand1 > cand2); }
+    static bool compare_cands(const std::unique_ptr<NeutCand>& cand1, const std::unique_ptr<NeutCand>& cand2) { 
+        return (cand1->GetCandRecoEDep() > cand2->GetCandRecoEDep()); 
+    }
     // static bool compare_cands(std::shared_ptr<NeutCand> cand1, std::shared_ptr<NeutCand> cand2) { return (cand1 > cand2); }
 
     // TODO: Something more flexible in development
