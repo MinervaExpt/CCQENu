@@ -8,18 +8,6 @@
     "add log10recoil"
   ],
   "HyperD": {
-    "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
-      "vars": [
-        "LeadingNeutCandEdep",
-        "LeadingNeutCandvtxSphereDist",
-        "LeadingNeutCandTopMCPID"
-      ],
-      "analysistype": 1,
-      "for": [
-        "selected_reco"
-      ]
-    },
     "ptmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
       "name": "ptmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
       "vars": [
@@ -37,6 +25,18 @@
       "vars": [
         "ptmu",
         "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "ptmu_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+      "name": "ptmu_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      "vars": [
+        "ptmu",
+        "LeadingNeutCandMuonCosTheta",
         "LeadingNeutCandTopMCPID"
       ],
       "analysistype": 1,
@@ -68,11 +68,59 @@
         "selected_reco"
       ]
     },
+    "EAvail_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+      "name": "EAvail_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "LeadingNeutCandMuonCosTheta",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name": "recoil_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
     "recoil_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
       "name": "recoil_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
       "vars": [
         "recoil",
         "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+      "name": "recoil_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "LeadingNeutCandMuonCosTheta",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "pzmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name": "pzmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "pzmu",
+        "LeadingNeutCandvtxSphereDist",
         "LeadingNeutCandTopMCPID"
       ],
       "analysistype": 1,
@@ -92,6 +140,18 @@
         "selected_reco"
       ]
     },
+    "pzmu_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+      "name": "pzmu_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      "vars": [
+        "pzmu",
+        "LeadingNeutCandMuonCosTheta",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
     "pzmu_ptmu_recoil": {
       "name": "pzmu_ptmu_recoil",
       "vars": [
@@ -103,6 +163,30 @@
         "recoil"
       ],
       "analysistype": 3
+    },
+    "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      "vars": [
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandMuonCosTheta",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
     },
     "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
       "name": "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
@@ -265,18 +349,26 @@
       "xvar": "LeadingNeutCandCosThetaToParent",
       "yvar": "LeadingNeutCandTopMCPID"
     },
-    "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist":{
-      "name":"LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist",
-      "xvar":"LeadingNeutCandEdep",
-      "yvar":"LeadingNeutCandvtxSphereDist",
+    "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist": {
+      "name": "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist",
+      "xvar": "LeadingNeutCandEdep",
+      "yvar": "LeadingNeutCandvtxSphereDist",
       "for": [
         "data"
       ]
     },
-    "ptmu_LeadingNeutCandvtxSphereDist": {
-      "name": "ptmu_LeadingNeutCandvtxSphereDist",
-      "xvar": "ptmu",
-      "yvar": "LeadingNeutCandvtxSphereDist",
+    "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta":{
+      "name": "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta",
+      "xvar": "LeadingNeutCandvtxSphereDist",
+      "yvar": "LeadingNeutCandMuonCosTheta",
+      "for": [
+        "data"
+      ]
+    },
+    "EAvail_LeadingNeutCandEdep": {
+      "name": "EAvail_LeadingNeutCandEdep",
+      "xvar": "EAvail",
+      "yvar": "LeadingNeutCandEdep",
       "for": [
         "data"
       ]
@@ -284,6 +376,22 @@
     "EAvail_LeadingNeutCandvtxSphereDist": {
       "name": "EAvail_LeadingNeutCandvtxSphereDist",
       "xvar": "EAvail",
+      "yvar": "LeadingNeutCandvtxSphereDist",
+      "for": [
+        "data"
+      ]
+    },
+    "EAvail_LeadingNeutCandMuonCosTheta": {
+      "name": "EAvail_LeadingNeutCandMuonCosTheta",
+      "xvar": "EAvail",
+      "yvar": "LeadingNeutCandMuonCosTheta",
+      "for": [
+        "data"
+      ]
+    },
+    "ptmu_LeadingNeutCandvtxSphereDist": {
+      "name": "ptmu_LeadingNeutCandvtxSphereDist",
+      "xvar": "ptmu",
       "yvar": "LeadingNeutCandvtxSphereDist",
       "for": [
         "data"
@@ -297,10 +405,34 @@
         "data"
       ]
     },
+    "ptmu_LeadingNeutCandMuonCosTheta": {
+      "name": "ptmu_LeadingNeutCandMuonCosTheta",
+      "xvar": "ptmu",
+      "yvar": "LeadingNeutCandMuonCosTheta",
+      "for": [
+        "data"
+      ]
+    },
     "pzmu_LeadingNeutCandEdep": {
       "name": "pzmu_LeadingNeutCandEdep",
       "xvar": "pzmu",
       "yvar": "LeadingNeutCandEdep",
+      "for": [
+        "data"
+      ]
+    },
+    "pzmu_LeadingNeutCandvtxSphereDist": {
+      "name": "pzmu_LeadingNeutCandvtxSphereDist",
+      "xvar": "pzmu",
+      "yvar": "LeadingNeutCandvtxSphereDist",
+      "for": [
+        "data"
+      ]
+    },
+    "pzmu_LeadingNeutCandMuonCosTheta": {
+      "name": "pzmu_LeadingNeutCandMuonCosTheta",
+      "xvar": "pzmu",
+      "yvar": "LeadingNeutCandMuonCosTheta",
       "for": [
         "data"
       ]
@@ -313,10 +445,18 @@
         "data"
       ]
     },
-    "EAvail_LeadingNeutCandEdep": {
-      "name": "EAvail_LeadingNeutCandEdep",
-      "xvar": "EAvail",
-      "yvar": "LeadingNeutCandEdep",
+    "recoil_LeadingNeutCandvtxSphereDist": {
+      "name": "recoil_LeadingNeutCandvtxSphereDist",
+      "xvar": "recoil",
+      "yvar": "LeadingNeutCandvtxSphereDist",
+      "for": [
+        "data"
+      ]
+    },
+    "recoil_LeadingNeutCandMuonCosTheta": {
+      "name": "recoil_LeadingNeutCandMuonCosTheta",
+      "xvar": "recoil",
+      "yvar": "LeadingNeutCandMuonCosTheta",
       "for": [
         "data"
       ]
