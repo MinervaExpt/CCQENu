@@ -19,17 +19,18 @@
 namespace NeutronMultiplicity {
 class NeutCand {
    public:
-    int m_blobID = -1;                         // which blob
-    int m_is3D = -1;                           // is it 3D?
-    double m_recoEDep = 0.0;                    // how much energy does it deposit?
-    double m_clusterMaxE = 0.0;                 // Max cluster Energy
+    int m_blobID = -1;                                              // which blob
+    int m_is3D = -1;                                                // is it 3D?
+    int m_view = 0;                                                   // 0 is none, 1 is x, 2 is u?, 3 is v?
+    double m_recoEDep = 0.0;                                        // how much energy does it deposit?
+    double m_clusterMaxE = 0.0;                                     // Max cluster Energy
     ROOT::Math::XYZVector m_begposition = ROOT::Math::XYZVector();  // where is it?
     ROOT::Math::XYZVector m_endposition = ROOT::Math::XYZVector();  // where does it end
     ROOT::Math::XYZVector m_flightpath = ROOT::Math::XYZVector();   // which direction did it travel from the vtx????
 
     // Truth vars
-    int m_truthPID = -1;       // PID of most recent GEANT Parent
-    int m_truthTopMCPID = -1;  // PID of the GENIE parent
+    int m_truthPID = -1;                                            // PID of most recent GEANT Parent
+    int m_truthTopMCPID = -1;                                       // PID of the GENIE parent
     ROOT::Math::XYZVector m_TopMomentum = ROOT::Math::XYZVector();  // which direction did it travel from the vtx????
 
     bool m_recoset = false;
@@ -37,12 +38,12 @@ class NeutCand {
 
     // CTORs
     NeutCand();  // default
-    NeutCand(int blobID, int is3D, double recoEDep, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition);
+    NeutCand(int blobID, int is3D, int view, double recoEDep, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition);
     // NeutCand(NeutCand& cand);
 
     ~NeutCand() = default;
     // reco functions
-    void SetReco(int blobID, int isD, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath);
+    void SetReco(int blobID, int is3D, int view, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath);
 
     // SetBlobID(int index);
 
@@ -51,6 +52,7 @@ class NeutCand {
 
     int GetCandBlobID();
     int GetCandIs3D();
+    int GetCandView();
     double GetCandRecoEDep();
     double GetCandMaxClusterE();
     ROOT::Math::XYZVector GetCandPosition();
@@ -119,14 +121,13 @@ class NeutEvent {
     NeutEvent(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath);
     NeutEvent(NuConfig config);  // would need to set up cands separately using SetCands
     NeutEvent();
-    ~NeutEvent() = default; //{
+    // ~NeutEvent() = default; //{
 
-    // ~NeutEvent() {
-    //     for (auto cand : m_cands) {
-    //         delete cand;
-    //     }
-    //     m_cands.clear();
-    // }
+    ~NeutEvent() {
+        m_cands.clear();
+        m_neutcands.clear();
+        m_trueneutcands.clear();
+    }
 
     void SetConfig(NuConfig config);
     // NeutEvent();
@@ -138,7 +139,7 @@ class NeutEvent {
     void SetTrueNeutCands();
    public:
     // Set the reco variables for reco and truth. This is necessary to handle both data and MC without issues
-    void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<ROOT::Math::XYZVector> begpositions, std::vector<ROOT::Math::XYZVector> endpositions);
+    void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<int> views, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<ROOT::Math::XYZVector> begpositions, std::vector<ROOT::Math::XYZVector> endpositions);
     void SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ);
 
     bool GetIsTruthSet();

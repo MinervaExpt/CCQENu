@@ -211,7 +211,7 @@ void LoopAndFillEventSelection(std::string tag,
                         double scale = 1.0;
                         if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv);  // Only calculate the per-universe weight for events that will actually use it.
                         
-                        // universe->PrintMADBlobs();
+                        // if (universe->ShortName() == "cv" && iuniv == 0) universe->PrintMADBlobs();
 
                         FillMC(tag, universe, weight, variables, variables2D, variablesHD, scale);
                         FillResponse(tag, universe, weight, variables, variables2D, variablesHD, scale);

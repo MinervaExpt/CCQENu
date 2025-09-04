@@ -104,6 +104,7 @@ class CVFunctions {
 
         recofunctions["OffsetRecoilEnergyGeV"] = &CVUNIVERSE::GetOffsetRecoilEnergyGeV;
 
+        recofunctions["EAvailFromBlobsGeV"] = &CVUNIVERSE::GetEAvailFromBlobsGeV;
         recofunctions["EAvailGeV"] = &CVUNIVERSE::GetEAvailGeV;
         recofunctions["EAvailLeadingBlobGeV"] = &CVUNIVERSE::GetEAvailLeadingBlobGeV;
         
