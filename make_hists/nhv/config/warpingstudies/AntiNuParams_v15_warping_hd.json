@@ -12,7 +12,7 @@
         "recoil_branch": "recoil_energy_nonmuon_nonvtx0mm"
     },
     "NeutronConfig": {
-        // "maxNCands": 2,
+        "maxNCands": 2,
         "vtxdist_min": 100.0,
         // "vtx_zdist_min": 100.0,
         // "vtx_box": [
@@ -21,9 +21,9 @@
         // ],
         "zpos_max": 8500.0,
         "zpos_min": 5890.0,
-        "muoncone_min": 15.0,
+        // "muoncone_min": 15.0,
         // "muondist_min": 100.0,
         "edep_min": 1.5,
-        "Is3D": 1
+        // "Is3D": 1
     }
 }

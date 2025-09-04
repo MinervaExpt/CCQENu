@@ -56,12 +56,60 @@
         "selected_reco"
       ]
     },
+    "EAvail_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID": {
+      "name": "EAvail_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "SecNeutCandvtxSphereDist",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID": {
+      "name": "EAvail_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "LeadingNeutCandvtxBoxDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID": {
+      "name": "EAvail_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "SecNeutCandvtxBoxDist",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
     "EAvail_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
       "name": "EAvail_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
       "vars": [
         "EAvail",
         "LeadingNeutCandEdep",
         "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_SecNeutCandEdep_SecNeutCandTopMCPID": {
+      "name": "EAvail_SecNeutCandEdep_SecNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "SecNeutCandEdep",
+        "SecNeutCandTopMCPID"
       ],
       "analysistype": 1,
       "for": [
@@ -92,6 +140,18 @@
         "selected_reco"
       ]
     },
+    "recoil_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID": {
+      "name": "recoil_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "SecNeutCandvtxSphereDist",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
     "recoil_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
       "name": "recoil_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
       "vars": [
@@ -104,12 +164,48 @@
         "selected_reco"
       ]
     },
+    "recoil_SecNeutCandEdep_SecNeutCandTopMCPID": {
+      "name": "recoil_SecNeutCandEdep_SecNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "SecNeutCandEdep",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
     "recoil_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
       "name": "recoil_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
       "vars": [
         "recoil",
         "LeadingNeutCandMuonCosTheta",
         "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID": {
+      "name": "recoil_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "LeadingNeutCandvtxBoxDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID": {
+      "name": "recoil_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "SecNeutCandvtxBoxDist",
+        "SecNeutCandTopMCPID"
       ],
       "analysistype": 1,
       "for": [
@@ -170,6 +266,42 @@
         "LeadingNeutCandEdep",
         "LeadingNeutCandvtxSphereDist",
         "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandEdep_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandEdep_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
+      "vars": [
+        "SecNeutCandEdep",
+        "SecNeutCandvtxSphereDist",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandvtxBoxDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandEdep_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandEdep_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID",
+      "vars": [
+        "SecNeutCandEdep",
+        "SecNeutCandvtxBoxDist",
+        "SecNeutCandTopMCPID"
       ],
       "analysistype": 1,
       "for": [
@@ -357,6 +489,30 @@
         "data"
       ]
     },
+    "SecNeutCandEdep_SecNeutCandvtxSphereDist": {
+      "name": "SecNeutCandEdep_SecNeutCandvtxSphereDist",
+      "xvar": "SecNeutCandEdep",
+      "yvar": "SecNeutCandvtxSphereDist",
+      "for": [
+        "data"
+      ]
+    },
+    "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist": {
+      "name": "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist",
+      "xvar": "LeadingNeutCandEdep",
+      "yvar": "LeadingNeutCandvtxBoxDist",
+      "for": [
+        "data"
+      ]
+    },
+    "SecNeutCandEdep_SecNeutCandvtxBoxDist": {
+      "name": "SecNeutCandEdep_SecNeutCandvtxBoxDist",
+      "xvar": "SecNeutCandEdep",
+      "yvar": "SecNeutCandvtxBoxDist",
+      "for": [
+        "data"
+      ]
+    },
     "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta":{
       "name": "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta",
       "xvar": "LeadingNeutCandvtxSphereDist",
@@ -373,6 +529,14 @@
         "data"
       ]
     },
+    "EAvail_SecNeutCandEdep": {
+      "name": "EAvail_SecNeutCandEdep",
+      "xvar": "EAvail",
+      "yvar": "SecNeutCandEdep",
+      "for": [
+        "data"
+      ]
+    },
     "EAvail_LeadingNeutCandvtxSphereDist": {
       "name": "EAvail_LeadingNeutCandvtxSphereDist",
       "xvar": "EAvail",
@@ -381,10 +545,34 @@
         "data"
       ]
     },
+    "EAvail_SecNeutCandvtxSphereDist": {
+      "name": "EAvail_SecNeutCandvtxSphereDist",
+      "xvar": "EAvail",
+      "yvar": "SecNeutCandvtxSphereDist",
+      "for": [
+        "data"
+      ]
+    },
     "EAvail_LeadingNeutCandMuonCosTheta": {
       "name": "EAvail_LeadingNeutCandMuonCosTheta",
       "xvar": "EAvail",
       "yvar": "LeadingNeutCandMuonCosTheta",
+      "for": [
+        "data"
+      ]
+    },
+    "EAvail_LeadingNeutCandvtxBoxDist": {
+      "name": "EAvail_LeadingNeutCandvtxBoxDist",
+      "xvar": "EAvail",
+      "yvar": "LeadingNeutCandvtxBoxDist",
+      "for": [
+        "data"
+      ]
+    },
+    "EAvail_SecNeutCandvtxBoxDist": {
+      "name": "EAvail_SecNeutCandvtxBoxDist",
+      "xvar": "EAvail",
+      "yvar": "SecNeutCandvtxBoxDist",
       "for": [
         "data"
       ]
@@ -445,6 +633,14 @@
         "data"
       ]
     },
+    "recoil_SecNeutCandEdep": {
+      "name": "recoil_SecNeutCandEdep",
+      "xvar": "recoil",
+      "yvar": "SecNeutCandEdep",
+      "for": [
+        "data"
+      ]
+    },
     "recoil_LeadingNeutCandvtxSphereDist": {
       "name": "recoil_LeadingNeutCandvtxSphereDist",
       "xvar": "recoil",
@@ -453,10 +649,34 @@
         "data"
       ]
     },
+    "recoil_SecNeutCandvtxSphereDist": {
+      "name": "recoil_SecNeutCandvtxSphereDist",
+      "xvar": "recoil",
+      "yvar": "SecNeutCandvtxSphereDist",
+      "for": [
+        "data"
+      ]
+    },
     "recoil_LeadingNeutCandMuonCosTheta": {
       "name": "recoil_LeadingNeutCandMuonCosTheta",
       "xvar": "recoil",
       "yvar": "LeadingNeutCandMuonCosTheta",
+      "for": [
+        "data"
+      ]
+    },
+    "recoil_LeadingNeutCandvtxBoxDist": {
+      "name": "recoil_LeadingNeutCandvtxBoxDist",
+      "xvar": "recoil",
+      "yvar": "LeadingNeutCandvtxBoxDist",
+      "for": [
+        "data"
+      ]
+    },
+    "recoil_SecNeutCandvtxBoxDist": {
+      "name": "recoil_SecNeutCandvtxBoxDist",
+      "xvar": "recoil",
+      "yvar": "SecNeutCandvtxBoxDist",
       "for": [
         "data"
       ]
@@ -685,13 +905,25 @@
       "name": "LeadingNeutCandEdep",
       "title": "Leading Blob Total E",
       "bins": [
+        // 1.5,
+        // 10,
+        // 30,
+        // 70,
+        // 150,
+        // 310,
+        // 500.0
         1.5,
-        10,
-        30,
-        70,
-        150,
-        310,
-        500.0
+        5.0,
+        12.0,
+        25.0,
+        50.0,
+        75.0,
+        100.0,
+        150.0,
+        200.0,
+        300.0,
+        500.0,
+        1000.0
       ],
       // "nbins": 50,
       // "min": 0.0,
@@ -708,12 +940,17 @@
       "title": "Second Blob Total E",
       "bins": [
         1.5,
-        10,
-        30,
-        70,
-        150,
-        310,
-        500.0
+        5.0,
+        12.0,
+        25.0,
+        50.0,
+        75.0,
+        100.0,
+        150.0,
+        200.0,
+        300.0,
+        500.0,
+        1000.0
       ],
       // "nbins": 50,
       // "min": 0.0,
