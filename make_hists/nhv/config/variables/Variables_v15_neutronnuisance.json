@@ -608,7 +608,7 @@
       // "nbins": 10,
       "nbins": 50,
       "min": 0.0,
-      "max": 1000.0,
+      "max": 500.0,
       "for": [
         "data",
         "selected_reco"
@@ -621,7 +621,7 @@
       "title": "Second Blob spherical dist from vtx",
       "nbins": 50,
       "min": 0.0,
-      "max": 1000.0,
+      "max": 500.0,
       "for": [
         "data",
         "selected_reco"
@@ -647,7 +647,7 @@
       "title": "Leading Blob box dist from vtx",
       "nbins": 50,
       "min": 0.0,
-      "max": 1000.0,
+      "max": 500.0,
       "for": [
         "data",
         "selected_reco"
@@ -660,7 +660,7 @@
       "title": "Second Blob box dist from vtx",
       "nbins": 50,
       "min": 0.0,
-      "max": 1000.0,
+      "max": 500.0,
       "for": [
         "data",
         "selected_reco"
@@ -1072,22 +1072,6 @@
       "name": "EAvail",
       "title": "E_{Available} in GeV",
       "bins": [
-        // 0.0,
-        // 0.04,
-        // 0.1,
-        // 0.18,
-        // 0.3,
-        // 0.5,
-        // 1.0
-        // -200.0,
-        // 0.0,
-        // 0.03,
-        // 0.07,
-        // 0.12,
-        // 0.2,
-        // 0.3,
-        // 0.5,
-        // 1.0
         0.0,
         0.04,
         0.1,
@@ -1095,6 +1079,7 @@
         0.3,
         0.5,
         1.0
+        // 0.75
       ],
       "fluxnorm": false
     },
@@ -1148,21 +1133,22 @@
       "name": "recoil",
       "title": "Recoil in GeV",
       "bins": [
+        0.0,
+        0.04,
+        0.1,
+        0.18,
+        0.3,
+        0.5,
+        // 0.75
+        1.0
         // 0.0,
-        // 0.04,
-        // 0.1,
-        // 0.18,
+        // 0.03,
+        // 0.07,
+        // 0.12,
+        // 0.2,
         // 0.3,
         // 0.5,
         // 1.0
-        0.0,
-        0.03,
-        0.07,
-        0.12,
-        0.2,
-        0.3,
-        0.5,
-        1.0
       ],
       // "for": [
       //   "data",
