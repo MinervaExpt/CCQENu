@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "warpingstudies_fixed_binning_EAvail_EAvailnohi_is3D_100mmvtx_min1_5MeV_20degmuon_2cands_300MeV1cand_500MeV0Cand_${MYSAMPLE}_${MYWARP}warp_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "warpingstudies_EAvail_incl2tracks_fixed2D_2Dand3D_100mmvtx_2cands_${MYSAMPLE}_${MYWARP}warp_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -25,7 +25,7 @@
   "DoTypes": false,
   "pdg": -14,
   "mcRecoToCSV": false,
-  "statusbar": false,
+  "statusbar": true,
   "runsamples": [ 
     "${MYSAMPLE}"
     // "QElike",

@@ -3,6 +3,12 @@ import sys
 import subprocess
 import ROOT
 from PlotUtils import MnvH1D, MnvH2D 
+import datetime
+
+
+mydate = datetime.datetime.now()
+month = mydate.strftime("%B")
+year = mydate.strftime("%Y")
 
 # How to run. Closure test, MnvTune v2
 # python run_TransWarpExtraction_f.py
@@ -15,11 +21,34 @@ excludebin = 1
 # Running TransWarpExtraction
 # ----------------------------
 
-studies = [
-    "nocut_oldbinning",
-    "recoilcut",
-    "nocut",
-    "lowbins",
+
+def MakePlotDir(subdir=""):
+    """
+    Subdir is the one for all plots that this script should ouptut. You will need to add
+    any other subdirs in the script itself (e.g. based off input file name)
+    """
+    plotdir = ""
+    base_plotdir = os.environ.get("OUTPUTLOC")
+    if base_plotdir != None:
+        plotdir = os.path.join(base_plotdir, month + year)
+    else:
+        plotdir = os.path.join("/Users/nova/git/output/", month + year)
+    if not os.path.exists(plotdir):
+        print("Can't find plot dir. Making it now... ", plotdir)
+        os.mkdir(plotdir)
+    if subdir == "":
+        return plotdir
+    if not os.path.exists(os.path.join(plotdir, subdir)):
+        print("Can't find plot dir. Making it now... ", os.path.join(plotdir, subdir))
+        os.mkdir(os.path.join(plotdir, subdir))
+    return os.path.join(plotdir, subdir)
+
+
+studies = [""
+    # "nocut_oldbinning",
+    # "recoilcut",
+    # "nocut",
+    # "lowbins",
 ]
 
 samples = {
@@ -32,9 +61,9 @@ samples = {
 variables = [
     "recoil",
     "EAvail",
-    "EAvailNoNonVtxBlobs",
-    # "ptmu",
-    "EAvailLeadingBlob",
+    # "EAvailNoNonVtxBlobs",
+    "ptmu",
+    # "EAvailLeadingBlob",
 ]
 
 warps = [
@@ -76,10 +105,10 @@ uncfactors = {
 
 
 warps_base_path = (
-    "/Users/nova/git/output/Summer25Collab/eventloopout/recoilstudy_newbinning"
+    "/Users/nova/git/output/August2025/eventloopout/warping/"
 )
 outdir_base = "/Users/nova/git/output/Summer25Collab/transwarp/recoilstudy_newbinning"
-
+outdir_base = MakePlotDir("warpingstudies")
 
 # nowarp_base_path = os.path.join(warps_base_path, "MnvTunev1")
 # mnvtunewarp_base_path = os.path.join(warps_base_path, "MnvTunev2")
@@ -195,16 +224,18 @@ for study in studies:
     outdir = os.path.join(outdir_base,study)
     if not os.path.exists(os.path.join(warps_base_path,study,"MnvTunev1")):
         continue
-
     nowarp_dir_list = os.listdir(os.path.join(warps_base_path,study,"MnvTunev1"))
+    # print(nowarp_dir_list)
+    print(os.path.join(warps_base_path, study, "MnvTunev1"))
     nowarp_file_name = ""
     for file_name in nowarp_dir_list:
-        # if "totaldatapotscaled_combined_" in file_name:
-        if "potscaled_combined_" in file_name and "totaldata" not in file_name:
+        if "totaldatapotscaled_combined_" in file_name:
+            # if "potscaled_combined_" in file_name and "totaldata" not in file_name:
             # if "combined_" in file_name and "potscaled" not in file_name:
             nowarp_file_name = os.path.join(
                 warps_base_path, study, "MnvTunev1", file_name
             )
+            print("looking at file ", nowarp_file_name)
     if nowarp_file_name == "":
         print("ERROR: Couldn't find nowarp file in", os.path.join(warps_base_path,study,"MnvTunev1"),"\n\tExiting.....")
         sys.exit(1)
@@ -220,7 +251,9 @@ for study in studies:
 
     # for warp in warps.keys():  # nubar
     for warp in warps:  # nubar
+        study = ""
         warp_dir_list = os.listdir(os.path.join(warps_base_path, study, warp))
+        # print(warp_dir_list)
         # for f in [1, 2, 3, 4, 4.697, 5, 6, 7, 8, 9, 10]: #nu
         warpfile = ""
         for file_name in warp_dir_list:
@@ -230,16 +263,20 @@ for study in studies:
                 warpfile = os.path.join(
                     warps_base_path, study, warp, file_name
                 )
+        print(warpfile)
         if warpfile == "":
             print("ERROR: Couldn't find nowarp file in", os.path.join(warps_base_path,study,warp),"\n\tExiting.....")
             sys.exit(1)
         if not os.path.exists(os.path.join(outdir, "warps")):
             os.mkdir(os.path.join(outdir, "warps"))
+        print("here", os.path.join(outdir, "warps"))
         for var in variables:
             if study not in uncfactors[var].keys():
-                continue
+                study = "nocut"
+                # continue
             if not os.path.exists(os.path.join(outdir,"warps",warp)):
                 os.mkdir(os.path.join(outdir, "warps", warp))
+            print("varloop", os.path.join(outdir, "warps", warp))
             output_file_name = os.path.join(
                 outdir,
                 "warps",
@@ -324,6 +361,7 @@ for study in studies:
             print(" ".join(cmd))
             subprocess.run(cmd)
             output_file_list.append(output_file_name)
+            print("here")
 
 
 print("TransWarpOutputs written to")
