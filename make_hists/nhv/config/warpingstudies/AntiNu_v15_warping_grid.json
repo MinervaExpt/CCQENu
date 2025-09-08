@@ -25,7 +25,7 @@
   "DoTypes": false,
   "pdg": -14,
   "mcRecoToCSV": false,
-  "statusbar": true,
+  "statusbar": false,
   "runsamples": [ 
     "${MYSAMPLE}"
     // "QElike",
