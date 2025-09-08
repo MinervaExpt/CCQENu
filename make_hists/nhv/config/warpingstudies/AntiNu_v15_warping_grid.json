@@ -4,7 +4,7 @@
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_sigonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
   "outRoot": "warpingstudies_EAvail_incl2tracks_fixed2D_2Dand3D_100mmvtx_2cands_${MYSAMPLE}_${MYWARP}warp_${MYPLAYLIST}_${MYMODEL}",
