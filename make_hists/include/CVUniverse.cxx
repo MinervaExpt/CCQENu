@@ -1203,8 +1203,8 @@ double CVUniverse::GetEAvailDropCandsGeV() const {
 
     if (neutevent->GetNNeutCands() == 0) return recoil;
     for (unsigned int i = 0; i < neutevent->GetNNeutCands(); i ++) {
-        if (i == 1 && recoil > 0.3) break;
-        if (i == m_maxNCands_neutron) break;  // defaults to 9999
+        // if (i == 1 && recoil > 0.2) break;
+        // if (i == m_maxNCands_neutron) break;  // defaults to 9999
         edep += neutevent->GetNeutCand(i)->GetCandRecoEDep();
     }
     // if (edep != 0)
@@ -1229,7 +1229,7 @@ double CVUniverse::GetEAvailGeV() const {
     if (neutevent->GetNNeutCands() == 0) return recoil;
     for (unsigned int i = 0; i < neutevent->GetNNeutCands(); i++) {
         // if (i == 1 && recoil > 0.3) break;
-        if (i == m_maxNCands_neutron) break;  // defaults to 9999
+        if (recoil > 0.3 && i == m_maxNCands_neutron) break;  // defaults to 9999
         edep += neutevent->GetNeutCand(i)->GetCandRecoEDep();
     }
     // if (edep != 0)
