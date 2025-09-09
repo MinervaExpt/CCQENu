@@ -386,6 +386,7 @@ bool NeutEvent::CandPassFiducial(int index) {
 bool NeutEvent::CandPassVtxDist(int index) {
     if (m_vtxdist_min <= 0) return true;
     double dist = m_cands[index]->GetCandVtxDist();
+    if (m_cands[index]->GetCandRecoEDep() < 12.0) return true;
     return dist >= m_vtxdist_min;
 }
 
@@ -436,10 +437,38 @@ int NeutEvent::GetCandTruthTopPID(int index) {
 }
 
 void NeutEvent::Configure(NuConfig config) {
+    // if (config.IsMember("global")) {
+    //     NuConfig globalsel_config = config.GetValue("global");
+    //     for (auto var : globalsel_config.GetKeys()) {
+    //         NuConfig varconfig = globalsel_config.GetConfig(var);
+    //         if (varconfig.IsMember("equals"))
+    //             m_global_equals[var] = varconfig.GetDouble("equals");
+    //         if (varconfig.IsMember("min"))
+    //             m_global_min[var] = varconfig.GetDouble("min");
+    //         if (varconfig.IsMember("max"))
+    //             m_global_max[var] = varconfig.GetDouble("max");
+    //     }
+    // }
+    // if (config.IsMember("subselections")) {
+    //     NuConfig subsel_config = config.GetValue("subselections");
+    //     for (auto sub : subsel_config.GetKeys()) {
+    //         for (auto var : subsel_config.GetKeys()) {
+    //             NuConfig varconfig = subsel_config.GetConfig(var);
+    //             if (varconfig.IsMember("equals"))
+    //                 m_subsel_equals[sub][var] = varconfig.GetDouble("equals");
+    //             if (varconfig.IsMember("min"))
+    //                 m_subsel_min[sub][var] = varconfig.GetDouble("min");
+    //             if (varconfig.IsMember("max"))
+    //                 m_subsel_max[sub][var] = varconfig.GetDouble("max");
+    //         }
+    //     }
+    // }
+
+
     if (config.IsMember("selection")) {
         NuConfig selection_config = config.GetValue("selection");
-        for (auto var : config.GetKeys()) {
-            NuConfig varconfig = config.GetConfig(var);
+        for (auto var : selection_config.GetKeys()) {
+            NuConfig varconfig = selection_config.GetConfig(var);
             if (varconfig.IsMember("equals"))
                 m_equals[var] = varconfig.GetDouble("equals");
             if (varconfig.IsMember("min"))
@@ -457,6 +486,10 @@ void NeutEvent::Configure(NuConfig config) {
         }
     }
 }
+
+// bool NeutEvent::CheckCand(int index) {
+//     for ()
+// }
 
 bool NeutEvent::CheckVal(std::string varname, double val) {
     if (std::find(m_selectionvars.begin(), m_selectionvars.end(), varname) == m_selectionvars.end()) {
