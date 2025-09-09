@@ -104,11 +104,9 @@ uncfactors = {
 }
 
 
-warps_base_path = (
-    "/Users/nova/git/output/August2025/eventloopout/warping/"
-)
+warps_base_path = "/Users/nova/git/output/September2025/eventloopout/warpingstudies/fullfiducial_protontracks"
 outdir_base = "/Users/nova/git/output/Summer25Collab/transwarp/recoilstudy_newbinning"
-outdir_base = MakePlotDir("warpingstudies")
+outdir_base = MakePlotDir("warpingstudies/fullfiducial_protontracks")
 
 # nowarp_base_path = os.path.join(warps_base_path, "MnvTunev1")
 # mnvtunewarp_base_path = os.path.join(warps_base_path, "MnvTunev2")
@@ -229,7 +227,7 @@ for study in studies:
     print(os.path.join(warps_base_path, study, "MnvTunev1"))
     nowarp_file_name = ""
     for file_name in nowarp_dir_list:
-        if "totaldatapotscaled_combined_" in file_name:
+        if "potscaled_combined_" in file_name:
             # if "potscaled_combined_" in file_name and "totaldata" not in file_name:
             # if "combined_" in file_name and "potscaled" not in file_name:
             nowarp_file_name = os.path.join(

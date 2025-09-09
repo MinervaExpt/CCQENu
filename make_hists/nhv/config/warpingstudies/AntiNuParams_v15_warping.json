@@ -5,7 +5,7 @@
         "Added the neutron config at some point. Most of it is read in by NeutronMultiplicity, excpt maxNCands, which CVUniv uses - NHV 8/15/25"
     ],
     "ProtonScoreConfig": {
-        "pass_proton_score_min": 0.65
+        "pass_proton_score_min": 0.3
     },
     "RecoilBranchConfig": {
         "vertex_dist": 0, //"100", "150"
