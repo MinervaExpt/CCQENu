@@ -1945,7 +1945,7 @@ double CVUniverse::GetTotNeutBlobEGeV() const {
     int nneutcands = neutevent->GetNNeutCands();
     for (unsigned int i = 0; i < nneutcands; i++) {
         // if (i == 2)
-        if (i == m_maxNCands_neutron) break;  // defaults to 9999
+        // if (i == m_maxNCands_neutron) break;  // defaults to 9999
         edep += neutevent->GetNeutCand(i)->GetCandRecoEDep();
     }
     // neutevent.reset();
@@ -1978,10 +1978,10 @@ double CVUniverse::GetTrueTotNeutBlobEGeV() const {
         return edep;
     }
     std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetTruthNeutEvent();
-    std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& neutcands = neutevent->GetNeutCands();
-    for (unsigned int i = 0; i < neutcands.size(); i++) {
-        edep += neutcands[i]->m_recoEDep;
-    }
+    // std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& neutcands = neutevent->GetNeutCands();
+    // for (unsigned int i = 0; i < neutcands.size(); i++) {
+    //     edep += neutcands[i]->m_recoEDep;
+    // }
     int ntrueneutcands = neutevent->GetNTrueNeutCands();
     if (ntrueneutcands == 0) return 0.0;
     for (unsigned int i = 0; i < ntrueneutcands; i++){
