@@ -1029,7 +1029,7 @@
       "true": "TrueTotNeutBlobEGeV",
       "name": "TotalNeutBlobE",
       "title": "Total Neutron Blob Energy",
-      "nbins": 30,
+      "nbins": 10,
       "min": 0.0,
       "max": 0.6,
       "for": [
@@ -1072,6 +1072,7 @@
       "name": "EAvail",
       "title": "E_{Available} in GeV",
       "bins": [
+        // -0.5,
         0.0,
         0.04,
         0.1,
