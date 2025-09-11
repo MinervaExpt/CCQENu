@@ -789,92 +789,92 @@ void LoopAndFillBDTG(std::string tag,
                      PlotUtils::weight_MCreScale mcRescale,
                      bool closure=false, bool mc_reco_to_csv=false) {
 
-  // Prepare loop
-  MinervaUniverse::SetTruth(false);
-  int nentries = -1;
+	// Prepare loop
+	MinervaUniverse::SetTruth(false);
+	int nentries = -1;
 
-  // get ready for weights by finding cv universe pointer
+	// get ready for weights by finding cv universe pointer
 
-  assert(!error_bands["cv"].empty() && "\"cv\" error band is empty!  Can't set Model weight.");
-  auto& cvUniv = error_bands["cv"].front();
-  // make a dummy event - may need to make fancier
-  PlotUtils::detail::empty event;
+	assert(!error_bands["cv"].empty() && "\"cv\" error band is empty!  Can't set Model weight.");
+	auto& cvUniv = error_bands["cv"].front();
+	// make a dummy event - may need to make fancier
+	PlotUtils::detail::empty event;
 
-  if ( variables.size() < 1) {
-    std::cout << " no variables to fill " << std::endl;
-    return;  // don't bother if there are no variables.
-  }
+	if ( variables.size() < 1) {
+		std::cout << " no variables to fill " << std::endl;
+		return;  // don't bother if there are no variables.
+	}
 
-  if (data_mc_truth == kData){
-    nentries = util.GetDataEntries();
-  }
-  else if (data_mc_truth == kMC){
-    nentries = util.GetMCEntries();
-  }
-  else{
-    nentries = util.GetTruthEntries() ;
-    MinervaUniverse::SetTruth(true);
-  }
+	if (data_mc_truth == kData){
+		nentries = util.GetDataEntries();
+	}
+	else if (data_mc_truth == kMC){
+		nentries = util.GetMCEntries();
+	}
+	else{
+		nentries = util.GetTruthEntries() ;
+		MinervaUniverse::SetTruth(true);
+	}
   
-  // xgboost
-  /*RBDT<> my_1track_bdt("my_1track_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_1track_Training.root");
-  RBDT<> my_2track_bdt("my_2track_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_2track_Training.root");
-  RBDT<> my_3ptrack_bdt("my_3ptrack_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_3ptrack_Training.root");*/
-  
-  // TMVA only
+	// xgboost
+	/*RBDT<> my_1track_bdt("my_1track_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_1track_Training.root");
+	RBDT<> my_2track_bdt("my_2track_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_2track_Training.root");
+	RBDT<> my_3ptrack_bdt("my_3ptrack_BDT","/home/sean/MinervaExpt/CCQENu/make_hists/smg/tmva_3ptrack_Training.root");*/
+
+	// TMVA only
 	RReader model_1track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_1track_BDTG.weights.xml"));
-  RReader model_2track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_2track_BDTG.weights.xml"));
-  RReader model_3ptrack(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml"));
+	RReader model_2track(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_2track_BDTG.weights.xml"));
+	RReader model_3ptrack(expandEnv("${CCQEMAT}/TMVA/TMVAMulticlass_3ptrack_BDTG.weights.xml"));
 
 	const clock_t begin_time = clock();
 
-  unsigned int loc = tag.find("___")+3;
-  std::string cat(tag,loc,string::npos);
-  std::string sample(tag,0,loc-3);
-  std::cout << sample << " category " << cat << std::endl;
-  std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
+	unsigned int loc = tag.find("___")+3;
+	std::string cat(tag,loc,string::npos);
+	std::string sample(tag,0,loc-3);
+	std::cout << sample << " category " << cat << std::endl;
+	std::cout << " starting loop " << data_mc_truth << " " << nentries << std::endl;
 
 	// Begin entries loop
-  for (int i = 0; i < nentries; i++) {
+	for (int i = 0; i < nentries; i++) {
     		
 		ProgressBar(nentries,i,true,data_mc_truth,prescale);
-		
-    cvUniv->SetEntry(i);
-    //atree->GetEntry(i);
 
-    if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
+		cvUniv->SetEntry(i);
+		//atree->GetEntry(i);
+
+		if (data_mc_truth != kData) model.SetEntry(*cvUniv, event);
 
 
-    const double cvWeight = (data_mc_truth == kData ||  closure ) ? 1. : model.GetWeight(*cvUniv,event);  // detail may be used for more complex things
-    // TODO: Is this scaled cvWeight necessary?
-    // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
-    
-    // Loop bands and universes
-    for (auto band : error_bands) {
-      std::vector<CVUniverse*> error_band_universes = band.second;
-      //  HMS replace with iuniv to access weights more easily
-      //  HMS for (auto universe : error_band_universes) {
-      std::string uni_name = (band.second)[0]->ShortName();
-      for (int iuniv=0; iuniv < error_band_universes.size(); iuniv++){
+		const double cvWeight = (data_mc_truth == kData ||  closure ) ? 1. : model.GetWeight(*cvUniv,event);  // detail may be used for more complex things
+		// TODO: Is this scaled cvWeight necessary?
+		// const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");
 
-        auto universe = error_band_universes[iuniv];
-        universe->SetEntry(i);
+		// Loop bands and universes
+		for (auto band : error_bands) {
+			std::vector<CVUniverse*> error_band_universes = band.second;
+			//  HMS replace with iuniv to access weights more easily
+			//  HMS for (auto universe : error_band_universes) {
+			std::string uni_name = (band.second)[0]->ShortName();
+			for (int iuniv=0; iuniv < error_band_universes.size(); iuniv++){
 
-        // Process this event/universe
-        //double weight = 1;
-        //if (universe->ShortName() == "cv" ) weight = data_mc_truth == kData ? 1. : universe->GetWeight();
+				auto universe = error_band_universes[iuniv];
+				universe->SetEntry(i);
 
-        // probably want to move this later on inside the loop
-        const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event); //Only calculate the per-universe weight for events that will actually use it.
-        //double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event);
-        //PlotUtils::detail::empty event;
+				// Process this event/universe
+				//double weight = 1;
+				//if (universe->ShortName() == "cv" ) weight = data_mc_truth == kData ? 1. : universe->GetWeight();
+
+				// probably want to move this later on inside the loop
+				const double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event); //Only calculate the per-universe weight for events that will actually use it.
+				//double weight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*universe, event);
+				//PlotUtils::detail::empty event;
+
+				std::vector<float> response_vec;
+				//std::vector<float> xgboost_response_vec;
+
+				if (data_mc_truth != kTruth) {
         
-        std::vector<float> response_vec;
-        //std::vector<float> xgboost_response_vec;
-        
-        if (data_mc_truth != kTruth) {
-        
-		      float multiplicity = universe->GetMultiplicity();
+					float multiplicity = universe->GetMultiplicity();
 					float proton_score1_0 = universe->GetPrimaryProtonScore1();
 					float proton_score1_1 = universe->GetProtonScore1_1();
 					float proton_score1_2 = universe->GetProtonScore1_2();
@@ -905,7 +905,7 @@ void LoopAndFillBDTG(std::string tag,
 					
 					std::vector<float> input_vars;
 					//std::vector<float> xgboost_input_vars;
-					
+
 					input_vars.emplace_back(multiplicity);
 					//xgboost_input_vars.emplace_back(multiplicity);
 					if (proton_score1_0 >= 0) {

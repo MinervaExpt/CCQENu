@@ -36,16 +36,23 @@ int main( int argc, char** argv )
 {
 	std::string pl;
 	if (argc == 2){
-    pl = std::string(argv[1]);
-  }
-  else{
-    std::cout << " arguments are:\n [path/to/]TMVAMulticlass <path/to/config> " << std::endl;
-    exit(0);
-  }
-  
-  std::string configfilename(pl+".json");
+		pl = std::string(argv[1]);
+	}
+	else{
+		std::cout << " arguments are:\n [path/to/]TMVAMulticlass <path/to/config> " << std::endl;
+		exit(0);
+	}
+
+	std::string configfilename(pl+".json");
 	NuConfig config;
 	config.Read(configfilename);
+	
+	TString fname = config.GetString("InFile");
+	std::string infilename = std::string(fname);
+	int ntrees = config.GetInt("NumberDecisionTrees");
+	double learnrate = config.GetDouble("LearningRate");
+	std::string strlrnrt = std::to_string(learnrate);
+	std::string boostType = config.GetString("boostType");
 
 	// This loads the library
 	TMVA::Tools::Instance();
@@ -70,16 +77,16 @@ int main( int argc, char** argv )
 	Use["FDA_GA"]  = methodsConfig.GetBool("FDA_GA");
 	Use["PDEFoam"] = methodsConfig.GetBool("PDEFoam");
 
-   //---------------------------------------------------------------
+	//---------------------------------------------------------------
 
 	std::cout << std::endl;
 	std::cout << "==> Start TMVAMulticlass" << std::endl;
 
 	// Create a new root output file.
-	TString outfileName = std::string("Multiclassed_"+config.GetString("Tag")+"_"+config.GetString("InFile"));
+	TString outfileName = std::string("Multiclassed_"+config.GetString("Tag")+"_"+infilename.substr(0, infilename.find("."))+"_"+std::to_string(ntrees)+"_"+strlrnrt.substr(0,strlrnrt.find("."))+"dot"+strlrnrt.substr(2,strlrnrt.find("."))+".root");
 	TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
 
-	TMVA::Factory *factory = new TMVA::Factory( std::string("TMVAMulticlass_"+config.GetString("Tag")), outputFile,
+	TMVA::Factory *factory = new TMVA::Factory( std::string("TMVAMulticlass_"+config.GetString("Tag")+"_"+std::to_string(ntrees)), outputFile,
 		                                         "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Multiclass" );
 	TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset");
 
@@ -152,7 +159,6 @@ int main( int argc, char** argv )
 	*/
 
 	TFile *input(0);
-	TString fname = config.GetString("InFile");
 	if (!gSystem->AccessPathName( fname )) {
 		input = TFile::Open( fname ); // check if file in local directory exists
 	}
@@ -167,24 +173,44 @@ int main( int argc, char** argv )
 	
 	std::cout << "Creating and adding Trees." << std::endl;
 	TTree *signalTree  = (TTree*)input->Get(sigT.c_str());
-	TTree *background0 = (TTree*)input->Get(bkgdTs[0].c_str());
-	TTree *background1 = (TTree*)input->Get(bkgdTs[1].c_str());
-	TTree *background2 = (TTree*)input->Get(bkgdTs[2].c_str());
-	TTree *background3 = (TTree*)input->Get(bkgdTs[3].c_str());
+	TTree *background0;
+	TTree *background1;
+	TTree *background2;
+	TTree *background3;
+	TTree *background4;
+	if (bkgdTs.size() == 1) {
+		background0 = (TTree*)input->Get(bkgdTs[0].c_str());
+	} else if (bkgdTs.size() == 2) {
+		background0 = (TTree*)input->Get(bkgdTs[0].c_str());
+		background1 = (TTree*)input->Get(bkgdTs[1].c_str());
+	} else if (bkgdTs.size() == 3) {
+		background0 = (TTree*)input->Get(bkgdTs[0].c_str());
+		background1 = (TTree*)input->Get(bkgdTs[1].c_str());
+		background2 = (TTree*)input->Get(bkgdTs[2].c_str());
+	} else if (bkgdTs.size() == 4) {
+		background0 = (TTree*)input->Get(bkgdTs[0].c_str());
+		background1 = (TTree*)input->Get(bkgdTs[1].c_str());
+		background2 = (TTree*)input->Get(bkgdTs[2].c_str());
+		background3 = (TTree*)input->Get(bkgdTs[3].c_str());
+	}
 	
 	gROOT->cd( outfileName+TString(":/") );
 	dataloader->AddTree(signalTree,sigT.c_str());
+	
 	dataloader->AddTree(background0,bkgdTs[0].c_str());
-	dataloader->AddTree(background1,bkgdTs[1].c_str());
-	dataloader->AddTree(background2,bkgdTs[2].c_str());
-	dataloader->AddTree(background3,bkgdTs[3].c_str());
+	if (bkgdTs.size() > 1) dataloader->AddTree(background1,bkgdTs[1].c_str());
+	if (bkgdTs.size() > 2) dataloader->AddTree(background2,bkgdTs[2].c_str());
+	if (bkgdTs.size() > 3) dataloader->AddTree(background3,bkgdTs[3].c_str());
 	
 	std::cout << "Setting weights." << std::endl;
 	dataloader->SetWeightExpression("weight",sigT.c_str());
-	dataloader->SetWeightExpression("weight",bkgdTs[0].c_str());
-	dataloader->SetWeightExpression("weight",bkgdTs[1].c_str());
-	dataloader->SetWeightExpression("weight",bkgdTs[2].c_str());
-	dataloader->SetWeightExpression("weight",bkgdTs[3].c_str());
+	for (int i=0; i<bkgdTs.size(); i++) {
+		dataloader->SetWeightExpression("weight",bkgdTs[i].c_str());
+	}
+	//dataloader->SetWeightExpression("weight",bkgdTs[0].c_str());
+	//dataloader->SetWeightExpression("weight",bkgdTs[1].c_str());
+	//dataloader->SetWeightExpression("weight",bkgdTs[2].c_str());
+	//dataloader->SetWeightExpression("weight",bkgdTs[3].c_str());
 	/*
 	TTree *signalTree  = (TTree*)input->Get("Mult2p___qelike");
 	TTree *background0 = (TTree*)input->Get("Mult2p___1chargedpion");
@@ -211,8 +237,10 @@ int main( int argc, char** argv )
 	std::cout << "Preparing Training and Test Trees." << std::endl;
 	dataloader->PrepareTrainingAndTestTree(mycuts, "SplitMode=Random:NormMode=NumEvents:!V" );
 
+	std::string boost = "Grad:Shrinkage";
+
 	if (Use["BDTG"]) // gradient boosted decision trees
-		factory->BookMethod( dataloader,  TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.50:nCuts=20:MaxDepth=3");
+		factory->BookMethod( dataloader,  TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees="+std::to_string(ntrees)+":BoostType=Grad:Shrinkage="+std::to_string(learnrate)+":UseBaggedBoost:BaggedSampleFraction=0.50:nCuts=20:MaxDepth=3");
 	if (Use["MLP"]) // neural network
 		factory->BookMethod( dataloader,  TMVA::Types::kMLP, "MLP", "!H:!V:NeuronType=tanh:NCycles=1000:HiddenLayers=N+5,5:TestRate=5:EstimatorType=MSE");
 	if (Use["FDA_GA"]) // functional discriminant with GA minimizer

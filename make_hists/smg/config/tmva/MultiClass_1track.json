@@ -1,5 +1,5 @@
 {
-	"InFile":"CCQENu_minervame1N_MC_Inextinguishable_merged_TMVA.root",
+	"InFile":"MAD_mc_me1N_TMVA.root",
 	"Tag":"1track",
 	"SignalTree":"qelike",
 	"BackgroundTrees":["1chargedpion",
@@ -14,6 +14,8 @@
 		"DL_CPU" :0,
 		"DL_GPU": 0
 	},
+	"NumberDecisionTrees":100,
+	"LearningRate":0.3,
 	"Cuts":"PrimaryProtonScore1<0 && NumberOfProtonCandidates==0",
 	"Variables":["Multiplicity",
 	             "NBlobs",
