@@ -826,9 +826,9 @@
       "name": "LeadingNeutCandvtxSphereDist",
       "title": "Leading Blob spherical dist from vtx",
       // "nbins": 10,
-      "nbins": 12,
+      "nbins": 16,
       "min": 0.0,
-      "max": 600.0,
+      "max": 400.0,
       "for": [
         "data",
         "selected_reco"
@@ -839,9 +839,9 @@
       "true": "SecNeutCandvtxSphereDist",
       "name": "SecNeutCandvtxSphereDist",
       "title": "Second Blob spherical dist from vtx",
-      "nbins": 12,
+      "nbins": 16,
       "min": 0.0,
-      "max": 600.0,
+      "max": 400.0,
       "for": [
         "data",
         "selected_reco"
@@ -852,9 +852,9 @@
       "true": "ThirdNeutCandvtxSphereDist",
       "name": "ThirdNeutCandvtxSphereDist",
       "title": "Third Blob spherical dist from vtx",
-      "nbins": 12,
+      "nbins": 16,
       "min": 0.0,
-      "max": 600.0,
+      "max": 400.0,
       "for": [
         "data",
         "selected_reco"
@@ -865,9 +865,9 @@
       "true": "LeadingNeutCandvtxBoxDist",
       "name": "LeadingNeutCandvtxBoxDist",
       "title": "Leading Blob box dist from vtx",
-      "nbins": 12,
+      "nbins": 16,
       "min": 0.0,
-      "max": 600.0,
+      "max": 400.0,
       "for": [
         "data",
         "selected_reco"
@@ -878,9 +878,9 @@
       "true": "SecNeutCandvtxBoxDist",
       "name": "SecNeutCandvtxBoxDist",
       "title": "Second Blob box dist from vtx",
-      "nbins": 12,
+      "nbins": 16,
       "min": 0.0,
-      "max": 600.0,
+      "max": 400.0,
       "for": [
         "data",
         "selected_reco"
@@ -891,9 +891,9 @@
       "true": "ThirdNeutCandvtxBoxDist",
       "name": "ThirdNeutCandvtxBoxDist",
       "title": "Third Blob box dist from vtx",
-      "nbins": 12,
+      "nbins": 16,
       "min": 0.0,
-      "max": 600.0,
+      "max": 400.0,
       "for": [
         "data",
         "selected_reco"
@@ -922,8 +922,8 @@
         150.0,
         200.0,
         300.0,
-        500.0,
-        1000.0
+        500.0//,
+        // 1000.0
       ],
       // "nbins": 50,
       // "min": 0.0,
@@ -949,8 +949,8 @@
         150.0,
         200.0,
         300.0,
-        500.0,
-        1000.0
+        500.0//,
+        // 1000.0
       ],
       // "nbins": 50,
       // "min": 0.0,

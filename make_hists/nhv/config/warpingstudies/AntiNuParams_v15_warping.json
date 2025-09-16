@@ -25,37 +25,37 @@
         // "muondist_min": 100.0,
         "edep_min": 1.5,
         // "Is3D": 1
-        "vtxdist_edep_min": {
-            "band1":{
-                "edep_max": 12.0,
-                "vtxdist_min": 0.0
-            },
-            "band2": {
-                "edep_range": [
-                    12.0,
-                    50.0
-                ],
-                "vtxdist_min": 50.0
-            },
-            "band3": {
-                "edep_range": [
-                    50.0,
-                    100.0
-                ],
-                "vtxdist_min": 100.0
-            },
-            "band4": {
-                "edep_range": [
-                    100.0,
-                    200.0
-                ],
-                "vtxdist_min":150.0
-            },
-            "band5": {
-                "edep_min": 200.0,
-                "vtxdist_min": 200.0
-            }
-        }
+        // "vtxdist_edep_min": {
+        //     "band1":{
+        //         "edep_max": 12.0,
+        //         "vtxdist_min": 0.0
+        //     },
+        //     "band2": {
+        //         "edep_range": [
+        //             12.0,
+        //             50.0
+        //         ],
+        //         "vtxdist_min": 50.0
+        //     },
+        //     "band3": {
+        //         "edep_range": [
+        //             50.0,
+        //             100.0
+        //         ],
+        //         "vtxdist_min": 100.0
+        //     },
+        //     "band4": {
+        //         "edep_range": [
+        //             100.0,
+        //             200.0
+        //         ],
+        //         "vtxdist_min":150.0
+        //     },
+        //     "band5": {
+        //         "edep_min": 200.0,
+        //         "vtxdist_min": 200.0
+        //     }
+        // }
         // "global": {
         //     "zpos": {
         //         "min": 5890.0,
