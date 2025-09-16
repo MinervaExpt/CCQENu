@@ -104,6 +104,10 @@ class NeutEvent {
     bool _recoset = false;
     bool _truthset = false;
 
+    // More complicated stuff
+    std::vector<std::pair<double,double>> m_vtxdist_edep;
+    bool _is_vtxdist_edep_set = false;
+
    public:
     int m_ncands = 0;                                             // total number of cands in event
     int m_nneutcands = 0;                                         // total number of cands passing neutron selection

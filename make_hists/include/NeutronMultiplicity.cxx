@@ -152,6 +152,24 @@ void NeutEvent::SetConfig(NuConfig config) {
     if (config.IsMember("edep_min")) m_edep_min = config.GetDouble("edep_min");
     if (config.IsMember("Is3D")) m_req3D = config.GetInt("Is3D");
     if (config.IsMember("maxlength")) m_maxlength = config.GetDouble("maxlength");
+    if (config.IsMember("vtxdist_edep_min")) {
+        NuConfig subconfig = config.GetConfig("vtxdist_edep_min");
+
+        for (auto band : subconfig.GetKeys()) {
+            NuConfig band_config = subconfig.GetConfig(band);
+            double tmp_edep = 100000.0;
+            double tmp_vtxdist = 0.0;
+            if (band_config.IsMember("edep_max")) {
+                tmp_edep = band_config.GetDouble("edep_max");
+            } else if (band_config.IsMember("edep_range")) {
+                tmp_edep = band_config.GetDoubleVector("edep_range")[1];
+            } 
+            tmp_vtxdist = band_config.GetDouble("vtxdist_min");
+            std::pair<double,double> mypair = {tmp_edep,tmp_vtxdist};
+            m_vtxdist_edep.push_back(mypair);
+        }
+        _is_vtxdist_edep_set = true;
+    }
 }
 
 void NeutEvent::SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath) {
@@ -390,9 +408,20 @@ bool NeutEvent::CandPassFiducial(int index) {
 }
 
 bool NeutEvent::CandPassVtxDist(int index) {
-    if (m_vtxdist_min <= 0) return true;
+    if (m_vtxdist_min <= 0 && !_is_vtxdist_edep_set) return true;
+    bool pass = false;
     double dist = m_cands[index]->GetCandVtxDist();
-    if (m_cands[index]->GetCandRecoEDep() < 12.0) return true;
+    if (_is_vtxdist_edep_set) {
+        double edep = m_cands[index]->GetCandRecoEDep();
+        for (auto band : m_vtxdist_edep) {
+            if (edep < band.first) {
+                // std::cout << "edep, vtx dist: " << edep << ", " << dist << "\tband " << band.first << ", " << band.second << std::endl;
+                return dist >= band.second;
+            }
+        }
+        return false;
+    }
+    // if (m_cands[index]->GetCandRecoEDep() < 12.0) return true;
     return dist >= m_vtxdist_min;
 }
 
