@@ -1,0 +1,1 @@
+nohup xrdcopy root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p6/FullDetector/Merged_mc_ana_me5A_DualVertex_p6/MasterAnaDev_mc_AnaTuple_run00123000_Playlist.root /minerva/data/ME/p6/FullDetector/Merged_mc_ana_me5A_DualVertex_p6/MasterAnaDev_mc_AnaTuple_run00123000_Playlist.root

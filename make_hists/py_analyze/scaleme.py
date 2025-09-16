@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-TEST = True # only does Enu
+TEST = False # only does Enu
 DEBUG = False # even more printout
 STOP1 = False # just does readin
-rescale = True # expect a fit of some sort
+rescale = False # expect a fit of some sort
 
 import os,sys
 from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixDSym, TVectorD
@@ -105,14 +105,14 @@ f = TFile.Open(inputname, "READONLY")
 g = TFile.Open(inputname.replace(".root","_out.root"),"RECREATE")
 
 mains = f.Get("main").GetTitle()
-rescale = f.Get("Fit")
+#rescale = f.Get("Fit")
 
 # get the info from the fit if available, otherwise need to read it in. 
 
 if rescale:
     allconfigs["Fit"] = commentjson.loads((f.Get("Fit").GetTitle()))
 else:
-    definitions = open("SignalDef.json",'r')
+    definitions = open("CCQESignal.json",'r')
     fitconfig = commentjson.load(definitions)
     allconfigs["Fit"] = fitconfig
 
@@ -126,6 +126,8 @@ if "AnalyzeVariables2D" in allconfigs["main"]:
     AnalyzeVariables2D = allconfigs["main"]["AnalyzeVariables2D"]
 else:
     AnalyzeVariables2D = []
+
+print ("AnalyzeVariables",AnalyzeVariables)
 
 categoryMap = {}
 signalMap = {}
@@ -261,8 +263,12 @@ for k in f.GetListOfKeys():
     category = parsekey[2]
     variable = parsekey[3]
     thetype = parsekey[4]
-    
-     
+    if variable not in AnalyzeVariables["AnalyzeVariables"] :
+        if DEBUG: print ("variable",variable,"not in AnalyzeVariables",AnalyzeVariables)
+        continue  
+    if "resolution" in variable:
+        if DEBUG: print ("variable",variable,"is a resolution variable, skipping")
+        continue 
     if "parameters" in key:
         hist = MnvH1D()
         hist = f.Get(key)
@@ -583,9 +589,9 @@ for sample in samples:
     print ("sample",sample)
     for variable in variables:
         print ("variable",variable)
-        #if variable not in AnalyzeVariables:
-        #    print (variable,"is not in",AnalyzeVariables)
-        #    continue
+        if variable not in AnalyzeVariables["AnalyzeVariables"] or "resolution" in variable:
+            print (variable,"is not in",AnalyzeVariables)
+            continue
         for thetype in usetypes:
             # if "reconstructed" not in thetype:
             #     print ("danger, in test mode")
@@ -595,6 +601,12 @@ for sample in samples:
             #if not rescale and thetype == "reconstructed_scaled": continue
             status = 1
             models = {}
+            if "reconstructed" not in hists1D[sample][variable]:
+                print ("no reconstructed for",sample,variable,thetype)
+                continue
+            if "data" not in hists1D[sample][variable]["reconstructed"]:
+                print ("no data for",sample,variable,thetype)
+                continue
             data = hists1D[sample][variable]["reconstructed"]["data"]
             #signal = allconfigs["main"]["signal"][sample]
             signals =  allconfigs["Fit"]["Signal"]

@@ -1,0 +1,204 @@
+{
+    "Comments": [
+        "v16 add inclusive samples",
+        "v9 - 2022-05-18 get rid of FULL",
+        "and add QElikeNot"
+    ],
+    "QElike": // this one reproduces the older format
+    {
+        "name": "QElike",
+        "reco": "QElike",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "qelikenot"
+        ],
+        "categories": {
+            "qelike": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenot": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth"
+                ]
+            }
+        }
+    },
+    "QElikeNu": // this one reproduces the older format
+    {
+        "name": "QElikeNu",
+        "reco": "QElikeNu",
+        "phase_space": "phase_space_inclusive",
+        "signal": [
+            "qelikeNu"
+        ],
+        "background": [
+            "qelikeNunot"
+        ],
+        "categories": {
+            "qelikeNu": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikeNunot": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth"
+                ]
+            }
+        }
+    },
+    "Inclusive": // this one reproduces the older format
+    {
+        "name": "Inclusive",
+        "reco": "Inclusive",
+        "phase_space": "phase_space_inclusive",
+        "signal": [
+            "inclusive"
+        ],
+        "background": [
+            "wrongsign"
+        ],
+        "categories": {
+            "inclusive": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "wrongsign": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth"
+                ]
+            }
+        }
+    },
+    "InclusiveNu": // this one reproduces the older format
+    {
+        "name": "InclusiveNu",
+        "reco": "InclusiveNu",
+        "phase_space": "phase_space_inclusive",
+        "signal": [
+            "inclusiveNu"
+        ],
+        "background": [
+            "inclusive" // this is anti-neutrino
+        ],
+        "categories": {
+            "inclusiveNu": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "inclusive": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth"
+                ]
+            }
+        }
+    },
+    //    "QElikeNot":
+    //   {"name":"QElikeNot",
+    //    "reco":"QElikeNot",
+    //    "phase_space":"phase_space",
+    //    "signal":["qelike"],
+    //    "background":["qelikenot"],
+    //    "categories":{
+    //      "qelike":{
+    //        "for":["selected_reco"]
+    //        },
+    //      "qelikenot":{"for":["selected_reco","selected_truth"]
+    //        }
+    //      }
+    //   },
+    "Multiplicity1": { // multipliciy is 1 
+        "name": "Multiplicity1",
+        "reco": "EHadronic",
+        "phase_space": "phase_space",
+        "signal": [
+            "qelike_np"
+        ],
+        "background": [
+            "qelikenot_np"
+        ],
+        "categories": {
+            "qelike_np": {
+                "for": [
+                    "selected_reco",
+                    "selected_truth",
+                    "truth",
+                    "response"
+                ]
+            },
+            "qelikenot_np": {
+                "for": [
+                    "selected_reco"
+                ]
+            }
+        }
+    }
+}
+//   "QElikeNP":{
+//      "name":"QElikeNP",
+//      "reco":"QElike",
+//      "phase_space":"phase_space",
+//      "signal":["qelike_np"],
+//      "background":["qelikenot_np"],
+//      "categories":{
+//        "qelike_np":{
+//          "for":["selected_reco","selected_truth","truth","response"]
+//         },
+//        "qelikenot_np":{
+//          "for":["selected_reco","selected_truth","truth"]
+//        }
+//      }
+//   },
+//   "QElikeNPAllN":{
+//      "name":"QElikeNPAllN",
+//      "reco":"QElikeAllN",
+//      "phase_space":"phase_space",
+//      "signal":["qelike_np"],
+//      "background":["qelikenot_np"],
+//      "categories":{
+//        "qelike_np":{
+//          "for":["selected_reco","selected_truth","truth","response"]
+//         },
+//        "qelikenot_np":{
+//          "for":["selected_reco","selected_truth","truth"]
+//        }
+//      }
+//   },
+//   "QElikeALLAngles":{
+//      "name":"QElikeALLAngles",
+//      "reco":"QElike",
+//      "phase_space":"phase_space_all_angles",
+//      "signal":["qelike_np"],
+//      "background":["qelikenot_np"],
+//      "categories":{
+//        "qelike_np":{
+//          "for":["selected_reco","selected_truth","truth","response"]
+//         },
+//        "qelikenot_np":{
+//          "for":["selected_reco"]
+//        }
+//      }
+//   }

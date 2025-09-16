@@ -53,8 +53,7 @@ fits/MultiScaleFactors.cpp
 fits/DoTheFit.cpp
 fits/DoTheFitBinByBin.cpp
 utils/SyncBands.cxx
-utils/ccqemadd.cxx
-#utils/ccqemadd_improved.cxx
+utils/BinomialMC.cxx
 )
 
 # tell it about the header files
@@ -83,6 +82,7 @@ fits/MultiScaleFactors.h
 fits/DoTheFit.h
 fits/DoTheFitBinByBin.h
 utils/SyncBands.h
+utils/BinomialMC.h
 )
 
 include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils)
@@ -120,13 +120,12 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} MathCore -L$ENV{PLOTUTIL
 # Adding something we can run - Output name matches target name
 
 #add_executable(runsamples runsamples.C)
-add_executable(sidebands_v2 sidebands_v2.C)
-
+#add_executable(sidebands_v2 sidebands_v2.C)
+add_executable(BinomialMC_t BinomialMC_t.cxx)
 #add_executable(analyze_v8 analyze_v8.C)
-add_executable(analyze_v9 analyze_v9.C)
-add_executable(MnvFitDriver MnvFitDriver.cxx)
-add_executable(ccqemadd ../utils/ccqemadd.cxx)
-#add_executable(ccqemadd_improved ../utils/ccqemadd_improved.cxx)
+#add_executable(analyze_v9 analyze_v9.C)
+#add_executable(MnvFitDriver MnvFitDriver.cxx)
+
 #add_executable(MnvMateusDriver MnvMateusDriver.cxx)
 #add_executable(analyze_vSean smg/analyze_vSean.C)
 #add_executable(getCSVs ../utilities/getCSVs.C)
@@ -138,15 +137,13 @@ add_executable(ccqemadd ../utils/ccqemadd.cxx)
 # even flags, so linking a target that does not exist will not give a configure-time error.
 
 #target_link_libraries(runsamples  PRIVATE ${PROJEC_NAME} )
-target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
-
+#target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(BinomialMC_t PRIVATE ${PROJECT_NAME})
 #target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
-target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )
+#target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(MnvFitDriver PRIVATE ${PROJECT_NAME} )
 
-target_link_libraries(MnvFitDriver PRIVATE ${PROJECT_NAME} )
-target_link_libraries(ccqemadd PRIVATE ${PROJECT_NAME} )
-#target_link_libraries(ccqemadd_improved PRIVATE ${PROJECT_NAME} )
+#target_link_libraries(MnvMateusDriver PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(analyze_vSean  PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(getCSVs PRIVATE ${PROJECT_NAME} )
 #target_link_libraries(getRatio PRIVATE ${PROJECT_NAME} )

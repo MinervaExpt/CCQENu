@@ -638,7 +638,7 @@ class AnalysisDriver():
                     print ("merging",sample,variable,thetype)
                     status = 1
                     models = {}
-                    if variable in self.hists2D[sample]:
+                    if self.hists2D and variable in self.hists2D[sample]:
                         continue
                     data = self.hists1D[sample][variable]["reconstructed"]["data"]
                     #signal = self.allconfigs["main"]["signal"][sample]

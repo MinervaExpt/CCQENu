@@ -303,7 +303,7 @@ template<class MnvHistoType>
     int m_fluxUniverses = configs.at("main")->GetInt("fluxUniverses");
     bool m_nue_constraint = configs.at("main")->GetInt("NuEConstraint");
     int pdg = configs.at("main")->GetInt("pdg");
-
+    std::cout << "pdg for flux is " << pdg << std::endl;
     //++++++++++++++++++=  Initialization +++++++++++++++++++++++++
 
     // Get the flux hist, clean it up a bit, remove binwidth correction that should not be there and return

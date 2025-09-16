@@ -7,6 +7,7 @@ bool DEBUG = 1;
 #include "MinervaUnfold/MnvUnfold.h"
 #include "PlotUtils/MnvH1D.h"
 #include "PlotUtils/MnvH2D.h"
+#include "PlotUtils/TargetUtils.h"
 #include "utils/RebinFlux.h"
 // #include "utils/RebinFluxTest.h"
 #include <stdlib.h>
@@ -147,8 +148,22 @@ int main(const int argc, const char* argv[]) {
     MnvH1D* h_flux_dewidthed = GetFlux(allconfigs);
 
     double flux = h_flux_dewidthed->Integral();
+    std::cout << "The integrated flux is " << flux << std::endl;
     // make containers for different analysis levels
     std::map<std::string, MnvH1D*> h_flux_ebins;
+
+    TargetUtils t = TargetUtils();
+    double minZ = 5980;
+    double maxZ = 8422;
+    double AtomsData = t.GetTrackerNAtoms(minZ,  maxZ, false);
+    double AtomsMC = t.GetTrackerNAtoms(minZ, maxZ, true);
+    double ProtonsData = t.GetTrackerNProtons(minZ, maxZ, false);
+    double ProtonsMC = t.GetTrackerNProtons(minZ, maxZ, true);
+    double NeutronsData = t.GetTrackerNNeutrons(minZ, maxZ, false);
+    double NeutronsMC = t.GetTrackerNNeutrons(minZ, maxZ, true);
+    std::cout << "Atoms" << AtomsData << " " << AtomsMC << std::endl;
+    std::cout << "Nucleons" << ProtonsData+NeutronsData << " " << ProtonsMC + NeutronsMC << std::endl;
+    std::cout << "targets" << targets << std::endl;
 
     // now loop over histograms, unsmear, efficiency correct and normalize
 

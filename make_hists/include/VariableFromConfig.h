@@ -269,7 +269,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         double range = bins[GetNBins()]-bins[1];
 
         if (m_doresolution) {
-            m_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName() + ";" + m_xaxis_label + " reco-true").c_str(), 50, -range / 10., range / 10., univs, tags);
+            m_resolution = HM(Form("%s_resolution", GetName().c_str()), (GetName() + ";" + m_xaxis_label + " reco-true").c_str(), 50, -range / 4., range / 4., univs, tags);
             m_resolution.AppendName("resolution", tags);
             std::cout << " created m_resolution " << GetName() << " " << range << std::endl;
         }
@@ -439,7 +439,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                     if (m_doresolution) {
                         std::cout << " write out resolution histogram " << m_resolution.GetHist(tag)->GetName() << std::endl;
                         m_resolution.Write(tag);
-                        m_resolution.GetHist(tag)->Print("ALL");
+                        m_resolution.GetHist(tag)->Print();
                     }
                 }
                 if (hasTunedMC[tag]) {

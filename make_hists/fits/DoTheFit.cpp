@@ -362,7 +362,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
     for (auto sample:fitHists){ //loop over samples
         
         for (int i = 0; i < ncat; i++){  // loop over categories for that sample
-            fitHists.at(sample.first).at(i)->AddVertErrorBandAndFillWithCV(std::string("FitVariations"), ncat * 2);
+            fitHists.at(sample.first).at(i)->AddVertErrorBandAndFillWithCV(std::string("FitVariations"), neigen * 2);  // only need neigen*2 HMS 2025-07-07
             PlotUtils::MnvVertErrorBand* errorband = fitHists.at(sample.first).at(i)->GetVertErrorBand("FitVariations");
             for (int var = 0; var < neigen; var++){ // loop over variations
                 for (int k = 0; k < 2; k++){

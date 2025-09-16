@@ -72,7 +72,8 @@ int main(const int argc, const char *argv[] ) {
     doresolution = config.GetBool("DoResolution");
     std::cout << " ask for resolutions" << std::endl;
   }
-
+  // setup to pass recoil definitions to cvuniverse
+  
   //=========================================S
   // MacroUtil (makes your anatuple chains)
   //=========================================
@@ -132,10 +133,10 @@ int main(const int argc, const char *argv[] ) {
   PlotUtils::MinervaUniverse::SetMHRWeightElastics( config.GetInt("Geant4Elastics") );
   PlotUtils::MinervaUniverse::SetTreeName(reco_tree_name);
 
+  
 
-
-  //=== MODELS === needs a driver
-  std::string modeltune="MnvTunev1";
+      //=== MODELS === needs a driver
+      std::string modeltune = "MnvTunev1";
   if(config.IsMember("MinervaModel")){ //TODO
     modeltune = config.GetString("MinervaModel");
     std::cout << "runsamplesMain: MinervaModel configured in main config and set to " << modeltune << std::endl;
@@ -185,6 +186,13 @@ int main(const int argc, const char *argv[] ) {
 
   data_error_bands["cv"] = data_band;
 
+  // tell CVUniverse about main config
+
+  CVUniverse::SetMainConfig(config); 
+
+
+
+
   //Selection Criteria
 	if (config.IsMember("paramsFile")) {
 
@@ -223,13 +231,14 @@ int main(const int argc, const char *argv[] ) {
   //samplesConfig.Print();
 
   std::vector<CCQENu::Sample> samples;
-
+  samplesConfig.Print();
   for (auto s:samplesToDo){
     if (samplesConfig.IsMember(s)){
       std::cout << "IsMember(" << s << "): TRUE" << std::endl;
       if(samplesConfig.CheckMember(s)) std::cout << "CheckMember(" << s << "): TRUE" << std::endl;
       NuConfig tmp = samplesConfig.GetConfig(s);
       samples.push_back(CCQENu::Sample(tmp));
+      std::cout << " doing sample " << s << std::endl;
     }
     else{
       std::cout << "requested sample " << s << " which is not in " << samplesfilename << std::endl;
@@ -250,6 +259,7 @@ int main(const int argc, const char *argv[] ) {
     NuConfig recocuts = cutsConfig.GetValue(sample.GetReco());
     NuConfig phasespace = cutsConfig.GetValue(sample.GetPhaseSpace());
     NuConfig truecuts = cutsConfig.GetValue("data");
+    
     // do data here
     selectionCriteria[tag] = new PlotUtils::Cutter<CVUniverse> (\
                                                                 config_reco::GetCCQECutsFromConfig<CVUniverse>(recocuts),\
@@ -401,6 +411,7 @@ int main(const int argc, const char *argv[] ) {
     //=========================================
     // Entry loop and fill
     //=========================================
+    
     std::cout << "Loop and Fill Data for " << tag << "\n";
     
     LoopAndFillEventSelection(tag, util, data_error_bands, variables1D, variables2D, kData, *selectionCriteria[tag],model,mcRescale,closure,mc_reco_to_csv);
@@ -415,6 +426,7 @@ int main(const int argc, const char *argv[] ) {
     unsigned int loc = tag.find("___")+3;
     std::string cat(tag,loc,string::npos);
     std::string sample(tag,0,loc-3);
+  
     mcRescale.SetCat(cat);
     std::cout << "Loop and Fill MC Reco  for " <<  tag << "\n";
     

@@ -30,7 +30,7 @@ import os,sys
 gStyle.SetOptStat(000000)
 
 # readin in put
-filename = "SB_NuConfig_mult1pBDTG_me1N_1.root"
+filename = "/User/schellma/Dropbox/CCQE/MLfits/SB_NuConfig_mult1pBDTG_me1N_1.root"
 r = TFile.Open(filename,"READONLY")
 r.ls()
 keys = r.GetListOfKeys()
