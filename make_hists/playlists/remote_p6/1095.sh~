@@ -1,0 +1,3 @@
+touch minervame5A_Data.log
+xrdcopy root://fndca1.fnal.gov:1095/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p6/p6PrimeData/Merged_data_ana_me5A_DualVertex_P6Prime13FebDSECalFix/MasterAnaDev_data_AnaTuple_run00019500_Playlist.root /minerva/data/ME/p6/p6PrimeData/Merged_data_ana_me5A_DualVertex_P6Prime13FebDSECalFix/MasterAnaDev_data_AnaTuple_run00019500_Playlist.root.test
+
