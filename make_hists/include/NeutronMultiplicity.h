@@ -17,6 +17,12 @@
 // #include "include/CVUniverse.h"
 
 namespace NeutronMultiplicity {
+
+const std::vector<double> view_angles = {0.0,         // 3D
+                                         0.0,         // X view
+                                         M_PI / 3,    // U? view
+                                         -M_PI / 3};  // V? view
+
 class NeutCand {
    public:
     int m_blobID = -1;                                              // which blob
@@ -55,27 +61,19 @@ class NeutCand {
     int GetCandView();
     double GetCandRecoEDep();
     double GetCandMaxClusterE();
-    ROOT::Math::XYZVector GetCandPosition();
     double GetCandLength();
+
+    ROOT::Math::XYZVector GetCandPosition();
+    ROOT::Math::XYZVector GetCandViewPosition();
     ROOT::Math::XYZVector GetCandFlightPath();
 
     double GetCandVtxDist();  // TODO: Andrew does something weird with this
-
+    double GetCandVtxZDist();
+    double GetCandVtxTDist();
     int GetCandTruthPID();
     int GetCandTruthTopPID();
 
     double GetCandTruthAngleFromParent();
-
-    // bool operator>(const NeutCand& cand) const {
-    //     return (this->m_recoEDep > cand.m_recoEDep);
-    // }
-
-    // bool operator>(const std::unique_ptr<NeutCand> cand) const {
-    //     return (this->m_recoEDep > cand->GetCandRecoEDep());
-    // }
-    // TODO: Something more flexible in development
-
-    // NeutCand(int index);  // give index, intialize internally
 };
 
 // class to hold all the neutron candidates for an event
@@ -92,10 +90,13 @@ class NeutEvent {
     double m_muondist_min = 0.0;               // in mm
     double m_edep_min = 0.;                    // in MeV
     int m_req3D = 0;                           // Set requirement to 3D blob, set to 1 for 3D only, -1 for 2D only, 0 for both
-    double m_maxlength = -1.;
+    double m_maxlength = -1.;                  // Set Maximum length for the track, may be deprecated bc not really useful
+    bool m_evthastrack = false;                // Check bool to see if event has a track
+    double m_trackenddist_max = -1.;           // Check val set in config, in mm
     // int m_nneutcands;
     ROOT::Math::XYZVector m_vtx;
     ROOT::Math::XYZVector m_mupath;
+    ROOT::Math::XYZVector m_trackend;  // not every event has a proton track, should be entered as -9999 for each dim if no proton track
 
     // std::vector<NeutronMultiplicity::NeutCand*> m_cands;  // the candidates it contains //moved to public?
     bool _is_cands_set = false;
@@ -115,14 +116,11 @@ class NeutEvent {
     std::vector<std::unique_ptr<NeutCand>> m_cands = {};          // the candidates the event has
     std::vector<std::unique_ptr<NeutCand>> m_neutcands = {};      // the candidates that pass neutron selection
     std::vector<std::unique_ptr<NeutCand>> m_trueneutcands = {};  // the candidates that pass neutron selection
-    // std::vector<std::shared_ptr<NeutCand>> m_cands = {};          // the candidates the event has
-    // std::vector<std::shared_ptr<NeutCand>> m_neutcands = {};      // the candidates that pass neutron selection
-    // std::vector<std::shared_ptr<NeutCand>> m_trueneutcands = {};  // the candidates that pass neutron selection
 
    public:
     // TOOD: make neutron config vars in CVUniverse
-    NeutEvent(NuConfig config, int n_neutcands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, std::vector<int> order = {});  // configure number of cands and set up the cands internally based off how many there are
-    NeutEvent(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath);
+    NeutEvent(NuConfig config, int n_neutcands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, ROOT::Math::XYZVector trackend);  // configure number of cands and set up the cands internally based off how many there are
+    NeutEvent(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, ROOT::Math::XYZVector trackend);
     NeutEvent(NuConfig config);  // would need to set up cands separately using SetCands
     NeutEvent();
     // ~NeutEvent() = default; //{
@@ -173,7 +171,7 @@ class NeutEvent {
     bool CandPassEDep(int index);       // check if Edep is high enough
     bool CandPassIs3D(int index);       // check if cand is 3D or 2D
     bool CandPassLength(int index);     // how long is the blob
-
+    bool CandPassTrackEndDist( int index); // check if the blob is near a track end
 
     int GetCandTruthPID(int index);     // GEANT parent
     int GetCandTruthTopPID(int index);  // GENIE parent

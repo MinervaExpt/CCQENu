@@ -8,14 +8,6 @@ namespace NeutronMultiplicity{
 
 // }
 NeutCand::NeutCand() {};
-// NeutCand::NeutCand(int index) : m_blobID(GetBlobID(index)),
-//                                 m_is3D(GetBlobIs3D(index)),
-//                                 m_recoEDep(GetBlobTotE(index)),
-//                                 m_truthPID(GetBlobMCPID(index)),
-//                                 m_truthTopMCPID(GetBlobTopMCPID(index)),
-//                                 m_position(GetBlobBegPosition(index)) {
-//     // TODO: set flight path
-// }
 
 NeutCand::NeutCand(int blobID, int is3D, int view,
                    double recoEDep,
@@ -60,6 +52,11 @@ int NeutCand::GetCandIs3D() {
     return m_is3D;
 }
 
+int NeutCand::GetCandView() {
+    if (!m_recoset) return -1;
+    return m_view;
+}
+
 double NeutCand::GetCandRecoEDep() {
     if (!m_recoset) return -1.0;
     return m_recoEDep;
@@ -75,6 +72,18 @@ ROOT::Math::XYZVector NeutCand::GetCandPosition() {
     return m_begposition;
 }
 
+ROOT::Math::XYZVector NeutCand::GetCandViewPosition() {
+    if (!m_recoset) return ROOT::Math::XYZVector();
+    if (m_is3D) return m_begposition;
+    if (m_view == 1) {
+        return ROOT::Math::XYZVector(m_begposition.X(),0,m_begposition.Z());
+    } else {
+        ROOT::Math::XYZVector view_pos(ROOT::Math::VectorUtil::RotateZ(m_begposition, NeutronMultiplicity::view_angles[m_view]));
+        return ROOT::Math::XYZVector(view_pos.X(), 0, view_pos.Z());
+    }
+    return ROOT::Math::XYZVector();
+}
+
 double NeutCand::GetCandLength() {
     if (!m_recoset) return -1;
     return abs((m_begposition - m_endposition).Rho());
@@ -86,6 +95,16 @@ ROOT::Math::XYZVector NeutCand::GetCandFlightPath() {
 }
 
 double NeutCand::GetCandVtxDist() {
+    if (!m_recoset) return -1.0;
+    return m_flightpath.R();
+}
+
+double NeutCand::GetCandVtxZDist() {
+    if (!m_recoset) return -1.0;
+    return m_flightpath.Z();
+}
+
+double NeutCand::GetCandVtxTDist() {
     if (!m_recoset) return -1.0;
     return m_flightpath.Rho();
 }
@@ -114,19 +133,27 @@ double NeutCand::GetCandTruthAngleFromParent() {
 
 // NeutEvent stuff
 // CTORS
-NeutEvent::NeutEvent(NuConfig config, int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, std::vector<int> order) : m_vtx(vtx),
+NeutEvent::NeutEvent(NuConfig config, int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, ROOT::Math::XYZVector trackend) : m_vtx(vtx),
                                                                                                                 m_mupath(mupath),
                                                                                                                 m_ncands(ncands) {
     SetConfig(config);
+    if (trackend.Z() > 0) { 
+        m_evthastrack = true;
+        m_trackend = trackend;
+    }
     for (int i = 0; i < ncands; i++) {
         m_cands.emplace_back(std::make_unique<NeutCand>(NeutCand()));
     }
     _is_cands_set = true;
 }
 
-NeutEvent::NeutEvent(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath) : m_vtx(vtx),
+NeutEvent::NeutEvent(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, ROOT::Math::XYZVector trackend) : m_vtx(vtx),
                                                                                              m_mupath(mupath),
                                                                                              m_ncands(ncands) {
+    if (trackend.Z() == -9999) {
+        m_evthastrack = true;
+        m_trackend = trackend;
+    }
     for (int i = 0; i < ncands; i++) {
         m_cands.emplace_back(std::make_unique<NeutCand>(NeutCand()));
     }
@@ -152,6 +179,7 @@ void NeutEvent::SetConfig(NuConfig config) {
     if (config.IsMember("edep_min")) m_edep_min = config.GetDouble("edep_min");
     if (config.IsMember("Is3D")) m_req3D = config.GetInt("Is3D");
     if (config.IsMember("maxlength")) m_maxlength = config.GetDouble("maxlength");
+    if (config.IsMember("trackenddist_max")) m_trackenddist_max = config.GetDouble("trackenddist_max");
     if (config.IsMember("vtxdist_edep_min")) {
         NuConfig subconfig = config.GetConfig("vtxdist_edep_min");
 
@@ -210,20 +238,13 @@ void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::v
 
             if (views[i] == 1) {
                 begpositions[i].SetXYZ(begpositions[i].X(), m_vtx.Y(), begpositions[i].Z());
-            }
-            else if (views[i] == 2) {
-                ROOT::Math::XYZVector tmp_begpos = ROOT::Math::VectorUtil::RotateZ(begpositions[i], M_PI / 3);
-                ROOT::Math::XYZVector tmp_vtx = ROOT::Math::VectorUtil::RotateZ(m_vtx, M_PI / 3);
+            } else {
+                ROOT::Math::XYZVector tmp_begpos = ROOT::Math::VectorUtil::RotateZ(begpositions[i], NeutronMultiplicity::view_angles[views[i]]);
+                ROOT::Math::XYZVector tmp_vtx = ROOT::Math::VectorUtil::RotateZ(m_vtx, NeutronMultiplicity::view_angles[views[i]]);
                 // std::cout << "\tmid blob pos:  \t" << tmp_begpos.X() << "\t" << tmp_begpos.Y() << "\t" << tmp_begpos.Z() << std::endl;
+                // std::cout << "\tmid vtx pos:   \t" << tmp_vtx.X() << "\t" << tmp_vtx.Y() << "\t" << tmp_vtx.Z() << std::endl;
                 tmp_begpos.SetXYZ(tmp_begpos.X(), tmp_vtx.Y(), tmp_begpos.Z());
-                begpositions[i] = ROOT::Math::VectorUtil::RotateZ(tmp_begpos, -M_PI / 3);
-            } else if (views[i] == 3){
-                ROOT::Math::XYZVector tmp_begpos = ROOT::Math::VectorUtil::RotateZ(begpositions[i], -M_PI / 3);
-                ROOT::Math::XYZVector tmp_vtx = ROOT::Math::VectorUtil::RotateZ(m_vtx, -M_PI / 3);
-                // std::cout << "\tmid blob pos:  \t" << tmp_begpos.X() << "\t" << tmp_begpos.Y() << "\t" << tmp_begpos.Z() << std::endl;
-
-                tmp_begpos.SetXYZ(tmp_begpos.X(), tmp_vtx.Y(), tmp_begpos.Z());
-                begpositions[i] = ROOT::Math::VectorUtil::RotateZ(tmp_begpos, M_PI / 3);
+                begpositions[i] = ROOT::Math::VectorUtil::RotateZ(tmp_begpos, -view_angles[views[i]]);
             }
             // std::cout << "\tend blob pos:  \t" << begpositions[i].X() << "\t" << begpositions[i].Y() << "\t" << begpositions[i].Z() << std::endl;
         }
@@ -391,7 +412,7 @@ bool NeutEvent::CandPassMuonDist(int index) {
     // double angle = m_mupath.Angle(candfp);
     // double dist = candfp.Mag() * std::sin(angle);
     double angle = ROOT::Math::VectorUtil::Angle(m_mupath,candfp);
-    double dist = candfp.Rho() * std::sin(angle);
+    double dist = candfp.R() * std::sin(angle);
     return dist >= m_muondist_min;
 }
 
@@ -460,6 +481,26 @@ bool NeutEvent::CandPassIs3D(int index) {
 
 bool NeutEvent::CandPassLength(int index) {
     if (m_maxlength <= 0) return true;
+    return false;
+}
+
+bool NeutEvent::CandPassTrackEndDist(int index) {
+    if (!m_evthastrack || m_trackenddist_max <= 0.0) return true;
+    if (m_cands[index]->GetCandIs3D()) {
+        ROOT::Math::XYZVector cand_pos = m_cands[index]->GetCandPosition();
+        double trackenddist = (cand_pos - m_trackend).R();
+        return trackenddist > m_trackenddist_max;
+    } else {
+        ROOT::Math::XYZVector candview_pos = m_cands[index]->GetCandViewPosition();
+        if (m_cands[index]->GetCandView() == 1) {
+            ROOT::Math::XYZVector tmp_candview_pos = ROOT::Math::XYZVector(candview_pos.X(), m_trackend.Y(), candview_pos.Z());
+            return (tmp_candview_pos - m_trackend).R() > m_trackenddist_max;
+        } else {
+            ROOT::Math::XYZVector candview_trackend(ROOT::Math::VectorUtil::RotateZ(m_trackend, NeutronMultiplicity::view_angles[m_cands[index]->GetCandView()]));
+            ROOT::Math::XYZVector tmp_candview_pos = ROOT::Math::XYZVector(candview_pos.X(), candview_trackend.Y(), candview_pos.Z());
+            return (tmp_candview_pos - candview_trackend).R() > m_trackenddist_max;
+        }
+    }
     return false;
 }
 
