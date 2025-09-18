@@ -572,6 +572,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetPrimaryProtonTrackEndX() const;
     virtual double GetPrimaryProtonTrackEndY() const;
     virtual double GetPrimaryProtonTrackEndZ() const;
+    virtual ROOT::Math::XYZVector GetPrimaryProtonTrackEnd() const;
 
     virtual double GetProtonAngle(int i) const;
     virtual double GetPrimaryProtonAngle() const;
