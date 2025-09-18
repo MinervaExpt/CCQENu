@@ -24,7 +24,7 @@
         // "muoncone_min": 15.0,
         // "muondist_min": 100.0,
         "edep_min": 1.5,
-        "Is3D": 1
+        "Is3D": -1
         // "vtxdist_edep_min": {
         //     "band1":{
         //         "edep_max": 12.0,
