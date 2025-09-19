@@ -158,9 +158,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
    private:
     // NeutronMultiplicity::NeutEvent* m_neutevent;  // = new NeutronMultiplicity::NeutEvent();
     std::shared_ptr<NeutronMultiplicity::NeutEvent> m_neutevent;  // = new NeutronMultiplicity::NeutEvent();
-   public:
-    bool _is_neut_event_set;
+    bool _is_neut_event_set = false;
 
+   public:
     // ----------------------- Analysis-related Variables ------------------------
 
     virtual int GetIsMinosMatchTrack() const;
