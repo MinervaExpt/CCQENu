@@ -207,6 +207,7 @@ void NeutEvent::SetConfig(NuConfig config) {
 }
 
 void NeutEvent::Reset() {
+    if (!_is_cands_set) return;
     m_cands.clear();
     m_neutcands.clear();
     m_trueneutcands.clear();
