@@ -277,7 +277,7 @@ void LoopAndFillEventSelection(std::string tag,
                         FillData(tag, universe, variables, variables2D, variablesHD);
                     }
                 }
-                universe->ResetNeutEvent();
+                // universe->ResetNeutEvent();
             }  // End universes
         }  // End error bands
     }  // End entries loop
