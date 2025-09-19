@@ -208,14 +208,6 @@ void NeutEvent::SetConfig(NuConfig config) {
 
 void NeutEvent::Reset() {
     if (!_is_cands_set) return;
-    m_cands.clear();
-    m_neutcands.clear();
-    m_trueneutcands.clear();
-
-    m_ncands = 0;
-    m_nneutcands = 0;
-    m_ntrueneutcands = 0;
-
     _is_cands_set = false;
     _is_neutcands_set = false;
     _is_trueneutcands_set = false;
@@ -226,6 +218,17 @@ void NeutEvent::Reset() {
     m_vtx = ROOT::Math::XYZVector();
     m_mupath = ROOT::Math::XYZVector();
     m_trackend = ROOT::Math::XYZVector();
+
+    if (m_ncands == 0) return;
+    m_cands.clear();
+    m_neutcands.clear();
+    m_trueneutcands.clear();
+
+    m_ncands = 0;
+    m_nneutcands = 0;
+    m_ntrueneutcands = 0;
+
+
 }
 
 // void NeutEvent::SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath) {
