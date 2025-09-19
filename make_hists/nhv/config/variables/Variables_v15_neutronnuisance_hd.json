@@ -345,405 +345,405 @@
       ]
     }
   },
-  "2D": {
-    "recoil_ptmu": {
-      "name": "recoil_ptmu",
-      "xvar": "recoil",
-      "yvar": "ptmu"
-    },
-    "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID",
-      "xvar": "LeadingNeutCandvtxZDist",
-      "yvar": "LeadingNeutCandTopMCPID"
-    },
-    "LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
-      "xvar": "LeadingNeutCandvtxSphereDist",
-      "yvar": "LeadingNeutCandTopMCPID"
-    },
-    "LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
-      "xvar": "LeadingNeutCandEdep",
-      "yvar": "LeadingNeutCandTopMCPID"
-    },
-    "SecNeutCandvtxZDist_SecNeutCandTopMCPID": {
-      "name": "SecNeutCandvtxZDist_SecNeutCandTopMCPID",
-      "xvar": "SecNeutCandvtxZDist",
-      "yvar": "SecNeutCandTopMCPID"
-    },
-    "SecNeutCandvtxSphereDist_SecNeutCandTopMCPID": {
-      "name": "SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
-      "xvar": "SecNeutCandvtxSphereDist",
-      "yvar": "SecNeutCandTopMCPID"
-    },
-    "SecNeutCandEdep_SecNeutCandTopMCPID": {
-      "name": "SecNeutCandEdep_SecNeutCandTopMCPID",
-      "xvar": "SecNeutCandEdep",
-      "yvar": "SecNeutCandTopMCPID"
-    },
-    "ThirdNeutCandvtxZDist_ThirdNeutCandTopMCPID": {
-      "name": "ThirdNeutCandvtxZDist_ThirdNeutCandTopMCPID",
-      "xvar": "ThirdNeutCandvtxZDist",
-      "yvar": "ThirdNeutCandTopMCPID"
-    },
-    "ThirdNeutCandvtxSphereDist_ThirdNeutCandTopMCPID": {
-      "name": "ThirdNeutCandvtxSphereDist_ThirdNeutCandTopMCPID",
-      "xvar": "ThirdNeutCandvtxSphereDist",
-      "yvar": "ThirdNeutCandTopMCPID"
-    },
-    "ThirdNeutCandEdep_ThirdNeutCandTopMCPID": {
-      "name": "ThirdNeutCandEdep_ThirdNeutCandTopMCPID",
-      "xvar": "ThirdNeutCandEdep",
-      "yvar": "ThirdNeutCandTopMCPID"
-    },
-    "LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID",
-      "xvar": "LeadingNeutCandvtxBoxDist",
-      "yvar": "LeadingNeutCandTopMCPID"
-    },
-    "SecNeutCandvtxBoxDist_SecNeutCandTopMCPID": {
-      "name": "SecNeutCandvtxBoxDist_SecNeutCandTopMCPID",
-      "xvar": "SecNeutCandvtxBoxDist",
-      "yvar": "SecNeutCandTopMCPID"
-    },
-    "ThirdNeutCandvtxBoxDist_ThirdNeutCandTopMCPID": {
-      "name": "ThirdNeutCandvtxBoxDist_ThirdNeutCandTopMCPID",
-      "xvar": "ThirdNeutCandvtxBoxDist",
-      "yvar": "ThirdNeutCandTopMCPID"
-    },
-    "LeadingNeutCandMuonDist_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandMuonDist_LeadingNeutCandTopMCPID",
-      "xvar": "LeadingNeutCandMuonDist",
-      "yvar": "LeadingNeutCandTopMCPID"
-    },
-    "SecNeutCandMuonDist_SecNeutCandTopMCPID": {
-      "name": "SecNeutCandMuonDist_SecNeutCandTopMCPID",
-      "xvar": "SecNeutCandMuonDist",
-      "yvar": "SecNeutCandTopMCPID"
-    },
-    "ThirdNeutCandMuonDist_ThirdNeutCandTopMCPID": {
-      "name": "ThirdNeutCandMuonDist_ThirdNeutCandTopMCPID",
-      "xvar": "ThirdNeutCandMuonDist",
-      "yvar": "ThirdNeutCandTopMCPID"
-    },
-    "LeadingNeutCandMuonAngle_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandMuonAngle_LeadingNeutCandTopMCPID",
-      "xvar": "LeadingNeutCandMuonAngle",
-      "yvar": "LeadingNeutCandTopMCPID"
-    },
-    "SecNeutCandMuonAngle_SecNeutCandTopMCPID": {
-      "name": "SecNeutCandMuonAngle_SecNeutCandTopMCPID",
-      "xvar": "SecNeutCandMuonAngle",
-      "yvar": "SecNeutCandTopMCPID"
-    },
-    "ThirdNeutCandMuonAngle_ThirdNeutCandTopMCPID": {
-      "name": "ThirdNeutCandMuonAngle_ThirdNeutCandTopMCPID",
-      "xvar": "ThirdNeutCandMuonAngle",
-      "yvar": "ThirdNeutCandTopMCPID"
-    },
-    "LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
-      "xvar": "LeadingNeutCandMuonCosTheta",
-      "yvar": "LeadingNeutCandTopMCPID"
-    },
-    "SecNeutCandMuonCosTheta_SecNeutCandTopMCPID": {
-      "name": "SecNeutCandMuonCosTheta_SecNeutCandTopMCPID",
-      "xvar": "SecNeutCandMuonCosTheta",
-      "yvar": "SecNeutCandTopMCPID"
-    },
-    "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID",
-      "xvar": "LeadingNeutCandClusterMaxE",
-      "yvar": "LeadingNeutCandTopMCPID"
-    },
-    "SecNeutCandClusterMaxE_SecNeutCandTopMCPID": {
-      "name": "SecNeutCandClusterMaxE_SecNeutCandTopMCPID",
-      "xvar": "SecNeutCandClusterMaxE",
-      "yvar": "SecNeutCandTopMCPID"
-    },
-    "ThirdNeutCandClusterMaxE_ThirdNeutCandTopMCPID": {
-      "name": "ThirdNeutCandClusterMaxE_ThirdNeutCandTopMCPID",
-      "xvar": "ThirdNeutCandClusterMaxE",
-      "yvar": "ThirdNeutCandTopMCPID"
-    },
-    "LeadingNeutCandAngleToParent_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandAngleToParent_LeadingNeutCandTopMCPID",
-      "xvar": "LeadingNeutCandAngleToParent",
-      "yvar": "LeadingNeutCandTopMCPID"
-    },
-    "SecNeutCandAngleToParent_SecNeutCandTopMCPID": {
-      "name": "SecNeutCandAngleToParent_SecNeutCandTopMCPID",
-      "xvar": "SecNeutCandAngleToParent",
-      "yvar": "SecNeutCandTopMCPID"
-    },
-    "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID": {
-      "name": "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID",
-      "xvar": "LeadingNeutCandCosThetaToParent",
-      "yvar": "LeadingNeutCandTopMCPID"
-    },
-    "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist": {
-      "name": "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist",
-      "xvar": "LeadingNeutCandEdep",
-      "yvar": "LeadingNeutCandvtxSphereDist",
-      "for": [
-        "data"
-      ]
-    },
-    "SecNeutCandEdep_SecNeutCandvtxSphereDist": {
-      "name": "SecNeutCandEdep_SecNeutCandvtxSphereDist",
-      "xvar": "SecNeutCandEdep",
-      "yvar": "SecNeutCandvtxSphereDist",
-      "for": [
-        "data"
-      ]
-    },
-    "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist": {
-      "name": "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist",
-      "xvar": "LeadingNeutCandEdep",
-      "yvar": "LeadingNeutCandvtxBoxDist",
-      "for": [
-        "data"
-      ]
-    },
-    "SecNeutCandEdep_SecNeutCandvtxBoxDist": {
-      "name": "SecNeutCandEdep_SecNeutCandvtxBoxDist",
-      "xvar": "SecNeutCandEdep",
-      "yvar": "SecNeutCandvtxBoxDist",
-      "for": [
-        "data"
-      ]
-    },
-    "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta":{
-      "name": "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta",
-      "xvar": "LeadingNeutCandvtxSphereDist",
-      "yvar": "LeadingNeutCandMuonCosTheta",
-      "for": [
-        "data"
-      ]
-    },
-    "EAvail_LeadingNeutCandEdep": {
-      "name": "EAvail_LeadingNeutCandEdep",
-      "xvar": "EAvail",
-      "yvar": "LeadingNeutCandEdep",
-      "for": [
-        "data"
-      ]
-    },
-    "EAvail_SecNeutCandEdep": {
-      "name": "EAvail_SecNeutCandEdep",
-      "xvar": "EAvail",
-      "yvar": "SecNeutCandEdep",
-      "for": [
-        "data"
-      ]
-    },
-    "EAvail_LeadingNeutCandvtxSphereDist": {
-      "name": "EAvail_LeadingNeutCandvtxSphereDist",
-      "xvar": "EAvail",
-      "yvar": "LeadingNeutCandvtxSphereDist",
-      "for": [
-        "data"
-      ]
-    },
-    "EAvail_SecNeutCandvtxSphereDist": {
-      "name": "EAvail_SecNeutCandvtxSphereDist",
-      "xvar": "EAvail",
-      "yvar": "SecNeutCandvtxSphereDist",
-      "for": [
-        "data"
-      ]
-    },
-    "EAvail_LeadingNeutCandMuonCosTheta": {
-      "name": "EAvail_LeadingNeutCandMuonCosTheta",
-      "xvar": "EAvail",
-      "yvar": "LeadingNeutCandMuonCosTheta",
-      "for": [
-        "data"
-      ]
-    },
-    "EAvail_LeadingNeutCandvtxBoxDist": {
-      "name": "EAvail_LeadingNeutCandvtxBoxDist",
-      "xvar": "EAvail",
-      "yvar": "LeadingNeutCandvtxBoxDist",
-      "for": [
-        "data"
-      ]
-    },
-    "EAvail_SecNeutCandvtxBoxDist": {
-      "name": "EAvail_SecNeutCandvtxBoxDist",
-      "xvar": "EAvail",
-      "yvar": "SecNeutCandvtxBoxDist",
-      "for": [
-        "data"
-      ]
-    },
-    "ptmu_LeadingNeutCandvtxSphereDist": {
-      "name": "ptmu_LeadingNeutCandvtxSphereDist",
-      "xvar": "ptmu",
-      "yvar": "LeadingNeutCandvtxSphereDist",
-      "for": [
-        "data"
-      ]
-    },
-    "ptmu_LeadingNeutCandEdep": {
-      "name": "ptmu_LeadingNeutCandEdep",
-      "xvar": "ptmu",
-      "yvar": "LeadingNeutCandEdep",
-      "for": [
-        "data"
-      ]
-    },
-    "ptmu_LeadingNeutCandMuonCosTheta": {
-      "name": "ptmu_LeadingNeutCandMuonCosTheta",
-      "xvar": "ptmu",
-      "yvar": "LeadingNeutCandMuonCosTheta",
-      "for": [
-        "data"
-      ]
-    },
-    "pzmu_LeadingNeutCandEdep": {
-      "name": "pzmu_LeadingNeutCandEdep",
-      "xvar": "pzmu",
-      "yvar": "LeadingNeutCandEdep",
-      "for": [
-        "data"
-      ]
-    },
-    "pzmu_LeadingNeutCandvtxSphereDist": {
-      "name": "pzmu_LeadingNeutCandvtxSphereDist",
-      "xvar": "pzmu",
-      "yvar": "LeadingNeutCandvtxSphereDist",
-      "for": [
-        "data"
-      ]
-    },
-    "pzmu_LeadingNeutCandMuonCosTheta": {
-      "name": "pzmu_LeadingNeutCandMuonCosTheta",
-      "xvar": "pzmu",
-      "yvar": "LeadingNeutCandMuonCosTheta",
-      "for": [
-        "data"
-      ]
-    },
-    "recoil_LeadingNeutCandEdep": {
-      "name": "recoil_LeadingNeutCandEdep",
-      "xvar": "recoil",
-      "yvar": "LeadingNeutCandEdep",
-      "for": [
-        "data"
-      ]
-    },
-    "recoil_SecNeutCandEdep": {
-      "name": "recoil_SecNeutCandEdep",
-      "xvar": "recoil",
-      "yvar": "SecNeutCandEdep",
-      "for": [
-        "data"
-      ]
-    },
-    "recoil_LeadingNeutCandvtxSphereDist": {
-      "name": "recoil_LeadingNeutCandvtxSphereDist",
-      "xvar": "recoil",
-      "yvar": "LeadingNeutCandvtxSphereDist",
-      "for": [
-        "data"
-      ]
-    },
-    "recoil_SecNeutCandvtxSphereDist": {
-      "name": "recoil_SecNeutCandvtxSphereDist",
-      "xvar": "recoil",
-      "yvar": "SecNeutCandvtxSphereDist",
-      "for": [
-        "data"
-      ]
-    },
-    "recoil_LeadingNeutCandMuonCosTheta": {
-      "name": "recoil_LeadingNeutCandMuonCosTheta",
-      "xvar": "recoil",
-      "yvar": "LeadingNeutCandMuonCosTheta",
-      "for": [
-        "data"
-      ]
-    },
-    "recoil_LeadingNeutCandvtxBoxDist": {
-      "name": "recoil_LeadingNeutCandvtxBoxDist",
-      "xvar": "recoil",
-      "yvar": "LeadingNeutCandvtxBoxDist",
-      "for": [
-        "data"
-      ]
-    },
-    "recoil_SecNeutCandvtxBoxDist": {
-      "name": "recoil_SecNeutCandvtxBoxDist",
-      "xvar": "recoil",
-      "yvar": "SecNeutCandvtxBoxDist",
-      "for": [
-        "data"
-      ]
-    },
-    "EAvail_TotalNeutBlobE": {
-      "name": "EAvail_TotalNeutBlobE",
-      "xvar": "EAvail",
-      "yvar": "TotalNeutBlobE"
-    },
-    "recoil_TotalNeutBlobE": {
-      "name": "recoil_TotalNeutBlobE",
-      "xvar": "recoil",
-      "yvar": "TotalNeutBlobE"
-    },
-    "EAvail_RecoTotalNeutBlobE": {
-      "name": "EAvail_RecoTotalNeutBlobE",
-      "xvar": "EAvail",
-      "yvar": "RecoTotalNeutBlobE"
-    },
-    "recoil_RecoTotalNeutBlobE": {
-      "name": "recoil_RecoTotalNeutBlobE",
-      "xvar": "recoil",
-      "yvar": "RecoTotalNeutBlobE"
-    },
-    "EAvail_TrueTotalNeutBlobE": {
-      "name": "EAvail_TrueTotalNeutBlobE",
-      "xvar": "EAvail",
-      "yvar": "TrueTotalNeutBlobE"
-    },
-    "recoil_TrueTotalNeutBlobE": {
-      "name": "recoil_TrueTotalNeutBlobE",
-      "xvar": "recoil",
-      "yvar": "TrueTotalNeutBlobE"
-    },
-    "LeadingNeutCandLength_LeadingNeutCandEdep": {
-      "name": "LeadingNeutCandLength_LeadingNeutCandEdep",
-      "xvar": "LeadingNeutCandLength",
-      "yvar": "LeadingNeutCandTopMCPID",
-      "for": [
-        "selected_reco"
-      ]
-    },
-    "SecondNeutCandLength_LeadingNeutCandEdep": {
-      "name": "SecondNeutCandLength_LeadingNeutCandEdep",
-      "xvar": "SecondNeutCandLength",
-      "yvar": "SecNeutCandTopMCPID",
-      "for": [
-        "selected_reco"
-      ]
-    },
-    "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep": {
-      "name": "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep",
-      "xvar": "LeadingNeutCandMuonCosTheta",
-      "yvar": "LeadingNeutCandEdep",
-      "for": [
-        "data"
-      ]
-    },
-    "SecNeutCandMuonCosTheta_SecNeutCandEdep": {
-      "name": "SecNeutCandMuonCosTheta_SecNeutCandEdep",
-      "xvar": "SecNeutCandMuonCosTheta",
-      "yvar": "SecNeutCandEdep",
-      "for": [
-        "data"
-      ]
-    }
-  },
+  // "2D": {
+  //   "recoil_ptmu": {
+  //     "name": "recoil_ptmu",
+  //     "xvar": "recoil",
+  //     "yvar": "ptmu"
+  //   },
+  //   "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandvtxZDist",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandvtxSphereDist",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandEdep",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandvtxZDist_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandvtxZDist_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandvtxZDist",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandvtxSphereDist_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandvtxSphereDist",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandEdep_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandEdep_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandEdep",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandvtxZDist_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandvtxZDist_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandvtxZDist",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandvtxSphereDist_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandvtxSphereDist_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandvtxSphereDist",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandEdep_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandEdep_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandEdep",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandvtxBoxDist",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandvtxBoxDist_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandvtxBoxDist_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandvtxBoxDist",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandvtxBoxDist_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandvtxBoxDist_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandvtxBoxDist",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandMuonDist_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandMuonDist_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandMuonDist",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandMuonDist_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandMuonDist_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandMuonDist",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandMuonDist_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandMuonDist_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandMuonDist",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandMuonAngle_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandMuonAngle_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandMuonAngle",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandMuonAngle_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandMuonAngle_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandMuonAngle",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandMuonAngle_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandMuonAngle_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandMuonAngle",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandMuonCosTheta",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandMuonCosTheta_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandMuonCosTheta_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandMuonCosTheta",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandClusterMaxE",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandClusterMaxE_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandClusterMaxE_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandClusterMaxE",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandClusterMaxE_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandClusterMaxE_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandClusterMaxE",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandAngleToParent_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandAngleToParent_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandAngleToParent",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandAngleToParent_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandAngleToParent_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandAngleToParent",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandCosThetaToParent",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist": {
+  //     "name": "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist",
+  //     "xvar": "LeadingNeutCandEdep",
+  //     "yvar": "LeadingNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "SecNeutCandEdep_SecNeutCandvtxSphereDist": {
+  //     "name": "SecNeutCandEdep_SecNeutCandvtxSphereDist",
+  //     "xvar": "SecNeutCandEdep",
+  //     "yvar": "SecNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist": {
+  //     "name": "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist",
+  //     "xvar": "LeadingNeutCandEdep",
+  //     "yvar": "LeadingNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "SecNeutCandEdep_SecNeutCandvtxBoxDist": {
+  //     "name": "SecNeutCandEdep_SecNeutCandvtxBoxDist",
+  //     "xvar": "SecNeutCandEdep",
+  //     "yvar": "SecNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta":{
+  //     "name": "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta",
+  //     "xvar": "LeadingNeutCandvtxSphereDist",
+  //     "yvar": "LeadingNeutCandMuonCosTheta",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_LeadingNeutCandEdep": {
+  //     "name": "EAvail_LeadingNeutCandEdep",
+  //     "xvar": "EAvail",
+  //     "yvar": "LeadingNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_SecNeutCandEdep": {
+  //     "name": "EAvail_SecNeutCandEdep",
+  //     "xvar": "EAvail",
+  //     "yvar": "SecNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_LeadingNeutCandvtxSphereDist": {
+  //     "name": "EAvail_LeadingNeutCandvtxSphereDist",
+  //     "xvar": "EAvail",
+  //     "yvar": "LeadingNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_SecNeutCandvtxSphereDist": {
+  //     "name": "EAvail_SecNeutCandvtxSphereDist",
+  //     "xvar": "EAvail",
+  //     "yvar": "SecNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_LeadingNeutCandMuonCosTheta": {
+  //     "name": "EAvail_LeadingNeutCandMuonCosTheta",
+  //     "xvar": "EAvail",
+  //     "yvar": "LeadingNeutCandMuonCosTheta",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_LeadingNeutCandvtxBoxDist": {
+  //     "name": "EAvail_LeadingNeutCandvtxBoxDist",
+  //     "xvar": "EAvail",
+  //     "yvar": "LeadingNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_SecNeutCandvtxBoxDist": {
+  //     "name": "EAvail_SecNeutCandvtxBoxDist",
+  //     "xvar": "EAvail",
+  //     "yvar": "SecNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "ptmu_LeadingNeutCandvtxSphereDist": {
+  //     "name": "ptmu_LeadingNeutCandvtxSphereDist",
+  //     "xvar": "ptmu",
+  //     "yvar": "LeadingNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "ptmu_LeadingNeutCandEdep": {
+  //     "name": "ptmu_LeadingNeutCandEdep",
+  //     "xvar": "ptmu",
+  //     "yvar": "LeadingNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "ptmu_LeadingNeutCandMuonCosTheta": {
+  //     "name": "ptmu_LeadingNeutCandMuonCosTheta",
+  //     "xvar": "ptmu",
+  //     "yvar": "LeadingNeutCandMuonCosTheta",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "pzmu_LeadingNeutCandEdep": {
+  //     "name": "pzmu_LeadingNeutCandEdep",
+  //     "xvar": "pzmu",
+  //     "yvar": "LeadingNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "pzmu_LeadingNeutCandvtxSphereDist": {
+  //     "name": "pzmu_LeadingNeutCandvtxSphereDist",
+  //     "xvar": "pzmu",
+  //     "yvar": "LeadingNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "pzmu_LeadingNeutCandMuonCosTheta": {
+  //     "name": "pzmu_LeadingNeutCandMuonCosTheta",
+  //     "xvar": "pzmu",
+  //     "yvar": "LeadingNeutCandMuonCosTheta",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_LeadingNeutCandEdep": {
+  //     "name": "recoil_LeadingNeutCandEdep",
+  //     "xvar": "recoil",
+  //     "yvar": "LeadingNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_SecNeutCandEdep": {
+  //     "name": "recoil_SecNeutCandEdep",
+  //     "xvar": "recoil",
+  //     "yvar": "SecNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_LeadingNeutCandvtxSphereDist": {
+  //     "name": "recoil_LeadingNeutCandvtxSphereDist",
+  //     "xvar": "recoil",
+  //     "yvar": "LeadingNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_SecNeutCandvtxSphereDist": {
+  //     "name": "recoil_SecNeutCandvtxSphereDist",
+  //     "xvar": "recoil",
+  //     "yvar": "SecNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_LeadingNeutCandMuonCosTheta": {
+  //     "name": "recoil_LeadingNeutCandMuonCosTheta",
+  //     "xvar": "recoil",
+  //     "yvar": "LeadingNeutCandMuonCosTheta",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_LeadingNeutCandvtxBoxDist": {
+  //     "name": "recoil_LeadingNeutCandvtxBoxDist",
+  //     "xvar": "recoil",
+  //     "yvar": "LeadingNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_SecNeutCandvtxBoxDist": {
+  //     "name": "recoil_SecNeutCandvtxBoxDist",
+  //     "xvar": "recoil",
+  //     "yvar": "SecNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_TotalNeutBlobE": {
+  //     "name": "EAvail_TotalNeutBlobE",
+  //     "xvar": "EAvail",
+  //     "yvar": "TotalNeutBlobE"
+  //   },
+  //   "recoil_TotalNeutBlobE": {
+  //     "name": "recoil_TotalNeutBlobE",
+  //     "xvar": "recoil",
+  //     "yvar": "TotalNeutBlobE"
+  //   },
+  //   "EAvail_RecoTotalNeutBlobE": {
+  //     "name": "EAvail_RecoTotalNeutBlobE",
+  //     "xvar": "EAvail",
+  //     "yvar": "RecoTotalNeutBlobE"
+  //   },
+  //   "recoil_RecoTotalNeutBlobE": {
+  //     "name": "recoil_RecoTotalNeutBlobE",
+  //     "xvar": "recoil",
+  //     "yvar": "RecoTotalNeutBlobE"
+  //   },
+  //   "EAvail_TrueTotalNeutBlobE": {
+  //     "name": "EAvail_TrueTotalNeutBlobE",
+  //     "xvar": "EAvail",
+  //     "yvar": "TrueTotalNeutBlobE"
+  //   },
+  //   "recoil_TrueTotalNeutBlobE": {
+  //     "name": "recoil_TrueTotalNeutBlobE",
+  //     "xvar": "recoil",
+  //     "yvar": "TrueTotalNeutBlobE"
+  //   },
+  //   "LeadingNeutCandLength_LeadingNeutCandEdep": {
+  //     "name": "LeadingNeutCandLength_LeadingNeutCandEdep",
+  //     "xvar": "LeadingNeutCandLength",
+  //     "yvar": "LeadingNeutCandTopMCPID",
+  //     "for": [
+  //       "selected_reco"
+  //     ]
+  //   },
+  //   "SecondNeutCandLength_LeadingNeutCandEdep": {
+  //     "name": "SecondNeutCandLength_LeadingNeutCandEdep",
+  //     "xvar": "SecondNeutCandLength",
+  //     "yvar": "SecNeutCandTopMCPID",
+  //     "for": [
+  //       "selected_reco"
+  //     ]
+  //   },
+  //   "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep": {
+  //     "name": "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep",
+  //     "xvar": "LeadingNeutCandMuonCosTheta",
+  //     "yvar": "LeadingNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "SecNeutCandMuonCosTheta_SecNeutCandEdep": {
+  //     "name": "SecNeutCandMuonCosTheta_SecNeutCandEdep",
+  //     "xvar": "SecNeutCandMuonCosTheta",
+  //     "yvar": "SecNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   }
+  // },
   "1D": {
     "LeadingNeutCandTopMCPID": {
       "reco": "LeadingNeutCandTopMCPID",
@@ -778,6 +778,45 @@
       "min": 0.5,
       "max": 11.5,
       "for": [
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandvtxTDist": {
+      "reco": "LeadingNeutCandvtxTDist",
+      "true": "LeadingNeutCandvtxTDist",
+      "name": "LeadingNeutCandvtxTDist",
+      "title": "Leading Blob Tdist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandvtxTDist": {
+      "reco": "SecNeutCandvtxTDist",
+      "true": "SecNeutCandvtxTDist",
+      "name": "SecNeutCandvtxTDist",
+      "title": "Second Blob Tdist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandvtxTDist": {
+      "reco": "ThirdNeutCandvtxTDist",
+      "true": "ThirdNeutCandvtxTDist",
+      "name": "ThirdNeutCandvtxTDist",
+      "title": "Third Blob Tdist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
         "selected_reco"
       ]
     },
@@ -852,6 +891,45 @@
       "true": "ThirdNeutCandvtxSphereDist",
       "name": "ThirdNeutCandvtxSphereDist",
       "title": "Third Blob spherical dist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandTrackEndDist": {
+      "reco": "LeadingNeutCandTrackEndDist",
+      "true": "LeadingNeutCandTrackEndDist",
+      "name": "LeadingNeutCandTrackEndDist",
+      "title": "Leading Blob dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandTrackEndDist": {
+      "reco": "SecNeutCandTrackEndDist",
+      "true": "SecNeutCandTrackEndDist",
+      "name": "SecNeutCandTrackEndDist",
+      "title": "Second Blob dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandTrackEndDist": {
+      "reco": "ThirdNeutCandTrackEndDist",
+      "true": "ThirdNeutCandTrackEndDist",
+      "name": "ThirdNeutCandTrackEndDist",
+      "title": "Third Blob dist from track end",
       "nbins": 16,
       "min": 0.0,
       "max": 400.0,
