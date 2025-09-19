@@ -325,7 +325,7 @@ bool CVUniverse::SetNeutronConfig(NuConfig neutron_config, bool print) {
 
 void CVUniverse::SetNeutEvent(bool dotruth) {
     if (_is_neut_event_set) {
-        m_neutevent->Reset();
+        this->m_neutevent->Reset();
     } else {
         // m_neutevent = new NeutronMultiplicity::NeutEvent(CVUniverse::m_neutron_config);
         this->m_neutevent = std::make_shared<NeutronMultiplicity::NeutEvent>(CVUniverse::m_neutron_config);
@@ -335,28 +335,28 @@ void CVUniverse::SetNeutEvent(bool dotruth) {
     ROOT::Math::XYZVector vtx(GetVec<double>("vtx").at(0), GetVec<double>("vtx").at(1), GetVec<double>("vtx").at(2));
     std::vector<ROOT::Math::XYZVector> blobbegpositions = GetBlobsBegPos();
     std::vector<ROOT::Math::XYZVector> blobendpositions = GetBlobsEndPos();
-    m_neutevent->SetCands(CVUniverse::GetNMADBlobs(),
-                          vtx,
-                          pmu,
-                          CVUniverse::GetPrimaryProtonTrackEnd());
-    m_neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()),
-                         GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()),
-                         GetVec<int>((GetAnaToolName() + "_Blob2DView").c_str()),
-                         GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()),
-                         GetVec<double>((GetAnaToolName() + "_BlobClusterMaxE").c_str()),
-                         blobbegpositions, blobendpositions);
+    this->m_neutevent->SetCands(CVUniverse::GetNMADBlobs(),
+                                vtx,
+                                pmu,
+                                CVUniverse::GetPrimaryProtonTrackEnd());
+    this->m_neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()),
+                               GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()),
+                               GetVec<int>((GetAnaToolName() + "_Blob2DView").c_str()),
+                               GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()),
+                               GetVec<double>((GetAnaToolName() + "_BlobClusterMaxE").c_str()),
+                               blobbegpositions, blobendpositions);
     if (dotruth) {
-        m_neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()),
-                              GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()),
-                              GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPx").c_str()),
-                              GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPy").c_str()),
-                              GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPz").c_str()));
+        this->m_neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()),
+                                    GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()),
+                                    GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPx").c_str()),
+                                    GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPy").c_str()),
+                                    GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPz").c_str()));
     }
 
 }
 
 void CVUniverse::ResetNeutEvent() {
-    m_neutevent->Reset();
+    this->m_neutevent->Reset();
 }
 
 // ========================================================================
