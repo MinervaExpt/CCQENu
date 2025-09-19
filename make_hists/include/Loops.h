@@ -181,7 +181,7 @@ void LoopAndFillEventSelection(std::string tag,
 
                 universe->SetEntry(i);
                 if (data_mc_truth == kMC || data_mc_truth == kTruth) universe->SetNeutEvent(true);
-                else universe->SetNeutEvent();
+                else universe->SetNeutEvent(false);
                 // Process this event/universe
                 // double weight = 1;
                 // if (universe->ShortName() == "cv" ) weight = data_mc_truth == kData ? 1. : universe->GetWeight();

@@ -324,9 +324,13 @@ bool CVUniverse::SetNeutronConfig(NuConfig neutron_config, bool print) {
 }
 
 void CVUniverse::SetNeutEvent(bool dotruth) {
+    std::cout << "_is neut_event_set ";
     if (_is_neut_event_set) {
+        std::cout << "true" << std::endl;
         this->m_neutevent->Reset();
     } else {
+        std::cout << "false" << std::endl;
+
         // m_neutevent = new NeutronMultiplicity::NeutEvent(CVUniverse::m_neutron_config);
         this->m_neutevent = std::make_shared<NeutronMultiplicity::NeutEvent>(CVUniverse::m_neutron_config);
         _is_neut_event_set = true;
