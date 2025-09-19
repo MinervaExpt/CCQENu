@@ -284,6 +284,13 @@ class CVFunctions {
         recofunctions["ThirdNeutCandvtxZDist"] = &CVUNIVERSE::GetThirdNeutCandvtxZDist;
         truefunctions["ThirdNeutCandvtxZDist"] = &CVUNIVERSE::GetThirdNeutCandvtxZDist;
 
+        recofunctions["LeadingNeutCandvtxTDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxTDist;
+        truefunctions["LeadingNeutCandvtxTDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxTDist;
+        recofunctions["SecNeutCandvtxTDist"] = &CVUNIVERSE::GetSecNeutCandvtxTDist;
+        truefunctions["SecNeutCandvtxTDist"] = &CVUNIVERSE::GetSecNeutCandvtxTDist;
+        recofunctions["ThirdNeutCandvtxTDist"] = &CVUNIVERSE::GetThirdNeutCandvtxTDist;
+        truefunctions["ThirdNeutCandvtxTDist"] = &CVUNIVERSE::GetThirdNeutCandvtxTDist;
+
         recofunctions["LeadingNeutCandvtxSphereDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxSphereDist;
         truefunctions["LeadingNeutCandvtxSphereDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxSphereDist;
         recofunctions["SecNeutCandvtxSphereDist"] = &CVUNIVERSE::GetSecNeutCandvtxSphereDist;
@@ -297,6 +304,13 @@ class CVFunctions {
         truefunctions["SecNeutCandvtxBoxDist"] = &CVUNIVERSE::GetSecNeutCandvtxBoxDist;
         recofunctions["ThirdNeutCandvtxBoxDist"] = &CVUNIVERSE::GetThirdNeutCandvtxBoxDist;
         truefunctions["ThirdNeutCandvtxBoxDist"] = &CVUNIVERSE::GetThirdNeutCandvtxBoxDist;
+
+        recofunctions["LeadingNeutCandTrackEndDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndDist;
+        truefunctions["LeadingNeutCandTrackEndDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndDist;
+        recofunctions["SecNeutCandTrackEndDist"] = &CVUNIVERSE::GetSecNeutCandTrackEndDist;
+        truefunctions["SecNeutCandTrackEndDist"] = &CVUNIVERSE::GetSecNeutCandTrackEndDist;
+        recofunctions["ThirdNeutCandTrackEndDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndDist;
+        truefunctions["ThirdNeutCandTrackEndDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndDist;
 
         recofunctions["LeadingNeutCandEdep"] = &CVUNIVERSE::GetLeadingNeutCandEdepMeV;
         truefunctions["LeadingNeutCandEdep"] = &CVUNIVERSE::GetLeadingNeutCandEdepMeV;

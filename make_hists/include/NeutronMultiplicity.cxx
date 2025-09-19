@@ -100,12 +100,12 @@ double NeutCand::GetCandVtxDist() {
 }
 
 double NeutCand::GetCandVtxZDist() {
-    if (!m_recoset) return -1.0;
+    if (!m_recoset) return -99999.0;
     return m_flightpath.Z();
 }
 
 double NeutCand::GetCandVtxTDist() {
-    if (!m_recoset) return -1.0;
+    if (!m_recoset) return -99999.0;
     return m_flightpath.Rho();
 }
 
@@ -133,13 +133,19 @@ double NeutCand::GetCandTruthAngleFromParent() {
 
 // NeutEvent stuff
 // CTORS
-NeutEvent::NeutEvent(NuConfig config, int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, ROOT::Math::XYZVector trackend) : m_vtx(vtx),
+NeutEvent::NeutEvent(NuConfig config,
+                     int ncands,
+                     ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, ROOT::Math::XYZVector trackend) : m_vtx(vtx),
                                                                                                                 m_mupath(mupath),
                                                                                                                 m_ncands(ncands) {
-    SetConfig(config);
-    if (trackend.Z() > 0) { 
+    if (!_is_config_set) {
+        SetConfig(config);
+        _is_config_set = true;
+    }
+    if (trackend.Z() > 0) {
         m_evthastrack = true;
         m_trackend = trackend;
+        // std::cout << "\ttrack end dist: \t" << m_trackend.X() << "\t" << m_trackend.Y() << "\t" << m_trackend.Z() << std::endl;
     }
     for (int i = 0; i < ncands; i++) {
         m_cands.emplace_back(std::make_unique<NeutCand>(NeutCand()));
@@ -161,7 +167,7 @@ NeutEvent::NeutEvent(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVecto
 }
 
 NeutEvent::NeutEvent(NuConfig config) {
-    std::cout << "WARNING: NeutronMultiplicity::NeutEvent: you are setting a neutevent without setting up candidates.\nYou will need to use NeutronMultiplicity::NeutEvent::SetCands()." << std::endl;
+    // std::cout << "WARNING: NeutronMultiplicity::NeutEvent: you are setting a neutevent without setting up candidates.\nYou will need to use NeutronMultiplicity::NeutEvent::SetCands()." << std::endl;
     SetConfig(config);
 }
 
@@ -200,24 +206,59 @@ void NeutEvent::SetConfig(NuConfig config) {
     }
 }
 
-void NeutEvent::SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath) {
+void NeutEvent::Reset() {
+    m_cands.clear();
+    m_neutcands.clear();
+    m_trueneutcands.clear();
+
+    m_ncands = 0;
+    m_nneutcands = 0;
+    m_ntrueneutcands = 0;
+
+    _is_cands_set = false;
+    _is_neutcands_set = false;
+    _is_trueneutcands_set = false;
+    _recoset = false;
+    _truthset = false;
+    m_evthastrack = false;
+
+    m_vtx = ROOT::Math::XYZVector();
+    m_mupath = ROOT::Math::XYZVector();
+    m_trackend = ROOT::Math::XYZVector();
+}
+
+// void NeutEvent::SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath) {
+//     m_ncands = ncands;
+//     m_vtx = vtx;
+//     m_mupath = mupath;
+//     if(_is_cands_set) {
+//         std::cout << "WARNING: resetting cands" << std::endl;
+//         this->ClearCands();
+//     }
+//     for (int i = 0; i < ncands; i++) {
+//         m_cands.emplace_back(std::make_unique<NeutCand>(NeutCand()));
+//     }
+//     _is_cands_set = true;
+// }
+
+void NeutEvent::SetCands(int ncands,
+                         ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, ROOT::Math::XYZVector trackend) {
+    if (_is_cands_set) {
+        std::cout << "WARNING: resetting cands" << std::endl;
+        this->Reset();
+    }
     m_ncands = ncands;
     m_vtx = vtx;
     m_mupath = mupath;
-    if(_is_cands_set) {
-        std::cout << "WARNING: resetting cands" << std::endl;
-        this->ClearCands();
+    if (trackend.Z() > 0) {
+        m_evthastrack = true;
+        m_trackend = trackend;
+        // std::cout << "\ttrack end dist: \t" << m_trackend.X() << "\t" << m_trackend.Y() << "\t" << m_trackend.Z() << std::endl;
     }
     for (int i = 0; i < ncands; i++) {
         m_cands.emplace_back(std::make_unique<NeutCand>(NeutCand()));
     }
     _is_cands_set = true;
-}
-
-void NeutEvent::ClearCands() {
-    if (!_is_cands_set) return;
-    m_cands.clear();
-    _is_cands_set = false;
 }
 
 void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<int> views, std::vector<double> EDeps, std::vector<double> clusterMaxE, std::vector<ROOT::Math::XYZVector> begpositions, std::vector<ROOT::Math::XYZVector> endpositions) {

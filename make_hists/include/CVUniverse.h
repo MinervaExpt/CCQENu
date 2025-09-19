@@ -61,7 +61,6 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     static NuConfig m_neutron_config;
     // static std::unique_ptr<NeutronMultiplicity::NeutEvent> m_neutevent;
-    // std::unique_ptr<NeutronMultiplicity::NeutEvent> m_neutevent;
 
     // initially set to false
     static bool _is_analysis_neutrino_pdg_set;
@@ -152,7 +151,16 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     static NuConfig GetNeutronConfig(bool print);
     static bool SetNeutronConfig(NuConfig neutron_config, bool print);
-    // bool SetNeutEvent();
+
+    virtual void SetNeutEvent(bool dotruth=false);
+    virtual void ResetNeutEvent();
+
+   private:
+    // NeutronMultiplicity::NeutEvent* m_neutevent;  // = new NeutronMultiplicity::NeutEvent();
+    std::shared_ptr<NeutronMultiplicity::NeutEvent> m_neutevent;  // = new NeutronMultiplicity::NeutEvent();
+   public:
+    bool _is_neut_event_set;
+
     // ----------------------- Analysis-related Variables ------------------------
 
     virtual int GetIsMinosMatchTrack() const;
@@ -414,22 +422,32 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // virtual double GetTotNeutBlobEGeV(double recoil) const;
     virtual double GetTrueTotNeutBlobEGeV() const;
     virtual int GetPlotNeutCandMCPID() const;
+
     virtual int GetPlotNeutCandTopMCPID(int index) const;
     virtual int GetPlotLeadingNeutCandTopMCPID() const;
     virtual int GetPlotSecNeutCandTopMCPID() const;
     virtual int GetPlotThirdNeutCandTopMCPID() const;
+
     virtual double GetNeutCandvtxZDist(int index) const;
     virtual double GetLeadingNeutCandvtxZDist() const;
     virtual double GetSecNeutCandvtxZDist() const;
     virtual double GetThirdNeutCandvtxZDist() const;
+
+    virtual double GetNeutCandvtxTDist(int index) const;
+    virtual double GetLeadingNeutCandvtxTDist() const;
+    virtual double GetSecNeutCandvtxTDist() const;
+    virtual double GetThirdNeutCandvtxTDist() const;
+
     virtual double GetNeutCandvtxSphereDist(int index) const;
     virtual double GetLeadingNeutCandvtxSphereDist() const;
     virtual double GetSecNeutCandvtxSphereDist() const;
     virtual double GetThirdNeutCandvtxSphereDist() const;
+
     virtual double GetNeutCandvtxBoxDist(int index) const;
     virtual double GetLeadingNeutCandvtxBoxDist() const;
     virtual double GetSecNeutCandvtxBoxDist() const;
     virtual double GetThirdNeutCandvtxBoxDist() const;
+
     virtual double GetNeutCandEdepMeV(int index) const;
     virtual double GetLeadingNeutCandEdepMeV() const;
     virtual double GetSecNeutCandEdepMeV() const;
@@ -445,6 +463,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetLeadingNeutCandMuonDist() const;
     virtual double GetSecNeutCandMuonDist() const;
     virtual double GetThirdNeutCandMuonDist() const;
+
     virtual double GetNeutCandMuonAngle(int index) const;
     virtual double GetLeadingNeutCandMuonAngle() const;
     virtual double GetSecNeutCandMuonAngle() const;
@@ -453,6 +472,11 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetNeutCandMuonCosTheta(int index) const;
     virtual double GetLeadingNeutCandMuonCosTheta() const;
     virtual double GetSecNeutCandMuonCosTheta() const;
+
+    virtual double GetNeutCandTrackEndDist(int index) const;
+    virtual double GetLeadingNeutCandTrackEndDist() const;
+    virtual double GetSecNeutCandTrackEndDist() const;
+    virtual double GetThirdNeutCandTrackEndDist() const;
 
     virtual double GetNeutCandAngleToParent(int index) const;
     virtual double GetLeadingNeutCandAngleToParent() const;

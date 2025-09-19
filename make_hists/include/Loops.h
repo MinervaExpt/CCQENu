@@ -180,7 +180,8 @@ void LoopAndFillEventSelection(std::string tag,
                 auto universe = error_band_universes[iuniv];
 
                 universe->SetEntry(i);
-
+                if (data_mc_truth == kMC || data_mc_truth == kTruth) universe->SetNeutEvent(true);
+                else universe->SetNeutEvent();
                 // Process this event/universe
                 // double weight = 1;
                 // if (universe->ShortName() == "cv" ) weight = data_mc_truth == kData ? 1. : universe->GetWeight();
@@ -276,6 +277,7 @@ void LoopAndFillEventSelection(std::string tag,
                         FillData(tag, universe, variables, variables2D, variablesHD);
                     }
                 }
+                universe->ResetNeutEvent();
             }  // End universes
         }  // End error bands
     }  // End entries loop

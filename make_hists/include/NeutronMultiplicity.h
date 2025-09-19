@@ -91,23 +91,26 @@ class NeutEvent {
     double m_edep_min = 0.;                    // in MeV
     int m_req3D = 0;                           // Set requirement to 3D blob, set to 1 for 3D only, -1 for 2D only, 0 for both
     double m_maxlength = -1.;                  // Set Maximum length for the track, may be deprecated bc not really useful
-    bool m_evthastrack = false;                // Check bool to see if event has a track
     double m_trackenddist_max = -1.;           // Check val set in config, in mm
+    std::vector<std::pair<double, double>> m_vtxdist_edep;
+    bool _is_vtxdist_edep_set = false;
+    
     // int m_nneutcands;
     ROOT::Math::XYZVector m_vtx;
     ROOT::Math::XYZVector m_mupath;
     ROOT::Math::XYZVector m_trackend;  // not every event has a proton track, should be entered as -9999 for each dim if no proton track
 
     // std::vector<NeutronMultiplicity::NeutCand*> m_cands;  // the candidates it contains //moved to public?
+    bool _is_config_set = false;
     bool _is_cands_set = false;
     bool _is_neutcands_set = false;
     bool _is_trueneutcands_set = false;
     bool _recoset = false;
     bool _truthset = false;
+    bool m_evthastrack = false;  // Check bool to see if event has a track
 
     // More complicated stuff
-    std::vector<std::pair<double,double>> m_vtxdist_edep;
-    bool _is_vtxdist_edep_set = false;
+
 
    public:
     int m_ncands = 0;                                             // total number of cands in event
@@ -123,7 +126,6 @@ class NeutEvent {
     NeutEvent(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, ROOT::Math::XYZVector trackend);
     NeutEvent(NuConfig config);  // would need to set up cands separately using SetCands
     NeutEvent();
-    // ~NeutEvent() = default; //{
 
     ~NeutEvent() {
         m_cands.clear();
@@ -132,11 +134,13 @@ class NeutEvent {
     }
 
     void SetConfig(NuConfig config);
+    void Reset(); // Used to clear everything except what comes from the config
     // NeutEvent();
-    void SetCands(int n_neutcands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath);
+    // void SetCands(int n_neutcands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath);
+    void SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, ROOT::Math::XYZVector trackend);
 
    private:
-    void ClearCands();  // This is to clean up, called internally in SetCands if some cands are set.
+    // void ClearCands();  // This is to clean up, called internally in SetCands if some cands are set.
     void SetNeutCands();
     void SetTrueNeutCands();
    public:
