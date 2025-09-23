@@ -478,6 +478,16 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetSecNeutCandTrackEndDist() const;
     virtual double GetThirdNeutCandTrackEndDist() const;
 
+    virtual double GetNeutCandTrackEndZDist(int index) const;
+    virtual double GetLeadingNeutCandTrackEndZDist() const;
+    virtual double GetSecNeutCandTrackEndZDist() const;
+    virtual double GetThirdNeutCandTrackEndZDist() const;
+
+    virtual double GetNeutCandTrackEndTDist(int index) const;
+    virtual double GetLeadingNeutCandTrackEndTDist() const;
+    virtual double GetSecNeutCandTrackEndTDist() const;
+    virtual double GetThirdNeutCandTrackEndTDist() const;
+
     virtual double GetNeutCandAngleToParent(int index) const;
     virtual double GetLeadingNeutCandAngleToParent() const;
     virtual double GetSecondNeutCandAngleToParent() const;

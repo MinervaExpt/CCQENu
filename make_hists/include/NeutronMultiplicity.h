@@ -33,6 +33,7 @@ class NeutCand {
     ROOT::Math::XYZVector m_begposition = ROOT::Math::XYZVector();  // where is it?
     ROOT::Math::XYZVector m_endposition = ROOT::Math::XYZVector();  // where does it end
     ROOT::Math::XYZVector m_flightpath = ROOT::Math::XYZVector();   // which direction did it travel from the vtx????
+    ROOT::Math::XYZVector m_trackend = ROOT::Math::XYZVector();     // If there is a track, where did it end (detector coords)
 
     // Truth vars
     int m_truthPID = -1;                                            // PID of most recent GEANT Parent
@@ -42,6 +43,8 @@ class NeutCand {
     bool m_recoset = false;
     bool m_truthset = false;
 
+    bool _is_candtrackend_set = false;
+
     // CTORs
     NeutCand();  // default
     NeutCand(int blobID, int is3D, int view, double recoEDep, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition);
@@ -50,6 +53,7 @@ class NeutCand {
     ~NeutCand() = default;
     // reco functions
     void SetReco(int blobID, int is3D, int view, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath);
+    void SetReco(int blobID, int is3D, int view, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath, ROOT::Math::XYZVector trackendpath);
 
     // SetBlobID(int index);
 
@@ -66,6 +70,7 @@ class NeutCand {
     ROOT::Math::XYZVector GetCandPosition();
     ROOT::Math::XYZVector GetCandViewPosition();
     ROOT::Math::XYZVector GetCandFlightPath();
+    ROOT::Math::XYZVector GetCandTrackFlightPath();
 
     double GetCandVtxDist();  // TODO: Andrew does something weird with this
     double GetCandVtxZDist();

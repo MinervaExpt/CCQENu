@@ -312,6 +312,20 @@ class CVFunctions {
         recofunctions["ThirdNeutCandTrackEndDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndDist;
         truefunctions["ThirdNeutCandTrackEndDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndDist;
 
+        recofunctions["LeadingNeutCandTrackEndZDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndZDist;
+        truefunctions["LeadingNeutCandTrackEndZDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndZDist;
+        recofunctions["SecNeutCandTrackEndZDist"] = &CVUNIVERSE::GetSecNeutCandTrackEndZDist;
+        truefunctions["SecNeutCandTrackEndZDist"] = &CVUNIVERSE::GetSecNeutCandTrackEndZDist;
+        recofunctions["ThirdNeutCandTrackEndZDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndZDist;
+        truefunctions["ThirdNeutCandTrackEndZDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndZDist;
+
+        recofunctions["LeadingNeutCandTrackEndTDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndTDist;
+        truefunctions["LeadingNeutCandTrackEndTDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndTDist;
+        recofunctions["SecNeutCandTrackEndTDist"] = &CVUNIVERSE::GetSecNeutCandTrackEndTDist;
+        truefunctions["SecNeutCandTrackEndTDist"] = &CVUNIVERSE::GetSecNeutCandTrackEndTDist;
+        recofunctions["ThirdNeutCandTrackEndTDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndTDist;
+        truefunctions["ThirdNeutCandTrackEndTDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndTDist;
+
         recofunctions["LeadingNeutCandEdep"] = &CVUNIVERSE::GetLeadingNeutCandEdepMeV;
         truefunctions["LeadingNeutCandEdep"] = &CVUNIVERSE::GetLeadingNeutCandEdepMeV;
         recofunctions["SecNeutCandEdep"] = &CVUNIVERSE::GetSecNeutCandEdepMeV;

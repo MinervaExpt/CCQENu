@@ -35,6 +35,22 @@ void NeutCand::SetReco(int blobID, int is3D, int view,
     m_flightpath = flightpath;
 }
 
+void NeutCand::SetReco(int blobID, int is3D, int view,
+                       double recoEDep, double clusterMaxE,
+                       ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath, ROOT::Math::XYZVector trackend) {
+    m_recoset = true;
+    m_blobID = blobID;
+    m_is3D = is3D;
+    m_view = view;
+    m_recoEDep = recoEDep;
+    m_clusterMaxE = clusterMaxE;
+    m_begposition = begposition;
+    m_endposition = endposition;
+    m_flightpath = flightpath;
+    m_trackend = trackend;
+    _is_candtrackend_set = true;
+}
+
 void NeutCand::SetTruth(int truthPID, int truthTopMCPID, ROOT::Math::XYZVector TopMomentum) {
     m_truthset = true;
     m_truthPID = truthPID;
@@ -76,10 +92,10 @@ ROOT::Math::XYZVector NeutCand::GetCandViewPosition() {
     if (!m_recoset) return ROOT::Math::XYZVector();
     if (m_is3D) return m_begposition;
     if (m_view == 1) {
-        return ROOT::Math::XYZVector(m_begposition.X(),0,m_begposition.Z());
+        return ROOT::Math::XYZVector(m_begposition.X(), 0.0, m_begposition.Z());
     } else {
         ROOT::Math::XYZVector view_pos(ROOT::Math::VectorUtil::RotateZ(m_begposition, NeutronMultiplicity::view_angles[m_view]));
-        return ROOT::Math::XYZVector(view_pos.X(), 0, view_pos.Z());
+        return ROOT::Math::XYZVector(view_pos.X(), 0.0, view_pos.Z());
     }
     return ROOT::Math::XYZVector();
 }
@@ -92,6 +108,18 @@ double NeutCand::GetCandLength() {
 ROOT::Math::XYZVector NeutCand::GetCandFlightPath() {
     if (!m_recoset) return ROOT::Math::XYZVector();
     return m_flightpath;
+}
+
+ROOT::Math::XYZVector NeutCand::GetCandTrackFlightPath() {
+    if (!m_recoset || !_is_candtrackend_set) return ROOT::Math::XYZVector(-9999.,-9999.,-9999.);
+    if (m_is3D) return m_begposition - m_trackend;
+    if (m_view == 1) {
+        return ROOT::Math::XYZVector(m_begposition.X() - m_trackend.X(), 0.0, m_begposition.Z() - m_trackend.Z());
+    } else {
+        ROOT::Math::XYZVector view_candbegpos(ROOT::Math::VectorUtil::RotateZ(m_begposition, NeutronMultiplicity::view_angles[m_view]));
+        ROOT::Math::XYZVector view_trackend(ROOT::Math::VectorUtil::RotateZ(m_trackend, NeutronMultiplicity::view_angles[m_view]));
+        return ROOT::Math::XYZVector(view_candbegpos.X() - view_trackend.X(), 0.0, view_candbegpos.Z() - view_trackend.Z());
+    }
 }
 
 double NeutCand::GetCandVtxDist() {
@@ -294,7 +322,11 @@ void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::v
             // std::cout << "\tend blob pos:  \t" << begpositions[i].X() << "\t" << begpositions[i].Y() << "\t" << begpositions[i].Z() << std::endl;
         }
         flightpath = begpositions[i] - m_vtx;
-        m_cands[i]->SetReco(blobIDs[i], is3Ds[i], views[i], EDeps[i], clusterMaxE[i], begpositions[i], endpositions[i], flightpath);
+
+        if (!m_evthastrack)
+            m_cands[i]->SetReco(blobIDs[i], is3Ds[i], views[i], EDeps[i], clusterMaxE[i], begpositions[i], endpositions[i], flightpath);
+        else
+            m_cands[i]->SetReco(blobIDs[i], is3Ds[i], views[i], EDeps[i], clusterMaxE[i], begpositions[i], endpositions[i], flightpath, m_trackend);
     }
     std::sort(m_cands.begin(), m_cands.end(), compare_cands);
     _recoset = true;

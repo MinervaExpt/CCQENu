@@ -2268,22 +2268,23 @@ double CVUniverse::GetNeutCandTrackEndDist(int index) const {
     if (m_neutevent->GetNNeutCands() < index + 1)
         return -99999.;
     const std::unique_ptr<NeutronMultiplicity::NeutCand>& cand = m_neutevent->GetNeutCand(index);
-    ROOT::Math::XYZVector trackend = GetPrimaryProtonTrackEnd();
-    if (cand->GetCandIs3D() == 1) {
-        ROOT::Math::XYZVector cand_pos = cand->GetCandPosition();
-        return (cand_pos - trackend).R();
-    } else {
-        ROOT::Math::XYZVector candview_pos = cand->GetCandViewPosition();
-        if (cand->GetCandView() == 1) {
-            ROOT::Math::XYZVector tmp_candview_pos = ROOT::Math::XYZVector(candview_pos.X(), trackend.Y(), candview_pos.Z());
-            return (tmp_candview_pos - trackend).R();
-        } else {
-            ROOT::Math::XYZVector candview_trackend(ROOT::Math::VectorUtil::RotateZ(trackend, NeutronMultiplicity::view_angles[cand->GetCandView()]));
-            ROOT::Math::XYZVector tmp_candview_pos = ROOT::Math::XYZVector(candview_pos.X(), candview_trackend.Y(), candview_pos.Z());
-            return (tmp_candview_pos - candview_trackend).R() ;
-        }
-    }
-    return -99999.;
+    return cand->GetCandTrackFlightPath().R();
+    // ROOT::Math::XYZVector trackend = GetPrimaryProtonTrackEnd();
+    // if (cand->GetCandIs3D() == 1) {
+    //     ROOT::Math::XYZVector cand_pos = cand->GetCandPosition();
+    //     return (cand_pos - trackend).R();
+    // } else {
+    //     ROOT::Math::XYZVector candview_pos = cand->GetCandViewPosition();
+    //     if (cand->GetCandView() == 1) {
+    //         ROOT::Math::XYZVector tmp_candview_pos = ROOT::Math::XYZVector(candview_pos.X(), trackend.Y(), candview_pos.Z());
+    //         return (tmp_candview_pos - trackend).R();
+    //     } else {
+    //         ROOT::Math::XYZVector candview_trackend(ROOT::Math::VectorUtil::RotateZ(trackend, NeutronMultiplicity::view_angles[cand->GetCandView()]));
+    //         ROOT::Math::XYZVector tmp_candview_pos = ROOT::Math::XYZVector(candview_pos.X(), candview_trackend.Y(), candview_pos.Z());
+    //         return (tmp_candview_pos - candview_trackend).R() ;
+    //     }
+    // }
+    // return -99999.;
 }
 
 double CVUniverse::GetLeadingNeutCandTrackEndDist() const {
@@ -2296,6 +2297,48 @@ double CVUniverse::GetSecNeutCandTrackEndDist() const {
 
 double CVUniverse::GetThirdNeutCandTrackEndDist() const {
     return GetNeutCandTrackEndDist(2);
+}
+
+double CVUniverse::GetNeutCandTrackEndZDist(int index) const {
+    if (CVUniverse::GetNMADBlobs() < index + 1 || CVUniverse::GetMultiplicity() < 2)
+        return -99999.;
+    if (m_neutevent->GetNNeutCands() < index + 1)
+        return -99999.;
+    const std::unique_ptr<NeutronMultiplicity::NeutCand>& cand = m_neutevent->GetNeutCand(index);
+    return cand->GetCandTrackFlightPath().Z();
+}
+
+double CVUniverse::GetLeadingNeutCandTrackEndZDist() const {
+    return GetNeutCandTrackEndZDist(0);
+}
+
+double CVUniverse::GetSecNeutCandTrackEndZDist() const {
+    return GetNeutCandTrackEndZDist(1);
+}
+
+double CVUniverse::GetThirdNeutCandTrackEndZDist() const {
+    return GetNeutCandTrackEndZDist(2);
+}
+
+double CVUniverse::GetNeutCandTrackEndTDist(int index) const {
+    if (CVUniverse::GetNMADBlobs() < index + 1 || CVUniverse::GetMultiplicity() < 2)
+        return -99999.;
+    if (m_neutevent->GetNNeutCands() < index + 1)
+        return -99999.;
+    const std::unique_ptr<NeutronMultiplicity::NeutCand>& cand = m_neutevent->GetNeutCand(index);
+    return cand->GetCandTrackFlightPath().Rho();
+}
+
+double CVUniverse::GetLeadingNeutCandTrackEndTDist() const {
+    return GetNeutCandTrackEndTDist(0);
+}
+
+double CVUniverse::GetSecNeutCandTrackEndTDist() const {
+    return GetNeutCandTrackEndTDist(1);
+}
+
+double CVUniverse::GetThirdNeutCandTrackEndTDist() const {
+    return GetNeutCandTrackEndTDist(2);
 }
 
 double CVUniverse::GetNeutCandAngleToParent(int index) const {
