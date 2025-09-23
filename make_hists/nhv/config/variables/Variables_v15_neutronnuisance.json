@@ -716,7 +716,7 @@
       "title": "Leading Blob dist from track end",
       "nbins": 25,
       "min": 0.0,
-      "max": 1000.0,
+      "max": 500.0,
       "for": [
         "data",
         "selected_reco"
@@ -729,7 +729,7 @@
       "title": "Second Blob dist from track end",
       "nbins": 25,
       "min": 0.0,
-      "max": 1000.0,
+      "max": 500.0,
       "for": [
         "data",
         "selected_reco"
@@ -742,7 +742,85 @@
       "title": "Third Blob dist from track end",
       "nbins": 25,
       "min": 0.0,
-      "max": 1000.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandTrackEndZDist": {
+      "reco": "LeadingNeutCandTrackEndZDist",
+      "true": "LeadingNeutCandTrackEndZDist",
+      "name": "LeadingNeutCandTrackEndZDist",
+      "title": "Leading Blob z dist from track end",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandTrackEndZDist": {
+      "reco": "SecNeutCandTrackEndZDist",
+      "true": "SecNeutCandTrackEndZDist",
+      "name": "SecNeutCandTrackEndZDist",
+      "title": "Second Blob z dist from track end",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandTrackEndZDist": {
+      "reco": "ThirdNeutCandTrackEndZDist",
+      "true": "ThirdNeutCandTrackEndZDist",
+      "name": "ThirdNeutCandTrackEndZDist",
+      "title": "Third Blob z dist from track end",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandTrackEndTDist": {
+      "reco": "LeadingNeutCandTrackEndTDist",
+      "true": "LeadingNeutCandTrackEndTDist",
+      "name": "LeadingNeutCandTrackEndTDist",
+      "title": "Leading Blob T dist from track end",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandTrackEndTDist": {
+      "reco": "SecNeutCandTrackEndTDist",
+      "true": "SecNeutCandTrackEndTDist",
+      "name": "SecNeutCandTrackEndTDist",
+      "title": "Second Blob T dist from track end",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandTrackEndTDist": {
+      "reco": "ThirdNeutCandTrackEndTDist",
+      "true": "ThirdNeutCandTrackEndTDist",
+      "name": "ThirdNeutCandTrackEndTDist",
+      "title": "Third Blob T dist from track end",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 500.0,
       "for": [
         "data",
         "selected_reco"
