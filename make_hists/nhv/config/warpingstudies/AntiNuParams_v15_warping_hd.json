@@ -25,7 +25,7 @@
         "zpos_min": 5810.0, // 5890.0,
         // "muoncone_min": 15.0,
         // "muondist_min": 100.0,
-        "edep_min": 1.5//,
-        // "Is3D": 1
+        "edep_min": 1.5,
+        "Is3D": -1
     }
 }
