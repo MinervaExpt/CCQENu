@@ -97,6 +97,7 @@ class NeutEvent {
     int m_req3D = 0;                           // Set requirement to 3D blob, set to 1 for 3D only, -1 for 2D only, 0 for both
     double m_maxlength = -1.;                  // Set Maximum length for the track, may be deprecated bc not really useful
     double m_trackenddist_max = -1.;           // Check val set in config, in mm
+    bool m_do_vtxdist_edep_funct = false;
     std::vector<std::pair<double, double>> m_vtxdist_edep;
     bool _is_vtxdist_edep_set = false;
     
@@ -113,6 +114,9 @@ class NeutEvent {
     bool _recoset = false;
     bool _truthset = false;
     bool m_evthastrack = false;  // Check bool to see if event has a track
+
+    bool _is_trackdist_set = false;
+    bool _is_vtxdist_set = false;
 
     // More complicated stuff
 
@@ -139,6 +143,9 @@ class NeutEvent {
     }
 
     void SetConfig(NuConfig config);
+    // void SetVtxDistConfig(NuConfig vtxdistconfig);
+    // void SetTrackEndDistConfig(NuConfig trackendconfig);
+
     void Reset(); // Used to clear everything except what comes from the config
     // NeutEvent();
     // void SetCands(int n_neutcands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath);

@@ -23,8 +23,52 @@
         "zpos_min": 5810.0, // 5890.0,
         // "muoncone_min": 15.0,
         // "muondist_min": 100.0,
+        "vtxdist_edep_funct": true,
         "edep_min": 1.5,
-        "Is3D": 1
+        "Is3D": -1//,
+        // "subselection": {
+        //     "trackenddist": {
+        //         "is3D": [
+        //             {
+        //                 "edep": {
+        //                     "max": 12.0
+        //                 },
+        //                 "vtxdist": {
+        //                     "min": 0.0
+        //                 }
+        //             },
+        //             {
+        //                 "edep": {
+        //                     "range": [
+        //                         12.0,
+        //                         200.0
+        //                     ]
+        //                 }
+        //             }
+        //         ],
+        //         "is2D": {
+
+        //         }
+        //     },
+        //     "vtxdist": {
+        //         "is3D": [
+        //             {
+        //                 "edep": {
+        //                     "max": 12.0
+        //                 },
+        //                 "vtxdist": {
+        //                     "min": 0.0
+        //                 }
+        //             },
+        //             {
+        //                 "edep": {
+        //                     "range":[12.0,200.0]
+        //                 }
+        //             }
+        //         ],
+        //         "is2D": {}
+        //     }
+        // }
         // "vtxdist_edep_min": {
         //     "band1":{
         //         "edep_max": 12.0,

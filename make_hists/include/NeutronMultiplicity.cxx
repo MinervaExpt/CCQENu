@@ -214,6 +214,7 @@ void NeutEvent::SetConfig(NuConfig config) {
     if (config.IsMember("Is3D")) m_req3D = config.GetInt("Is3D");
     if (config.IsMember("maxlength")) m_maxlength = config.GetDouble("maxlength");
     if (config.IsMember("trackenddist_max")) m_trackenddist_max = config.GetDouble("trackenddist_max");
+    if (config.IsMember("vtxdist_edep_funct")) m_do_vtxdist_edep_funct = config.GetBool("vtxdist_edep_funct");
     if (config.IsMember("vtxdist_edep_min")) {
         NuConfig subconfig = config.GetConfig("vtxdist_edep_min");
 
@@ -232,7 +233,44 @@ void NeutEvent::SetConfig(NuConfig config) {
         }
         _is_vtxdist_edep_set = true;
     }
+    // if (config.IsMember("trackenddist")) {
+    //     this->SetTrackEndDistConfig(config.GetConfig("trackenddist"));
+    // }
 }
+
+// void NeutEvent::SetVtxDistConfig(NuConfig vtxdistconfig) {
+//     std::vector<NuConfig> configlist_3D = vtxdistconfig.GetConfigVector("is3D");
+//     std::vector<std::pair<double, double>> points_is3D = { {0., 0.} };
+//     for (auto subconfig : configlist_3D) {
+//         double edep_min;
+//         double edep_max;
+//         NuConfig tmp_edepconfig = subconfig.GetConfig("edep");
+//         if (tmp_edepconfig.IsMember("range")) {
+//             edep_min = tmp_edepconfig.GetDoubleVector("range")[0];
+//             edep_max = tmp_edepconfig.GetDoubleVector("range")[1];
+//         }
+//         else if (tmp_edepconfig.IsMember("max")) {
+//             edep_max = tmp_edepconfig.GetDouble("max");
+//         }
+//         else if (tmp_edepconfig.IsMember("min")) {
+//             edep_min = tmp_edepconfig.GetDouble("min");
+//         }
+//         NuConfig tmp_vtxdistconfig = subconfig.GetConfig("vtxdist");
+//         if (tmp_vtxdistconfig.IsMember("range")) {
+//             edep_min = tmp_vtxdistconfig.GetDoubleVector("range")[0];
+//             edep_max = tmp_vtxdistconfig.GetDoubleVector("range")[1];
+//         } else if (tmp_vtxdistconfig.IsMember("max")) {
+//             edep_max = tmp_vtxdistconfig.GetDouble("max");
+//         } else if (tmp_vtxdistconfig.IsMember("min")) {
+//             edep_min = tmp_vtxdistconfig.GetDouble("min");
+//         }
+//     }
+//     std::vector<NuConfig> configlist_2D = vtxdistconfig.GetConfigVector("is2D");
+// }
+
+// void NeutEvent::SetTrackEndDistConfig(NuConfig trackendconfig) {
+
+// }
 
 void NeutEvent::Reset() {
     if (!_is_cands_set) return;
@@ -506,7 +544,7 @@ bool NeutEvent::CandPassFiducial(int index) {
 }
 
 bool NeutEvent::CandPassVtxDist(int index) {
-    if (m_vtxdist_min <= 0 && !_is_vtxdist_edep_set) return true;
+    if (m_vtxdist_min <= 0 && !_is_vtxdist_edep_set && !m_do_vtxdist_edep_funct) return true;
     bool pass = false;
     double dist = m_cands[index]->GetCandVtxDist();
     if (_is_vtxdist_edep_set) {
@@ -518,6 +556,10 @@ bool NeutEvent::CandPassVtxDist(int index) {
             }
         }
         return false;
+    }
+    if (m_do_vtxdist_edep_funct) {
+        double edep = m_cands[index]->GetCandRecoEDep();
+        return dist >= 59.52*log(edep/12.989);
     }
     // if (m_cands[index]->GetCandRecoEDep() < 12.0) return true;
     return dist >= m_vtxdist_min;
