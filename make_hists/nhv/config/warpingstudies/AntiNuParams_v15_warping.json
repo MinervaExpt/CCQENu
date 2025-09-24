@@ -25,7 +25,7 @@
         // "muondist_min": 100.0,
         "vtxdist_edep_funct": true,
         "edep_min": 1.5,
-        "Is3D": -1//,
+        "Is3D": 1//,
         // "subselection": {
         //     "trackenddist": {
         //         "is3D": [
