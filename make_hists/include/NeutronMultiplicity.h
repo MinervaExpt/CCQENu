@@ -98,6 +98,8 @@ class NeutEvent {
     double m_maxlength = -1.;                  // Set Maximum length for the track, may be deprecated bc not really useful
     double m_trackenddist_max = -1.;           // Check val set in config, in mm
     bool m_do_vtxdist_edep_funct = false;
+    bool m_do_trackenddist_edep_funct = false;
+    
     std::vector<std::pair<double, double>> m_vtxdist_edep;
     bool _is_vtxdist_edep_set = false;
     

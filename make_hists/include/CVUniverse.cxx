@@ -2222,7 +2222,6 @@ double CVUniverse::GetThirdNeutCandMuonDist() const {
 double CVUniverse::GetNeutCandMuonAngle(int index) const {
     if (CVUniverse::GetNMADBlobs() < index + 1)
         return -99999.;
-    // std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetNeutEvent();
     if (m_neutevent->GetNNeutCands() < index + 1)
         return -99999.;
     const std::unique_ptr<NeutronMultiplicity::NeutCand>& cand = m_neutevent->GetNeutCand(index);
@@ -2244,7 +2243,6 @@ double CVUniverse::GetThirdNeutCandMuonAngle() const {
 double CVUniverse::GetNeutCandMuonCosTheta(int index) const {
     if (CVUniverse::GetNMADBlobs() < index + 1)
         return -99999.;
-    // std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetNeutEvent();
     if (m_neutevent->GetNNeutCands() < index + 1)
         return -99999.;
     const std::unique_ptr<NeutronMultiplicity::NeutCand>& cand = m_neutevent->GetNeutCand(index);
@@ -2264,7 +2262,6 @@ double CVUniverse::GetSecNeutCandMuonCosTheta() const {
 double CVUniverse::GetNeutCandTrackEndDist(int index) const {
     if (CVUniverse::GetNMADBlobs() < index + 1 || CVUniverse::GetMultiplicity() < 2)
         return -99999.;
-    // std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetNeutEvent();
     if (m_neutevent->GetNNeutCands() < index + 1)
         return -99999.;
     const std::unique_ptr<NeutronMultiplicity::NeutCand>& cand = m_neutevent->GetNeutCand(index);

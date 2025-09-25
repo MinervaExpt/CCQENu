@@ -215,6 +215,7 @@ void NeutEvent::SetConfig(NuConfig config) {
     if (config.IsMember("maxlength")) m_maxlength = config.GetDouble("maxlength");
     if (config.IsMember("trackenddist_max")) m_trackenddist_max = config.GetDouble("trackenddist_max");
     if (config.IsMember("vtxdist_edep_funct")) m_do_vtxdist_edep_funct = config.GetBool("vtxdist_edep_funct");
+    if (config.IsMember("trackenddist_edep_funct")) m_do_trackenddist_edep_funct = config.GetBool("trackenddist_edep_funct");
     if (config.IsMember("vtxdist_edep_min")) {
         NuConfig subconfig = config.GetConfig("vtxdist_edep_min");
 
@@ -559,7 +560,7 @@ bool NeutEvent::CandPassVtxDist(int index) {
     }
     if (m_do_vtxdist_edep_funct) {
         double edep = m_cands[index]->GetCandRecoEDep();
-        return dist >= 59.52*log(edep/12.989);
+        return dist >= 55.461 * log(edep) - 125.22;
     }
     // if (m_cands[index]->GetCandRecoEDep() < 12.0) return true;
     return dist >= m_vtxdist_min;
@@ -604,23 +605,35 @@ bool NeutEvent::CandPassLength(int index) {
 }
 
 bool NeutEvent::CandPassTrackEndDist(int index) {
-    if (!m_evthastrack || m_trackenddist_max <= 0.0) return true;
-    if (m_cands[index]->GetCandIs3D()) {
-        ROOT::Math::XYZVector cand_pos = m_cands[index]->GetCandPosition();
-        double trackenddist = (cand_pos - m_trackend).R();
-        return trackenddist > m_trackenddist_max;
-    } else {
-        ROOT::Math::XYZVector candview_pos = m_cands[index]->GetCandViewPosition();
-        if (m_cands[index]->GetCandView() == 1) {
-            ROOT::Math::XYZVector tmp_candview_pos = ROOT::Math::XYZVector(candview_pos.X(), m_trackend.Y(), candview_pos.Z());
-            return (tmp_candview_pos - m_trackend).R() > m_trackenddist_max;
+    if (!m_evthastrack || (m_trackenddist_max <= 0.0 && !m_do_trackenddist_edep_funct)) return true;
+    double track_dist = m_cands[index]->GetCandTrackFlightPath().R();
+    if (m_do_trackenddist_edep_funct) {
+        double edep = m_cands[index]->GetCandRecoEDep();
+        if (m_cands[index]->GetCandIs3D()) {
+            if (edep > 60.0) return track_dist > 250.;
+            return track_dist > 2.991453 * edep + 75.0;
         } else {
-            ROOT::Math::XYZVector candview_trackend(ROOT::Math::VectorUtil::RotateZ(m_trackend, NeutronMultiplicity::view_angles[m_cands[index]->GetCandView()]));
-            ROOT::Math::XYZVector tmp_candview_pos = ROOT::Math::XYZVector(candview_pos.X(), candview_trackend.Y(), candview_pos.Z());
-            return (tmp_candview_pos - candview_trackend).R() > m_trackenddist_max;
+            return track_dist > 1.9218 * edep + 52.919;
         }
     }
-    return false;
+
+    return track_dist > m_trackenddist_max;
+    // if (m_cands[index]->GetCandIs3D()) {
+    //     ROOT::Math::XYZVector cand_pos = m_cands[index]->GetCandPosition();
+    //     double trackenddist = (cand_pos - m_trackend).R();
+    //     return trackenddist > m_trackenddist_max;
+    // } else {
+    //     ROOT::Math::XYZVector candview_pos = m_cands[index]->GetCandViewPosition();
+    //     if (m_cands[index]->GetCandView() == 1) {
+    //         ROOT::Math::XYZVector tmp_candview_pos = ROOT::Math::XYZVector(candview_pos.X(), m_trackend.Y(), candview_pos.Z());
+    //         return (tmp_candview_pos - m_trackend).R() > m_trackenddist_max;
+    //     } else {
+    //         ROOT::Math::XYZVector candview_trackend(ROOT::Math::VectorUtil::RotateZ(m_trackend, NeutronMultiplicity::view_angles[m_cands[index]->GetCandView()]));
+    //         ROOT::Math::XYZVector tmp_candview_pos = ROOT::Math::XYZVector(candview_pos.X(), candview_trackend.Y(), candview_pos.Z());
+    //         return (tmp_candview_pos - candview_trackend).R() > m_trackenddist_max;
+    //     }
+    // }
+    // return false;
 }
 
 int NeutEvent::GetCandTruthPID(int index) {
