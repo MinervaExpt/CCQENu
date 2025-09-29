@@ -509,7 +509,8 @@ bool NeutEvent::GetCandIsNeut(int index) {
             CandPassVtxZDist(index) &&
             CandPassEDep(index) && 
             CandPassIs3D(index) &&
-            CandPassVtxBox(index)
+            CandPassVtxBox(index) &&
+            CandPassTrackEndDist(index)
         );
 }
 

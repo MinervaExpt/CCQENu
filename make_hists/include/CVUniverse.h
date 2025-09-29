@@ -472,6 +472,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetNeutCandMuonCosTheta(int index) const;
     virtual double GetLeadingNeutCandMuonCosTheta() const;
     virtual double GetSecNeutCandMuonCosTheta() const;
+    virtual double GetThirdNeutCandMuonCosTheta() const;
 
     virtual double GetNeutCandTrackEndDist(int index) const;
     virtual double GetLeadingNeutCandTrackEndDist() const;
@@ -702,6 +703,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetSecProtonCandidatePDG_4() const;
     virtual int GetSecProtonCandidatePDG_5() const;
     virtual int GetSecProtonCandidatePDG_6() const;
+
+    virtual int GetPlotProtonCandMCPID(int index) const;
+
+    virtual int GetPlotPrimaryProtonCandMCPID() const;
 
     virtual double GetEnergyDiffTruedEdx() const;
 

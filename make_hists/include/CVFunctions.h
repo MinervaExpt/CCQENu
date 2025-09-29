@@ -358,6 +358,8 @@ class CVFunctions {
         truefunctions["LeadingNeutCandMuonCosTheta"] = &CVUNIVERSE::GetLeadingNeutCandMuonCosTheta;
         recofunctions["SecNeutCandMuonCosTheta"] = &CVUNIVERSE::GetSecNeutCandMuonCosTheta;
         truefunctions["SecNeutCandMuonCosTheta"] = &CVUNIVERSE::GetSecNeutCandMuonCosTheta;
+        recofunctions["ThirdNeutCandMuonCosTheta"] = &CVUNIVERSE::GetThirdNeutCandMuonCosTheta;
+        truefunctions["ThirdNeutCandMuonCosTheta"] = &CVUNIVERSE::GetThirdNeutCandMuonCosTheta;
 
         recofunctions["LeadingNeutCandAngleToParent"] = &CVUNIVERSE::GetLeadingNeutCandAngleToParent;
         truefunctions["LeadingNeutCandAngleToParent"] = &CVUNIVERSE::GetLeadingNeutCandAngleToParent;
@@ -574,6 +576,11 @@ class CVFunctions {
         recofunctions["SecProtonCandidatePDG_5"] = &CVUNIVERSE::GetSecProtonCandidatePDG_5;
         recointfunctions["SecProtonCandidatePDG_6"] = &CVUNIVERSE::GetSecProtonCandidatePDG_6;
         recofunctions["SecProtonCandidatePDG_6"] = &CVUNIVERSE::GetSecProtonCandidatePDG_6;
+
+        recofunctions["PlotPrimaryProtonCandMCPID"] = &CVUNIVERSE::GetPlotPrimaryProtonCandMCPID;
+        recointfunctions["PlotPrimaryProtonCandMCPID"] = &CVUNIVERSE::GetPlotPrimaryProtonCandMCPID;
+        truefunctions["PlotPrimaryProtonCandMCPID"] = &CVUNIVERSE::GetPlotPrimaryProtonCandMCPID;
+        trueintfunctions["PlotPrimaryProtonCandMCPID"] = &CVUNIVERSE::GetPlotPrimaryProtonCandMCPID;
 
         recointfunctions["RecoTruthIsPrimaryProton"] = &CVUNIVERSE::GetRecoTruthIsPrimaryProton;
         recointfunctions["RecoTruthIsPrimaryPion"] = &CVUNIVERSE::GetRecoTruthIsPrimaryPion;

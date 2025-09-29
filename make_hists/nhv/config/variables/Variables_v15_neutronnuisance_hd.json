@@ -1067,20 +1067,20 @@
         // 10.0, // test
         // 11.0, // test
         12.0,
-        15.0, // test
-        18.0, // test
-        21.0, // test
+        // 15.0, // test
+        // 18.0, // test
+        // 21.0, // test
         25.0,
-        30.0, // test
-        35.0, // test
-        40.0, // test
-        45.0, // test
+        // 30.0, // test
+        // 35.0, // test
+        // 40.0, // test
+        // 45.0, // test
         50.0,
-        60.0, // test
-        // 75.0, // test remove
-        70.0, // test
-        80.0, // test
-        90.0, // test
+        // 60.0, // test
+        75.0, // test remove
+        // 70.0, // test
+        // 80.0, // test
+        // 90.0, // test
         100.0,
         150.0,
         200.0,
@@ -1108,25 +1108,25 @@
         // 10.0, // test
         // 11.0, // test
         12.0,
-        15.0, // test
-        18.0, // test
-        21.0, // test
+        // 15.0, // test
+        // 18.0, // test
+        // 21.0, // test
         25.0,
-        30.0, // test
-        35.0, // test
-        40.0, // test
-        45.0, // test
+        // 30.0, // test
+        // 35.0, // test
+        // 40.0, // test
+        // 45.0, // test
         50.0,
-        60.0, // test
-        // 75.0, // test remove
-        70.0, // test
-        80.0, // test
-        90.0, // test
+        // 60.0, // test
+        75.0, // test remove
+        // 70.0, // test
+        // 80.0, // test
+        // 90.0, // test
         100.0,
         150.0,
         200.0,
         300.0,
-        500.0//,
+        500.0 //,
         // 1000.0
       ],
       // "nbins": 50,
@@ -1294,6 +1294,19 @@
       "true": "SecNeutCandMuonCosTheta",
       "name": "SecNeutCandMuonCosTheta",
       "title": "Second Blob CosTheta from muon track",
+      "nbins": 10,
+      "min": -1.0,
+      "max": 1.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandMuonCosTheta": {
+      "reco": "ThirdNeutCandMuonCosTheta",
+      "true": "ThirdNeutCandMuonCosTheta",
+      "name": "ThirdNeutCandMuonCosTheta",
+      "title": "Third Blob CosTheta from muon track",
       "nbins": 10,
       "min": -1.0,
       "max": 1.0,
@@ -1520,9 +1533,13 @@
         0.5,
         1.0
       ],
+      "for": [
+        "data",
+        "selected_reco"
+      ],
       "fluxnorm": false
     },
-      "EAvail_nohi": {
+    "EAvail_nohi": {
       "reco": "EAvailGeV",
       "true": "TrueEAvailGeV",
       "name": "EAvail_nohi",
@@ -1634,5 +1651,46 @@
       ],
       "fluxnorm": false
     },
+    "Q2QE": {
+      "reco": "Q2QEGeV",
+      "true": "TrueQ2QEGeV",
+      "name": "Q2QE",
+      "title": "Q^{2} (QE)(GeV^{2})",
+      "bins": [
+        0.001,
+        0.0125,
+        0.025,
+        0.05,
+        0.1,
+        0.2,
+        0.4,
+        0.8,
+        1.6,
+        4.0
+      ],
+      "fluxnorm": false
+    },
+    "PrimaryProtonScore": {
+      "reco": "PrimaryProtonScore",
+      "true": "TruthHasSingleProton",
+      "name": "PrimaryProtonScore",
+      "title": "Proton Score of Primary non-Muon Track",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 1.0,
+      "fluxnorm": false
+    }//,
+    // "PrimaryProtonCandidatePDG": {
+    //   "reco": "PlotPrimaryProtonCandidatePDG",
+    //   "true": "PlotPrimaryProtonCandidatePDG",
+    //   "name": "PlotPrimaryProtonCandidatePDG",
+    //   "title": "PDG Primary Proton Candidate",
+    //   "nbins": 11,
+    //   "min": 0.5,
+    //   "max": 11.5,
+    //   "for": [
+    //     "selected_reco"
+    //   ]
+    // }
   }
 }

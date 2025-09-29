@@ -1022,6 +1022,41 @@ int CVUniverse::GetSecProtonCandidatePDG_4() const { return GetProtonCandidatePD
 int CVUniverse::GetSecProtonCandidatePDG_5() const { return GetProtonCandidatePDG(5); }
 int CVUniverse::GetSecProtonCandidatePDG_6() const { return GetProtonCandidatePDG(6); }
 
+int CVUniverse::GetPlotProtonCandMCPID(int index) const {
+    if (GetMultiplicity() < index + 2) {
+        return -9999;
+    }
+    int pid = GetProtonCandidatePDG(index);
+    if (pid == -1)
+        return -9999;
+    if (pid == 2112)  // neutron
+        return 1;
+    else if (pid == 2212)  // proton
+        return 2;
+    else if (pid == 111)  // pi0
+        return 3;
+    else if (pid == 211)  // pi+
+        return 4;
+    else if (pid == -211)  // pi-
+        return 5;
+    else if (pid == 22)  // photon
+        return 6;
+    else if (abs(pid) == 11)  // electron
+        return 7;
+    else if (abs(pid) == 13)  // muon
+        return 8;
+    else if (pid == 0)  // no genie parent
+        return 9;
+    else {
+        // std::cout << "other pid = " << pid << std::endl;
+        return 10;
+    }
+}
+
+int CVUniverse::GetPlotPrimaryProtonCandMCPID() const {
+    return CVUniverse::GetPlotProtonCandMCPID(0);
+}
+
 double CVUniverse::GetEnergyDiffTruedEdx() const {
     return GetPrimaryProtonTrueKE() - GetTotalPrimaryProtonEnergy();
 }
@@ -2257,6 +2292,10 @@ double CVUniverse::GetLeadingNeutCandMuonCosTheta() const {
 
 double CVUniverse::GetSecNeutCandMuonCosTheta() const {
     return GetNeutCandMuonCosTheta(1);
+}
+
+double CVUniverse::GetThirdNeutCandMuonCosTheta() const {
+    return GetNeutCandMuonCosTheta(2);
 }
 
 double CVUniverse::GetNeutCandTrackEndDist(int index) const {
