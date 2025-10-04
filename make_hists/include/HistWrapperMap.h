@@ -137,7 +137,11 @@ public:
     m_hists[tag].FillUniverse(universe, value, weight);
   }
 
-  
+  inline void Fill(const std::string tag, const T* universe, const std::vector<Double_t> values, const Double_t weight = 1.0) {
+    for (auto value : values){
+        m_hists[tag].FillUniverse(universe, value, weight);
+    }
+  }
 
   inline int GetNhists(){return m_hists.size();}
 

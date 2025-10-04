@@ -32,10 +32,15 @@ template <class CVUNIVERSE>
 class CVFunctions {
     typedef std::function<double(const CVUNIVERSE &)> PointerToCVUniverseFunction;
     typedef std::function<int(const CVUNIVERSE &)> PointerToCVUniverseIntFunction;
+    typedef std::function<double(const CVUNIVERSE &, int)> PointerToCVUniverseArgFunction;
+
     std::map<const std::string, PointerToCVUniverseFunction> recofunctions;
     std::map<const std::string, PointerToCVUniverseFunction> truefunctions;
     std::map<const std::string, PointerToCVUniverseIntFunction> recointfunctions;
     std::map<const std::string, PointerToCVUniverseIntFunction> trueintfunctions;
+
+    std::map<const std::string, PointerToCVUniverseArgFunction> recoargfunctions;
+    std::map<const std::string, PointerToCVUniverseArgFunction> trueargfunctions;
 
    public:
     CVFunctions() {
@@ -262,6 +267,9 @@ class CVFunctions {
         truefunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
         trueintfunctions["NeutCandMCPID"] = &CVUNIVERSE::GetPlotNeutCandMCPID;
 
+        recoargfunctions["NeutCandsTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
+        trueargfunctions["NeutCandsTopMCPID"] = &CVUNIVERSE::GetPlotNeutCandTopMCPID;
+
         recofunctions["LeadingNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotLeadingNeutCandTopMCPID;
         recointfunctions["LeadingNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotLeadingNeutCandTopMCPID;
         truefunctions["LeadingNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotLeadingNeutCandTopMCPID;
@@ -277,12 +285,18 @@ class CVFunctions {
         truefunctions["ThirdNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotThirdNeutCandTopMCPID;
         trueintfunctions["ThirdNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotThirdNeutCandTopMCPID;
 
+        recoargfunctions["NeutCandsvtxZDist"] = &CVUNIVERSE::GetNeutCandvtxZDist;
+        trueargfunctions["NeutCandsvtxZDist"] = &CVUNIVERSE::GetNeutCandvtxZDist;
+
         recofunctions["LeadingNeutCandvtxZDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxZDist;
         truefunctions["LeadingNeutCandvtxZDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxZDist;
         recofunctions["SecNeutCandvtxZDist"] = &CVUNIVERSE::GetSecNeutCandvtxZDist;
         truefunctions["SecNeutCandvtxZDist"] = &CVUNIVERSE::GetSecNeutCandvtxZDist;
         recofunctions["ThirdNeutCandvtxZDist"] = &CVUNIVERSE::GetThirdNeutCandvtxZDist;
         truefunctions["ThirdNeutCandvtxZDist"] = &CVUNIVERSE::GetThirdNeutCandvtxZDist;
+
+        recoargfunctions["NeutCandsvtxTDist"] = &CVUNIVERSE::GetNeutCandvtxTDist;
+        trueargfunctions["NeutCandsvtxTDist"] = &CVUNIVERSE::GetNeutCandvtxTDist;
 
         recofunctions["LeadingNeutCandvtxTDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxTDist;
         truefunctions["LeadingNeutCandvtxTDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxTDist;
@@ -291,12 +305,18 @@ class CVFunctions {
         recofunctions["ThirdNeutCandvtxTDist"] = &CVUNIVERSE::GetThirdNeutCandvtxTDist;
         truefunctions["ThirdNeutCandvtxTDist"] = &CVUNIVERSE::GetThirdNeutCandvtxTDist;
 
+        recoargfunctions["NeutCandsvtxSphereDist"] = &CVUNIVERSE::GetNeutCandvtxSphereDist;
+        trueargfunctions["NeutCandsvtxSphereDist"] = &CVUNIVERSE::GetNeutCandvtxSphereDist;
+
         recofunctions["LeadingNeutCandvtxSphereDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxSphereDist;
         truefunctions["LeadingNeutCandvtxSphereDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxSphereDist;
         recofunctions["SecNeutCandvtxSphereDist"] = &CVUNIVERSE::GetSecNeutCandvtxSphereDist;
         truefunctions["SecNeutCandvtxSphereDist"] = &CVUNIVERSE::GetSecNeutCandvtxSphereDist;
         recofunctions["ThirdNeutCandvtxSphereDist"] = &CVUNIVERSE::GetThirdNeutCandvtxSphereDist;
         truefunctions["ThirdNeutCandvtxSphereDist"] = &CVUNIVERSE::GetThirdNeutCandvtxSphereDist;
+
+        recoargfunctions["NeutCandsvtxBoxDist"] = &CVUNIVERSE::GetNeutCandvtxBoxDist;
+        trueargfunctions["NeutCandsvtxBoxDist"] = &CVUNIVERSE::GetNeutCandvtxBoxDist;
 
         recofunctions["LeadingNeutCandvtxBoxDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxBoxDist;
         truefunctions["LeadingNeutCandvtxBoxDist"] = &CVUNIVERSE::GetLeadingNeutCandvtxBoxDist;
@@ -305,12 +325,18 @@ class CVFunctions {
         recofunctions["ThirdNeutCandvtxBoxDist"] = &CVUNIVERSE::GetThirdNeutCandvtxBoxDist;
         truefunctions["ThirdNeutCandvtxBoxDist"] = &CVUNIVERSE::GetThirdNeutCandvtxBoxDist;
 
+        recoargfunctions["NeutCandsTrackEndDist"] = &CVUNIVERSE::GetNeutCandTrackEndDist;
+        trueargfunctions["NeutCandsTrackEndDist"] = &CVUNIVERSE::GetNeutCandTrackEndDist;
+
         recofunctions["LeadingNeutCandTrackEndDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndDist;
         truefunctions["LeadingNeutCandTrackEndDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndDist;
         recofunctions["SecNeutCandTrackEndDist"] = &CVUNIVERSE::GetSecNeutCandTrackEndDist;
         truefunctions["SecNeutCandTrackEndDist"] = &CVUNIVERSE::GetSecNeutCandTrackEndDist;
         recofunctions["ThirdNeutCandTrackEndDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndDist;
         truefunctions["ThirdNeutCandTrackEndDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndDist;
+
+        recoargfunctions["NeutCandsTrackEndZDist"] = &CVUNIVERSE::GetNeutCandTrackEndZDist;
+        trueargfunctions["NeutCandsTrackEndZDist"] = &CVUNIVERSE::GetNeutCandTrackEndZDist;
 
         recofunctions["LeadingNeutCandTrackEndZDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndZDist;
         truefunctions["LeadingNeutCandTrackEndZDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndZDist;
@@ -319,12 +345,18 @@ class CVFunctions {
         recofunctions["ThirdNeutCandTrackEndZDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndZDist;
         truefunctions["ThirdNeutCandTrackEndZDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndZDist;
 
+        recoargfunctions["NeutCandsTrackEndTDist"] = &CVUNIVERSE::GetNeutCandTrackEndTDist;
+        trueargfunctions["NeutCandsTrackEndTDist"] = &CVUNIVERSE::GetNeutCandTrackEndTDist;
+
         recofunctions["LeadingNeutCandTrackEndTDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndTDist;
         truefunctions["LeadingNeutCandTrackEndTDist"] = &CVUNIVERSE::GetLeadingNeutCandTrackEndTDist;
         recofunctions["SecNeutCandTrackEndTDist"] = &CVUNIVERSE::GetSecNeutCandTrackEndTDist;
         truefunctions["SecNeutCandTrackEndTDist"] = &CVUNIVERSE::GetSecNeutCandTrackEndTDist;
         recofunctions["ThirdNeutCandTrackEndTDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndTDist;
         truefunctions["ThirdNeutCandTrackEndTDist"] = &CVUNIVERSE::GetThirdNeutCandTrackEndTDist;
+
+        recoargfunctions["NeutCandsEdep"] = &CVUNIVERSE::GetNeutCandEdepMeV;
+        trueargfunctions["NeutCandsEdep"] = &CVUNIVERSE::GetNeutCandEdepMeV;
 
         recofunctions["LeadingNeutCandEdep"] = &CVUNIVERSE::GetLeadingNeutCandEdepMeV;
         truefunctions["LeadingNeutCandEdep"] = &CVUNIVERSE::GetLeadingNeutCandEdepMeV;
@@ -353,6 +385,9 @@ class CVFunctions {
         truefunctions["SecNeutCandMuonAngle"] = &CVUNIVERSE::GetSecNeutCandMuonAngle;
         recofunctions["ThirdNeutCandMuonAngle"] = &CVUNIVERSE::GetThirdNeutCandMuonAngle;
         truefunctions["ThirdNeutCandMuonAngle"] = &CVUNIVERSE::GetThirdNeutCandMuonAngle;
+
+        recoargfunctions["NeutCandsMuonCosTheta"] = &CVUNIVERSE::GetNeutCandMuonCosTheta;
+        trueargfunctions["NeutCandsMuonCosTheta"] = &CVUNIVERSE::GetNeutCandMuonCosTheta;
 
         recofunctions["LeadingNeutCandMuonCosTheta"] = &CVUNIVERSE::GetLeadingNeutCandMuonCosTheta;
         truefunctions["LeadingNeutCandMuonCosTheta"] = &CVUNIVERSE::GetLeadingNeutCandMuonCosTheta;
@@ -679,6 +714,22 @@ class CVFunctions {
         return keys;
     }
 
+    std::vector<std::string> GetRecoArgKeys() const {
+        std::vector<std::string> keys;
+        for (auto key : recoargfunctions) {
+            keys.push_back(key.first);
+        }
+        return keys;
+    }
+
+    std::vector<std::string> GetTrueArgKeys() const {
+        std::vector<std::string> keys;
+        for (auto key : trueargfunctions) {
+            keys.push_back(key.first);
+        }
+        return keys;
+    }
+
     const PointerToCVUniverseFunction GetRecoFunction(const std::string name) {
         assert(recofunctions.count(name));
         PointerToCVUniverseFunction result = recofunctions[name];
@@ -703,6 +754,18 @@ class CVFunctions {
     PointerToCVUniverseIntFunction GetTrueIntFunction(const std::string name) {
         assert(trueintfunctions.count(name));
         return trueintfunctions[name];
+    };
+
+    const PointerToCVUniverseArgFunction GetRecoArgFunction(const std::string name) {
+        assert(recoargfunctions.count(name));
+        PointerToCVUniverseArgFunction result = recoargfunctions[name];
+        return result;
+    };
+
+    const PointerToCVUniverseArgFunction GetTrueArgFunction(const std::string name) {
+        assert(trueargfunctions.count(name));
+        PointerToCVUniverseArgFunction result = trueargfunctions[name];
+        return result;
     };
 
     void Dump(const CVUniverse  * univ, const int isData, const int isTruth)const{

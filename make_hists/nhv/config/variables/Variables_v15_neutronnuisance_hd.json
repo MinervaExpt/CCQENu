@@ -745,6 +745,19 @@
   //   }
   // },
   "1D": {
+    "NeutCandsTopMCPID": {
+      "reco": "NeutCandsTopMCPID",
+      "true": "NeutCandsTopMCPID",
+      "index": "NNeutCands",
+      "name": "NeutCandsTopMCPID",
+      "title": "Blob parent Top PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
     "LeadingNeutCandTopMCPID": {
       "reco": "LeadingNeutCandTopMCPID",
       "true": "LeadingNeutCandTopMCPID",
@@ -756,7 +769,7 @@
       "for": [
         "selected_reco"
       ]
-    },  
+    },
     "SecNeutCandTopMCPID": {
       "reco": "SecNeutCandTopMCPID",
       "true": "SecNeutCandTopMCPID",
@@ -778,6 +791,20 @@
       "min": 0.5,
       "max": 11.5,
       "for": [
+        "selected_reco"
+      ]
+    },
+    "NeutCandsvtxTDist": {
+      "reco": "NeutCandsvtxTDist",
+      "true": "NeutCandsvtxTDist",
+      "index": "NNeutCands",
+      "name": "NeutCandsvtxTDist",
+      "title": "Blob Tdist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
         "selected_reco"
       ]
     },
@@ -815,6 +842,20 @@
       "nbins": 16,
       "min": 0.0,
       "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsvtxZDist": {
+      "reco": "NeutCandsvtxZDist",
+      "true": "NeutCandsvtxZDist",
+      "index":"NNeutCands",
+      "name": "NeutCandsvtxZDist",
+      "title": "Leading Blob zdist from vtx",
+      "nbins": 10,
+      "min": 0.0,
+      "max": 1000.0,
       "for": [
         "data",
         "selected_reco"
@@ -859,6 +900,21 @@
         "selected_reco"
       ]
     },
+    "NeutCandsvtxSphereDist": {
+      "reco": "NeutCandsvtxSphereDist",
+      "true": "NeutCandsvtxSphereDist",
+      "index":"NNeutCands",
+      "name": "NeutCandsvtxSphereDist",
+      "title": "Leading Blob spherical dist from vtx",
+      // "nbins": 10,
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
     "LeadingNeutCandvtxSphereDist": {
       "reco": "LeadingNeutCandvtxSphereDist",
       "true": "LeadingNeutCandvtxSphereDist",
@@ -891,6 +947,20 @@
       "true": "ThirdNeutCandvtxSphereDist",
       "name": "ThirdNeutCandvtxSphereDist",
       "title": "Third Blob spherical dist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsTrackEndDist": {
+      "reco": "NeutCandsTrackEndDist",
+      "true": "NeutCandsTrackEndDist",
+      "index": "NNeutCands",
+      "name": "NeutCandsTrackEndDist",
+      "title": "Leading Blob dist from track end",
       "nbins": 16,
       "min": 0.0,
       "max": 400.0,
@@ -938,6 +1008,20 @@
         "selected_reco"
       ]
     },
+    "NeutCandsTrackEndZDist": {
+      "reco": "NeutCandsTrackEndZDist",
+      "true": "NeutCandsTrackEndZDist",
+      "index":"NNeutCands",
+      "name": "NeutCandsTrackEndZDist",
+      "title": "Blob z dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
     "LeadingNeutCandTrackEndZDist": {
       "reco": "LeadingNeutCandTrackEndZDist",
       "true": "LeadingNeutCandTrackEndZDist",
@@ -969,6 +1053,20 @@
       "true": "ThirdNeutCandTrackEndZDist",
       "name": "ThirdNeutCandTrackEndZDist",
       "title": "Third Blob z dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsTrackEndTDist": {
+      "reco": "NeutCandsTrackEndTDist",
+      "true": "NeutCandsTrackEndTDist",
+      "index": "NNeutCands",
+      "name": "NeutCandsTrackEndTDist",
+      "title": "Leading Blob T dist from track end",
       "nbins": 16,
       "min": 0.0,
       "max": 400.0,
@@ -1016,6 +1114,20 @@
         "selected_reco"
       ]
     },
+    "NeutCandsvtxBoxDist": {
+      "reco": "NeutCandsvtxBoxDist",
+      "true": "NeutCandsvtxBoxDist",
+      "index": "NNeutCands",
+      "name": "NeutCandsvtxBoxDist",
+      "title": "Blob box dist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
     "LeadingNeutCandvtxBoxDist": {
       "reco": "LeadingNeutCandvtxBoxDist",
       "true": "LeadingNeutCandvtxBoxDist",
@@ -1050,6 +1162,48 @@
       "nbins": 16,
       "min": 0.0,
       "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsEdep": {
+      "reco": "NeutCandsEdep",
+      "true": "NeutCandsEdep",
+      "index": "NNeutCands",
+      "name": "NeutCandsEdep",
+      "title": "Blob Deposited E",
+      "bins": [
+        1.5,
+        5.0,
+        // 7.0, // test
+        // 10.0, // test
+        // 11.0, // test
+        12.0,
+        // 15.0, // test
+        // 18.0, // test
+        // 21.0, // test
+        25.0,
+        // 30.0, // test
+        // 35.0, // test
+        // 40.0, // test
+        // 45.0, // test
+        50.0,
+        // 60.0, // test
+        75.0, // test remove
+        // 70.0, // test
+        // 80.0, // test
+        // 90.0, // test
+        100.0,
+        150.0,
+        200.0,
+        300.0,
+        500.0 //,
+        // 1000.0
+      ],
+      // "nbins": 50,
+      // "min": 0.0,
+      // "max": 200.0,
       "for": [
         "data",
         "selected_reco"
@@ -1271,6 +1425,20 @@
       "nbins": 10,
       "min": 0,
       "max": 180.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsMuonCosTheta": {
+      "reco": "NeutCandsMuonCosTheta",
+      "true": "NeutCandsMuonCosTheta",
+      "name": "NeutCandsMuonCosTheta",
+      "index": "NNeutCands",
+      "title": "Blob CosTheta from muon track",
+      "nbins": 10,
+      "min": -1.0,
+      "max": 1.0,
       "for": [
         "data",
         "selected_reco"

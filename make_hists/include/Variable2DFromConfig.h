@@ -15,13 +15,16 @@
 #define VARIABLE2DFromConfig_H
 
 #include <map>
-#include <vector>
 #include <string>
+#include <vector>
 
-#include "include/CVUniverse.h"
 #include "MinervaUnfold/MnvResponse.h"
-#include "include/Hist2DWrapperMap.h"  
+#include "include/CVFunctions.h"
+#include "include/CVUniverse.h"
+#include "include/Hist2DWrapperMap.h"
 #include "include/Response2DWrapperMap.h"
+
+#include "include/VariableFromConfig.h"
 
 #ifndef __CINT__  // CINT doesn't know about std::function
 #include "PlotUtils/Variable2DBase.h"
@@ -34,8 +37,25 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     typedef PlotUtils::Hist2DWrapperMap<CVUniverse> HM2D;
 
     typedef PlotUtils::Response2DWrapperMap<CVUniverse> RM2D;
+    typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
+    typedef std::function<double(const CVUniverse&, int)> PointerToCVUniverseArgFunction;
+    
+    PointerToCVUniverseFunction m_pointer_to_RecoIndex;
+    PointerToCVUniverseFunction m_pointer_to_TrueIndex;
+    
+    PointerToCVUniverseArgFunction m_pointer_to_ArgGetRecoValueX;
+    PointerToCVUniverseArgFunction m_pointer_to_ArgGetTrueValueX;
+    // PointerToCVUniverseFunction m_pointer_to_RecoIndexX;
+    // PointerToCVUniverseFunction m_pointer_to_TrueIndexX;
+
+    PointerToCVUniverseArgFunction m_pointer_to_ArgGetRecoValueY;
+    PointerToCVUniverseArgFunction m_pointer_to_ArgGetTrueValueY;
+    // PointerToCVUniverseFunction m_pointer_to_RecoIndexY;
+    // PointerToCVUniverseFunction m_pointer_to_TrueIndexY;
 
    public:
+    bool m_do_argvalue_x = false;
+    bool m_do_argvalue_y = false;
     //=======================================================================================
     // CTOR
     //=======================================================================================
@@ -109,6 +129,17 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         m_fitbinning_y = y.GetFitBinVec();
         if (m_dofitFill_x) m_fitSamples = x.GetFitSamples();
         if (m_dofitFill_y) m_fitSamples = y.GetFitSamples();
+
+        if (x.m_do_argvalue) {
+            m_do_argvalue_x = true;
+            m_pointer_to_ArgGetRecoValueX = x.GetPointerToArgRecoFunction();
+            m_pointer_to_RecoIndex = x.GetPointerToRecoIndexFunction();
+        }
+        if (y.m_do_argvalue) {
+            m_do_argvalue_y = true;
+            m_pointer_to_ArgGetRecoValueY = y.GetPointerToArgRecoFunction();
+            m_pointer_to_RecoIndex = y.GetPointerToRecoIndexFunction();
+        }
     };
 
     typedef std::map<std::string, std::vector<CVUniverse*>> UniverseMap;
@@ -403,6 +434,88 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             }
         }
     }
+    //============================================================================
+    // GetValue overloads for doing vector branches (e.g. blobs)
+    //============================================================================
+
+    std::vector<double> GetArgRecoValueX(const CVUniverse& universe, const int maxidx) const {
+        std::vector<double> valvec = {};
+        if (!m_do_argvalue_x) {
+            valvec.push_back(PlotUtils::Variable2DBase<CVUniverse>::GetRecoValueX(universe));
+            return valvec;
+        }
+        for (int i = 0; i < maxidx; i++) {
+            valvec.push_back(m_pointer_to_ArgGetRecoValueX(universe, i));
+        }
+        return valvec;
+    }
+
+    std::vector<double> GetArgTrueValueX(const CVUniverse& universe, const int maxidx) const {
+        std::vector<double> valvec = {};
+        if (!m_do_argvalue_x) {
+            valvec.push_back(PlotUtils::Variable2DBase<CVUniverse>::GetTrueValueX(universe));
+            return valvec;
+        }
+        for (int i = 0; i < maxidx; i++) {
+            valvec.push_back(m_pointer_to_ArgGetTrueValueX(universe, i));
+        }
+        return valvec;
+    }
+
+    std::vector<double> GetArgRecoValueY(const CVUniverse& universe, const int maxidx) const {
+        std::vector<double> valvec = {};
+        if (!m_do_argvalue_y) {
+            valvec.push_back(PlotUtils::Variable2DBase<CVUniverse>::GetRecoValueY(universe));
+            return valvec;
+        }
+        for (int i = 0; i < maxidx; i++) {
+            valvec.push_back(m_pointer_to_ArgGetRecoValueY(universe, i));
+        }
+        return valvec;
+    }
+
+    std::vector<double> GetArgTrueValueY(const CVUniverse& universe, const int maxidx) const {
+        std::vector<double> valvec = {};
+        if (!m_do_argvalue_y) {
+            valvec.push_back(PlotUtils::Variable2DBase<CVUniverse>::GetTrueValueY(universe));
+            return valvec;
+        }
+        for (int i = 0; i < maxidx; i++) {
+            valvec.push_back(m_pointer_to_ArgGetTrueValueY(universe, i));
+        }
+        return valvec;
+    }
+
+    // double GetRecoValueX(const CVUniverse& universe, const int idx = -1) const {
+    //     std::cout << " derived GetRecoValue" << std::endl;
+    //     if (!m_do_argvalue_x) {
+    //         return this->PlotUtils::Variable2DBase<CVUniverse>::GetRecoValueX(universe);
+    //         // std::cout << "derived GetRecoValue" << std::endl;
+    //     }
+    //     return m_pointer_to_ArgGetRecoValueX(universe, idx);
+    // }
+
+    // double GetTrueValueX(const CVUniverse& universe, const int idx = -1) const {
+    //     std::cout << " derived GetTrueValue" << std::endl;
+    //     if (!m_do_argvalue_x) {
+    //         return this->PlotUtils::Variable2DBase<CVUniverse>::GetTrueValueX(universe);
+    //     }
+    //     return m_pointer_to_ArgGetTrueValueX(universe, idx);
+    // }
+
+
+    // TODO figure out index stuff for multidim
+    int GetRecoIndex(const CVUniverse& universe) const {
+        if (!m_do_argvalue_x || !m_do_argvalue_y) return -1;  //
+        return m_pointer_to_RecoIndex(universe);
+    }
+
+    int GetTrueIndex(const CVUniverse& universe) const {
+        if (!m_do_argvalue_x || !m_do_argvalue_y) return -1;  //
+        return m_pointer_to_RecoIndex(universe);
+    }
+
+
 
     //=======================================================================================
     // SYNC ALL HISTOGRAMS

@@ -33,11 +33,23 @@ namespace CCQENu {
 class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse> {
    private:
     typedef std::function<double(const CVUniverse &)> PointerToCVUniverseFunction;
+    typedef std::function<double(const CVUniverse &, int)> PointerToCVUniverseArgFunction;
 
     typedef HistHyperDWrapperMap<CVUniverse> HMHD;  // TODO: HyperDim HistWrapper? Map?
     typedef ResponseHyperDWrapperMap<CVUniverse> RMHD;
 
+
+    PointerToCVUniverseFunction m_pointer_to_RecoIndex; // I think this should be the same for all the vars you look at
+    PointerToCVUniverseFunction m_pointer_to_TrueIndex; // I think this should be the same for all the vars you look at
+
+    std::vector<PointerToCVUniverseArgFunction> m_pointer_to_ArgGetRecoValue_vec;
+    std::vector<PointerToCVUniverseArgFunction> m_pointer_to_ArgGetTrueValue_vec;
+    // std::vector<PointerToCVUniverseFunction> m_pointer_to_RecoIndex_vec;
+    // std::vector<PointerToCVUniverseFunction> m_pointer_to_TrueIndex_vec;
+
    public:
+    std::vector<bool> m_do_argvalue_vec = {};
+    bool m_do_argvalue = false;
     //=======================================================================================
     // CTOR
     //=======================================================================================
@@ -50,9 +62,30 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
 
         for (int i = 0; i < vars.size(); i++) {
             AddVariable(*vars[i]);
-            m_tunedmc = vars[i]->GetTunedMC(); 
+            m_tunedmc = vars[i]->GetTunedMC();
+            if (vars[i]->m_do_argvalue) {
+                m_pointer_to_ArgGetRecoValue_vec.push_back(vars[i]->GetPointerToArgRecoFunction());
+                m_pointer_to_ArgGetTrueValue_vec.push_back(vars[i]->GetPointerToArgTrueFunction());
+                m_pointer_to_RecoIndex = vars[i]->GetPointerToRecoIndexFunction();
+                m_pointer_to_TrueIndex = vars[i]->GetPointerToTrueIndexFunction();
+                // m_pointer_to_RecoIndex_vec.push_back(vars[i]->GetPointerToRecoIndexFunction());
+                // m_pointer_to_TrueIndex_vec.push_back(vars[i]->GetPointerToTrueIndexFunction());
+                m_do_argvalue_vec.push_back(true);
+            } else {
+                m_do_argvalue_vec.push_back(false);
+                m_pointer_to_ArgGetRecoValue_vec.push_back(vars[i]->GetPointerToArgRecoFunction());
+                m_pointer_to_ArgGetTrueValue_vec.push_back(vars[i]->GetPointerToArgTrueFunction());
+                // m_pointer_to_RecoIndex_vec.push_back(vars[i]->GetPointerToRecoIndexFunction());
+                // m_pointer_to_TrueIndex_vec.push_back(vars[i]->GetPointerToTrueIndexFunction());
+            }
         }
 
+        for (auto val : m_do_argvalue_vec) {
+            if (val) {
+                m_do_argvalue = true;
+                break;
+            }
+        }
         // Fors isn't very sophisticated atm. Could be better.
         if (fors.size() > 0) {
             for (auto s : fors)
@@ -353,6 +386,87 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
             m_response.Fill(tag, univ, x_value, y_value, x_truth, y_truth, weight);  // value here is reco
         if (hasTunedMC[tag] && scale >= 0.)
             m_tuned_response.Fill(tag, univ, x_value, y_value, x_truth, y_truth, weight, scale);  // value here is reco
+    }
+    //============================================================================
+    // GetValue overloads for doing vector branches (e.g. blobs)
+    //============================================================================
+
+    std::vector<double> GetArgRecoValue(const CVUniverse &universe, const int maxidx) const {
+        assert(m_do_argvalue);
+
+        std::vector<double> out_vec;
+        // std::vector<std::vector<double>> val_vec; // should be a list of val_vecs to plug into hyperdim to get the value for each blob
+        for (int i = 0; i < maxidx; i++) {
+            std::vector<double> tmp_val_vec = {};
+            for (int j = 0; j < m_dimension; j++) {
+                if (!m_do_argvalue_vec[i]) {
+                    double tmp_val = m_vars_vec[j]->PlotUtils::VariableBase<CVUniverse>::GetRecoValue(universe);
+                    tmp_val_vec.push_back(tmp_val);
+                    continue;
+                }
+                tmp_val_vec.push_back(m_pointer_to_ArgGetRecoValue_vec[j](universe,i));
+            }
+            if (!m_has_reco_binning) out_vec.push_back((m_hyperdim->GetBin(tmp_val_vec)).first + 0.0001);
+            else out_vec.push_back((m_reco_hyperdim->GetBin(tmp_val_vec)).first + 0.0001);
+        }
+        return out_vec;
+    }
+
+    std::vector<double> GetArgTrueValue(const CVUniverse &universe, const int maxidx) const {
+        assert(m_do_argvalue);
+        std::vector<double> out_vec;
+        for (int i = 0; i < maxidx; i++) {
+            std::vector<double> tmp_val_vec = {};
+            for (int j = 0; j < m_dimension; j++) {
+                if (!m_do_argvalue_vec[i]) {
+                    tmp_val_vec.push_back(m_vars_vec[i]->GetTrueValue(universe)); // TODO this could be optimized to be called only once
+                    continue;
+                }
+                tmp_val_vec.push_back(m_pointer_to_ArgGetTrueValue_vec[j](universe,i));
+            }
+            out_vec.push_back((m_hyperdim->GetBin(tmp_val_vec)).first + 0.0001);
+        }
+        return out_vec;
+    }
+
+
+    std::vector<double> GetArgRecoValue(const int axis, const CVUniverse &universe, const int maxidx) const {
+        assert(m_do_argvalue);
+        std::vector<double> out_vec = {};
+        if (!m_do_argvalue_vec[axis]) {
+            double val = m_vars_vec[axis]->GetRecoValue(universe);
+            for (int i = 0; i < maxidx; i++)
+                out_vec.push_back(val);
+            return out_vec;
+        }
+        for (int i = 0; i < maxidx; i++)
+            out_vec.push_back(m_pointer_to_ArgGetRecoValue_vec[axis](universe,i));
+        return out_vec;
+    }
+
+    std::vector<double> GetArgTrueValue(const int axis, const CVUniverse &universe, const int maxidx) const {
+        assert(m_do_argvalue);
+        std::vector<double> out_vec = {};
+        if (!m_do_argvalue_vec[axis]) {
+            double val = m_vars_vec[axis]->GetTrueValue(universe);
+            for (int i = 0; i < maxidx; i++)
+                out_vec.push_back(val);
+            return out_vec;
+        }
+        for (int i = 0; i < maxidx; i++)
+            out_vec.push_back(m_pointer_to_ArgGetTrueValue_vec[axis](universe,i));
+        return out_vec;
+    }
+
+
+    int GetRecoIndex( const CVUniverse& universe) const {
+        if (!m_do_argvalue) return 1;
+        return m_pointer_to_RecoIndex(universe);
+    }
+
+    int GetTrueIndex( const CVUniverse& universe) const {
+        if (!m_do_argvalue) return 1;
+        return m_pointer_to_TrueIndex(universe);
     }
 
     //============================================================================

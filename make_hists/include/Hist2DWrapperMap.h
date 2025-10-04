@@ -219,9 +219,14 @@ public:
   }
 
   //  can we make this smarter?
-  inline void Fill2D(const std::string tag, const T* universe, const Double_t x_value, const Double_t y_value, const Double_t weight=1.0){
+  inline void Fill2D(const std::string tag, const T *universe, const Double_t x_value, const Double_t y_value, const Double_t weight = 1.0) {
+      m_hists[tag].FillUniverse(universe, x_value, y_value, weight);
+  }
 
-    m_hists[tag].FillUniverse(universe, x_value, y_value, weight);
+  inline void Fill2D(const std::string tag, const T *universe, const std::vector<Double_t> x_values, const std::vector<Double_t> y_values, const Double_t weight = 1.0) {
+    assert(x_values.size() == y_values.size());
+    for (int i = 0; i < x_values.size(); i++)  
+      m_hists[tag].FillUniverse(universe, x_values[i], y_values[i], weight);
   }
 
   inline int GetNhists(){return m_hists.size();}

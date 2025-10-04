@@ -44,8 +44,18 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     bool m_dofitFill = false; // if variable has this set up (in variable config as "dofitFill")
     std::vector<std::string> m_fitSamples;  // list of the tags for each sample
     std::vector<double> m_fitbinning;
+    
+    typedef std::function<double(const CVUniverse&, int)> PointerToCVUniverseArgFunction;
+
+    PointerToCVUniverseArgFunction m_pointer_to_ArgGetRecoValue;
+    PointerToCVUniverseArgFunction m_pointer_to_ArgGetTrueValue;
+    PointerToCVUniverseFunction m_pointer_to_RecoIndex;
+    PointerToCVUniverseFunction m_pointer_to_TrueIndex;
+
 
    public:
+    bool m_do_argvalue = false;
+
     //=======================================================================================
     // CTOR
     //=======================================================================================
@@ -118,6 +128,23 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         return m_fitSamples;
     }
 
+    const PointerToCVUniverseArgFunction GetPointerToArgRecoFunction() const {
+        PointerToCVUniverseArgFunction result = m_pointer_to_ArgGetRecoValue;
+        return result;
+    }
+    const PointerToCVUniverseArgFunction GetPointerToArgTrueFunction() const {
+        PointerToCVUniverseArgFunction result = m_pointer_to_ArgGetTrueValue;
+        return result;
+    }
+    const PointerToCVUniverseFunction GetPointerToRecoIndexFunction() const {
+        PointerToCVUniverseFunction result = m_pointer_to_RecoIndex;
+        return result;
+    }
+    const PointerToCVUniverseFunction GetPointerToTrueIndexFunction() const {
+        PointerToCVUniverseFunction result = m_pointer_to_TrueIndex;
+        return result;
+    }
+
     VariableFromConfig(const NuConfig config) {
         // config.Print();
 
@@ -132,6 +159,14 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 break;
             }
         }
+        for (auto key : fun.GetRecoArgKeys()) {
+            if (recovar == key) {
+                std::cout << " reco arg function keys " << key << std::endl;
+                good = true;
+                m_do_argvalue = true;
+                break;
+            }
+        }
 
         if (!good) {
             std::cout << "VariableFromConfig(config) is asking for an unimplemented reco variable " << recovar << std::endl;
@@ -139,11 +174,21 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
         }
         bool tgood = false;
         std::string truevar = config.GetString("true");
-        for (auto key : fun.GetTrueKeys()) {
-            if (truevar == key) {
-                std::cout << " true function keys " << key << std::endl;
-                tgood = true;
-                break;
+        if (!m_do_argvalue) {
+            for (auto key : fun.GetTrueKeys()) {
+                if (truevar == key) {
+                    std::cout << " true function keys " << key << std::endl;
+                    tgood = true;
+                    break;
+                }
+            }
+        } else {
+            for (auto key : fun.GetTrueArgKeys()) {
+                if (truevar == key) {
+                    std::cout << " true function keys " << key << std::endl;
+                    tgood = true;
+                    break;
+                }
             }
         }
         if (!tgood) {
@@ -151,8 +196,66 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
             exit(1);
         }
 
-        PlotUtils::VariableBase<CVUniverse>::m_pointer_to_GetRecoValue = (fun.GetRecoFunction(recovar));
-        PlotUtils::VariableBase<CVUniverse>::m_pointer_to_GetTrueValue = (fun.GetTrueFunction(truevar));
+        if (!m_do_argvalue) {
+            PlotUtils::VariableBase<CVUniverse>::m_pointer_to_GetRecoValue = (fun.GetRecoFunction(recovar));
+            PlotUtils::VariableBase<CVUniverse>::m_pointer_to_GetTrueValue = (fun.GetTrueFunction(truevar));
+        } else {
+            bool goodindex = false;
+
+            std::string recoindexvar;
+            std::string trueindexvar;
+            if (config.IsMember("index")) {
+                recoindexvar = config.GetString("index");
+                trueindexvar = config.GetString("index");
+                for (auto key : fun.GetRecoKeys()) {
+                    if (recoindexvar == key) {
+                        std::cout << " reco index function keys " << key << std::endl;
+                        goodindex = true;
+                        break;
+                    }
+                }
+                if (!goodindex) {
+                    for (auto key : fun.GetTrueKeys()) {
+                        if (recoindexvar == key) {
+                            std::cout << " true index function keys " << key << std::endl;
+                            goodindex = true;
+                            break;
+                        }
+                    }
+                }
+            } else if (config.IsMember("recoindex") && config.IsMember("trueindex")) {
+                recoindexvar = config.GetString("recoindex");
+                trueindexvar = config.GetString("trueindex");
+                bool goodrindex = false;
+                bool goodtindex = false;
+                for (auto key : fun.GetRecoKeys()) {
+                    if (recoindexvar == key) {
+                        std::cout << " reco index function keys " << key << std::endl;
+                        goodrindex = true;
+                        break;
+                    }
+                }
+                for (auto key : fun.GetTrueKeys()) {
+                    if (trueindexvar == key) {
+                        std::cout << " true index function keys " << key << std::endl;
+                        goodtindex = true;
+                        break;
+                    }
+                }
+                if (goodrindex && goodtindex) goodindex = true;
+            } else {
+                std::cout << "VariableFromConfig(config) index is not set " << std::endl;
+                exit(1);
+            }
+            if (!goodindex) {
+                std::cout << "VariableFromConfig(config) index is not set " << std::endl;
+                exit(1);
+            }
+            m_pointer_to_RecoIndex = fun.GetRecoFunction(recoindexvar);
+            m_pointer_to_TrueIndex = fun.GetRecoFunction(trueindexvar);
+            m_pointer_to_ArgGetRecoValue = fun.GetRecoArgFunction(recovar);
+            m_pointer_to_ArgGetTrueValue = fun.GetTrueArgFunction(truevar);
+        }
 
         PlotUtils::VariableBase<CVUniverse>::m_name = config.GetString("name");
         PlotUtils::VariableBase<CVUniverse>::m_xaxis_label = config.GetString("title");
@@ -596,6 +699,60 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     }
 
     //============================================================================
+    // GetValue overloads for doing vector branches (e.g. blobs)
+    //============================================================================
+
+    std::vector<double> GetArgRecoValue(const CVUniverse& universe, const int maxidx) const {
+        std::vector<double> valvec = {};
+        if (!m_do_argvalue) {
+            valvec.push_back(PlotUtils::VariableBase<CVUniverse>::GetRecoValue(universe));
+            return valvec;
+        }
+        for (int i = 0; i < maxidx; i++) {
+            valvec.push_back(m_pointer_to_ArgGetRecoValue(universe, i));
+        }
+        return valvec;
+    }
+
+    std::vector<double> GetArgTrueValue(const CVUniverse& universe, const int maxidx) const {
+        std::vector<double> valvec = {};
+        if (!m_do_argvalue) {
+            valvec.push_back(PlotUtils::VariableBase<CVUniverse>::GetTrueValue(universe));
+            return valvec;
+        }
+        for (int i = 0; i < maxidx; i++) {
+            valvec.push_back(m_pointer_to_ArgGetTrueValue(universe, i));
+        }
+        return valvec;
+    }
+
+    // double GetRecoValue(const CVUniverse& universe, const int idx = -1) const {
+    //     std::cout << " derived GetRecoValue" << std::endl;
+    //     if (!m_do_argvalue) {
+    //         return PlotUtils::VariableBase<CVUniverse>::GetRecoValue(universe);
+    //     }
+    //     return m_pointer_to_ArgGetRecoValue(universe, idx);
+    // }
+
+    // double GetTrueValue(const CVUniverse& universe, const int idx = -1) const {
+    //     std::cout << " derived GetTrueValue" << std::endl;
+    //     if (!m_do_argvalue) {
+    //         return PlotUtils::VariableBase<CVUniverse>::GetTrueValue(universe);
+    //     }
+    //     return m_pointer_to_ArgGetTrueValue(universe, idx);
+    // }
+
+    int GetRecoIndex(const CVUniverse& universe) const {
+        if(!m_do_argvalue) return 1; // 
+        return m_pointer_to_RecoIndex(universe);
+    }
+
+    int GetTrueIndex(const CVUniverse& universe) const {
+        if (!m_do_argvalue) return 1;
+        return m_pointer_to_TrueIndex(universe);
+    }
+
+    //============================================================================
     // SYNC ALL HISTOGRAMS
     //============================================================================
     void SyncAllHists() {
@@ -746,6 +903,22 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     //
     //  //
 };  // end of class
+
+// class ExclusiveVariableFromConfig : public PlotUtils::ExclusiveVariable1Arg<CVUniverse, CCQENu::VariableFromConfig> {
+//    private:
+//     typedef std::function<double(const CVUniverse&)> PointerToCVUniverseFunction;
+//     typedef std::function<double(const CVUniverse&, int)> PointerToCVUniverseArgFunction;
+
+//     PointerToCVUniverseArgFunction m_pointer_to_ArgGetRecoValue;
+//     PointerToCVUniverseArgFunction m_pointer_to_ArgGetTrueValue;
+//     PointerToCVUniverseFunction m_pointer_to_RecoIndex;
+//     PointerToCVUniverseFunction m_pointer_to_TrueIndex;
+
+//    public:
+//     ExclusiveVariableFromConfig(const NuConfig Config) {
+
+//     }
+// };
 
 }  // namespace CCQENu
 

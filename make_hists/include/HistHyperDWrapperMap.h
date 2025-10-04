@@ -157,8 +157,20 @@ class HistHyperDWrapperMap : public T {
         m_hists[tag].FillUniverse(universe, value, weight);
     }
 
+    // Fill if you have multiples per event
+    inline void Fill(const std::string tag, const T *universe, const std::vector<Double_t> values, const Double_t weight = 1.0) {
+        for (auto value : values)
+            m_hists[tag].FillUniverse(universe, value, weight);
+    }
+
     inline void Fill(const std::string tag, const T *universe, const Double_t x_value, const Double_t y_value, const Double_t weight) {
         m_hists_2d[tag].FillUniverse(universe, x_value, y_value, weight);
+    }
+
+    inline void Fill(const std::string tag, const T *universe, const std::vector<Double_t> x_values, const std::vector<Double_t> y_values, const Double_t weight) {
+        assert(x_values.size() == y_values.size());
+        for (int i = 0; i < x_values.size(); i++)
+            m_hists_2d[tag].FillUniverse(universe, x_values[i], y_values[i], weight);
     }
 
     inline int GetNhists() {
