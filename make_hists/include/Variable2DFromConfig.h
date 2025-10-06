@@ -441,7 +441,10 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     std::vector<double> GetArgRecoValueX(const CVUniverse& universe, const int maxidx) const {
         std::vector<double> valvec = {};
         if (!m_do_argvalue_x) {
-            valvec.push_back(PlotUtils::Variable2DBase<CVUniverse>::GetRecoValueX(universe));
+            double val = PlotUtils::Variable2DBase<CVUniverse>::GetRecoValueX(universe);
+            for (int i = 0; i < maxidx; i++) {
+                valvec.push_back(val);
+            }
             return valvec;
         }
         for (int i = 0; i < maxidx; i++) {
@@ -453,7 +456,10 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     std::vector<double> GetArgTrueValueX(const CVUniverse& universe, const int maxidx) const {
         std::vector<double> valvec = {};
         if (!m_do_argvalue_x) {
-            valvec.push_back(PlotUtils::Variable2DBase<CVUniverse>::GetTrueValueX(universe));
+            double val = PlotUtils::Variable2DBase<CVUniverse>::GetTrueValueX(universe);
+            for (int i = 0; i < maxidx; i++) {
+                valvec.push_back(val);
+            }
             return valvec;
         }
         for (int i = 0; i < maxidx; i++) {
@@ -465,7 +471,10 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     std::vector<double> GetArgRecoValueY(const CVUniverse& universe, const int maxidx) const {
         std::vector<double> valvec = {};
         if (!m_do_argvalue_y) {
-            valvec.push_back(PlotUtils::Variable2DBase<CVUniverse>::GetRecoValueY(universe));
+            double val = PlotUtils::Variable2DBase<CVUniverse>::GetRecoValueY(universe);
+            for (int i = 0; i < maxidx; i++) {
+                valvec.push_back(val);
+            }
             return valvec;
         }
         for (int i = 0; i < maxidx; i++) {
@@ -477,7 +486,10 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     std::vector<double> GetArgTrueValueY(const CVUniverse& universe, const int maxidx) const {
         std::vector<double> valvec = {};
         if (!m_do_argvalue_y) {
-            valvec.push_back(PlotUtils::Variable2DBase<CVUniverse>::GetTrueValueY(universe));
+            double val = PlotUtils::Variable2DBase<CVUniverse>::GetTrueValueY(universe);
+            for (int i = 0; i < maxidx; i++) {
+                valvec.push_back(val);
+            }
             return valvec;
         }
         for (int i = 0; i < maxidx; i++) {

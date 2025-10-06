@@ -705,7 +705,10 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     std::vector<double> GetArgRecoValue(const CVUniverse& universe, const int maxidx) const {
         std::vector<double> valvec = {};
         if (!m_do_argvalue) {
-            valvec.push_back(PlotUtils::VariableBase<CVUniverse>::GetRecoValue(universe));
+            double val = PlotUtils::VariableBase<CVUniverse>::GetRecoValue(universe);
+            for (int i = 0; i < maxidx; i++) {
+                valvec.push_back(val);
+            }
             return valvec;
         }
         for (int i = 0; i < maxidx; i++) {
@@ -717,7 +720,10 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     std::vector<double> GetArgTrueValue(const CVUniverse& universe, const int maxidx) const {
         std::vector<double> valvec = {};
         if (!m_do_argvalue) {
-            valvec.push_back(PlotUtils::VariableBase<CVUniverse>::GetTrueValue(universe));
+            double val = PlotUtils::VariableBase<CVUniverse>::GetTrueValue(universe);
+            for (int i = 0; i < maxidx; i++) {
+                valvec.push_back(val);
+            }
             return valvec;
         }
         for (int i = 0; i < maxidx; i++) {

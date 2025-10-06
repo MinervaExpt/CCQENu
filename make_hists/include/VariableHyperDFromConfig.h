@@ -399,7 +399,7 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
         for (int i = 0; i < maxidx; i++) {
             std::vector<double> tmp_val_vec = {};
             for (int j = 0; j < m_dimension; j++) {
-                if (!m_do_argvalue_vec[i]) {
+                if (!m_do_argvalue_vec[j]) {
                     double tmp_val = m_vars_vec[j]->PlotUtils::VariableBase<CVUniverse>::GetRecoValue(universe);
                     tmp_val_vec.push_back(tmp_val);
                     continue;
@@ -418,8 +418,8 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
         for (int i = 0; i < maxidx; i++) {
             std::vector<double> tmp_val_vec = {};
             for (int j = 0; j < m_dimension; j++) {
-                if (!m_do_argvalue_vec[i]) {
-                    tmp_val_vec.push_back(m_vars_vec[i]->GetTrueValue(universe)); // TODO this could be optimized to be called only once
+                if (!m_do_argvalue_vec[j]) {
+                    tmp_val_vec.push_back(m_vars_vec[j]->GetTrueValue(universe)); // TODO this could be optimized to be called only once
                     continue;
                 }
                 tmp_val_vec.push_back(m_pointer_to_ArgGetTrueValue_vec[j](universe,i));
