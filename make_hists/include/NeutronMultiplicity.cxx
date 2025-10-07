@@ -234,6 +234,7 @@ void NeutEvent::SetConfig(NuConfig config) {
         }
         _is_vtxdist_edep_set = true;
     }
+    if (config.IsMember("muonangle_edep_funct")) m_do_muonangle_edep_funct = config.GetBool("muonangle_edep_funct");
     // if (config.IsMember("trackenddist")) {
     //     this->SetTrackEndDistConfig(config.GetConfig("trackenddist"));
     // }
@@ -516,9 +517,17 @@ bool NeutEvent::GetCandIsNeut(int index) {
 
 
 bool NeutEvent::CandPassMuonAngle(int index) {
-    if (m_muoncone_min <= 0.0) return true;
+    if (m_muoncone_min <= 0.0 || !m_do_muonangle_edep_funct) return true;
     ROOT::Math::XYZVector candfp = m_cands[index]->m_flightpath;
     // double angle = m_mupath.Angle(candfp) * 180. / M_PI;  // need this in deg (for user configurability)
+    if (m_do_muonangle_edep_funct) {
+        if (!m_cands[index]->m_is3D) {
+            if (m_cands[index]->m_recoEDep < 12.0) return true;
+            double costheta = cos(ROOT::Math::VectorUtil::Angle(m_mupath, candfp));
+            return costheta < 0.8 && costheta > 1.2;
+        }
+        else return true;
+    }
     double angle = ROOT::Math::VectorUtil::Angle(m_mupath, candfp) * 180. / M_PI;  // need this in deg (for user configurability)
     return angle >= m_muoncone_min;
 }
