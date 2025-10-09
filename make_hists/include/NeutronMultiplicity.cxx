@@ -524,7 +524,7 @@ bool NeutEvent::CandPassMuonAngle(int index) {
         if (!m_cands[index]->m_is3D) {
             if (m_cands[index]->m_recoEDep < 12.0) return true;
             double costheta = cos(ROOT::Math::VectorUtil::Angle(m_mupath, candfp));
-            return costheta < 0.8 && costheta > 1.2;
+            return abs(costheta) < 0.2;
         }
         else return true;
     }
