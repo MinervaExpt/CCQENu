@@ -28,49 +28,6 @@
         "edep_min": 1.5,
         "Is3D": -1,
         "muonangle_edep_funct": true//,
-        // "subselection": {
-        //     "trackenddist": {
-        //         "is3D": [
-        //             {
-        //                 "edep": {
-        //                     "max": 12.0
-        //                 },
-        //                 "vtxdist": {
-        //                     "min": 0.0
-        //                 }
-        //             },
-        //             {
-        //                 "edep": {
-        //                     "range": [
-        //                         12.0,
-        //                         200.0
-        //                     ]
-        //                 }
-        //             }
-        //         ],
-        //         "is2D": {
-
-        //         }
-        //     },
-        //     "vtxdist": {
-        //         "is3D": [
-        //             {
-        //                 "edep": {
-        //                     "max": 12.0
-        //                 },
-        //                 "vtxdist": {
-        //                     "min": 0.0
-        //                 }
-        //             },
-        //             {
-        //                 "edep": {
-        //                     "range":[12.0,200.0]
-        //                 }
-        //             }
-        //         ],
-        //         "is2D": {}
-        //     }
-        // }
         // "vtxdist_edep_min": {
         //     "band1":{
         //         "edep_max": 12.0,

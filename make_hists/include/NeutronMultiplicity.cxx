@@ -517,7 +517,7 @@ bool NeutEvent::GetCandIsNeut(int index) {
 
 
 bool NeutEvent::CandPassMuonAngle(int index) {
-    if (m_muoncone_min <= 0.0 || !m_do_muonangle_edep_funct) return true;
+    if (m_muoncone_min <= 0.0 && !m_do_muonangle_edep_funct) return true;
     ROOT::Math::XYZVector candfp = m_cands[index]->m_flightpath;
     // double angle = m_mupath.Angle(candfp) * 180. / M_PI;  // need this in deg (for user configurability)
     if (m_do_muonangle_edep_funct) {
@@ -525,7 +525,7 @@ bool NeutEvent::CandPassMuonAngle(int index) {
         double edep = m_cands[index]->m_recoEDep;
         if (edep < 12.0) return true; // below 12 MeV this is irrelevant
         double costheta = cos(ROOT::Math::VectorUtil::Angle(m_mupath, candfp));
-        return (costheta < -0.0023 * edep - 0.078) || (costheta > 0.0011 * edep + 0.0864);
+        return (costheta < -0.0023 * edep - 0.078) || (costheta > 0.0011 * edep + 0.0864); // fit from edep vs muon costheta plot
     }
     double angle = ROOT::Math::VectorUtil::Angle(m_mupath, candfp) * 180. / M_PI;  // need this in deg (for user configurability)
     return angle >= m_muoncone_min;
