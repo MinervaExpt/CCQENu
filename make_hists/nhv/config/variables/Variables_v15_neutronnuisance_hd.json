@@ -907,9 +907,9 @@
       "name": "NeutCandsvtxSphereDist",
       "title": "Leading Blob spherical dist from vtx",
       // "nbins": 10,
-      "nbins": 16,
+      "nbins": 30,
       "min": 0.0,
-      "max": 400.0,
+      "max": 750.0,
       "for": [
         "data",
         "selected_reco"

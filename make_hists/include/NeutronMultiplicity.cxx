@@ -295,8 +295,6 @@ void NeutEvent::Reset() {
     m_ncands = 0;
     m_nneutcands = 0;
     m_ntrueneutcands = 0;
-
-
 }
 
 // void NeutEvent::SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath) {
