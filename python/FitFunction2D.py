@@ -176,7 +176,9 @@ class FitFunction2D:
 
         diff =  self.inputs["data"] - self.total
         if DEBUG: print ("diff",diff)
-        residuals = diff/np.sqrt(totalerr2+self.errors["data"]**2)
+        #residuals = diff/np.sqrt(totalerr2+self.errors["data"]**2)
+        residuals = diff/np.sqrt(self.errors["data"]**2)
+        
         if DEBUG: print ("residuals",residuals)
         chi2 = np.sum(residuals*residuals) + nuisance
 
@@ -210,7 +212,8 @@ class FitFunction2D:
     
     def GetResiduals(self):
         diff = self.inputs["data"]-self.total
-        return diff/np.sqrt(self.totalerr**2 +self.errors["data"]**2)
+        #return diff/np.sqrt(self.totalerr**2 +self.errors["data"]**2)
+        return diff/np.sqrt(self.errors["data"]**2)
     
     def GetResidualsHist(self,name,title):
         return Arrays2Hist(self.GetResiduals(),np.zeros((self.fnxbins,self.fnybins)),name,title,self.fxbins,self.fybins)

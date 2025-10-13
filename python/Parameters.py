@@ -135,7 +135,7 @@ for bin in range(1,nybins+1):
         parsdict[bin].append(binhist.GetBinContent(par+1))
         
         if binhist.GetBinContent(par+1) < 0.1:
-            parhists[par].SetBinError(bin+1, 1.0)
+            parhists[par].SetBinError(bin+1, 0.1)
         else:
             parhists[par].SetBinError(bin+1, binhist.GetBinError(par+1))   
 
