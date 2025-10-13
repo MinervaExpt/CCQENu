@@ -1,0 +1,133 @@
+\hypertarget{classCCQENu_1_1Variable2DFromConfig}{}\doxysection{CCQENu\+::Variable2\+DFrom\+Config Class Reference}
+\label{classCCQENu_1_1Variable2DFromConfig}\index{CCQENu::Variable2DFromConfig@{CCQENu::Variable2DFromConfig}}
+Inheritance diagram for CCQENu\+::Variable2\+DFrom\+Config\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d7/d07/classCCQENu_1_1Variable2DFromConfig}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_ae27b90bb57287574a25157d4f5a60f22}\label{classCCQENu_1_1Variable2DFromConfig_ae27b90bb57287574a25157d4f5a60f22}} 
+typedef std\+::map$<$ std\+::string, std\+::vector$<$ \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $\ast$ $>$ $>$ {\bfseries Universe\+Map}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a82cb1d473213874e77c06dde8c812764}\label{classCCQENu_1_1Variable2DFromConfig_a82cb1d473213874e77c06dde8c812764}} 
+{\footnotesize template$<$class... ARGS$>$ }\\{\bfseries Variable2\+DFrom\+Config} (const std\+::string name, const Variable\+Base$<$ \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $>$ \&x, const Variable\+Base$<$ \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $>$ \&y)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a094bd9f042529beec7f5ebb1b9ca1a47}\label{classCCQENu_1_1Variable2DFromConfig_a094bd9f042529beec7f5ebb1b9ca1a47}} 
+{\bfseries Variable2\+DFrom\+Config} (const Variable\+Base$<$ \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $>$ \&x, const Variable\+Base$<$ \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $>$ \&y)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_aab8bb386564906ad50f62d57baa37eb7}\label{classCCQENu_1_1Variable2DFromConfig_aab8bb386564906ad50f62d57baa37eb7}} 
+{\bfseries Variable2\+DFrom\+Config} (const std\+::string name, const Variable\+Base$<$ \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $>$ \&x, const Variable\+Base$<$ \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $>$ \&y, const \mbox{\hyperlink{classNuConfig}{Nu\+Config}} config)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a47b465aad83db92290c0b242336fa5ce}\label{classCCQENu_1_1Variable2DFromConfig_a47b465aad83db92290c0b242336fa5ce}} 
+{\bfseries Variable2\+DFrom\+Config} (const std\+::string name, const \mbox{\hyperlink{classCCQENu_1_1VariableFromConfig}{CCQENu\+::\+Variable\+From\+Config}} \&x, const \mbox{\hyperlink{classCCQENu_1_1VariableFromConfig}{CCQENu\+::\+Variable\+From\+Config}} \&y, const std\+::vector$<$ std\+::string $>$ fors)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a4805c81d1d13b431679de9726e208f95}\label{classCCQENu_1_1Variable2DFromConfig_a4805c81d1d13b431679de9726e208f95}} 
+virtual std\+::string {\bfseries Get\+Units} ()
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_acc4458fb1f76b654e1c26c56dc46ffaf}\label{classCCQENu_1_1Variable2DFromConfig_acc4458fb1f76b654e1c26c56dc46ffaf}} 
+virtual void {\bfseries Set\+Units} (std\+::string units)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_aba7068f74f8de00b58044e43806fcec2}\label{classCCQENu_1_1Variable2DFromConfig_aba7068f74f8de00b58044e43806fcec2}} 
+void {\bfseries Add\+Tags} (const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_ace2c2f7b14dbd6e332cd60f4d0e9269e}\label{classCCQENu_1_1Variable2DFromConfig_ace2c2f7b14dbd6e332cd60f4d0e9269e}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries Initialize\+MCHistograms2D} (T univs, const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_afa5996ec5291a97f0fdd75160505afb2}\label{classCCQENu_1_1Variable2DFromConfig_afa5996ec5291a97f0fdd75160505afb2}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries Initialize\+Selected\+Truth\+Histograms2D} (T univs, const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_aac45a0d8a8ca20c58310bbdd828c0729}\label{classCCQENu_1_1Variable2DFromConfig_aac45a0d8a8ca20c58310bbdd828c0729}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries Initialize\+Truth\+Histograms2D} (T univs, const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_ac9f0ebd51220a8a1388364ee1f4001e8}\label{classCCQENu_1_1Variable2DFromConfig_ac9f0ebd51220a8a1388364ee1f4001e8}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries Initialize\+Data\+Histograms2D} (T univs, const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a72d7cefe76e9c6b0d3323aaca036f2aa}\label{classCCQENu_1_1Variable2DFromConfig_a72d7cefe76e9c6b0d3323aaca036f2aa}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries Initialize\+Tuned\+MCHistograms2D} (T reco\+\_\+univs, T truth\+\_\+univs, const std\+::vector$<$ std\+::string $>$ tuned\+\_\+tags, const std\+::vector$<$ std\+::string $>$ response\+\_\+tags)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a9e20e651c0289c304e5c91d608a98825}\label{classCCQENu_1_1Variable2DFromConfig_a9e20e651c0289c304e5c91d608a98825}} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries Initialize\+Response2D} (T reco\+\_\+univs, const std\+::vector$<$ std\+::string $>$ tags, std\+::string tail=\char`\"{}\char`\"{})
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a68db709abac16d0b3d5ff29d768e3952}\label{classCCQENu_1_1Variable2DFromConfig_a68db709abac16d0b3d5ff29d768e3952}} 
+void {\bfseries Write\+All\+Histograms\+To\+File2D} (TFile \&f)
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_ad57106ab0041e0b1e8f3a11689c85752}\label{classCCQENu_1_1Variable2DFromConfig_ad57106ab0041e0b1e8f3a11689c85752}} 
+void {\bfseries Sync\+All\+Hists} ()
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a53d40ac4127b6fd5a4970cc0fb1f5351}\label{classCCQENu_1_1Variable2DFromConfig_a53d40ac4127b6fd5a4970cc0fb1f5351}} 
+void {\bfseries Fill\+Response2D} (const std\+::string tag, \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $\ast$univ, const double x\+\_\+value, const double y\+\_\+value, const double x\+\_\+truth, const double y\+\_\+truth, const double weight, const double scale=1.\+0)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_aa88fd71ef5df1418d345f9bbe30e9d8a}\label{classCCQENu_1_1Variable2DFromConfig_aa88fd71ef5df1418d345f9bbe30e9d8a}} 
+\mbox{\hyperlink{classPlotUtils_1_1Hist2DWrapperMap}{HM2D}} {\bfseries m\+\_\+selected\+\_\+mc\+\_\+reco}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a06829cc26c071e366a29f6f68fa24cbc}\label{classCCQENu_1_1Variable2DFromConfig_a06829cc26c071e366a29f6f68fa24cbc}} 
+\mbox{\hyperlink{classPlotUtils_1_1Hist2DWrapperMap}{HM2D}} {\bfseries m\+\_\+tuned\+\_\+selected\+\_\+mc\+\_\+reco}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_ab0c0ffcf7f4d2171b67c158e56042395}\label{classCCQENu_1_1Variable2DFromConfig_ab0c0ffcf7f4d2171b67c158e56042395}} 
+\mbox{\hyperlink{classPlotUtils_1_1Hist2DWrapperMap}{HM2D}} {\bfseries m\+\_\+selected\+\_\+mc\+\_\+truth}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_abe7bfd13d3cd838681718bf09b32be68}\label{classCCQENu_1_1Variable2DFromConfig_abe7bfd13d3cd838681718bf09b32be68}} 
+\mbox{\hyperlink{classPlotUtils_1_1Hist2DWrapperMap}{HM2D}} {\bfseries m\+\_\+tuned\+\_\+selected\+\_\+mc\+\_\+truth}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a75ccfadf8c1f54bcaf98b8d7dba1466d}\label{classCCQENu_1_1Variable2DFromConfig_a75ccfadf8c1f54bcaf98b8d7dba1466d}} 
+\mbox{\hyperlink{classPlotUtils_1_1Hist2DWrapperMap}{HM2D}} {\bfseries m\+\_\+signal\+\_\+mc\+\_\+truth}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_aaeb53f8992c1abf19d9f2f117d13fced}\label{classCCQENu_1_1Variable2DFromConfig_aaeb53f8992c1abf19d9f2f117d13fced}} 
+\mbox{\hyperlink{classPlotUtils_1_1Hist2DWrapperMap}{HM2D}} {\bfseries m\+\_\+tuned\+\_\+signal\+\_\+mc\+\_\+truth}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a93f3343cbd8a77055f951b4dbf94e17b}\label{classCCQENu_1_1Variable2DFromConfig_a93f3343cbd8a77055f951b4dbf94e17b}} 
+\mbox{\hyperlink{classPlotUtils_1_1Hist2DWrapperMap}{HM2D}} {\bfseries m\+\_\+selected\+\_\+data}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_aaa5ed6ccca3396dfad4f6b9fd1bad1e5}\label{classCCQENu_1_1Variable2DFromConfig_aaa5ed6ccca3396dfad4f6b9fd1bad1e5}} 
+\mbox{\hyperlink{classPlotUtils_1_1Response2DWrapperMap}{RM2D}} {\bfseries m\+\_\+response}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a4ab57fedc2f03acdf32cf254d46ac532}\label{classCCQENu_1_1Variable2DFromConfig_a4ab57fedc2f03acdf32cf254d46ac532}} 
+\mbox{\hyperlink{classPlotUtils_1_1Response2DWrapperMap}{RM2D}} {\bfseries m\+\_\+tuned\+\_\+response}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_ade8acf28c0448b54d45f1a51c31d9368}\label{classCCQENu_1_1Variable2DFromConfig_ade8acf28c0448b54d45f1a51c31d9368}} 
+Universe\+Map {\bfseries m\+\_\+universes}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a89d707ef368598c654118a8d7a995aa5}\label{classCCQENu_1_1Variable2DFromConfig_a89d707ef368598c654118a8d7a995aa5}} 
+std\+::string {\bfseries m\+\_\+units}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_aed46c35fb802da6c1ef5f82017ba2583}\label{classCCQENu_1_1Variable2DFromConfig_aed46c35fb802da6c1ef5f82017ba2583}} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Data}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a3364655880a30448496ab285bb0d0688}\label{classCCQENu_1_1Variable2DFromConfig_a3364655880a30448496ab285bb0d0688}} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+MC}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_ac02055cb41f37e2ab55d206201efc8a6}\label{classCCQENu_1_1Variable2DFromConfig_ac02055cb41f37e2ab55d206201efc8a6}} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Tuned\+MC}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a156909f609054483b2b74a7e5d7962f7}\label{classCCQENu_1_1Variable2DFromConfig_a156909f609054483b2b74a7e5d7962f7}} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Truth}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a6542da313019247dc6a5141b761c23e5}\label{classCCQENu_1_1Variable2DFromConfig_a6542da313019247dc6a5141b761c23e5}} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Selected\+Truth}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a583f3d0a749536c51b91683204b42ca8}\label{classCCQENu_1_1Variable2DFromConfig_a583f3d0a749536c51b91683204b42ca8}} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Response}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a90171302b70eb8326ecfb7a7d7973801}\label{classCCQENu_1_1Variable2DFromConfig_a90171302b70eb8326ecfb7a7d7973801}} 
+std\+::vector$<$ std\+::string $>$ {\bfseries m\+\_\+tags}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_a8ce181978ca66609e094bd7fd5da037c}\label{classCCQENu_1_1Variable2DFromConfig_a8ce181978ca66609e094bd7fd5da037c}} 
+std\+::vector$<$ std\+::string $>$ {\bfseries m\+\_\+for}
+\item 
+\mbox{\Hypertarget{classCCQENu_1_1Variable2DFromConfig_aabf78b76baaa17857c7e94069dc5b7b8}\label{classCCQENu_1_1Variable2DFromConfig_aabf78b76baaa17857c7e94069dc5b7b8}} 
+std\+::string {\bfseries m\+\_\+tunedmc} = \char`\"{}both\char`\"{}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+make\+\_\+hists/include/\mbox{\hyperlink{Variable2DFromConfig_8h}{Variable2\+DFrom\+Config.\+h}}\end{DoxyCompactItemize}

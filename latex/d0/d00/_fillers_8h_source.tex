@@ -1,0 +1,191 @@
+\doxysection{Fillers.\+h}
+\hypertarget{_fillers_8h_source}{}\label{_fillers_8h_source}\index{make\_hists/include/Fillers.h@{make\_hists/include/Fillers.h}}
+\mbox{\hyperlink{_fillers_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ include\ at\ top\ of\ your\ loop\ code}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ includes\ just\ to\ keep\ lint\ happy}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_c_v_universe_8h}{CVUniverse.h}}"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Fill\ Data\ or\ MC\ histograms}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{00028\ \textcolor{keywordtype}{void}\ FillData(std::string\ tag,\ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}*\ univ,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::VariableFromConfig*>\ variables,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::Variable2DFromConfig*>\ variables2D)\ \{}
+\DoxyCodeLine{00031\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables)\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordflow}{if}\ (v-\/>hasData[tag])\{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ fill\_val\ =\ v-\/>GetRecoValue(*univ,\ 0);}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ v-\/>m\_selected\_data.Fill(tag,\ univ,\ fill\_val);}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ \ \ \}}
+\DoxyCodeLine{00037\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v2\ :\ variables2D)\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordflow}{if}\ (v2-\/>hasData[tag])\{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ fill\_val\_x\ =\ v2-\/>GetRecoValueX(*univ,\ 0);}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ fill\_val\_y\ =\ v2-\/>GetRecoValueY(*univ,\ 0);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ v2-\/>m\_selected\_data.Fill2D(tag,\ univ,\ fill\_val\_x,\ fill\_val\_y);}
+\DoxyCodeLine{00042\ \ \ \ \ \}}
+\DoxyCodeLine{00043\ \ \ \}}
+\DoxyCodeLine{00044\ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{void}\ FillMC(std::string\ tag,\ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}*\ univ,\ \textcolor{keywordtype}{double}\ weight,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::VariableFromConfig*>\ variables,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::Variable2DFromConfig*>\ variables2D,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scale\ =\ -\/1.)\ \{}
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables)\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordflow}{if}\ (v-\/>hasMC[tag])\{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ fill\_val\ =\ v-\/>GetRecoValue(*univ,\ 0);}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v-\/>m\_tunedmc!=\textcolor{stringliteral}{"{}tuned"{}})\{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ v-\/>m\_selected\_mc\_reco.Fill(tag,\ univ,\ fill\_val,\ weight);}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v-\/>hasTunedMC[tag]\ \&\&\ scale>=0.)\{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ v-\/>m\_tuned\_selected\_mc\_reco.Fill(tag,\ univ,\ fill\_val,\ scale*weight);}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordflow}{if}\ (v-\/>hasSelectedTruth[tag])\{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ true\_val\ =\ v-\/>GetTrueValue(*univ,\ 0);}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v-\/>m\_tunedmc!=\textcolor{stringliteral}{"{}tuned"{}})\{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ v-\/>m\_selected\_mc\_truth.Fill(tag,\ univ,\ true\_val,\ weight);}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v-\/>hasTunedMC[tag]\ \&\&\ scale>=0.)\{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ v-\/>m\_tuned\_selected\_mc\_truth.Fill(tag,\ univ,\ true\_val,\ scale*weight);}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \ \ \}}
+\DoxyCodeLine{00072\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v2\ :\ variables2D)\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordflow}{if}\ (v2-\/>hasMC[tag])\{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ fill\_val\_x\ =\ v2-\/>GetRecoValueX(*univ,\ 0);}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ fill\_val\_y\ =\ v2-\/>GetRecoValueY(*univ,\ 0);}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v2-\/>m\_tunedmc!=\textcolor{stringliteral}{"{}tuned"{}})\{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ v2-\/>m\_selected\_mc\_reco.Fill2D(tag,\ univ,\ fill\_val\_x,\ fill\_val\_y,\ weight);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v2-\/>hasTunedMC[tag]\ \&\&\ scale>=0.)\{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ v2-\/>m\_tuned\_selected\_mc\_reco.Fill2D(tag,\ univ,\ fill\_val\_x,\ fill\_val\_y,\ scale*weight);}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordflow}{if}\ (v2-\/>hasSelectedTruth[tag])\{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ true\_val\_x\ =\ v2-\/>GetTrueValueX(*univ,\ 0);}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ true\_val\_y\ =\ v2-\/>GetTrueValueY(*univ,\ 0);}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v2-\/>m\_tunedmc!=\textcolor{stringliteral}{"{}tuned"{}})\{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ v2-\/>m\_selected\_mc\_truth.Fill2D(tag,\ univ,\ true\_val\_x,\ true\_val\_y,\ weight);}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v2-\/>hasTunedMC[tag]\ \&\&\ scale>=0.)\{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ v2-\/>m\_tuned\_selected\_mc\_truth.Fill2D(tag,\ univ,\ true\_val\_x,\ true\_val\_y,\ scale*weight);}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00092\ \ \ \ \ \}}
+\DoxyCodeLine{00093\ \ \ \}}
+\DoxyCodeLine{00094\ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{keywordtype}{void}\ FillResolution(std::string\ tag,\ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}*\ univ,\ \textcolor{keywordtype}{double}\ weight,}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::VariableFromConfig*>\ variables,}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::Variable2DFromConfig*>\ variables2D,}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scale=-\/1.)\ \{}
+\DoxyCodeLine{00100\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordflow}{if}\ (v-\/>hasResponse[tag])\{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ reco\_val\ =\ v-\/>GetRecoValue(*univ,\ 0);}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ true\_val\ =\ v-\/>GetTrueValue(*univ,\ 0);}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \textcolor{comment}{//\ This\ will\ fill\ both\ tuned\ and\ untuned}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ v-\/>FillResolution(tag,univ,reco\_val,true\_val,weight,scale);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \}}
+\DoxyCodeLine{00108\ \ \ \}}
+\DoxyCodeLine{00109\ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{keywordtype}{void}\ FillType(std::string\ tag,\ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}*\ univ,\ \textcolor{keywordtype}{double}\ weight,}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::VariableFromConfig*>\ variables,}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::Variable2DFromConfig*>\ variables2D,}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scale)\ \{}
+\DoxyCodeLine{00115\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables)\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordflow}{if}\ (v-\/>hasType[tag])\{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ reco\_val\ =\ v-\/>GetRecoValue(*univ,\ 0);}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ type\ =\ univ-\/>GetMCIntType();}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \textcolor{comment}{//\ This\ will\ fill\ both\ tuned\ and\ untuned}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ v-\/>FillType(tag,type,reco\_val,weight,scale);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \}}
+\DoxyCodeLine{00123\ \ \ \}}
+\DoxyCodeLine{00124\ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{keywordtype}{void}\ FillResponse(std::string\ tag,\ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}*\ univ,\ \textcolor{keywordtype}{double}\ weight,}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::VariableFromConfig*>\ variables,}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::Variable2DFromConfig*>\ variables2D,}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scale=-\/1.)\ \{}
+\DoxyCodeLine{00130\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables)\ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordflow}{if}\ (v-\/>hasResponse[tag])\{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ reco\_val\ =\ v-\/>GetRecoValue(*univ,\ 0);}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ true\_val\ =\ v-\/>GetTrueValue(*univ,\ 0);}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \textcolor{comment}{//\ This\ will\ fill\ both\ tuned\ and\ untuned}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ v-\/>FillResponse(tag,univ,reco\_val,true\_val,weight,scale);}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \textcolor{comment}{//\ if(v-\/>m\_tunedmc!=1)\{}}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ v-\/>FillResponse(tag,univ,reco\_val,true\_val,weight);}}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \textcolor{comment}{//\ if(v-\/>hasTunedMC[tag]\ \&\&\ scale>=0.)\{}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ v-\/>FillResponse(tag,univ,reco\_val,true\_val,scale*weight);}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00143\ \ \ \ \ \}}
+\DoxyCodeLine{00144\ \ \ \}}
+\DoxyCodeLine{00145\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v2\ :\ variables2D)\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordflow}{if}\ (v2-\/>hasResponse[tag])\{}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ reco\_val\_x\ =\ v2-\/>GetRecoValueX(*univ,\ 0);}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ reco\_val\_y\ =\ v2-\/>GetRecoValueY(*univ,\ 0);}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ true\_val\_x\ =\ v2-\/>GetTrueValueX(*univ,\ 0);}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ true\_val\_y\ =\ v2-\/>GetTrueValueY(*univ,\ 0);}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ v2-\/>FillResponse2D(tag,univ,reco\_val\_x,reco\_val\_y,true\_val\_x,true\_val\_y,weight,scale);}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \textcolor{comment}{//\ if(v2-\/>m\_tunedmc!=1)\{}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ v2-\/>FillResponse2D(tag,univ,reco\_val\_x,reco\_val\_y,true\_val\_x,true\_val\_y,weight);}}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \textcolor{comment}{//\ if(v2-\/>hasTunedMC[tag]\ \&\&\ scale>=0.)\{}}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ v2-\/>FillResponse2D(tag,univ,reco\_val\_x,reco\_val\_y,true\_val\_x,true\_val\_y,scale*weight);}}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00158\ \ \ \ \ \}}
+\DoxyCodeLine{00159\ \ \ \}}
+\DoxyCodeLine{00160\ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{keywordtype}{void}\ FillSignalTruth(std::string\ tag,\ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}*\ univ,\ \textcolor{keywordtype}{double}\ weight,}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::VariableFromConfig*>\ variables,}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::Variable2DFromConfig*>\ variables2D,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scale=-\/1.)\ \{}
+\DoxyCodeLine{00166\ \ \ \textcolor{keywordtype}{int}\ run\ =\ univ-\/>GetTrueRun();}
+\DoxyCodeLine{00167\ \ \ \textcolor{keywordtype}{int}\ subrun\ =\ univ-\/>GetTrueSubRun();}
+\DoxyCodeLine{00168\ \ \ \textcolor{keywordtype}{int}\ gate\ =\ univ-\/>GetTrueGate();}
+\DoxyCodeLine{00169\ \ \ \textcolor{comment}{//if\ (run\ ==\ 123000\ \&\&\ subrun\ ==\ 288)\ return;}}
+\DoxyCodeLine{00170\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables)\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keywordflow}{if}\ (v-\/>hasTruth[tag])\{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ true\_val\ =\ v-\/>GetTrueValue(*univ,\ 0);}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (univ-\/>ShortName()\ ==\ "{}cv"{}\ )\ std::cout\ <<\ v-\/>GetName()\ <<\ "{}\ "{}\ <<\ univ-\/>GetEventID()\ <<\ "{}\ "{}\ <<\ run\ <<\ "{}\ "{}\ <<\ subrun\ <<\ "{}\ "{}\ \ <<\ \ "{}\ "{}\ \ <<\ true\_val\ <<\ "{}\ "{}\ <<\ weight\ <<\ std::endl;}}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v-\/>m\_tunedmc!=\textcolor{stringliteral}{"{}tuned"{}})\{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ v-\/>m\_signal\_mc\_truth.Fill(tag,univ,\ true\_val,\ weight);}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v-\/>hasTunedMC[tag]\ \&\&\ scale>=0.)\{}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scaledweight\ =\ scale*weight;}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ v-\/>m\_tuned\_signal\_mc\_truth.Fill(tag,\ univ,\ true\_val,\ scaledweight);}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00181\ \ \ \ \ \}}
+\DoxyCodeLine{00182\ \ \ \}}
+\DoxyCodeLine{00183\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v2\ :\ variables2D)\ \{}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keywordflow}{if}\ (v2-\/>hasTruth[tag])\{}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ true\_val\_x\ =\ v2-\/>GetTrueValueX(*univ,\ 0);}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ true\_val\_y\ =\ v2-\/>GetTrueValueY(*univ,\ 0);}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (univ-\/>ShortName()\ ==\ "{}cv"{}\ )\ std::cout\ <<\ v-\/>GetName()\ <<\ "{}\ "{}\ <<\ univ-\/>GetEventID()\ <<\ "{}\ "{}\ <<\ run\ <<\ "{}\ "{}\ <<\ subrun\ <<\ "{}\ "{}\ \ <<\ \ "{}\ "{}\ \ <<\ true\_val\ <<\ "{}\ "{}\ <<\ weight\ <<\ std::endl;}}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v2-\/>m\_tunedmc!=\textcolor{stringliteral}{"{}tuned"{}})\{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ v2-\/>m\_signal\_mc\_truth.Fill2D(tag,univ,\ true\_val\_x,\ true\_val\_y,\ weight);}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v2-\/>hasTunedMC[tag]\ \&\&\ scale>=0.)\{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scaledweight\ =\ scale*weight;}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ v2-\/>m\_tuned\_signal\_mc\_truth.Fill2D(tag,univ,\ true\_val\_x,\ true\_val\_y,\ scaledweight);}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \ \ \ \ \}}
+\DoxyCodeLine{00196\ \ \ \}}
+\DoxyCodeLine{00197\ \}}
+
+\end{DoxyCode}

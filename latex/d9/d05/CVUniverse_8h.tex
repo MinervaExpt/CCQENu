@@ -1,0 +1,39 @@
+\hypertarget{CVUniverse_8h}{}\doxysection{make\+\_\+hists/include/\+CVUniverse.h File Reference}
+\label{CVUniverse_8h}\index{make\_hists/include/CVUniverse.h@{make\_hists/include/CVUniverse.h}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Calo\+Correction.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Chain\+Wrapper.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Geant\+Hadron\+Systematics.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Minerva\+Universe.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Physics\+Variables.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}TVector3.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}utils/\+Nu\+Config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Muon\+Functions.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Recoil\+Energy\+Functions.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Truth\+Functions.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Weight\+Functions.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classCVUniverse}{CVUniverse}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Heidi Schellman/\+Noah Vaughan/\+Sean\+Gilligan 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 $\ast$ 
+\end{DoxyVersion}
+\hypertarget{VariableFromConfig_8h_LICENSE}{}\doxysubsection{$\ast$}\label{VariableFromConfig_8h_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. $\ast$ \hypertarget{VariableFromConfig_8h_DESCRIPTION}{}\doxysubsection{$\ast$}\label{VariableFromConfig_8h_DESCRIPTION}
+The main universe class, it inherits from Minerva\+Universe which implements most of the variations one addition is units of GeV and degrees where the base classes use MeV and radians
+
+\DoxyHorRuler{0}
+ Base class for an un-\/systematically shifted (i.\+e. CV) universe. Implement \char`\"{}\+Get\char`\"{} functions for all the quantities that you need for your analysis.
+
+your \char`\"{}\+Get\char`\"{} functions the way you want them. In that case, you don\textquotesingle{}t need to \hypertarget{CVUniverse_8h_autotoc_md1}{}\doxysubsection{re-\/write them here.}\label{CVUniverse_8h_autotoc_md1}

@@ -1,0 +1,265 @@
+\hypertarget{NuConfig_8h_source}{}\doxysection{Nu\+Config.\+h}
+\label{NuConfig_8h_source}\index{make\_hists/utils/NuConfig.h@{make\_hists/utils/NuConfig.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ NUCONFIG\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ NUCONFIG\_H}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}json/json.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}utils/expandEnv.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classNuConfig}{NuConfig}};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{typedef}\ std::map<const\ std::string,\ NuConfig*>\ CONFIGMAP;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classNuConfig}{NuConfig}}\{}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00019\ \ \ std::string\ f\_filename;}
+\DoxyCodeLine{00020\ \ \ std::string\ f\_buffer;}
+\DoxyCodeLine{00021\ \ \ Json::Value\ f\_config;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ }
+\DoxyCodeLine{00027\ \ \ \mbox{\hyperlink{classNuConfig}{NuConfig}}()\{\};}
+\DoxyCodeLine{00028\ \ \ \textcolor{comment}{//\ copy\ constructor}}
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{classNuConfig}{NuConfig}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classNuConfig}{NuConfig}}\&\ f)\{}
+\DoxyCodeLine{00030\ \ \ \ \ f\_filename\ =\ \textcolor{stringliteral}{"{}fromConfig"{}};}
+\DoxyCodeLine{00031\ \ \ \ \ f\_config\ =\ f.f\_config;}
+\DoxyCodeLine{00032\ \ \ \}}
+\DoxyCodeLine{00033\ \ \ \ \ \mbox{\hyperlink{classNuConfig}{NuConfig}}(\textcolor{keyword}{const}\ std::string\ inputstringlong)\{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ ReadFromString(inputstringlong);}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \textcolor{keywordtype}{bool}\ Read(\textcolor{keyword}{const}\ std::string\ filename)\{}
+\DoxyCodeLine{00038\ \ \ \ \ f\_filename\ \ =\ expandEnv(filename);}
+\DoxyCodeLine{00039\ \ \ \ \ Json::CharReaderBuilder\ rbuilder;}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ Configure\ the\ Builder,\ then\ ...}}
+\DoxyCodeLine{00041\ \ \ \ \ std::ifstream\ f\_buffer(f\_filename,\ std::ifstream::binary);}
+\DoxyCodeLine{00042\ \ \ \ \ std::string\ errs;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{bool}\ parsingSuccessful\ =\ Json::parseFromStream(rbuilder,\ f\_buffer,\ \&f\_config,\ \&errs);}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordflow}{if}\ (!parsingSuccessful)}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \textcolor{comment}{//\ report\ to\ the\ user\ the\ failure\ and\ their\ locations\ in\ the\ document.}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ std::cout\ \ <<\ \textcolor{stringliteral}{"{}Failed\ to\ parse\ configuration\(\backslash\)n"{}}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ <<\ errs;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ std::cout\ <<\ \ \textcolor{stringliteral}{"{}bad\ file\ was\ "{}}\ <<\ filename\ <<\ std::endl;}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ exit(120);}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}read\ in\ configuration\ file\ "{}}\ <<\ f\_filename\ <<\ std::endl;}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00056\ \ \ \};}
+\DoxyCodeLine{00057\ \ \ }
+\DoxyCodeLine{00058\ \ \ \textcolor{keywordtype}{bool}\ ReadFromString(\textcolor{keyword}{const}\ std::string\ inputstringlong)\{}
+\DoxyCodeLine{00059\ \ \ \ \ JSONCPP\_STRING\ err;}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ std::string\ inputstring=expandEnv(inputstringlong);}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//Json::CharReader\ reader;}}
+\DoxyCodeLine{00062\ \ \ \ \ }
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ \ \ \ f\_filename\ \ =\ filename;}}
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ \ \ \ Json::CharReaderBuilder\ rbuilder;}}
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ \ \ \ //\ Configure\ the\ Builder,\ then\ ...}}
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ \ \ \ std::ifstream\ f\_buffer(f\_filename,\ std::ifstream::binary);}}
+\DoxyCodeLine{00067\ \textcolor{comment}{//\ \ \ \ std::string\ errs;}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//https://github.com/open-\/source-\/parsers/jsoncpp/blob/master/example/readFromString/readFromString.cpp\ \ says\ to\ use\ this\ somewhat\ cumbersome\ method\ instead\ the\ old\ one}}
+\DoxyCodeLine{00069\ \ \ \ \ Json::CharReaderBuilder\ builder;}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{const}\ std::unique\_ptr<Json::CharReader>\ reader(builder.newCharReader());}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!reader-\/>parse(inputstring.c\_str(),\ inputstring.c\_str()+\ inputstring.length(),\ \&f\_config,}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&err))\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}error"{}}\ <<\ err\ <<\ std::endl;}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ EXIT\_FAILURE;}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00079\ \ \ \};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{classNuConfig}{NuConfig}}(\textcolor{keyword}{const}\ Json::Value\ value)\{\ \ \textcolor{comment}{//\ can\ read\ in\ a\ value\ from\ the\ file\ and\ then\ use\ that\ read\ in\ a\ subconfig}}
+\DoxyCodeLine{00082\ \ \ \ \ f\_config\ =\ value;}
+\DoxyCodeLine{00083\ \ \ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \textcolor{keywordtype}{bool}\ CheckMember(std::string\ key)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}\ check\ Member"{}\ <<\ f\_config.type()\ <<\ "{}\ "{}\ <<\ f\_config.isObject()\ \ <<\ "{}\ "{}\ <<\ \ f\_config.isMember(key)\ <<\ std::endl;}}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordflow}{if}\ (not\ f\_config.isObject()\ ||\ not\ \ f\_config.isMember(key))\{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}NuConfig:\ "{}}\ <<\ key\ <<\ \textcolor{stringliteral}{"{}\ is\ not\ a\ valid\ member\ of\ "{}}\ <<\ f\_filename\ <<\ \ \textcolor{stringliteral}{"{}\ maybe\ you\ have\ a\ default?\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00093\ \ \ \};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \textcolor{comment}{//\ gentler\ version\ of\ CheckMember\ to\ use\ to\ see\ if\ you\ need\ to\ stick\ with\ a\ default.}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \textcolor{keywordtype}{bool}\ IsMember(std::string\ key)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordflow}{if}\ (not\ f\_config.isObject()\ ||\ not\ \ f\_config.isMember(key))\{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00100\ \ \ \ \ \}}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00102\ \ \ \};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \textcolor{keywordtype}{void}\ Print()\textcolor{keyword}{\ const}\{}
+\DoxyCodeLine{00105\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}config\ "{}}\ <<\ \ f\_filename\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ f\_config\ <<\ std::endl;}
+\DoxyCodeLine{00106\ \ \ \};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ std::string\ ToString()\textcolor{keyword}{\ const}\{}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordflow}{return}\ expandEnv(f\_config.toStyledString());}
+\DoxyCodeLine{00110\ \ \ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \textcolor{keywordtype}{double}\ GetDouble(\textcolor{keyword}{const}\ std::string\ key)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00113\ \ \ \ \ assert(CheckMember(key));}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordflow}{return}\ f\_config.get(key,-\/9999.).asDouble();}
+\DoxyCodeLine{00115\ \ \ \};}
+\DoxyCodeLine{00116\ \ \ \textcolor{keywordtype}{int}\ GetInt(\textcolor{keyword}{const}\ std::string\ key)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00117\ \ \ \ \ assert(CheckMember(key));}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordflow}{return}\ f\_config.get(key,-\/9999).asInt();}
+\DoxyCodeLine{00119\ \ \ \};}
+\DoxyCodeLine{00120\ \ \ \textcolor{keywordtype}{bool}\ GetBool(\textcolor{keyword}{const}\ std::string\ key)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00121\ \ \ \ \ assert(CheckMember(key));}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordflow}{return}\ f\_config.get(key,\textcolor{keyword}{false}).asBool();}
+\DoxyCodeLine{00123\ \ \ \};}
+\DoxyCodeLine{00124\ \ \ std::string\ GetString(\textcolor{keyword}{const}\ std::string\ key)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00125\ \ \ \ \ assert(CheckMember(key));}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordflow}{return}\ expandEnv(f\_config.get(key,\textcolor{stringliteral}{"{}None"{}}).asString());}
+\DoxyCodeLine{00127\ \ \ \};}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ std::vector\ <std::string>\ GetStringVector(\textcolor{keyword}{const}\ std::string\ key)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00130\ \ \ \ \ assert(CheckMember(key));}
+\DoxyCodeLine{00131\ \ \ \ \ std::vector<std::string>\ \ a;}
+\DoxyCodeLine{00132\ \ \ \ \ Json::Value\ array\ =\ f\_config.get(key,0);}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&el\ \ :\ array)\{}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (el.isString())\{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ a.push\_back(expandEnv(el.asString()));}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00137\ \ \ \ \ \}}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00139\ \ \ \};}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \textcolor{comment}{//\ can't\ compile\ on\ some\ machines.\ \ Avoid\ vectors\ of\ const.}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{comment}{//\ \ std::vector\ <const\ std::string>\ GetConstStringVector(const\ std::string\ key)const\{}}
+\DoxyCodeLine{00144\ \textcolor{comment}{//\ \ \ \ assert(CheckMember(key));}}
+\DoxyCodeLine{00145\ \textcolor{comment}{//\ \ \ \ std::vector<const\ std::string>\ \ a;}}
+\DoxyCodeLine{00146\ \textcolor{comment}{//\ \ \ \ Json::Value\ array\ =\ f\_config.get(key,0);}}
+\DoxyCodeLine{00147\ \textcolor{comment}{//\ \ \ \ for\ (const\ auto\ \&el\ \ :\ array)\{}}
+\DoxyCodeLine{00148\ \textcolor{comment}{//\ \ \ \ \ \ if\ (el.isString())\{}}
+\DoxyCodeLine{00149\ \textcolor{comment}{//\ \ \ \ \ \ \ \ a.push\_back(el.asString());}}
+\DoxyCodeLine{00150\ \textcolor{comment}{//\ \ \ \ \ \ \}}}
+\DoxyCodeLine{00151\ \textcolor{comment}{//\ \ \ \ \}}}
+\DoxyCodeLine{00152\ \textcolor{comment}{//\ \ \ \ return\ a;}}
+\DoxyCodeLine{00153\ \textcolor{comment}{//\ \ \};}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ std::vector\ <double>\ GetDoubleVector(\textcolor{keyword}{const}\ std::string\ key)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00156\ \ \ \ \ assert(CheckMember(key));}
+\DoxyCodeLine{00157\ \ \ \ \ std::vector<double>\ \ a;}
+\DoxyCodeLine{00158\ \ \ \ \ Json::Value\ array\ =\ f\_config.get(key,0);}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&el\ \ :\ array)\{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (el.isDouble())\{}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ a.push\_back(el.asDouble());}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00163\ \ \ \ \ \}}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00165\ \ \ \};}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \textcolor{comment}{//\ get\ a\ vector\ of\ subconfigs}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ std::vector<NuConfig>\ GetConfigVector(std::string\ key)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00170\ \ \ \ \ assert(CheckMember(key));}
+\DoxyCodeLine{00171\ \ \ \ \ std::vector<NuConfig>\ \ a;}
+\DoxyCodeLine{00172\ \ \ \ \ Json::Value\ array\ =\ f\_config.get(key,0);}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&el\ \ :\ array)\{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ a.push\_back(el);}
+\DoxyCodeLine{00175\ \ \ \ \ \}}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00177\ \ \ \};}
+\DoxyCodeLine{00178\ \ \ }
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \textcolor{comment}{//\ do\ this\ when\ you\ already\ have\ the\ vector\ of\ configs\ in\ hand}}
+\DoxyCodeLine{00181\ \ \ std::vector<NuConfig>\ GetConfigVector()\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \ std::vector<NuConfig>\ \ a;}
+\DoxyCodeLine{00184\ \ \ \ \ Json::Value\ array\ =\ f\_config;}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&el\ \ :\ array)\{}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ a.push\_back(el);}
+\DoxyCodeLine{00187\ \ \ \ \ \}}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00189\ \ \ \};}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ Json::Value\ GetValue(\textcolor{keyword}{const}\ std::string\ key)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00192\ \ \ \ \ assert(CheckMember(key));}
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keywordflow}{return}\ f\_config.get(key,0);}
+\DoxyCodeLine{00194\ \ \ \};}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \mbox{\hyperlink{classNuConfig}{NuConfig}}\ GetConfig(\textcolor{keyword}{const}\ std::string\ key)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00197\ \ \ \ \ assert(CheckMember(key));}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classNuConfig}{NuConfig}}(f\_config.get(key,0));}
+\DoxyCodeLine{00199\ \ \ \};}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ std::vector<std::string>\ GetKeys()\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{comment}{//\ from\ https://github.com/open-\/source-\/parsers/jsoncpp/issues/288}}
+\DoxyCodeLine{00204\ \ \ \ \ std::vector<std::string>\ result;}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordflow}{for}\ (Json::ValueConstIterator\ it\ =\ f\_config.begin();\ it\ !=\ f\_config.end();\ ++it)\{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ result.push\_back(it.name());}
+\DoxyCodeLine{00207\ \ \ \ \ \}}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00209\ \ \ \};}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ var\_t>}
+\DoxyCodeLine{00212\ \ \ var\_t\ GetNumber(\textcolor{keyword}{const}\ std::string\ key)\{}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{typeid}(var\_t)\ ==\ \textcolor{keyword}{typeid}(\textcolor{keywordtype}{double})?GetDouble(key):GetInt(key);}
+\DoxyCodeLine{00214\ \ \ \}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \mbox{\hyperlink{classNuConfig}{NuConfig}}\ \mbox{\hyperlink{classNuConfig_a59a37a49061522244747f2e16e9ff49b}{GetConfigVariable}}(std::string\ variable)\{\ \ }
+\DoxyCodeLine{00217\ \ \ \ \ \mbox{\hyperlink{classNuConfig}{NuConfig}}\ varsconfig;}
+\DoxyCodeLine{00218\ \ \ \ \ \mbox{\hyperlink{classNuConfig}{NuConfig}}\ config1D;}
+\DoxyCodeLine{00219\ \ \ \ \ \mbox{\hyperlink{classNuConfig}{NuConfig}}\ config2D;}
+\DoxyCodeLine{00220\ \ \ \ \ \mbox{\hyperlink{classNuConfig}{NuConfig}}\ outconfig;}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keywordflow}{if}(IsMember(\textcolor{stringliteral}{"{}varsFile"{}}))\{}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ std::string\ varsFile\ =\ f\_config.get(\textcolor{stringliteral}{"{}varsFile"{}},\textcolor{stringliteral}{"{}None"{}}).asString();}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ varsconfig.Read(varsFile);}
+\DoxyCodeLine{00225\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ varsconfig\ =\ f\_config;}
+\DoxyCodeLine{00227\ \ \ \ \ \}}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ variable\ config}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{comment}{//\ Get\ 1D\ and\ 2D}}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordflow}{if}(varsconfig.IsMember(\textcolor{stringliteral}{"{}1D"{}}))\{}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ config1D\ =\ varsconfig.GetValue(\textcolor{stringliteral}{"{}1D"{}});}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(config1D.IsMember(variable))\{}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NuConfig\ var1D;}}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ outconfig\ =\ config1D.GetValue(variable);}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ return\ var1D;}}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ NC:\ found\ 1D\ variable\ config\ for\ "{}}\ <<\ variable\ <<\ std::endl;\ \textcolor{comment}{//\ print\ statement\ for\ debugging}}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00240\ \ \ \ \ \}}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keywordflow}{if}(varsconfig.IsMember(\textcolor{stringliteral}{"{}2D"{}}))\{}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ config2D\ =\ varsconfig.GetValue(\textcolor{stringliteral}{"{}2D"{}});}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(config2D.IsMember(variable))\{}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NuConfig\ var2D;}}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ outconfig\ =\ config2D.GetValue(variable);}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ return\ var2D;}}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ NC:\ found\ 2D\ variable\ config\ for\ "{}}\ <<\ variable\ <<\ std::endl;\ \textcolor{comment}{//\ print\ statement\ for\ debugging}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00250\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ NuConfig:\ 1D\ or\ 2D\ variables\ not\ found"{}}\ <<\ std::endl;\ \textcolor{comment}{//\ print\ statement\ for\ debugging}}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \textcolor{comment}{//\ assert(varsconfig.CheckMember(variable));}}
+\DoxyCodeLine{00253\ \ \ \ \ \}}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keywordflow}{return}\ outconfig;}
+\DoxyCodeLine{00255\ \ \ \}}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \};}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

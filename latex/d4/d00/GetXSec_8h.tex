@@ -1,0 +1,142 @@
+\hypertarget{GetXSec_8h}{}\doxysection{make\+\_\+hists/include/\+Get\+XSec.h File Reference}
+\label{GetXSec_8h}\index{make\_hists/include/GetXSec.h@{make\_hists/include/GetXSec.h}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}Minerva\+Unfold/\+Mnv\+Response.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Minerva\+Unfold/\+Mnv\+Unfold.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Flux\+Reweighter.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Mnv\+H1\+D.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Plot\+Utils/\+Mnv\+H2\+D.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}TCanvas.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}TF2.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}TH2\+D.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}utils/\+Nu\+Config.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}utils/\+Rebin\+Flux.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}utils/\+Sync\+Bands.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$filesystem$>$}\newline
+{\ttfamily \#include \char`\"{}include/plotting\+\_\+pdf.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{GetXSec_8h_aab32c31a30b223c707d6eb1d064ebe25}\label{GetXSec_8h_aab32c31a30b223c707d6eb1d064ebe25}} 
+std\+::vector$<$ std\+::string $>$ {\bfseries split} (std\+::string s, std\+::string delimiter)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a3308d128344fe005232420848364560f}\label{GetXSec_8h_a3308d128344fe005232420848364560f}} 
+TMatrixD {\bfseries Zero\+Diagonal} (const TMatrixD \&m)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a1ee17de4d4049f1e29fc59e72e270899}\label{GetXSec_8h_a1ee17de4d4049f1e29fc59e72e270899}} 
+std\+::map$<$ std\+::string, bool $>$ {\bfseries Check\+Flux\+Norm} (\mbox{\hyperlink{classNuConfig}{Nu\+Config}} $\ast$configvar, std\+::string variable)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_aef9059594fdc85af1d944a33bbc74ca0}\label{GetXSec_8h_aef9059594fdc85af1d944a33bbc74ca0}} 
+{\footnotesize template$<$class Mnv\+Histo\+Type $>$ }\\Mnv\+Histo\+Type $\ast$ {\bfseries Make\+MC} (std\+::string basename, Mnv\+Histo\+Type $\ast$imcsighist, Mnv\+Histo\+Type $\ast$imcbkghist)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a2f20505573cf8a9179a500ffa2d2d9cd}\label{GetXSec_8h_a2f20505573cf8a9179a500ffa2d2d9cd}} 
+template Mnv\+H1D $\ast$ {\bfseries Make\+MC$<$ Mnv\+H1\+D $>$} (std\+::string basename, Mnv\+H1D $\ast$imcsighist, Mnv\+H1D $\ast$imcbkghist)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_ab76e0e4d25f7527ddf17d8b9dee6b39d}\label{GetXSec_8h_ab76e0e4d25f7527ddf17d8b9dee6b39d}} 
+template Mnv\+H2D $\ast$ {\bfseries Make\+MC$<$ Mnv\+H2\+D $>$} (std\+::string basename, Mnv\+H2D $\ast$imcsighist, Mnv\+H2D $\ast$imcbkghist)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_aa891d3ef0d82d76be61431f5378a817c}\label{GetXSec_8h_aa891d3ef0d82d76be61431f5378a817c}} 
+{\footnotesize template$<$class Mnv\+Histo\+Type $>$ }\\Mnv\+Histo\+Type $\ast$ {\bfseries Get\+Signal\+Fraction} (std\+::string basename, Mnv\+Histo\+Type $\ast$imcsighist, Mnv\+Histo\+Type $\ast$mc)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a2a39ef4e9839c99c1730fe31e13f190b}\label{GetXSec_8h_a2a39ef4e9839c99c1730fe31e13f190b}} 
+template Mnv\+H1D $\ast$ {\bfseries Get\+Signal\+Fraction$<$ Mnv\+H1\+D $>$} (std\+::string basename, Mnv\+H1D $\ast$imcsighist, Mnv\+H1D $\ast$mc)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_ad73ce033d027d3cea0a784d1b7980889}\label{GetXSec_8h_ad73ce033d027d3cea0a784d1b7980889}} 
+template Mnv\+H2D $\ast$ {\bfseries Get\+Signal\+Fraction$<$ Mnv\+H2\+D $>$} (std\+::string basename, Mnv\+H2D $\ast$imcsighist, Mnv\+H2D $\ast$mc)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_aac84636c5cb1bc32c321f902c8303d83}\label{GetXSec_8h_aac84636c5cb1bc32c321f902c8303d83}} 
+{\footnotesize template$<$class Mnv\+Histo\+Type $>$ }\\Mnv\+Histo\+Type $\ast$ {\bfseries Get\+Bkg\+Fraction} (std\+::string basename, Mnv\+Histo\+Type $\ast$imcbkghist, Mnv\+Histo\+Type $\ast$mc)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_aca6b643da0beb80791c374f0e0211661}\label{GetXSec_8h_aca6b643da0beb80791c374f0e0211661}} 
+template Mnv\+H1D $\ast$ {\bfseries Get\+Bkg\+Fraction$<$ Mnv\+H1\+D $>$} (std\+::string basename, Mnv\+H1D $\ast$imcbkghist, Mnv\+H1D $\ast$mc)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_aa784b993558968ef79c964634a82bc32}\label{GetXSec_8h_aa784b993558968ef79c964634a82bc32}} 
+template Mnv\+H2D $\ast$ {\bfseries Get\+Bkg\+Fraction$<$ Mnv\+H2\+D $>$} (std\+::string basename, Mnv\+H2D $\ast$imcbkghist, Mnv\+H2D $\ast$mc)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_aaad6386b6f940c5a4cda7f73bc3ce04e}\label{GetXSec_8h_aaad6386b6f940c5a4cda7f73bc3ce04e}} 
+{\footnotesize template$<$class Mnv\+Histo\+Type $>$ }\\Mnv\+Histo\+Type $\ast$ {\bfseries Do\+Bkg\+Subtraction} (std\+::string basename, Mnv\+Histo\+Type $\ast$idatahist, Mnv\+Histo\+Type $\ast$mc, Mnv\+Histo\+Type $\ast$signal\+Fraction)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a586553bf29df633570cc2928b40f1560}\label{GetXSec_8h_a586553bf29df633570cc2928b40f1560}} 
+template Mnv\+H1D $\ast$ {\bfseries Do\+Bkg\+Subtraction$<$ Mnv\+H1\+D $>$} (std\+::string basename, Mnv\+H1D $\ast$idatahist, Mnv\+H1D $\ast$mc, Mnv\+H1D $\ast$signal\+Fraction)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a279838256cf15696c082ddbd9b0198a3}\label{GetXSec_8h_a279838256cf15696c082ddbd9b0198a3}} 
+template Mnv\+H2D $\ast$ {\bfseries Do\+Bkg\+Subtraction$<$ Mnv\+H2\+D $>$} (std\+::string basename, Mnv\+H2D $\ast$idatahist, Mnv\+H2D $\ast$mc, Mnv\+H2D $\ast$signal\+Fraction)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a42a8c8cc898408442dd0c500e79150fb}\label{GetXSec_8h_a42a8c8cc898408442dd0c500e79150fb}} 
+{\footnotesize template$<$class Mnv\+Histo\+Type $>$ }\\std\+::vector$<$ Mnv\+Histo\+Type $\ast$ $>$ {\bfseries Do\+Ratio\+Unfolding} (std\+::string basename, Mnv\+Histo\+Type $\ast$bkgsub, Mnv\+Histo\+Type $\ast$imcsighist, Mnv\+Histo\+Type $\ast$idatahist, Mnv\+Histo\+Type $\ast$iseltruhist)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_ab5c4001898b7767839d45501de5e6bae}\label{GetXSec_8h_ab5c4001898b7767839d45501de5e6bae}} 
+template std\+::vector$<$ Mnv\+H1D $\ast$ $>$ {\bfseries Do\+Ratio\+Unfolding$<$ Mnv\+H1\+D $>$} (std\+::string basename, Mnv\+H1D $\ast$bkgsub, Mnv\+H1D $\ast$imcsighist, Mnv\+H1D $\ast$idatahist, Mnv\+H1D $\ast$iseltruhist)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_aa210da263fff21bca176472fd673bd2a}\label{GetXSec_8h_aa210da263fff21bca176472fd673bd2a}} 
+template std\+::vector$<$ Mnv\+H2D $\ast$ $>$ {\bfseries Do\+Ratio\+Unfolding$<$ Mnv\+H2\+D $>$} (std\+::string basename, Mnv\+H2D $\ast$bkgsub, Mnv\+H2D $\ast$imcsighist, Mnv\+H2D $\ast$idatahist, Mnv\+H2D $\ast$iseltruhist)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_aeb316454d5c0ac257c31e17f307e43cc}\label{GetXSec_8h_aeb316454d5c0ac257c31e17f307e43cc}} 
+{\footnotesize template$<$class Mnv\+Histo\+Type $>$ }\\Mnv\+Histo\+Type $\ast$ {\bfseries Do\+Response\+Unfolding} (std\+::string basename, Mnv\+H2D $\ast$iresponse, Mnv\+Histo\+Type $\ast$imcsighist, Mnv\+Histo\+Type $\ast$iseltruhist, Mnv\+Histo\+Type $\ast$bkgsub, Mnv\+Histo\+Type $\ast$idatahist, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a2312472a9a2d64cb714f4d2d64f04bba}\label{GetXSec_8h_a2312472a9a2d64cb714f4d2d64f04bba}} 
+template$<$$>$ Mnv\+H1D $\ast$ {\bfseries Do\+Response\+Unfolding$<$ Mnv\+H1\+D $>$} (std\+::string basename, Mnv\+H2D $\ast$iresponse, Mnv\+H1D $\ast$imcsighist, Mnv\+H1D $\ast$iseltruhist, Mnv\+H1D $\ast$bkgsub, Mnv\+H1D $\ast$idatahist, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a19463dcd5ba235f397dd8edfd5e98f75}\label{GetXSec_8h_a19463dcd5ba235f397dd8edfd5e98f75}} 
+template$<$$>$ Mnv\+H2D $\ast$ {\bfseries Do\+Response\+Unfolding$<$ Mnv\+H2\+D $>$} (std\+::string basename, Mnv\+H2D $\ast$iresponse, Mnv\+H2D $\ast$imcsighist, Mnv\+H2D $\ast$iseltruhist, Mnv\+H2D $\ast$bkgsub, Mnv\+H2D $\ast$idatahist, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_aa3292a0562e11b71ab97e796908f2739}\label{GetXSec_8h_aa3292a0562e11b71ab97e796908f2739}} 
+{\footnotesize template$<$class Mnv\+Histo\+Type $>$ }\\std\+::vector$<$ Mnv\+Histo\+Type $\ast$ $>$ {\bfseries Do\+Unfolding} (std\+::string basename, Mnv\+H2D $\ast$iresponse, Mnv\+Histo\+Type $\ast$imcsighist, Mnv\+Histo\+Type $\ast$iseltruhist, Mnv\+Histo\+Type $\ast$bkgsub, Mnv\+Histo\+Type $\ast$idatahist, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a48dde7791a865db628e924c4fd79ee55}\label{GetXSec_8h_a48dde7791a865db628e924c4fd79ee55}} 
+template std\+::vector$<$ Mnv\+H1D $\ast$ $>$ {\bfseries Do\+Unfolding$<$ Mnv\+H1\+D $>$} (std\+::string basename, Mnv\+H2D $\ast$iresponse, Mnv\+H1D $\ast$mc, Mnv\+H1D $\ast$iseltruhist, Mnv\+H1D $\ast$bkgsub, Mnv\+H1D $\ast$idatahist, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_ab36837e1fb2918dae98ab17fa8cfc402}\label{GetXSec_8h_ab36837e1fb2918dae98ab17fa8cfc402}} 
+template std\+::vector$<$ Mnv\+H2D $\ast$ $>$ {\bfseries Do\+Unfolding$<$ Mnv\+H2\+D $>$} (std\+::string basename, Mnv\+H2D $\ast$iresponse, Mnv\+H2D $\ast$mc, Mnv\+H2D $\ast$iseltruhist, Mnv\+H2D $\ast$bkgsub, Mnv\+H2D $\ast$idatahist, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_ac35e420b5c4974047ff789e5808b2b1f}\label{GetXSec_8h_ac35e420b5c4974047ff789e5808b2b1f}} 
+{\footnotesize template$<$class Mnv\+Histo\+Type $>$ }\\std\+::vector$<$ Mnv\+Histo\+Type $\ast$ $>$ {\bfseries Do\+Efficiency\+Correction} (std\+::string basename, Mnv\+Histo\+Type $\ast$unsmeared, Mnv\+Histo\+Type $\ast$iseltruhist, Mnv\+Histo\+Type $\ast$ialltruhist, const bool fluxhere=false)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a83d15b132482d82e639fc0f2338437d4}\label{GetXSec_8h_a83d15b132482d82e639fc0f2338437d4}} 
+template std\+::vector$<$ Mnv\+H1D $\ast$ $>$ {\bfseries Do\+Efficiency\+Correction$<$ Mnv\+H1\+D $>$} (std\+::string basename, Mnv\+H1D $\ast$unsmeared, Mnv\+H1D $\ast$iseltruhist, Mnv\+H1D $\ast$ialltruhist, const bool fluxhere)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_afa218f8837a6eed5c2100819ff22fe03}\label{GetXSec_8h_afa218f8837a6eed5c2100819ff22fe03}} 
+template std\+::vector$<$ Mnv\+H2D $\ast$ $>$ {\bfseries Do\+Efficiency\+Correction$<$ Mnv\+H2\+D $>$} (std\+::string basename, Mnv\+H2D $\ast$unsmeared, Mnv\+H2D $\ast$iseltruhist, Mnv\+H2D $\ast$ialltruhist, const bool fluxhere)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_acadea40d53888484c69a7300f8fcd2f0}\label{GetXSec_8h_acadea40d53888484c69a7300f8fcd2f0}} 
+{\footnotesize template$<$class Mnv\+Histo\+Type $>$ }\\std\+::vector$<$ Mnv\+Histo\+Type $\ast$ $>$ {\bfseries Do\+Normalization} (std\+::map$<$ const std\+::string, \mbox{\hyperlink{classNuConfig}{Nu\+Config}} $\ast$ $>$ configs, std\+::string basename, std\+::map$<$ std\+::string, bool $>$ Flux\+Norm, double norm, Mnv\+Histo\+Type $\ast$effcorr, Mnv\+Histo\+Type $\ast$ialltruhist, Mnv\+H1D $\ast$h\+\_\+flux\+\_\+dewidthed, const std\+::string outname)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a6e592a6c3af814ef16a63ed7cd8bdc13}\label{GetXSec_8h_a6e592a6c3af814ef16a63ed7cd8bdc13}} 
+template std\+::vector$<$ Mnv\+H1D $\ast$ $>$ {\bfseries Do\+Normalization$<$ Mnv\+H1\+D $>$} (std\+::map$<$ const std\+::string, \mbox{\hyperlink{classNuConfig}{Nu\+Config}} $\ast$ $>$ configs, std\+::string basename, std\+::map$<$ std\+::string, bool $>$ Flux\+Norm, double norm, Mnv\+H1D $\ast$effcorr, Mnv\+H1D $\ast$ialltruhist, Mnv\+H1D $\ast$h\+\_\+flux\+\_\+dewidthed, std\+::string outname)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_af4850b307a4f95c1eee5b4b8ece7cdbe}\label{GetXSec_8h_af4850b307a4f95c1eee5b4b8ece7cdbe}} 
+template std\+::vector$<$ Mnv\+H2D $\ast$ $>$ {\bfseries Do\+Normalization$<$ Mnv\+H2\+D $>$} (std\+::map$<$ const std\+::string, \mbox{\hyperlink{classNuConfig}{Nu\+Config}} $\ast$ $>$ configs, std\+::string basename, std\+::map$<$ std\+::string, bool $>$ Flux\+Norm, double norm, Mnv\+H2D $\ast$effcorr, Mnv\+H2D $\ast$ialltruhist, Mnv\+H1D $\ast$h\+\_\+flux\+\_\+dewidthed, std\+::string outname)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a570658eecf356c07a694a238a03d4c3a}\label{GetXSec_8h_a570658eecf356c07a694a238a03d4c3a}} 
+{\footnotesize template$<$class Mnv\+Histo\+Type $>$ }\\int {\bfseries Get\+Cross\+Section} (std\+::string sample, std\+::string variable, std\+::string basename, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+Histo\+Type $\ast$ $>$ $>$ hists\+ND, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+H2D $\ast$ $>$ $>$ response\+ND, \mbox{\hyperlink{classNuConfig}{Nu\+Config}} oneconfig, TCanvas \&canvas, double norm, double POTScale, Mnv\+H1D $\ast$h\+\_\+flux\+\_\+dewidthed, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter, bool DEBUG, bool hasbkgsub, bool usetune, std\+::string outname)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a661d1106121365680d9b987243cb7b6b}\label{GetXSec_8h_a661d1106121365680d9b987243cb7b6b}} 
+{\footnotesize template$<$class Mnv\+Histo\+Type $>$ }\\int {\bfseries Get\+Cross\+Section} (std\+::string sample, std\+::string variable, std\+::string basename, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+Histo\+Type $\ast$ $>$ $>$ hists\+ND, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+H2D $\ast$ $>$ $>$ response\+ND, std\+::map$<$ const std\+::string, \mbox{\hyperlink{classNuConfig}{Nu\+Config}} $\ast$ $>$ configs, TCanvas \&canvas, double norm, double POTScale, Mnv\+H1D $\ast$h\+\_\+flux\+\_\+dewidthed, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter, bool DEBUG, bool hasbkgsub, bool usetune, std\+::string outname)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a963f08d909a1dda57869c81f47138831}\label{GetXSec_8h_a963f08d909a1dda57869c81f47138831}} 
+template int {\bfseries Get\+Cross\+Section$<$ Mnv\+H1\+D $>$} (std\+::string sample, std\+::string variable, std\+::string basename, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+H1D $\ast$ $>$ $>$ hists\+ND, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+H2D $\ast$ $>$ $>$ response\+ND, std\+::map$<$ const std\+::string, \mbox{\hyperlink{classNuConfig}{Nu\+Config}} $\ast$ $>$ configs, TCanvas \&canvas, double norm, double POTScale, Mnv\+H1D $\ast$h\+\_\+flux\+\_\+dewidthed, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter, bool DEBUG=false, bool hasbksub=false, bool usetune=false, std\+::string outname=\char`\"{}\char`\"{})
+\item 
+\mbox{\Hypertarget{GetXSec_8h_aac4c3d68efe022c3d9865a942e0b66b7}\label{GetXSec_8h_aac4c3d68efe022c3d9865a942e0b66b7}} 
+template int {\bfseries Get\+Cross\+Section$<$ Mnv\+H2\+D $>$} (std\+::string sample, std\+::string variable, std\+::string basename, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+H2D $\ast$ $>$ $>$ hists\+ND, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+H2D $\ast$ $>$ $>$ response\+ND, std\+::map$<$ const std\+::string, \mbox{\hyperlink{classNuConfig}{Nu\+Config}} $\ast$ $>$ configs, TCanvas \&canvas, double norm, double POTScale, Mnv\+H1D $\ast$h\+\_\+flux\+\_\+dewidthed, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter, bool DEBUG=false, bool hasbksub=false, bool usetune=false, std\+::string outname=\char`\"{}\char`\"{})
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a2d40b93d6abc9d8b609f17358cc28557}\label{GetXSec_8h_a2d40b93d6abc9d8b609f17358cc28557}} 
+template int {\bfseries Get\+Cross\+Section$<$ Mnv\+H1\+D $>$} (std\+::string sample, std\+::string variable, std\+::string basename, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+H1D $\ast$ $>$ $>$ hists\+ND, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+H2D $\ast$ $>$ $>$ response\+ND, \mbox{\hyperlink{classNuConfig}{Nu\+Config}} mainconfig, TCanvas \&canvas, double norm, double POTScale, Mnv\+H1D $\ast$h\+\_\+flux\+\_\+dewidthed, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter, bool DEBUG=false, bool hasbksub=false, bool usetune=false, std\+::string outname)
+\item 
+\mbox{\Hypertarget{GetXSec_8h_a48c3f3500cf701cf55fc0df4bdb32f5d}\label{GetXSec_8h_a48c3f3500cf701cf55fc0df4bdb32f5d}} 
+template int {\bfseries Get\+Cross\+Section$<$ Mnv\+H2\+D $>$} (std\+::string sample, std\+::string variable, std\+::string basename, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+H2D $\ast$ $>$ $>$ hists\+ND, std\+::map$<$ std\+::string, std\+::map$<$ std\+::string, Mnv\+H2D $\ast$ $>$ $>$ response\+ND, \mbox{\hyperlink{classNuConfig}{Nu\+Config}} mainconfig, TCanvas \&canvas, double norm, double POTScale, Mnv\+H1D $\ast$h\+\_\+flux\+\_\+dewidthed, Minerva\+Unfold\+::\+Mnv\+Unfold unfold, double num\+\_\+iter, bool DEBUG=false, bool hasbksub=false, bool usetune=false, std\+::string outname=\char`\"{}\char`\"{})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Heidi Schellman/\+Noah Vaughan/\+Sean\+Gilligan 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 $\ast$ 
+\end{DoxyVersion}
+\hypertarget{VariableFromConfig_8h_LICENSE}{}\doxysubsection{$\ast$}\label{VariableFromConfig_8h_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. $\ast$ \hypertarget{VariableFromConfig_8h_DESCRIPTION}{}\doxysubsection{$\ast$}\label{VariableFromConfig_8h_DESCRIPTION}
+Code to fill histograms 

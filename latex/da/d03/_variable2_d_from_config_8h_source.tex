@@ -1,0 +1,414 @@
+\doxysection{Variable2\+DFrom\+Config.\+h}
+\hypertarget{_variable2_d_from_config_8h_source}{}\label{_variable2_d_from_config_8h_source}\index{make\_hists/include/Variable2DFromConfig.h@{make\_hists/include/Variable2DFromConfig.h}}
+\mbox{\hyperlink{_variable2_d_from_config_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#ifndef\ VARIABLE2DFromConfig\_H}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ VARIABLE2DFromConfig\_H}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_c_v_universe_8h}{include/CVUniverse.h}}"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}MinervaUnfold/MnvResponse.h"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_hist2_d_wrapper_map_8h}{include/Hist2DWrapperMap.h}}"{}}\ \ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}include/Response2DWrapperMap.h"{}}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifndef\ \_\_CINT\_\_\ \ }\textcolor{comment}{//\ CINT\ doesn't\ know\ about\ std::function}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/Variable2DBase.h"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ \_\_CINT\_\_}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{namespace\ }CCQENu\ \{}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{class\ }Variable2DFromConfig\ :\ \textcolor{keyword}{public}\ PlotUtils::Variable2DBase<CVUniverse>\ \{}
+\DoxyCodeLine{00033\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{class_plot_utils_1_1_hist2_d_wrapper_map}{PlotUtils::Hist2DWrapperMap<CVUniverse>}}\ HM2D;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{class_plot_utils_1_1_response2_d_wrapper_map}{PlotUtils::Response2DWrapperMap<CVUniverse>}}\ RM2D;}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//=======================================================================================}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ CTOR}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{//=======================================================================================}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}...\ ARGS>}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ Variable2DFromConfig(ARGS...\ args)\ :\ PlotUtils::Variable2DBase<CVUniverse>(args...)\ \{\}}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{//\ NHV\ 3/16/21\ replace\ templated\ version\ with\ explicit\ ones\ so\ we\ can\ use\ a\ config\ without\ changing\ the\ base\ class.}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ Variable2DFromConfig(\textcolor{keyword}{const}\ std::string\ name,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ VariableBase<CVUniverse>\&\ x,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ VariableBase<CVUniverse>\&\ y)\ :\ PlotUtils::Variable2DBase<CVUniverse>(name,\ x,\ y)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ std::vector<std::string>\ def\ =\ \{\textcolor{stringliteral}{"{}data"{}},\ \textcolor{stringliteral}{"{}selected\_reco"{}},\ \textcolor{stringliteral}{"{}selected\_truth"{}},\ \textcolor{stringliteral}{"{}response"{}},\ \textcolor{stringliteral}{"{}truth"{}}\};}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ s\ :\ def)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ m\_for.push\_back(s);}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ Variable2DFromConfig(\textcolor{keyword}{const}\ VariableBase<CVUniverse>\&\ x,}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ VariableBase<CVUniverse>\&\ y)\ :\ PlotUtils::Variable2DBase<CVUniverse>(x,\ y)\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ std::vector<std::string>\ def\ =\ \{\textcolor{stringliteral}{"{}data"{}},\ \textcolor{stringliteral}{"{}selected\_reco"{}},\ \textcolor{stringliteral}{"{}selected\_truth"{}},\ \textcolor{stringliteral}{"{}response"{}},\ \textcolor{stringliteral}{"{}truth"{}}\};}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ s\ :\ def)\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ m\_for.push\_back(s);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ Variable2DFromConfig(\textcolor{keyword}{const}\ std::string\ name,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ VariableBase<CVUniverse>\&\ x,}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ VariableBase<CVUniverse>\&\ y,}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ config)\ :\ PlotUtils::Variable2DBase<CVUniverse>(name,\ x,\ y)\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (config.IsMember(\textcolor{stringliteral}{"{}for"{}}))\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ m\_for\ =\ config.GetStringVector(\textcolor{stringliteral}{"{}for"{}});}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::string>\ def\ =\ \{\textcolor{stringliteral}{"{}data"{}},\ \textcolor{stringliteral}{"{}selected\_reco"{}},\ \textcolor{stringliteral}{"{}selected\_truth"{}},\ \textcolor{stringliteral}{"{}response"{}},\ \textcolor{stringliteral}{"{}truth"{}}\};}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ s\ :\ def)\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_for.push\_back(s);}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00076\ \ \ \ \ \};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ Variable2DFromConfig(\textcolor{keyword}{const}\ std::string\ name,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable_from_config}{CCQENu::VariableFromConfig}}\&\ x,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable_from_config}{CCQENu::VariableFromConfig}}\&\ y,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::string>\ fors)\ :\ PlotUtils::Variable2DBase<CVUniverse>(name,\ x,\ y)\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (fors.size()\ >\ 0)\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ s\ :\ fors)\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_for.push\_back(s);}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::string>\ def\ =\ \{\textcolor{stringliteral}{"{}data"{}},\ \textcolor{stringliteral}{"{}selected\_reco"{}},\ \textcolor{stringliteral}{"{}selected\_truth"{}},\ \textcolor{stringliteral}{"{}response"{}},\ \textcolor{stringliteral}{"{}truth"{}}\};}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ s\ :\ def)\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_for.push\_back(s);}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ m\_tunedmc\ =\ \textcolor{stringliteral}{"{}untuned"{}};\ \ \textcolor{comment}{//\ Default\ to\ "{}both"{}\ tuned\ and\ untuned}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ std::string\ x\_tunedmc\ =\ x.m\_tunedmc;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ std::string\ y\_tunedmc\ =\ y.m\_tunedmc;}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (x\_tunedmc\ ==\ y\_tunedmc)\ \ \textcolor{comment}{//\ If\ they're\ the\ same,\ set\ to\ that\ value}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tunedmc\ =\ x\_tunedmc;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (x\_tunedmc\ ==\ \textcolor{stringliteral}{"{}both"{}}\ \&\&\ y\_tunedmc\ !=\ \textcolor{stringliteral}{"{}both"{}})\ \{\ \ \textcolor{comment}{//\ If\ x\ is\ set\ to\ both,\ but\ y\ isn't\ =>\ do\ what\ y\ does}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig:\ tunedmc\ for\ x\ and\ y\ incompatible.\ Defaulting\ to\ y\ tunedmc\ of\ "{}}\ <<\ y\_tunedmc\ <<\ std::endl;}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tunedmc\ =\ y\_tunedmc;}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (x\_tunedmc\ !=\ \textcolor{stringliteral}{"{}both"{}}\ \&\&\ y\_tunedmc\ ==\ \textcolor{stringliteral}{"{}both"{}})\ \{\ \ \textcolor{comment}{//\ If\ y\ is\ set\ to\ both,\ but\ x\ isn't\ =>\ do\ what\ x\ does}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig:\ tunedmc\ for\ x\ and\ y\ incompatible.\ Defaulting\ to\ x\ tunedmc\ of\ "{}}\ <<\ x\_tunedmc\ <<\ std::endl;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tunedmc\ =\ x\_tunedmc;}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig:\ tunedmc\ for\ x\ and\ y\ incompatible.\ Defaulting\ to\ both.\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00106\ \ \ \ \ \};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{typedef}\ std::map<std::string,\ std::vector<CVUniverse*>>\ UniverseMap;}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{//=======================================================================================}}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{comment}{//\ DECLARE\ NEW\ HISTOGRAMS}}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{comment}{//=======================================================================================}}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ Histwrappers\ -\/-\/\ selected\ mc,\ selected\ data}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ HM2D\ m\_selected\_mc\_reco;}
+\DoxyCodeLine{00115\ \ \ \ \ HM2D\ m\_tuned\_selected\_mc\_reco;\ \ \textcolor{comment}{//\ HM\ for\ tuned\ MC\ hists\ used\ for\ background\ subtraction\ -\/NHV}}
+\DoxyCodeLine{00116\ \ \ \ \ HM2D\ m\_selected\_mc\_truth;}
+\DoxyCodeLine{00117\ \ \ \ \ HM2D\ m\_tuned\_selected\_mc\_truth;}
+\DoxyCodeLine{00118\ \ \ \ \ HM2D\ m\_signal\_mc\_truth;}
+\DoxyCodeLine{00119\ \ \ \ \ HM2D\ m\_tuned\_signal\_mc\_truth;}
+\DoxyCodeLine{00120\ \ \ \ \ HM2D\ m\_selected\_data;}
+\DoxyCodeLine{00121\ \ \ \ \ RM2D\ m\_response;}
+\DoxyCodeLine{00122\ \ \ \ \ RM2D\ m\_tuned\_response;}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ UniverseMap\ m\_universes;\ \ \textcolor{comment}{//\ need\ to\ change\ this?}}
+\DoxyCodeLine{00125\ \ \ \ \ std::string\ m\_units;}
+\DoxyCodeLine{00126\ \ \ \ \ std::map<const\ std::string,\ bool>\ hasData;}
+\DoxyCodeLine{00127\ \ \ \ \ std::map<const\ std::string,\ bool>\ hasMC;}
+\DoxyCodeLine{00128\ \ \ \ \ std::map<const\ std::string,\ bool>\ hasTunedMC;}
+\DoxyCodeLine{00129\ \ \ \ \ std::map<const\ std::string,\ bool>\ hasTruth;}
+\DoxyCodeLine{00130\ \ \ \ \ std::map<const\ std::string,\ bool>\ hasSelectedTruth;}
+\DoxyCodeLine{00131\ \ \ \ \ std::map<const\ std::string,\ bool>\ hasResponse;}
+\DoxyCodeLine{00132\ \ \ \ \ std::vector<std::string>\ m\_tags;}
+\DoxyCodeLine{00133\ \ \ \ \ std::vector<std::string>\ m\_for;}
+\DoxyCodeLine{00134\ \ \ \ \ std::string\ m\_tunedmc\ =\ \textcolor{stringliteral}{"{}both"{}};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{virtual}\ std::string\ GetUnits()\ \{\ \textcolor{keywordflow}{return}\ m\_units;\ \};}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ SetUnits(std::string\ units)\ \{\ m\_units\ =\ units;\ \};}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{//=======================================================================================}}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{comment}{//\ INITIALIZE\ ALL\ HISTOGRAMS}}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{comment}{//=======================================================================================}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{void}\ AddTags(\textcolor{keyword}{const}\ std::vector<std::string>\ tags)\ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ t\ :\ tags)\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tags.push\_back(t);}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \ \ \ \ \};}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{void}\ InitializeMCHistograms2D(T\ univs,\ \textcolor{keyword}{const}\ std::vector<std::string>\ tags)\ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::count(m\_for.begin(),\ m\_for.end(),\ \textcolor{stringliteral}{"{}selected\_reco"{}})\ <\ 1)\ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig\ Warning:\ selected\_reco\ is\ disabled\ for\ this\ 2D\ variable\ "{}}\ <<\ GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\ \{}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasMC[tag]\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ hasMC[tag]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tunedmc\ ==\ \textcolor{stringliteral}{"{}tuned"{}})\ \{}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig\ Warning:\ untuned\ MC\ disabled\ for\ this\ variable,\ only\ filling\ tuned\ MC\ "{}}\ <<\ GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ std::vector<double>\ xbins\ =\ GetBinVecX();}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ std::vector<double>\ ybins\ =\ GetBinVecY();}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ std::vector<double>\ xrecobins\ =\ GetRecoBinVecX();}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ std::vector<double>\ yrecobins\ =\ GetRecoBinVecY();}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ m\_selected\_mc\_reco\ =\ HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}},\ GetName().c\_str()),\ (GetName()\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_xaxis\_label\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_yaxis\_label).c\_str(),\ xbins,\ ybins,\ xrecobins,\ yrecobins,\ univs,\ tags);\ \ \textcolor{comment}{//\ Hist2DWrapper\ doesn't\ need\ nbins\ for\ variable\ binning}}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ m\_selected\_mc\_reco.AppendName(\textcolor{stringliteral}{"{}reconstructed"{}},\ tags);}
+\DoxyCodeLine{00175\ \ \ \ \ \}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keywordtype}{void}\ InitializeSelectedTruthHistograms2D(T\ univs,\ \textcolor{keyword}{const}\ std::vector<std::string>\ tags)\ \{}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::count(m\_for.begin(),\ m\_for.end(),\ \textcolor{stringliteral}{"{}selected\_truth"{}})\ <\ 1)\ \{}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig\ Warning:\ selected\_truth\ is\ disabled\ for\ this\ 2D\ variable\ "{}}\ <<\ GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\ \{}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasSelectedTruth[tag]\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ hasSelectedTruth[tag]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tunedmc\ ==\ \textcolor{stringliteral}{"{}tuned"{}})\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig\ Warning:\ untuned\ MC\ disabled\ for\ this\ variable,\ only\ filling\ tuned\ MC\ "{}}\ <<\ GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ std::vector<double>\ xbins\ =\ GetBinVecX();}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ std::vector<double>\ ybins\ =\ GetBinVecY();}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ m\_selected\_mc\_truth\ =\ HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}},\ GetName().c\_str()),\ (GetName()\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_xaxis\_label\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_yaxis\_label).c\_str(),\ xbins,\ ybins,\ univs,\ tags);\ \ \textcolor{comment}{//\ Hist2DWrapper\ doesn't\ need\ nbins\ for\ variable\ binning}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ m\_selected\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}selected\_truth"{}},\ tags);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ patch\ to\ conform\ to\ CCQENU\ standardm\_selected\_mc\_truth.AppendName("{}\_truth"{},tags);\ //\ patch\ to\ conform\ to\ CCQENU\ standard}}
+\DoxyCodeLine{00200\ \ \ \ \ \}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordtype}{void}\ InitializeTruthHistograms2D(T\ univs,\ \textcolor{keyword}{const}\ std::vector<std::string>\ tags)\ \{}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::count(m\_for.begin(),\ m\_for.end(),\ \textcolor{stringliteral}{"{}truth"{}})\ <\ 1)\ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig\ Warning:\ truth\ is\ disabled\ for\ this\ 2D\ variable\ "{}}\ <<\ GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\ \{}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasTruth[tag]\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \textcolor{keyword}{const}\ tag\ :\ tags)\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ hasTruth[tag]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tunedmc\ ==\ \textcolor{stringliteral}{"{}tuned"{}})\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig\ Warning:\ untuned\ MC\ disabled\ for\ this\ variable,\ only\ filling\ tuned\ MC\ "{}}\ <<\ GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ std::vector<double>\ xbins\ =\ GetBinVecX();}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ std::vector<double>\ ybins\ =\ GetBinVecY();}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ m\_signal\_mc\_truth\ =\ HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}},\ GetName().c\_str()),\ (GetName()\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_xaxis\_label\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_yaxis\_label).c\_str(),\ xbins,\ ybins,\ univs,\ tags);}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ m\_signal\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}all\_truth"{}},\ tags);}
+\DoxyCodeLine{00225\ \ \ \ \ \}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keywordtype}{void}\ InitializeDataHistograms2D(T\ univs,\ \textcolor{keyword}{const}\ std::vector<std::string>\ tags)\ \{}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::count(m\_for.begin(),\ m\_for.end(),\ \textcolor{stringliteral}{"{}data"{}})\ <\ 1)\ \{}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig\ Warning:\ data\ is\ disabled\ for\ this\ variable\ "{}}\ <<\ GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\ \{}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasData[tag]\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ hasData[tag]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ std::vector<double>\ xrecobins\ =\ GetRecoBinVecX();}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ std::vector<double>\ yrecobins\ =\ GetRecoBinVecY();}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ m\_selected\_data\ =\ HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}},\ GetName().c\_str()),\ (GetName()\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_xaxis\_label\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_yaxis\_label).c\_str(),\ xrecobins,\ yrecobins,\ univs,\ tags);\ \ \textcolor{comment}{//\ Hist2DWrapper\ doesn't\ need\ nbins\ for\ variable\ binning}}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ m\_selected\_data.AppendName(\textcolor{stringliteral}{"{}reconstructed"{}},\ tags);}
+\DoxyCodeLine{00244\ \ \ \ \ \}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keywordtype}{void}\ InitializeTunedMCHistograms2D(T\ reco\_univs,\ T\ truth\_univs,\ \textcolor{keyword}{const}\ std::vector<std::string>\ tuned\_tags,\ \textcolor{keyword}{const}\ std::vector<std::string>\ response\_tags)\ \{}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tunedmc\ ==\ \textcolor{stringliteral}{"{}untuned"{}})\ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig\ Warning:\ tunedmc\ is\ disabled\ for\ this\ variable\ "{}}\ <<\ GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tuned\_tags)\ \{}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasTunedMC[tag]\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tuned\_tags)\ \{}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ hasTunedMC[tag]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ std::vector<double>\ xbins\ =\ GetBinVecX();}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ std::vector<double>\ ybins\ =\ GetBinVecY();}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ std::vector<double>\ xrecobins\ =\ GetRecoBinVecX();}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ std::vector<double>\ yrecobins\ =\ GetRecoBinVecY();}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ which\ categories\ are\ configured\ and\ add\ a\ tuned\ version}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ selected\_reco\ is\ special\ -\/\ it\ needs\ to\ have\ both\ bins\ and\ reco\ bins\ to\ add\ a\ response.}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::count(m\_for.begin(),\ m\_for.end(),\ \textcolor{stringliteral}{"{}selected\_reco"{}})\ >=\ 1)\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_selected\_mc\_reco\ =\ HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}},\ GetName().c\_str()),\ (GetName()\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_xaxis\_label\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_yaxis\_label).c\_str(),\ xbins,\ ybins,\ xrecobins,\ yrecobins,\ reco\_univs,\ tuned\_tags);}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_selected\_mc\_reco.AppendName(\textcolor{stringliteral}{"{}reconstructed\_tuned"{}},\ tuned\_tags);}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::count(m\_for.begin(),\ m\_for.end(),\ \textcolor{stringliteral}{"{}selected\_truth"{}})\ >=\ 1)\ \{}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_selected\_mc\_truth\ =\ HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}},\ GetName().c\_str()),\ (GetName()\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_xaxis\_label\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_yaxis\_label).c\_str(),\ xbins,\ ybins,\ reco\_univs,\ tuned\_tags);}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_selected\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}selected\_truth\_tuned"{}},\ tuned\_tags);}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::count(m\_for.begin(),\ m\_for.end(),\ \textcolor{stringliteral}{"{}truth"{}})\ >=\ 1)\ \{}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_signal\_mc\_truth\ =\ HM2D(Form(\textcolor{stringliteral}{"{}\%s"{}},\ GetName().c\_str()),\ (GetName()\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_xaxis\_label\ +\ \textcolor{stringliteral}{"{};"{}}\ +\ m\_yaxis\_label).c\_str(),\ xbins,\ ybins,\ truth\_univs,\ tuned\_tags);}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_signal\_mc\_truth.AppendName(\textcolor{stringliteral}{"{}all\_truth\_tuned"{}},\ tuned\_tags);}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::count(m\_for.begin(),\ m\_for.end(),\ \textcolor{stringliteral}{"{}response"{}})\ >=\ 1)\ \{}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_response\ =\ RM2D(Form(\textcolor{stringliteral}{"{}\%s"{}},\ GetName().c\_str()),\ reco\_univs,\ xrecobins,\ xbins,\ yrecobins,\ ybins,\ response\_tags,\ \textcolor{stringliteral}{"{}\_tuned"{}});}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00280\ \ \ \ \ \}}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{comment}{//\ ===========================\ Initialize\ Response\ ===========================}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{keywordtype}{void}\ InitializeResponse2D(T\ reco\_univs,\ \textcolor{keyword}{const}\ std::vector<std::string>\ tags,\ std::string\ tail\ =\ \textcolor{stringliteral}{"{}"{}})\ \{}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::count(m\_for.begin(),\ m\_for.end(),\ \textcolor{stringliteral}{"{}response"{}})\ <\ 1)\ \{}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Variable2DFromConfig\ Warning:\ response\ is\ disabled\ for\ this\ variable\ "{}}\ <<\ GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\ \{}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasResponse[tag]\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ assert(hasMC[tag]);}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ assert(hasSelectedTruth[tag]);}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ hasResponse[tag]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ std::vector<double>\ xbins\ =\ GetBinVecX();}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ std::vector<double>\ xrecobins\ =\ GetRecoBinVecX();}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ std::vector<double>\ ybins\ =\ GetBinVecY();}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ std::vector<double>\ yrecobins\ =\ GetRecoBinVecY();}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ m\_response\ =\ RM2D(Form(\textcolor{stringliteral}{"{}\%s"{}},\ GetName().c\_str()),\ reco\_univs,\ xrecobins,\ xbins,\ yrecobins,\ ybins,\ tags,\ tail);}
+\DoxyCodeLine{00305\ \ \ \ \ \}}
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{comment}{//=======================================================================================}}
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{comment}{//\ WRITE\ ALL\ HISTOGRAMS}}
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{comment}{//=======================================================================================}}
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{comment}{//\ Does\ it\ make\ sense\ to\ have\ separate\ implementation\ of\ 2D\ Writes?\ Is\ it\ smart\ enough\ to\ know\ the\ difference?}}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keywordtype}{void}\ WriteAllHistogramsToFile2D(TFile\&\ f)\ \{}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}should\ only\ be\ called\ once\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ f.cd();}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ selected\ mc\ reco}}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ m\_tags)\ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ write\ out\ flags\ "{}}\ \ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ hasMC[tag]\ <<\ hasTunedMC[tag]\ <<\ hasTruth[tag]\ <<\ hasData[tag]\ <<\ std::endl;}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasMC[tag])\ \{}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tunedmc\ !=\ \textcolor{stringliteral}{"{}tuned"{}})\ \{}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_selected\_mc\_reco.Write(tag);}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ write\ out\ mc\ histogram\ "{}}\ <<\ m\_selected\_mc\_reco.GetHist(tag)-\/>GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTunedMC[tag])\ \{}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_selected\_mc\_reco.Write(tag);}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ write\ out\ tuned\ mc\ histogram\ "{}}\ <<\ m\_tuned\_selected\_mc\_reco.GetHist(tag)-\/>GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasSelectedTruth[tag])\ \{}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tunedmc\ !=\ \textcolor{stringliteral}{"{}tuned"{}})\ \{}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_selected\_mc\_truth.Write(tag);}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ write\ out\ truth\ histogram\ "{}}\ <<\ m\_selected\_mc\_truth.GetHist(tag)-\/>GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTunedMC[tag])\ \{}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_selected\_mc\_truth.Write(tag);}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ write\ out\ tuned\ mc\ histogram\ "{}}\ <<\ m\_tuned\_selected\_mc\_truth.GetHist(tag)-\/>GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTruth[tag])\ \{}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tunedmc\ !=\ \textcolor{stringliteral}{"{}tuned"{}})\ \{}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_signal\_mc\_truth.Write(tag);}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ write\ out\ truth\ histogram\ "{}}\ <<\ m\_signal\_mc\_truth.GetHist(tag)-\/>GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTunedMC[tag])\ \{}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_signal\_mc\_truth.Write(tag);}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ write\ out\ tuned\ mc\ histogram\ "{}}\ <<\ m\_tuned\_signal\_mc\_truth.GetHist(tag)-\/>GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasResponse[tag])\ \{}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tunedmc\ !=\ \textcolor{stringliteral}{"{}tuned"{}})\ \{}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ write\ out\ response\ histograms\ "{}}\ <<\ tag\ <<\ std::endl;}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_response.Write(tag);}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTunedMC[tag])\ \{}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ write\ out\ tuned\ response\ histograms\ "{}}\ <<\ tag\ <<\ std::endl;}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_response.Write(tag);}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasData[tag])\ \{}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_selected\_data.Write(tag);}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ write\ out\ data\ histogram\ "{}}\ <<\ m\_selected\_data.GetHist(tag)-\/>GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00362\ \ \ \ \ \}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{comment}{//=======================================================================================}}
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{comment}{//\ SYNC\ ALL\ HISTOGRAMS}}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{comment}{//=======================================================================================}}
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{keywordtype}{void}\ SyncAllHists()\ \{}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ m\_tags)\ \{}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasMC[tag])\ \{}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tunedmc\ !=\ \textcolor{stringliteral}{"{}tuned"{}})\ \{}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_selected\_mc\_reco.SyncCVHistos();}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTunedMC[tag])\ \{}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_selected\_mc\_reco.SyncCVHistos();}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasSelectedTruth[tag])\ \{}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tunedmc\ !=\ \textcolor{stringliteral}{"{}tuned"{}})\ \{}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_selected\_mc\_truth.SyncCVHistos();}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTunedMC[tag])\ \{}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_selected\_mc\_truth.SyncCVHistos();}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasData[tag])\ \{}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_selected\_data.SyncCVHistos();}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTruth[tag])\ \{}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tunedmc\ !=\ \textcolor{stringliteral}{"{}tuned"{}})\ \{}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_signal\_mc\_truth.SyncCVHistos();}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTunedMC[tag])\ \{}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_signal\_mc\_truth.SyncCVHistos();}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00397\ \ \ \ \ \}}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ FillResponse2D(\textcolor{keyword}{const}\ std::string\ tag,\ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}*\ univ,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ x\_value,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ y\_value,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ x\_truth,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ y\_truth,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ weight,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ scale\ =\ 1.0)\ \{\ \ \textcolor{comment}{//\ From\ Hist2DWrapperMap}}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasMC[tag]\ \&\&\ m\_tunedmc\ !=\ \textcolor{stringliteral}{"{}tuned"{}})\ \{}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \ \ \ \ m\_response.Fill2D(tag,\ univ,\ x\_value,\ y\_value,\ x\_truth,\ y\_truth,\ weight);\ \ \textcolor{comment}{//\ value\ here\ is\ reco}}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTunedMC[tag]\ \&\&\ scale\ >=\ 0.)\ \{}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tuned\_response.Fill2D(tag,\ univ,\ x\_value,\ y\_value,\ x\_truth,\ y\_truth,\ weight,\ scale);\ \ \textcolor{comment}{//\ value\ here\ is\ reco}}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00406\ \ \ \ \ \}}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{comment}{//\ helper\ to\ return\ the\ actual\ numeric\ index\ corresponding\ to\ a\ universe\ \ ie,\ allows\ map\ from\ name,index\ space\ to\ pure\ universe\ space.}}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{comment}{//\ \ inline\ int\ UniverseIndex(CVUniverse*\ univ)\{}}
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{comment}{//\ \ \ \ return\ m\_map[univ];}}
+\DoxyCodeLine{00412\ \ \ \ \ \textcolor{comment}{//\ \ \}}}
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00414\ \ \ \ \ \textcolor{comment}{//\ \ //}}
+\DoxyCodeLine{00415\ \};}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00417\ \}\ \ \textcolor{comment}{//\ namespace\ CCQENu}}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ VARIABLE\_H}}
+
+\end{DoxyCode}

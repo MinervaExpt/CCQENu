@@ -1,0 +1,222 @@
+\hypertarget{CutFromConfig_8h_source}{}\doxysection{Cut\+From\+Config.\+h}
+\label{CutFromConfig_8h_source}\index{make\_hists/include/CutFromConfig.h@{make\_hists/include/CutFromConfig.h}}
+\mbox{\hyperlink{CutFromConfig_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifndef\ CutFromConfig\_H}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ CutFromConfig\_H}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}utils/NuConfig.h"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/Cut.h"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{CVUniverse_8h}{include/CVUniverse.h}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{CVFunctions_8h}{include/CVFunctions.h}}"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{namespace\ }PlotUtils\{}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//template\ <class\ var\_t>}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//var\_t\ getValue(const\ NuConfig\ config,\ const\ std::string\ key)\{}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ \ return\ typeid(var\_t)\ ==\ typeid(double)\ ?\ config.GetDouble(key):config.GetInt(key);}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\}}}
+\DoxyCodeLine{00028\ \ \ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ UNIVERSE,\ \textcolor{keyword}{class}\ EVENT\ =\ detail::empty>}
+\DoxyCodeLine{00030\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classPlotUtils_1_1MaximumFromConfigFunc}{MaximumFromConfigFunc}}:\ \textcolor{keyword}{public}\ Cut<UNIVERSE,\ EVENT>}
+\DoxyCodeLine{00031\ \ \ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00033\ \ \ \textcolor{keyword}{typedef}\ std::function<double(\textcolor{keyword}{const}\ UNIVERSE\&)>\ PointerToCVUniverseFunction;}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \mbox{\hyperlink{classPlotUtils_1_1MaximumFromConfigFunc}{MaximumFromConfigFunc}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classNuConfig}{NuConfig}}\&\ config,\ \mbox{\hyperlink{classCVFunctions}{CVFunctions<UNIVERSE>}}\&\ functions):\ Cut<UNIVERSE,\ EVENT>(config.GetString(\textcolor{stringliteral}{"{}name"{}})+\textcolor{stringliteral}{"{}<="{}}+(config.GetString(\textcolor{stringliteral}{"{}max"{}}))),\ m\_Max(config.GetDouble(\textcolor{stringliteral}{"{}max"{}})),\ m\_func(functions.GetRecoFunction(config.GetString(\textcolor{stringliteral}{"{}variable"{}})))}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#ifndef\ \_\_GCCXML\_\_}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classPlotUtils_1_1MaximumFromConfigFunc}{\string~MaximumFromConfigFunc}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ checkCut(\textcolor{keyword}{const}\ UNIVERSE\&\ univ,\ EVENT\&\ \textcolor{comment}{/*evt*/})\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00042\ \textcolor{keyword}{\ \ \ \ \ \ }\{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_func(univ)\ <=\ m\_Max;}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00045\ \textcolor{keyword}{const}\ PointerToCVUniverseFunction\ m\_func;}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ m\_Max;\ \textcolor{comment}{//Maximum\ value\ of\ UNIVERSE::var\ that\ passes\ this\ Cut}}
+\DoxyCodeLine{00047\ \ \ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ UNIVERSE,\ \textcolor{keyword}{class}\ EVENT\ =\ detail::empty>}
+\DoxyCodeLine{00052\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classPlotUtils_1_1MinimumFromConfigFunc}{MinimumFromConfigFunc}}:\ \textcolor{keyword}{public}\ Cut<UNIVERSE,\ EVENT>}
+\DoxyCodeLine{00053\ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00055\ \ \ \textcolor{keyword}{typedef}\ std::function<double(\textcolor{keyword}{const}\ UNIVERSE\&)>\ PointerToCVUniverseFunction;}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \mbox{\hyperlink{classPlotUtils_1_1MinimumFromConfigFunc}{MinimumFromConfigFunc}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classNuConfig}{NuConfig}}\&\ config,\ \mbox{\hyperlink{classCVFunctions}{CVFunctions<UNIVERSE>}}\&\ functions):\ Cut<UNIVERSE,\ EVENT>(config.GetString(\textcolor{stringliteral}{"{}name"{}})+\textcolor{stringliteral}{"{}>="{}}+std::to\_string(\ config.GetDouble(\textcolor{stringliteral}{"{}min"{}}))),\ m\_Min(config.GetDouble(\textcolor{stringliteral}{"{}min"{}})),\ m\_func(functions.GetRecoFunction(config.GetString(\textcolor{stringliteral}{"{}variable"{}})))}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#ifndef\ \_\_GCCXML\_\_}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classPlotUtils_1_1MinimumFromConfigFunc}{\string~MinimumFromConfigFunc}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ checkCut(\textcolor{keyword}{const}\ UNIVERSE\&\ univ,\ EVENT\&\ \textcolor{comment}{/*evt*/})\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00064\ \textcolor{keyword}{\ \ \ \ \ \ }\{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_func(univ)\ >=\ m\_Min;}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \textcolor{keyword}{const}\ PointerToCVUniverseFunction\ m\_func;}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ m\_Min;\ \textcolor{comment}{//Minimum\ value\ of\ UNIVERSE::var\ that\ passes\ this\ Cut}}
+\DoxyCodeLine{00069\ \ \ \};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ UNIVERSE,\ \textcolor{keyword}{class}\ EVENT\ =\ detail::empty>}
+\DoxyCodeLine{00073\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classPlotUtils_1_1IsSameFromConfigFunc}{IsSameFromConfigFunc}}:\ \textcolor{keyword}{public}\ Cut<UNIVERSE,\ EVENT>}
+\DoxyCodeLine{00074\ \ \ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00076\ \ \ \textcolor{keyword}{typedef}\ std::function<double(\textcolor{keyword}{const}\ UNIVERSE\&)>\ PointerToCVUniverseIntFunction;}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \mbox{\hyperlink{classPlotUtils_1_1IsSameFromConfigFunc}{IsSameFromConfigFunc}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classNuConfig}{NuConfig}}\&\ config,\ \mbox{\hyperlink{classCVFunctions}{CVFunctions<UNIVERSE>}}\&\ functions):\ Cut<UNIVERSE,\ EVENT>(config.GetString(\textcolor{stringliteral}{"{}name"{}})+\ \textcolor{stringliteral}{"{}=="{}}\ +\ std::to\_string(\ config.GetInt(\textcolor{stringliteral}{"{}equals"{}}))),\ m\_Matches(config.GetInt(\textcolor{stringliteral}{"{}equals"{}})),\ m\_func(functions.GetRecoIntFunction(config.GetString(\textcolor{stringliteral}{"{}variable"{}})))}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#ifndef\ \_\_GCCXML\_\_}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classPlotUtils_1_1IsSameFromConfigFunc}{\string~IsSameFromConfigFunc}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ checkCut(\textcolor{keyword}{const}\ UNIVERSE\&\ univ,\ EVENT\&\ \textcolor{comment}{/*evt*/})\textcolor{keyword}{\ const\ override}}
+\DoxyCodeLine{00086\ \textcolor{keyword}{\ \ \ \ \ \ }\{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \textcolor{comment}{//std::cout\ <<\ Cut<UNIVERSE,\ EVENT>::getName()\ <<\ "{}\ "{}\ <<\ m\_func(univ)\ <<\ "{}\ "{}\ \ <<\ m\_Matches\ <<\ std::endl;}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_func(univ)\ ==\ m\_Matches;}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00090\ \textcolor{keyword}{const}\ PointerToCVUniverseIntFunction\ m\_func;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ m\_Matches;\ \textcolor{comment}{//Maximum\ value\ of\ UNIVERSE::var\ that\ passes\ this\ Cut}}
+\DoxyCodeLine{00092\ \ \ \};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{comment}{//\ takes\ a\ vector\ with\ 2\ entried,\ min\ and\ max.}}
+\DoxyCodeLine{00095\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ UNIVERSE,\ \textcolor{keyword}{class}\ EVENT\ =\ detail::empty>}
+\DoxyCodeLine{00096\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classPlotUtils_1_1RangeFromConfigFunc}{RangeFromConfigFunc}}:\ \textcolor{keyword}{public}\ Cut<UNIVERSE>}
+\DoxyCodeLine{00097\ \ \ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00099\ \ \ \textcolor{keyword}{typedef}\ std::function<double(\textcolor{keyword}{const}\ UNIVERSE\&)>\ PointerToCVUniverseFunction;}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \mbox{\hyperlink{classPlotUtils_1_1RangeFromConfigFunc}{RangeFromConfigFunc}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classNuConfig}{NuConfig}}\&\ config,\ \mbox{\hyperlink{classCVFunctions}{CVFunctions<UNIVERSE>}}\&\ functions):\ Cut<UNIVERSE,EVENT>((config.GetString(\textcolor{stringliteral}{"{}min"{}}))\ +\ \textcolor{stringliteral}{"{}<="{}}\ +\ \ config.GetString(\textcolor{stringliteral}{"{}name"{}})+\ \textcolor{stringliteral}{"{}<="{}}\ +\ (config.GetString(\textcolor{stringliteral}{"{}max"{}}))),\ m\_min(config.GetDouble(\textcolor{stringliteral}{"{}min"{}})),\ m\_max(config.GetDouble(\textcolor{stringliteral}{"{}max"{}})),m\_func(functions.GetRecoFunction(config.GetString(\textcolor{stringliteral}{"{}variable"{}})))}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#ifndef\ \_\_GCCXML\_\_}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classPlotUtils_1_1RangeFromConfigFunc}{\string~RangeFromConfigFunc}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ checkCut(\textcolor{keyword}{const}\ UNIVERSE\&\ univ\ ,\ EVENT\&\ \textcolor{comment}{/*evt*/})\ \textcolor{keyword}{const}\textcolor{comment}{//\ override}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_func(univ)\ >=\ m\_min\ \&\&\ m\_func(univ)\ <=\ m\_max;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00111\ \ \textcolor{keyword}{const}\ PointerToCVUniverseFunction\ m\_func;}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ m\_min;\ \textcolor{comment}{//Minimum\ value\ of\ UNIVERSE::var\ that\ passes\ this\ Cut}}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ m\_max;\ \textcolor{comment}{//Maximum\ value\ of\ UNIVERSE::var\ that\ passes\ this\ Cut}}
+\DoxyCodeLine{00114\ \ \ \};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{comment}{//\ make\ version\ for\ constraints?}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ UNIVERSE>}
+\DoxyCodeLine{00120\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classPlotUtils_1_1MaximumConstraintFromConfigFunc}{MaximumConstraintFromConfigFunc}}:\ \textcolor{keyword}{public}\ SignalConstraint<UNIVERSE>}
+\DoxyCodeLine{00121\ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00123\ \ \ \textcolor{keyword}{typedef}\ std::function<double(\textcolor{keyword}{const}\ UNIVERSE\&)>\ PointerToCVUniverseFunction;}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \mbox{\hyperlink{classPlotUtils_1_1MaximumConstraintFromConfigFunc}{MaximumConstraintFromConfigFunc}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classNuConfig}{NuConfig}}\&\ config,\ \mbox{\hyperlink{classCVFunctions}{CVFunctions<UNIVERSE>}}\&\ functions):\ SignalConstraint<UNIVERSE>(config.GetString(\textcolor{stringliteral}{"{}name"{}})+\textcolor{stringliteral}{"{}<="{}}+(config.GetString(\textcolor{stringliteral}{"{}max"{}}))),\ m\_Max(config.GetDouble(\textcolor{stringliteral}{"{}max"{}})),m\_func(functions.GetTrueFunction(config.GetString(\textcolor{stringliteral}{"{}variable"{}})))}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#ifndef\ \_\_GCCXML\_\_}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classPlotUtils_1_1MaximumConstraintFromConfigFunc}{\string~MaximumConstraintFromConfigFunc}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ checkConstraint(\textcolor{keyword}{const}\ UNIVERSE\&\ univ\textcolor{comment}{/*evt*/})\ \textcolor{keyword}{const}\ \textcolor{comment}{//override}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_func(univ)\ <=\ m\_Max;}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00135\ \textcolor{keyword}{const}\ PointerToCVUniverseFunction\ m\_func;}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ m\_Max;\ \textcolor{comment}{//Maximum\ value\ of\ UNIVERSE::var\ that\ passes\ this\ Cut}}
+\DoxyCodeLine{00137\ \ \ \};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ UNIVERSE>}
+\DoxyCodeLine{00140\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classPlotUtils_1_1MinimumConstraintFromConfigFunc}{MinimumConstraintFromConfigFunc}}:\ \textcolor{keyword}{public}\ SignalConstraint<UNIVERSE>}
+\DoxyCodeLine{00141\ \ \ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00143\ \ \ \textcolor{keyword}{typedef}\ std::function<double(\textcolor{keyword}{const}\ UNIVERSE\&)>\ PointerToCVUniverseFunction;}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \mbox{\hyperlink{classPlotUtils_1_1MinimumConstraintFromConfigFunc}{MinimumConstraintFromConfigFunc}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classNuConfig}{NuConfig}}\&\ config,\ \mbox{\hyperlink{classCVFunctions}{CVFunctions<UNIVERSE>}}\&\ functions):\ SignalConstraint<UNIVERSE>(config.GetString(\textcolor{stringliteral}{"{}name"{}})+\textcolor{stringliteral}{"{}>="{}}+(config.GetString(\textcolor{stringliteral}{"{}min"{}}))),\ m\_Min(config.GetDouble(\textcolor{stringliteral}{"{}min"{}})),\ m\_func(functions.GetTrueFunction(config.GetString(\textcolor{stringliteral}{"{}variable"{}})))}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#ifndef\ \_\_GCCXML\_\_}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classPlotUtils_1_1MinimumConstraintFromConfigFunc}{\string~MinimumConstraintFromConfigFunc}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ checkConstraint(\textcolor{keyword}{const}\ UNIVERSE\&\ univ\ \textcolor{comment}{/*evt*/})\ \textcolor{keyword}{const}\ \textcolor{comment}{//override}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_func(univ)\ >=\ m\_Min;}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \textcolor{keyword}{const}\ PointerToCVUniverseFunction\ m\_func;}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ \ m\_Min;\ \textcolor{comment}{//Minimum\ value\ of\ UNIVERSE::var\ that\ passes\ this\ Cut}}
+\DoxyCodeLine{00157\ \ \ \};}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ UNIVERSE>}
+\DoxyCodeLine{00160\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classPlotUtils_1_1IsSameConstraintFromConfigFunc}{IsSameConstraintFromConfigFunc}}:\ \textcolor{keyword}{public}\ SignalConstraint<UNIVERSE>}
+\DoxyCodeLine{00161\ \ \ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00163\ \ \ \textcolor{keyword}{typedef}\ std::function<double(\textcolor{keyword}{const}\ UNIVERSE\&)>\ PointerToCVUniverseFunction;}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \mbox{\hyperlink{classPlotUtils_1_1IsSameConstraintFromConfigFunc}{IsSameConstraintFromConfigFunc}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classNuConfig}{NuConfig}}\&\ config,\ \mbox{\hyperlink{classCVFunctions}{CVFunctions<UNIVERSE>}}\&\ functions):\ SignalConstraint<UNIVERSE>(config.GetString(\textcolor{stringliteral}{"{}name"{}})+\ \textcolor{stringliteral}{"{}=="{}}\ +\ (config.GetString(\textcolor{stringliteral}{"{}equals"{}}))),\ m\_Matches(config.GetInt(\textcolor{stringliteral}{"{}equals"{}})),m\_func(functions.GetTrueIntFunction(config.GetString(\textcolor{stringliteral}{"{}variable"{}})))}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#ifndef\ \_\_GCCXML\_\_}}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classPlotUtils_1_1IsSameConstraintFromConfigFunc}{\string~IsSameConstraintFromConfigFunc}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ checkConstraint(\textcolor{keyword}{const}\ UNIVERSE\&\ univ\ \textcolor{comment}{/*evt*/})\ \textcolor{keyword}{const}\textcolor{comment}{//\ override}}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_func(univ)\ ==\ m\_Matches;}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00175\ \ \textcolor{keyword}{const}\ PointerToCVUniverseFunction\ m\_func;}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ m\_Matches;\ \textcolor{comment}{//Maximum\ value\ of\ UNIVERSE::var\ that\ passes\ this\ Cut}}
+\DoxyCodeLine{00177\ \ \ \};}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{comment}{//\ takes\ a\ vector\ with\ 2\ entried,\ min\ and\ max.}}
+\DoxyCodeLine{00181\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ UNIVERSE>}
+\DoxyCodeLine{00182\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classPlotUtils_1_1RangeConstraintFromConfigFunc}{RangeConstraintFromConfigFunc}}:\ \textcolor{keyword}{public}\ SignalConstraint<UNIVERSE>}
+\DoxyCodeLine{00183\ \ \ \{}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00185\ \ \ \textcolor{keyword}{typedef}\ std::function<double(\textcolor{keyword}{const}\ UNIVERSE\&)>\ PointerToCVUniverseFunction;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \mbox{\hyperlink{classPlotUtils_1_1RangeConstraintFromConfigFunc}{RangeConstraintFromConfigFunc}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classNuConfig}{NuConfig}}\&\ config,\ \mbox{\hyperlink{classCVFunctions}{CVFunctions<UNIVERSE>}}\&\ functions):\ SignalConstraint<UNIVERSE>((config.GetString(\textcolor{stringliteral}{"{}min"{}}))\ +\ \textcolor{stringliteral}{"{}<="{}}\ +\ config.GetString(\textcolor{stringliteral}{"{}name"{}})+\ \textcolor{stringliteral}{"{}<="{}}\ +\ (config.GetString(\textcolor{stringliteral}{"{}max"{}}))),\ m\_min(config.GetDouble(\textcolor{stringliteral}{"{}min"{}})),\ m\_max(config.GetDouble(\textcolor{stringliteral}{"{}max"{}})),\ m\_func(functions.GetTrueFunction(config.GetString(\textcolor{stringliteral}{"{}variable"{}})))}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#ifndef\ \_\_GCCXML\_\_}}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classPlotUtils_1_1RangeConstraintFromConfigFunc}{\string~RangeConstraintFromConfigFunc}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ checkConstraint(\textcolor{keyword}{const}\ UNIVERSE\&\ univ\ \textcolor{comment}{/*evt*/})\ \textcolor{keyword}{const}\textcolor{comment}{//\ override}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_func(univ)\ >=\ m\_min\ \&\&\ m\_func(univ)\ <=\ m\_max;}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00197\ \ \textcolor{keyword}{const}\ PointerToCVUniverseFunction\ m\_func;}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ m\_min;\ \textcolor{comment}{//Minimum\ value\ of\ UNIVERSE::var\ that\ passes\ this\ Cut}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ m\_max;\ \textcolor{comment}{//Maximum\ value\ of\ UNIVERSE::var\ that\ passes\ this\ Cut}}
+\DoxyCodeLine{00200\ \ \ \};}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00203\ \textcolor{comment}{//\ \ }}
+\DoxyCodeLine{00204\ \textcolor{comment}{//template\ <class\ UNIVERSE,\ class\ EVENT\ =\ detail::empty>}}
+\DoxyCodeLine{00205\ \textcolor{comment}{//class\ MaximumFromConfigFunc:\ public\ Cut<UNIVERSE,\ EVENT>}}
+\DoxyCodeLine{00206\ \textcolor{comment}{//\ \ \{}}
+\DoxyCodeLine{00207\ \textcolor{comment}{//\ \ typedef\ std::function<double(const\ UNIVERSE\&)>\ PointerToCVUniverseFunction;}}
+\DoxyCodeLine{00208\ \textcolor{comment}{//\ \ \ \ public:}}
+\DoxyCodeLine{00209\ \textcolor{comment}{//\ \ \ \ \ \ MaximumFromConfigFunc(const\ NuConfig\&\ config,\ \ CVFunctions<UNIVERSE>\&\ functions):\ Cut<UNIVERSE,\ EVENT>(config.GetString("{}name"{})+"{}\ <=\ "{}+config.GetString("{}max"{})),\ m\_Max(config.GetDouble("{}max"{})),\ m\_func(functions.GetRecoFunction(config.GetString("{}variable"{})))}}
+\DoxyCodeLine{00210\ \textcolor{comment}{//\ \ \{}}
+\DoxyCodeLine{00211\ \textcolor{comment}{//\ \ \ \ }}
+\DoxyCodeLine{00212\ \textcolor{comment}{//\ \ \ \ \ \ \}}}
+\DoxyCodeLine{00213\ \textcolor{comment}{//\#ifndef\ \_\_GCCXML\_\_}}
+\DoxyCodeLine{00214\ \textcolor{comment}{//\ \ \ \ \ \ virtual\ \string~MaximumFromConfigFunc()\ =\ default;}}
+\DoxyCodeLine{00215\ \textcolor{comment}{//\#endif}}
+\DoxyCodeLine{00216\ \textcolor{comment}{//\ \ \ \ private:}}
+\DoxyCodeLine{00217\ \textcolor{comment}{//\ \ \ \ \ \ bool\ checkCut(const\ UNIVERSE\&\ univ,\ EVENT\&\ /*evt*/)\ const\ override}}
+\DoxyCodeLine{00218\ \textcolor{comment}{//\ \ \ \ \ \ \{}}
+\DoxyCodeLine{00219\ \textcolor{comment}{//\ \ \ \ \ \ \ \ return\ m\_func(univ)\ <=\ m\_Max;}}
+\DoxyCodeLine{00220\ \textcolor{comment}{//\ \ \ \ \ \ \}}}
+\DoxyCodeLine{00221\ \textcolor{comment}{//}}
+\DoxyCodeLine{00222\ \textcolor{comment}{//\ \ \ \ \ \ const\ double\ m\_Max;\ //Maximum\ value\ of\ UNIVERSE::var\ that\ passes\ this\ Cut}}
+\DoxyCodeLine{00223\ \textcolor{comment}{//\ \ \ \ \ \ const\ PointerToCVUniverseFunction\ m\_fun;}}
+\DoxyCodeLine{00224\ \textcolor{comment}{//\ \ \};}}
+\DoxyCodeLine{00225\ \textcolor{comment}{//}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00229\ \ \ }
+
+\end{DoxyCode}

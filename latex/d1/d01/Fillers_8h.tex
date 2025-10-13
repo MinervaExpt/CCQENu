@@ -1,0 +1,39 @@
+\hypertarget{Fillers_8h}{}\doxysection{make\+\_\+hists/include/\+Fillers.h File Reference}
+\label{Fillers_8h}\index{make\_hists/include/Fillers.h@{make\_hists/include/Fillers.h}}
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}CVUniverse.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{Fillers_8h_a317a52306e201a77c027053b9e0f9931}\label{Fillers_8h_a317a52306e201a77c027053b9e0f9931}} 
+void {\bfseries Fill\+Data} (std\+::string tag, \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $\ast$univ, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1VariableFromConfig}{CCQENu\+::\+Variable\+From\+Config}} $\ast$ $>$ variables, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1Variable2DFromConfig}{CCQENu\+::\+Variable2\+DFrom\+Config}} $\ast$ $>$ variables2D)
+\item 
+\mbox{\Hypertarget{Fillers_8h_a8f32dfd7a197a6f830e591494a4b462b}\label{Fillers_8h_a8f32dfd7a197a6f830e591494a4b462b}} 
+void {\bfseries Fill\+MC} (std\+::string tag, \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $\ast$univ, double weight, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1VariableFromConfig}{CCQENu\+::\+Variable\+From\+Config}} $\ast$ $>$ variables, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1Variable2DFromConfig}{CCQENu\+::\+Variable2\+DFrom\+Config}} $\ast$ $>$ variables2D, double scale=-\/1.)
+\item 
+\mbox{\Hypertarget{Fillers_8h_a9cb9a71501993a77c500af2d34ca52e4}\label{Fillers_8h_a9cb9a71501993a77c500af2d34ca52e4}} 
+void {\bfseries Fill\+Resolution} (std\+::string tag, \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $\ast$univ, double weight, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1VariableFromConfig}{CCQENu\+::\+Variable\+From\+Config}} $\ast$ $>$ variables, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1Variable2DFromConfig}{CCQENu\+::\+Variable2\+DFrom\+Config}} $\ast$ $>$ variables2D, double scale=-\/1.)
+\item 
+\mbox{\Hypertarget{Fillers_8h_a66ad7b66286454418436e3ba91631fca}\label{Fillers_8h_a66ad7b66286454418436e3ba91631fca}} 
+void {\bfseries Fill\+Type} (std\+::string tag, \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $\ast$univ, double weight, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1VariableFromConfig}{CCQENu\+::\+Variable\+From\+Config}} $\ast$ $>$ variables, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1Variable2DFromConfig}{CCQENu\+::\+Variable2\+DFrom\+Config}} $\ast$ $>$ variables2D, double scale)
+\item 
+\mbox{\Hypertarget{Fillers_8h_a043cba5d30fae35974196617ef392a5a}\label{Fillers_8h_a043cba5d30fae35974196617ef392a5a}} 
+void {\bfseries Fill\+Response} (std\+::string tag, \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $\ast$univ, double weight, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1VariableFromConfig}{CCQENu\+::\+Variable\+From\+Config}} $\ast$ $>$ variables, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1Variable2DFromConfig}{CCQENu\+::\+Variable2\+DFrom\+Config}} $\ast$ $>$ variables2D, double scale=-\/1.)
+\item 
+\mbox{\Hypertarget{Fillers_8h_ab8ad86eb6c3af09a04a0751a275f84cc}\label{Fillers_8h_ab8ad86eb6c3af09a04a0751a275f84cc}} 
+void {\bfseries Fill\+Signal\+Truth} (std\+::string tag, \mbox{\hyperlink{classCVUniverse}{CVUniverse}} $\ast$univ, double weight, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1VariableFromConfig}{CCQENu\+::\+Variable\+From\+Config}} $\ast$ $>$ variables, std\+::vector$<$ \mbox{\hyperlink{classCCQENu_1_1Variable2DFromConfig}{CCQENu\+::\+Variable2\+DFrom\+Config}} $\ast$ $>$ variables2D, double scale=-\/1.)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Heidi Schellman/\+Noah Vaughan/\+Sean\+Gilligan 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 $\ast$ 
+\end{DoxyVersion}
+\hypertarget{VariableFromConfig_8h_LICENSE}{}\doxysubsection{$\ast$}\label{VariableFromConfig_8h_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. $\ast$ \hypertarget{VariableFromConfig_8h_DESCRIPTION}{}\doxysubsection{$\ast$}\label{VariableFromConfig_8h_DESCRIPTION}
+Fillers actually fills the histograms, called from Loops one addition is units of GeV and degrees where the base classes use MeV and radians 

@@ -1,0 +1,58 @@
+\doxysection{Scale\+Factors.\+h}
+\hypertarget{_scale_factors_8h_source}{}\label{_scale_factors_8h_source}\index{make\_hists/fits/ScaleFactors.h@{make\_hists/fits/ScaleFactors.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//File:\ ScaleFactor.h}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//Info:\ Class\ for\ passing\ as\ a\ function\ to\ TMinuit\ for\ minimization.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ \ \ \ \ \ Largely\ derived\ by\ example\ from\ Andrew\ Olivier's\ }}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ \ \ \ \ \ github.com/MinervaExpt/NucCCNeutrons/tree/develop/fits/Universe.h\ }}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ \ \ \ \ \ as\ of\ 03/16/2022.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//Author:\ David\ Last\ dlast@sas.upenn.edu/lastd44@gmail.com}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ SCALEFACTORS\_H}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ SCALEFACTORS\_H}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}TH1D.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}TVector3.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}Math/IFunction.h"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}stdlib.h"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <bitset>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{namespace\ }fit\{}
+\DoxyCodeLine{00024\ \ \ \textcolor{keyword}{class\ }ScaleFactors:\ \textcolor{keyword}{public}\ ROOT::Math::IBaseFunctionMultiDimTempl<double>\{}
+\DoxyCodeLine{00025\ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{comment}{//Members\ to\ hold\ the\ histos}}
+\DoxyCodeLine{00027\ \ \ \ \ std::vector<TH1D*>\ fFitHists;}
+\DoxyCodeLine{00028\ \ \ \ \ std::vector<TH1D*>\ fUnfitHists;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{const}\ TH1D*\ fDataHist;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{comment}{//Members\ for\ fit\ range}}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{int}\ fFirstBin;}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{int}\ fLastBin;}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{bool}\ fDoFit;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//CTOR}}
+\DoxyCodeLine{00037\ \ \ \ \ ScaleFactors(\textcolor{keyword}{const}\ std::vector<TH1D*>\ fitHists,\ \textcolor{keyword}{const}\ std::vector<TH1D*>\ unfitHists,\ \textcolor{keyword}{const}\ TH1D*\ dataHist,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ firstBin\ =\ 1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ lastBin\ =\ -\/1);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ NDim()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{//Function\ which\ the\ ROOT\ fitter\ will\ minimize}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{double}\ DoEval(\textcolor{keyword}{const}\ \textcolor{keywordtype}{double}*\ parameters)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{//Required\ for\ ROOT\ fittable\ function\ base\ class\ :(\ (indeed\ this\ is\ sad,\ Andrew)}}
+\DoxyCodeLine{00045\ \ \ \ \ IBaseFunctionMultiDimTempl<double>*\ Clone()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//DTOR}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~ScaleFactors()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00049\ \ \ \};}
+\DoxyCodeLine{00050\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

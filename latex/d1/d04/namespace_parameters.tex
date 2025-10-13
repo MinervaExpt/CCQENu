@@ -1,0 +1,186 @@
+\doxysection{Parameters Namespace Reference}
+\hypertarget{namespace_parameters}{}\label{namespace_parameters}\index{Parameters@{Parameters}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespace_parameters_a78ce44880ed5784658dc6bbef7155962}{Hist2\+Array}} (hist)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespace_parameters_a2471c7a9e530cb64bb907ec8d7056207}\label{namespace_parameters_a2471c7a9e530cb64bb907ec8d7056207} 
+bool {\bfseries DEBUG} = False
+\item 
+dict \mbox{\hyperlink{namespace_parameters_ad72f6f030db9a9cc305f48b7b0301cab}{templates}}
+\item 
+\Hypertarget{namespace_parameters_aa37234f498ce2adb9414b0621b0002ab}\label{namespace_parameters_aa37234f498ce2adb9414b0621b0002ab} 
+str {\bfseries referencehistname} = "{}h2\+D\+\_\+\+\_\+\+\_\+2track\+\_\+\+Multi\+Pion\+Cut\+\_\+\+\_\+\+\_\+data\+\_\+\+\_\+\+\_\+bdtg\+QELike\+\_\+\+Q2\+QE\+\_\+\+\_\+\+\_\+reconstructed"{}
+\item 
+\Hypertarget{namespace_parameters_a3bdebaa0719f7d6d19647a1413cff9aa}\label{namespace_parameters_a3bdebaa0719f7d6d19647a1413cff9aa} 
+{\bfseries filename} = os.\+path.\+join(os.\+getenv("{}CCQE"{}),"{}sean"{},"{}Nu\+Fit\+\_\+\+MAD\+\_\+\+Multi\+Pion\+Cut\+\_\+2track\+\_\+multother\+\_\+\+Q2\+QE\+\_\+2\+D.\+root"{})
+\item 
+\Hypertarget{namespace_parameters_a98befaf161023999ff3fa471eb45d34c}\label{namespace_parameters_a98befaf161023999ff3fa471eb45d34c} 
+{\bfseries file} = TFile(filename, "{}READ"{})
+\item 
+\Hypertarget{namespace_parameters_aa89b9beaea4e69c098577e6550f9f7f8}\label{namespace_parameters_aa89b9beaea4e69c098577e6550f9f7f8} 
+{\bfseries referencehist} = Mnv\+H2D()
+\item 
+\Hypertarget{namespace_parameters_a1866dce6363b427fd0dc5745ef3f6d25}\label{namespace_parameters_a1866dce6363b427fd0dc5745ef3f6d25} 
+{\bfseries nybins} = referencehist.\+Get\+NbinsY()
+\item 
+\Hypertarget{namespace_parameters_abf4ca4dd581a9f8349f636e53484a99f}\label{namespace_parameters_abf4ca4dd581a9f8349f636e53484a99f} 
+{\bfseries ybins} = np.\+zeros(nybins+1, dtype=float)
+\item 
+\Hypertarget{namespace_parameters_a3d3436653b1b5a6be0f9cee867a15692}\label{namespace_parameters_a3d3436653b1b5a6be0f9cee867a15692} 
+dict {\bfseries parameters} = \{\}
+\item 
+\Hypertarget{namespace_parameters_a07f452271920e22ac083373f4d6bad12}\label{namespace_parameters_a07f452271920e22ac083373f4d6bad12} 
+dict {\bfseries fcns} = \{\}
+\item 
+\Hypertarget{namespace_parameters_a5f095880c57ba4bfbea0a7fb8a90765d}\label{namespace_parameters_a5f095880c57ba4bfbea0a7fb8a90765d} 
+dict {\bfseries covariances} = \{\}
+\item 
+\Hypertarget{namespace_parameters_a4109bedaa9b1e204225f73db1f27326b}\label{namespace_parameters_a4109bedaa9b1e204225f73db1f27326b} 
+{\bfseries name} = form \% i
+\item 
+\Hypertarget{namespace_parameters_afe07197df44f0aa5bbade4861650041e}\label{namespace_parameters_afe07197df44f0aa5bbade4861650041e} 
+{\bfseries obj} = Mnv\+H1D()
+\item 
+\Hypertarget{namespace_parameters_a7981a69b5c7fb9953a9c5ac4e9334fdb}\label{namespace_parameters_a7981a69b5c7fb9953a9c5ac4e9334fdb} 
+dict {\bfseries npars} = parameters\mbox{[}1\mbox{]}.Get\+NbinsX()
+\item 
+\Hypertarget{namespace_parameters_a830ee6a65c50749006b915984457a8ef}\label{namespace_parameters_a830ee6a65c50749006b915984457a8ef} 
+dict {\bfseries parhists} = \{\}
+\item 
+\Hypertarget{namespace_parameters_ad38678828fba3f2eabc8ded9196cdfe9}\label{namespace_parameters_ad38678828fba3f2eabc8ded9196cdfe9} 
+dict {\bfseries parsdict} = \{\}
+\item 
+\Hypertarget{namespace_parameters_a1cbb89d797e20c2e0a61bc9da58a2267}\label{namespace_parameters_a1cbb89d797e20c2e0a61bc9da58a2267} 
+dict {\bfseries covdict} = \{\}
+\item 
+\Hypertarget{namespace_parameters_a7640d4dd273a6d282e57a46a23334c9f}\label{namespace_parameters_a7640d4dd273a6d282e57a46a23334c9f} 
+dict {\bfseries binhist} = parameters\mbox{[}bin\mbox{]}
+\item 
+\Hypertarget{namespace_parameters_a5548f172d88d4101094f2314d90a1374}\label{namespace_parameters_a5548f172d88d4101094f2314d90a1374} 
+dict {\bfseries covhist} = covariances\mbox{[}bin\mbox{]}
+\item 
+\Hypertarget{namespace_parameters_a2968a8144a9b61f5aa4fd545ab404323}\label{namespace_parameters_a2968a8144a9b61f5aa4fd545ab404323} 
+{\bfseries spar} = json.\+dumps(parsdict, indent=4)
+\item 
+\Hypertarget{namespace_parameters_a65b2a451616712415a870d2b1b70ffe6}\label{namespace_parameters_a65b2a451616712415a870d2b1b70ffe6} 
+{\bfseries scov} = json.\+dumps(covdict, indent=4)
+\item 
+\Hypertarget{namespace_parameters_a541cbf7be64d27f1d2132401f15d68ce}\label{namespace_parameters_a541cbf7be64d27f1d2132401f15d68ce} 
+dict {\bfseries data} = \{"{}parameters"{}\+: parsdict, "{}covariances"{}\+: covdict, "{}ybins"{}\+: ybins.\+tolist()\}
+\item 
+\Hypertarget{namespace_parameters_a77f79df306adb0fdf73b13df4ecad373}\label{namespace_parameters_a77f79df306adb0fdf73b13df4ecad373} 
+{\bfseries sdata} = json.\+dumps(data, indent=4)
+\item 
+\Hypertarget{namespace_parameters_aec26b45f34b98a40f084d06a8ad5f1c6}\label{namespace_parameters_aec26b45f34b98a40f084d06a8ad5f1c6} 
+str {\bfseries outputjson} = "{}parameters.\+json"{}
+\item 
+\Hypertarget{namespace_parameters_a9ce796d36b6d5880ce674914c2c36bad}\label{namespace_parameters_a9ce796d36b6d5880ce674914c2c36bad} 
+{\bfseries c1} = TCanvas("{}c1"{},"{}Parameters"{},800,600)
+\item 
+\Hypertarget{namespace_parameters_ad409c42afba0af2e46fcf05261f5e391}\label{namespace_parameters_ad409c42afba0af2e46fcf05261f5e391} 
+int {\bfseries order} = 1
+\item 
+\Hypertarget{namespace_parameters_abcf2dc8337dee8c4340ae95f6f05d02e}\label{namespace_parameters_abcf2dc8337dee8c4340ae95f6f05d02e} 
+{\bfseries chisq}
+\item 
+\Hypertarget{namespace_parameters_a15c6c8110cef6fac495a05a42c65e547}\label{namespace_parameters_a15c6c8110cef6fac495a05a42c65e547} 
+{\bfseries status}
+\item 
+\Hypertarget{namespace_parameters_a0d0d738b2e8fd629893e3dd5fec3dccc}\label{namespace_parameters_a0d0d738b2e8fd629893e3dd5fec3dccc} 
+{\bfseries Results}
+\item 
+\Hypertarget{namespace_parameters_a2565aa1c40d54c7410f06ab5e17b2432}\label{namespace_parameters_a2565aa1c40d54c7410f06ab5e17b2432} 
+{\bfseries Errors}
+\item 
+\Hypertarget{namespace_parameters_a8e96368bd32d945b5d49b652221e35aa}\label{namespace_parameters_a8e96368bd32d945b5d49b652221e35aa} 
+{\bfseries Cov\+Matrix}
+\item 
+\Hypertarget{namespace_parameters_ac5a7bc8bbec99b2066eb9bbb745afd7b}\label{namespace_parameters_ac5a7bc8bbec99b2066eb9bbb745afd7b} 
+{\bfseries Cor\+Matrix}
+\item 
+\Hypertarget{namespace_parameters_a50a820b04b3c4b1c14d7361bdfc6d69b}\label{namespace_parameters_a50a820b04b3c4b1c14d7361bdfc6d69b} 
+{\bfseries from\+File}
+\item 
+\Hypertarget{namespace_parameters_a04cb187c50e473da9ca33db71644675e}\label{namespace_parameters_a04cb187c50e473da9ca33db71644675e} 
+{\bfseries fit\+\_\+type}
+\item 
+\Hypertarget{namespace_parameters_ae634dfa2bd3298843d5740d02cfaca1f}\label{namespace_parameters_ae634dfa2bd3298843d5740d02cfaca1f} 
+{\bfseries first\+\_\+bin}
+\item 
+\Hypertarget{namespace_parameters_a81300eca23a950d8d8a8edf9bfb2084b}\label{namespace_parameters_a81300eca23a950d8d8a8edf9bfb2084b} 
+{\bfseries last\+\_\+bin}
+\item 
+\Hypertarget{namespace_parameters_a9f57c42bb7080f50a2d1f00a1dae770a}\label{namespace_parameters_a9f57c42bb7080f50a2d1f00a1dae770a} 
+dict {\bfseries functions} = \{\}
+\item 
+\Hypertarget{namespace_parameters_a1709f49598cc1acb407cc4c12333a866}\label{namespace_parameters_a1709f49598cc1acb407cc4c12333a866} 
+str {\bfseries funcname} = "{}par\%02d"{}\%par
+\item 
+\Hypertarget{namespace_parameters_a62e076c33853df8b743d9d4afe7254ef}\label{namespace_parameters_a62e076c33853df8b743d9d4afe7254ef} 
+str {\bfseries polname} = "{}pol\%d"{}\%order
+\item 
+\Hypertarget{namespace_parameters_ae85987cd2ee72ceb5f086409afc77e64}\label{namespace_parameters_ae85987cd2ee72ceb5f086409afc77e64} 
+{\bfseries offset} = par\texorpdfstring{$\ast$}{*}(order+1)
+\item 
+\Hypertarget{namespace_parameters_ac9523a36581baee79382eabe10141ff8}\label{namespace_parameters_ac9523a36581baee79382eabe10141ff8} 
+{\bfseries legend} = TLegend(.\+1,.\+1,.\+6,.\+4)
+\item 
+\Hypertarget{namespace_parameters_a20ce7b088a3d7ed6a28fb0babcbacfe8}\label{namespace_parameters_a20ce7b088a3d7ed6a28fb0babcbacfe8} 
+{\bfseries localpol} = TF1()
+\item 
+\Hypertarget{namespace_parameters_ab28a0f94357729bfdb3a8aca3eb6521a}\label{namespace_parameters_ab28a0f94357729bfdb3a8aca3eb6521a} 
+{\bfseries localchisq} = localpol.\+Get\+Chisquare()
+\item 
+\Hypertarget{namespace_parameters_a07ff4e9796ee728ea9d2d933d7691f26}\label{namespace_parameters_a07ff4e9796ee728ea9d2d933d7691f26} 
+int {\bfseries localdof} = nybins -\/ order -\/ 1
+\item 
+\Hypertarget{namespace_parameters_a2c30cc87bdd4914ee8a293490b06ac14}\label{namespace_parameters_a2c30cc87bdd4914ee8a293490b06ac14} 
+tuple {\bfseries dof} = (nybins-\/order-\/1)\texorpdfstring{$\ast$}{*}npars
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb} take parameters from BDT fits to Q2 bins from Sean Gilligan
+This program plots and does local fits using the ROOT TH1 fitting.
+It stores the parameters in a json file by bin index (which gets changed into a string by json writing).
+It calls ParameterFit which sets up the fit with the goodness being calculated by FitFunction
+
+Fun facts - root passes the parameters to the fit function as a pointer to double in memory - you can access elements via [] but not via most other methods fail miserably. 
+
+Author: Heidi Schellman - based loosely on the MINERvA fitting code. 
+Date: 2025-07-29
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace_parameters_a78ce44880ed5784658dc6bbef7155962}\index{Parameters@{Parameters}!Hist2Array@{Hist2Array}}
+\index{Hist2Array@{Hist2Array}!Parameters@{Parameters}}
+\doxysubsubsection{\texorpdfstring{Hist2Array()}{Hist2Array()}}
+{\footnotesize\ttfamily \label{namespace_parameters_a78ce44880ed5784658dc6bbef7155962} 
+Parameters.\+Hist2\+Array (\begin{DoxyParamCaption}\item[{}]{hist}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Convert a ROOT histogram to 2D array\end{DoxyVerb}
+ 
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespace_parameters_ad72f6f030db9a9cc305f48b7b0301cab}\index{Parameters@{Parameters}!templates@{templates}}
+\index{templates@{templates}!Parameters@{Parameters}}
+\doxysubsubsection{\texorpdfstring{templates}{templates}}
+{\footnotesize\ttfamily \label{namespace_parameters_ad72f6f030db9a9cc305f48b7b0301cab} 
+dict Parameters.\+templates}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ =\ \ \{}
+\DoxyCodeLine{00002\ \ \ \ \ \textcolor{stringliteral}{"{}fcn"{}}:\textcolor{stringliteral}{"{}fcnh\_\_\_2track\_MultiPionCut\_\_\_data\_\_\_bdtgQELike\_\_\_reconstructed\_Q2QE\_\%02d"{}},}
+\DoxyCodeLine{00003\ \ \ \ \ \textcolor{stringliteral}{"{}parameter"{}}:\textcolor{stringliteral}{"{}parameters\_h\_\_\_2track\_MultiPionCut\_\_\_data\_\_\_bdtgQELike\_\_\_reconstructed\_Q2QE\_\%02d"{}},}
+\DoxyCodeLine{00004\ \ \ \ \ \textcolor{stringliteral}{"{}correlation"{}}:\textcolor{stringliteral}{"{}correlation\_h\_\_\_2track\_MultiPionCut\_\_\_data\_\_\_bdtgQELike\_\_\_reconstructed\_Q2QE\_\%02d"{}},}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{stringliteral}{"{}covariance"{}}:\textcolor{stringliteral}{"{}covariance\_h\_\_\_2track\_MultiPionCut\_\_\_data\_\_\_bdtgQELike\_\_\_reconstructed\_Q2QE\_\%02d"{}}}
+\DoxyCodeLine{00006\ \ \ \ \ \}}
+
+\end{DoxyCode}

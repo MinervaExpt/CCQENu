@@ -1,0 +1,140 @@
+\doxysection{Fit\+Function.\+Fit\+Function Class Reference}
+\hypertarget{class_fit_function_1_1_fit_function}{}\label{class_fit_function_1_1_fit_function}\index{FitFunction.FitFunction@{FitFunction.FitFunction}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_ada07a3f4c71509f13d966a055b025377}\label{class_fit_function_1_1_fit_function_ada07a3f4c71509f13d966a055b025377} 
+{\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self)
+\item 
+\mbox{\hyperlink{class_fit_function_1_1_fit_function_a9522eb5a1107cd46c7ede311db99799d}{par\+Map}} (self, subpar)
+\item 
+\mbox{\hyperlink{class_fit_function_1_1_fit_function_a939cc586bd3e308a34504ea832ae9c44}{Set\+Vals}} (self, order, hists, categories, xbins, ybins, fit\+\_\+type=None, first\+\_\+bin=1, last\+\_\+bin=None)
+\item 
+\mbox{\hyperlink{class_fit_function_1_1_fit_function_a024264e6160eb9e4c68eae4c76c90be5}{Invert\+Covariance}} (self)
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a71a8dabab9859a0ef90bc09b5c2b2127}\label{class_fit_function_1_1_fit_function_a71a8dabab9859a0ef90bc09b5c2b2127} 
+{\bfseries NDim} (self)
+\item 
+\mbox{\hyperlink{class_fit_function_1_1_fit_function_ab615a1e777542d5b25b1e4a01c95d4e8}{Polynomial}} (self, x, fitpars, subpar)
+\item 
+\mbox{\hyperlink{class_fit_function_1_1_fit_function_ac9234c51faaacb66af90de6f17005528}{Do\+Eval}} (self, fitparameters)
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_ae3806f8da1e97abd10a6cdaf567a2818}\label{class_fit_function_1_1_fit_function_ae3806f8da1e97abd10a6cdaf567a2818} 
+{\bfseries to\+\_\+root\+\_\+math\+\_\+functor} (self)
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a2003f35d92706b20d7d0d0dab7acad9f}\label{class_fit_function_1_1_fit_function_a2003f35d92706b20d7d0d0dab7acad9f} 
+{\bfseries Clone} (self)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_afeff0abf805d502167dd9e7e333b50d2}\label{class_fit_function_1_1_fit_function_afeff0abf805d502167dd9e7e333b50d2} 
+int {\bfseries f\+NDim} = 0
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a8c37d2b212184d7fb8cb36461ffda685}\label{class_fit_function_1_1_fit_function_a8c37d2b212184d7fb8cb36461ffda685} 
+{\bfseries forder} = order
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a77930f8160c38a659a16b7f19ad3dc95}\label{class_fit_function_1_1_fit_function_a77930f8160c38a659a16b7f19ad3dc95} 
+{\bfseries fparameters} = parameters
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_ad10e50a28166f8f06a6425a068c68ca8}\label{class_fit_function_1_1_fit_function_ad10e50a28166f8f06a6425a068c68ca8} 
+{\bfseries fcovariance} = covariances
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a2c0281e7362deb40853a3c60cc16ac31}\label{class_fit_function_1_1_fit_function_a2c0281e7362deb40853a3c60cc16ac31} 
+{\bfseries fybins} = np.\+array(ybins)
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_af4bc913a2133276a6cd479145337d198}\label{class_fit_function_1_1_fit_function_af4bc913a2133276a6cd479145337d198} 
+int {\bfseries fnbins} = len(self.\+fybins) -\/ 1
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a164f9f31f44a3ab14769d012084d8481}\label{class_fit_function_1_1_fit_function_a164f9f31f44a3ab14769d012084d8481} 
+{\bfseries fnpars} = len(parameters\mbox{[}"{}1"{}\mbox{]})
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a9b034bb2704f8531f0a09106cca33ee6}\label{class_fit_function_1_1_fit_function_a9b034bb2704f8531f0a09106cca33ee6} 
+int {\bfseries f\+Type} = Fit\+Function.\+k\+Slow\+Chi2
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a207311fed8da4f6edff465dfde27ab26}\label{class_fit_function_1_1_fit_function_a207311fed8da4f6edff465dfde27ab26} 
+{\bfseries f\+Ndim} = self.\+fnpars \texorpdfstring{$\ast$}{*} (self.\+forder + 1)
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a3109116ff80f24d17441c41a756d6945}\label{class_fit_function_1_1_fit_function_a3109116ff80f24d17441c41a756d6945} 
+{\bfseries f\+First\+Bin} = first\+\_\+bin
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_aab7645b4acebcc0d301c13945992b0e8}\label{class_fit_function_1_1_fit_function_aab7645b4acebcc0d301c13945992b0e8} 
+int {\bfseries f\+Last\+Bin} = last\+\_\+bin if last\+\_\+bin is not None else self.\+fnbins
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a4b517a7761bb8eee5629868e3a3cde30}\label{class_fit_function_1_1_fit_function_a4b517a7761bb8eee5629868e3a3cde30} 
+bool {\bfseries f\+Do\+Fit} = True
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a6faf8dc51e7b5e3a1ba43ec5300df096}\label{class_fit_function_1_1_fit_function_a6faf8dc51e7b5e3a1ba43ec5300df096} 
+dict {\bfseries finv\+Cov} = \{\}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a84812ba2d0757cf91fac8a4429d7a6b1}\label{class_fit_function_1_1_fit_function_a84812ba2d0757cf91fac8a4429d7a6b1} 
+int {\bfseries k\+Fast\+Chi2} = 1
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_a14c7110764e2fad449892405bd34e41b}\label{class_fit_function_1_1_fit_function_a14c7110764e2fad449892405bd34e41b} 
+int {\bfseries k\+Slow\+Chi2} = 0
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_af49f292fb6d13e1ab1e690946d098cfe}\label{class_fit_function_1_1_fit_function_af49f292fb6d13e1ab1e690946d098cfe} 
+int {\bfseries k\+ML} = 2
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_fit_function_1_1_fit_function_aec0816601d929abbf872cf5021cfd6aa}\label{class_fit_function_1_1_fit_function_aec0816601d929abbf872cf5021cfd6aa} 
+{\bfseries \+\_\+do\+\_\+eval\+\_\+callable} = self.\+Do\+Eval
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_fit_function_1_1_fit_function_ac9234c51faaacb66af90de6f17005528}\index{FitFunction.FitFunction@{FitFunction.FitFunction}!DoEval@{DoEval}}
+\index{DoEval@{DoEval}!FitFunction.FitFunction@{FitFunction.FitFunction}}
+\doxysubsubsection{\texorpdfstring{DoEval()}{DoEval()}}
+{\footnotesize\ttfamily \label{class_fit_function_1_1_fit_function_ac9234c51faaacb66af90de6f17005528} 
+Fit\+Function.\+Fit\+Function.\+Do\+Eval (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{fitparameters}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Evaluate the chi-squared (or likelihood) for the current fit parameters.\end{DoxyVerb}
+ \Hypertarget{class_fit_function_1_1_fit_function_a024264e6160eb9e4c68eae4c76c90be5}\index{FitFunction.FitFunction@{FitFunction.FitFunction}!InvertCovariance@{InvertCovariance}}
+\index{InvertCovariance@{InvertCovariance}!FitFunction.FitFunction@{FitFunction.FitFunction}}
+\doxysubsubsection{\texorpdfstring{InvertCovariance()}{InvertCovariance()}}
+{\footnotesize\ttfamily \label{class_fit_function_1_1_fit_function_a024264e6160eb9e4c68eae4c76c90be5} 
+Fit\+Function.\+Fit\+Function.\+Invert\+Covariance (\begin{DoxyParamCaption}\item[{}]{self}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb} Invert the covariance matrix for the fit \end{DoxyVerb}
+ \Hypertarget{class_fit_function_1_1_fit_function_a9522eb5a1107cd46c7ede311db99799d}\index{FitFunction.FitFunction@{FitFunction.FitFunction}!parMap@{parMap}}
+\index{parMap@{parMap}!FitFunction.FitFunction@{FitFunction.FitFunction}}
+\doxysubsubsection{\texorpdfstring{parMap()}{parMap()}}
+{\footnotesize\ttfamily \label{class_fit_function_1_1_fit_function_a9522eb5a1107cd46c7ede311db99799d} 
+Fit\+Function.\+Fit\+Function.\+par\+Map (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{subpar}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb} order goes pol ... pol ... pol \end{DoxyVerb}
+ \Hypertarget{class_fit_function_1_1_fit_function_ab615a1e777542d5b25b1e4a01c95d4e8}\index{FitFunction.FitFunction@{FitFunction.FitFunction}!Polynomial@{Polynomial}}
+\index{Polynomial@{Polynomial}!FitFunction.FitFunction@{FitFunction.FitFunction}}
+\doxysubsubsection{\texorpdfstring{Polynomial()}{Polynomial()}}
+{\footnotesize\ttfamily \label{class_fit_function_1_1_fit_function_ab615a1e777542d5b25b1e4a01c95d4e8} 
+Fit\+Function.\+Fit\+Function.\+Polynomial (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{x}{, }\item[{}]{fitpars}{, }\item[{}]{subpar}{}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Evaluate a polynomial at x with coefficients fitpars\end{DoxyVerb}
+ \Hypertarget{class_fit_function_1_1_fit_function_a939cc586bd3e308a34504ea832ae9c44}\index{FitFunction.FitFunction@{FitFunction.FitFunction}!SetVals@{SetVals}}
+\index{SetVals@{SetVals}!FitFunction.FitFunction@{FitFunction.FitFunction}}
+\doxysubsubsection{\texorpdfstring{SetVals()}{SetVals()}}
+{\footnotesize\ttfamily \label{class_fit_function_1_1_fit_function_a939cc586bd3e308a34504ea832ae9c44} 
+Fit\+Function.\+Fit\+Function.\+Set\+Vals (\begin{DoxyParamCaption}\item[{}]{self}{, }\item[{}]{order}{, }\item[{}]{hists}{, }\item[{}]{categories}{, }\item[{}]{xbins}{, }\item[{}]{ybins}{, }\item[{}]{fit\+\_\+type}{ = {\ttfamily None}, }\item[{}]{first\+\_\+bin}{ = {\ttfamily 1}, }\item[{}]{last\+\_\+bin}{ = {\ttfamily None}}\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Initialize fit function parameters and configuration.
+
+Args:
+    order (int): Order of the polynomial.
+    parameters (dict): Dict of parameter arrays for each sample/bin.
+    covariances (dict): Dict of covariance matrices for each sample/bin.
+    ybins (array-like): Array of y-bin edges.
+    fit_type (int, optional): Fit type (kFastChi2, kSlowChi2, kML). Defaults to kSlowChi2.
+    first_bin (int, optional): First bin index (inclusive). Defaults to 1.
+    last_bin (int, optional): Last bin index (exclusive). Defaults to None (all bins).
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+python/Fit\+Function.\+py\end{DoxyCompactItemize}

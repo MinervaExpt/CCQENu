@@ -1,0 +1,34 @@
+\hypertarget{classPlotUtils_1_1ResponseWrapperMap}{}\doxysection{Plot\+Utils\+::Response\+Wrapper\+Map\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\label{classPlotUtils_1_1ResponseWrapperMap}\index{PlotUtils::ResponseWrapperMap$<$ T $>$@{PlotUtils::ResponseWrapperMap$<$ T $>$}}
+Inheritance diagram for Plot\+Utils\+::Response\+Wrapper\+Map\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>}\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{d1/d04/classPlotUtils_1_1ResponseWrapperMap}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPlotUtils_1_1ResponseWrapperMap_a79a2cb9a4b6e8b343bc100d8d11c6895}\label{classPlotUtils_1_1ResponseWrapperMap_a79a2cb9a4b6e8b343bc100d8d11c6895}} 
+{\bfseries Response\+Wrapper\+Map} (std\+::string name, std\+::map$<$ std\+::string, std\+::vector$<$ T $\ast$ $>$ $>$ reco\+\_\+univs, const std\+::vector$<$ double $>$ recobins, const std\+::vector$<$ double $>$ truebins, std\+::vector$<$ std\+::string $>$ tags, std\+::string tail=\char`\"{}\char`\"{})
+\item 
+\mbox{\Hypertarget{classPlotUtils_1_1ResponseWrapperMap_a8301d16d41f4b42aa223dcae24fd0ec7}\label{classPlotUtils_1_1ResponseWrapperMap_a8301d16d41f4b42aa223dcae24fd0ec7}} 
+void {\bfseries Fill} (const std\+::string tag, const T $\ast$univ, const double value, const double truth, const double weight=1.\+0, const double scale=1.\+0)
+\item 
+\mbox{\Hypertarget{classPlotUtils_1_1ResponseWrapperMap_affc0b890fde0c0fc795e41a8f9228de5}\label{classPlotUtils_1_1ResponseWrapperMap_affc0b890fde0c0fc795e41a8f9228de5}} 
+void {\bfseries Write} (const std\+::string tag)
+\item 
+\mbox{\Hypertarget{classPlotUtils_1_1ResponseWrapperMap_ab8f5d89fffb877900b75d7d9cc0de0b3}\label{classPlotUtils_1_1ResponseWrapperMap_ab8f5d89fffb877900b75d7d9cc0de0b3}} 
+Minerva\+Unfold\+::\+Mnv\+Response $\ast$ {\bfseries Get\+Response} (const std\+::string tag)
+\item 
+\mbox{\Hypertarget{classPlotUtils_1_1ResponseWrapperMap_ab72563f03e3b65c0ddfe6d7510c39441}\label{classPlotUtils_1_1ResponseWrapperMap_ab72563f03e3b65c0ddfe6d7510c39441}} 
+Mnv\+H2D $\ast$ {\bfseries Get\+Migration\+Matrix} (const std\+::string tag)
+\item 
+\mbox{\Hypertarget{classPlotUtils_1_1ResponseWrapperMap_aa2088759c9a39eff57b936dabfc2eecf}\label{classPlotUtils_1_1ResponseWrapperMap_aa2088759c9a39eff57b936dabfc2eecf}} 
+std\+::map$<$ const T $\ast$, int $>$ {\bfseries Universe\+Decoder} (const std\+::map$<$ std\+::string, std\+::vector$<$ T $\ast$ $>$ $>$ univs) const
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+make\+\_\+hists/include/Response\+Wrapper\+Map.\+h\end{DoxyCompactItemize}

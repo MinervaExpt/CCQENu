@@ -1,0 +1,59 @@
+This directory contains csv files for the MINERvA anti-\/neutrino CCQE-\/like measurements There are two subdirectories\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{fixed}} is fixed format cross section scaled by 1E39
+\item {\bfseries{full}} is full double precision
+\end{DoxyItemize}
+
+data and model files are stored as follows
+
+filenames are\+:
+
+MINERv\+A\+\_\+\+Anti\+Neutrino\+\_\+\+CCQElike\+\_\+\+VAR\+\_\+\+TYPE\+\_\+\+MODEL\+\_\+\+CONTENT\+\_\+\+DIM.\+csv
+
+{\bfseries{VAR}} can be Enu, Enu\+QE, q2, pzmu, ptmu or pzmu\+\_\+ptmu
+
+{\bfseries{TYPE}} can be Data or MC ~\newline
+ Data\+Full and MCFull refer to the special energy plots corrected to the full angle phase space without the final state proton energy cut.
+
+{\bfseries{MODEL}} refers to the GENIE2.\+12.\+6 variation\+:
+
+
+\begin{DoxyItemize}
+\item GENIE2.\+12.\+6 = default GENIE
+\item 2p2h = replaces the GENIE RPA with our tuned 2p2h
+\item rpa = adds RPA
+\item piontune = adds pion tune (negligible effect)
+\item MINERv\+A\+\_\+v1 = MINERvA v1 tune (used for extraction)
+\item MINERv\+A\+\_\+v2 = MINERvA v2 tune
+\item Meas is for data
+\end{DoxyItemize}
+
+{\bfseries{CONTENT}} can be\+:
+
+
+\begin{DoxyItemize}
+\item meta, some description of the files, including scaling, binwidth corrections...
+\item values, the cross section values -\/ in the Fixed directory these are scaled by 1E39.
+\item bins, the bins, low edges are listed with the last \# being the high end of the last bin
+\item staterrors, statistical errors
+\item systerrors, systematic errors
+\item errors, combined statistical and systematic
+\item covariance, the full covariance matrix
+\item correlation, the full correlation matrix
+\item vertdump, a dump of all the separate fractional uncertainties due to individual sources
+\end{DoxyItemize}
+
+{\bfseries{DIM}} can be\+:
+
+
+\begin{DoxyItemize}
+\item px\+\_\+1d the px and py are there because these are projections of 2-\/d histograms
+\item py\+\_\+1d
+\item 2d ~\newline
+
+\end{DoxyItemize}
+
+In the 2d files, the ordering is column is increasing x-\/view (pzmu), row is increasing y-\/view (ptmu). ~\newline
+ In the covariance and correlation matrix the ordering is pzbin + ptbin$\ast$(Npzbin) 

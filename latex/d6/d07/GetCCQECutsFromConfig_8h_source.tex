@@ -1,0 +1,217 @@
+\hypertarget{GetCCQECutsFromConfig_8h_source}{}\doxysection{Get\+CCQECuts\+From\+Config.\+h}
+\label{GetCCQECutsFromConfig_8h_source}\index{make\_hists/include/GetCCQECutsFromConfig.h@{make\_hists/include/GetCCQECutsFromConfig.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GETCCQECUTSFromConfig\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GETCCQECUTSFromConfig\_H}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/Cut.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{CVUniverse_8h}{CVUniverse.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{CutFromConfig_8h}{CutFromConfig.h}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}utils/NuConfig.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{namespace\ }config\_reco\ \{}
+\DoxyCodeLine{00014\ \textcolor{comment}{//============================================================================}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ This\ function\ instantiates\ each\ of\ the\ above\ cuts\ and\ adds\ them\ to\ a}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ container,\ over\ which\ we'll\ loop\ during\ our\ event\ selection\ to\ apply\ the}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ cuts.}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ The\ return\ type\ for\ this\ function\ is\ a\ `cuts\_t<UNIVERSE,\ EVENT>`,\ which\ is}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ shorthand\ for\ std::vector<std::unique\_ptr<PlotUtils::Cut<UNIVERSE,\ EVENT>>>;}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//============================================================================}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ UNIVERSE,\ \textcolor{keyword}{class}\ EVENT\ =\ PlotUtils::detail::empty>}
+\DoxyCodeLine{00023\ PlotUtils::cuts\_t<UNIVERSE>\ GetCCQECutsFromConfig(\textcolor{keyword}{const}\ \mbox{\hyperlink{classNuConfig}{NuConfig}}\ \&\ config\ )}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \ \ \textcolor{keyword}{typedef}\ std::function<double(\textcolor{keyword}{const}\ UNIVERSE\&)>\ PointerToCVUniverseFunction;}
+\DoxyCodeLine{00026\ \ \ PlotUtils::cuts\_t<UNIVERSE,\ EVENT>\ ccqe\_cuts;}
+\DoxyCodeLine{00027\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ set\ up\ the\ cuts"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00028\ \ \ \textcolor{comment}{//\ event\ cuts}}
+\DoxyCodeLine{00029\ \ \ \textcolor{comment}{//std::vector<std::string>\ \ cuts=\ config.GetKeys();}}
+\DoxyCodeLine{00030\ \ \ std::vector<NuConfig>\ cuts\ =\ config.GetConfigVector();}
+\DoxyCodeLine{00031\ \ \ \mbox{\hyperlink{classCVFunctions}{CVFunctions<UNIVERSE>}}\ fun;}
+\DoxyCodeLine{00032\ \ \ \textcolor{comment}{//\ event\ cuts}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ NoDeadtime<UNIVERSE,\ EVENT>(config.GetValue("{}NoDeadTime"{})));}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ Apothem<UNIVERSE>(config.GetValue("{}Apothem"{})));}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ \ //ccqe\_cuts.emplace\_back(new\ ZRange<UNIVERSE>(config.GetValue("{}ZRange"{})));\ //\ replace\ with\ generic}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ RangeFromConfig<UNIVERSE,double,\&UNIVERSE::GetZVertex,\ EVENT>(config.GetValue("{}ZRange"{})));}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ \ //\ muon\ cuts}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ HasMINOSMatch<UNIVERSE,\ EVENT>(config.GetValue("{}HasMINOSMatch"{})));}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ \ //ccqe\_cuts.emplace\_back(new\ IsNeutrino<UNIVERSE,\ EVENT>(config.GetValue("{}IsNeutrino"{})));}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ \ //ccqe\_cuts.emplace\_back(new\ MaxMuonAngle<UNIVERSE,\ EVENT>(config.GetValue("{}MaxMuonAngle"{})));}}
+\DoxyCodeLine{00041\ \textcolor{comment}{//\ //\ ccqe\_cuts.emplace\_back(new\ MuonMomentumMin<UNIVERSE,\ EVENT>(config.GetValue("{}MuonMomentumMin"{})));}}
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ //\ ccqe\_cuts.emplace\_back(new\ MuonMomentumMax<UNIVERSE,\ EVENT>(config.GetValue("{}MuonMomentumMax"{})));}}
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ MaximumFromConfig<UNIVERSE,double,\&UNIVERSE::GetThetamuDegrees>(config.GetValue("{}MaxMuonAngle"{})));}}
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ MinimumFromConfig<UNIVERSE,double,\&UNIVERSE::GetPmuGeV,\ EVENT>(config.GetValue("{}MuonMomentumMin"{})));}}
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ MaximumFromConfig<UNIVERSE,double,\&UNIVERSE::GetPmuGeV,\ EVENT>(config.GetValue("{}MuonMomentumMax"{})));}}
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ MaximumFromConfigFunc<UNIVERSE>(config.GetConfig("{}MuonMomentumMax"{}),fun));}}
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ \ //\ recoil\ cuts}}
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ MaxMultiplicity<UNIVERSE,\ EVENT>(config.GetValue("{}MaxMultiplicity"{})));}}
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ GoodRecoil<UNIVERSE,\ EVENT>(config.GetValue("{}GoodRecoil"{})));}}
+\DoxyCodeLine{00050\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ cut:cuts)\{}
+\DoxyCodeLine{00051\ \ \ \ \ std::string\ key\ =\ cut.GetString(\textcolor{stringliteral}{"{}name"{}});}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{//NuConfig\ cut(config.GetConfig(key));\ //\ make\ a\ subconfig}}
+\DoxyCodeLine{00053\ \ \ \ \ std::string\ variable\ =\ cut.GetString(\textcolor{stringliteral}{"{}variable"{}});}
+\DoxyCodeLine{00054\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ set\ up\ cut\ "{}}\ <<\ key\ <<\ \textcolor{stringliteral}{"{}\ using\ variable\ "{}}\ <<\ variable\ <<\ std::endl;}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{if}(\ cut.IsMember(\textcolor{stringliteral}{"{}equals"{}}))\{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ ccqe\_cuts.emplace\_back(\ \textcolor{keyword}{new}\ IsSameFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00057\ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cut.IsMember(\textcolor{stringliteral}{"{}min"{}})\ and\ cut.IsMember(\textcolor{stringliteral}{"{}max"{}}))\{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ ccqe\_cuts.emplace\_back(\ \textcolor{keyword}{new}\ RangeFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ cut.IsMember(\textcolor{stringliteral}{"{}max"{}}))\{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ ccqe\_cuts.emplace\_back(\ \textcolor{keyword}{new}\ MaximumFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ cut.IsMember(\textcolor{stringliteral}{"{}min"{}}))\{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ ccqe\_cuts.emplace\_back(\ \textcolor{keyword}{new}\ MinimumFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ asked\ for\ a\ cut\ without\ a\ valid\ type\ "{}}\ <<\ key\ <<\ std::endl;}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ exit(8);}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00076\ \ \ \ \ \}}
+\DoxyCodeLine{00077\ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \textcolor{keywordflow}{return}\ ccqe\_cuts;}
+\DoxyCodeLine{00081\ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{comment}{//\ don't\ need\ this\ as\ can\ configure\ it.}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{comment}{//template\ <class\ UNIVERSE,\ class\ EVENT\ =\ PlotUtils::detail::empty>}}
+\DoxyCodeLine{00086\ \textcolor{comment}{//PlotUtils::cuts\_t<UNIVERSE,\ EVENT>\ GetCCQENuCuts()}}
+\DoxyCodeLine{00087\ \textcolor{comment}{//\{}}
+\DoxyCodeLine{00088\ \textcolor{comment}{//\ \ PlotUtils::cuts\_t<UNIVERSE,\ EVENT>\ ccqe\_cuts;}}
+\DoxyCodeLine{00089\ \textcolor{comment}{//\ \ std::cout\ <<\ "{}\ set\ up\ the\ cuts"{}\ <<\ std::endl;}}
+\DoxyCodeLine{00090\ \textcolor{comment}{//\ \ //\ event\ cuts}}
+\DoxyCodeLine{00091\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ NoDeadtime<UNIVERSE,\ EVENT>(1,\ "{}Deadtime"{}));}}
+\DoxyCodeLine{00092\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ Apothem<UNIVERSE>(850.));}}
+\DoxyCodeLine{00093\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ ZRange<UNIVERSE>("{}Tracker"{},\ 5980,\ 8422));}}
+\DoxyCodeLine{00094\ \textcolor{comment}{//\ \ //\ muon\ cuts}}
+\DoxyCodeLine{00095\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ HasMINOSMatch<UNIVERSE,\ EVENT>());}}
+\DoxyCodeLine{00096\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ IsNeutrino<UNIVERSE,\ EVENT>(true));}}
+\DoxyCodeLine{00097\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ MaxMuonAngle<UNIVERSE,\ EVENT>(20.));}}
+\DoxyCodeLine{00098\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ MuonMomentumMin<UNIVERSE,\ EVENT>(1.5,\ "{}Minimum\ Pmu"{}));}}
+\DoxyCodeLine{00099\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ MuonMomentumMax<UNIVERSE,\ EVENT>(20.,\ "{}Maximum\ Pmu"{}));}}
+\DoxyCodeLine{00100\ \textcolor{comment}{//\ \ //\ recoil\ cuts}}
+\DoxyCodeLine{00101\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ MaxMultiplicity<UNIVERSE,\ EVENT>(2));}}
+\DoxyCodeLine{00102\ \textcolor{comment}{//\ \ ccqe\_cuts.emplace\_back(new\ GoodRecoil<UNIVERSE,\ EVENT>());}}
+\DoxyCodeLine{00103\ \textcolor{comment}{//\ \ return\ ccqe\_cuts;}}
+\DoxyCodeLine{00104\ \textcolor{comment}{//\}}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{keyword}{namespace\ }config\_truth\{}
+\DoxyCodeLine{00111\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/signal}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ UNIVERSE>}
+\DoxyCodeLine{00114\ PlotUtils::constraints\_t<UNIVERSE>\ GetCCQEPhaseSpaceFromConfig(\mbox{\hyperlink{classNuConfig}{NuConfig}}\ \&\ config)}
+\DoxyCodeLine{00115\ \{}
+\DoxyCodeLine{00116\ \ }
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{comment}{//\ \ signalDef.emplace\_back(new\ MaximumConstraintFromConfig<UNIVERSE,double,\&UNIVERSE::GetTrueThetamuDegrees>(config.GetValue("{}MaxMuonAngle"{})));}}
+\DoxyCodeLine{00119\ \textcolor{comment}{//\ \ signalDef.emplace\_back(new\ MinimumConstraintFromConfig<UNIVERSE,double,\&UNIVERSE::GetTruePmuGeV>(config.GetValue("{}MuonMomentumMin"{})));}}
+\DoxyCodeLine{00120\ \textcolor{comment}{//\ \ signalDef.emplace\_back(new\ MaximumConstraintFromConfig<UNIVERSE,double,\&UNIVERSE::GetTruePmuGeV>(config.GetValue("{}MuonMomentumMax"{})));}}
+\DoxyCodeLine{00121\ \textcolor{comment}{//\ \ signalDef.emplace\_back(new\ Apothem<UNIVERSE>(config.GetValue("{}Apothem"{})));}}
+\DoxyCodeLine{00122\ \textcolor{comment}{//\ \ signalDef.emplace\_back(new\ RangeConstraintFromConfig<UNIVERSE,double,\&UNIVERSE::GetTrueZVertex>(config.GetValue("{}ZRange"{})));}}
+\DoxyCodeLine{00123\ \textcolor{comment}{//}}
+\DoxyCodeLine{00124\ \ \ }
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{typedef}\ std::function<double(\textcolor{keyword}{const}\ UNIVERSE\&)>\ PointerToCVUniverseFunction;}
+\DoxyCodeLine{00126\ \ \ \ \ PlotUtils::constraints\_t<UNIVERSE>\ signalDef;}
+\DoxyCodeLine{00127\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ set\ up\ the\ constraints\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{//\ event\ cuts}}
+\DoxyCodeLine{00129\ \ \ \ \ \ std::vector<NuConfig>\ cuts\ =\ config.GetConfigVector();}
+\DoxyCodeLine{00130\ \ \ \ \ }
+\DoxyCodeLine{00131\ \ \ \ \ \mbox{\hyperlink{classCVFunctions}{CVFunctions<UNIVERSE>}}\ fun;}
+\DoxyCodeLine{00132\ \ }
+\DoxyCodeLine{00133\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ cut:cuts)\{}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ std::string\ key\ =\ cut.GetString(\textcolor{stringliteral}{"{}name"{}});}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ std::string\ variable\ =\ cut.GetString(\textcolor{stringliteral}{"{}variable"{}});}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ set\ up\ phase\ space\ \ "{}}\ <<\ key\ <<\ \textcolor{stringliteral}{"{}\ using\ variable\ "{}}\ <<\ variable\ <<\ std::endl;}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ cut.IsMember(\textcolor{stringliteral}{"{}equals"{}}))\{}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ signalDef.emplace\_back(\ \textcolor{keyword}{new}\ IsSameConstraintFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cut.IsMember(\textcolor{stringliteral}{"{}min"{}})\ and\ cut.IsMember(\textcolor{stringliteral}{"{}max"{}}))\{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ signalDef.emplace\_back(\ \textcolor{keyword}{new}\ RangeConstraintFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ cut.IsMember(\textcolor{stringliteral}{"{}max"{}}))\{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ signalDef.emplace\_back(\ \textcolor{keyword}{new}\ MaximumConstraintFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ cut.IsMember(\textcolor{stringliteral}{"{}min"{}}))\{}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ signalDef.emplace\_back(\ \textcolor{keyword}{new}\ MinimumConstraintFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ asked\ for\ a\ signalDef\ without\ a\ valid\ type\ "{}}\ <<\ key\ <<\ std::endl;}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exit(8);}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00159\ \ \ \ \ \}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \textcolor{keywordflow}{return}\ signalDef;}
+\DoxyCodeLine{00162\ \}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{comment}{//\ CCQELike\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ //\ this\ is\ actually\ identical\ to\ the\ fiducial\ stuff}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ UNIVERSE>}
+\DoxyCodeLine{00169\ PlotUtils::constraints\_t<UNIVERSE>\ GetCCQESignalFromConfig(\mbox{\hyperlink{classNuConfig}{NuConfig}}\ \&\ config)}
+\DoxyCodeLine{00170\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{typedef}\ std::function<double(\textcolor{keyword}{const}\ UNIVERSE\&)>\ PointerToCVUniverseFunction;}
+\DoxyCodeLine{00172\ \ \ \ \ PlotUtils::constraints\_t<UNIVERSE>\ signalDef;}
+\DoxyCodeLine{00173\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ set\ up\ the\ constraints\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{comment}{//\ event\ cuts}}
+\DoxyCodeLine{00175\ \ \ std::vector<NuConfig>\ cuts\ =\ config.GetConfigVector();}
+\DoxyCodeLine{00176\ \ \ \ \ \mbox{\hyperlink{classCVFunctions}{CVFunctions<UNIVERSE>}}\ fun;}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ cut:cuts)\{}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ std::string\ key\ =\ cut.GetString(\textcolor{stringliteral}{"{}name"{}});\textcolor{comment}{//\ make\ a\ subconfig}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ std::string\ variable\ =\ cut.GetString(\textcolor{stringliteral}{"{}variable"{}});}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ set\ up\ signal\ definition\ \ "{}}\ <<\ key\ <<\ \textcolor{stringliteral}{"{}\ using\ variable\ "{}}\ <<\ variable\ <<\ std::endl;}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ cut.IsMember(\textcolor{stringliteral}{"{}equals"{}}))\{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ signalDef.emplace\_back(\ \textcolor{keyword}{new}\ IsSameConstraintFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cut.IsMember(\textcolor{stringliteral}{"{}min"{}})\ and\ cut.IsMember(\textcolor{stringliteral}{"{}max"{}}))\{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ signalDef.emplace\_back(\ \textcolor{keyword}{new}\ RangeConstraintFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ cut.IsMember(\textcolor{stringliteral}{"{}max"{}}))\{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ signalDef.emplace\_back(\ \textcolor{keyword}{new}\ MaximumConstraintFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ cut.IsMember(\textcolor{stringliteral}{"{}min"{}}))\{}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ signalDef.emplace\_back(\ \textcolor{keyword}{new}\ MinimumConstraintFromConfigFunc<UNIVERSE>(cut,fun));}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ asked\ for\ a\ signalDef\ without\ a\ valid\ type\ "{}}\ <<\ key\ <<\ std::endl;}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exit(8);}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00204\ \ \ \ \ \}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \textcolor{keywordflow}{return}\ signalDef;}
+\DoxyCodeLine{00207\ \}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \}\ \textcolor{comment}{//\ end\ namespace}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

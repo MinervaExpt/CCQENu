@@ -1,0 +1,76 @@
+\doxysection{Copy\+FIle.\+h}
+\hypertarget{_copy_f_ile_8h_source}{}\label{_copy_f_ile_8h_source}\index{make\_hists/utils/CopyFIle.h@{make\_hists/utils/CopyFIle.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}TROOT.h"{}}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}TKey.h"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}TFile.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}TSystem.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}TTree.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{keywordtype}{void}\ CopyDir(TDirectory\ *source)\ \{}
+\DoxyCodeLine{00007\ \ \ \ \textcolor{comment}{//copy\ all\ objects\ and\ subdirs\ of\ directory\ source\ as\ a\ subdir\ of\ the\ current\ directory}}
+\DoxyCodeLine{00008\ \ \ \ source-\/>ls();}
+\DoxyCodeLine{00009\ \ \ \ TDirectory\ *savdir\ =\ gDirectory;}
+\DoxyCodeLine{00010\ \ \ \ TDirectory\ *adir\ =\ savdir-\/>mkdir(source-\/>GetName());}
+\DoxyCodeLine{00011\ \ \ \ adir-\/>cd();}
+\DoxyCodeLine{00012\ \ \ \ \textcolor{comment}{//loop\ on\ all\ entries\ of\ this\ directory}}
+\DoxyCodeLine{00013\ \ \ \ TKey\ *key;}
+\DoxyCodeLine{00014\ \ \ \ TIter\ nextkey(source-\/>GetListOfKeys());}
+\DoxyCodeLine{00015\ \ \ \ \textcolor{keywordflow}{while}\ ((key\ =\ (TKey*)nextkey()))\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *classname\ =\ key-\/>GetClassName();}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ TClass\ *cl\ =\ gROOT-\/>GetClass(classname);}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!cl)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cl-\/>InheritsFrom(TDirectory::Class()))\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ source-\/>cd(key-\/>GetName());}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ TDirectory\ *subdir\ =\ gDirectory;}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ adir-\/>cd();}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ CopyDir(subdir);}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ adir-\/>cd();}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (cl-\/>InheritsFrom(TTree::Class()))\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ TTree\ *T\ =\ (TTree*)source-\/>Get(key-\/>GetName());}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ adir-\/>cd();}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ TTree\ *newT\ =\ T-\/>CloneTree(-\/1,\textcolor{stringliteral}{"{}fast"{}});}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ newT-\/>Write();}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ source-\/>cd();}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ TObject\ *obj\ =\ key-\/>ReadObj();}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ adir-\/>cd();}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ obj-\/>Write();}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ obj;}
+\DoxyCodeLine{00036\ \ \ \ \ \ \}}
+\DoxyCodeLine{00037\ \ \ \}}
+\DoxyCodeLine{00038\ \ \ adir-\/>SaveSelf(kTRUE);}
+\DoxyCodeLine{00039\ \ \ savdir-\/>cd();}
+\DoxyCodeLine{00040\ \}}
+\DoxyCodeLine{00041\ \textcolor{keywordtype}{void}\ CopyFile(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fname)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \textcolor{comment}{//Copy\ all\ objects\ and\ subdirs\ of\ file\ fname\ as\ a\ subdir\ of\ the\ current\ directory}}
+\DoxyCodeLine{00043\ \ \ \ TDirectory\ *target\ =\ gDirectory;}
+\DoxyCodeLine{00044\ \ \ \ TFile\ *f\ =\ TFile::Open(fname);}
+\DoxyCodeLine{00045\ \ \ \ \textcolor{keywordflow}{if}\ (!f\ ||\ f-\/>IsZombie())\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}Cannot\ copy\ file:\ \%s\(\backslash\)n"{}},fname);}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ target-\/>cd();}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00049\ \ \ \ \}}
+\DoxyCodeLine{00050\ \ \ \ target-\/>cd();}
+\DoxyCodeLine{00051\ \ \ \ CopyDir(f);}
+\DoxyCodeLine{00052\ \ \ \ \textcolor{keyword}{delete}\ f;}
+\DoxyCodeLine{00053\ \ \ \ target-\/>cd();}
+\DoxyCodeLine{00054\ \}}
+\DoxyCodeLine{00055\ \textcolor{keywordtype}{void}\ copyFiles()\ \{}
+\DoxyCodeLine{00056\ \ \ \ \textcolor{comment}{//prepare\ files\ to\ be\ copied}}
+\DoxyCodeLine{00057\ \ \ \ \textcolor{keywordflow}{if}(gSystem-\/>AccessPathName(\textcolor{stringliteral}{"{}tot100.root"{}}))\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ gSystem-\/>CopyFile(\textcolor{stringliteral}{"{}hsimple.root"{}},\ \textcolor{stringliteral}{"{}tot100.root"{}});}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ gSystem-\/>CopyFile(\textcolor{stringliteral}{"{}hsimple.root"{}},\ \textcolor{stringliteral}{"{}hs1.root"{}});}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ gSystem-\/>CopyFile(\textcolor{stringliteral}{"{}hsimple.root"{}},\ \textcolor{stringliteral}{"{}hs2.root"{}});}
+\DoxyCodeLine{00061\ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \textcolor{comment}{//main\ function\ copying\ 4\ files\ as\ subdirectories\ of\ a\ new\ file}}
+\DoxyCodeLine{00063\ \ \ \ TFile\ *f\ =\ \textcolor{keyword}{new}\ TFile(\textcolor{stringliteral}{"{}result.root"{}},\textcolor{stringliteral}{"{}recreate"{}});}
+\DoxyCodeLine{00064\ \ \ \ CopyFile(\textcolor{stringliteral}{"{}tot100.root"{}});}
+\DoxyCodeLine{00065\ \ \ \ CopyFile(\textcolor{stringliteral}{"{}hsimple.root"{}});}
+\DoxyCodeLine{00066\ \ \ \ CopyFile(\textcolor{stringliteral}{"{}hs1.root"{}});}
+\DoxyCodeLine{00067\ \ \ \ CopyFile(\textcolor{stringliteral}{"{}hs2.root"{}});}
+\DoxyCodeLine{00068\ \ \ \ f-\/>ls();}
+\DoxyCodeLine{00069\ \ \ \ \textcolor{keyword}{delete}\ f;}
+\DoxyCodeLine{00070\ \}}
+
+\end{DoxyCode}

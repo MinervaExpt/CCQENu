@@ -1,0 +1,25 @@
+The python script \char`\"{}getvars.\+py\char`\"{} attempts to identify all the variables called from a CCQENu tuple among a collection of {\ttfamily .h} and {\ttfamily .\mbox{\hyperlink{classC}{C}}} files identified by name or directory. To run this script, enter the folder containing \char`\"{}getvars.\+py\char`\"{} and enter
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{python3\ getvars.py\ [arguments]}
+
+\end{DoxyCode}
+
+
+The arguments can be one of the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{flist\ \ :\ Tells\ program\ to\ extract\ directory\ and\ file\ names\ from\ ./Input\_Files/files\_list.txt\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ and\ recursively\ collect\ file\ names\ for\ named\ directories.}
+\DoxyCodeLine{glist\ \ :\ Tells\ program\ to\ only\ search\ for\ variables\ called\ using\ the\ list\ of\ "{}get's"{}\ in\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ ./Input\_Files/allowed\_gets.txt.\ The\ default\ will\ be\ to\ look\ for\ all\ "{}get's"{}\ with\ the}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ exception\ of\ those\ listed\ in\ ./Input\_Files/bad\_gets.txt}
+\DoxyCodeLine{/path/\ :\ Any\ number\ of\ valid\ directory\ or\ file\ paths.\ These\ will\ be\ treated\ the\ same\ as\ (and\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ in\ addition\ to\ any)\ items\ found\ in\ ./Input\_Files/files\_list.txt.\ If\ there\ are\ no\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ path\ arguments\ and\ flist\ is\ not\ included\ ./Input\_Files/files\_list.txt\ will\ be\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ referenced\ by\ default.}
+
+\end{DoxyCode}
+ 

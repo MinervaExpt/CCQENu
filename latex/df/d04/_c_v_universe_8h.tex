@@ -1,0 +1,39 @@
+\doxysection{make\+\_\+hists/include/\+CVUniverse.h File Reference}
+\hypertarget{_c_v_universe_8h}{}\label{_c_v_universe_8h}\index{make\_hists/include/CVUniverse.h@{make\_hists/include/CVUniverse.h}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include "{}Plot\+Utils/\+Calo\+Correction.\+h"{}}\newline
+{\ttfamily \#include "{}Plot\+Utils/\+Chain\+Wrapper.\+h"{}}\newline
+{\ttfamily \#include "{}Plot\+Utils/\+Geant\+Hadron\+Systematics.\+h"{}}\newline
+{\ttfamily \#include "{}Plot\+Utils/\+Minerva\+Universe.\+h"{}}\newline
+{\ttfamily \#include "{}Plot\+Utils/\+Physics\+Variables.\+h"{}}\newline
+{\ttfamily \#include "{}TVector3.\+h"{}}\newline
+{\ttfamily \#include "{}utils/\+Nu\+Config.\+h"{}}\newline
+{\ttfamily \#include "{}Plot\+Utils/\+Muon\+Functions.\+h"{}}\newline
+{\ttfamily \#include "{}Plot\+Utils/\+Recoil\+Energy\+Functions.\+h"{}}\newline
+{\ttfamily \#include "{}Plot\+Utils/\+Truth\+Functions.\+h"{}}\newline
+{\ttfamily \#include "{}Plot\+Utils/\+Weight\+Functions.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Heidi Schellman/\+Noah Vaughan/\+Sean\+Gilligan 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 \texorpdfstring{$\ast$}{*} 
+\end{DoxyVersion}
+\hypertarget{_variable_from_config_8h_LICENSE}{}\doxysubsection{\texorpdfstring{\texorpdfstring{$\ast$}{*}}{\texorpdfstring{$\ast$}{*}}}\label{_variable_from_config_8h_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. \texorpdfstring{$\ast$}{*} \hypertarget{_variable_from_config_8h_DESCRIPTION}{}\doxysubsection{\texorpdfstring{\texorpdfstring{$\ast$}{*}}{\texorpdfstring{$\ast$}{*}}}\label{_variable_from_config_8h_DESCRIPTION}
+The main universe class, it inherits from Minerva\+Universe which implements most of the variations one addition is units of GeV and degrees where the base classes use MeV and radians
+
+\DoxyHorRuler{0}
+ Base class for an un-\/systematically shifted (i.\+e. CV) universe. Implement "{}\+Get"{} functions for all the quantities that you need for your analysis.
+
+your "{}\+Get"{} functions the way you want them. In that case, you don\textquotesingle{}t need to \hypertarget{_c_v_universe_8h_autotoc_md1}{}\doxysubsection{\texorpdfstring{re-\/write them here.}{re-\/write them here.}}\label{_c_v_universe_8h_autotoc_md1}

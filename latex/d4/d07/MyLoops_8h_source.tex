@@ -1,0 +1,144 @@
+\hypertarget{MyLoops_8h_source}{}\doxysection{My\+Loops.\+h}
+\label{MyLoops_8h_source}\index{make\_hists/include/MyLoops.h@{make\_hists/include/MyLoops.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#define\ CLOSURE\ 1}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{enum}\ EDataMCTruth\ \{kData,\ kMC,\ kTruth,\ kNDataMCTruthTypes\};}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ Loop\ and\ fill}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#ifndef\ \_\_CINT\_\_\ }\textcolor{comment}{//for\ PlotUtils::cuts\_t<>}}
+\DoxyCodeLine{00016\ \textcolor{keywordtype}{void}\ LoopAndFillEventSelection(std::string\ tag,}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ PlotUtils::MacroUtil\&\ util,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<std::string,\ std::vector<CVUniverse*>\ >\ error\_bands,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::VariableFromConfig*>\&\ variables,}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::Variable2DFromConfig*>\&\ variables2D,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EDataMCTruth\ data\_mc\_truth,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PlotUtils::Cutter<CVUniverse>\&\ selection,\ PlotUtils::Model<CVUniverse,PlotUtils::detail::empty>\&\ model,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classPlotUtils_1_1weight__MCreScale}{PlotUtils::weight\_MCreScale}}\ mcRescale)\ \{}
+\DoxyCodeLine{00024\ \ \ \textcolor{comment}{//\ Prepare\ loop}}
+\DoxyCodeLine{00025\ \ \ MinervaUniverse::SetTruth(\textcolor{keyword}{false});}
+\DoxyCodeLine{00026\ \ \ \textcolor{keywordtype}{int}\ nentries\ =\ -\/1;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \textcolor{comment}{//\ get\ ready\ for\ weights\ by\ finding\ cv\ universe\ pointer}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ assert(!error\_bands[\textcolor{stringliteral}{"{}cv"{}}].empty()\ \&\&\ \textcolor{stringliteral}{"{}\(\backslash\)"{}cv\(\backslash\)"{}\ error\ band\ is\ empty!\ \ Can't\ set\ Model\ weight."{}});}
+\DoxyCodeLine{00031\ \ \ \textcolor{keyword}{auto}\&\ cvUniv\ =\ error\_bands[\textcolor{stringliteral}{"{}cv"{}}].front();}
+\DoxyCodeLine{00032\ \ \ \textcolor{comment}{//\ make\ a\ dummy\ event\ -\/\ may\ need\ to\ make\ fancier}}
+\DoxyCodeLine{00033\ \ \ PlotUtils::detail::empty\ event;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \textcolor{keywordflow}{if}\ (\ variables.size()\ <\ 1)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ no\ variables\ to\ fill\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{return};\ \ \textcolor{comment}{//\ don't\ bother\ if\ there\ are\ no\ variables.}}
+\DoxyCodeLine{00038\ \ \ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ ==\ kData\ )\{}
+\DoxyCodeLine{00041\ \ \ \ \ nentries\ =\ util.GetDataEntries();}
+\DoxyCodeLine{00042\ \ \ \}}
+\DoxyCodeLine{00043\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ ==\ kMC\ )\{}
+\DoxyCodeLine{00044\ \ \ \ \ nentries\ =\ util.GetMCEntries();}
+\DoxyCodeLine{00045\ \ \ \}}
+\DoxyCodeLine{00046\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ nentries\ =\ util.GetTruthEntries()\ ;}
+\DoxyCodeLine{00049\ \ \ \ \ MinervaUniverse::SetTruth(\textcolor{keyword}{true});}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ starting\ loop\ "{}}\ <<\ data\_mc\_truth\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ nentries\ <<\ std::endl;}
+\DoxyCodeLine{00054\ \ \ \textcolor{comment}{//\ Begin\ entries\ loop}}
+\DoxyCodeLine{00055\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ nentries;\ i++)\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordflow}{if}(data\_mc\_truth\ !=\ kData)\ i+=\ prescale-\/1;}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordflow}{if}\ (i+1\ \%\ 1000\ ==\ 0)\ std::cout\ <<\ (i\ /\ 1000)\ <<\ \textcolor{stringliteral}{"{}k\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00058\ \ \ \ \ cvUniv-\/>SetEntry(i);}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ !=\ kData)\ model.SetEntry(*cvUniv,\ event);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#ifdef\ CLOSURE}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ cvWeight\ =\ 1.0;}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ cvWeight\ =\ (data\_mc\_truth\ ==\ kData)\ ?\ 1.:\ model.GetWeight(*cvUniv,event);}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ detail\ may\ be\ used\ for\ more\ complex\ things}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//\ TODO:\ Is\ this\ scaled\ cvWeight\ necessary?}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ const\ double\ cvWeightScaled\ =\ (data\_mc\_truth\ kData)\ ?\ 1.\ :\ cvWeight*mcRescale.GetScale(q2qe,\ "{}cv"{});}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{//\ Loop\ bands\ and\ universes}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ band\ :\ error\_bands)\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ std::vector<CVUniverse*>\ error\_band\_universes\ =\ band.second;}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \textcolor{comment}{//\ \ HMS\ replace\ with\ iuniv\ to\ access\ weights\ more\ easily}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \textcolor{comment}{//\ \ HMS\ for\ (auto\ universe\ :\ error\_band\_universes)\ \{}}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ std::string\ uni\_name\ =\ (band.second)[0]-\/>ShortName();}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ iuniv=0;\ iuniv\ <\ error\_band\_universes.size();\ iuniv++)\{}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ universe\ =\ error\_band\_universes[iuniv];}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ universe-\/>SetEntry(i);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Process\ this\ event/universe}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{comment}{//double\ weight\ =\ 1;}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{comment}{//if\ (universe-\/>ShortName()\ ==\ "{}cv"{}\ )\ weight\ =\ data\_mc\_truth\ ==\ kData\ ?\ 1.\ :\ universe-\/>GetWeight();}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ probably\ want\ to\ move\ this\ later\ on\ inside\ the\ loop}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#ifdef\ CLOSURE}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ weight\ =\ 1.0;}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ weight\ =\ (data\_mc\_truth\ ==\ kData)\ ?\ 1.\ :\ model.GetWeight(*universe,\ event);}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Only\ calculate\ the\ per-\/universe\ weight\ for\ events\ that\ will\ actually\ use\ it.}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//PlotUtils::detail::empty\ event;}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fill}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(data\_mc\_truth\ ==\ kMC)\{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(selection.isMCSelected(*universe,\ event,\ weight).all()}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \&\&\ selection.isSignal(*universe))\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//double\ weight\ =\ data\_mc\_truth\ ==\ kData\ ?\ 1.\ :\ universe-\/>GetWeight();}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ q2qe\ =\ universe-\/>GetQ2QEGeV();}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scale\ =\ mcRescale.GetScale(tag,\ q2qe,\ uni\_name,\ iuniv);\ \textcolor{comment}{//Only\ calculate\ the\ per-\/universe\ weight\ for\ events\ that\ will\ actually\ use\ it.}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#ifdef\ CLOSURE}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ scale\ =\ 1.0;}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ FillMC(tag,\ universe,\ weight,\ variables,\ variables2D,\ scale);}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ FillResponse(tag,universe,weight,variables,variables2D,\ scale);}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ ==\ kTruth)\{}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(selection.isEfficiencyDenom(*universe,\ weight))\{}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ q2qe\ =\ universe-\/>GetTrueQ2QEGeV();}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scale\ =\ mcRescale.GetScale(tag,\ q2qe,\ uni\_name,\ iuniv);\ \textcolor{comment}{//Only\ calculate\ the\ per-\/universe\ weight\ for\ events\ that\ will\ actually\ use\ it.}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#ifdef\ CLOSURE}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ scale\ =\ 1.0;}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ FillSignalTruth(tag,\ universe,\ weight,\ variables,\ variables2D,\ scale);}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\{\ \textcolor{comment}{//kData}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(selection.isDataSelected(*universe,\ event).all())\ FillData(tag,\ universe,\ variables,\ variables2D);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \}\ \textcolor{comment}{//\ End\ universes}}
+\DoxyCodeLine{00134\ \ \ \ \ \}\ \textcolor{comment}{//\ End\ error\ bands}}
+\DoxyCodeLine{00135\ \ \ \}\ \textcolor{comment}{//\ End\ entries\ loop}}
+\DoxyCodeLine{00136\ \}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\_\_CINT\_\_}}
+
+\end{DoxyCode}

@@ -1,0 +1,279 @@
+\doxysection{Loops.\+h}
+\hypertarget{_loops_8h_source}{}\label{_loops_8h_source}\index{make\_hists/include/Loops.h@{make\_hists/include/Loops.h}}
+\mbox{\hyperlink{_loops_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{enum}\ EDataMCTruth\ \{\ kData,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kMC,}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kTruth,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ kNDataMCTruthTypes\ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ \#define\ CLOSUREDETAIL}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Loop\ and\ fill}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#ifndef\ \_\_CINT\_\_\ \ }\textcolor{comment}{//\ for\ PlotUtils::cuts\_t<>}}
+\DoxyCodeLine{00029\ \textcolor{keywordtype}{void}\ LoopAndFillEventSelection(std::string\ tag,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ PlotUtils::MacroUtil\&\ util,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<std::string,\ std::vector<CVUniverse*>\ >\ error\_bands,}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::VariableFromConfig*>\&\ variables,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CCQENu::Variable2DFromConfig*>\&\ variables2D,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EDataMCTruth\ data\_mc\_truth,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PlotUtils::Cutter<CVUniverse>\&\ selection,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PlotUtils::Model<CVUniverse,\ PlotUtils::detail::empty>\&\ model,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_plot_utils_1_1weight___m_cre_scale}{PlotUtils::weight\_MCreScale}}\ mcRescale,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ closure\ =\ \textcolor{keyword}{false},\ \textcolor{keywordtype}{bool}\ mc\_reco\_to\_csv\ =\ \textcolor{keyword}{false})\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//\ Prepare\ loop}}
+\DoxyCodeLine{00040\ \ \ \ \ MinervaUniverse::SetTruth(\textcolor{keyword}{false});}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{int}\ nentries\ =\ -\/1;}
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{class_c_v_functions}{CVFunctions<CVUniverse>}}\ fund;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ TFile\ *\ myFile;}
+\DoxyCodeLine{00045\ \ \ \ \ TTree\ *\ mc\_tree;}
+\DoxyCodeLine{00046\ \ \ \ \ TTree\ *\ data\_tree;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{//\ future\ code\ to\ dump\ the\ outputs.\ }}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{//\ if\ (data\_mc\_truth\ ==\ kData)\ \{}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ myFile\ =\ TFile::Open("{}data.root"{},\ "{}RECREATE"{});}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ data\_tree\ =\ new\ TTree("{}digest"{},\ "{}data\ tree"{});}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ fund-\/>MakeTree(data\_tree,1,0);\ }}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{//\ \}\ }}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//\ else\ \{}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ if\ (data\_mc\_truth\ ==\ kMC)\ \{}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ myFile\ =\ TFile::Open("{}mc.root"{},\ "{}RECREATE"{});}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ mc\_tree\ =\ new\ TTree("{}digest"{},\ "{}mc\ tree"{});}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ fund-\/>MakeTree(data\_tree,0,0);\ }}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \}}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ }
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ get\ ready\ for\ weights\ by\ finding\ cv\ universe\ pointer}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ assert(!error\_bands[\textcolor{stringliteral}{"{}cv"{}}].empty()\ \&\&\ \textcolor{stringliteral}{"{}\(\backslash\)"{}cv\(\backslash\)"{}\ error\ band\ is\ empty!\ \ Can't\ set\ Model\ weight."{}});}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{auto}\&\ cvUniv\ =\ error\_bands[\textcolor{stringliteral}{"{}cv"{}}].front();}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{//\ make\ a\ dummy\ event\ -\/\ may\ need\ to\ make\ fancier}}
+\DoxyCodeLine{00073\ \ \ \ \ PlotUtils::detail::empty\ event;}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ std::ofstream\ csvFile;}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{if}\ (variables.size()\ <\ 1)\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ no\ variables\ to\ fill\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};\ \ \textcolor{comment}{//\ don't\ bother\ if\ there\ are\ no\ variables.}}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ ==\ kData)\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ nentries\ =\ util.GetDataEntries();}
+\DoxyCodeLine{00083\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ ==\ kMC)\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ nentries\ =\ util.GetMCEntries();}
+\DoxyCodeLine{00085\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ nentries\ =\ util.GetTruthEntries();}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ MinervaUniverse::SetTruth(\textcolor{keyword}{true});}
+\DoxyCodeLine{00088\ \ \ \ \ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ loc\ =\ tag.find(\textcolor{stringliteral}{"{}\_\_\_"{}})\ +\ 3;}
+\DoxyCodeLine{00091\ \ \ \ \ std::string\ cat(tag,\ loc,\ string::npos);}
+\DoxyCodeLine{00092\ \ \ \ \ std::string\ sample(tag,\ 0,\ loc\ -\/\ 3);}
+\DoxyCodeLine{00093\ \ \ \ \ std::cout\ <<\ sample\ <<\ \textcolor{stringliteral}{"{}\ category\ "{}}\ <<\ cat\ <<\ std::endl;}
+\DoxyCodeLine{00094\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ starting\ loop\ "{}}\ <<\ data\_mc\_truth\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ nentries\ <<\ std::endl;}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ If\ sending\ MC\ Reco\ values\ to\ CSV\ create\ file\ and\ add\ columns\ names}}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ ==\ kMC\ \&\&\ mc\_reco\_to\_csv)\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ std::string\ csvFileName\ =\ \textcolor{stringliteral}{"{}mc\_reco\_entries\_"{}}\ +\ sample\ +\ \textcolor{stringliteral}{"{}\_"{}}\ +\ cat\ +\ \textcolor{stringliteral}{"{}.csv"{}};}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ csvFile.open(csvFileName);}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ csvFile\ <<\ \textcolor{stringliteral}{"{}Entry"{}};}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables)\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (v-\/>hasMC[tag])\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ \textcolor{stringliteral}{"{};"{}}\ <<\ v-\/>GetName();}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ csvFile\ <<\ \textcolor{stringliteral}{"{};Interaction;nFSPart;FSPDGs;FSPartEs;"{}};}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ \ \ \ \ \ \ \ std::vector<std::string>\ true\_particle\_counts\ =\ \{"{}nFSChargedPion"{},"{}nFSNeutralPion"{},}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}nFSProton"{},"{}nFSNeutron"{},"{}nFSNegMuon"{},}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}nFSGamma"{}\};}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ \ \ \ \ \ \ \ for\ (auto\ v:true\_particle\_counts)\ \{\ csvFile\ <<\ "{};"{}\ <<\ v;\ \}}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ csvFile\ <<\ \textcolor{stringliteral}{"{};Arachne"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00114\ \ \ \ \ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{comment}{//\ status\ bar\ stuff}}
+\DoxyCodeLine{00117\ \ \ \ \ std::cout\ <<\ std::endl;}
+\DoxyCodeLine{00118\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ 0\%\ 10\%\ 20\%\ 30\%\ 40\%\ 50\%\ 60\%\ 70\%\ 80\%\ 90\%\ 100\%"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00119\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ \ \(\backslash\)\(\backslash\)\_\_\_\(\backslash\)\(\backslash\)\_\_\_\(\backslash\)\(\backslash\)\_\_\_\(\backslash\)\(\backslash\)\_\_\_\(\backslash\)\(\backslash\)\_\_\_\(\backslash\)\(\backslash\)\_\_\_\(\backslash\)\(\backslash\)\_\_\_\(\backslash\)\(\backslash\)\_\_\_\(\backslash\)\(\backslash\)\_\_\_\(\backslash\)\(\backslash\)\_\_\_\(\backslash\)\(\backslash\)\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00120\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ \ \ |\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_|\ \ \ [\_\_0.0\%]"{}};}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{double}\ progress\ =\ 0;}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{comment}{//\ Begin\ entries\ loop}}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ nentries;\ i++)\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ !=\ kData)\ i\ +=\ prescale\ -\/\ 1;}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (i+1\ \%\ 1000\ ==\ 0)\ std::cout\ <<\ (i\ /\ 1000)\ <<\ "{}k\ "{}\ <<\ std::endl;}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ status\ bar\ stuff}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (((double)(i\ +\ 1)\ /\ nentries)\ *\ 100\ >=\ progress\ +\ 2.5)\ \{}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ progress\ +=\ 2.5;}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ std::cout\ <<\ '\(\backslash\)r'\ <<\ std::flush\ <<\ "{}\ \ \ |"{};}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ //\ std::cout\ <<\ std::endl\ <<\ "{}\ \ \ |"{};}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ for\ (int\ j\ =\ 0;\ j\ <\ progress\ /\ 2.5;\ j++)\ std::cout\ <<\ "{}\(\backslash\)e[0;31;47m\ \(\backslash\)e[0m"{};}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ for\ (int\ j\ =\ 40;\ j\ >\ progress\ /\ 2.5;\ j-\/-\/)\ std::cout\ <<\ "{}\_"{};}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ std::cout\ <<\ "{}|\ \ \ ["{};}}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ if\ (progress\ <\ 10)\ std::cout\ <<\ "{}\_"{};}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ if\ (progress\ <\ 100)\ std::cout\ <<\ "{}\_"{};}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ std::cout\ <<\ progress;}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ if\ (((int)(0.5\ +\ progress\ /\ 2.5))\ \%\ 2\ ==\ 0)\ std::cout\ <<\ "{}.0"{};}}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ std::cout\ <<\ "{}\%]"{};}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ std::cout\ <<\ "{}\ \ \ (\ "{};}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ for\ (int\ j\ =\ ((int)log10(nentries)\ -\/\ (int)log10(i\ +\ 1));\ j\ >\ 0;\ j-\/-\/)\ \{}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ std::cout\ <<\ "{}\_"{};}}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \}}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ std::cout\ <<\ i\ +\ 1\ <<\ "{}\ /\ "{}\ <<\ nentries\ <<\ "{}\ )"{};}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ if\ (progress\ ==\ 100)\ std::cout\ <<\ std::endl}}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ cvUniv-\/>SetEntry(i);}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{comment}{//HMS\ fund.Dump(cvUniv,data\_mc\_truth==kData,data\_mc\_truth==kTruth);}}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ !=\ kData)\ model.SetEntry(*cvUniv,\ event);}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ ==\ kMC\ ||\ data\_mc\_truth\ ==\ kData)\{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!cvUniv-\/>FastFilter())\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ cvWeight\ =\ (data\_mc\_truth\ ==\ kData\ ||\ closure)\ ?\ 1.\ :\ model.GetWeight(*cvUniv,\ event);\ \ \textcolor{comment}{//\ detail\ may\ be\ used\ for\ more\ complex\ things}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ Is\ this\ scaled\ cvWeight\ necessary?}}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ const\ double\ cvWeightScaled\ =\ (data\_mc\_truth\ kData)\ ?\ 1.\ :\ cvWeight*mcRescale.GetScale(q2qe,\ "{}cv"{});}}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Loop\ bands\ and\ universes}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ band\ :\ error\_bands)\ \{}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<CVUniverse*>\ error\_band\_universes\ =\ band.second;}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ HMS\ replace\ with\ iuniv\ to\ access\ weights\ more\ easily}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ HMS\ for\ (auto\ universe\ :\ error\_band\_universes)\ \{}}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ uni\_name\ =\ (band.second)[0]-\/>ShortName();}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ iuniv\ =\ 0;\ iuniv\ <\ error\_band\_universes.size();\ iuniv++)\ \{}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ universe\ =\ error\_band\_universes[iuniv];}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ universe-\/>SetEntry(i);}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Process\ this\ event/universe}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ double\ weight\ =\ 1;}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ (universe-\/>ShortName()\ ==\ "{}cv"{}\ )\ weight\ =\ data\_mc\_truth\ ==\ kData\ ?\ 1.\ :\ universe-\/>GetWeight();}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ probably\ want\ to\ move\ this\ later\ on\ inside\ the\ loop}}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ weight\ =\ (data\_mc\_truth\ ==\ kData\ ||\ closure)\ ?\ 1.\ :\ model.GetWeight(*universe,\ event);\ \ \textcolor{comment}{//\ Only\ calculate\ the\ per-\/universe\ weight\ for\ events\ that\ will\ actually\ use\ it.}}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ PlotUtils::detail::empty\ event;}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fill}}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ ==\ kMC)\ \{}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#ifdef\ CLOSUREDETAIL}}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (closure\ \&\&\ universe-\/>ShortName()\ ==\ \textcolor{stringliteral}{"{}cv"{}}\ \&\&\ selection.isMCSelected(*universe,\ event,\ weight).all())\ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ universe-\/>GetRun()\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ universe-\/>GetSubRun()\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ universe-\/>GetGate()\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ universe-\/>GetPmuGeV()\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ weight\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ selection.isDataSelected(*universe,\ event).all()\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ selection.isMCSelected(*universe,\ event,\ weight).all()\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ tag\ <<\ selection.isSignal(*universe)\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ universe-\/>ShortName()\ <<\ std::endl;}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ universe-\/>Print();}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (selection.isMCSelected(*universe,\ event,\ weight).all()\ \&\&\ selection.isSignal(*universe))\ \{}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ double\ weight\ =\ data\_mc\_truth\ ==\ kData\ ?\ 1.\ :\ universe-\/>GetWeight();}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ q2qe\ =\ universe-\/>GetQ2QEGeV();}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scale\ =\ 1.0;}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!closure)\ scale\ =\ mcRescale.GetScale(cat,\ q2qe,\ uni\_name,\ iuniv);\ \ \textcolor{comment}{//\ Only\ calculate\ the\ per-\/universe\ weight\ for\ events\ that\ will\ actually\ use\ it.}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FillMC(tag,\ universe,\ weight,\ variables,\ variables2D,\ scale);}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FillResponse(tag,\ universe,\ weight,\ variables,\ variables2D,\ scale);}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FillResolution(tag,\ universe,\ weight,\ variables,\ variables2D,\ scale);}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (universe-\/>ShortName()\ ==\ \textcolor{stringliteral}{"{}cv"{}})\ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FillType(tag,\ universe,\ weight,\ variables,\ variables2D,\ scale);\ \ \textcolor{comment}{//\ only\ use\ cv\ and\ variables\ for\ now}}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Send\ MC\ Reco\ value\ to\ CSV\ here}}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mc\_reco\_to\_csv\ \&\&\ universe-\/>ShortName()\ ==\ \textcolor{stringliteral}{"{}cv"{}})\ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ i;}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables)\ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (v-\/>hasMC[tag])\ \{}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ \textcolor{stringliteral}{"{};"{}}\ <<\ v-\/>GetRecoValue(*universe,\ 0);}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ mcinttype\ =\ universe-\/>GetMCIntType();}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<int,\ std::string>\ interaction;}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interaction[1]\ =\ \textcolor{stringliteral}{"{}QE"{}};}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interaction[2]\ =\ \textcolor{stringliteral}{"{}RES"{}};}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interaction[3]\ =\ \textcolor{stringliteral}{"{}DIS"{}};}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interaction[4]\ =\ \textcolor{stringliteral}{"{}COH"{}};}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ interaction[8]\ =\ \textcolor{stringliteral}{"{}MEC"{}};}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ \textcolor{stringliteral}{"{};"{}}\ <<\ interaction[mcinttype];}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nFSParts\ =\ universe-\/>GetTrueNumberOfFSParticles();}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ \textcolor{stringliteral}{"{};"{}}\ <<\ universe-\/>GetTrueNumberOfFSParticles();}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<int>\ FSPartPDG\ =\ universe-\/>GetVecInt(\textcolor{stringliteral}{"{}mc\_FSPartPDG"{}});}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<double>\ mc\_FSPartE\ =\ universe-\/>GetVecDouble(\textcolor{stringliteral}{"{}mc\_FSPartPDG"{}});}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ \textcolor{stringliteral}{"{};\{"{}};}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ nFSParts\ -\/\ 1;\ i++)\ csvFile\ <<\ FSPartPDG[i]\ <<\ \textcolor{stringliteral}{"{},"{}};}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ FSPartPDG[nFSParts\ -\/\ 1]\ <<\ \textcolor{stringliteral}{"{}\};\{"{}};}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ nFSParts\ -\/\ 1;\ i++)\ csvFile\ <<\ mc\_FSPartE[i]\ <<\ \textcolor{stringliteral}{"{},"{}};}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ mc\_FSPartE[nFSParts\ -\/\ 1]\ <<\ \textcolor{stringliteral}{"{}\}"{}};}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00239\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::map<int,int>\ true\_counts\_per\_pdg\ =\ universe-\/>GetTrueFSCountsPerPDG();}}
+\DoxyCodeLine{00240\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ "{};"{}\ <<\ true\_counts\_per\_pdg[211]\ +\ true\_counts\_per\_pdg[-\/211];\ //\ nFSChargedPion}}
+\DoxyCodeLine{00241\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ "{};"{}\ <<\ true\_counts\_per\_pdg[111];\ //\ nFSNeutralPion}}
+\DoxyCodeLine{00242\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ "{};"{}\ <<\ true\_counts\_per\_pdg[2212];\ //\ nFSProton}}
+\DoxyCodeLine{00243\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ "{};"{}\ <<\ true\_counts\_per\_pdg[2112];\ //\ nFSNeutron}}
+\DoxyCodeLine{00244\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ "{};"{}\ <<\ true\_counts\_per\_pdg[13];\ //\ nFSNegMuon}}
+\DoxyCodeLine{00245\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ "{};"{}\ <<\ true\_counts\_per\_pdg[22];\ //\ nFSGamma}}
+\DoxyCodeLine{00246\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csvFile\ <<\ \textcolor{stringliteral}{"{};"{}}\ <<\ universe-\/>StringTrueArachneLink()\ <<\ std::endl;}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Done\ Sending\ MC\ Reco\ value\ to\ CSV}}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ ==\ kTruth)\ \{}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (selection.isEfficiencyDenom(*universe,\ weight))\ \{}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ q2qe\ =\ universe-\/>GetTrueQ2QEGeV();}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ scale\ =\ 1.0;}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!closure)\ scale\ =\ mcRescale.GetScale(cat,\ q2qe,\ uni\_name,\ iuniv);\ \ \textcolor{comment}{//\ Only\ calculate\ the\ per-\/universe\ weight\ for\ events\ that\ will\ actually\ use\ it.}}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (closure)\ scale\ =\ 1.0;}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FillSignalTruth(tag,\ universe,\ weight,\ variables,\ variables2D,\ scale);}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{\ \ \textcolor{comment}{//\ kData}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#ifdef\ CLOSUREDETAIL}}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (closure\ \&\&\ selection.isDataSelected(*universe,\ event).all())\ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ universe-\/>GetRun()\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ universe-\/>GetSubRun()\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ universe-\/>GetGate()\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ universe-\/>GetPmuGeV()\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ weight\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ selection.isDataSelected(*universe,\ event).all()\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ selection.isMCSelected(*universe,\ event,\ weight).all()\ <<\ \textcolor{stringliteral}{"{}\ \ "{}}\ <<\ tag\ <<\ \textcolor{stringliteral}{"{}1"{}}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ universe-\/>ShortName()\ <<\ std::endl;}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (selection.isDataSelected(*universe,\ event).all())\ \{}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FillData(tag,\ universe,\ variables,\ variables2D);}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \textcolor{comment}{//\ End\ universes}}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \textcolor{comment}{//\ End\ error\ bands}}
+\DoxyCodeLine{00274\ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ End\ entries\ loop}}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keywordflow}{if}\ (data\_mc\_truth\ ==\ kMC\ \&\&\ mc\_reco\_to\_csv)\ \{}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ csvFile.close();}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ std::string\ csvFileName\ =\ \textcolor{stringliteral}{"{}mc\_reco\_entries\_"{}}\ +\ sample\ +\ \textcolor{stringliteral}{"{}\_"{}}\ +\ cat\ +\ \textcolor{stringliteral}{"{}.csv"{}};}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ std::cout\ <<\ std::endl;}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}MC\ Reco\ events\ for\ "{}}\ <<\ sample\ <<\ \textcolor{stringliteral}{"{}\ category\ "{}}\ <<\ cat\ <<\ \textcolor{stringliteral}{"{}\ saved\ to\ "{}}\ <<\ csvFileName;}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ std::cout\ <<\ std::endl;}
+\DoxyCodeLine{00281\ \ \ \ \ \}}
+\DoxyCodeLine{00282\ \}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\_\_CINT\_\_}}
+
+\end{DoxyCode}
