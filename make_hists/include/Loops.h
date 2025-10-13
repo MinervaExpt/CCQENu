@@ -147,7 +147,8 @@ void LoopAndFillEventSelection(std::string tag,
         }
         csvFile << ";Interaction;nFSPart;FSPDGs;FSPartEs";
         csvFile << ";run;subrun;gate;slice";
-        csvFile << ";Arachne" << std::endl;
+        // csvFile << ";Arachne" << std::endl;
+        csvFile << std::endl;
     }
 
     // status bar stuff
@@ -226,7 +227,20 @@ void LoopAndFillEventSelection(std::string tag,
                             csvFile << i;
                             for (auto v : variables) {
                                 if (v->hasMC[tag]) {
-                                    csvFile << ";" << v->GetRecoValue(*universe, 0) << ";" << v->GetTrueValue(*universe, 0);
+                                    if (!v->m_do_argvalue) {
+                                        csvFile << ";" << v->GetRecoValue(*universe) << ";" << v->GetTrueValue(*universe);
+                                        continue;
+                                    }
+                                    std::vector<double> fill_vals = v->GetArgRecoValue(*universe, v->GetRecoIndex(*universe));
+                                    csvFile << ";{";
+                                    for (int i = 0; i < fill_vals.size(); i++) {
+                                        csvFile << fill_vals[i];
+                                        if (i == fill_vals.size()-1) {
+                                            csvFile << "};";
+                                            break;
+                                        }
+                                        csvFile << ","; 
+                                    }
                                 }
                             }
 
@@ -254,7 +268,7 @@ void LoopAndFillEventSelection(std::string tag,
                             csvFile << ";" << universe->GetInt("mc_subrun");
                             csvFile << ";" << universe->GetInt("mc_nthEvtInFile") + 1;
                             csvFile << ";" << universe->GetVecElem("slice_numbers", 0);
-                            csvFile << ";" << universe->StringTrueArachneLink() << std::endl;
+                            // csvFile << ";" << universe->StringTrueArachneLink() << std::endl;
                         }
                         // Done Sending MC Reco value to CSV
                     }

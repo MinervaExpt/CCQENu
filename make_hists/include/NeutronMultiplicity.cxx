@@ -567,7 +567,11 @@ bool NeutEvent::CandPassVtxDist(int index) {
     }
     if (m_do_vtxdist_edep_funct) {
         double edep = m_cands[index]->GetCandRecoEDep();
-        return dist >= 55.461 * log(edep) - 125.22;
+        if (!m_cands[index]->GetCandIs3D()) {
+            // return dist >= 43.533*log(edep) - 80.586; without muon angle cut
+            return dist >= 37.894 * log(edep) - 63.634;
+        }
+        return dist >= 75.611 * log(edep) - 190.03;
     }
     // if (m_cands[index]->GetCandRecoEDep() < 12.0) return true;
     return dist >= m_vtxdist_min;
