@@ -1,0 +1,66 @@
+\doxysection{weight\+\_\+\+MCre\+Scale.\+h}
+\hypertarget{weight___m_cre_scale_8h_source}{}\label{weight___m_cre_scale_8h_source}\index{make\_hists/include/weight\_MCreScale.h@{make\_hists/include/weight\_MCreScale.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ weight\_mcrescale\_h}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ weight\_mcrescale\_h}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <fstream>}\ \ \textcolor{comment}{//ifstream}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iostream>}\ \textcolor{comment}{//cout}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <string>}\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <TString.h>}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ \#include\ <TH3D.h>}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ \#include\ <TH2D.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_c_v_universe_8h}{include/CVUniverse.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <TH1D.h>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <TFile.h>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ \#include\ <TF1.h>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MnvH1D.h"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MnvVertErrorBand.h"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}utils/NuConfig.h"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}utils/expandEnv.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{namespace\ }PlotUtils\{}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ template\ <typename\ T>}}
+\DoxyCodeLine{00027\ \ \ \textcolor{keyword}{class\ }weight\_MCreScale\{}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \textcolor{comment}{//\ tunedmc\ set\ from\ config.\ Can\ be\ "{}tuned"{},\ "{}untuned"{},\ or\ "{}both"{}.\ Default\ to\ false\ to\ avoid\ issues\ if\ not\ tuning.}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ std::string\ m\_tunedmc\ =\ \textcolor{stringliteral}{"{}untuned"{}};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \textcolor{comment}{//\ Member\ file\ with\ scale/fraction\ MnvH1Ds}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ TFile*\ m\_f\_Q2QEScaleFrac;}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ std::vector<std::string>\ m\_categories;}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \textcolor{comment}{//\ Member\ MnvH1D's\ for\ each\ scale\ from\ the\ file\ (set\ at\ initialization)}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ std::map<const\ std::string,\ MnvH1D*>\ m\_mnvh\_Scales;}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \textcolor{comment}{//\ Member\ scale\ set\ to\ be\ sig\ or\ bkg\ (set\ at\ GetWeight)}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ MnvH1D*\ m\_mnvh\_Scale;}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ TH1D*\ m\_h\_scale;}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ std::string\ m\_category;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \textcolor{comment}{//\ Constructor\ that\ reads\ in\ hists\ from\ file}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ weight\_MCreScale(\textcolor{keyword}{const}\ TString\ f);}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \textcolor{comment}{//\ Constructor\ that\ reads\ in\ hists\ from\ file\ and\ sets\ the\ Cat}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ weight\_MCreScale(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ config);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ GetScale(std::string\ cat,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ q2qe,\ std::string\ uni\_name,\ \textcolor{keywordtype}{int}\ iuniv);\ \textcolor{comment}{//\ q2qe\ in\ GeV2}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ GetScale(std::string\ cat,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}*\ univ,\ std::string\ uni\_name,\ \textcolor{keywordtype}{int}\ iuniv);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ read(TString\ filename);}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ SetCat(std::string\ cat);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ GetScaleInternal(\textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ q2qe,\ std::string\ uni\_name,\ \textcolor{keywordtype}{int}\ iuniv);}
+\DoxyCodeLine{00056\ \ \ \};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

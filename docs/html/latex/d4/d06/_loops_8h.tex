@@ -1,0 +1,33 @@
+\doxysection{make\+\_\+hists/include/\+Loops.h File Reference}
+\hypertarget{_loops_8h}{}\label{_loops_8h}\index{make\_hists/include/Loops.h@{make\_hists/include/Loops.h}}
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{_loops_8h_a077162bef73490c10b9f9874099b311c}\label{_loops_8h_a077162bef73490c10b9f9874099b311c} 
+enum {\bfseries EData\+MCTruth} \{ {\bfseries k\+Data}
+, {\bfseries k\+MC}
+, {\bfseries k\+Truth}
+, {\bfseries k\+NData\+MCTruth\+Types}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{_loops_8h_a519c882699808b013910ae209110ef79}\label{_loops_8h_a519c882699808b013910ae209110ef79} 
+void {\bfseries Loop\+And\+Fill\+Event\+Selection} (std\+::string tag, const Plot\+Utils\+::\+Macro\+Util \&util, std\+::map$<$ std\+::string, std\+::vector$<$ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}} \texorpdfstring{$\ast$}{*} $>$ $>$ error\+\_\+bands, std\+::vector$<$ \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable_from_config}{CCQENu\+::\+Variable\+From\+Config}} \texorpdfstring{$\ast$}{*} $>$ \&variables, std\+::vector$<$ \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable2_d_from_config}{CCQENu\+::\+Variable2\+DFrom\+Config}} \texorpdfstring{$\ast$}{*} $>$ \&variables2D, EData\+MCTruth data\+\_\+mc\+\_\+truth, Plot\+Utils\+::\+Cutter$<$ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}} $>$ \&selection, Plot\+Utils\+::\+Model$<$ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}, Plot\+Utils\+::detail\+::empty $>$ \&model, \mbox{\hyperlink{class_plot_utils_1_1weight___m_cre_scale}{Plot\+Utils\+::weight\+\_\+\+MCre\+Scale}} mc\+Rescale, bool closure=false, bool mc\+\_\+reco\+\_\+to\+\_\+csv=false)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Heidi Schellman/\+Noah Vaughan/\+Sean\+Gilligan 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+1.\+0 \texorpdfstring{$\ast$}{*} 
+\end{DoxyVersion}
+\hypertarget{_variable_from_config_8h_LICENSE}{}\doxysubsection{\texorpdfstring{\texorpdfstring{$\ast$}{*}}{\texorpdfstring{$\ast$}{*}}}\label{_variable_from_config_8h_LICENSE}
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. \texorpdfstring{$\ast$}{*} \hypertarget{_variable_from_config_8h_DESCRIPTION}{}\doxysubsection{\texorpdfstring{\texorpdfstring{$\ast$}{*}}{\texorpdfstring{$\ast$}{*}}}\label{_variable_from_config_8h_DESCRIPTION}
+This implements a loop over the tuple that fills the histograms 

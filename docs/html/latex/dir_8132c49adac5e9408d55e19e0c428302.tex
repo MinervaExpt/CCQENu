@@ -1,0 +1,98 @@
+\doxysection{make\+\_\+hists Directory Reference}
+\hypertarget{dir_8132c49adac5e9408d55e19e0c428302}{}\label{dir_8132c49adac5e9408d55e19e0c428302}\index{make\_hists Directory Reference@{make\_hists Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_3cd85e268f21013aea7ab889207c7a4c}{analyze\+\_\+py}}
+\item 
+directory \mbox{\hyperlink{dir_f3897cc9a587cf7901ec13ce43bcfd95}{build}}
+\item 
+directory \mbox{\hyperlink{dir_29c7feb4e5580e0e78b24bdc5cc2d921}{doc}}
+\item 
+directory \mbox{\hyperlink{dir_06283a75350c54346ccff0c961132438}{fits}}
+\item 
+directory \mbox{\hyperlink{dir_18d630837a75a21a7265e8a608eeb622}{hms}}
+\item 
+directory \mbox{\hyperlink{dir_8839f2020de56ad08b4fe0fd6dd531a6}{include}}
+\item 
+directory \mbox{\hyperlink{dir_78ce3bb39b6b3e10096edd8f3a2a5570}{mat}}
+\item 
+directory \mbox{\hyperlink{dir_a4faad6ab47506a9714f11727b6c6e60}{nonmat}}
+\item 
+directory \mbox{\hyperlink{dir_fe4f50a135866a5ca03aaceee437c4e0}{py\+\_\+analyze}}
+\item 
+directory \mbox{\hyperlink{dir_97d5cc32b3192b807d3244c5d35db158}{python}}
+\item 
+directory \mbox{\hyperlink{dir_3acd672d5ae35675eed12a4d7385ed47}{smg}}
+\item 
+directory \mbox{\hyperlink{dir_a0264b18706d64b2e3094f40f8891d79}{tests}}
+\item 
+directory \mbox{\hyperlink{dir_82e9344f3dda0680ff7ecb27f37a6d8f}{utils}}
+\item 
+directory \mbox{\hyperlink{dir_3945730153b9d0ba4b1b4a7cf9cbb2c8}{v\+\_\+08}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file {\bfseries runsamples\+Main.\+C}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Uses json files to configure the code.
+
+sidebands\+\_\+v2 reads CCQENu (or MAD) tuples and produces histogram files
+
+analyze\+\_\+v9 reads those histogram files and produces cross section plots and tables.
+
+Data are organized by\+:
+
+
+\begin{DoxyItemize}
+\item Reco sample (QElike, Pion ...)
+\item Signal category (qelike, qelikenot ... )
+\item Variable (Enu, ... )
+\item Type (reco, truth, ...)
+\end{DoxyItemize}
+
+Into hists with names like \begin{DoxyVerb}`h___QElike___data___recoil___reconstructed` where the fields are separated by 3 `-`
+\end{DoxyVerb}
+
+
+the configuration json is also written out
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \{}
+\DoxyCodeLine{\ \ "{}version"{}:13,\ \ //\ Run\ major\ variables\ in\ batch,\ use\ v13\ of\ cuts,\ add\ closure}
+\DoxyCodeLine{\ \ "{}mcIn"{}:"{}\$\{CCQEMAT\}/playlists/\$\{DATALOC\}/CCQENu\_\$\{MYPLAYLIST\}\_MC\_Inextinguishable\_merged.txt"{},}
+\DoxyCodeLine{\ \ "{}dataIn"{}:"{}\$\{CCQEMAT\}/playlists/\$\{DATALOC\}/CCQENu\_\$\{MYPLAYLIST\}\_DATA\_Inextinguishable\_merged.txt"{},}
+\DoxyCodeLine{\ \ "{}prescale"{}:999,}
+\DoxyCodeLine{\ \ "{}playlist"{}:"{}\$\{MYPLAYLIST\}"{},}
+\DoxyCodeLine{\ \ "{}MinervaModel"{}:"{}\$\{MYMODEL\}"{},\ //\ set\ this\ as\ an\ environmental\ to\ MnvTunev1\ or\ MnvTunev2}
+\DoxyCodeLine{\ \ "{}recoName"{}:"{}CCQENu"{},\ //\ change\ if\ running\ on\ MAT\ tuples}
+\DoxyCodeLine{\ \ "{}useTuned"{}:1,\ //\ uses\ the\ tunes\ if\ available}
+\DoxyCodeLine{\ \ "{}closure"{}:0,\ //\ set\ to\ 1\ if\ you\ want\ to\ do\ closure\ test,\ otherwise\ 0}
+\DoxyCodeLine{\ \ "{}scalefileIn"{}:"{}\$\{CCQEMAT\}/data/FullSample\_\$\{MYMODEL\}\_Q2QErecoil.root"{},\ //\ location\ of\ anti-\/nu\ background\ tuning}
+\DoxyCodeLine{\ \ "{}TuneCategories"{}:["{}qelike"{},"{}qelikenot"{}],\ //\ categories\ that\ have\ tunes}
+\DoxyCodeLine{\ \ "{}pdg"{}:-\/14,\ //\ I'm\ anti-\/neutrino}
+\DoxyCodeLine{\ \ "{}cutsFile"{}:"{}\$\{CCQEMAT\}/AntiNuExample/AntiNuCuts\_v13.json"{},\ //\ describe\ the\ cuts,\ choose\ them\ in\ samples}
+\DoxyCodeLine{\ \ "{}varsFile"{}:"{}\$\{CCQEMAT\}/AntiNuExample/Variables\_v13.json"{},\ //\ describe\ the\ variables,\ choose\ them\ below}
+\DoxyCodeLine{\ \ "{}samplesFile"{}:"{}\$\{CCQEMAT\}/AntiNuExample/AntiNuSamples\_v13.json"{},\ \ //\ describe\ the\ samples,\ cuts\ are\ chosen\ here}
+\DoxyCodeLine{\ \ "{}runsamples"{}:["{}\$\{MYSAMPLE\}"{}],\ //\ chose\ which\ samples\ to\ run\ can\ provide\ a\ list\ or\ chose\ 1\ using\ the\ batch}
+\DoxyCodeLine{\ \ "{}outRoot"{}:"{}CCQENu\_\$\{MYPLAYLIST\}\_\$\{MYMODEL\}\_\$\{MYSAMPLE\}"{},\ //\ name\ for\ output\ files}
+\DoxyCodeLine{\ \ "{}AnalyzeVariables"{}:["{}Q2QE"{},"{}pzmu"{},"{}ptmu"{},"{}Enu"{},"{}EnuCCQE"{},"{}ThetamuDegrees"{},"{}recoil"{}],\ //\ choose\ the\ 1D\ variables}
+\DoxyCodeLine{\ \ "{}Analyze2DVariables"{}:["{}pzmu\_ptmu"{}],\ //\ choose\ 2D\ variables,\ 1D\ variables\ must\ be\ chosen}
+\DoxyCodeLine{\ \ "{}signal"{}:\{"{}QElike"{}:"{}qelike"{},"{}Background"{}:"{}qelike"{},"{}QElikeNP"{}:"{}qelike\_np"{},"{}QElikeALLAngles"{}:"{}qelike\_np"{}\},\ //\ used\ in\ analysis\ to\ define\ signal/background,\ key\ is\ the\ sample,\ value\ is\ what\ category\ is\ signal\_tag}
+\DoxyCodeLine{\ \ "{}background"{}:\{"{}QElike"{}:"{}qelikenot"{},"{}Background"{}:"{}qelikenot"{},"{}QElikeNP"{}:"{}qelikenot\_np"{},"{}QElikeALLAngles"{}:"{}qelikenot\_np"{}\},}
+\DoxyCodeLine{\ \ "{}data"{}:\{"{}QElike"{}:"{}data"{},"{}Background"{}:"{}data"{},"{}QElikeNP"{}:"{}data"{},"{}QElikeALLAngles"{}:"{}data"{}\},}
+\DoxyCodeLine{\ \ //\ turn\ on/off\ systematics}
+\DoxyCodeLine{\ \ "{}systematics"{}:["{}Flux"{},"{}MuonMINOS"{},"{}MuonResolution"{},"{}MINOSEfficiency"{},"{}Angle"{},"{}GENIE"{},"{}Flux"{},"{}GenieRvx1pi"{},"{}RPA"{},"{}2p2h"{},"{}MuonMinerva"{},"{}geant4"{},"{}response"{}],}
+\DoxyCodeLine{\ \ "{}fluxUniverses"{}:2,\ //\ \#\ of\ flux\ universes}
+\DoxyCodeLine{\ \ "{}NuEConstraint"{}:1,\ //\ apply\ constraints\ to\ flux}
+\DoxyCodeLine{\ \ "{}Geant4NeutronCV"{}:1,\ //\ set\ true\ by\ default\ docdb\ 28556}
+\DoxyCodeLine{\ \ "{}Geant4Elastics"{}:1\ //\ set\ to\ true\ by\ default}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 

@@ -1,0 +1,166 @@
+\doxysection{CCQENu\+::Variable\+From\+Config Class Reference}
+\hypertarget{class_c_c_q_e_nu_1_1_variable_from_config}{}\label{class_c_c_q_e_nu_1_1_variable_from_config}\index{CCQENu::VariableFromConfig@{CCQENu::VariableFromConfig}}
+Inheritance diagram for CCQENu\+::Variable\+From\+Config\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{dd/d01/class_c_c_q_e_nu_1_1_variable_from_config}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a9e941ffc190584927ed345fc73c200d2}\label{class_c_c_q_e_nu_1_1_variable_from_config_a9e941ffc190584927ed345fc73c200d2} 
+typedef std\+::map$<$ std\+::string, std\+::vector$<$ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}} \texorpdfstring{$\ast$}{*} $>$ $>$ {\bfseries Universe\+Map}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_ae6c57a9b225ff10bd7610c3745b40417}\label{class_c_c_q_e_nu_1_1_variable_from_config_ae6c57a9b225ff10bd7610c3745b40417} 
+typedef std\+::map$<$ int, TH1D \texorpdfstring{$\ast$}{*} $>$ {\bfseries TYPES}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_ae5dc3294bf8158249e2e45e37137f570}\label{class_c_c_q_e_nu_1_1_variable_from_config_ae5dc3294bf8158249e2e45e37137f570} 
+typedef std\+::map$<$ std\+::string, TYPES $>$ {\bfseries TYPEMAP}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_add3c94a7732ba8e2848e5e5524abf3ce}\label{class_c_c_q_e_nu_1_1_variable_from_config_add3c94a7732ba8e2848e5e5524abf3ce} 
+void {\bfseries Set\+Do\+Resolution} (const bool doresolution)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a43f00b98fbc5517223cd06c19361265a}\label{class_c_c_q_e_nu_1_1_variable_from_config_a43f00b98fbc5517223cd06c19361265a} 
+bool {\bfseries Get\+Do\+Resolution} ()
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_aaab451b4e7e487068409be64b7c87a79}\label{class_c_c_q_e_nu_1_1_variable_from_config_aaab451b4e7e487068409be64b7c87a79} 
+{\bfseries Variable\+From\+Config} (const \mbox{\hyperlink{class_nu_config}{Nu\+Config}} config)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a8aa4e42ec1044658be0d54240b884713}\label{class_c_c_q_e_nu_1_1_variable_from_config_a8aa4e42ec1044658be0d54240b884713} 
+virtual std\+::string {\bfseries Get\+Units} ()
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a713b3ec6f2a8c0ffb5d1c7075aee9ced}\label{class_c_c_q_e_nu_1_1_variable_from_config_a713b3ec6f2a8c0ffb5d1c7075aee9ced} 
+virtual void {\bfseries Set\+Units} (std\+::string units)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a94fd796787ab527b5d2bbf6340d1d2f0}\label{class_c_c_q_e_nu_1_1_variable_from_config_a94fd796787ab527b5d2bbf6340d1d2f0} 
+std\+::string {\bfseries Get\+Tuned\+MC} ()
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a7ef963dd004b70b23e5bdebe0417e501}\label{class_c_c_q_e_nu_1_1_variable_from_config_a7ef963dd004b70b23e5bdebe0417e501} 
+void {\bfseries Set\+Tuned\+MC} (std\+::string tunedmc)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a0c76dbf76ad2fd3117e65e1adef09b4a}\label{class_c_c_q_e_nu_1_1_variable_from_config_a0c76dbf76ad2fd3117e65e1adef09b4a} 
+void {\bfseries Add\+Tags} (const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a8b41ae73e4fbfbdada9b0ae81e37f4df}\label{class_c_c_q_e_nu_1_1_variable_from_config_a8b41ae73e4fbfbdada9b0ae81e37f4df} 
+{\footnotesize template$<$typename T$>$ }\\void {\bfseries Initialize\+MCHistograms} (T univs, const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a2aacf25fc3bf11b56c256244bdb2feb3}\label{class_c_c_q_e_nu_1_1_variable_from_config_a2aacf25fc3bf11b56c256244bdb2feb3} 
+{\footnotesize template$<$typename T$>$ }\\void {\bfseries Initialize\+Selected\+Truth\+Histograms} (T univs, const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_aa1321897bb7f60eeacb3a5b84faf4800}\label{class_c_c_q_e_nu_1_1_variable_from_config_aa1321897bb7f60eeacb3a5b84faf4800} 
+{\footnotesize template$<$typename T$>$ }\\void {\bfseries Initialize\+Truth\+Histograms} (T univs, const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_aa703713bb0b83bab1eaa948734a00001}\label{class_c_c_q_e_nu_1_1_variable_from_config_aa703713bb0b83bab1eaa948734a00001} 
+{\footnotesize template$<$typename T$>$ }\\void {\bfseries Initialize\+Data\+Histograms} (T univs, const std\+::vector$<$ std\+::string $>$ tags)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a1c0be6c1e69b7e874bc814c1929c3323}\label{class_c_c_q_e_nu_1_1_variable_from_config_a1c0be6c1e69b7e874bc814c1929c3323} 
+{\footnotesize template$<$typename T$>$ }\\void {\bfseries Initialize\+Tuned\+MCHistograms} (T reco\+\_\+univs, T truth\+\_\+univs, const std\+::vector$<$ std\+::string $>$ tuned\+\_\+tags, const std\+::vector$<$ std\+::string $>$ response\+\_\+tags)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a0e09fb24c958841b9e6a48f1ff5cec10}\label{class_c_c_q_e_nu_1_1_variable_from_config_a0e09fb24c958841b9e6a48f1ff5cec10} 
+{\footnotesize template$<$typename T$>$ }\\void {\bfseries Initialize\+Response} (T reco\+\_\+univs, const std\+::vector$<$ std\+::string $>$ tags, std\+::string tail="{}"{})
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a01ee8d0369a5b011e92e09b060b321a5}\label{class_c_c_q_e_nu_1_1_variable_from_config_a01ee8d0369a5b011e92e09b060b321a5} 
+void {\bfseries Write\+All\+Histograms\+To\+File} (TFile \&f)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_ae146512cb7c9dd45fb3a82f034edf4e3}\label{class_c_c_q_e_nu_1_1_variable_from_config_ae146512cb7c9dd45fb3a82f034edf4e3} 
+void {\bfseries Sync\+All\+Hists} ()
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a9b07e9031a44046b89c09072f2b96c1f}\label{class_c_c_q_e_nu_1_1_variable_from_config_a9b07e9031a44046b89c09072f2b96c1f} 
+void {\bfseries Fill\+Response} (std\+::string tag, \mbox{\hyperlink{class_c_v_universe}{CVUniverse}} \texorpdfstring{$\ast$}{*}univ, const double value, const double truth, const double weight=1.\+0, const double scale=1.\+0)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a80238853738f0dce01f8147faa8de032}\label{class_c_c_q_e_nu_1_1_variable_from_config_a80238853738f0dce01f8147faa8de032} 
+void {\bfseries Fill\+Resolution} (std\+::string tag, \mbox{\hyperlink{class_c_v_universe}{CVUniverse}} \texorpdfstring{$\ast$}{*}univ, const double value, const double truth, const double weight=1.\+0, const double scale=1.\+0)
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_ade60c86a299d3d12d67a2817f651478a}\label{class_c_c_q_e_nu_1_1_variable_from_config_ade60c86a299d3d12d67a2817f651478a} 
+void {\bfseries Fill\+Type} (std\+::string tag, const int type, const double value, const double weight, const double scale=1.\+0)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a58fdecb8736e0dc422678f036d2026cc}\label{class_c_c_q_e_nu_1_1_variable_from_config_a58fdecb8736e0dc422678f036d2026cc} 
+HM {\bfseries m\+\_\+selected\+\_\+mc\+\_\+reco}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a90495af0227a15fb81987282915af20b}\label{class_c_c_q_e_nu_1_1_variable_from_config_a90495af0227a15fb81987282915af20b} 
+HM {\bfseries m\+\_\+tuned\+\_\+selected\+\_\+mc\+\_\+reco}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a5dc1628a2d8669d4bd5c4be8c04cf61a}\label{class_c_c_q_e_nu_1_1_variable_from_config_a5dc1628a2d8669d4bd5c4be8c04cf61a} 
+HM {\bfseries m\+\_\+selected\+\_\+mc\+\_\+truth}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a2c122ec4afd819f4ea3c4ba1c9e40f4f}\label{class_c_c_q_e_nu_1_1_variable_from_config_a2c122ec4afd819f4ea3c4ba1c9e40f4f} 
+HM {\bfseries m\+\_\+tuned\+\_\+selected\+\_\+mc\+\_\+truth}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_adaeba61066e4da0a24b1da4cbd34b59c}\label{class_c_c_q_e_nu_1_1_variable_from_config_adaeba61066e4da0a24b1da4cbd34b59c} 
+HM {\bfseries m\+\_\+signal\+\_\+mc\+\_\+truth}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a06a87b4916a1403de7cfaccb25538f5c}\label{class_c_c_q_e_nu_1_1_variable_from_config_a06a87b4916a1403de7cfaccb25538f5c} 
+HM {\bfseries m\+\_\+tuned\+\_\+signal\+\_\+mc\+\_\+truth}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a5b842f11a7714808a60294dabfd0dde5}\label{class_c_c_q_e_nu_1_1_variable_from_config_a5b842f11a7714808a60294dabfd0dde5} 
+HM {\bfseries m\+\_\+selected\+\_\+data}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_ab241ae69d6bf13a807b1cb8772399527}\label{class_c_c_q_e_nu_1_1_variable_from_config_ab241ae69d6bf13a807b1cb8772399527} 
+RM {\bfseries m\+\_\+response}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_ae45b780337e4900993f524b076148218}\label{class_c_c_q_e_nu_1_1_variable_from_config_ae45b780337e4900993f524b076148218} 
+RM {\bfseries m\+\_\+tuned\+\_\+response}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_aa28323e748decce6d16b7d1e6bfbf91a}\label{class_c_c_q_e_nu_1_1_variable_from_config_aa28323e748decce6d16b7d1e6bfbf91a} 
+HM {\bfseries m\+\_\+resolution}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a549aad2f9805e6cff7186e227cdcbf13}\label{class_c_c_q_e_nu_1_1_variable_from_config_a549aad2f9805e6cff7186e227cdcbf13} 
+HM {\bfseries m\+\_\+tuned\+\_\+resolution}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a7c4e501fd4fac0d052b5c3ce18906a8e}\label{class_c_c_q_e_nu_1_1_variable_from_config_a7c4e501fd4fac0d052b5c3ce18906a8e} 
+TYPEMAP {\bfseries m\+\_\+types}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_aa2adcca1de58b2952a169376e7f420d9}\label{class_c_c_q_e_nu_1_1_variable_from_config_aa2adcca1de58b2952a169376e7f420d9} 
+TYPEMAP {\bfseries m\+\_\+tuned\+\_\+types}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a1c70a254cfd613a3d3109c94ab2c0433}\label{class_c_c_q_e_nu_1_1_variable_from_config_a1c70a254cfd613a3d3109c94ab2c0433} 
+Universe\+Map {\bfseries m\+\_\+universes}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a0bc30300ff0bbcd10881304a0d3ad7e8}\label{class_c_c_q_e_nu_1_1_variable_from_config_a0bc30300ff0bbcd10881304a0d3ad7e8} 
+std\+::string {\bfseries m\+\_\+units}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_adb553e43b24f5bb94ebfd67b0e14f266}\label{class_c_c_q_e_nu_1_1_variable_from_config_adb553e43b24f5bb94ebfd67b0e14f266} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Data}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_aeff9c2d01f58c28c2f91536f63305987}\label{class_c_c_q_e_nu_1_1_variable_from_config_aeff9c2d01f58c28c2f91536f63305987} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+MC}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a4b2f72afc7f467d2575890d0b1ceb245}\label{class_c_c_q_e_nu_1_1_variable_from_config_a4b2f72afc7f467d2575890d0b1ceb245} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Selected\+Truth}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a7b71a3f37c733e7fde1fe8750943ba9a}\label{class_c_c_q_e_nu_1_1_variable_from_config_a7b71a3f37c733e7fde1fe8750943ba9a} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Truth}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_ac43a71caf08c99f34ab411e5b078e3cf}\label{class_c_c_q_e_nu_1_1_variable_from_config_ac43a71caf08c99f34ab411e5b078e3cf} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Response}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a3b64944c84e9a65431c003d049e97dbc}\label{class_c_c_q_e_nu_1_1_variable_from_config_a3b64944c84e9a65431c003d049e97dbc} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Tuned\+MC}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a2cf46398af075f81660143b5abc118b0}\label{class_c_c_q_e_nu_1_1_variable_from_config_a2cf46398af075f81660143b5abc118b0} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Type}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a11b1a3d0a1be4f9154a7613fa42abf1e}\label{class_c_c_q_e_nu_1_1_variable_from_config_a11b1a3d0a1be4f9154a7613fa42abf1e} 
+std\+::map$<$ const std\+::string, bool $>$ {\bfseries has\+Tuned\+Type}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_aa5e30745973478bbf2fe742ed9cc38c5}\label{class_c_c_q_e_nu_1_1_variable_from_config_aa5e30745973478bbf2fe742ed9cc38c5} 
+std\+::vector$<$ std\+::string $>$ {\bfseries m\+\_\+tags}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_aff88d28f0b333908c10ec697cd3c5416}\label{class_c_c_q_e_nu_1_1_variable_from_config_aff88d28f0b333908c10ec697cd3c5416} 
+std\+::vector$<$ std\+::string $>$ {\bfseries m\+\_\+for}
+\item 
+\Hypertarget{class_c_c_q_e_nu_1_1_variable_from_config_a9f627ebcf2ce32d7fd278add048f3fb4}\label{class_c_c_q_e_nu_1_1_variable_from_config_a9f627ebcf2ce32d7fd278add048f3fb4} 
+std\+::string {\bfseries m\+\_\+tunedmc}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+make\+\_\+hists/include/\mbox{\hyperlink{_variable_from_config_8h}{Variable\+From\+Config.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,184 @@
+\doxysection{Fit2D Namespace Reference}
+\hypertarget{namespace_fit2_d}{}\label{namespace_fit2_d}\index{Fit2D@{Fit2D}}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespace_fit2_d_ab2afdd46f86263ac324b885db891fc61}\label{namespace_fit2_d_ab2afdd46f86263ac324b885db891fc61} 
+int {\bfseries k\+Fast\+Chi2} = 1
+\item 
+\Hypertarget{namespace_fit2_d_a7e9e2edfc829e1be03837c5d76621a4e}\label{namespace_fit2_d_a7e9e2edfc829e1be03837c5d76621a4e} 
+int {\bfseries k\+Slow\+Chi2} = 0
+\item 
+\Hypertarget{namespace_fit2_d_ad3a66721ca3f5acfec25c7de777bd5fa}\label{namespace_fit2_d_ad3a66721ca3f5acfec25c7de777bd5fa} 
+bool {\bfseries DEBUG} = False
+\item 
+\Hypertarget{namespace_fit2_d_ac55603ed2ccbec74afa48c6360d56e1e}\label{namespace_fit2_d_ac55603ed2ccbec74afa48c6360d56e1e} 
+int {\bfseries rebinx} = 1
+\item 
+\Hypertarget{namespace_fit2_d_aa87209ab163206797645606ec9e1417e}\label{namespace_fit2_d_aa87209ab163206797645606ec9e1417e} 
+int {\bfseries rebiny} = 1
+\item 
+\Hypertarget{namespace_fit2_d_afbaa0f295573ca2a55db5571cb040e12}\label{namespace_fit2_d_afbaa0f295573ca2a55db5571cb040e12} 
+{\bfseries precision}
+\item 
+\Hypertarget{namespace_fit2_d_a78f726245f5ab788b0e90c8ef534e13d}\label{namespace_fit2_d_a78f726245f5ab788b0e90c8ef534e13d} 
+{\bfseries threshold}
+\item 
+\Hypertarget{namespace_fit2_d_a8c4613f889bb7bee2404e7711d5ed001}\label{namespace_fit2_d_a8c4613f889bb7bee2404e7711d5ed001} 
+{\bfseries linewidth}
+\item 
+\Hypertarget{namespace_fit2_d_ae6482f504cbfa0ab7301a14de74f5460}\label{namespace_fit2_d_ae6482f504cbfa0ab7301a14de74f5460} 
+{\bfseries floatmode}
+\item 
+\Hypertarget{namespace_fit2_d_ae43d6532f1bcd90d5ddfd8069a2439e9}\label{namespace_fit2_d_ae43d6532f1bcd90d5ddfd8069a2439e9} 
+str {\bfseries referencehistname} = "{}h2\+D\+\_\+\+\_\+\+\_\+2track\+\_\+\+Multi\+Pion\+Cut\+\_\+\+\_\+\+\_\+data\+\_\+\+\_\+\+\_\+bdtg\+QELike\+\_\+\+Q2\+QE\+\_\+\+\_\+\+\_\+reconstructed"{}
+\item 
+\Hypertarget{namespace_fit2_d_a594277ad96e1a05edd5eb745a4e2ca87}\label{namespace_fit2_d_a594277ad96e1a05edd5eb745a4e2ca87} 
+{\bfseries filename} = os.\+path.\+join(os.\+getenv("{}CCQE"{}),"{}sean"{},"{}SB\+\_\+\+Nu\+Config\+\_\+bdtg\+\_\+\+MAD\+\_\+\+Multi\+Pion\+Cut\+\_\+2track\+\_\+me1\+N\+\_\+1\+\_\+test\+\_\+multother.\+root"{})
+\item 
+\Hypertarget{namespace_fit2_d_adb79b8e7da4d625350d31576723b54f0}\label{namespace_fit2_d_adb79b8e7da4d625350d31576723b54f0} 
+{\bfseries file} = TFile(filename, "{}READ"{})
+\item 
+\Hypertarget{namespace_fit2_d_a882cf6656c07e2cee6081684c4ecfd39}\label{namespace_fit2_d_a882cf6656c07e2cee6081684c4ecfd39} 
+{\bfseries referencehist} = Mnv\+H2D()
+\item 
+\Hypertarget{namespace_fit2_d_a1ccf9fb5e8ce37d69ac54184cbbc9589}\label{namespace_fit2_d_a1ccf9fb5e8ce37d69ac54184cbbc9589} 
+str {\bfseries configname} = "{}Nu\+Fit\+\_\+\+MAD\+\_\+2track\+\_\+\+Multi\+Pion\+Cut\+\_\+multother.\+json"{}
+\item 
+\Hypertarget{namespace_fit2_d_a9d96662a661780f165ce47ff93381fff}\label{namespace_fit2_d_a9d96662a661780f165ce47ff93381fff} 
+{\bfseries config} = json.\+load(open(configname,\textquotesingle{}r\textquotesingle{}))
+\item 
+\Hypertarget{namespace_fit2_d_abead9c89fa0bc19c59900c6fd6e6de25}\label{namespace_fit2_d_abead9c89fa0bc19c59900c6fd6e6de25} 
+{\bfseries sidebands} = config\mbox{[}"{}Sidebands"{}\mbox{]}
+\item 
+\Hypertarget{namespace_fit2_d_ab1df413bb39b1d0ccd066d69b191fe4b}\label{namespace_fit2_d_ab1df413bb39b1d0ccd066d69b191fe4b} 
+{\bfseries includeinfit} = config\mbox{[}"{}Include\+In\+Fit"{}\mbox{]}
+\item 
+\Hypertarget{namespace_fit2_d_ad248e3878d9b1fa00be1136fd776091f}\label{namespace_fit2_d_ad248e3878d9b1fa00be1136fd776091f} 
+{\bfseries categories} = config\mbox{[}"{}Categories"{}\mbox{]}
+\item 
+\Hypertarget{namespace_fit2_d_a0175fb9e8d331e380419705e215481d9}\label{namespace_fit2_d_a0175fb9e8d331e380419705e215481d9} 
+{\bfseries background} = config\mbox{[}"{}Backgrounds"{}\mbox{]}
+\item 
+\Hypertarget{namespace_fit2_d_a34d923faf5ef3c8db230b19b8aee426c}\label{namespace_fit2_d_a34d923faf5ef3c8db230b19b8aee426c} 
+{\bfseries nxbins} = referencehist.\+Get\+NbinsX()
+\item 
+\Hypertarget{namespace_fit2_d_a05e413cd4f755f7fcbbcba076687bbd8}\label{namespace_fit2_d_a05e413cd4f755f7fcbbcba076687bbd8} 
+{\bfseries nybins} = referencehist.\+Get\+NbinsY()
+\item 
+\Hypertarget{namespace_fit2_d_a4946001953890d0d5a5f340eec9addf0}\label{namespace_fit2_d_a4946001953890d0d5a5f340eec9addf0} 
+{\bfseries xbins} = np.\+zeros(nxbins+1, dtype=float)
+\item 
+\Hypertarget{namespace_fit2_d_abf28c5cb6366e45efb7eee25bcc50f23}\label{namespace_fit2_d_abf28c5cb6366e45efb7eee25bcc50f23} 
+{\bfseries ybins} = np.\+zeros(nybins+1, dtype=float)
+\item 
+\Hypertarget{namespace_fit2_d_a358950ea3560aea7bed29ff98afa02d5}\label{namespace_fit2_d_a358950ea3560aea7bed29ff98afa02d5} 
+dict {\bfseries hists} = \{\}
+\item 
+\Hypertarget{namespace_fit2_d_ad71f57a794c1802f8d675a71c84ed730}\label{namespace_fit2_d_ad71f57a794c1802f8d675a71c84ed730} 
+{\bfseries datanorm} = referencehist.\+Integral()
+\item 
+\Hypertarget{namespace_fit2_d_ad498584067869fb677783e5f65067290}\label{namespace_fit2_d_ad498584067869fb677783e5f65067290} 
+float {\bfseries mcnorm} = 0.\+0
+\item 
+\Hypertarget{namespace_fit2_d_a196394591cd50c453c85d2d2274f4b9a}\label{namespace_fit2_d_a196394591cd50c453c85d2d2274f4b9a} 
+str {\bfseries histname} = referencehistname.\+replace("{}data"{},cat)
+\item 
+\Hypertarget{namespace_fit2_d_af245b5f56c706e2769dd16f91d0835be}\label{namespace_fit2_d_af245b5f56c706e2769dd16f91d0835be} 
+{\bfseries hist} = Mnv\+H2D()
+\item 
+\Hypertarget{namespace_fit2_d_a7137e71e3838f495d37dad3f4f2916ee}\label{namespace_fit2_d_a7137e71e3838f495d37dad3f4f2916ee} 
+{\bfseries out} = TFile.\+Open("{}Output.\+root"{},"{}RECREATE"{})
+\item 
+\Hypertarget{namespace_fit2_d_a7a114756c309b69966f199115b3cc984}\label{namespace_fit2_d_a7a114756c309b69966f199115b3cc984} 
+int {\bfseries order} = 1
+\item 
+\Hypertarget{namespace_fit2_d_ac38c22ad670bdaa82da5ac35940dd008}\label{namespace_fit2_d_ac38c22ad670bdaa82da5ac35940dd008} 
+{\bfseries npars} = len(categories)
+\item 
+\Hypertarget{namespace_fit2_d_af09627678cd462a6ffd6751ebea51459}\label{namespace_fit2_d_af09627678cd462a6ffd6751ebea51459} 
+{\bfseries fitparameters} = np.\+zeros ((order+1)\texorpdfstring{$\ast$}{*}npars)
+\item 
+\Hypertarget{namespace_fit2_d_a97caf4640c1b97a7006efbebe476f7e4}\label{namespace_fit2_d_a97caf4640c1b97a7006efbebe476f7e4} 
+tuple {\bfseries nfitparameters} = (order+1)\texorpdfstring{$\ast$}{*}npars
+\item 
+\Hypertarget{namespace_fit2_d_ae8713db84f8835aecbd42a348a63c453}\label{namespace_fit2_d_ae8713db84f8835aecbd42a348a63c453} 
+{\bfseries mini2} = Minuit2.\+Minuit2\+Minimizer(0)
+\item 
+\Hypertarget{namespace_fit2_d_a42e4616678b259be5be31f7a11112e08}\label{namespace_fit2_d_a42e4616678b259be5be31f7a11112e08} 
+{\bfseries func2} = \mbox{\hyperlink{class_fit_function2_d_1_1_fit_function2_d}{Fit\+Function2\+D.\+Fit\+Function2D}}()
+\item 
+\Hypertarget{namespace_fit2_d_a0294150315646f1f0f341c045495e3af}\label{namespace_fit2_d_a0294150315646f1f0f341c045495e3af} 
+{\bfseries fit\+\_\+type}
+\item 
+\Hypertarget{namespace_fit2_d_ae2552155318a066660cf5968e062e9e6}\label{namespace_fit2_d_ae2552155318a066660cf5968e062e9e6} 
+{\bfseries first\+\_\+bin}
+\item 
+\Hypertarget{namespace_fit2_d_ad7dbefe6c72cefec206540b7dfcb4276}\label{namespace_fit2_d_ad7dbefe6c72cefec206540b7dfcb4276} 
+{\bfseries last\+\_\+bin}
+\item 
+\Hypertarget{namespace_fit2_d_a32427f55e2d8b36a45cf9fc868ce1e50}\label{namespace_fit2_d_a32427f55e2d8b36a45cf9fc868ce1e50} 
+{\bfseries functor} = func2.\+to\+\_\+root\+\_\+math\+\_\+functor()
+\item 
+\Hypertarget{namespace_fit2_d_aa6cb1b281c150b9db9ccda56ea9e25fc}\label{namespace_fit2_d_aa6cb1b281c150b9db9ccda56ea9e25fc} 
+str {\bfseries name} = "{}pol\%02d\+\_\+par\%s"{} \% (term,categories\mbox{[}par\mbox{]})
+\item 
+\Hypertarget{namespace_fit2_d_a7c4c7084681d6ef458d640675a2cf362}\label{namespace_fit2_d_a7c4c7084681d6ef458d640675a2cf362} 
+float {\bfseries val} = 0.\+0
+\item 
+\Hypertarget{namespace_fit2_d_a330ca24250f54c89e382e5711c51019d}\label{namespace_fit2_d_a330ca24250f54c89e382e5711c51019d} 
+{\bfseries ndof} = nxbins\texorpdfstring{$\ast$}{*}nybins -\/ func2.\+NDim()
+\item 
+\Hypertarget{namespace_fit2_d_a85a046ab4641b4ebfe89633d8d9a48b1}\label{namespace_fit2_d_a85a046ab4641b4ebfe89633d8d9a48b1} 
+{\bfseries prefit} = func2.\+Get\+Total\+Hist("{}Before\+Fit"{},"{}before the fit"{})
+\item 
+\Hypertarget{namespace_fit2_d_a3f0e260f666487f84ba87c3fc3b9ce7b}\label{namespace_fit2_d_a3f0e260f666487f84ba87c3fc3b9ce7b} 
+{\bfseries status} = mini2.\+Status()
+\item 
+\Hypertarget{namespace_fit2_d_a316de9e3610296777c31f2a49ff23d9b}\label{namespace_fit2_d_a316de9e3610296777c31f2a49ff23d9b} 
+{\bfseries X} = mini2.\+X()
+\item 
+\Hypertarget{namespace_fit2_d_aa9de6c103cd1483186418ee558c5479f}\label{namespace_fit2_d_aa9de6c103cd1483186418ee558c5479f} 
+{\bfseries errors} = mini2.\+Errors()
+\item 
+\Hypertarget{namespace_fit2_d_a136edccae7b39f137133ba81c84a1185}\label{namespace_fit2_d_a136edccae7b39f137133ba81c84a1185} 
+{\bfseries chisq} = mini2.\+Min\+Value()
+\item 
+\Hypertarget{namespace_fit2_d_a0546a4a3532d1283fd775f7c987f7116}\label{namespace_fit2_d_a0546a4a3532d1283fd775f7c987f7116} 
+{\bfseries Results} = np.\+zeros(nfitparameters)
+\item 
+\Hypertarget{namespace_fit2_d_a74d3118ef72e543161c18be35b2131d2}\label{namespace_fit2_d_a74d3118ef72e543161c18be35b2131d2} 
+{\bfseries Errors} = np.\+zeros(nfitparameters)
+\item 
+\Hypertarget{namespace_fit2_d_a00c6f32af47101b42d492ab328f61fb4}\label{namespace_fit2_d_a00c6f32af47101b42d492ab328f61fb4} 
+{\bfseries Cov\+Matrix} = np.\+zeros((nfitparameters,nfitparameters))
+\item 
+\Hypertarget{namespace_fit2_d_ab4a23c4db23082438f1a9ad47f40e484}\label{namespace_fit2_d_ab4a23c4db23082438f1a9ad47f40e484} 
+{\bfseries Cor\+Matrix} = np.\+zeros((nfitparameters,nfitparameters))
+\item 
+\Hypertarget{namespace_fit2_d_a1a5090a8d8c3753b6c296425c9a404d8}\label{namespace_fit2_d_a1a5090a8d8c3753b6c296425c9a404d8} 
+{\bfseries total} = TH2D()
+\item 
+\Hypertarget{namespace_fit2_d_a2d84d5a8cb684ce4e8d0073b0cf58ea0}\label{namespace_fit2_d_a2d84d5a8cb684ce4e8d0073b0cf58ea0} 
+{\bfseries residuals} = func2.\+Get\+Residuals()
+\item 
+\Hypertarget{namespace_fit2_d_abe818862b459c40ea979d5e6770134d8}\label{namespace_fit2_d_abe818862b459c40ea979d5e6770134d8} 
+{\bfseries stattest} = TH1D("{}stattest"{},"{}Residuals from fit"{},30,-\/3.,3.)
+\item 
+\Hypertarget{namespace_fit2_d_a4fc64aa969815df9c90d8aa6023d521c}\label{namespace_fit2_d_a4fc64aa969815df9c90d8aa6023d521c} 
+{\bfseries residualhist} = func2.\+Get\+Residuals\+Hist("{}residuals"{},"{}residuals"{})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb} take parameters from BDT fits to Q2 bins from Sean Gilligan
+This program plots and does local fits using the ROOT TH1 fitting.
+It stores the parameters in a json file by bin index (which gets changed into a string by json writing).
+It calls ParameterFit which sets up the fit with the goodness being calculated by FitFunction
+
+Fun facts - root passes the parameters to the fit function as a pointer to double in memory - you can access elements via [] but not via most other methods fail miserably. 
+
+Author: Heidi Schellman - based loosely on the MINERvA fitting code. 
+Date: 2025-07-29
+\end{DoxyVerb}
+ 

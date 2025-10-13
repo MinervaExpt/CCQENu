@@ -1,0 +1,489 @@
+\doxysection{plotting\+\_\+pdf.\+h}
+\hypertarget{plotting__pdf_8h_source}{}\label{plotting__pdf_8h_source}\index{make\_hists/include/plotting\_pdf.h@{make\_hists/include/plotting\_pdf.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ plotting\_functions\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ plotting\_functions\_H}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ \#define\ FULLDUMP\ \ //\ dumps\ all\ syst\ error\ subgroups}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/HistogramUtils.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MnvH1D.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MnvH2D.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MnvPlotter.h"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MnvVertErrorBand.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}TCanvas.h"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}TText.h"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keywordtype}{double}\ xmin\ =\ 0.;}
+\DoxyCodeLine{00018\ \textcolor{keywordtype}{double}\ xmax\ =\ 20.e3;}
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{int}\ nbins\ =\ 30;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ do\_fractional\_uncertainty\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00022\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ do\_cov\_area\_norm\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00023\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ include\_stat\_error\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{const}\ std::string\ do\_fractional\_uncertainty\_str\ =\ do\_fractional\_uncertainty\ ?\ std::string(\textcolor{stringliteral}{"{}Frac"{}})\ :\ std::string(\textcolor{stringliteral}{"{}Abs"{}});}
+\DoxyCodeLine{00026\ \textcolor{keyword}{const}\ std::string\ do\_cov\_area\_norm\_str\ =\ do\_cov\_area\_norm\ ?\ std::string(\textcolor{stringliteral}{"{}CovAreaNorm"{}})\ :\ std::string(\textcolor{stringliteral}{"{}POT"{}});}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keywordtype}{void}\ setLogScale(\textcolor{keywordtype}{int}\ logscale)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ gPad-\/>SetLogy(\textcolor{keyword}{false});}
+\DoxyCodeLine{00030\ \ \ \ \ gPad-\/>SetLogx(\textcolor{keyword}{false});}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordflow}{if}\ (logscale\ ==\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordflow}{if}\ (logscale\ ==\ 2\ ||\ logscale\ ==\ 3)\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ gPad-\/>SetLogy(\textcolor{keyword}{true});}
+\DoxyCodeLine{00034\ \ \ \ \ \}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordflow}{if}\ (logscale\ ==\ 1\ ||\ logscale\ ==\ 3)\ gPad-\/>SetLogx(\textcolor{keyword}{true});}
+\DoxyCodeLine{00036\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keywordtype}{void}\ resetLogScale()\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ gPad-\/>SetLogy(\textcolor{keyword}{false});}
+\DoxyCodeLine{00040\ \ \ \ \ gPad-\/>SetLogx(\textcolor{keyword}{false});}
+\DoxyCodeLine{00041\ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keywordtype}{void}\ PlotErrorSummary(PlotUtils::MnvH1D*\ hist,\ std::string\ label);}
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{void}\ PlotErrorSummary(PlotUtils::MnvH2D*\ hist,\ std::string\ label)\ \{\ std::cout\ <<\ \textcolor{stringliteral}{"{}no\ error\ bands\ for\ 2D"{}}\ <<\ std::endl;\ \}}
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{void}\ PlotVertBand(std::string\ band,\ std::string\ method\_str,\ PlotUtils::MnvH1D*\ hist);}
+\DoxyCodeLine{00046\ \textcolor{keywordtype}{void}\ PlotLatBand(std::string\ band,\ std::string\ method\_str,\ PlotUtils::MnvH1D*\ hist);}
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{void}\ PlotVertUniverse(std::string\ band,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ universe,\ std::string\ method\_str,\ PlotUtils::MnvH1D*\ hist);}
+\DoxyCodeLine{00048\ \textcolor{keywordtype}{void}\ PlotLatUniverse(std::string\ band,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ universe,\ std::string\ method\_str,\ PlotUtils::MnvH1D*\ hist);}
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{void}\ PlotCVAndError(PlotUtils::MnvH1D*\ hist,\ std::string\ label);}
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{void}\ PlotTotalError(PlotUtils::MnvH1D*\ hist,\ std::string\ method\_str);}
+\DoxyCodeLine{00051\ \textcolor{keywordtype}{void}\ Plot2D(PlotUtils::MnvH2D*\ hist,\ std::string\ label);}
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{void}\ PlotCVAndError(PlotUtils::MnvH2D*\ hist,\ std::string\ label);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keywordtype}{double}\ integrator(PlotUtils::MnvH1D*);}
+\DoxyCodeLine{00055\ \textcolor{keywordtype}{double}\ integrator(PlotUtils::MnvH2D*);}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keywordtype}{void}\ PlotTotalError(PlotUtils::MnvH1D*\ hist,\ std::string\ method\_str)\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ TH1D*\ hTotalErr\ =\ (TH1D*)hist-\/>GetTotalError(include\_stat\_error,\ do\_fractional\_uncertainty,\ do\_cov\_area\_norm).Clone(Form(\textcolor{stringliteral}{"{}h\_total\_err\_errSum\_\%d"{}},\ \_\_LINE\_\_));}
+\DoxyCodeLine{00059\ \ \ \ \ hTotalErr-\/>SetDirectory(0);}
+\DoxyCodeLine{00060\ \ \ \ \ TCanvas\ cF(\textcolor{stringliteral}{"{}c4"{}},\ \textcolor{stringliteral}{"{}c4"{}});}
+\DoxyCodeLine{00061\ \ \ \ \ hTotalErr-\/>SetTitle(Form(\textcolor{stringliteral}{"{}Total\ Uncertainty\ (\%s);\ \%s\ "{}},\ method\_str.c\_str(),\ hist-\/>GetTitle()));}
+\DoxyCodeLine{00062\ \ \ \ \ hTotalErr-\/>Draw();}
+\DoxyCodeLine{00063\ \ \ \ \ cF.Print(Form(\textcolor{stringliteral}{"{}\%s\_TotalUncertainty\_\%s\_\%s\_\%s.png"{}},\ hist-\/>GetName(),\ do\_fractional\_uncertainty\_str.c\_str(),\ do\_cov\_area\_norm\_str.c\_str(),\ method\_str.c\_str()));}
+\DoxyCodeLine{00064\ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keywordtype}{void}\ PlotErrorSummary(TCanvas\&\ cE,\ PlotUtils::MnvH2D*\ hist,\ std::string\ label,\ \textcolor{keywordtype}{int}\ logscale)\ \{\ std::cout\ <<\ \textcolor{stringliteral}{"{}\ no\ error\ summary\ for\ 2D"{}}\ <<\ std::endl;\ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keywordtype}{void}\ PlotErrorSummary(TCanvas\&\ cE,\ PlotUtils::MnvH1D*\ hist,\ std::string\ label,\ \textcolor{keywordtype}{int}\ logscale)\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ PlotUtils::MnvPlotter\ mnvPlotter(PlotUtils::kCCQEAntiNuStyle);}
+\DoxyCodeLine{00070\ \ \ \ \ resetLogScale();}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ TCanvas\ cE\ ("{}c1"{},"{}c1"{});}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{//\ \ hist-\/>GetXaxis()-\/>SetTitle(hist-\/>GetTitle());}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//\ \ std::string\ xaxis\ =\ mc-\/>GetXaxis()-\/>GetTitle();}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ mnvPlotter.error\_color\_map.clear();}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ mnvPlotter.axis\_maximum\ =\ 0.2;}
+\DoxyCodeLine{00077\ \ \ \ \ mnvPlotter.axis\_minimum\ =\ 0.0;}
+\DoxyCodeLine{00078\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}Flux"{}}]\ =\ kViolet\ +\ 6;}
+\DoxyCodeLine{00079\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}Recoil\ Reconstruction"{}}]\ =\ kOrange\ +\ 2;}
+\DoxyCodeLine{00080\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}Cross\ Section\ Models"{}}]\ =\ kMagenta;}
+\DoxyCodeLine{00081\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}]\ =\ kRed;}
+\DoxyCodeLine{00082\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}Muon\ Reconstruction"{}}]\ =\ kGreen;}
+\DoxyCodeLine{00083\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}Muon\ Energy"{}}]\ =\ kGreen\ +\ 3;}
+\DoxyCodeLine{00084\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}Muon\_Energy\_MINERvA"{}}]\ =\ kRed\ -\/\ 3;}
+\DoxyCodeLine{00085\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}Muon\_Energy\_MINOS"{}}]\ =\ kViolet\ -\/\ 3;}
+\DoxyCodeLine{00086\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}Other"{}}]\ =\ kGreen\ +\ 3;}
+\DoxyCodeLine{00087\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}Low\ Recoil\ Fits"{}}]\ =\ kRed\ +\ 3;}
+\DoxyCodeLine{00088\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}GEANT4"{}}]\ =\ kBlue;}
+\DoxyCodeLine{00089\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}Background\ Subtraction"{}}]\ =\ kGreen;}
+\DoxyCodeLine{00090\ \ \ \ \ mnvPlotter.error\_color\_map[\textcolor{stringliteral}{"{}Tune"{}}]\ =\ kOrange\ +\ 2;}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ mnvPlotter.error\_summary\_group\_map.clear();}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#ifndef\ NOGENIE}}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}\ include\ GENIE"{}\ <<\ std::endl;}}
+\DoxyCodeLine{00095\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_FrAbs\_N"{}});}
+\DoxyCodeLine{00096\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_FrAbs\_pi"{}});}
+\DoxyCodeLine{00097\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_FrCEx\_N"{}});}
+\DoxyCodeLine{00098\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_FrCEx\_pi"{}});}
+\DoxyCodeLine{00099\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_FrElas\_N"{}});}
+\DoxyCodeLine{00100\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_FrElas\_pi"{}});}
+\DoxyCodeLine{00101\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_FrInel\_N"{}});}
+\DoxyCodeLine{00102\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_FrInel\_pi"{}});}
+\DoxyCodeLine{00103\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_FrPiProd\_N"{}});}
+\DoxyCodeLine{00104\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_FrPiProd\_pi"{}});}
+\DoxyCodeLine{00105\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_MFP\_N"{}});}
+\DoxyCodeLine{00106\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}FSI\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_MFP\_pi"{}});}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00108\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_AGKYxF1pi"{}});}
+\DoxyCodeLine{00109\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_AhtBY"{}});}
+\DoxyCodeLine{00110\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_BhtBY"{}});}
+\DoxyCodeLine{00111\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_CCQEPauliSupViaKF"{}});}
+\DoxyCodeLine{00112\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_CV1uBY"{}});}
+\DoxyCodeLine{00113\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_CV2uBY"{}});}
+\DoxyCodeLine{00114\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_EtaNCEL"{}});}
+\DoxyCodeLine{00115\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_MaCCQE"{}});}
+\DoxyCodeLine{00116\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_MaCCQEshape"{}});}
+\DoxyCodeLine{00117\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_MaNCEL"{}});}
+\DoxyCodeLine{00118\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_MaRES"{}});}
+\DoxyCodeLine{00119\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_MvRES"{}});}
+\DoxyCodeLine{00120\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_NormCCQE"{}});}
+\DoxyCodeLine{00121\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_NormCCRES"{}});}
+\DoxyCodeLine{00122\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_NormDISCC"{}});}
+\DoxyCodeLine{00123\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_NormNCRES"{}});}
+\DoxyCodeLine{00124\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_RDecBR1gamma"{}});}
+\DoxyCodeLine{00125\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_Rvn1pi"{}});}
+\DoxyCodeLine{00126\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_Rvn2pi"{}});}
+\DoxyCodeLine{00127\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_Rvn3pi"{}});}
+\DoxyCodeLine{00128\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_Rvp1pi"{}});}
+\DoxyCodeLine{00129\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_Rvp2pi"{}});}
+\DoxyCodeLine{00130\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_Theta\_Delta2Npi"{}});}
+\DoxyCodeLine{00131\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Genie\ Interaction\ Model"{}}].push\_back(\textcolor{stringliteral}{"{}GENIE\_VecFFCCQEshape"{}});}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00133\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Tune"{}}].push\_back(\textcolor{stringliteral}{"{}RPA\_LowQ2"{}});}
+\DoxyCodeLine{00134\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Tune"{}}].push\_back(\textcolor{stringliteral}{"{}RPA\_HighQ2"{}});}
+\DoxyCodeLine{00135\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Tune"{}}].push\_back(\textcolor{stringliteral}{"{}NonResPi"{}});}
+\DoxyCodeLine{00136\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Tune"{}}].push\_back(\textcolor{stringliteral}{"{}2p2h"{}});}
+\DoxyCodeLine{00137\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Tune"{}}].push\_back(\textcolor{stringliteral}{"{}LowQ2Pi"{}});}
+\DoxyCodeLine{00138\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Tune"{}}].push\_back(\textcolor{stringliteral}{"{}Low\_Recoil\_2p2h\_Tune"{}});}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{//\ mnvPlotter.error\_summary\_group\_map["{}Angle"{}].push\_back("{}BeamAngleX"{});}}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{comment}{//\ \ \ mnvPlotter.error\_summary\_group\_map["{}Angle"{}].push\_back("{}BeamAngleY"{});}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Response"{}}].push\_back(\textcolor{stringliteral}{"{}response\_em"{}});}
+\DoxyCodeLine{00144\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Response"{}}].push\_back(\textcolor{stringliteral}{"{}response\_proton"{}});}
+\DoxyCodeLine{00145\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Response"{}}].push\_back(\textcolor{stringliteral}{"{}response\_pion"{}});}
+\DoxyCodeLine{00146\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Response"{}}].push\_back(\textcolor{stringliteral}{"{}response\_meson"{}});}
+\DoxyCodeLine{00147\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Response"{}}].push\_back(\textcolor{stringliteral}{"{}response\_other"{}});}
+\DoxyCodeLine{00148\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Response"{}}].push\_back(\textcolor{stringliteral}{"{}response\_low\_neutron"{}});}
+\DoxyCodeLine{00149\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Response"{}}].push\_back(\textcolor{stringliteral}{"{}response\_mid\_neutron"{}});}
+\DoxyCodeLine{00150\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Response"{}}].push\_back(\textcolor{stringliteral}{"{}response\_high\_neutron"{}});}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Geant"{}}].push\_back(\textcolor{stringliteral}{"{}GEANT\_Neutron"{}});}
+\DoxyCodeLine{00153\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Geant"{}}].push\_back(\textcolor{stringliteral}{"{}GEANT\_Proton"{}});}
+\DoxyCodeLine{00154\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Geant"{}}].push\_back(\textcolor{stringliteral}{"{}GEANT\_Pion"{}});}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00156\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Muon\ Energy"{}}].push\_back(\textcolor{stringliteral}{"{}Muon\_Energy\_MINOS"{}});}
+\DoxyCodeLine{00157\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Muon\ Energy"{}}].push\_back(\textcolor{stringliteral}{"{}Muon\_Energy\_MINERvA"{}});}
+\DoxyCodeLine{00158\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Muon\ Energy"{}}].push\_back(\textcolor{stringliteral}{"{}MINOS\_Reconstruction\_Efficiency"{}});}
+\DoxyCodeLine{00159\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Muon\ Energy"{}}].push\_back(\textcolor{stringliteral}{"{}Muon\_Energy\_Resolution"{}});}
+\DoxyCodeLine{00160\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Muon\ Energy"{}}].push\_back(\textcolor{stringliteral}{"{}BeamAngleX"{}});}
+\DoxyCodeLine{00161\ \ \ \ \ mnvPlotter.error\_summary\_group\_map[\textcolor{stringliteral}{"{}Muon\ Energy"{}}].push\_back(\textcolor{stringliteral}{"{}BeamAngleY"{}});}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{comment}{//\ \ mnvPlotter.error\_summary\_group\_map["{}Unfolding"{}].push\_back("{}Unfolding"{});}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ mnvPlotter.DrawErrorSummary(hist,\ \textcolor{stringliteral}{"{}TR"{}},\ include\_stat\_error,\ \textcolor{keyword}{false},\ 0.0,\ do\_cov\_area\_norm,\ \textcolor{stringliteral}{"{}"{}},\ do\_fractional\_uncertainty);}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ std::string\ plotname\ =\ Form(\textcolor{stringliteral}{"{}Title:\ ErrorSummary\_\%s\_\%s\_\%s"{}},\ hist-\/>GetName(),\ do\_cov\_area\_norm\_str.c\_str(),\ label.c\_str());}
+\DoxyCodeLine{00167\ \ \ \ \ TText*\ t\ =\ \textcolor{keyword}{new}\ TText(.3,\ .95,\ label.c\_str());}
+\DoxyCodeLine{00168\ \ \ \ \ t-\/>SetNDC(1);}
+\DoxyCodeLine{00169\ \ \ \ \ t-\/>SetTextSize(.03);}
+\DoxyCodeLine{00170\ \ \ \ \ setLogScale(logscale);}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{comment}{//\ \ gPad-\/>SetLogy(false);}}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{comment}{//\ \ gPad-\/>SetLogx(false);}}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{comment}{//\ \ if\ (logscale==\ 2\ ||\ logscale\ ==3)\{}}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{comment}{//\ \ \ \ gPad-\/>SetLogy();}}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{comment}{//\ \ \ \ hist-\/>SetMinimum(0.001);}}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{comment}{//\ \ \}}}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{comment}{//\ \ if\ (logscale==\ 1\ ||\ logscale\ ==3)\ gPad-\/>SetLogx();}}
+\DoxyCodeLine{00178\ \ \ \ \ t-\/>Draw();}
+\DoxyCodeLine{00179\ \ \ \ \ cE.Print(cE.GetName(),\ plotname.c\_str());}
+\DoxyCodeLine{00180\ \ \ \ \ resetLogScale();}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#ifdef\ FULLDUMP}}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ group\ :\ mnvPlotter.error\_summary\_group\_map)\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}\ error\ summary\ for\ "{}\ <<\ group.first\ <<\ std::endl;}}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ mnvPlotter.DrawErrorSummary(hist,\ \textcolor{stringliteral}{"{}TR"{}},\ include\_stat\_error,\ \textcolor{keyword}{false},\ 0.0,\ do\_cov\_area\_norm,\ group.first,\ do\_fractional\_uncertainty);}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ plotname\ =\ Form(\textcolor{stringliteral}{"{}Title:\ ErrorSummary\_\%s\_\%s\_\%s\_\%s"{}},\ hist-\/>GetName(),\ group.first.c\_str(),\ do\_cov\_area\_norm\_str.c\_str(),\ label.c\_str());}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ TText*\ t\ =\ \textcolor{keyword}{new}\ TText(.3,\ .95,\ label.c\_str());}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ t-\/>SetNDC(1);}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ t-\/>SetTextSize(.03);}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ setLogScale(logscale);}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ gPad-\/>SetLogy(false);}}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ gPad-\/>SetLogx(false);}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ if\ (logscale==\ 2\ ||\ logscale\ ==3)\{}}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ gPad-\/>SetLogy();}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ hist-\/>SetMinimum(0.001);}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \}}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ if\ (logscale==\ 1\ ||\ logscale\ ==3)\ gPad-\/>SetLogx();}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ t-\/>Draw();}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ cE.Print(cE.GetName(),\ plotname.c\_str());}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ resetLogScale();}
+\DoxyCodeLine{00200\ \ \ \ \ \}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{comment}{//\ mnvPlotter.MultiPrint(\&cE,\ plotname,\ "{}pdf"{});}}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{comment}{//\ \ \ mnvPlotter.DrawErrorSummary(hist,"{}TR"{},include\_stat\_error,true,0.0,\ do\_cov\_area\_norm,\ "{}Angle"{},false);}}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{comment}{//\ \ \ plotname\ =\ Form("{}ResponseErrorSummary\_\%s\_\%s\_\%s"{},\ hist-\/>GetName(),do\_cov\_area\_norm\_str.c\_str(),label.c\_str());}}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{comment}{//\ \ \ mnvPlotter.MultiPrint(\&cE,\ plotname,\ "{}png"{});}}
+\DoxyCodeLine{00206\ \}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{keywordtype}{void}\ PlotVertBand(std::string\ band,\ std::string\ method\_str,\ PlotUtils::MnvH1D*\ hist)\ \{}
+\DoxyCodeLine{00209\ \ \ \ \ TH1*\ h1\ =\ (TH1*)hist-\/>GetVertErrorBand(band.c\_str())-\/>GetErrorBand(do\_fractional\_uncertainty,\ do\_cov\_area\_norm).Clone(Form(\textcolor{stringliteral}{"{}\%s\_\%s\_\%s"{}},\ hist-\/>GetName(),\ band.c\_str(),\ method\_str.c\_str()));}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordflow}{if}\ (h1\ ==\ NULL)\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ no\ error\ band\ "{}}\ <<\ band\ <<\ std::endl;}
+\DoxyCodeLine{00213\ \ \ \ \ \}}
+\DoxyCodeLine{00214\ \ \ \ \ h1-\/>SetDirectory(0);}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{comment}{//\ TH1*\ h1\ =\ (TH1*)hist-\/>GetVertErrorBand(band.c\_str());}}
+\DoxyCodeLine{00216\ \ \ \ \ TCanvas\ cF(\textcolor{stringliteral}{"{}c4"{}},\ \textcolor{stringliteral}{"{}c4"{}});}
+\DoxyCodeLine{00217\ \ \ \ \ h1-\/>SetTitle(Form(\textcolor{stringliteral}{"{}\%s\ Uncertainty\ (\%s);\ Theta\_\{\#nu\}\ (rad)"{}},\ band.c\_str(),\ method\_str.c\_str()));}
+\DoxyCodeLine{00218\ \ \ \ \ h1-\/>Draw(\textcolor{stringliteral}{"{}h"{}});}
+\DoxyCodeLine{00219\ \ \ \ \ cF.Print(Form(\textcolor{stringliteral}{"{}\%s\_\%s\_band\_\%s.png"{}},\ hist-\/>GetName(),\ band.c\_str(),\ method\_str.c\_str()));}
+\DoxyCodeLine{00220\ \}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{keywordtype}{void}\ PlotLatBand(std::string\ band,\ std::string\ method\_str,\ PlotUtils::MnvH1D*\ hist)\ \{}
+\DoxyCodeLine{00223\ \ \ \ \ TH1*\ h1\ =\ (TH1*)hist-\/>GetLatErrorBand(band.c\_str())-\/>GetErrorBand(do\_fractional\_uncertainty,\ do\_cov\_area\_norm).Clone(Form(\textcolor{stringliteral}{"{}\%s\_\%s\_\%s"{}},\ hist-\/>GetName(),\ band.c\_str(),\ method\_str.c\_str()));}
+\DoxyCodeLine{00224\ \ \ \ \ h1-\/>SetDirectory(0);}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{comment}{//\ TH1*\ h1\ =\ (TH1*)hist-\/>GetLatErrorBand(band.c\_str());}}
+\DoxyCodeLine{00226\ \ \ \ \ TCanvas\ cF(\textcolor{stringliteral}{"{}c1"{}},\ \textcolor{stringliteral}{"{}c1"{}});}
+\DoxyCodeLine{00227\ \ \ \ \ h1-\/>SetTitle(Form(\textcolor{stringliteral}{"{}\%s\ Uncertainty\ (\%s);\ E\_\{\#nu\}\ (MeV)"{}},\ band.c\_str(),\ method\_str.c\_str()));}
+\DoxyCodeLine{00228\ \ \ \ \ h1-\/>Draw(\textcolor{stringliteral}{"{}h"{}});}
+\DoxyCodeLine{00229\ \ \ \ \ cF.Print(Form(\textcolor{stringliteral}{"{}\%s\_\%s\_band\_\%s.png"{}},\ hist-\/>GetName(),\ band.c\_str(),\ method\_str.c\_str()));}
+\DoxyCodeLine{00230\ \}}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \textcolor{keywordtype}{void}\ PlotVertUniverse(std::string\ band,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ universe,\ std::string\ method\_str,\ PlotUtils::MnvH1D*\ hist)\ \{}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}band\ "{}\ <<\ band\ <<\ "{}\ "{}\ <<\ hist-\/>GetName()\ <<\ std::endl;}}
+\DoxyCodeLine{00234\ \ \ \ \ TH1D*\ h1\ =\ hist-\/>GetVertErrorBand(band.c\_str())-\/>GetHist(universe);}
+\DoxyCodeLine{00235\ \ \ \ \ h1-\/>SetDirectory(0);}
+\DoxyCodeLine{00236\ \ \ \ \ TCanvas\ cF(\textcolor{stringliteral}{"{}c1"{}},\ \textcolor{stringliteral}{"{}c1"{}});}
+\DoxyCodeLine{00237\ \ \ \ \ h1-\/>SetLineColor(kBlack);}
+\DoxyCodeLine{00238\ \ \ \ \ h1-\/>SetLineStyle(1);}
+\DoxyCodeLine{00239\ \ \ \ \ h1-\/>Draw(\textcolor{stringliteral}{"{}hist"{}});}
+\DoxyCodeLine{00240\ \ \ \ \ cF.Print(Form(\textcolor{stringliteral}{"{}\%s\_\%s\_band\_universe\%i\_\%s.png"{}},\ hist-\/>GetName(),\ band.c\_str(),\ universe\ +\ 1,\ method\_str.c\_str()));}
+\DoxyCodeLine{00241\ \}}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \textcolor{keywordtype}{void}\ PlotLatUniverse(std::string\ band,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ universe,\ std::string\ method\_str,\ PlotUtils::MnvH1D*\ hist)\ \{}
+\DoxyCodeLine{00244\ \ \ \ \ TH1D*\ h1\ =\ hist-\/>GetLatErrorBand(band.c\_str())-\/>GetHist(universe);}
+\DoxyCodeLine{00245\ \ \ \ \ h1-\/>SetDirectory(0);}
+\DoxyCodeLine{00246\ \ \ \ \ TCanvas\ cF(\textcolor{stringliteral}{"{}c1"{}},\ \textcolor{stringliteral}{"{}c1"{}});}
+\DoxyCodeLine{00247\ \ \ \ \ h1-\/>SetLineColor(kBlack);}
+\DoxyCodeLine{00248\ \ \ \ \ h1-\/>SetLineStyle(1);}
+\DoxyCodeLine{00249\ \ \ \ \ h1-\/>Draw(\textcolor{stringliteral}{"{}hist"{}});}
+\DoxyCodeLine{00250\ \ \ \ \ cF.Print(Form(\textcolor{stringliteral}{"{}\%s\_\%s\_band\_universe\%i\_\%s.png"{}},\ hist-\/>GetName(),\ band.c\_str(),\ universe\ +\ 1,\ method\_str.c\_str()));}
+\DoxyCodeLine{00251\ \}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \textcolor{keywordtype}{void}\ PlotCVAndError(TCanvas\&\ cE,\ PlotUtils::MnvH1D*\ idatahist,\ PlotUtils::MnvH1D*\ ihist,\ std::string\ label,\ \textcolor{keywordtype}{bool}\ cov\_area\ =\ do\_cov\_area\_norm,\ \textcolor{keywordtype}{int}\ logscale\ =\ 0,\ \textcolor{keywordtype}{bool}\ binwid\ =\ \textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{00254\ \ \ \ \ resetLogScale();}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{comment}{//\ PlotUtils::MnvPlotter\ mnvPlotter(PlotUtils::kCCQEAntiNuStyle);}}
+\DoxyCodeLine{00256\ \ \ \ \ PlotUtils::MnvPlotter\ mnvPlotter(PlotUtils::kDefaultStyle);}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{comment}{//\ mnvPlotter.SetBinWidthNorm(false);}}
+\DoxyCodeLine{00258\ \ \ \ \ mnvPlotter.draw\_normalized\_to\_bin\_width\ =\ 0;}
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{comment}{//\ binwid\ =\ true;}}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{comment}{//\ \ need\ to\ clone\ as\ plan\ to\ bin\ width\ correct}}
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keywordflow}{if}\ (!ihist\ ||\ !idatahist)\ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ No\ datahist\ "{}}\ <<\ ihist\ <<\ \textcolor{stringliteral}{"{}\ or\ mchist\ "{}}\ <<\ ihist\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ label\ <<\ std::endl;}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00264\ \ \ \ \ \}}
+\DoxyCodeLine{00265\ \ \ \ \ MnvH1D*\ datahist\ =\ idatahist-\/>Clone();}
+\DoxyCodeLine{00266\ \ \ \ \ datahist-\/>SetDirectory(0);}
+\DoxyCodeLine{00267\ \ \ \ \ MnvH1D*\ hist\ =\ ihist-\/>Clone();}
+\DoxyCodeLine{00268\ \ \ \ \ hist-\/>SetDirectory(0);}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{comment}{//\ TCanvas\ cE\ ("{}c1"{},"{}c1"{});}}
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{comment}{//\ hist-\/>GetXaxis()-\/>SetTitle(Form("{}\%s"{},hist-\/>GetTitle()\ ));}}
+\DoxyCodeLine{00271\ \ \ \ \ hist-\/>GetXaxis()-\/>GetTitle();}
+\DoxyCodeLine{00272\ \ \ \ \ hist-\/>GetYaxis()-\/>SetTitle(Form(\textcolor{stringliteral}{"{}\%s"{}},\ \textcolor{stringliteral}{"{}Counts\ per\ unit"{}}));}
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{comment}{//\ PlotUtils::MnvH1D*\ datahist\ =new\ PlotUtils::MnvH1D("{}adsf"{},\ "{}E\_\{\#nu\}\ (MeV)"{},\ nbins,\ xmin,\ xmax);}}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keywordtype}{bool}\ statPlusSys\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keywordtype}{int}\ mcScale\ =\ 1.;}
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keywordtype}{bool}\ useHistTitles\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}\ check\ bin\ width\ "{}\ <<\ std::endl;}}
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{comment}{//\ datahist-\/>Print("{}ALL"{});}}
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordflow}{if}\ (binwid)\ \{}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}\ scale\ width\ "{}\ <<\ std::endl;}}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ datahist-\/>Scale(1.,\ \textcolor{stringliteral}{"{}width"{}});}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ hist-\/>Scale(1.,\ \textcolor{stringliteral}{"{}width"{}});}
+\DoxyCodeLine{00283\ \ \ \ \ \}}
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keyword}{const}\ PlotUtils::MnvH1D*\ bkgdHist\ =\ NULL;}
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{keyword}{const}\ PlotUtils::MnvH1D*\ dataBkgdHist\ =\ NULL;}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{comment}{//\ datahist-\/>Print("{}ALL"{});}}
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{comment}{//\ \ gPad-\/>SetLogy(false);}}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{comment}{//\ \ gPad-\/>SetLogx(false);}}
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{comment}{//\ \ if\ (logscale==\ 2\ ||\ logscale\ ==3)\ \{}}
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{comment}{//\ \ \ \ gPad-\/>SetLogy();}}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{comment}{//\ \ \}}}
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{comment}{//\ \ if\ (logscale==\ 1\ ||\ logscale\ ==3)\ gPad-\/>SetLogx();}}
+\DoxyCodeLine{00293\ \ \ \ \ setLogScale(logscale);}
+\DoxyCodeLine{00294\ \ \ \ \ cov\_area\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00295\ \ \ \ \ TText*\ t\ =\ \textcolor{keyword}{new}\ TText(.3,\ .95,\ label.c\_str());}
+\DoxyCodeLine{00296\ \ \ \ \ t-\/>SetNDC(1);}
+\DoxyCodeLine{00297\ \ \ \ \ t-\/>SetTextSize(.03);}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ label\ <<\ "{}\ BinWidthNorm\ before"{}\ <<\ datahist-\/>GetNormBinWidth()\ <<\ std::endl;}}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{comment}{//\ datahist-\/>SetNormBinWidth(1.0);}}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{comment}{//\ hist-\/>SetNormBinWidth(1);}}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{comment}{//\ mnvPlotter.SetBinWidthNorm(!binwid);}}
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ label\ <<\ "{}\ BinWidthNorm\ after"{}\ <<\ datahist-\/>GetNormBinWidth()\ <<\ std::endl;}}
+\DoxyCodeLine{00304\ \ \ \ \ mnvPlotter.SetROOT6Palette(57);\ \ \textcolor{comment}{//\ kBird}}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \ \ \ \ mnvPlotter.DrawDataMCWithErrorBand(datahist,\ hist,\ mcScale,\ \textcolor{stringliteral}{"{}TL"{}},\ useHistTitles,\ NULL,\ NULL,\ cov\_area,\ statPlusSys);}
+\DoxyCodeLine{00307\ \ \ \ \ TH1D\ stat\ =\ datahist-\/>GetCVHistoWithStatError();}
+\DoxyCodeLine{00308\ \ \ \ \ stat.SetLineColor(kBlack);}
+\DoxyCodeLine{00309\ \ \ \ \ stat.SetMarkerColor(kBlack);}
+\DoxyCodeLine{00310\ \ \ \ \ stat.Draw(\textcolor{stringliteral}{"{}E1\ same"{}});}
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{comment}{//\ mnvPlotter.DrawMCWithErrorBand(hist);\ //I\ think\ that\ this\ call\ only\ shows\ stat\ errors.}}
+\DoxyCodeLine{00312\ \ \ \ \ std::string\ plotname\ =\ Form(\textcolor{stringliteral}{"{}Title:\ \%s\_CV\_w\_err\_\%s"{}},\ datahist-\/>GetName(),\ label.c\_str());}
+\DoxyCodeLine{00313\ \ \ \ \ t-\/>Draw();}
+\DoxyCodeLine{00314\ \ \ \ \ cE.Print(cE.GetName(),\ plotname.c\_str());}
+\DoxyCodeLine{00315\ \ \ \ \ \textcolor{keywordflow}{if}\ (idatahist\ !=\ ihist)\ \{\ \ \ \ \ \textcolor{comment}{//\ don't\ plot\ ratio\ for\ identical\ hists.}}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ MnvH1D*\ d\ =\ (MnvH1D*)datahist-\/>Clone();}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ d-\/>SetDirectory(0);}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ MnvH1D*\ m\ =\ (MnvH1D*)hist-\/>Clone();}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ m-\/>SetDirectory(0);}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (d-\/>GetXaxis()-\/>GetNbins()\ !=\ m-\/>GetXaxis()-\/>GetNbins())\ \{}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ data\ and\ mc\ bins\ don't\ agree"{}}\ <<\ d-\/>GetName()\ <<\ m-\/>GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00324\ \ \ \ \ }
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ MnvH1D*\ mc\ =\ (MnvH1D*)m-\/>Clone();}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ mc-\/>SetDirectory(0);}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ mc-\/>ClearAllErrorBands();}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ mc-\/>AddMissingErrorBandsAndFillWithCV(*m);}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ d-\/>Divide(d,\ mc,\ 1.,\ 1.);}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ d-\/>GetYaxis()-\/>SetTitle(\textcolor{stringliteral}{"{}Data/MC"{}});}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ m-\/>Divide(m,\ mc,\ 1.,\ 1.);}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ no\ idea\ why\ I\ should\ have\ to\ do\ this}}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ m-\/>Print("{}ALL"{});}}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ datahist-\/>Draw();}}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ cov\_area\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ mnvPlotter.SetBinWidthNorm(false);}}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ mnvPlotter.DrawDataMCRatio(d,\ m,\ mcScale,\ \textcolor{keyword}{true},\ \textcolor{keyword}{true});\ \ \textcolor{comment}{//\ "{}TL"{},\ useHistTitles,\ NULL,\ NULL,cov\_area,\ statPlusSys);}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ t-\/>Draw();}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ std::string\ plotname2\ =\ Form(\textcolor{stringliteral}{"{}Title:\ ratio\ \%s\_CV\_w\_err\_\%s"{}},\ datahist-\/>GetName(),\ label.c\_str());}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ cE.Print(cE.GetName(),\ plotname2.c\_str());}
+\DoxyCodeLine{00345\ \ \ \ \ \}}
+\DoxyCodeLine{00346\ \ \ \ \ resetLogScale();}
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{comment}{//\ mnvPlotter.MultiPrint(\&cE,\ plotname,\ "{}pdf"{});}}
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{comment}{//\ \ mnvPlotter.MultiPrint(\&cE,\ plotname,\ "{}C"{});}}
+\DoxyCodeLine{00349\ \}}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \textcolor{keywordtype}{void}\ Plot2D(TCanvas\&\ cE,\ MnvH2D*\ ihist,\ std::string\ label,\ \textcolor{keywordtype}{int}\ logscale\ =\ 0,\ \textcolor{keywordtype}{bool}\ binwid\ =\ \textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{00352\ \ \ \ \ setLogScale(logscale);}
+\DoxyCodeLine{00353\ \ \ \ \ MnvH2D*\ hist\ =\ (MnvH2D*)ihist-\/>Clone();}
+\DoxyCodeLine{00354\ \ \ \ \ hist-\/>SetDirectory(0);}
+\DoxyCodeLine{00355\ \ \ \ \ setLogScale(logscale);}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \ \ std::string\ xtitle\ =\ hist-\/>GetXaxis()-\/>GetTitle();}
+\DoxyCodeLine{00358\ \ \ \ \ std::string\ ytitle\ =\ hist-\/>GetYaxis()-\/>GetTitle();}
+\DoxyCodeLine{00359\ \ \ \ \ std::string\ title\ =\ Form(\textcolor{stringliteral}{"{}\%s\ by\ \%s:\ \%s"{}},\ xtitle.c\_str(),\ ytitle.c\_str(),\ label.c\_str());}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \ \ \ \ hist-\/>GetXaxis()-\/>CenterTitle();}
+\DoxyCodeLine{00362\ \ \ \ \ hist-\/>GetYaxis()-\/>CenterTitle();}
+\DoxyCodeLine{00363\ \ \ \ \ hist-\/>SetTitle(Form(\textcolor{stringliteral}{"{}\%s"{}},\ title.c\_str()));}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{comment}{//\ \ gPad-\/>SetLogy(false);}}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{comment}{//\ \ gPad-\/>SetLogx(false);}}
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{comment}{//\ \ if\ (logscale\ ==\ 2\ ||\ logscale\ ==\ 3)\ gPad-\/>SetLogy();}}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{comment}{//\ \ if\ (logscale\ ==\ 1\ ||\ logscale\ ==\ 3)\ gPad-\/>SetLogx();}}
+\DoxyCodeLine{00369\ \ \ \ \ TText*\ t\ =\ \textcolor{keyword}{new}\ TText(.3,\ .95,\ label.c\_str());}
+\DoxyCodeLine{00370\ \ \ \ \ hist-\/>Draw(\textcolor{stringliteral}{"{}COLZ"{}});}
+\DoxyCodeLine{00371\ \ \ \ \ t-\/>SetNDC(1);}
+\DoxyCodeLine{00372\ \ \ \ \ t-\/>SetTextSize(.03);}
+\DoxyCodeLine{00373\ \ \ \ \ std::string\ plotname\ =\ Form(\textcolor{stringliteral}{"{}Title:\ \%s\_CV\_\%s"{}},\ hist-\/>GetName(),\ label.c\_str());}
+\DoxyCodeLine{00374\ \ \ \ \ t-\/>Draw();}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \ \ \ \ cE.Print(cE.GetName(),\ plotname.c\_str());}
+\DoxyCodeLine{00377\ \ \ \ \ resetLogScale();}
+\DoxyCodeLine{00378\ \}}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \textcolor{keywordtype}{void}\ Plot2DFraction(TCanvas\&\ cE,\ MnvH1D*\ ihist1,\ MnvH1D*\ ihist2,\ std::string\ label,\ \textcolor{keywordtype}{int}\ logscale\ =\ 0,\ \textcolor{keywordtype}{bool}\ binwid\ =\ \textcolor{keyword}{false})\ \{\ \ \textcolor{comment}{//\ null\ version\ for\ 1d}}
+\DoxyCodeLine{00381\ \}}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \textcolor{keywordtype}{void}\ Plot2DFraction(TCanvas\&\ cE,\ MnvH2D*\ ihist1,\ MnvH2D*\ ihist2,\ std::string\ label,\ \textcolor{keywordtype}{int}\ logscale\ =\ 0,\ \textcolor{keywordtype}{bool}\ binwid\ =\ \textcolor{keyword}{false})\ \{}
+\DoxyCodeLine{00384\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}print\ 2D\ fraction"{}}\ <<\ ihist1-\/>GetName()\ <<\ std::endl;}
+\DoxyCodeLine{00385\ \ \ \ \ setLogScale(logscale);}
+\DoxyCodeLine{00386\ \ \ \ \ TH2D\ hist1\ =\ ihist1-\/>GetCVHistoWithStatError();}
+\DoxyCodeLine{00387\ \ \ \ \ TH2D\ hist2\ =\ ihist2-\/>GetCVHistoWithStatError();}
+\DoxyCodeLine{00388\ \ \ \ \ hist1.SetDirectory(0);}
+\DoxyCodeLine{00389\ \ \ \ \ hist2.SetDirectory(0);}
+\DoxyCodeLine{00390\ \ \ \ \ setLogScale(logscale);}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \ \ \ \ std::string\ xtitle\ =\ hist1.GetXaxis()-\/>GetTitle();}
+\DoxyCodeLine{00393\ \ \ \ \ std::string\ ytitle\ =\ hist1.GetYaxis()-\/>GetTitle();}
+\DoxyCodeLine{00394\ \ \ \ \ std::string\ title\ =\ Form(\textcolor{stringliteral}{"{}\%s\ by\ \%s:\ \%s"{}},\ xtitle.c\_str(),\ ytitle.c\_str(),\ label.c\_str());}
+\DoxyCodeLine{00395\ }
+\DoxyCodeLine{00396\ \ \ \ \ hist1.GetXaxis()-\/>CenterTitle();}
+\DoxyCodeLine{00397\ \ \ \ \ hist1.GetYaxis()-\/>CenterTitle();}
+\DoxyCodeLine{00398\ \ \ \ \ hist1.SetTitle(Form(\textcolor{stringliteral}{"{}\%s"{}},\ title.c\_str()));}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \ \ \ \ gPad-\/>SetLogy(\textcolor{keyword}{false});}
+\DoxyCodeLine{00401\ \ \ \ \ gPad-\/>SetLogx(\textcolor{keyword}{false});}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keywordflow}{if}\ (logscale\ ==\ 2\ ||\ logscale\ ==\ 3)\ gPad-\/>SetLogy();}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keywordflow}{if}\ (logscale\ ==\ 1\ ||\ logscale\ ==\ 3)\ gPad-\/>SetLogx();}
+\DoxyCodeLine{00404\ \ \ \ \ TText*\ t\ =\ \textcolor{keyword}{new}\ TText(.3,\ .90,\ label.c\_str());}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \ \ \ \ hist1.SetLineColor(1);}
+\DoxyCodeLine{00407\ \ \ \ \ hist1.Draw(\textcolor{stringliteral}{"{}BOX"{}});}
+\DoxyCodeLine{00408\ \ \ \ \ t-\/>SetNDC(1);}
+\DoxyCodeLine{00409\ \ \ \ \ t-\/>SetTextSize(.03);}
+\DoxyCodeLine{00410\ \ \ \ \ std::string\ plotname\ =\ Form(\textcolor{stringliteral}{"{}Title:\ \%s\_CV\_\%s"{}},\ hist1.GetName(),\ label.c\_str());}
+\DoxyCodeLine{00411\ \ \ \ \ t-\/>Draw();}
+\DoxyCodeLine{00412\ \ \ \ \ hist2.SetLineColor(2);}
+\DoxyCodeLine{00413\ \ \ \ \ hist2.Draw(\textcolor{stringliteral}{"{}BOX\ SAME"{}});}
+\DoxyCodeLine{00414\ \ \ \ \ hist1.Print();}
+\DoxyCodeLine{00415\ \ \ \ \ hist2.Print();}
+\DoxyCodeLine{00416\ \ \ \ \ cE.Print(cE.GetName(),\ plotname.c\_str());}
+\DoxyCodeLine{00417\ \ \ \ \ resetLogScale();}
+\DoxyCodeLine{00418\ \}}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ \textcolor{keywordtype}{void}\ PlotCVAndError(TCanvas\&\ cE,\ MnvH2D*\ idatahist,\ MnvH2D*\ imchist,\ std::string\ label,\ \textcolor{keywordtype}{bool}\ cov\_area\ =\ do\_cov\_area\_norm,\ \textcolor{keywordtype}{int}\ logscale\ =\ 0,\ \textcolor{keywordtype}{bool}\ binwid\ =\ \textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{00421\ \ \ \ \ setLogScale(logscale);}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00423\ \ \ \ \ MnvH2D*\ d\ =\ (MnvH2D*)idatahist-\/>Clone();}
+\DoxyCodeLine{00424\ \ \ \ \ d-\/>SetDirectory(0);}
+\DoxyCodeLine{00425\ \ \ \ \ MnvH2D*\ mc\ =\ (MnvH2D*)imchist-\/>Clone();}
+\DoxyCodeLine{00426\ \ \ \ \ d-\/>SetDirectory(0);}
+\DoxyCodeLine{00427\ }
+\DoxyCodeLine{00428\ \ \ \ \ std::string\ xaxis\ =\ mc-\/>GetXaxis()-\/>GetTitle();}
+\DoxyCodeLine{00429\ \ \ \ \ std::string\ yaxis\ =\ mc-\/>GetYaxis()-\/>GetTitle();}
+\DoxyCodeLine{00430\ \ \ \ \ std::string\ xtitle\ =\ \textcolor{stringliteral}{"{}X\ Projection\ "{}}\ +\ xaxis;}
+\DoxyCodeLine{00431\ \ \ \ \ std::string\ ytitle\ =\ \textcolor{stringliteral}{"{}Y\ Projection\ "{}}\ +\ yaxis;}
+\DoxyCodeLine{00432\ \ \ \ \ std::string\ xlabel\ =\ \textcolor{stringliteral}{"{}\_projx"{}};}
+\DoxyCodeLine{00433\ \ \ \ \ std::string\ ylabel\ =\ \textcolor{stringliteral}{"{}\_projy"{}};}
+\DoxyCodeLine{00434\ \ \ \ \ TText*\ t\ =\ \textcolor{keyword}{new}\ TText(.3,\ .90,\ label.c\_str());}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \ \ \ \ MnvH1D*\ d\_xhist\ =\ d-\/>ProjectionX(Form(\textcolor{stringliteral}{"{}\%s\%s"{}},\ d-\/>GetName(),\ xlabel.c\_str()),\ 0,\ -\/1,\ \textcolor{stringliteral}{"{}o"{}});}
+\DoxyCodeLine{00437\ \ \ \ \ d\_xhist-\/>GetXaxis()-\/>SetTitle(Form(\textcolor{stringliteral}{"{}\%s"{}},\ xtitle.c\_str()));}
+\DoxyCodeLine{00438\ \ \ \ \ MnvH1D*\ d\_yhist\ =\ d-\/>ProjectionY(Form(\textcolor{stringliteral}{"{}\%s\%s"{}},\ d-\/>GetName(),\ ylabel.c\_str()),\ 0,\ -\/1,\ \textcolor{stringliteral}{"{}o"{}});}
+\DoxyCodeLine{00439\ \ \ \ \ d\_yhist-\/>GetXaxis()-\/>SetTitle(Form(\textcolor{stringliteral}{"{}\%s"{}},\ ytitle.c\_str()));}
+\DoxyCodeLine{00440\ \ \ \ \ MnvH1D*\ mc\_xhist\ =\ mc-\/>ProjectionX(Form(\textcolor{stringliteral}{"{}\%s\%s"{}},\ mc-\/>GetName(),\ xlabel.c\_str()),\ 0,\ -\/1,\ \textcolor{stringliteral}{"{}o"{}});}
+\DoxyCodeLine{00441\ \ \ \ \ mc\_xhist-\/>GetXaxis()-\/>SetTitle(Form(\textcolor{stringliteral}{"{}\%s"{}},\ xtitle.c\_str()));}
+\DoxyCodeLine{00442\ \ \ \ \ MnvH1D*\ mc\_yhist\ =\ mc-\/>ProjectionY(Form(\textcolor{stringliteral}{"{}\%s\%s"{}},\ mc-\/>GetName(),\ ylabel.c\_str()),\ 0,\ -\/1,\ \textcolor{stringliteral}{"{}o"{}});}
+\DoxyCodeLine{00443\ \ \ \ \ mc\_yhist-\/>GetXaxis()-\/>SetTitle(Form(\textcolor{stringliteral}{"{}\%s"{}},\ ytitle.c\_str()));}
+\DoxyCodeLine{00444\ }
+\DoxyCodeLine{00445\ \ \ \ \ std::string\ dlabel\ =\ d-\/>GetTitle();}
+\DoxyCodeLine{00446\ \ \ \ \ std::string\ mclabel\ =\ mc-\/>GetTitle();}
+\DoxyCodeLine{00447\ \ \ \ \ Plot2D(cE,\ d,\ label,\ logscale,\ binwid);}
+\DoxyCodeLine{00448\ \ \ \ \ resetLogScale();}
+\DoxyCodeLine{00449\ \ \ \ \ Plot2D(cE,\ mc,\ label,\ logscale,\ binwid);}
+\DoxyCodeLine{00450\ \ \ \ \ resetLogScale();}
+\DoxyCodeLine{00451\ \ \ \ \ PlotCVAndError(cE,\ d\_xhist,\ mc\_xhist,\ label,\ \textcolor{keyword}{false},\ logscale,\ binwid);}
+\DoxyCodeLine{00452\ \ \ \ \ resetLogScale();}
+\DoxyCodeLine{00453\ \ \ \ \ PlotCVAndError(cE,\ d\_yhist,\ mc\_yhist,\ label,\ \textcolor{keyword}{false},\ logscale,\ binwid);}
+\DoxyCodeLine{00454\ \ \ \ \ resetLogScale();}
+\DoxyCodeLine{00455\ \}}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00457\ \textcolor{comment}{//\ 1D}}
+\DoxyCodeLine{00458\ \textcolor{keywordtype}{double}\ integrator(PlotUtils::MnvH1D*\ h,\ \textcolor{keywordtype}{bool}\ binwid)\ \{}
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{keywordtype}{double}\ inte\ =\ 0;}
+\DoxyCodeLine{00460\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 1;\ i\ <=\ h-\/>GetXaxis()-\/>GetNbins();\ i++)\ \{}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ val\ =\ h-\/>GetBinContent(i);}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ wid\ =\ binwid\ ?\ h-\/>GetBinWidth(i)\ :\ 1.0;}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ inte\ +=\ val\ *\ wid;}
+\DoxyCodeLine{00464\ \ \ \ \ \}}
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}Integral\ of\ "{}\ <<\ h-\/>GetName()\ <<\ "{}\ "{}\ <<\ inte\ <<\ std::endl;}}
+\DoxyCodeLine{00466\ \ \ \ \ \textcolor{keywordflow}{return}\ inte;}
+\DoxyCodeLine{00467\ \}}
+\DoxyCodeLine{00468\ \textcolor{comment}{//\ 2D}}
+\DoxyCodeLine{00469\ \textcolor{keywordtype}{double}\ integrator(PlotUtils::MnvH2D*\ h,\ \textcolor{keywordtype}{bool}\ binwid)\ \{}
+\DoxyCodeLine{00470\ \ \ \ \ \textcolor{keywordtype}{double}\ inte\ =\ 0;}
+\DoxyCodeLine{00471\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ ix\ =\ 1;\ ix\ <=\ h-\/>GetXaxis()-\/>GetNbins();\ ix++)\ \{}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ iy\ =\ 1;\ iy\ <=\ h-\/>GetYaxis()-\/>GetNbins();\ iy++)\ \{}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ val\ =\ h-\/>GetBinContent(ix,\ iy);}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xwid\ =\ binwid\ ?\ h-\/>GetXaxis()-\/>GetBinWidth(ix)\ :\ 1.0;}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ ywid\ =\ binwid\ ?\ h-\/>GetYaxis()-\/>GetBinWidth(iy)\ :\ 1.0;}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \ \ \ \ inte\ +=\ val\ *\ xwid\ *\ ywid;}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00478\ \ \ \ \ \}}
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}Integral\ of\ "{}\ <<\ h-\/>GetName()\ <<\ "{}\ "{}\ <<\ inte\ <<\ std::endl;}}
+\DoxyCodeLine{00480\ \ \ \ \ \textcolor{keywordflow}{return}\ inte;}
+\DoxyCodeLine{00481\ \}}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
