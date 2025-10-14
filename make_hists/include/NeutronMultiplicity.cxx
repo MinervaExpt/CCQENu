@@ -621,10 +621,14 @@ bool NeutEvent::CandPassTrackEndDist(int index) {
     if (m_do_trackenddist_edep_funct) {
         double edep = m_cands[index]->GetCandRecoEDep();
         if (m_cands[index]->GetCandIs3D()) {
-            if (edep > 60.0) return track_dist > 250.;
-            return track_dist > 2.991453 * edep + 75.0;
+            // if (edep > 60.0) return track_dist > 250.;
+            // return track_dist > 2.991453 * edep + 75.0;
+            if (edep > 60.0) return track_dist > 300.;
+            return track_dist > 3.75 * edep + 75.0;
         } else {
-            return track_dist > 1.9218 * edep + 52.919;
+            // return track_dist > 1.9218 * edep + 52.919;
+            if (edep > 30.0) return track_dist > 175.;
+            return track_dist > 4.1667 * edep + 50.;
         }
     }
 
