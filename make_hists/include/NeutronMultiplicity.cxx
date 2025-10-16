@@ -51,6 +51,40 @@ void NeutCand::SetReco(int blobID, int is3D, int view,
     _is_candtrackend_set = true;
 }
 
+void NeutCand::SetReco(int blobID, int is3D, int view, int nclusters, int nHIclusters,
+                       double recoEDep, double clusterMaxE,
+                       ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath) {
+    m_recoset = true;
+    m_blobID = blobID;
+    m_is3D = is3D;
+    m_view = view;
+    m_nclusters = nclusters;
+    m_nHIclusters = nHIclusters;
+    m_recoEDep = recoEDep;
+    m_clusterMaxE = clusterMaxE;
+    m_begposition = begposition;
+    m_endposition = endposition;
+    m_flightpath = flightpath;
+}
+
+void NeutCand::SetReco(int blobID, int is3D, int view, int nclusters, int nHIclusters,
+                       double recoEDep, double clusterMaxE,
+                       ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath, ROOT::Math::XYZVector trackend) {
+    m_recoset = true;
+    m_blobID = blobID;
+    m_is3D = is3D;
+    m_view = view;
+    m_nclusters = nclusters;
+    m_nHIclusters = nHIclusters;
+    m_recoEDep = recoEDep;
+    m_clusterMaxE = clusterMaxE;
+    m_begposition = begposition;
+    m_endposition = endposition;
+    m_flightpath = flightpath;
+    m_trackend = trackend;
+    _is_candtrackend_set = true;
+}
+
 void NeutCand::SetTruth(int truthPID, int truthTopMCPID, ROOT::Math::XYZVector TopMomentum) {
     m_truthset = true;
     m_truthPID = truthPID;
@@ -71,6 +105,16 @@ int NeutCand::GetCandIs3D() {
 int NeutCand::GetCandView() {
     if (!m_recoset) return -1;
     return m_view;
+}
+
+int NeutCand::GetCandNClusters() {
+    if (!m_recoset) return -1;
+    return m_nclusters;
+}
+
+int NeutCand::GetCandNHIClusters() {
+    if (!m_recoset) return -1;
+    return m_nHIclusters;
 }
 
 double NeutCand::GetCandRecoEDep() {
@@ -365,6 +409,47 @@ void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::v
             m_cands[i]->SetReco(blobIDs[i], is3Ds[i], views[i], EDeps[i], clusterMaxE[i], begpositions[i], endpositions[i], flightpath);
         else
             m_cands[i]->SetReco(blobIDs[i], is3Ds[i], views[i], EDeps[i], clusterMaxE[i], begpositions[i], endpositions[i], flightpath, m_trackend);
+    }
+    std::sort(m_cands.begin(), m_cands.end(), compare_cands);
+    _recoset = true;
+
+    this->SetNeutCands();
+}
+
+void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<int> views, std::vector<int> nclusters, std::vector<int> nHIclusters, std::vector<double> EDeps, std::vector<double> clusterMaxE, std::vector<ROOT::Math::XYZVector> begpositions, std::vector<ROOT::Math::XYZVector> endpositions) {
+    if (blobIDs.size() != m_ncands) {
+        std::cout << "ERROR: NeutronMultiplicity::NeutEvent::SetReco number of blobs doesn't match input.\n\tblobIDs.size() " << blobIDs.size() << "m_ncands " << m_ncands << std::endl;
+        exit(1);
+    }
+    // Avoid filling with uninited memory
+    if (m_ncands == 0) {
+        _recoset = true;
+        return;
+    }
+    for (int i = 0; i < m_ncands; i++) {
+        ROOT::Math::XYZVector flightpath = ROOT::Math::XYZVector();
+        if (!is3Ds[i]) {
+            // std::cout << "view: " << views[i] << std::endl;
+            // std::cout << "\tstart blob pos:\t" << begpositions[i].X() << "\t" << begpositions[i].Y() << "\t" << begpositions[i].Z() << std::endl;
+
+            if (views[i] == 1) {
+                begpositions[i].SetXYZ(begpositions[i].X(), m_vtx.Y(), begpositions[i].Z());
+            } else {
+                ROOT::Math::XYZVector tmp_begpos = ROOT::Math::VectorUtil::RotateZ(begpositions[i], NeutronMultiplicity::view_angles[views[i]]);
+                ROOT::Math::XYZVector tmp_vtx = ROOT::Math::VectorUtil::RotateZ(m_vtx, NeutronMultiplicity::view_angles[views[i]]);
+                // std::cout << "\tmid blob pos:  \t" << tmp_begpos.X() << "\t" << tmp_begpos.Y() << "\t" << tmp_begpos.Z() << std::endl;
+                // std::cout << "\tmid vtx pos:   \t" << tmp_vtx.X() << "\t" << tmp_vtx.Y() << "\t" << tmp_vtx.Z() << std::endl;
+                tmp_begpos.SetXYZ(tmp_begpos.X(), tmp_vtx.Y(), tmp_begpos.Z());
+                begpositions[i] = ROOT::Math::VectorUtil::RotateZ(tmp_begpos, -view_angles[views[i]]);
+            }
+            // std::cout << "\tend blob pos:  \t" << begpositions[i].X() << "\t" << begpositions[i].Y() << "\t" << begpositions[i].Z() << std::endl;
+        }
+        flightpath = begpositions[i] - m_vtx;
+
+        if (!m_evthastrack)
+            m_cands[i]->SetReco(blobIDs[i], is3Ds[i], views[i], nclusters[i], nHIclusters[i], EDeps[i], clusterMaxE[i], begpositions[i], endpositions[i], flightpath);
+        else
+            m_cands[i]->SetReco(blobIDs[i], is3Ds[i], views[i], nclusters[i], nHIclusters[i], EDeps[i], clusterMaxE[i], begpositions[i], endpositions[i], flightpath, m_trackend);
     }
     std::sort(m_cands.begin(), m_cands.end(), compare_cands);
     _recoset = true;

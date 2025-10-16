@@ -28,6 +28,8 @@ class NeutCand {
     int m_blobID = -1;                                              // which blob
     int m_is3D = -1;                                                // is it 3D?
     int m_view = 0;                                                   // 0 is none, 1 is x, 2 is u?, 3 is v?
+    int m_nclusters = 0;
+    int m_nHIclusters = 0;
     double m_recoEDep = 0.0;                                        // how much energy does it deposit?
     double m_clusterMaxE = 0.0;                                     // Max cluster Energy
     ROOT::Math::XYZVector m_begposition = ROOT::Math::XYZVector();  // where is it?
@@ -54,6 +56,8 @@ class NeutCand {
     // reco functions
     void SetReco(int blobID, int is3D, int view, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath);
     void SetReco(int blobID, int is3D, int view, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath, ROOT::Math::XYZVector trackendpath);
+    void SetReco(int blobID, int is3D, int view, int nclusters, int nHIclusters, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath);
+    void SetReco(int blobID, int is3D, int view, int nclusters, int nHIclusters, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath, ROOT::Math::XYZVector trackendpath);
 
     // SetBlobID(int index);
 
@@ -63,6 +67,8 @@ class NeutCand {
     int GetCandBlobID();
     int GetCandIs3D();
     int GetCandView();
+    int GetCandNClusters();
+    int GetCandNHIClusters();
     double GetCandRecoEDep();
     double GetCandMaxClusterE();
     double GetCandLength();
@@ -161,6 +167,7 @@ class NeutEvent {
    public:
     // Set the reco variables for reco and truth. This is necessary to handle both data and MC without issues
     void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<int> views, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<ROOT::Math::XYZVector> begpositions, std::vector<ROOT::Math::XYZVector> endpositions);
+    void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<int> views, std::vector<int> nclusters, std::vector<int> nHIclusters, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<ROOT::Math::XYZVector> begpositions, std::vector<ROOT::Math::XYZVector> endpositions);
     void SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ);
 
     bool GetIsTruthSet();

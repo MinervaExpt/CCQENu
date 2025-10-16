@@ -343,9 +343,17 @@ void CVUniverse::SetNeutEvent(bool dotruth) {
                                 vtx,
                                 pmu,
                                 CVUniverse::GetPrimaryProtonTrackEnd());
+    // this->m_neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()),
+    //                            GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()),
+    //                            GetVec<int>((GetAnaToolName() + "_Blob2DView").c_str()),
+    //                            GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()),
+    //                            GetVec<double>((GetAnaToolName() + "_BlobClusterMaxE").c_str()),
+    //                            blobbegpositions, blobendpositions);
     this->m_neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()),
                                GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()),
                                GetVec<int>((GetAnaToolName() + "_Blob2DView").c_str()),
+                               GetVec<int>((GetAnaToolName() + "_BlobNClusters").c_str()),
+                               GetVec<int>((GetAnaToolName() + "_BlobNHeavyIonizingClusters").c_str()),
                                GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()),
                                GetVec<double>((GetAnaToolName() + "_BlobClusterMaxE").c_str()),
                                blobbegpositions, blobendpositions);
@@ -2065,6 +2073,8 @@ int CVUniverse::GetPlotNeutCandTopMCPID(int index) const {
         return -9999;
     // int pid = neutevent->GetNeutCand(index)->GetCandTruthTopPID();
     int pid = m_neutevent->GetNeutCand(index)->GetCandTruthTopPID();
+    // std::cout << "pid      for cand " << index << "\t" << pid << "\n";
+
     // if (pid == 0 || pid == -1) // is zero for blobs with no genie parent?
     if (pid == -1)
         return -9999;
@@ -2102,6 +2112,20 @@ int CVUniverse::GetPlotSecNeutCandTopMCPID() const {
 
 int CVUniverse::GetPlotThirdNeutCandTopMCPID() const {
     return GetPlotNeutCandTopMCPID(2);
+}
+
+int CVUniverse::GetNeutCandNClusters(int index) const {
+    if (m_neutevent->GetNNeutCands() < index + 1)
+        return -99999.;
+    const std::unique_ptr<NeutronMultiplicity::NeutCand>& cand = m_neutevent->GetNeutCand(index);
+    return cand->GetCandNClusters();
+}
+
+int CVUniverse::GetNeutCandNHIClusters(int index) const {
+    if (m_neutevent->GetNNeutCands() < index + 1)
+        return -99999.;
+    const std::unique_ptr<NeutronMultiplicity::NeutCand>& cand = m_neutevent->GetNeutCand(index);
+    return cand->GetCandNHIClusters();
 }
 
 double CVUniverse::GetNeutCandvtxZDist(int index) const {
@@ -2156,6 +2180,7 @@ double CVUniverse::GetNeutCandvtxSphereDist(int index) const {
         return -99999.;
     const std::unique_ptr<NeutronMultiplicity::NeutCand>& cand = m_neutevent->GetNeutCand(index);
     // return cand->GetCandFlightPath().R();
+    // std::cout << "distance for cand " << index << "\t" << cand->GetCandVtxDist() << "\n";
     return cand->GetCandVtxDist();
 }
 
@@ -2198,6 +2223,7 @@ double CVUniverse::GetNeutCandEdepMeV(int index) const {
     if (m_neutevent->GetNNeutCands() < index + 1)
         return -99999.;
     const std::unique_ptr<NeutronMultiplicity::NeutCand>& cand = m_neutevent->GetNeutCand(index);
+    // std::cout << "edep     for cand " << index << "\t" << cand->GetCandRecoEDep() << "\n";
     return cand->GetCandRecoEDep();
 }
 
@@ -2283,6 +2309,7 @@ double CVUniverse::GetNeutCandMuonCosTheta(int index) const {
     const std::unique_ptr<NeutronMultiplicity::NeutCand>& cand = m_neutevent->GetNeutCand(index);
     ROOT::Math::XYZVector pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
     ROOT::Math::XYZVector fp = cand->GetCandFlightPath();
+    // std::cout << "costheta for cand " << index << "\t" << std::cos(ROOT::Math::VectorUtil::Angle(pmu, fp)) << "\n";
     return std::cos(ROOT::Math::VectorUtil::Angle(pmu, fp));
 }
 

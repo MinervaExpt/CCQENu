@@ -428,6 +428,9 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetPlotSecNeutCandTopMCPID() const;
     virtual int GetPlotThirdNeutCandTopMCPID() const;
 
+    virtual int GetNeutCandNClusters(int index) const;
+    virtual int GetNeutCandNHIClusters(int index) const;
+
     virtual double GetNeutCandvtxZDist(int index) const;
     virtual double GetLeadingNeutCandvtxZDist() const;
     virtual double GetSecNeutCandvtxZDist() const;

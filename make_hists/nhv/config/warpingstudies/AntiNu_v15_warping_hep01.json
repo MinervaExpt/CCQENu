@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "csvout_allblobs_1and2track_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "EAvailtest_1and2track_allblobs_edepdistcut_edepmuonanglecut_edeptrackendcut_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -39,18 +39,19 @@
     // "MultipBlobSideband"
   ],
   "AnalyzeVariables": [
-    "NeutCandsEdep",
-    "NeutCandsMuonCosTheta",
-    "NeutCandsvtxSphereDist",
-    "NeutCandsTrackEndDist",
-    "Mutliplicity",
-    "NNeutBlobs",
-    "recoil",
-    "NeutCandsTopMCPID"
+    // "NeutCandsEdep",
+    // "NeutCandsMuonCosTheta",
+    // "NeutCandsvtxSphereDist",
+    // "NeutCandsTrackEndDist",
+    // "Mutliplicity",
+    // "NNeutBlobs",
+    // "recoil",
+    // "NeutCandsTopMCPID"
+
     // "NeutCandMCPID",
     // "LeadingIsoBlobsPrimaryMCPID"
     // "NBlobs",
-    // "NNeutCands",
+    "NNeutCands",
     // "NNeutBlobs",
     // "NNonVtxIsoBlobs",
     // "NNonVtxIsoBlobsAll"//,
@@ -61,14 +62,14 @@
     // "recoilNoBlobs",
     // "Q2QE" //,
     // "FitQ2QE",
-    // "EAvail",
+    "EAvail",
     // "EAvailNoNonVtxBlobs",
     // "pzmuHD",
     // "ptmuHD",
     // "pmu",
     // "ThetamuDegrees",
     // "CosThetamu",
-    // "TotalNeutBlobE"
+    "TotalNeutBlobE"
     // "EAvailWiggled"
     // "EAvailWithNeutrons",
     // "CalibEAvailWithNeutrons",
@@ -80,7 +81,7 @@
     // "pzmu",
     // "ptmu"
     // "NeutCandMCPID",
-    "NeutCandTopMCPID"
+    // "NeutCandTopMCPID"
   ],
   "Analyze2DVariables": [],
   //   "recoil_ptmu",

@@ -745,6 +745,34 @@
   //   }
   // },
   "1D": {
+    "NeutCandsNClusters": {
+      "reco": "NeutCandsNClusters",
+      "true": "NeutCandsNClusters",
+      "index": "NNeutCands",
+      "name": "NeutCandsNClusters",
+      "title": "Blob NClsuters",
+      "nbins": 25,
+      "min": 0,
+      "max": 25,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsNHIClusters": {
+      "reco": "NeutCandsNHIClusters",
+      "true": "NeutCandsNHIClusters",
+      "index": "NNeutCands",
+      "name": "NeutCandsNHIClusters",
+      "title": "Blob NHIClsuters",
+      "nbins": 15,
+      "min": 0,
+      "max": 15,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
     "NeutCandsTopMCPID": {
       "reco": "NeutCandsTopMCPID",
       "true": "NeutCandsTopMCPID",
@@ -907,9 +935,9 @@
       "name": "NeutCandsvtxSphereDist",
       "title": "Leading Blob spherical dist from vtx",
       // "nbins": 10,
-      "nbins": 30,
+      "nbins": 20,
       "min": 0.0,
-      "max": 750.0,
+      "max": 500.0,
       "for": [
         "data",
         "selected_reco"

@@ -15,7 +15,7 @@
                     "selected_reco",
                     "selected_truth",
                     // "truth",
-                    // "response"
+                    "response"
                 ]
             },
             "qelikenot": {

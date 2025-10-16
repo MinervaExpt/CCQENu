@@ -285,6 +285,11 @@ class CVFunctions {
         truefunctions["ThirdNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotThirdNeutCandTopMCPID;
         trueintfunctions["ThirdNeutCandTopMCPID"] = &CVUNIVERSE::GetPlotThirdNeutCandTopMCPID;
 
+        recoargfunctions["NeutCandsNClusters"] = &CVUNIVERSE::GetNeutCandNClusters;
+        trueargfunctions["NeutCandsNClusters"] = &CVUNIVERSE::GetNeutCandNClusters;
+        recoargfunctions["NeutCandsNHIClusters"] = &CVUNIVERSE::GetNeutCandNHIClusters;
+        trueargfunctions["NeutCandsNHIClusters"] = &CVUNIVERSE::GetNeutCandNHIClusters;
+
         recoargfunctions["NeutCandsvtxZDist"] = &CVUNIVERSE::GetNeutCandvtxZDist;
         trueargfunctions["NeutCandsvtxZDist"] = &CVUNIVERSE::GetNeutCandvtxZDist;
 
