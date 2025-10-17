@@ -538,7 +538,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetChargedPionAngle() const;
     virtual double GetCosMuonPionAngle() const;
     virtual int GetNPionTracks() const;
-    virtual int GetNProtonPionTraks() const;
+    virtual int GetNProtonPionTracks() const;
     virtual int GetTruthHasMultiPion() const;
     virtual double GetExtraTrackAngle() const;  // This just does the leading/primary proton candidate
 

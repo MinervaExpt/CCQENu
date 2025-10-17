@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "HDplots_allblobs_allcuts_2d_1track_NClusters_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "ProtonScorePlots_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -27,7 +27,7 @@
   "mcRecoToCSV": false,
   "statusbar": true,
   "runsamples": [
-    "QElike"//,
+    "QElike",
     // "QElike_old"
     // "QElike_maxrecoil"//,
     // "QElike_maxrecoil_hiEAvail",
@@ -36,7 +36,7 @@
     // "QElike_0blob",
     // "QElike_1blob"
     // "QElikeNeutrons"//,
-    // "TrackSideband",
+    "TrackSideband"//,
     // "LoPionThetaSideband",
     // "HiPionThetaSideband"//,
     // "BlobSideband"//,
@@ -44,10 +44,12 @@
   ], 
   "AnalyzeVariables": [],
   "Analyze2DVariables": [ //],
-    "NeutCandsNClusters_NeutCandsEdep",
-    "NeutCandsNHIClusters_NeutCandsEdep",
-    "NeutCandsNClusters_NeutCandsvtxSphereDist",
-    "NeutCandsNHIClusters_NeutCandsvtxSphereDist"//,
+    // "NeutCandsNClusters_NeutCandsEdep",
+    // "NeutCandsNHIClusters_NeutCandsEdep",
+    // "NeutCandsNClusters_NeutCandsvtxSphereDist",
+    // "NeutCandsNHIClusters_NeutCandsvtxSphereDist"//,
+    "Q2QE_PrimaryProtonScore",
+    "Q2QE_ProtonScores"
     // "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist",
     // "NeutCandsEdep_NeutCandsvtxSphereDist",
     // "NeutCandsEdep_NeutCandsMuonCosTheta",
@@ -146,12 +148,13 @@
     //   // "Q2QE_recoil"
   ],
   "AnalyzeHyperDVariables": [
-    // "Q2QE_PrimaryProtonScore_PlotPrimaryProtonCandidatePDG",
+    "Q2QE_PrimaryProtonScore_PlotPrimaryProtonCandMCPID",
+    "Q2QE_ProtonScores_PlotProtonCandsMCPID"
     // "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
-    "NeutCandsNClusters_NeutCandsEdep_NeutCandsTopMCPID",
-    "NeutCandsNHIClusters_NeutCandsEdep_NeutCandsTopMCPID",
-    "NeutCandsNClusters_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
-    "NeutCandsNHIClusters_NeutCandsvtxSphereDist_NeutCandsTopMCPID" //,
+    // "NeutCandsNClusters_NeutCandsEdep_NeutCandsTopMCPID",
+    // "NeutCandsNHIClusters_NeutCandsEdep_NeutCandsTopMCPID",
+    // "NeutCandsNClusters_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
+    // "NeutCandsNHIClusters_NeutCandsvtxSphereDist_NeutCandsTopMCPID" //,
     // "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
     // "NeutCandsEdep_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
     // "NeutCandsEdep_NeutCandsMuonCosTheta_NeutCandsTopMCPID",

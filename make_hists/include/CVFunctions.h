@@ -459,10 +459,10 @@ class CVFunctions {
         recofunctions["NPionTracks"] = &CVUNIVERSE::GetNPionTracks;
         recofunctions["ChargedPionAngle"] = &CVUNIVERSE::GetChargedPionAngle;  // This is just the leading pion candidate
 
-        recointfunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTraks;
-        recofunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTraks;
-        trueintfunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTraks;
-        truefunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTraks;
+        recointfunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTracks;
+        recofunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTracks;
+        trueintfunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTracks;
+        truefunctions["NProtonPionTracks"] = &CVUNIVERSE::GetNProtonPionTracks;
 
         recofunctions["CosMuonPionAngle"] = &CVUNIVERSE::GetCosMuonPionAngle;
         truefunctions["CosMuonPionAngle"] = &CVUNIVERSE::GetCosMuonPionAngle;
@@ -480,6 +480,9 @@ class CVFunctions {
         recofunctions["NumberOfProtonCandidates"] = &CVUNIVERSE::GetNumberOfProtonCandidates;
         truefunctions["NumberOfProtonCandidates"] = &CVUNIVERSE::GetNumberOfProtonCandidates;
         trueintfunctions["NumberOfProtonCandidates"] = &CVUNIVERSE::GetNumberOfProtonCandidates;
+
+        recoargfunctions["ProtonScores"] = &CVUNIVERSE::GetProtonScore;
+        trueargfunctions["ProtonScores"] = &CVUNIVERSE::GetProtonScore;
 
         recofunctions["ProtonScore_0"] = &CVUNIVERSE::GetProtonScore_0;
         recofunctions["ProtonScore_1"] = &CVUNIVERSE::GetProtonScore_1;
@@ -616,6 +619,11 @@ class CVFunctions {
         recofunctions["SecProtonCandidatePDG_5"] = &CVUNIVERSE::GetSecProtonCandidatePDG_5;
         recointfunctions["SecProtonCandidatePDG_6"] = &CVUNIVERSE::GetSecProtonCandidatePDG_6;
         recofunctions["SecProtonCandidatePDG_6"] = &CVUNIVERSE::GetSecProtonCandidatePDG_6;
+
+
+        // GetPlotProtonCandMCPID
+        recoargfunctions["PlotProtonCandsMCPID"] = &CVUNIVERSE::GetPlotProtonCandMCPID;
+        trueargfunctions["PlotProtonCandsMCPID"] = &CVUNIVERSE::GetPlotProtonCandMCPID;
 
         recofunctions["PlotPrimaryProtonCandMCPID"] = &CVUNIVERSE::GetPlotPrimaryProtonCandMCPID;
         recointfunctions["PlotPrimaryProtonCandMCPID"] = &CVUNIVERSE::GetPlotPrimaryProtonCandMCPID;

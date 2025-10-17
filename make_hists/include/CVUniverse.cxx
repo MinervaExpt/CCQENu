@@ -657,14 +657,15 @@ int CVUniverse::GetNumberOfProtonCandidates() const {
     return count;
 }
 
-double CVUniverse::GetProtonScore(int i) const {
-    if (i == 0)
-        return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_score").c_str());
-    else if (GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str()) < i)
-        return -1.;
-    else
-        return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str(), i - 1);
-}
+// double CVUniverse::GetProtonScore(int i) const {
+//     if (i == 0)
+//         return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_score").c_str());
+//     else if (GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str()) < i)
+//         return -1.;
+//     else
+//         return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str(), i - 1);
+// }
+
 double CVUniverse::GetProtonScore1(int i) const {
     if (i == 0)
         return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_score1").c_str());
@@ -1162,6 +1163,13 @@ int CVUniverse::GetTrueProtonCount() const {
     }
 
     return genie_n_protons;
+}
+
+double CVUniverse::GetProtonScore(int index) const {
+    if (index == 0) return GetPrimaryProtonScore();
+    int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
+    assert(index <= n_sec_proton_scores);
+    return GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str())[index-1];
 }
 
 // ----------------------------- Recoil Variables ----------------------------
@@ -3058,7 +3066,7 @@ int CVUniverse::GetNPionTracks() const {
     return n_pions;  // Return how many pions there are
 }
 
-int CVUniverse::GetNProtonPionTraks() const {
+int CVUniverse::GetNProtonPionTracks() const {
     int n_part = 0;
     if (CVUniverse::GetPrimaryProtonScore() < 0) return 0;
     n_part+=1;

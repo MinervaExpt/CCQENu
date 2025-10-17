@@ -1864,7 +1864,11 @@
         1.6,
         4.0
       ],
-      "fluxnorm": false
+      "fluxnorm": false,
+      "for": [
+        "selected_reco",
+        "data"
+      ]
     },
     "PrimaryProtonScore": {
       "reco": "PrimaryProtonScore",
@@ -1874,19 +1878,51 @@
       "nbins": 20,
       "min": 0.0,
       "max": 1.0,
-      "fluxnorm": false
-    }//,
-    // "PrimaryProtonCandidatePDG": {
-    //   "reco": "PlotPrimaryProtonCandidatePDG",
-    //   "true": "PlotPrimaryProtonCandidatePDG",
-    //   "name": "PlotPrimaryProtonCandidatePDG",
-    //   "title": "PDG Primary Proton Candidate",
-    //   "nbins": 11,
-    //   "min": 0.5,
-    //   "max": 11.5,
-    //   "for": [
-    //     "selected_reco"
-    //   ]
-    // }
+      "fluxnorm": false,
+      "for": [
+        "selected_reco",
+        "data"
+      ]
+    },
+    "PlotPrimaryProtonCandMCPID": {
+      "reco": "PlotPrimaryProtonCandMCPID",
+      "true": "PlotPrimaryProtonCandMCPID",
+      "name": "PlotPrimaryProtonCandMCPID",
+      "title": "PDG Primary Proton Candidate",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "ProtonScores": {
+      "reco": "ProtonScores",
+      "true": "ProtonScores",
+      "index": "NumberOfProtonCandidates",
+      "name": "ProtonScores",
+      "title": "Proton Scores of all Proton Candidates",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 1.0,
+      "fluxnorm": false,
+      "for": [
+        "selected_reco",
+        "data"
+      ]
+    },
+    "PlotProtonCandsMCPID": {
+      "reco": "PlotProtonCandsMCPID",
+      "true": "PlotProtonCandsMCPID",
+      "index": "NumberOfProtonCandidates",
+      "name": "PlotProtonCandsMCPID",
+      "title": "PDGs of all Proton Candidates",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    }
   }
 }
