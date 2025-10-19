@@ -939,6 +939,11 @@ double CVUniverse::GetSecProtonTrackVtxGap_5() const { return GetProtonTrackVtxG
 double CVUniverse::GetSecProtonTrackVtxGap_6() const { return GetProtonTrackVtxGap(6); }
 
 // Proton candidate T from dEdx of candidate track
+double CVUniverse::GetProtonTfromdEdx(int index) const {
+    if (index == 0) return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_T_fromdEdx").c_str());
+    return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_T_fromdEdx").c_str(), index - 1);
+}
+
 double CVUniverse::GetPrimaryProtonTfromdEdx() const {
     return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_T_fromdEdx").c_str());
 }
@@ -1169,7 +1174,7 @@ double CVUniverse::GetProtonScore(int index) const {
     if (index == 0) return GetPrimaryProtonScore();
     int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
     assert(index <= n_sec_proton_scores);
-    return GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str())[index-1];
+    return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str(), index-1);
 }
 
 // ----------------------------- Recoil Variables ----------------------------

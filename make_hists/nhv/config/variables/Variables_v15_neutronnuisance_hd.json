@@ -1875,7 +1875,7 @@
       "true": "TruthHasSingleProton",
       "name": "PrimaryProtonScore",
       "title": "Proton Score of Primary non-Muon Track",
-      "nbins": 20,
+      "nbins": 25,
       "min": 0.0,
       "max": 1.0,
       "fluxnorm": false,
@@ -1902,7 +1902,7 @@
       "index": "NumberOfProtonCandidates",
       "name": "ProtonScores",
       "title": "Proton Scores of all Proton Candidates",
-      "nbins": 20,
+      "nbins": 25,
       "min": 0.0,
       "max": 1.0,
       "fluxnorm": false,
@@ -1922,6 +1922,21 @@
       "max": 11.5,
       "for": [
         "selected_reco"
+      ]
+    },
+    "ProtonTfromdEdx": {
+      "reco": "ProtonTfromdEdx",
+      "true": "ProtonTfromdEdx",
+      "index": "NumberOfProtonCandidates",
+      "name": "ProtonTfromdEdx",
+      "title": "T_{p}",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 1000.0,
+      "fluxnorm": false,
+      "for": [
+        "selected_reco",
+        "data"
       ]
     }
   }

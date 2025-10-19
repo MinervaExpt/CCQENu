@@ -27,7 +27,7 @@
   "mcRecoToCSV": false,
   "statusbar": true,
   "runsamples": [
-    "QElike",
+    "QElike"//,
     // "QElike_old"
     // "QElike_maxrecoil"//,
     // "QElike_maxrecoil_hiEAvail",
@@ -36,7 +36,7 @@
     // "QElike_0blob",
     // "QElike_1blob"
     // "QElikeNeutrons"//,
-    "TrackSideband"//,
+    // "TrackSideband"//,
     // "LoPionThetaSideband",
     // "HiPionThetaSideband"//,
     // "BlobSideband"//,
@@ -48,8 +48,9 @@
     // "NeutCandsNHIClusters_NeutCandsEdep",
     // "NeutCandsNClusters_NeutCandsvtxSphereDist",
     // "NeutCandsNHIClusters_NeutCandsvtxSphereDist"//,
-    "Q2QE_PrimaryProtonScore",
-    "Q2QE_ProtonScores"
+    "Q2QE_PrimaryProtonScore"//,
+    // "Q2QE_ProtonScores",
+    // "ProtonTfromdEdx_ProtonScores"
     // "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist",
     // "NeutCandsEdep_NeutCandsvtxSphereDist",
     // "NeutCandsEdep_NeutCandsMuonCosTheta",
@@ -148,8 +149,9 @@
     //   // "Q2QE_recoil"
   ],
   "AnalyzeHyperDVariables": [
-    "Q2QE_PrimaryProtonScore_PlotPrimaryProtonCandMCPID",
-    "Q2QE_ProtonScores_PlotProtonCandsMCPID"
+    "Q2QE_PrimaryProtonScore_PlotPrimaryProtonCandMCPID"//,
+    // "Q2QE_ProtonScores_PlotProtonCandsMCPID",
+    // "ProtonTfromdEdx_ProtonScores_PlotProtonCandsMCPID"
     // "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
     // "NeutCandsNClusters_NeutCandsEdep_NeutCandsTopMCPID",
     // "NeutCandsNHIClusters_NeutCandsEdep_NeutCandsTopMCPID",

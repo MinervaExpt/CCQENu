@@ -394,37 +394,78 @@ class VariableHyperDFromConfig : public PlotUtils::VariableHyperDBase<CVUniverse
     std::vector<double> GetArgRecoValue(const CVUniverse &universe, const int maxidx) const {
         assert(m_do_argvalue);
 
-        std::vector<double> out_vec;
-        // std::vector<std::vector<double>> val_vec; // should be a list of val_vecs to plug into hyperdim to get the value for each blob
-        for (int i = 0; i < maxidx; i++) {
-            std::vector<double> tmp_val_vec = {};
-            for (int j = 0; j < m_dimension; j++) {
-                if (!m_do_argvalue_vec[j]) {
-                    double tmp_val = m_vars_vec[j]->PlotUtils::VariableBase<CVUniverse>::GetRecoValue(universe);
-                    tmp_val_vec.push_back(tmp_val);
-                    continue;
-                }
-                tmp_val_vec.push_back(m_pointer_to_ArgGetRecoValue_vec[j](universe,i));
+        // std::vector<double> out_vec;
+        // // std::vector<std::vector<double>> val_vec; // should be a list of val_vecs to plug into hyperdim to get the value for each blob
+        // for (int i = 0; i < maxidx; i++) {
+        //     std::vector<double> tmp_val_vec = {};
+        //     for (int j = 0; j < m_dimension; j++) {
+        //         if (!m_do_argvalue_vec[j]) {
+        //             double tmp_val = m_vars_vec[j]->PlotUtils::VariableBase<CVUniverse>::GetRecoValue(universe);
+        //             tmp_val_vec.push_back(tmp_val);
+        //             continue;
+        //         }
+        //         tmp_val_vec.push_back(m_pointer_to_ArgGetRecoValue_vec[j](universe,i));
+        //     }
+        //     if (!m_has_reco_binning) out_vec.push_back((m_hyperdim->GetBin(tmp_val_vec)).first + 0.0001);
+        //     else out_vec.push_back((m_reco_hyperdim->GetBin(tmp_val_vec)).first + 0.0001);
+        // }
+        // return out_vec;
+
+        std::vector<std::vector<double>> val_vec(maxidx);
+        for (int i = 0; i < m_dimension; i++) {
+            if (!m_do_argvalue_vec[i]) {
+                double tmp_val = m_vars_vec[i]->PlotUtils::VariableBase<CVUniverse>::GetRecoValue(universe);
+                for (int j = 0; j < maxidx; j++) 
+                    val_vec[j].push_back(tmp_val);
+                continue;
             }
-            if (!m_has_reco_binning) out_vec.push_back((m_hyperdim->GetBin(tmp_val_vec)).first + 0.0001);
-            else out_vec.push_back((m_reco_hyperdim->GetBin(tmp_val_vec)).first + 0.0001);
+            for (int j = 0; j < maxidx; j++) {
+                double tmp_val = m_pointer_to_ArgGetRecoValue_vec[i](universe,j);
+                val_vec[j].push_back(tmp_val);
+            }
+        }
+        std::vector<double> out_vec;
+        for (int i = 0; i < maxidx; i++) {
+            out_vec.push_back((m_reco_hyperdim->GetBin(val_vec[i])).first + 0.0001);
+            // if (!m_has_reco_binning)
+            //     out_vec.push_back((m_hyperdim->GetBin(val_vec[i])).first + 0.0001);
+            // else
+            //     out_vec.push_back((m_reco_hyperdim->GetBin(val_vec[i])).first + 0.0001);
         }
         return out_vec;
     }
 
     std::vector<double> GetArgTrueValue(const CVUniverse &universe, const int maxidx) const {
         assert(m_do_argvalue);
+        // std::vector<double> out_vec;
+        // for (int i = 0; i < maxidx; i++) {
+        //     std::vector<double> tmp_val_vec = {};
+        //     for (int j = 0; j < m_dimension; j++) {
+        //         if (!m_do_argvalue_vec[j]) {
+        //             tmp_val_vec.push_back(m_vars_vec[j]->GetTrueValue(universe)); // TODO this could be optimized to be called only once
+        //             continue;
+        //         }
+        //         tmp_val_vec.push_back(m_pointer_to_ArgGetTrueValue_vec[j](universe,i));
+        //     }
+        //     out_vec.push_back((m_hyperdim->GetBin(tmp_val_vec)).first + 0.0001);
+        // }
+        // return out_vec;
+        std::vector<std::vector<double>> val_vec(maxidx);
+        for (int i = 0; i < m_dimension; i++) {
+            if (!m_do_argvalue_vec[i]) {
+                double tmp_val = m_vars_vec[i]->PlotUtils::VariableBase<CVUniverse>::GetTrueValue(universe);
+                for (int j = 0; j < maxidx; j++)
+                    val_vec[j].push_back(tmp_val);
+                continue;
+            }
+            for (int j = 0; j < maxidx; j++) {
+                double tmp_val = m_pointer_to_ArgGetTrueValue_vec[i](universe, j);
+                val_vec[j].push_back(tmp_val);
+            }
+        }
         std::vector<double> out_vec;
         for (int i = 0; i < maxidx; i++) {
-            std::vector<double> tmp_val_vec = {};
-            for (int j = 0; j < m_dimension; j++) {
-                if (!m_do_argvalue_vec[j]) {
-                    tmp_val_vec.push_back(m_vars_vec[j]->GetTrueValue(universe)); // TODO this could be optimized to be called only once
-                    continue;
-                }
-                tmp_val_vec.push_back(m_pointer_to_ArgGetTrueValue_vec[j](universe,i));
-            }
-            out_vec.push_back((m_hyperdim->GetBin(tmp_val_vec)).first + 0.0001);
+            out_vec.push_back((m_hyperdim->GetBin(val_vec[i])).first + 0.0001);
         }
         return out_vec;
     }

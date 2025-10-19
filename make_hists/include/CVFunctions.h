@@ -571,6 +571,9 @@ class CVFunctions {
         recofunctions["VisEClustsSecProtonEnd_5"] = &CVUNIVERSE::GetVisEClustsSecProtonEnd_5;
         recofunctions["VisEClustsSecProtonEnd_6"] = &CVUNIVERSE::GetVisEClustsSecProtonEnd_6;
 
+        recoargfunctions["ProtonTfromdEdx"] = &CVUNIVERSE::GetProtonTfromdEdx;
+        trueargfunctions["ProtonTfromdEdx"] = &CVUNIVERSE::GetProtonTfromdEdx;
+
         recofunctions["PrimaryProtonTfromdEdx"] = &CVUNIVERSE::GetPrimaryProtonTfromdEdx;
         recofunctions["SecProtonTfromdEdx_1"] = &CVUNIVERSE::GetSecProtonTfromdEdx_1;
         recofunctions["SecProtonTfromdEdx_2"] = &CVUNIVERSE::GetSecProtonTfromdEdx_2;

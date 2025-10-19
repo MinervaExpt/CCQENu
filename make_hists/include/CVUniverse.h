@@ -661,6 +661,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetVisEClustsSecProtonEnd_5() const;
     virtual double GetVisEClustsSecProtonEnd_6() const;
 
+    virtual double GetProtonTfromdEdx(int index) const;
+
     virtual double GetPrimaryProtonTfromdEdx() const;
     virtual double GetSecProtonTfromdEdx(int i) const;
     virtual double GetSecProtonTfromdEdx_1() const;
