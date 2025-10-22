@@ -687,14 +687,20 @@ double CVUniverse::GetProtonScore_9() const { return GetProtonScore(9); }
 
 int CVUniverse::GetPassProtonScoreCut(double score, double tree_Q2) const {
     if (score < 0) return -1;
-    int index = 0;
-    for (int i = 0; i < m_proton_score_Q2QEs.size(); i++) {
-        if (tree_Q2 >= m_proton_score_Q2QEs[i]) index++;
-    }
-    if (score < m_proton_score_mins[index])
-        return 0;
-    else
-        return 1;
+    // These values based off fit to proton scores of protons and pions, targetting bins with 50% each
+    if (tree_Q2 < 0.025 && score > 0.3428) return 1;
+    if (tree_Q2 > 0.8 && score > 0.1383) return 1; 
+    double passingscore = -0.059*log(tree_Q2) + 0.1251;
+    if (score > passingscore) return 1;
+    return 0;
+    // int index = 0;
+    // for (int i = 0; i < m_proton_score_Q2QEs.size(); i++) {
+    //     if (tree_Q2 >= m_proton_score_Q2QEs[i]) index++;
+    // }
+    // if (score < m_proton_score_mins[index])
+    //     return 0;
+    // else
+    //     return 1;
 }
 int CVUniverse::GetPassScoreCutProton_0() const { return GetPassProtonScoreCut(GetProtonScore_0(), GetQ2QEGeV()); }
 int CVUniverse::GetPassScoreCutProton_1() const { return GetPassProtonScoreCut(GetProtonScore_1(), GetQ2QEGeV()); }
@@ -716,14 +722,18 @@ int CVUniverse::GetSecondaryProtonCandidateCount() const {
 }
 
 int CVUniverse::GetPassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const {
-    int index = 0;
-    for (int i = 0; i < m_proton_score_Q2QEs.size(); i++) {
-        if (tree_Q2 >= m_proton_score_Q2QEs[i]) index++;
-    }
     for (auto score : scores) {
-        if (score < m_proton_score_mins[index]) return 0;
+        if (GetPassProtonScoreCut(score, tree_Q2) == 0) return 0;
     }
     return 1;
+    // int index = 0;
+    // for (int i = 0; i < m_proton_score_Q2QEs.size(); i++) {
+    //     if (tree_Q2 >= m_proton_score_Q2QEs[i]) index++;
+    // }
+    // for (auto score : scores) {
+    //     if (score < m_proton_score_mins[index]) return 0;
+    // }
+    // return 1;
 }
 
 double CVUniverse::GetPrimaryProtonScore() const {

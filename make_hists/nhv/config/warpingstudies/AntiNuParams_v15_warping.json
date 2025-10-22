@@ -23,11 +23,11 @@
         "zpos_min": 5810.0, // 5890.0,
         // "muoncone_min": 15.0,
         // "muondist_min": 100.0,
-        "vtxdist_edep_funct": true,
-        "trackenddist_edep_funct": true,
+        "vtxdist_edep_funct": false,
+        "trackenddist_edep_funct": false,
         "edep_min": 1.5,
-        // "Is3D": -1,
-        "muonangle_edep_funct": true//,
+        "Is3D": 1,
+        "muonangle_edep_funct": false//,
         // "vtxdist_edep_min": {
         //     "band1":{
         //         "edep_max": 12.0,
