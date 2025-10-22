@@ -1418,6 +1418,76 @@
       "nbins": 7,
       "min": -0.5,
       "max": 6.5
+    },
+    "NeutCandsEdep": {
+      "reco": "NeutCandsEdep",
+      "true": "NeutCandsEdep",
+      "index": "NNeutCands",
+      "name": "NeutCandsEdep",
+      "title": "Blob Deposited E",
+      "nbins": 250,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsTrackEndDist": {
+      "reco": "NeutCandsTrackEndDist",
+      "true": "NeutCandsTrackEndDist",
+      "index": "NNeutCands",
+      "name": "NeutCandsTrackEndDist",
+      "title": "Leading Blob dist from track end",
+      "nbins": 80,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsvtxSphereDist": {
+      "reco": "NeutCandsvtxSphereDist",
+      "true": "NeutCandsvtxSphereDist",
+      "index": "NNeutCands",
+      "name": "NeutCandsvtxSphereDist",
+      "title": "Leading Blob spherical dist from vtx",
+      // "nbins": 10,
+      "nbins": 150,
+      "min": 0.0,
+      "max": 750.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsMuonCosTheta": {
+      "reco": "NeutCandsMuonCosTheta",
+      "true": "NeutCandsMuonCosTheta",
+      "name": "NeutCandsMuonCosTheta",
+      "index": "NNeutCands",
+      "title": "Blob CosTheta from muon track",
+      "nbins": 50,
+      "min": -1.0,
+      "max": 1.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsTopMCPID": {
+      "reco": "NeutCandsTopMCPID",
+      "true": "NeutCandsTopMCPID",
+      "index": "NNeutCands",
+      "name": "NeutCandsTopMCPID",
+      "title": "Blob parent Top PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
     }
   }
 }
