@@ -688,8 +688,14 @@ double CVUniverse::GetProtonScore_9() const { return GetProtonScore(9); }
 int CVUniverse::GetPassProtonScoreCut(double score, double tree_Q2) const {
     if (score < 0) return -1;
     // These values based off fit to proton scores of protons and pions, targetting bins with 50% each
-    if (tree_Q2 < 0.025 && score > 0.3428) return 1;
-    if (tree_Q2 > 0.8 && score > 0.1383) return 1; 
+    if (tree_Q2 < 0.025) {
+        if (score > 0.3428) return 1;
+        else return 0;
+    }
+    if (tree_Q2 > 0.8) {
+        if (score > 0.1383) return 1;
+        else return 0;
+    } 
     double passingscore = -0.059*log(tree_Q2) + 0.1251;
     if (score > passingscore) return 1;
     return 0;
