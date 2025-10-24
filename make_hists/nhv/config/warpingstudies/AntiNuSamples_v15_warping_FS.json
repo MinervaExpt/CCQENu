@@ -19,10 +19,10 @@
         "categories": {
             "qelike": {
                 "for": [
-                    "selected_reco"//,
+                    "selected_reco",
                     // "selected_truth",
                     // "truth",
-                    // "response"
+                    "response"
                 ]
                 // "for": [
                 //     "selected_reco"
