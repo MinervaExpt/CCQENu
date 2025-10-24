@@ -1,0 +1,87 @@
+{
+    "comments": [
+        "Added to config proton scores 6/17/2024",
+        "Added recoil var config and started blob config, 8/2/24",
+        "Added the neutron config at some point. Most of it is read in by NeutronMultiplicity, excpt maxNCands, which CVUniv uses - NHV 8/15/25"
+    ],
+    "ProtonScoreConfig": {
+        "pass_proton_score_min": 0.3
+    },
+    "RecoilBranchConfig": {
+        "vertex_dist": 0, //"100", "150"
+        "recoil_branch": "recoil_energy_nonmuon_nonvtx0mm"
+    },
+    "NeutronConfig": {
+        // "maxNCands": 2,
+        // "vtxdist_min": 100.0,
+        // "vtx_zdist_min": 100.0,
+        // "vtx_box": [
+        //     50.0,
+        //     100.0
+        // ],
+        "zpos_max": 9038.0, // 9058.0,
+        "zpos_min": 5810.0, // 5890.0,
+        // "muoncone_min": 15.0,
+        // "muondist_min": 100.0,
+        "vtxdist_edep_funct": true,
+        "trackenddist_edep_funct": true,
+        "edep_min": 1.5,
+        // "Is3D": 1,
+        "muonangle_edep_funct": true//,
+        // "vtxdist_edep_min": {
+        //     "band1":{
+        //         "edep_max": 12.0,
+        //         "vtxdist_min": 0.0
+        //     },
+        //     "band2": {
+        //         "edep_range": [
+        //             12.0,
+        //             50.0
+        //         ],
+        //         "vtxdist_min": 50.0
+        //     },
+        //     "band3": {
+        //         "edep_range": [
+        //             50.0,
+        //             100.0
+        //         ],
+        //         "vtxdist_min": 100.0
+        //     },
+        //     "band4": {
+        //         "edep_range": [
+        //             100.0,
+        //             200.0
+        //         ],
+        //         "vtxdist_min":150.0
+        //     },
+        //     "band5": {
+        //         "edep_min": 200.0,
+        //         "vtxdist_min": 200.0
+        //     }
+        // }
+        // "global": {
+        //     "zpos": {
+        //         "min": 5890.0,
+        //         "max": 8500.0
+        //     },
+        //     "edep":{
+        //         "min": 1.5
+        //     }
+        // },
+        // "subselections": {
+        //     "lowE":{
+        //         "edep": {
+        //             "max": 12.0
+        //         }
+        //     },
+        //     "hiE": {
+        //         "edep": {
+        //             "min": 12.0
+        //         },
+        //         "vtxdist": {
+        //             "min": 100.0
+        //         }
+        //     }
+        // }
+    }
+}

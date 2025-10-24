@@ -4,10 +4,10 @@
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance_hd.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
-  "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
+  "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping_hep01.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "FallCollab1Dhep02_allblobs1D_1track_3d_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "FallCollab1Dhep02_allblobsremoval_EAvailDists_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -51,7 +51,7 @@
     // "NeutCandMCPID",
     // "LeadingIsoBlobsPrimaryMCPID"
     // "NBlobs",
-    "NNeutCands",
+    // "NNeutCands",
     // "NNeutBlobs",
     // "NNonVtxIsoBlobs",
     // "NNonVtxIsoBlobsAll"//,
@@ -75,7 +75,7 @@
     // "CalibEAvailWithNeutrons",
     // "EAvailWithNeutronsCalib",
     // "resEAvailWithNeutrons"
-    // "recoil" //,
+    "recoil" //,
     // "recoilQE"
     // "NeutBlobsRatio"
     // "pzmu",
