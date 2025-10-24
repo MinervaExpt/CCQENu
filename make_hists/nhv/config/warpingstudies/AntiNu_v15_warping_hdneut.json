@@ -53,7 +53,7 @@
     // "ProtonTfromdEdx_ProtonScores"
     // "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist",
     "NeutCandsEdep_NeutCandsvtxSphereDist",
-    "NeutCandsEdep_NeutCandsMuonCosTheta",
+    "NeutCandsEdep_NeutCandsMuonCosTheta"//,
     // "NeutCandsEdep_NeutCandsTrackEndDist"//,
     // "LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
     // "SecNeutCandMuonCosTheta_SecNeutCandTopMCPID",
@@ -159,7 +159,7 @@
     // "NeutCandsNHIClusters_NeutCandsvtxSphereDist_NeutCandsTopMCPID" //,
     // "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
     "NeutCandsEdep_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
-    "NeutCandsEdep_NeutCandsMuonCosTheta_NeutCandsTopMCPID",
+    "NeutCandsEdep_NeutCandsMuonCosTheta_NeutCandsTopMCPID"//,
     // "NeutCandsEdep_NeutCandsTrackEndDist_NeutCandsTopMCPID"//,
     // "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
     // "SecNeutCandEdep_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
