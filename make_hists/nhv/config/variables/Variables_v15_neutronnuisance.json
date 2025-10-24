@@ -1425,9 +1425,9 @@
       "index": "NNeutCands",
       "name": "NeutCandsEdep",
       "title": "Blob Deposited E",
-      "nbins": 250,
+      "nbins": 100,
       "min": 0.0,
-      "max": 500.0,
+      "max": 200.0,
       "for": [
         "data",
         "selected_reco"
