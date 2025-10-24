@@ -17,7 +17,7 @@
     // {"name": "Max Recoil 100mm", "max": 0.5, "variable": "RecoilEnergy100mmGeV"},
     // {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
     {"name": "NBlobs", "max": 1, "variable": "NBlobs"},
-    {"name": "Max Multiplicity", "equals": 1, "variable": "Multiplicity"},
+    {"name": "Max Multiplicity", "max": 1, "variable": "Multiplicity"},
     // {"name": "Max Multiplicity", "max": 2, "variable": "Multiplicity"},
     {"name": "IsPrimaryProton", "equals": 1, "variable": "IsPrimaryProton"},
     {"name": "No HasImprovedMichel", "equals": 0, "variable": "HasImprovedMichelElectron"},
