@@ -26,7 +26,7 @@
         "vtxdist_edep_funct": false,
         "trackenddist_edep_funct": false,
         "edep_min": 1.5,
-        "Is3D": -1,
+        // "Is3D": 1,
         "muonangle_edep_funct": false//,
         // "vtxdist_edep_min": {
         //     "band1":{
