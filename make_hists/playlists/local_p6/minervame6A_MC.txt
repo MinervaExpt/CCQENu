@@ -1,0 +1,2 @@
+total 13778944
+-rw-r--r--  1 schellma  staff  7054092612 Jun 17 10:08 MasterAnaDev_mc_AnaTuple_run00122000_Playlist.root
