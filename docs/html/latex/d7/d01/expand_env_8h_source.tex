@@ -1,0 +1,32 @@
+\doxysection{expand\+Env.\+h}
+\hypertarget{expand_env_8h_source}{}\label{expand_env_8h_source}\index{make\_hists/utils/expandEnv.h@{make\_hists/utils/expandEnv.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ EXPANDENV\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ EXPANDENV\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//https://codereview.stackexchange.com/questions/172644/c-\/environment-\/variable-\/expansion}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//https://codereview.stackexchange.com/users/75307/toby-\/speight}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <regex>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{inline}\ std::string\ expandEnv(std::string\ text)}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{comment}{//std::cout\ <<\ "{}\ expand\ text?\ "{}\ <<\ text\ <<\ std::endl;}}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::regex\ env\_re\{R\textcolor{stringliteral}{"{}-\/-\/(\(\backslash\)\$\(\backslash\)\{([\string^\}]+)\(\backslash\)\})-\/-\/"{}\};}}
+\DoxyCodeLine{00016\ \textcolor{stringliteral}{\ \ \ \ std::smatch\ match;}}
+\DoxyCodeLine{00017\ \textcolor{stringliteral}{\ \ \ \ }\textcolor{keywordflow}{while}\ (std::regex\_search(text,\ match,\ env\_re))\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \textcolor{keyword}{const}\ from\ =\ match[0];}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \textcolor{keyword}{const}\ next\ =\ match[1].str();}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \textcolor{keyword}{const}\ var\_name\ =\ next.c\_str();}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ replace\ "{}}\ <<\ var\_name\ <<\ \textcolor{stringliteral}{"{}\ with\ "{}}\ <<\ std::getenv(var\_name)\ <<\ std::endl;}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ text.replace(from.first,\ from.second,\ std::getenv(var\_name));}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordflow}{return}\ text;}
+\DoxyCodeLine{00025\ \}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

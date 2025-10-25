@@ -1,0 +1,253 @@
+\doxysection{Systematics.\+h}
+\hypertarget{_systematics_8h_source}{}\label{_systematics_8h_source}\index{make\_hists/include/Systematics.h@{make\_hists/include/Systematics.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ Systematics\_h}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ Systematics\_h}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\#define\ NOGENIE}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\#define\ NOFLUX}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ systematics\ namespace}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ *\ GetStandardSystematics\ function\ which\ get\ ALL\ of\ the\ generally\ applicable}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ \ \ PU\ systematics}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//==============================================================================}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_c_v_universe_8h}{CVUniverse.h}}"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/ChainWrapper.h"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/FluxSystematics.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/GenieSystematics.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MinosEfficiencySystematics.h"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MnvTuneSystematics.h"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MuonSystematics.h"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/AngleSystematics.h"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MuonResolutionSystematics.h"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/GeantHadronSystematics.h"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/ResponseSystematics.h"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}utils/NuConfig.h"{}}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{namespace\ }systematics\ \{}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ std::map<std::string,\ std::vector<CVUniverse*>>\ UniverseMap;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{//============================================================================}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ Get\ Standard\ PU\ MAT\ Systematics}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//============================================================================}}
+\DoxyCodeLine{00037\ UniverseMap\ GetStandardSystematics(PlotUtils::ChainWrapper*\ chain,\ \textcolor{keyword}{const}\ NuConfig\ config,\ \textcolor{keywordtype}{bool}\ is\_truth\ =\ \textcolor{keyword}{false})\ \{}
+\DoxyCodeLine{00038\ \ \ \textcolor{comment}{//\ return\ map}}
+\DoxyCodeLine{00039\ \ \ UniverseMap\ error\_bands;}
+\DoxyCodeLine{00040\ \ \ \textcolor{comment}{//unsigned\ int\ kNFluxUniverses\ =\ config.GetInt("{}fluxUniverses"{});}}
+\DoxyCodeLine{00041\ \ \ \textcolor{comment}{//\ get\ a\ list\ of\ systematics\ to\ turn\ on\ from\ systematics}}
+\DoxyCodeLine{00042\ \ \ std::vector<std::string>\ flags\ =\ config.GetStringVector(\textcolor{stringliteral}{"{}systematics"{}});}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \textcolor{comment}{//\ CV}}
+\DoxyCodeLine{00045\ \ \ error\_bands[std::string(\textcolor{stringliteral}{"{}cv"{}})].push\_back(\textcolor{keyword}{new}\ CVUniverse(chain));}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ HMS\ 4-\/20-\/2024\ -\/\ make\ systematics\ version\ configurable}}
+\DoxyCodeLine{00048\ \ \ std::string\ responseSystematicsVersion\ =\ \textcolor{stringliteral}{"{}CCQENu"{}};}
+\DoxyCodeLine{00049\ \ \ \textcolor{keywordflow}{if}\ (config.IsMember(\textcolor{stringliteral}{"{}responseSystematicsVersion"{}}))\{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ responseSystematicsVersion\ =\ config.GetString(\textcolor{stringliteral}{"{}responseSystematicsVersion"{}});}
+\DoxyCodeLine{00051\ \ \ \}}
+\DoxyCodeLine{00052\ \ \ \textcolor{comment}{//\#ifndef\ NOFLUX}}
+\DoxyCodeLine{00053\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}Flux"{}})!=flags.end())\{}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//\ FLUX}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{00057\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ standard\ Flux\ systematics\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{int}\ kNFluxUniverses\ =\ MinervaUniverse::GetNFluxUniverses();}
+\DoxyCodeLine{00059\ \ \ \ \ UniverseMap\ bands\_flux\ =\ PlotUtils::GetFluxSystematicsMap<CVUniverse>(chain,kNFluxUniverses);}
+\DoxyCodeLine{00060\ \ \ \ \ error\_bands.insert(bands\_flux.begin(),\ bands\_flux.end());}
+\DoxyCodeLine{00061\ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00063\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ Flux\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00064\ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \textcolor{comment}{//\#endif}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \textcolor{comment}{//\#ifndef\ NOGENIE}}
+\DoxyCodeLine{00068\ \ \ \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{00069\ \ \ \textcolor{comment}{//\ GENIE}}
+\DoxyCodeLine{00070\ \ \ \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{00071\ \ \ \textcolor{comment}{//\ Standard}}
+\DoxyCodeLine{00072\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}GENIE"{}})!=flags.end())\{}
+\DoxyCodeLine{00073\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ standard\ GENIE\ systematcs\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00074\ \ \ \ \ UniverseMap\ bands\_genie\ =\ PlotUtils::GetStandardGenieSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{00075\ \ \ \ \ error\_bands.insert(bands\_genie.begin(),\ bands\_genie.end());}
+\DoxyCodeLine{00076\ \ \ \}}
+\DoxyCodeLine{00077\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00078\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ GENIE\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00079\ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}GenieRvx1pi"{}})!=flags.end())\{}
+\DoxyCodeLine{00082\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ GenieRvx1pi\ systematics\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ Pion\ final\ state\ normalization}}
+\DoxyCodeLine{00084\ \ \ \ \ UniverseMap\ bands\_pi\_fs\_norm\ =\ PlotUtils::GetGenieRvx1piSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{00085\ \ \ \ \ error\_bands.insert(bands\_pi\_fs\_norm.begin(),\ bands\_pi\_fs\_norm.end());}
+\DoxyCodeLine{00086\ \ \ \}}
+\DoxyCodeLine{00087\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00088\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ GenieRvx1pi\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00089\ \ \ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{00092\ \ \ \textcolor{comment}{//\ MnvTunes}}
+\DoxyCodeLine{00093\ \ \ \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{00094\ \ \ \textcolor{comment}{//\ RPA}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}RPA"{}})!=flags.end())\{}
+\DoxyCodeLine{00098\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ RPA\ systematics\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00099\ \ \ \ \ UniverseMap\ bands\_rpa\ =\ PlotUtils::GetRPASystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{00100\ \ \ \ \ error\_bands.insert(bands\_rpa.begin(),\ bands\_rpa.end());}
+\DoxyCodeLine{00101\ \ \ \}}
+\DoxyCodeLine{00102\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00103\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ RPA\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00104\ \ \ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}2p2h"{}})!=flags.end())\{}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ 2P2H}}
+\DoxyCodeLine{00108\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ 2p2h\ systematics\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00109\ \ \ \ \ UniverseMap\ bands\_2p2h\ =\ PlotUtils::Get2p2hSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{00110\ \ \ \ \ error\_bands.insert(bands\_2p2h.begin(),\ bands\_2p2h.end());}
+\DoxyCodeLine{00111\ \ \ \}}
+\DoxyCodeLine{00112\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00113\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ 2p2h\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00114\ \ \ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \textcolor{comment}{//\ Geant}}
+\DoxyCodeLine{00117\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}geant4"{}})!=flags.end())\{}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ geant4\ systematics\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00120\ \ \ \ \ UniverseMap\ bands\_geant\ =\ PlotUtils::GetGeantHadronSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{00121\ \ \ \ \ error\_bands.insert(bands\_geant.begin(),\ bands\_geant.end());}
+\DoxyCodeLine{00122\ \ \ \}}
+\DoxyCodeLine{00123\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00124\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ geant4\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00125\ \ \ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{00129\ \ \ \textcolor{comment}{//\ Muons}}
+\DoxyCodeLine{00130\ \ \ \textcolor{comment}{//========================================================================}}
+\DoxyCodeLine{00131\ \ \ \textcolor{comment}{//\ MUON\ -\/\ MINERvA}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}MuonMinerva"{}})!=flags.end())\{}
+\DoxyCodeLine{00135\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ muon\ MINERvA\ energy\ systematics"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ UniverseMap\ bands\_muon\_minerva\ =\ PlotUtils::GetMinervaMuonSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{00138\ \ \ \ \ error\_bands.insert(bands\_muon\_minerva.begin(),\ bands\_muon\_minerva.end());}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \}}
+\DoxyCodeLine{00141\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00142\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ MuonMinerva\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00143\ \ \ \}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}MuonMINOS"{}})!=flags.end())\{}
+\DoxyCodeLine{00146\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ muon\ MINOS\ energy\ systematics"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ UniverseMap\ bands\_muon\_minos\ =}
+\DoxyCodeLine{00149\ \ \ \ \ PlotUtils::GetMinosMuonSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{00150\ \ \ \ \ error\_bands.insert(bands\_muon\_minos.begin(),\ bands\_muon\_minos.end());}
+\DoxyCodeLine{00151\ \ \ \}}
+\DoxyCodeLine{00152\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00153\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ MuonMINOS\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00154\ \ \ \}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}MuonResolution"{}})!=flags.end())\{}
+\DoxyCodeLine{00157\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ muon\ resolution\ systematics"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{comment}{//\ Muon\ resolution}}
+\DoxyCodeLine{00160\ \ \ \ \ UniverseMap\ muonR\_systematics\ =\ PlotUtils::GetMuonResolutionSystematicsMap<CVUniverse>(chain,NSFDefaults::muonResolution\_Err);}
+\DoxyCodeLine{00161\ \ \ \ \ error\_bands.insert(muonR\_systematics.begin(),\ muonR\_systematics.end());}
+\DoxyCodeLine{00162\ \ \ \}}
+\DoxyCodeLine{00163\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00164\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ MuonResolution\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00165\ \ \ \}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}MINOSEfficiency"{}})!=flags.end())\{}
+\DoxyCodeLine{00168\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ MINOS\ efficiency\ systematics"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{comment}{//\ MINOS\ EFFICIENCY}}
+\DoxyCodeLine{00171\ \ \ \ \ UniverseMap\ bands\_minoseff\ =\ PlotUtils::GetMinosEfficiencySystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{00172\ \ \ \ \ error\_bands.insert(bands\_minoseff.begin(),\ bands\_minoseff.end());}
+\DoxyCodeLine{00173\ \ \ \}}
+\DoxyCodeLine{00174\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00175\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ MINOSEffiency\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00176\ \ \ \}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}Angle"{}})!=flags.end())\{}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{comment}{//\ Angle}}
+\DoxyCodeLine{00180\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ make\ angle\ systematics"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ UniverseMap\ angle\_systematics\ =\ PlotUtils::GetAngleSystematicsMap<CVUniverse>(chain,NSFDefaults::beamThetaX\_Err,NSFDefaults::beamThetaY\_Err);}
+\DoxyCodeLine{00183\ \ \ \ \ error\_bands.insert(angle\_systematics.begin(),\ angle\_systematics.end());}
+\DoxyCodeLine{00184\ \ \ \}}
+\DoxyCodeLine{00185\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00186\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ Angle\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00187\ \ \ \}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \textcolor{comment}{//GeantHadronUniverse\ constructor}}
+\DoxyCodeLine{00190\ \ \ \textcolor{comment}{//GeantHadronUniverse<T>::GeantHadronUniverse(\ typename\ T::config\_t\ chw,\ double\ nsigma,\ int\ pdg\ )}}
+\DoxyCodeLine{00191\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\textcolor{stringliteral}{"{}geant4"{}})!=flags.end())\{}
+\DoxyCodeLine{00192\ \ \ \ \ UniverseMap\ geant4\_systematics\ =\ PlotUtils::GetGeantHadronSystematicsMap<CVUniverse>(chain);}
+\DoxyCodeLine{00193\ \ \ \ \ error\_bands.insert(geant4\_systematics.begin(),\ geant4\_systematics.end());}
+\DoxyCodeLine{00194\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ make\ geant4\ systematics"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00195\ \ \ \}}
+\DoxyCodeLine{00196\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00197\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ \ geant4\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00198\ \ \ \}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \textcolor{comment}{//\ Response\ systematics\ (which\ also\ have\ recoil\ syst)}}
+\DoxyCodeLine{00201\ \ \ \textcolor{comment}{//\ Stole\ this\ from\ Andrew's\ code}}
+\DoxyCodeLine{00202\ \ \ \textcolor{keywordflow}{if}(std::find(flags.begin(),\ flags.end(),\ \textcolor{stringliteral}{"{}response"{}})!=flags.end())\{}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_ID\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_OD\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00205\ \ \ \ \ std::string\ name\_tag\ =\ \textcolor{stringliteral}{"{}allNonMuonClusters"{}};}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keywordtype}{bool}\ neutron\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keywordtype}{bool}\ part\_response\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordtype}{bool}\ proton\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_nucl\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_tracker\ =\ \textcolor{keyword}{true};\ }
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_ecal\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_hcal\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \ \ \ \ UniverseMap\ response\_systematics;}
+\DoxyCodeLine{00215\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ using\ version\ "{}}\ <<\ responseSystematicsVersion\ <<\ \textcolor{stringliteral}{"{}\ of\ response\ systematics"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keywordflow}{if}\ (responseSystematicsVersion\ ==\ \textcolor{stringliteral}{"{}CCQENu"{}})\ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ response\_systematics\ =\ PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain,\ neutron,\ part\_response,\ proton);\ \ \textcolor{comment}{//\ Not\ totally\ sure\ what\ the\ args\ do\ here}}
+\DoxyCodeLine{00218\ \ \ \ \ \}}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (responseSystematicsVersion\ ==\ \textcolor{stringliteral}{"{}2024"{}})\{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ response\_systematics\ =\ PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain,\ use\_ID,\ use\_OD,\ name\_tag,\ neutron,\ part\_response,\ proton,\ use\_nucl,\ use\_tracker,\ use\_ecal,\ use\_hcal);\ \ \textcolor{comment}{//\ Not\ totally\ sure\ what\ the\ args\ do\ here}}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ unknown\ responseSystematicsVersion\ set;\ will\ not\ do\ response\ "{}}\ <<\ responseSystematicsVersion\ <<\ std::endl;}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ assert(0);}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \}\ }
+\DoxyCodeLine{00228\ \ \ \ \ \}}
+\DoxyCodeLine{00229\ \ \ \ \ error\_bands.insert(response\_systematics.begin(),\ response\_systematics.end());}
+\DoxyCodeLine{00230\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ do\ make\ response\ systematics\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00231\ \ \ \}}
+\DoxyCodeLine{00232\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00233\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Warning:\ response\ systematics\ are\ turned\ off"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00234\ \ \ \}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \textcolor{comment}{//\ at\ the\ end}}
+\DoxyCodeLine{00237\ \ \ \textcolor{keywordflow}{return}\ error\_bands;}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \textcolor{comment}{//\ \ std::cout\ <<\ "{}Warning:\ still\ need\ to\ implement\ response\ systematics\ "{}\ <<\ std::endl;}}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \}}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \}\ \ \textcolor{comment}{//\ namespace\ systematics}}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ Systematics\_h}}
+
+\end{DoxyCode}

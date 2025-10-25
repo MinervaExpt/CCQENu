@@ -1,0 +1,379 @@
+\doxysection{Rebin\+Flux.\+h}
+\hypertarget{_rebin_flux_8h_source}{}\label{_rebin_flux_8h_source}\index{make\_hists/utils/RebinFlux.h@{make\_hists/utils/RebinFlux.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ utilities\ to\ deal\ with\ flux}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ REBIN\_FLUX\_H}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ REBIN\_FLUX\_H}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}utils/NuConfig.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MnvH1D.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}TFile.h"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ -\/\ return\ a\ flux\ histogram\ for\ the\ playlist\ in\ config\ with\ bin\ width\ correction\ removed\ -\/\ integral\ is\ total\ flux}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ HMS\ change\ to\ use\ map\ of\ configs\ instead\ of\ config.\ \ Put\ in\ calls\ with\ just\ a\ config\ to\ allow\ backwards\ compatibility.\ \ Get\ rid\ of\ in\ future\ as\ they\ are\ nasty\ in\ terms\ of\ potential\ memory\ leaks.}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ MnvH1D*\ GetFlux(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ config);}
+\DoxyCodeLine{00017\ MnvH1D*\ GetFlux(\textcolor{keyword}{const}\ CONFIGMAP);}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ -\/\ get\ the\ flux\ histogram\ derived\ above\ back\ rebinned\ according\ to\ histogram\ ehist}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ MnvH1D*\ GetFluxEbins(\textcolor{keyword}{const}\ MnvH1D*\ h\_flux\_dewidthed,\ \textcolor{keyword}{const}\ MnvH1D*\ ehist\ );}
+\DoxyCodeLine{00022\ MnvH2D*\ GetFluxEbins(\textcolor{keyword}{const}\ MnvH1D*\ h\_flux\_dewidthed,\ \textcolor{keyword}{const}\ MnvH2D*\ ehist\ );}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ DeWidth\ -\/-\/\ utility\ to\ remove\ binwidth\ correction\ from\ an\ MnvH1D}}
+\DoxyCodeLine{00025\ \textcolor{keywordtype}{void}\ DeWidth(MnvH1D*\ h\_mnv\_with\_binwidth,\ MnvH1D\ *\&h\_mnv\_with\_binwidth\_removed)\{}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \textcolor{comment}{//cout\ <<\ "{}TRACE:\ remove\ binwidth\ correction\ from\ MnvH1D\ "{}\ <<\ h\_mnv\_with\_binwidth-\/>GetName()\ <<\ endl;}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \textcolor{comment}{//strategy\ is\ to\ recale\ orig\ by\ bin\ width\ (undo\ bin\ width\ normalization)\ then\ combine\ bins\ and\ then\ rescale\ by\ binwidth\ again}}
+\DoxyCodeLine{00030\ \ \ MnvH1D*\ scaler\ =\ (MnvH1D*)h\_mnv\_with\_binwidth-\/>Clone(\textcolor{stringliteral}{"{}widths"{}});}
+\DoxyCodeLine{00031\ \ \ scaler-\/>SetDirectory(0);}
+\DoxyCodeLine{00032\ \ \ std::string\ name\ =\ h\_mnv\_with\_binwidth-\/>GetName();}
+\DoxyCodeLine{00033\ \ \ name\ +=\ std::string(\textcolor{stringliteral}{"{}\_counts"{}});}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \textcolor{keywordtype}{double}\ flux\ =\ 0.0;}
+\DoxyCodeLine{00036\ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;i<scaler-\/>GetNbinsX()+2;i++)\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ scaler-\/>SetBinContent(i,scaler-\/>GetBinWidth(i));}
+\DoxyCodeLine{00038\ \ \ \ \ flux\ +=\ scaler-\/>GetBinWidth(i)*h\_mnv\_with\_binwidth-\/>GetBinContent(i);}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}bin\ "{}\ <<\ i\ <<\ "{}\ "{}\ <<\ scaler-\/>GetBinCenter(i)\ <<\ "{}\ "{}\ <<\ scaler-\/>GetBinWidth(0)\ <<\ "{}\ "{}\ <<\ h\_mnv\_with\_binwidth-\/>GetBinContent(i)<<\ "{}\ "{}\ \ <<\ flux\ <<\ std::endl;}}
+\DoxyCodeLine{00040\ \ \ \}}
+\DoxyCodeLine{00041\ \ \ h\_mnv\_with\_binwidth\_removed\ =\ (MnvH1D*)h\_mnv\_with\_binwidth-\/>Clone(name.c\_str());}
+\DoxyCodeLine{00042\ \ \ h\_mnv\_with\_binwidth\_removed-\/>SetDirectory(0);}
+\DoxyCodeLine{00043\ \ \ h\_mnv\_with\_binwidth\_removed-\/>MultiplySingle(h\_mnv\_with\_binwidth,scaler,\ 1.,\ 1.);\textcolor{comment}{//undid\ bin\ width\ normalization}}
+\DoxyCodeLine{00044\ \ \ \textcolor{comment}{//std::cout\ <<\ "{}integral\ for\ mnv\ after\ removing\ binwidth\ correction\ "{}\ <<\ h\_mnv\_with\_binwidth\_removed-\/>GetName()\ <<\ "{}\ is\ "{}\ <<\ \ h\_mnv\_with\_binwidth\_removed-\/>Integral()\ <<\ std::endl;}}
+\DoxyCodeLine{00045\ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ rebin\ an\ MnvH1D\ to\ match\ a\ different\ subset\ of\ bins}}
+\DoxyCodeLine{00048\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ HistoType1D>}
+\DoxyCodeLine{00049\ \ \ HistoType1D*\ RebinDeWidthedFluxHist(\textcolor{keyword}{const}\ HistoType1D*\ h\_mnv\_without\_binwidth,\ \textcolor{keyword}{const}\ HistoType1D\ *\ h\_mnv\_rebinned\_without\_binwidth)\{}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{//\ this\ operates\ on\ a\ dewidthed\ as\ we\ want\ total\ counts.}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{comment}{//cout\ <<\ "{}TRACE:\ Rebin\ an\ MnvH1D\ "{}\ <<\ h\_mnv\_without\_binwidth-\/>GetName()\ <<\ "{}\ into\ \ "{}\ \ <<\ h\_mnv\_rebinned\_without\_binwidth-\/>GetName()\ <<\ endl;}}
+\DoxyCodeLine{00052\ \ \ \ \ std::vector<double>mnv\_rebinned\_without\_binwidth\_bin\_edges;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=1;i<h\_mnv\_rebinned\_without\_binwidth-\/>GetNbinsX()+2;i++)\{\textcolor{comment}{//need\ low\ edge\ of\ overflow\ (high\ edge\ of\ last\ bin)}}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ mnv\_rebinned\_without\_binwidth\_bin\_edges.push\_back(h\_mnv\_rebinned\_without\_binwidth-\/>GetBinLowEdge(i));}
+\DoxyCodeLine{00055\ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \ \ \ \ HistoType1D*\ not\_rebinned\ =\ (HistoType1D*)h\_mnv\_without\_binwidth-\/>Clone();\ \ \textcolor{comment}{//\ have\ to\ do\ this\ as\ otherwise\ the\ rebin\ occurs\ multiple\ times}}
+\DoxyCodeLine{00057\ \ \ \ \ HistoType1D*\ new\_rebinned\ =\ (HistoType1D*)h\_mnv\_rebinned\_without\_binwidth-\/>Clone();}
+\DoxyCodeLine{00058\ \ \ \ \ new\_rebinned-\/>SetDirectory(0);}
+\DoxyCodeLine{00059\ \ \ \ \ new\_rebinned\ =\ (HistoType1D*)not\_rebinned-\/>Rebin(mnv\_rebinned\_without\_binwidth\_bin\_edges.size()-\/1,\textcolor{stringliteral}{"{}Rebinned"{}},\&mnv\_rebinned\_without\_binwidth\_bin\_edges[0]);}
+\DoxyCodeLine{00060\ \ \ \ \ new\_rebinned-\/>SetName(\textcolor{stringliteral}{"{}flux"{}});}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{//new\_rebinned-\/>Print("{}ALL"{});}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//cout\ <<\ "{}TRACE:\ Rebin\ an\ MnvH1D\ "{}\ <<\ h\_mnv\_without\_binwidth-\/>GetName()\ <<\ "{}\ into\ \ "{}\ \ <<\ new\_rebinned-\/>GetName()\ <<\ endl;}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{return}\ new\_rebinned;}
+\DoxyCodeLine{00064\ \ \ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{template}\ MnvH1D*\ RebinDeWidthedFluxHist<MnvH1D>(\textcolor{keyword}{const}\ MnvH1D*\ h\_mnv\_without\_binwidth,\ \textcolor{keyword}{const}\ MnvH1D\ *\ h\_mnv\_rebinned\_without\_binwidth);}
+\DoxyCodeLine{00067\ \textcolor{comment}{//\ TH1D\ is\ sometimes\ useful\ for\ doing\ 2D\ stuff}}
+\DoxyCodeLine{00068\ \textcolor{keyword}{template}\ TH1D*\ RebinDeWidthedFluxHist<TH1D>(\textcolor{keyword}{const}\ TH1D*\ h\_mnv\_without\_binwidth,\ \textcolor{keyword}{const}\ TH1D\ *\ h\_mnv\_rebinned\_without\_binwidth);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ sometimes\ you\ need\ to\ make\ \#\ of\ universes\ match\ -\/\ this\ does\ that}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keywordtype}{void}\ TruncateNumberOfFluxUniverses(\ MnvH1D*\ h,\ \textcolor{keywordtype}{int}\ nUniverses)}
+\DoxyCodeLine{00073\ \{}
+\DoxyCodeLine{00074\ \ \ MnvVertErrorBand\ *poppedFluxErrorBand\ =\ h-\/>PopVertErrorBand(\textcolor{stringliteral}{"{}Flux"{}});}
+\DoxyCodeLine{00075\ \ \ std::vector<TH1D*>\ fluxUniverses\ =\ poppedFluxErrorBand-\/>GetHists();}
+\DoxyCodeLine{00076\ \ \ fluxUniverses.resize(nUniverses);}
+\DoxyCodeLine{00077\ \ \ h-\/>AddVertErrorBand(\textcolor{stringliteral}{"{}Flux"{}},fluxUniverses);}
+\DoxyCodeLine{00078\ \ \ \textcolor{comment}{//CheckAndFixFluxErrorBand(h);}}
+\DoxyCodeLine{00079\ \}}
+\DoxyCodeLine{00080\ \textcolor{comment}{//2D}}
+\DoxyCodeLine{00081\ \textcolor{keywordtype}{void}\ TruncateNumberOfFluxUniverses(\ MnvH2D*\ h,\ \textcolor{keywordtype}{int}\ nUniverses)}
+\DoxyCodeLine{00082\ \{}
+\DoxyCodeLine{00083\ \ \ MnvVertErrorBand2D\ *poppedFluxErrorBand\ =\ h-\/>PopVertErrorBand(\textcolor{stringliteral}{"{}Flux"{}});}
+\DoxyCodeLine{00084\ \ \ std::vector<TH2D*>\ fluxUniverses\ =\ poppedFluxErrorBand-\/>GetHists();}
+\DoxyCodeLine{00085\ \ \ fluxUniverses.resize(nUniverses);}
+\DoxyCodeLine{00086\ \ \ h-\/>AddVertErrorBand(\textcolor{stringliteral}{"{}Flux"{}},fluxUniverses);}
+\DoxyCodeLine{00087\ \ \ \textcolor{comment}{//CheckAndFixFluxErrorBand(h);}}
+\DoxyCodeLine{00088\ \}}
+\DoxyCodeLine{00089\ \textcolor{comment}{//\ implementation\ of\ GetFlux}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{comment}{//\ make\ a\ version\ that\ takes\ a\ pointer\ to\ the\ config}}
+\DoxyCodeLine{00092\ MnvH1D*\ GetFlux(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ config)\{}
+\DoxyCodeLine{00093\ \ \ \ \ CONFIGMAP\ allconfigs;}
+\DoxyCodeLine{00094\ \ \ \ \ allconfigs[\textcolor{stringliteral}{"{}main"{}}]=\textcolor{keyword}{new}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}(config);}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordflow}{return}\ GetFlux(allconfigs);}
+\DoxyCodeLine{00096\ \ \ \ \ }
+\DoxyCodeLine{00097\ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ MnvH1D*\ GetFlux(\textcolor{keyword}{const}\ CONFIGMAP\ configmap)\{}
+\DoxyCodeLine{00100\ \ \ \ \ }
+\DoxyCodeLine{00101\ \ \ std::string\ playlist\ =\ configmap.at(\textcolor{stringliteral}{"{}main"{}})-\/>GetString(\textcolor{stringliteral}{"{}playlist"{}});}
+\DoxyCodeLine{00102\ \ \ \textcolor{keywordtype}{int}\ m\_fluxUniverses\ =\ configmap.at(\textcolor{stringliteral}{"{}main"{}})-\/>GetInt(\textcolor{stringliteral}{"{}fluxUniverses"{}});}
+\DoxyCodeLine{00103\ \ \ \textcolor{keywordtype}{bool}\ m\_nue\_constraint\ =\ configmap.at(\textcolor{stringliteral}{"{}main"{}})-\/>GetInt(\textcolor{stringliteral}{"{}NuEConstraint"{}});}
+\DoxyCodeLine{00104\ \ \ \textcolor{keywordtype}{int}\ pdg\ =\ configmap.at(\textcolor{stringliteral}{"{}main"{}})-\/>GetInt(\textcolor{stringliteral}{"{}pdg"{}});}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \textcolor{comment}{//++++++++++++++++++=\ \ Initialization\ +++++++++++++++++++++++++}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \textcolor{comment}{//\ Get\ the\ flux\ hist,\ clean\ it\ up\ a\ bit,\ remove\ binwidth\ correction\ that\ should\ not\ be\ there\ and\ return}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \textcolor{comment}{//\ someone\ thought\ an\ enum\ was\ a\ good\ idea.\ \ It\ was\ not.}}
+\DoxyCodeLine{00111\ \ \ std::map<std::string,\ enum\ FluxReweighter::EPlaylist>\ fluxplaylist;}
+\DoxyCodeLine{00112\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1A"{}}]\ =\ FluxReweighter::minervame1A;}
+\DoxyCodeLine{00113\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1B"{}}]\ =\ FluxReweighter::minervame1B;}
+\DoxyCodeLine{00114\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1C"{}}]\ =\ FluxReweighter::minervame1C;}
+\DoxyCodeLine{00115\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1D"{}}]\ =\ FluxReweighter::minervame1D;}
+\DoxyCodeLine{00116\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1E"{}}]\ =\ FluxReweighter::minervame1E;}
+\DoxyCodeLine{00117\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1F"{}}]\ =\ FluxReweighter::minervame1F;}
+\DoxyCodeLine{00118\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1G"{}}]\ =\ FluxReweighter::minervame1G;}
+\DoxyCodeLine{00119\ \textcolor{comment}{//\ \ fluxplaylist["{}minervame1H"{}]\ =\ FluxReweighter::minervame1H;}}
+\DoxyCodeLine{00120\ \textcolor{comment}{//\ \ fluxplaylist["{}minervame1I"{}]\ =\ FluxReweighter::minervame1I;}}
+\DoxyCodeLine{00121\ \textcolor{comment}{//\ \ fluxplaylist["{}minervame1J"{}]\ =\ FluxReweighter::minervame1J;}}
+\DoxyCodeLine{00122\ \textcolor{comment}{//\ \ fluxplaylist["{}minervame1K"{}]\ =\ FluxReweighter::minervame1K;}}
+\DoxyCodeLine{00123\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1L"{}}]\ =\ FluxReweighter::minervame1L;}
+\DoxyCodeLine{00124\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1M"{}}]\ =\ FluxReweighter::minervame1M;}
+\DoxyCodeLine{00125\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1N"{}}]\ =\ FluxReweighter::minervame1N;}
+\DoxyCodeLine{00126\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame5A"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00127\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6A"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00128\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6B"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00129\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6C"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00130\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6D"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00131\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6E"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00132\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6F"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00133\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6G"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00134\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6H"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00135\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6I"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00136\ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6J"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \textcolor{keywordflow}{if}(\ fluxplaylist.find(playlist)\ ==\ fluxplaylist.end()\ )\{}
+\DoxyCodeLine{00139\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ playlist\ "{}}\ <<\ playlist\ <<\ \textcolor{stringliteral}{"{}\ not\ yet\ implemented\ in\ RebinFlux.h\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00140\ \ \ \ \ exit(0);}
+\DoxyCodeLine{00141\ \ \ \}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ FluxReweighter\ *frw\ =\ \textcolor{keyword}{new}\ PlotUtils::FluxReweighter(pdg,m\_nue\_constraint,fluxplaylist[playlist],FluxReweighter::gen2thin,\ FluxReweighter::g4numiv6,m\_fluxUniverses);}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ MnvH1D\ *h\_flux\ =\ frw-\/>GetFluxReweighted(pdg);}
+\DoxyCodeLine{00146\ \ \ h\_flux-\/>SetDirectory(0);}
+\DoxyCodeLine{00147\ \ \ \textcolor{comment}{//\ clean\ up\ the\ external\ flux\ by\ removing\ error\ bands\ we\ won't\ use\ in\ this\ analysis}}
+\DoxyCodeLine{00148\ \ \ h\_flux-\/>PopVertErrorBand(\textcolor{stringliteral}{"{}Flux\_BeamFocus"{}});}
+\DoxyCodeLine{00149\ \ \ h\_flux-\/>PopVertErrorBand(\textcolor{stringliteral}{"{}ppfx1\_Total"{}});}
+\DoxyCodeLine{00150\ \ \ TruncateNumberOfFluxUniverses(h\_flux,m\_fluxUniverses);}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00153\ \ \ \textcolor{comment}{//\ \ flux\ hist\ is\ stored\ with\ binwidth\ correction,\ need\ to\ undo\ that\ to\ get\ the\ integral\ and\ use\ for\ sigma(E)}}
+\DoxyCodeLine{00154\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00155\ \ \ MnvH1D*\ h\_flux\_dewidthed;}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ DeWidth(h\_flux,h\_flux\_dewidthed);}
+\DoxyCodeLine{00158\ \ \ h\_flux\_dewidthed-\/>SetName(\textcolor{stringliteral}{"{}flux\_dewidthed"{}});}
+\DoxyCodeLine{00159\ \ \ h\_flux\_dewidthed-\/>Scale(1/10000.);\ \textcolor{comment}{//\ convert\ from\ m\string^2\ to\ cm\string^2}}
+\DoxyCodeLine{00160\ \ \ \textcolor{keywordflow}{return}\ h\_flux\_dewidthed;}
+\DoxyCodeLine{00161\ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{comment}{//\ given\ energy\ histogram,\ rebin\ flux\ to\ match}}
+\DoxyCodeLine{00166\ MnvH1D*\ GetFluxEbins(\textcolor{keyword}{const}\ MnvH1D*\ h\_flux\_dewidthed,\ \textcolor{keyword}{const}\ MnvH1D*\ ihist,\ CONFIGMAP\ configs\ ,\ std::map<std::string,\ bool>\ FluxEnormBool)\{}
+\DoxyCodeLine{00167\ \ \ TString\ newname\ =\ ihist-\/>GetName()+TString(\textcolor{stringliteral}{"{}\_Flux"{}});}
+\DoxyCodeLine{00168\ \ \ MnvH1D*\ h\_flux\_ebins\ =\ RebinDeWidthedFluxHist(h\_flux\_dewidthed,ihist);}
+\DoxyCodeLine{00169\ \ \ h\_flux\_ebins-\/>SetName(newname);}
+\DoxyCodeLine{00170\ \ \ h\_flux\_ebins-\/>SetTitle(\textcolor{stringliteral}{"{}Integrated\ Flux/bin;\ GeV"{}});}
+\DoxyCodeLine{00171\ \ \ \textcolor{comment}{//\ reapply\ the\ bin\ width\ correction\ to\ flux(this\ cancels\ out\ the\ plotter\ applying\ it\ later\ to\ the\ numerator)}}
+\DoxyCodeLine{00172\ \ \ h\_flux\_ebins-\/>Scale(1.0,\textcolor{stringliteral}{"{}width"{}});}
+\DoxyCodeLine{00173\ \ \ \textcolor{keywordflow}{return}\ h\_flux\_ebins;}
+\DoxyCodeLine{00174\ \}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ MnvH1D*\ GetFluxEbins(\textcolor{keyword}{const}\ MnvH1D*\ h\_flux\_dewidthed,\ \textcolor{keyword}{const}\ MnvH1D*\ ihist,\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ config,\ std::map<std::string,\ bool>\ FluxEnormBool)\{}
+\DoxyCodeLine{00177\ \ \ \ \ CONFIGMAP\ allconfigs;}
+\DoxyCodeLine{00178\ \ \ \ \ allconfigs[\textcolor{stringliteral}{"{}main"{}}]=\textcolor{keyword}{new}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}(config);}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keywordflow}{return}\ GetFluxEbins(\ h\_flux\_dewidthed,\ ihist\ ,\ allconfigs,\ \ FluxEnormBool);}
+\DoxyCodeLine{00180\ \}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{comment}{//MnvH2D*\ GetFluxEbins(const\ MnvH1D*\ h\_flux,\ const\ MnvH2D*\ ihist\ ,\ NuConfig*\ pconfig,\ std::map<std::string,\ bool>\ FluxEnormBool)\{}}
+\DoxyCodeLine{00183\ \textcolor{comment}{//\ \ \ \ return\ GetFluxEbins(h\_flux,\ ihist\ ,\ *pconfig,\ FluxEnormBool);}}
+\DoxyCodeLine{00184\ \textcolor{comment}{//\}}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ MnvH2D*\ GetFluxEbins(\textcolor{keyword}{const}\ MnvH1D*\ h\_flux,\ \textcolor{keyword}{const}\ MnvH2D*\ ihist\ ,\ CONFIGMAP\ configmap,\ std::map<std::string,\ bool>\ FluxEnormBool)\{\ \ \textcolor{comment}{//std::vector<std::string>\ varparse)\{}}
+\DoxyCodeLine{00187\ \ \ \textcolor{comment}{//\ hist\ that\ will\ come\ out\ with\ flux\ hist\ in\ bins\ you\ want}}
+\DoxyCodeLine{00188\ \ \ \ \ }
+\DoxyCodeLine{00189\ \ \ MnvH2D*\ h2D\_flux\_ebins\ =\ (MnvH2D*)ihist-\/>Clone();}
+\DoxyCodeLine{00190\ \ \ \textcolor{comment}{//\ changed\ ehist\ to\ h2D\_flux\_ebins}}
+\DoxyCodeLine{00191\ \ \ \textcolor{comment}{//\ MnvH2D*\ ehist\ =\ (MnvH2D*)enu\_hist-\/>Clone();}}
+\DoxyCodeLine{00192\ \ \ h2D\_flux\_ebins-\/>ClearAllErrorBands();\ \textcolor{comment}{//\ need\ to\ do\ this\ so\ you\ can\ add\ them\ back\ later.}}
+\DoxyCodeLine{00193\ \ \ h2D\_flux\_ebins-\/>Reset();}
+\DoxyCodeLine{00194\ \ \ \textcolor{comment}{//\ Make\ a\ blank\ dummy\ hist}}
+\DoxyCodeLine{00195\ \ \ MnvH2D*\ dummyhist;\ \textcolor{comment}{//-\/>Divide(h2D\_flux\_ebins,h2D\_flux\_ebins,1.,1.);}}
+\DoxyCodeLine{00196\ \ \ \textcolor{keywordflow}{if}(\ !FluxEnormBool[\textcolor{stringliteral}{"{}xfluxnorm"{}}]\ \&\&\ !FluxEnormBool[\textcolor{stringliteral}{"{}yfluxnorm"{}}])\{}
+\DoxyCodeLine{00197\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ fluxnorm\ not\ set\ for\ axes.\ Doing\ flat\ flux\ instead."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{comment}{//\ MnvH2D*\ flux\ =\ GetFluxFlat(config,ihist);}}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{comment}{//\ return\ flux;}}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keywordflow}{return}\ dummyhist;}
+\DoxyCodeLine{00201\ \ \ \}}
+\DoxyCodeLine{00202\ \ \ \textcolor{keywordflow}{if}(\ FluxEnormBool[\textcolor{stringliteral}{"{}xfluxnorm"{}}]\ \&\&\ FluxEnormBool[\textcolor{stringliteral}{"{}yfluxnorm"{}}])\{}
+\DoxyCodeLine{00203\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ Both\ axes\ have\ energy\ dependent\ flux\ normalization,\ which\ isn't\ implimented\ yet."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{comment}{//\ MnvH2D*\ flux\ =\ GetFluxFlat(config,ihist);}}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{comment}{//\ return\ flux;}}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keywordflow}{return}\ dummyhist;}
+\DoxyCodeLine{00207\ \ \ \}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \textcolor{comment}{//\ Take\ projection\ on\ x\ or\ y\ axis\ (depending\ on\ which\ variable\ is\ on\ which\ axis)\ to\ get\ input\ hist\ binning\ for\ 1D\ flux}}
+\DoxyCodeLine{00211\ \ \ MnvH1D*\ ihistproj;}
+\DoxyCodeLine{00212\ \ \ \textcolor{keywordflow}{if}(FluxEnormBool[\textcolor{stringliteral}{"{}xfluxnorm"{}}]\ \&\&\ !FluxEnormBool[\textcolor{stringliteral}{"{}yfluxnorm"{}}])\ \{}
+\DoxyCodeLine{00213\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ Using\ an\ energy\ dependent\ flux\ for\ the\ x\ axis.\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00214\ \ \ \ \ ihistproj\ =\ h2D\_flux\_ebins-\/>ProjectionX(\textcolor{stringliteral}{"{}\_proj\_x"{}},0,-\/1);}
+\DoxyCodeLine{00215\ \ \ \}}
+\DoxyCodeLine{00216\ \ \ \textcolor{keywordflow}{if}(FluxEnormBool[\textcolor{stringliteral}{"{}yfluxnorm"{}}]\ \&\&\ !FluxEnormBool[\textcolor{stringliteral}{"{}xfluxnorm"{}}])\ \{}
+\DoxyCodeLine{00217\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ Using\ an\ energy\ dependent\ flux\ for\ the\ y\ axis.\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00218\ \ \ \ \ ihistproj\ =\ h2D\_flux\_ebins-\/>ProjectionY(\textcolor{stringliteral}{"{}\_proj\_y"{}},0,-\/1);}
+\DoxyCodeLine{00219\ \ \ \}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \textcolor{comment}{//\ Borrowed\ from\ 1D\ code}}
+\DoxyCodeLine{00222\ \ \ MnvH1D*\ h\_flux\_dewidthed\ =\ (MnvH1D*)h\_flux-\/>Clone();}
+\DoxyCodeLine{00223\ \ \ \textcolor{comment}{//\ Rebin\ flux\ to\ energy\ hist\ bins,\ Amit\ works\ with\ TH1D's\ for\ all\ this...}}
+\DoxyCodeLine{00224\ \ \ MnvH1D*\ mnvh\_rebinned\_flux\ =\ RebinDeWidthedFluxHist(h\_flux\_dewidthed,ihistproj);}
+\DoxyCodeLine{00225\ \ \ mnvh\_rebinned\_flux-\/>SetTitle(\textcolor{stringliteral}{"{}Integrated\ Flux/projected\ bin;\ GeV"{}});}
+\DoxyCodeLine{00226\ \ \ \textcolor{comment}{//\ reapply\ the\ bin\ width\ correction\ to\ flux(this\ cancels\ out\ the\ plotter\ applying\ it\ later\ to\ the\ numerator)}}
+\DoxyCodeLine{00227\ \ \ \textcolor{comment}{//\ is\ this\ necessary\ for\ 2D?}}
+\DoxyCodeLine{00228\ \ \ mnvh\_rebinned\_flux-\/>Scale(1.0,\textcolor{stringliteral}{"{}width"{}});}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \ \ \textcolor{comment}{//\ Borrowed\ from\ Amit's\ code.\ Don't\ need\ hist\ tmphist\ though,\ since\ already\ rebinned\ flux.}}
+\DoxyCodeLine{00231\ \ \ TH1D*\ h\_rebinned\_flux\ =\ \textcolor{keyword}{new}\ TH1D(mnvh\_rebinned\_flux-\/>GetCVHistoWithStatError());}
+\DoxyCodeLine{00232\ \ \ \textcolor{comment}{//\ find\ number\ of\ bins\ to\ help\ rebin\ the\ flux}}
+\DoxyCodeLine{00233\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nxbins\ =\ h2D\_flux\_ebins-\/>GetNbinsX();}
+\DoxyCodeLine{00234\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ nybins\ =\ h2D\_flux\_ebins-\/>GetNbinsY();}
+\DoxyCodeLine{00235\ \ \ \textcolor{comment}{//\ Fill\ the\ 2D\ flux\ hist\ with\ contents\ of\ 1D.\ Filling\ by\ xbins\ or\ ybins\ depending\ on\ the\ case.}}
+\DoxyCodeLine{00236\ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;i<nxbins+1;i++)\{}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=0;j<nybins+1;j++)\{}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(FluxEnormBool[\textcolor{stringliteral}{"{}xfluxnorm"{}}]\ \&\&\ !FluxEnormBool[\textcolor{stringliteral}{"{}yfluxnorm"{}}])\ h2D\_flux\_ebins-\/>SetBinContent(i,j,h\_rebinned\_flux-\/>GetBinContent(i));}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(FluxEnormBool[\textcolor{stringliteral}{"{}yfluxnorm"{}}]\ \&\&\ !FluxEnormBool[\textcolor{stringliteral}{"{}xfluxnorm"{}}])\ h2D\_flux\_ebins-\/>SetBinContent(i,j,h\_rebinned\_flux-\/>GetBinContent(j));}
+\DoxyCodeLine{00240\ \ \ \ \ \}}
+\DoxyCodeLine{00241\ \ \ \}}
+\DoxyCodeLine{00242\ \ \ \textcolor{comment}{//\ TODO:\ Binwidth\ is\ being\ corrected\ too\ many\ times\ or\ not\ enough\ on\ 2D}}
+\DoxyCodeLine{00243\ \ \ \textcolor{comment}{//\ look\ at\ cheryl's\ paper\ about\ this}}
+\DoxyCodeLine{00244\ \ \ \textcolor{comment}{//\ Is\ this\ \string^\string^\string^\ true???\ May\ need\ to\ do\ binwidth\ correction\ for\ 2D\ on\ my\ own.\ NHV,\ 6/22}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \textcolor{comment}{//\ This\ hist\ doesn't\ have\ (vertical)\ errorbands,\ so\ we'll\ need\ to\ do\ the\ same\ for\ them.}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Now\ for\ verts"{}}\ <<\ endl;}
+\DoxyCodeLine{00250\ \ \ \textcolor{keywordtype}{int}\ nfluxUniverses\ =\ configmap.at(\textcolor{stringliteral}{"{}main"{}})-\/>GetInt(\textcolor{stringliteral}{"{}fluxUniverses"{}});}
+\DoxyCodeLine{00251\ \ \ \textcolor{comment}{//Do\ the\ same\ with\ the\ vertical\ error\ bands}}
+\DoxyCodeLine{00252\ \ \ std::vector<std::string>\ vertNames\ =\ h\_flux\_dewidthed-\/>GetVertErrorBandNames();}
+\DoxyCodeLine{00253\ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ k=0;\ k<vertNames.size();\ ++k\ )\{}
+\DoxyCodeLine{00254\ \ \ \ \ MnvVertErrorBand\ *errBand\ =\ h\_flux\_dewidthed-\/>GetVertErrorBand(\ vertNames[k]\ );}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keywordtype}{int}\ nuniverses\ =\ errBand-\/>GetNHists();}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keywordflow}{if}(vertNames[k]==\textcolor{stringliteral}{"{}Flux"{}})\ nuniverses\ =\ nfluxUniverses;\textcolor{comment}{//cout\ <<\ "{}Flux\ Universes\ =\ "{}\ <<\ universes\ <<\ endl;}}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{keywordflow}{if}(vertNames[k].find(\textcolor{stringliteral}{"{}\_BeamFocus"{}})!=-\/1||vertNames[k].find(\textcolor{stringliteral}{"{}ppfx1\_Total"{}})!=-\/1)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00258\ \ \ \ \ std::vector<TH2D*>\ vert\_hists;}
+\DoxyCodeLine{00259\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Working\ on\ "{}}\ <<\ vertNames[k]\ <<\ endl;}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ u=0\ ;\ u\ <\ nuniverses;\ ++u)}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ TH2D\ *h\_vert\ =\ \textcolor{keyword}{new}\ TH2D(\ (TH2D)*h2D\_flux\_ebins);}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ h\_vert-\/>SetName(\ Form(\textcolor{stringliteral}{"{}h\_vert\_\%s\_\%i"{}},\ vertNames[k].c\_str(),\ u)\ );}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \textcolor{comment}{//strategy\ is\ get\ 1D\ th1d\ and\ fill\ up\ h\_flux\_normalization}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ TH1D*\ univerrBand\ =\ \textcolor{keyword}{new}\ TH1D(*errBand-\/>GetHist(u));}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ RebinDeWidthedFluxHist(univerrBand,\ h\_rebinned\_flux);}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;i<nxbins+1;i++)\{}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=0;j<nybins+1;j++)\{}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ h\_vert-\/>SetBinContent(i,j,h\_rebinned\_flux-\/>GetBinContent(i));}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ vert\_hists.push\_back(\ h\_vert\ );}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00274\ \ \ \ \ h2D\_flux\_ebins-\/>AddVertErrorBand(\ vertNames[k],\ vert\_hists\ );}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{comment}{//cleaning}}
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keywordflow}{for}(std::vector<TH2D*>::iterator\ itHist\ =\ vert\_hists.begin();\ itHist\ !=\ vert\_hists.end();\ ++itHist)}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \textcolor{keyword}{delete}\ *itHist;}
+\DoxyCodeLine{00278\ \ \ \}}
+\DoxyCodeLine{00279\ \ \ \textcolor{keywordflow}{return}\ h2D\_flux\_ebins;}
+\DoxyCodeLine{00280\ \}}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ MnvH2D*\ GetFluxEbins(\textcolor{keyword}{const}\ MnvH1D*\ h\_flux,\ \textcolor{keyword}{const}\ MnvH2D*\ ihist\ ,\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ config,\ std::map<std::string,\ bool>\ FluxEnormBool)\{}
+\DoxyCodeLine{00283\ \ \ \ \ std::map<const\ std::string,\ NuConfig*>\ allconfigs;}
+\DoxyCodeLine{00284\ \ \ \ \ allconfigs[\textcolor{stringliteral}{"{}main"{}}\ ]=\textcolor{keyword}{new}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}(config);}
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{keywordflow}{return}\ GetFluxEbins(\ h\_flux,\ ihist\ ,\ allconfigs,\ \ FluxEnormBool);}
+\DoxyCodeLine{00286\ \}}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \textcolor{comment}{//\ implementation\ of\ GetFlux\ for\ a\ special\ histogram}}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \textcolor{comment}{//\ backwards\ compatibility}}
+\DoxyCodeLine{00292\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ MnvHistoType>}
+\DoxyCodeLine{00293\ \ \ MnvHistoType*\ GetFluxFlat(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ config,\ \ MnvHistoType*\ h)\{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ CONFIGMAP\ allconfigs;}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ allconfigs[\textcolor{stringliteral}{"{}main"{}}]\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}(config);}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ GetFluxFlat(allconfigs,h);}
+\DoxyCodeLine{00297\ \ \ \}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ MnvHistoType>}
+\DoxyCodeLine{00300\ \ \ MnvHistoType*\ GetFluxFlat(\textcolor{keyword}{const}\ CONFIGMAP\ configs,\ \ MnvHistoType*\ h)\{}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \ \ \ \ std::string\ playlist\ =\ configs.at(\textcolor{stringliteral}{"{}main"{}})-\/>GetString(\textcolor{stringliteral}{"{}playlist"{}});}
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_fluxUniverses\ =\ configs.at(\textcolor{stringliteral}{"{}main"{}})-\/>GetInt(\textcolor{stringliteral}{"{}fluxUniverses"{}});}
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_nue\_constraint\ =\ configs.at(\textcolor{stringliteral}{"{}main"{}})-\/>GetInt(\textcolor{stringliteral}{"{}NuEConstraint"{}});}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keywordtype}{int}\ pdg\ =\ configs.at(\textcolor{stringliteral}{"{}main"{}})-\/>GetInt(\textcolor{stringliteral}{"{}pdg"{}});}
+\DoxyCodeLine{00306\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}pdg\ for\ flux\ is\ "{}}\ <<\ pdg\ <<\ std::endl;}
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{comment}{//++++++++++++++++++=\ \ Initialization\ +++++++++++++++++++++++++}}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ flux\ hist,\ clean\ it\ up\ a\ bit,\ remove\ binwidth\ correction\ that\ should\ not\ be\ there\ and\ return}}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{comment}{//\ someone\ thought\ an\ enum\ was\ a\ good\ idea.\ \ It\ was\ not.}}
+\DoxyCodeLine{00312\ \ \ \ \ std::map<std::string,\ enum\ FluxReweighter::EPlaylist>\ fluxplaylist;}
+\DoxyCodeLine{00313\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1A"{}}]\ =\ FluxReweighter::minervame1A;}
+\DoxyCodeLine{00314\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1B"{}}]\ =\ FluxReweighter::minervame1B;}
+\DoxyCodeLine{00315\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1C"{}}]\ =\ FluxReweighter::minervame1C;}
+\DoxyCodeLine{00316\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1D"{}}]\ =\ FluxReweighter::minervame1D;}
+\DoxyCodeLine{00317\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1E"{}}]\ =\ FluxReweighter::minervame1E;}
+\DoxyCodeLine{00318\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1F"{}}]\ =\ FluxReweighter::minervame1F;}
+\DoxyCodeLine{00319\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1G"{}}]\ =\ FluxReweighter::minervame1G;}
+\DoxyCodeLine{00320\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1H"{}}]\ =\ FluxReweighter::minervame1G;}
+\DoxyCodeLine{00321\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1I"{}}]\ =\ FluxReweighter::minervame1G;}
+\DoxyCodeLine{00322\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1J"{}}]\ =\ FluxReweighter::minervame1G;}
+\DoxyCodeLine{00323\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1K"{}}]\ =\ FluxReweighter::minervame1G;}
+\DoxyCodeLine{00324\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1L"{}}]\ =\ FluxReweighter::minervame1G;}
+\DoxyCodeLine{00325\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1M"{}}]\ =\ FluxReweighter::minervame1M;}
+\DoxyCodeLine{00326\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1N"{}}]\ =\ FluxReweighter::minervame1N;}
+\DoxyCodeLine{00327\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1O"{}}]\ =\ FluxReweighter::minervame1N;}
+\DoxyCodeLine{00328\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame1P"{}}]\ =\ FluxReweighter::minervame1N;}
+\DoxyCodeLine{00329\ \textcolor{comment}{//anti-\/nu}}
+\DoxyCodeLine{00330\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame5A"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00331\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6A"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00332\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6B"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00333\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6C"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00334\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6D"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00335\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6E"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00336\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6F"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00337\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6G"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00338\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6H"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00339\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6I"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00340\ \ \ \ \ fluxplaylist[\textcolor{stringliteral}{"{}minervame6J"{}}]\ =\ FluxReweighter::minervame6A;}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{keywordflow}{if}(\ fluxplaylist.find(playlist)\ ==\ fluxplaylist.end()\ )\{}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ playlist\ "{}}\ <<\ playlist\ <<\ \textcolor{stringliteral}{"{}\ not\ yet\ implemented\ in\ RebinFlux.h\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ exit(0);}
+\DoxyCodeLine{00345\ \ \ \ \ \}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \ \ \ \ FluxReweighter\ *frw\ =\ \textcolor{keyword}{new}\ PlotUtils::FluxReweighter(pdg,m\_nue\_constraint,fluxplaylist[playlist],FluxReweighter::gen2thin,\ FluxReweighter::g4numiv6,m\_fluxUniverses);}
+\DoxyCodeLine{00349\ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_muon\_correlations\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00350\ \ \ \ \ MnvHistoType\ *h\_flux\ =\ frw-\/>GetIntegratedFluxReweighted<MnvHistoType>(pdg,h,0.,120.,\ use\_muon\_correlations);}
+\DoxyCodeLine{00351\ \ \ \ \ h\_flux-\/>SetDirectory(0);}
+\DoxyCodeLine{00352\ \ \ \ \ \textcolor{comment}{//\ clean\ up\ the\ external\ flux\ by\ removing\ error\ bands\ we\ won't\ use\ in\ this\ analysis}}
+\DoxyCodeLine{00353\ \ \ \ \ h\_flux-\/>PopVertErrorBand(\textcolor{stringliteral}{"{}Flux\_BeamFocus"{}});}
+\DoxyCodeLine{00354\ \ \ \ \ h\_flux-\/>PopVertErrorBand(\textcolor{stringliteral}{"{}ppfx1\_Total"{}});}
+\DoxyCodeLine{00355\ \ \ \ \ TruncateNumberOfFluxUniverses(h\_flux,m\_fluxUniverses);}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{comment}{//\ \ flux\ hist\ is\ stored\ with\ binwidth\ correction,\ need\ to\ undo\ that\ to\ get\ the\ integral\ and\ use\ for\ sigma(E)}}
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00360\ \ \ \ \ h\_flux-\/>Scale(1./10000.);\ \textcolor{comment}{//convert\ from\ m\string^2\ to\ cm\string^2}}
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{keywordflow}{return}\ h\_flux;}
+\DoxyCodeLine{00362\ \ \ \}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \textcolor{keyword}{template}\ MnvH1D*\ GetFluxFlat<MnvH1D>(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ config,\ MnvH1D*\ h);}
+\DoxyCodeLine{00365\ \textcolor{keyword}{template}\ MnvH2D*\ GetFluxFlat<MnvH2D>(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ config,\ MnvH2D*\ h);}
+\DoxyCodeLine{00366\ \textcolor{keyword}{template}\ MnvH1D*\ GetFluxFlat<MnvH1D>(\textcolor{keyword}{const}\ CONFIGMAP\ configs,\ MnvH1D*\ h);}
+\DoxyCodeLine{00367\ \textcolor{keyword}{template}\ MnvH2D*\ GetFluxFlat<MnvH2D>(\textcolor{keyword}{const}\ CONFIGMAP\ configs,\ MnvH2D*\ h);}
+\DoxyCodeLine{00368\ \textcolor{comment}{//template\ MnvH1D*\ GetFluxFlat<MnvH1D>(const\ NuConfig*\ pconfig,\ MnvH1D*\ h);}}
+\DoxyCodeLine{00369\ \textcolor{comment}{//template\ MnvH2D*\ GetFluxFlat<MnvH2D>(const\ NuConfig*\ pconfig,\ MnvH2D*\ h);}}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

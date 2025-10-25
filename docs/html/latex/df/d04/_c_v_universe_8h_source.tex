@@ -1,0 +1,507 @@
+\doxysection{CVUniverse.\+h}
+\hypertarget{_c_v_universe_8h_source}{}\label{_c_v_universe_8h_source}\index{make\_hists/include/CVUniverse.h@{make\_hists/include/CVUniverse.h}}
+\mbox{\hyperlink{_c_v_universe_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#ifndef\ CVUNIVERSE\_H}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ CVUNIVERSE\_H}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/CaloCorrection.h"{}}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/ChainWrapper.h"{}}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/GeantHadronSystematics.h"{}}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MinervaUniverse.h"{}}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/PhysicsVariables.h"{}}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ "{}TVector3.h"{}}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ "{}utils/NuConfig.h"{}}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{class\ }CVUniverse\ :\ \textcolor{keyword}{public}\ PlotUtils::MinervaUniverse\ \{}
+\DoxyCodeLine{00042\ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ default\ values}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ m\_analysis\_neutrino\_pdg;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ m\_min\_blob\_zvtx;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ m\_photon\_energy\_cut;}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ m\_proton\_ke\_cut;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ m\_proton\_score\_config;}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{static}\ std::vector<double>\ m\_proton\_score\_Q2QEs;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{static}\ std::vector<double>\ m\_proton\_score\_mins;}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ mainConfig;}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ hasrecoildefinitions;}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ recoilDefinition;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//\ initially\ set\ to\ false}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \_is\_analysis\_neutrino\_pdg\_set;}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \_is\_min\_blob\_zvtx\_set;}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \_is\_photon\_energy\_cut\_set;}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \_is\_proton\_ke\_cut\_set;}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \_is\_proton\_score\_config\_set;}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00064\ \ \ \ }
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ \#ifndef\ HAZMAT}}
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ \#include\ "{}PlotUtils/SystCalcs/MuonFunctions.h"{}}}
+\DoxyCodeLine{00067\ \textcolor{comment}{//\ \#include\ "{}PlotUtils/SystCalcs/RecoilEnergyFunctions.h"{}}}
+\DoxyCodeLine{00068\ \textcolor{comment}{//\ \#include\ "{}PlotUtils/SystCalcs/TruthFunctions.h"{}}}
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ \#include\ "{}PlotUtils/SystCalcs/WeightFunctions.h"{}}}
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ \#else}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/MuonFunctions.h"{}}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/RecoilEnergyFunctions.h"{}}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/TruthFunctions.h"{}}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/WeightFunctions.h"{}}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ \#endif}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ ========================================================================}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{//\ Constructor/Destructor}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{//\ ========================================================================}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{//\ fake\ a\ default\ constructor}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ CVUniverse()\ \{\ PlotUtils::MinervaUniverse();\ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ CVUniverse(PlotUtils::ChainWrapper*\ chw,\ \textcolor{keywordtype}{double}\ nsigma\ =\ 0)}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ :\ PlotUtils::MinervaUniverse(chw,\ nsigma)\ \{\}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~CVUniverse()\ \{\}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{//\ ========================================================================}}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{//\ Get}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ ========================================================================}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{static}\ std::map<std::string,\ int>\ GetEventParticleCounts();}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ ========================================================================}}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{comment}{//\ Get\ Weight}}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{comment}{//\ ========================================================================}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetWeight()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{//\ ========================================================================}}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{//\ Write\ a\ "{}Get"{}\ function\ for\ all\ quantities\ access\ by\ your\ analysis.}}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{comment}{//\ For\ composite\ quantities\ (e.g.\ Enu)\ use\ a\ calculator\ function.}}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{comment}{//\ Currently\ PlotUtils::MinervaUniverse\ may\ already\ define\ some\ functions}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ that\ you\ want.\ The\ future\ of\ these\ functions\ is\ uncertain.\ You\ might\ want}}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ to\ write\ all\ your\ own\ functions\ for\ now.}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{//\ ========================================================================}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetEventID()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetMultiplicity()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetDeadTime()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ FastFilter()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ TrueFastFilter()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Cut-\/configuring\ Functions\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ GetAnalysisNeutrinoPDG();}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ SetAnalysisNeutrinoPDG(\textcolor{keywordtype}{int}\ neutrino\_pdg,\ \textcolor{keywordtype}{bool}\ print);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ GetMinBlobZVtx();}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ SetMinBlobZVtx(\textcolor{keywordtype}{double}\ min\_zvtx,\ \textcolor{keywordtype}{bool}\ print);}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ GetPhotonEnergyCut();}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ SetPhotonEnergyCut(\textcolor{keywordtype}{double}\ energy,\ \textcolor{keywordtype}{bool}\ print);}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ GetProtonKECut();}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ SetProtonKECut(\textcolor{keywordtype}{double}\ proton\_KECut,\ \textcolor{keywordtype}{bool}\ print);}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ GetProtonScoreConfig(\textcolor{keywordtype}{bool}\ print);}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ SetProtonScoreConfig(\mbox{\hyperlink{class_nu_config}{NuConfig}}\ protonScoreConfig,\ \textcolor{keywordtype}{bool}\ print);}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SetMainConfig(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ config);}
+\DoxyCodeLine{00137\ \ \ \ \ }
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Analysis-\/related\ Variables\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{comment}{//\ these\ are\ dummies\ for\ when\ you\ want\ to\ plot\ something\ that\ is\ missing\ truth\ or\ data}}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetNothing()\textcolor{keyword}{const}\{\textcolor{keywordflow}{return}\ 0.0;\};}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueNothing()\textcolor{keyword}{const\ }\{\textcolor{keywordflow}{return}\ 0.0;\};}
+\DoxyCodeLine{00142\ \ \ \ \ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetIsMinosMatchTrack()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetEnuHadGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueEnuGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetEnuCCQEGeV()\ \textcolor{keyword}{const};\ \ \ \ \ \ \textcolor{comment}{//\ both\ neutrino\ and\ antinu}}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueEnuCCQEGeV()\ \textcolor{keyword}{const};\ \ \textcolor{comment}{//\ may\ be\ a\ better\ way\ to\ implement\ this}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueEnuDiffGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueEnuRatio()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetRecoTrueEnuRatio()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetQ2QEGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueQ2QEGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetQ0QEGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueQ0QEGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetLog10Q2QEGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueLog10Q2QEGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Muon\ Variables\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetEmuGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueEmuGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPmuGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTruePmuGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPparMuGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTruePparMuGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPperpMuGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTruePperpMuGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueThetaXmu()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueThetaYmu()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueThetamu()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetThetamuDegrees()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueThetamuDegrees()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetThetaXmuDegrees()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueThetaXmuDegrees()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetThetaYmuDegrees()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueThetaYmuDegrees()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ Null()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ 0.0;\ \};}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{comment}{//\ remove\ as\ creates\ dependency\ on\ MAT}}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{comment}{//\ virtual\ bool\ isMC()\ const;}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{comment}{//\ virtual\ bool\ isValid(const\ std::string\ \&\ a\ )\ const;}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Hadron\ Variables\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetHadronEGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Recoil\ Variables\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{comment}{//virtual\ double\ GetRecoilEnergy()\ const;}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{comment}{//\ //\ dummy\ to\ try\ to\ avoid\ redefinition\ errors\ in\ }}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{comment}{//\ inline\ virtual\ double\ ApplyCaloTuning(const\ double\ energy)\ const\ \{}}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ return\ energy;}}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{comment}{//\ \}\ ;}}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ ApplyCaloTuning(\textcolor{keywordtype}{double}\ calRecoilE)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00212\ \ \ \ \ }
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCalRecoilEnergy()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCalRecoilEnergyGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCalRecoilEnergyGeVCalibrated()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetNonCalRecoilEnergy()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetNonCalRecoilEnergyGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetRecoilEnergyGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueRecoilEnergyGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetLog10RecoilEnergyGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueLog10RecoilEnergyGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueQ0GeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueQ3GeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueQ2GeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Other\ Variables\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{comment}{//\ \ virtual\ double\ GetWgenie()\ const\ \{\ return\ GetDouble("{}mc\_w"{});\ \}}}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetIntType()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetMCIntType()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthNuPDG()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetCurrent()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTpiGeV(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ hadron)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Quantities\ only\ needed\ for\ cuts\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{comment}{//\ Although\ unlikely,\ in\ principle\ these\ quanties\ could\ be\ shifted\ by\ a}}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{comment}{//\ systematic.\ And\ when\ they\ are,\ they'll\ only\ be\ shifted\ correctly\ if\ we}}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{comment}{//\ write\ these\ accessor\ functions.}}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ IsMinosMatchMuon()\ \textcolor{keyword}{const};\ \ \textcolor{comment}{//\ This\ isn't\ even\ used\ anymore,\ there's\ something\ else.\ This\ is\ left\ over\ from\ Amit's\ analysis}}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNuHelicity()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCurvature()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueCurvature()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTDead()\ \textcolor{keyword}{const};\ \ \textcolor{comment}{//\ Dead\ electronics,\ a\ rock\ muon\ removal\ technique.\ Amit's\ analysis\ doesn't}}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{comment}{//\ have\ that\ cut\ most\ likely.\ Not\ even\ in\ that\ tuple,\ only\ reason\ it\ survives\ is\ bc\ it's\ not\ called\ anymore.}}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{comment}{//\ Can't\ find\ it?\ Just\ a\ hard\ coded\ constant\ in\ CCQENuCutsNSF.h}}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{comment}{//\ These\ cuts\ are\ already\ made\ in\ the\ CCQENu\ AnaTuple,\ may\ be\ unnecessary}}
+\DoxyCodeLine{00257\ \ \ \ \ ROOT::Math::XYZTVector\ GetVertex()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{comment}{//\ 1-\/d\ apothems\ for\ cuts}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keywordtype}{double}\ GetApothemY()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keywordtype}{double}\ GetApothemX()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \ \ \ \ \textcolor{keywordtype}{double}\ GetTrueApothemY()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00265\ \ \ \ \ \textcolor{keywordtype}{double}\ GetTrueApothemX()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keywordtype}{double}\ GetZVertex()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00268\ \ \ \ \ ROOT::Math::XYZTVector\ GetTrueVertex()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keywordtype}{double}\ GetTrueZVertex()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{comment}{//\ Some\ stuff\ Heidi\ added\ to\ test\ out\ some\ issues\ with\ the\ NTuples}}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetRun()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetSubRun()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetGate()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueRun()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueSubRun()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueGate()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ put\ cut\ functions\ here\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetGoodRecoil()\ \textcolor{keyword}{const};\ \ \textcolor{comment}{//\ implement\ Cheryl's\ cut}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthIsCC()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{comment}{//\ helper\ function}}
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{keywordtype}{bool}\ passTrueCCQELike(\textcolor{keywordtype}{bool}\ neutrinoMode,\ std::vector<int>\ mc\_FSPartPDG,\ std::vector<double>\ mc\_FSPartE,\ \textcolor{keywordtype}{int}\ mc\_nFSPart,\ \textcolor{keywordtype}{double}\ proton\_KECut)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthIsCCQELike()\ \textcolor{keyword}{const};\ \ \textcolor{comment}{//\ cut\ hardwired\ for\ now}}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{comment}{//\ all\ CCQElike\ without\ proton\ cut\ enabled}}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthIsCCQELikeAll()\ \textcolor{keyword}{const};\ \ \textcolor{comment}{//\ cut\ hardwired\ for\ now}}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthIsQELike()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Sean\ Neutrino\ Functions\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{comment}{//\ Interaction\ Vertex}}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetHasInteractionVertex()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{comment}{//\ Isolated\ Blobs}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNBlobs()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{comment}{//\ Michel\ Electrons}}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNMichel()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<int>\ GetMichelVertexType()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetImprovedNMichel()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00312\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<int>\ GetImprovedMichelMatch()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetFittedNMichel()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<int>\ GetFittedMichelFitPass()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00315\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetHasMichelElectron()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetHasImprovedMichelElectron()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueFittedNMichel()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00318\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthHasMichel()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthHasImprovedMichel()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{comment}{//\ Both}}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetHasMichelOrNBlobs()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{comment}{//\ Charged\ and\ Neutral\ Pions}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthCCQELikeExceptForChargedPions()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthHasSingleChargedPion()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthHasSingleNeutralPion()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthHasMultiPion()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00331\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPionScore()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPionScore1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00333\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPionScore2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \ \ \ \textcolor{comment}{//\ Proton\ Score,\ Primary\ and\ Secondary\ Proton\ Tracks}}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNumberOfProtonCandidates()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore1(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore\_0()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00345\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore\_7()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00349\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore\_8()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonScore\_9()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassProtonScoreCut(\textcolor{keywordtype}{double}\ score,\ \textcolor{keywordtype}{double}\ tree\_Q2)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00353\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassScoreCutProton\_0()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassScoreCutProton\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassScoreCutProton\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassScoreCutProton\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassScoreCutProton\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassScoreCutProton\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassScoreCutProton\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassScoreCutProton\_7()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassScoreCutProton\_8()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassScoreCutProton\_9()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetSecondaryProtonCandidateCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetSecondaryProtonCandidateCount1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonScore()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonScore1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonScore2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetAreClustsFoundAtPrimaryProtonEnd()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNumClustsProtonEnd(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNumClustsPrimaryProtonEnd()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNumClustsSecProtonEnd\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNumClustsSecProtonEnd\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNumClustsSecProtonEnd\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00378\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNumClustsSecProtonEnd\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNumClustsSecProtonEnd\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetNumClustsSecProtonEnd\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonTrackLength()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00383\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonTrackEndX()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00384\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonTrackEndY()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00385\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonTrackEndZ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonAngle(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonAngle()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00389\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonAngle\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonAngle\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonAngle\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonAngle\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00393\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonAngle\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonAngle\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00395\ }
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonTrackVtxGap(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00397\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonTrackVtxGap()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrackVtxGap\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrackVtxGap\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrackVtxGap\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrackVtxGap\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrackVtxGap\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrackVtxGap\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCalibEClustsProtonEnd(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCalibEClustsPrimaryProtonEnd()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCalibEClustsSecProtonEnd\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCalibEClustsSecProtonEnd\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCalibEClustsSecProtonEnd\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCalibEClustsSecProtonEnd\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCalibEClustsSecProtonEnd\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00412\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetCalibEClustsSecProtonEnd\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetVisEClustsProtonEnd(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00415\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetVisEClustsPrimaryProtonEnd()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00416\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetVisEClustsSecProtonEnd\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00417\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetVisEClustsSecProtonEnd\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00418\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetVisEClustsSecProtonEnd\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetVisEClustsSecProtonEnd\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00420\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetVisEClustsSecProtonEnd\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00421\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetVisEClustsSecProtonEnd\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonTfromdEdx()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00424\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTfromdEdx(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00425\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTfromdEdx\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00426\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTfromdEdx\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTfromdEdx\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTfromdEdx\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTfromdEdx\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00430\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTfromdEdx\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTotalProtonEnergy(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTotalPrimaryProtonEnergy()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTotalSecProtonEnergy\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTotalSecProtonEnergy\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTotalSecProtonEnergy\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTotalSecProtonEnergy\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00438\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTotalSecProtonEnergy\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00439\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTotalSecProtonEnergy\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonFractionEnergyInCone(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00442\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonFractionEnergyInCone()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00443\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonFractionEnergyInCone\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00444\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonFractionEnergyInCone\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00445\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonFractionEnergyInCone\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00446\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonFractionEnergyInCone\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonFractionEnergyInCone\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00448\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonFractionEnergyInCone\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetMaxProtonTrueKE()\ \textcolor{keyword}{const};\ \ \ \ \textcolor{comment}{//\ this\ does\ not\ require\ prong}}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetProtonTrueKE(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};\ \ \textcolor{comment}{//\ index\ i\ is\ prong}}
+\DoxyCodeLine{00452\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetPrimaryProtonTrueKE()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00453\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrueKE\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrueKE\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00455\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrueKE\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00456\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrueKE\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00457\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrueKE\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00458\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetSecProtonTrueKE\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetProtonCandidatePDG(\textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPrimaryProtonCandidatePDG()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00462\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetSecProtonCandidatePDG\_1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetSecProtonCandidatePDG\_2()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00464\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetSecProtonCandidatePDG\_3()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetSecProtonCandidatePDG\_4()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00466\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetSecProtonCandidatePDG\_5()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00467\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetSecProtonCandidatePDG\_6()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00468\ }
+\DoxyCodeLine{00469\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetEnergyDiffTruedEdx()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00471\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetRecoTruthIsPrimaryProton()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00472\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetRecoTruthIsPrimaryPion()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00473\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetRecoTruthIsPrimaryOther()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetIsPrimaryProton()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00476\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetIsPrimaryProton1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00477\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruthHasSingleProton()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetPassAllProtonScoreCuts(std::vector<double>\ scores,\ \textcolor{keywordtype}{double}\ tree\_Q2)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00480\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetAllExtraTracksProtons()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00481\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetAllExtraTracksProtons1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00482\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetProtonCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00483\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetProtonCount1()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{comment}{//\ GENIE\ Particle\ Counts}}
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueNumberOfFSParticles()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00488\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueChargedPionCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00489\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueNeutralPionCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00490\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTruePionCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00491\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueProtonCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00492\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueLightMesonCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00493\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueCharmedMesonCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00494\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueStrangeMesonCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00495\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueCharmedBaryonCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00496\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueStrangeBaryonCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueNeutronCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00498\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueNegMuonCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00499\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetTrueGammaCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ \ \ \ \ \textcolor{keyword}{virtual}\ std::map<int,\ int>\ GetTrueFSCountsPerPDG()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00503\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00504\ }
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetEventRecordTrueEtaCount()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00506\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetMCTargetA()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetMCTargetZ()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ GetMCTargetNucleon()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00509\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{int}\ Dummy()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \ \ \ \ \textcolor{comment}{//\ Arachne}}
+\DoxyCodeLine{00512\ }
+\DoxyCodeLine{00513\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ PrintTrueArachneLink()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00514\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ PrintDataArachneLink()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00515\ \ \ \ \ \textcolor{keyword}{virtual}\ std::string\ StringTrueArachneLink()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00516\ \ \ \ \ \textcolor{keyword}{virtual}\ std::string\ StringDataArachneLink()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00520\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Print()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00521\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueEAvailWithNeutronsGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00522\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ GetTrueEAvailGeV()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00523\ \};}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

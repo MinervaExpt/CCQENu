@@ -115,8 +115,10 @@ for cat in categories:
 for cat in categories:
      hists[cat].Scale(datanorm/mcnorm)
 
-print (hists)
-
+#print (hists)
+out = TFile.Open("Output.root","RECREATE")
+for hist in hists:
+    hists[hist].Write()
 #sys.exit(0)
 order = 1
 npars = len(categories)
@@ -178,12 +180,18 @@ total = func2.GetTotalHist("AfterFit","result of fit")
 hists["data"].Print()
 total.Print("")
 residuals = func2.GetResiduals()
+
+stattest = TH1D("stattest","Residuals from fit",30,-3.,3.)
+for x in range(nxbins):
+    for y in range(nybins):
+         
+         stattest.Fill(residuals[x][y])
 print ("residuals\n",residuals)
 print ("residuals2\n",residuals*residuals)
 print ("chi2test",np.sum(residuals*residuals))
 residualhist = func2.GetResidualsHist("residuals","residuals")
-out = TFile.Open("Output.root","RECREATE")
-hists["data"].Write()
+stattest.Write()
+#hists["data"].Write()
 total.Write()
 residualhist.Write()
 out.Close()

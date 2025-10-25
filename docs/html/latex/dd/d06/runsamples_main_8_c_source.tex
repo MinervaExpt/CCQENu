@@ -1,0 +1,516 @@
+\doxysection{runsamples\+Main.\+C}
+\hypertarget{runsamples_main_8_c_source}{}\label{runsamples_main_8_c_source}\index{make\_hists/runsamplesMain.C@{make\_hists/runsamplesMain.C}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keywordtype}{int}\ main(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ argc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *argv[]\ )\ \{}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \ \ gROOT-\/>ProcessLine(\textcolor{stringliteral}{"{}gErrorIgnoreLevel\ =\ kWarning;"{}});}
+\DoxyCodeLine{00008\ \ \ \textcolor{comment}{//++++++++++++++++++=\ \ Initialization\ +++++++++++++++++++++++++}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ }
+\DoxyCodeLine{00012\ \ \ std::string\ pl\ =\ \textcolor{stringliteral}{"{}5A"{}};}
+\DoxyCodeLine{00013\ \ \ \textcolor{keywordflow}{if}\ (argc\ >\ 1)\{}
+\DoxyCodeLine{00014\ \ \ \ \ pl\ =\ std::string(argv[1]);}
+\DoxyCodeLine{00015\ \ \ \}}
+\DoxyCodeLine{00016\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00017\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ arguments\ are:\(\backslash\)n\ loop\ <config>\ [<prescale\ from\ config\ file>]\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00018\ \ \ \ \ exit(0);}
+\DoxyCodeLine{00019\ \ \ \}}
+\DoxyCodeLine{00020\ \ \ std::string\ configfilename(pl+\textcolor{stringliteral}{"{}.json"{}});}
+\DoxyCodeLine{00021\ \ \ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ config;}
+\DoxyCodeLine{00022\ \ \ config.Read(configfilename);}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \textcolor{keywordflow}{if}\ (argc\ >\ 2)\{}
+\DoxyCodeLine{00025\ \ \ \ \ prescale\ =\ std::stoi(argv[2]);}
+\DoxyCodeLine{00026\ \ \ \}}
+\DoxyCodeLine{00027\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00028\ \ \ \ \ prescale\ =\ config.GetDouble(\textcolor{stringliteral}{"{}prescale"{}});}
+\DoxyCodeLine{00029\ \ \ \}}
+\DoxyCodeLine{00030\ \ \ std::string\ dir\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00031\ \ \ \textcolor{keywordflow}{if}\ (argc\ >\ 3)\ dir\ =\ std::string(argv[3]);}
+\DoxyCodeLine{00032\ \ \ \textcolor{comment}{//bool\ LOCAL\ =\ config.GetBool("{}local"{});}}
+\DoxyCodeLine{00033\ \ \ \textcolor{comment}{//double\ kecut\ =\ config.GetDouble("{}protonKECutMeV"{});}}
+\DoxyCodeLine{00034\ \ \ \textcolor{keywordtype}{int}\ pdg\ =\ config.GetInt(\textcolor{stringliteral}{"{}pdg"{}});}
+\DoxyCodeLine{00035\ \ \ \textcolor{keywordtype}{bool}\ neutrinomode\ =\ (pdg>0);}
+\DoxyCodeLine{00036\ \ \ \textcolor{keywordtype}{int}\ version\ =\ 1;}
+\DoxyCodeLine{00037\ \ \ \textcolor{keywordflow}{if}\ (config.IsMember(\textcolor{stringliteral}{"{}version"{}}))\{}
+\DoxyCodeLine{00038\ \ \ \ \ version\ =\ config.GetInt(\textcolor{stringliteral}{"{}version"{}});}
+\DoxyCodeLine{00039\ \ \ \}}
+\DoxyCodeLine{00040\ \ \ }
+\DoxyCodeLine{00041\ \ \ \textcolor{keywordtype}{bool}\ closure\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00042\ \ \ \textcolor{keywordflow}{if}\ (config.IsMember(\textcolor{stringliteral}{"{}closure"{}}))\{}
+\DoxyCodeLine{00043\ \ \ \ \ closure\ =\ config.GetBool(\textcolor{stringliteral}{"{}closure"{}});}
+\DoxyCodeLine{00044\ \ \ \}}
+\DoxyCodeLine{00045\ \ \ }
+\DoxyCodeLine{00046\ \ \ std::string\ tunedmc\ =\ \textcolor{stringliteral}{"{}untuned"{}};\ \textcolor{comment}{//\ can\ be\ set\ to\ "{}both"{},\ "{}tuned"{},\ or\ "{}untuned"{}}}
+\DoxyCodeLine{00047\ \ \ \textcolor{keywordflow}{if}(config.IsMember(\textcolor{stringliteral}{"{}tunedmc"{}}))}
+\DoxyCodeLine{00048\ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ tunedmc\ =\ config.GetString(\textcolor{stringliteral}{"{}tunedmc"{}});}
+\DoxyCodeLine{00050\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}runsamplesMain:\ \(\backslash\)'tunedmc\(\backslash\)'\ configured\ in\ main\ config\ and\ set\ to\ "{}}\ <<\ tunedmc\ <<\ std::endl;}
+\DoxyCodeLine{00051\ \ \ \}}
+\DoxyCodeLine{00052\ \ \ \textcolor{keywordflow}{if}\ (config.IsMember(\textcolor{stringliteral}{"{}scalefileIn"{}}))\ \{\ \textcolor{comment}{//\ check\ if\ you\ have\ a\ scalefile\ specified}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordflow}{if}\ (config.GetString(\textcolor{stringliteral}{"{}scalefileIn"{}})\ ==\ \textcolor{stringliteral}{"{}"{}})\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ tunedmc\ =\ \textcolor{stringliteral}{"{}untuned"{}};}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}runsamplesMain:\ WARNING:\ no\ \(\backslash\)'scalefileIn\(\backslash\)'\ specficied.\ Defaulting\ \(\backslash\)'tunedmc\(\backslash\)'\ to\ \(\backslash\)'untuned\(\backslash\)'."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ tunedmc\ =\ \textcolor{stringliteral}{"{}untuned"{}};}
+\DoxyCodeLine{00059\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}runsamplesMain:\ WARNING:\ \(\backslash\)'scalefileIn\(\backslash\)'\ not\ found\ in\ main\ config.\ Defaulting\ \(\backslash\)'tunedmc\(\backslash\)'\ to\ \(\backslash\)'untuned\(\backslash\)'."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00060\ \ \ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \textcolor{comment}{//\ Deprecated\ but\ should\ be\ backwards\ compatible}}
+\DoxyCodeLine{00063\ \ \ \textcolor{keywordtype}{bool}\ useTuned;}
+\DoxyCodeLine{00064\ \ \ \textcolor{keywordflow}{if}(config.IsMember(\textcolor{stringliteral}{"{}useTuned"{}}))\{}
+\DoxyCodeLine{00065\ \ \ \ \ useTuned\ =\ config.GetBool(\textcolor{stringliteral}{"{}useTuned"{}});}
+\DoxyCodeLine{00066\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}runsamplesMain:\ WARNING:\ useTuned\ deprecated.\ Use\ tunedmc\ instead.\ Setting\ tunedmc\ accordingly"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00067\ \ \ \ \ useTuned\ ==\ \textcolor{keyword}{false}\ ?\ tunedmc\ =\ \textcolor{stringliteral}{"{}untuned"{}}\ :\ tunedmc\ =\ \textcolor{stringliteral}{"{}both"{}};}
+\DoxyCodeLine{00068\ \ \ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \textcolor{keywordtype}{bool}\ doresolution\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00071\ \ \ \textcolor{keywordflow}{if}\ (config.IsMember(\textcolor{stringliteral}{"{}DoResolution"{}}))\{}
+\DoxyCodeLine{00072\ \ \ \ \ doresolution\ =\ config.GetBool(\textcolor{stringliteral}{"{}DoResolution"{}});}
+\DoxyCodeLine{00073\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ ask\ for\ resolutions"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00074\ \ \ \}}
+\DoxyCodeLine{00075\ \ \ \textcolor{comment}{//\ setup\ to\ pass\ recoil\ definitions\ to\ cvuniverse}}
+\DoxyCodeLine{00076\ \ \ }
+\DoxyCodeLine{00077\ \ \ \textcolor{comment}{//=========================================S}}
+\DoxyCodeLine{00078\ \ \ \textcolor{comment}{//\ MacroUtil\ (makes\ your\ anatuple\ chains)}}
+\DoxyCodeLine{00079\ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \textcolor{keyword}{const}\ std::string\ mc\_file\_list(config.GetString(\textcolor{stringliteral}{"{}mcIn"{}}));}
+\DoxyCodeLine{00082\ \ \ std::string\ data\_file\_list;}
+\DoxyCodeLine{00083\ \ \ \textcolor{keywordflow}{if}\ (!closure)\{}
+\DoxyCodeLine{00084\ \ \ \ \ data\_file\_list\ =\ config.GetString(\textcolor{stringliteral}{"{}dataIn"{}});}
+\DoxyCodeLine{00085\ \ \ \}}
+\DoxyCodeLine{00086\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00087\ \ \ \ \ data\_file\_list\ =\ mc\_file\_list;}
+\DoxyCodeLine{00088\ \ \ \}}
+\DoxyCodeLine{00089\ \ \ }
+\DoxyCodeLine{00090\ \ \ }
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \textcolor{keyword}{const}\ std::string\ plist\_string(config.GetString(\textcolor{stringliteral}{"{}playlist"{}}));}
+\DoxyCodeLine{00093\ \ \ \textcolor{keyword}{const}\ std::string\ reco\_tree\_name(config.GetString(\textcolor{stringliteral}{"{}recoName"{}}));}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \textcolor{keyword}{const}\ std::string\ truth\_tree\_name(\textcolor{stringliteral}{"{}Truth"{}});}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \textcolor{comment}{//const\ std::string\ background\_tag\ =\ config.GetString("{}background"{});}}
+\DoxyCodeLine{00098\ \ \ \textcolor{comment}{//const\ std::string\ signal\_tag\ =\ config.GetString("{}signal"{});}}
+\DoxyCodeLine{00099\ \ \ \textcolor{comment}{//const\ std::string\ data\_tag\ =\ config.GetString("{}data"{});}}
+\DoxyCodeLine{00100\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ do\_truth\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ PlotUtils::MacroUtil\ util(reco\_tree\_name,\ mc\_file\_list,\ data\_file\_list,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ plist\_string,\ do\_truth);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \textcolor{comment}{//Data,\ MC\ reco,\ and\ Truth\ trees}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ util.PrintMacroConfiguration(\textcolor{stringliteral}{"{}runEventLoop"{}});}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \textcolor{comment}{//\ Setup\ systematics-\/related\ constants}}
+\DoxyCodeLine{00111\ \ \ \textcolor{comment}{//\ TODO\ These\ should\ be\ handled\ by\ PU::MacroUtil}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \textcolor{comment}{//PlotUtils::MinervaUniverse::SetNonResPiReweight(config.GetInt("{}NonResPiReweight"{}));}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \textcolor{comment}{//PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune\ (config.GetInt("{}DeuteriumGeniePiTune"{}));}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \textcolor{comment}{//\ this\ is\ new\ as\ of\ \string~2024}}
+\DoxyCodeLine{00118\ \ \ PlotUtils::MinervaUniverse::RPAMaterials(\textcolor{keyword}{true});}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ PlotUtils::MinervaUniverse::SetNuEConstraint(config.GetInt(\textcolor{stringliteral}{"{}NuEConstraint"{}}));\ \ \textcolor{comment}{//\ Needs\ to\ be\ on\ to\ match\ Dan's\ ME\ 2D\ inclusive\ analysis}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ PlotUtils::MinervaUniverse::SetNFluxUniverses(config.GetInt(\textcolor{stringliteral}{"{}fluxUniverses"{}}));}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ PlotUtils::MinervaUniverse::SetPlaylist(plist\_string);}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ PlotUtils::MinervaUniverse::SetAnalysisNuPDG(pdg);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \textcolor{comment}{//\ see\ docdb\ 28556\ for\ description\ of\ these\ flags\ for\ the\ hadron\ interaction\ reweighter.}}
+\DoxyCodeLine{00129\ \ \ PlotUtils::MinervaUniverse::SetReadoutVolume(\textcolor{stringliteral}{"{}Tracker"{}});}
+\DoxyCodeLine{00130\ \ \ \textcolor{comment}{//Neutron\ CV\ reweight\ is\ on\ by\ default\ (recommended\ you\ keep\ this\ on)}}
+\DoxyCodeLine{00131\ \ \ PlotUtils::MinervaUniverse::SetMHRWeightNeutronCVReweight(\ config.GetInt(\textcolor{stringliteral}{"{}Geant4NeutronCV"{}})\ );}
+\DoxyCodeLine{00132\ \ \ \textcolor{comment}{//Elastics\ are\ on\ by\ default\ (recommended\ you\ keep\ this\ on)}}
+\DoxyCodeLine{00133\ \ \ PlotUtils::MinervaUniverse::SetMHRWeightElastics(\ config.GetInt(\textcolor{stringliteral}{"{}Geant4Elastics"{}})\ );}
+\DoxyCodeLine{00134\ \ \ PlotUtils::MinervaUniverse::SetTreeName(reco\_tree\_name);}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ }
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \textcolor{comment}{//===\ MODELS\ ===\ needs\ a\ driver}}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ std::string\ modeltune\ =\ \textcolor{stringliteral}{"{}MnvTunev1"{}};}
+\DoxyCodeLine{00140\ \ \ \textcolor{keywordflow}{if}(config.IsMember(\textcolor{stringliteral}{"{}MinervaModel"{}}))\{\ \textcolor{comment}{//TODO}}
+\DoxyCodeLine{00141\ \ \ \ \ modeltune\ =\ config.GetString(\textcolor{stringliteral}{"{}MinervaModel"{}});}
+\DoxyCodeLine{00142\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}runsamplesMain:\ MinervaModel\ configured\ in\ main\ config\ and\ set\ to\ "{}}\ <<\ modeltune\ <<\ std::endl;}
+\DoxyCodeLine{00143\ \ \ \}}
+\DoxyCodeLine{00144\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00145\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}runsamplesMain:\ MinervaModel\ NOT\ configured\ or\ set\ in\ main\ config.\ Defaulting\ to\ MnvTunev1."{}}\ <<\ std::endl;}
+\DoxyCodeLine{00146\ \ \ \ \ modeltune=\textcolor{stringliteral}{"{}MnvTunev1"{}};}
+\DoxyCodeLine{00147\ \ \ \}}
+\DoxyCodeLine{00148\ \ \ std::vector<std::unique\_ptr<PlotUtils::Reweighter<CVUniverse,PlotUtils::detail::empty>>>\ MnvTune;}
+\DoxyCodeLine{00149\ \ \ \textcolor{keywordflow}{if}(modeltune==\textcolor{stringliteral}{"{}MnvTunev1"{}}\ ||\ modeltune==\textcolor{stringliteral}{"{}MnvTunev2"{}})\{}
+\DoxyCodeLine{00150\ \ \ \ \ MnvTune.emplace\_back(\textcolor{keyword}{new}\ PlotUtils::FluxAndCVReweighter<CVUniverse,\ PlotUtils::detail::empty>());}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ NonResPiReweight\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ DeuteriumGeniePiTune\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Deut\ should\ be\ 0?\ for\ v1?}}
+\DoxyCodeLine{00153\ \ \ \ \ MnvTune.emplace\_back(\textcolor{keyword}{new}\ PlotUtils::GENIEReweighter<CVUniverse,PlotUtils::detail::empty>(NonResPiReweight,DeuteriumGeniePiTune));\ \ \textcolor{comment}{//\ Deut\ should\ be\ 0?\ for\ v1?}}
+\DoxyCodeLine{00154\ \ \ \ \ MnvTune.emplace\_back(\textcolor{keyword}{new}\ PlotUtils::LowRecoil2p2hReweighter<CVUniverse,\ PlotUtils::detail::empty>());}
+\DoxyCodeLine{00155\ \ \ \ \ MnvTune.emplace\_back(\textcolor{keyword}{new}\ PlotUtils::MINOSEfficiencyReweighter<CVUniverse,\ PlotUtils::detail::empty>());}
+\DoxyCodeLine{00156\ \ \ \ \ MnvTune.emplace\_back(\textcolor{keyword}{new}\ PlotUtils::RPAReweighter<CVUniverse,\ PlotUtils::detail::empty>());}
+\DoxyCodeLine{00157\ \ \ \}}
+\DoxyCodeLine{00158\ \ \ \textcolor{keywordflow}{if}(modeltune==\textcolor{stringliteral}{"{}MnvTunev2"{}})\{}
+\DoxyCodeLine{00159\ \ \ \ \ MnvTune.emplace\_back(\textcolor{keyword}{new}\ PlotUtils::LowQ2PiReweighter<CVUniverse,\ PlotUtils::detail::empty>(\textcolor{stringliteral}{"{}JOINT"{}}));}
+\DoxyCodeLine{00160\ \ \ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ PlotUtils::Model<CVUniverse,\ PlotUtils::detail::empty>\ model(std::move(MnvTune));}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \textcolor{comment}{//====================MC\ Reco\ tuning\ for\ bkg\ subtraction======================}}
+\DoxyCodeLine{00165\ \ \ \textcolor{comment}{//\ Initialize\ the\ rescale\ for\ tuning\ MC\ reco\ for\ background\ subtraction\ later}}
+\DoxyCodeLine{00166\ \ \ \mbox{\hyperlink{class_plot_utils_1_1weight___m_cre_scale}{PlotUtils::weight\_MCreScale}}\ mcRescale\ =\ weight\_MCreScale(config);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00169\ \ \ \textcolor{comment}{//\ Systematics}}
+\DoxyCodeLine{00170\ \ \ \textcolor{comment}{//\ GetStandardSystematics\ in\ Systematics.h}}
+\DoxyCodeLine{00171\ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00172\ \ \ std::map<std::string,\ std::vector<CVUniverse*>\ >\ mc\_error\_bands\ =}
+\DoxyCodeLine{00173\ \ \ systematics::GetStandardSystematics(util.m\_mc,config);}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ std::map<std::string,\ std::vector<CVUniverse*>\ >\ truth\_error\_bands\ =}
+\DoxyCodeLine{00176\ \ \ systematics::GetStandardSystematics(util.m\_truth,config);}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ mc\ error\ bands\ is\ "{}}\ <<\ mc\_error\_bands.size()\ <<\ std::endl;}
+\DoxyCodeLine{00179\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ truth\ error\ bands\ is\ "{}}\ <<\ truth\_error\_bands.size()\ <<\ std::endl;}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \textcolor{comment}{//\ If\ we're\ doing\ data\ we\ need\ a\ single\ central\ value\ universe.}}
+\DoxyCodeLine{00182\ \ \ \textcolor{comment}{//\ TODO\ Take\ care\ of\ this\ in\ PU::MacroUtil.}}
+\DoxyCodeLine{00183\ \ \ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}*\ data\_universe\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_c_v_universe}{CVUniverse}}(util.m\_data);}
+\DoxyCodeLine{00184\ \ \ std::vector<CVUniverse*>\ data\_band\ =\ \{data\_universe\};}
+\DoxyCodeLine{00185\ \ \ std::map<std::string,\ std::vector<CVUniverse*>\ >\ data\_error\_bands;}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ data\_error\_bands[\textcolor{stringliteral}{"{}cv"{}}]\ =\ data\_band;}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \textcolor{comment}{//\ tell\ CVUniverse\ about\ main\ config}}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ CVUniverse::SetMainConfig(config);\ }
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \textcolor{comment}{//Selection\ Criteria}}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keywordflow}{if}\ (config.IsMember(\textcolor{stringliteral}{"{}paramsFile"{}}))\ \{}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ configuring\ cvuniverse\ parameters"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ std::string\ paramsfilename\ =\ config.GetString(\textcolor{stringliteral}{"{}paramsFile"{}});}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ paramsConfig;}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ paramsConfig.Read(paramsfilename);}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Print\ applicable\ configurables?}}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ printConfigs\ =\ 0;}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (paramsConfig.IsMember(\textcolor{stringliteral}{"{}printConfigs"{}}))\ printConfigs\ =\ paramsConfig.GetBool(\textcolor{stringliteral}{"{}printConfigs"{}});}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Set\ applicable\ configurables}}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (paramsConfig.IsMember(\textcolor{stringliteral}{"{}MinimumBlobZVtx"{}}))\ \{}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ CVUniverse::SetMinBlobZVtx(paramsConfig.GetConfig(\textcolor{stringliteral}{"{}MinimumBlobZVtx"{}}).GetDouble(\textcolor{stringliteral}{"{}min"{}}),printConfigs);}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (paramsConfig.IsMember(\textcolor{stringliteral}{"{}PhotonEnergyCut"{}}))\ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ CVUniverse::SetPhotonEnergyCut(paramsConfig.GetConfig(\textcolor{stringliteral}{"{}PhotonEnergyCut"{}}).GetDouble(\textcolor{stringliteral}{"{}energy"{}}),printConfigs);}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (paramsConfig.IsMember(\textcolor{stringliteral}{"{}ProtonScoreConfig"{}}))\ \{}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ CVUniverse::SetProtonScoreConfig(paramsConfig.GetConfig(\textcolor{stringliteral}{"{}ProtonScoreConfig"{}}),printConfigs);}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (paramsConfig.IsMember(\textcolor{stringliteral}{"{}ProtonKECut"{}}))\ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ CVUniverse::SetProtonKECut(paramsConfig.GetConfig(\textcolor{stringliteral}{"{}ProtonKECut"{}}).GetDouble(\textcolor{stringliteral}{"{}energy"{}}),printConfigs);}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ CVUniverse::SetAnalysisNeutrinoPDG(pdg,printConfigs);}
+\DoxyCodeLine{00220\ \ \ \ \ \}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ std::string\ cutsfilename\ =\ config.GetString(\textcolor{stringliteral}{"{}cutsFile"{}});}
+\DoxyCodeLine{00223\ \ \ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ cutsConfig;}
+\DoxyCodeLine{00224\ \ \ cutsConfig.Read(cutsfilename);}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ std::string\ samplesfilename\ =\ config.GetString(\textcolor{stringliteral}{"{}samplesFile"{}});}
+\DoxyCodeLine{00227\ \ \ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ samplesConfig;}
+\DoxyCodeLine{00228\ \ \ \textcolor{comment}{//cutsConfig.Print();}}
+\DoxyCodeLine{00229\ \ \ std::vector<string>\ samplesToDo=config.GetStringVector(\textcolor{stringliteral}{"{}runsamples"{}});\ \textcolor{comment}{//\ get\ the\ master\ list.}}
+\DoxyCodeLine{00230\ \ \ samplesConfig.Read(samplesfilename);}
+\DoxyCodeLine{00231\ \ \ \textcolor{comment}{//samplesConfig.Print();}}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ std::vector<CCQENu::Sample>\ samples;}
+\DoxyCodeLine{00234\ \ \ samplesConfig.Print();}
+\DoxyCodeLine{00235\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ s:samplesToDo)\{}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keywordflow}{if}\ (samplesConfig.IsMember(s))\{}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}IsMember("{}}\ <<\ s\ <<\ \textcolor{stringliteral}{"{}):\ TRUE"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(samplesConfig.CheckMember(s))\ std::cout\ <<\ \textcolor{stringliteral}{"{}CheckMember("{}}\ <<\ s\ <<\ \textcolor{stringliteral}{"{}):\ TRUE"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ tmp\ =\ samplesConfig.GetConfig(s);}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ samples.push\_back(\mbox{\hyperlink{class_c_c_q_e_nu_1_1_sample}{CCQENu::Sample}}(tmp));}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ doing\ sample\ "{}}\ <<\ s\ <<\ std::endl;}
+\DoxyCodeLine{00242\ \ \ \ \ \}}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}requested\ sample\ "{}}\ <<\ s\ <<\ \textcolor{stringliteral}{"{}\ which\ is\ not\ in\ "{}}\ <<\ samplesfilename\ <<\ std::endl;}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ assert(0);}
+\DoxyCodeLine{00246\ \ \ \ \ \}}
+\DoxyCodeLine{00247\ \ \ \}}
+\DoxyCodeLine{00248\ \ \ PlotUtils::cuts\_t<CVUniverse>\ noSidebands;}
+\DoxyCodeLine{00249\ \ \ PlotUtils::constraints\_t<CVUniverse>\ signal,\ phaseSpace;}
+\DoxyCodeLine{00250\ \ \ std::map<std::string,PlotUtils::Cutter<CVUniverse>\ *>\ selectionCriteria;}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ std::vector<std::string>\ tags;}
+\DoxyCodeLine{00253\ \ \ std::string\ tag;}
+\DoxyCodeLine{00254\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ sample:samples)\{}
+\DoxyCodeLine{00255\ \ \ \ \ std::string\ name\ =\ sample.GetName();}
+\DoxyCodeLine{00256\ \ \ \ \ std::string\ tag\ =\ name+\textcolor{stringliteral}{"{}\_\_\_data"{}};}
+\DoxyCodeLine{00257\ \ \ \ \ tags.push\_back(tag);}
+\DoxyCodeLine{00258\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ load\ in\ cuts\ for\ sample\ "{}}\ <<\ name\ <<\ std::endl;}
+\DoxyCodeLine{00259\ \ \ \ \ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ recocuts\ =\ cutsConfig.GetValue(sample.GetReco());}
+\DoxyCodeLine{00260\ \ \ \ \ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ phasespace\ =\ cutsConfig.GetValue(sample.GetPhaseSpace());}
+\DoxyCodeLine{00261\ \ \ \ \ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ truecuts\ =\ cutsConfig.GetValue(\textcolor{stringliteral}{"{}data"{}});}
+\DoxyCodeLine{00262\ \ \ \ \ }
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{comment}{//\ do\ data\ here}}
+\DoxyCodeLine{00264\ \ \ \ \ selectionCriteria[tag]\ =\ \textcolor{keyword}{new}\ PlotUtils::Cutter<CVUniverse>\ (\(\backslash\)}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ config\_reco::GetCCQECutsFromConfig<CVUniverse>(recocuts),\(\backslash\)}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::move(noSidebands),\(\backslash\)}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ config\_truth::GetCCQESignalFromConfig<CVUniverse>(truecuts),\(\backslash\)}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ config\_truth::GetCCQEPhaseSpaceFromConfig<CVUniverse>(phasespace));}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{comment}{//\ now\ do\ for\ signal\ categories}}
+\DoxyCodeLine{00271\ \ \ \ \ std::map<const\ std::string,\ CCQENu::Category>\ categories\ =\ sample.GetCategories();}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ category:categories)\{}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ std::string\ cname\ =\ category.first;}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ tag\ =\ name\ +\ \textcolor{stringliteral}{"{}\_\_\_"{}}\ +\ cname;}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ tags.push\_back(tag);}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}make\ a\ tag\ "{}}\ <<\ tag\ <<\ std::endl;}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!cutsConfig.IsMember(cname))\{}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ sample\ category\ "{}}\ <<\ cname\ <<\ \textcolor{stringliteral}{"{}\ does\ not\ have\ an\ associated\ \ cut\ in\ "{}}\ <<\ cutsfilename\ <<\ std::endl;}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ assert(0);}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ truecuts\ =\ cutsConfig.GetValue(cname);}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ selectionCriteria[tag]\ =\ \textcolor{keyword}{new}\ PlotUtils::Cutter<CVUniverse>\ (\(\backslash\)}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ config\_reco::GetCCQECutsFromConfig<CVUniverse>(recocuts),\(\backslash\)}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::move(noSidebands),\(\backslash\)}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ config\_truth::GetCCQESignalFromConfig<CVUniverse>(truecuts),\(\backslash\)}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ config\_truth::GetCCQEPhaseSpaceFromConfig<CVUniverse>(phasespace));}
+\DoxyCodeLine{00288\ \ \ \ \ \}}
+\DoxyCodeLine{00289\ \ \ \}}
+\DoxyCodeLine{00290\ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00291\ \ \ \textcolor{comment}{//\ Get\ variables\ and\ initialize\ their\ hists}}
+\DoxyCodeLine{00292\ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ \ \ std::vector<std::string>\ vars1D\ =\ config.GetStringVector(\textcolor{stringliteral}{"{}AnalyzeVariables"{}});}
+\DoxyCodeLine{00296\ \ \ std::vector<std::string>\ vars2D\ =\ config.GetStringVector(\textcolor{stringliteral}{"{}Analyze2DVariables"{}});}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \ \ std::vector<CCQENu::VariableFromConfig*>\ variables1D;}
+\DoxyCodeLine{00299\ \ \ std::vector<CCQENu::Variable2DFromConfig*>\ variables2D;}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \ \ \textcolor{comment}{//\ std::string\ variables1Dname\ =\ config.GetString("{}varsFile"{});}}
+\DoxyCodeLine{00302\ \ \ std::string\ varsFile\ =\ config.GetString(\textcolor{stringliteral}{"{}varsFile"{}});}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \mbox{\hyperlink{class_nu_config}{NuConfig}}\ configvar;}
+\DoxyCodeLine{00305\ \ \ \textcolor{keywordflow}{if}\ (varsFile\ !=\ \textcolor{stringliteral}{"{}"{}}\ )\{}
+\DoxyCodeLine{00306\ \ \ \ \ configvar.Read(varsFile);}
+\DoxyCodeLine{00307\ \ \ \}}
+\DoxyCodeLine{00308\ \ \ \textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00309\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ no\ varsFile"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00310\ \ \ \ \ exit(1);}
+\DoxyCodeLine{00311\ \ \ \}}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \textcolor{comment}{//\ new\ way}}
+\DoxyCodeLine{00314\ \ \ std::map<std::string,CCQENu::VariableFromConfig*>\ variablesmap1D\ =\ GetVariablesFromConfig(vars1D,tags,configvar,doresolution,tunedmc);}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \ \ std::map<std::string,CCQENu::Variable2DFromConfig*>\ variablesmap2D\ =\ Get2DVariablesFromConfig(vars2D,variablesmap1D,tags,configvar);}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \textcolor{comment}{//\ associate\ different\ datasets\ with\ types\ so\ you\ don't\ have\ to\ loop\ over\ everything\ for\ everything}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \ \ \textcolor{comment}{//\ \ std::vector<std::string>\ selected\_reco\_tags\ =\ \{signal\_tag,background\_tag\};\ \ //bkg\ only\ needed\ for\ recontructed\ MC}}
+\DoxyCodeLine{00322\ \ \ \textcolor{comment}{//\ \ std::vector<std::string>\ datatags\ =\ \{data\_tag\};}}
+\DoxyCodeLine{00323\ \ \ \textcolor{comment}{//\ \ std::vector<std::string>\ truthtags\ =\ \{signal\_tag\};}}
+\DoxyCodeLine{00324\ \ \ \textcolor{comment}{//\ \ std::vector<std::string>\ responsetags\ =\ \{signal\_tag\};}}
+\DoxyCodeLine{00325\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00326\ \ \ \textcolor{comment}{//\ for\ (auto\ v\ :\ variables)\ \{}}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \ \ std::vector<std::string>\ selected\_reco\_tags\ ;\ \ \textcolor{comment}{//bkg\ only\ needed\ for\ recontructed\ MC}}
+\DoxyCodeLine{00329\ \ \ std::vector<std::string>\ selected\_truth\_tags\ ;}
+\DoxyCodeLine{00330\ \ \ std::vector<std::string>\ datatags;}
+\DoxyCodeLine{00331\ \ \ std::vector<std::string>\ truthtags;}
+\DoxyCodeLine{00332\ \ \ \textcolor{comment}{//\ std::vector<std::string>\ tuned\_mc\_tags\ ;}}
+\DoxyCodeLine{00333\ \ \ std::vector<std::string>\ responsetags;}
+\DoxyCodeLine{00334\ \ \ std::vector<std::string>\ types;}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \ \ \textcolor{comment}{//\ here\ we\ decide\ what\ histograms\ to\ fill}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ sample:samples)\{}
+\DoxyCodeLine{00339\ \ \ \ \ std::map<const\ std::string,\ CCQENu::Category>\ categories\ =\ sample.GetCategories();}
+\DoxyCodeLine{00340\ \ \ \ \ std::string\ data\_tag\ =\ sample.GetName()+\textcolor{stringliteral}{"{}\_\_\_data"{}};}
+\DoxyCodeLine{00341\ \ \ \ \ datatags.push\_back(data\_tag);}
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ category:categories)\{}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ std::string\ cname\ =\ category.first;}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ std::vector<std::string>\ forlist\ =\ category.second.GetFor();}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}for\ "{}};}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ f:forlist)\{}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ f;}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ std::cout\ <<\ std::endl;}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \ \ \ \ \ \ std::string\ tag\ =\ sample.GetName()+\textcolor{stringliteral}{"{}\_\_\_"{}}+cname;}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}make\ a\ tag\ "{}}\ <<\ tag\ <<\ std::endl;}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (IsInVector<std::string>(\textcolor{stringliteral}{"{}selected\_reco"{}},forlist))\{}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ selected\_reco\_tags.push\_back(tag);}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (IsInVector<std::string>(\textcolor{stringliteral}{"{}selected\_truth"{}},forlist))\{}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ selected\_truth\_tags.push\_back(tag);}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(IsInVector<std::string>(\textcolor{stringliteral}{"{}truth"{}},forlist\ ))\{}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ truthtags.push\_back(tag);}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(IsInVector<std::string>(\textcolor{stringliteral}{"{}response"{}},forlist))\{}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ responsetags.push\_back(tag);}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00366\ \ \ \ \ \}}
+\DoxyCodeLine{00367\ \ \ \}}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag:tags)\{}
+\DoxyCodeLine{00370\ \ \ std:cout\ <<\ \textcolor{stringliteral}{"{}tag:\ "{}}\ <<\ tag\ <<\ std::endl;}
+\DoxyCodeLine{00371\ \ \ \}}
+\DoxyCodeLine{00372\ \ \ \textcolor{comment}{//\ here\ we\ initialist\ ghem}}
+\DoxyCodeLine{00373\ }
+\DoxyCodeLine{00374\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ var1D\ :\ variablesmap1D)\ \{}
+\DoxyCodeLine{00375\ \ \ \ \ \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable_from_config}{CCQENu::VariableFromConfig}}*\ v\ =\ var1D.second;}
+\DoxyCodeLine{00376\ \ \ \ \ v-\/>InitializeMCHistograms(mc\_error\_bands,selected\_reco\_tags);}
+\DoxyCodeLine{00377\ \ \ \ \ v-\/>InitializeSelectedTruthHistograms(mc\_error\_bands,selected\_truth\_tags);}
+\DoxyCodeLine{00378\ \ \ \ \ v-\/>InitializeDataHistograms(data\_error\_bands,datatags);}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{comment}{//\ v-\/>AddMCResponse(responsetags);}}
+\DoxyCodeLine{00380\ \ \ \ \ v-\/>InitializeTruthHistograms(truth\_error\_bands,truthtags);}
+\DoxyCodeLine{00381\ \ \ \ \ v-\/>InitializeResponse(mc\_error\_bands,responsetags);}
+\DoxyCodeLine{00382\ \ \ \ \ v-\/>InitializeTunedMCHistograms(mc\_error\_bands,truth\_error\_bands,selected\_reco\_tags,responsetags);}
+\DoxyCodeLine{00383\ \ \ \ \ variables1D.push\_back(v);}
+\DoxyCodeLine{00384\ \ \ \}}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ var2D\ :\ variablesmap2D\ )\ \{}
+\DoxyCodeLine{00388\ \ \ \ \ std::string\ varname\ =\ var2D.first;}
+\DoxyCodeLine{00389\ \ \ \ \ \mbox{\hyperlink{class_c_c_q_e_nu_1_1_variable2_d_from_config}{CCQENu::Variable2DFromConfig}}*\ v\ =\ var2D.second;}
+\DoxyCodeLine{00390\ \ \ \ \ v-\/>InitializeMCHistograms2D(mc\_error\_bands,selected\_reco\_tags);}
+\DoxyCodeLine{00391\ \ \ \ \ v-\/>InitializeSelectedTruthHistograms2D(mc\_error\_bands,selected\_truth\_tags);}
+\DoxyCodeLine{00392\ \ \ \ \ v-\/>InitializeDataHistograms2D(data\_error\_bands,datatags);}
+\DoxyCodeLine{00393\ \ \ \ \ \textcolor{comment}{//\ v-\/>AddMCResponse2D(responsetags);}}
+\DoxyCodeLine{00394\ \ \ \ \ v-\/>InitializeTruthHistograms2D(truth\_error\_bands,truthtags);}
+\DoxyCodeLine{00395\ \ \ \ \ v-\/>InitializeResponse2D(mc\_error\_bands,responsetags);}
+\DoxyCodeLine{00396\ \ \ \ \ v-\/>InitializeTunedMCHistograms2D(mc\_error\_bands,truth\_error\_bands,selected\_reco\_tags,responsetags);}
+\DoxyCodeLine{00397\ \ \ \ \ variables2D.push\_back(v);}
+\DoxyCodeLine{00398\ \ \ \}}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{comment}{//\ Check\ if\ sending\ events\ to\ csv\ file}}
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{keywordtype}{bool}\ mc\_reco\_to\_csv\ =\ 0;}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keywordflow}{if}\ (config.IsMember(\textcolor{stringliteral}{"{}mcRecoToCSV"{}}))\ \{}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ mc\_reco\_to\_csv\ =\ config.GetBool(\textcolor{stringliteral}{"{}mcRecoToCSV"{}});}
+\DoxyCodeLine{00404\ \ \ \ \ \}}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ just\ before\ event\ loop"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00407\ \ \ \ \ util.PrintMacroConfiguration(\textcolor{stringliteral}{"{}runEventLoop"{}});}
+\DoxyCodeLine{00408\ \ \ \textcolor{comment}{//\ here\ we\ fill\ them}}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag:datatags)\{}
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00412\ \ \ \ \ \textcolor{comment}{//\ Entry\ loop\ and\ fill}}
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00414\ \ \ \ \ }
+\DoxyCodeLine{00415\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Loop\ and\ Fill\ Data\ for\ "{}}\ <<\ tag\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00416\ \ \ \ \ }
+\DoxyCodeLine{00417\ \ \ \ \ LoopAndFillEventSelection(tag,\ util,\ data\_error\_bands,\ variables1D,\ variables2D,\ kData,\ *selectionCriteria[tag],model,mcRescale,closure,mc\_reco\_to\_csv);}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{comment}{//\ LoopAndFillEventSelection2D(tag,\ util,\ data\_error\_bands,\ variables2D,\ kData,\ *selectionCriteria[tag]);}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nCut\ summary\ for\ Data:"{}}\ <<\ \ tag\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ <<\ *selectionCriteria[tag]\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00422\ \ \ \ \ selectionCriteria[tag]-\/>resetStats();}
+\DoxyCodeLine{00423\ \ \ \}}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag:selected\_reco\_tags)\{}
+\DoxyCodeLine{00426\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ loc\ =\ tag.find(\textcolor{stringliteral}{"{}\_\_\_"{}})+3;}
+\DoxyCodeLine{00427\ \ \ \ \ std::string\ cat(tag,loc,string::npos);}
+\DoxyCodeLine{00428\ \ \ \ \ std::string\ sample(tag,0,loc-\/3);}
+\DoxyCodeLine{00429\ \ \ }
+\DoxyCodeLine{00430\ \ \ \ \ mcRescale.SetCat(cat);}
+\DoxyCodeLine{00431\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Loop\ and\ Fill\ MC\ Reco\ \ for\ "{}}\ <<\ \ tag\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00432\ \ \ \ \ }
+\DoxyCodeLine{00433\ \ \ \ \ LoopAndFillEventSelection(tag,\ util,\ mc\_error\_bands,\ variables1D,\ variables2D,\ kMC,\ *selectionCriteria[tag],model,\ mcRescale,closure,mc\_reco\_to\_csv);}
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{comment}{//\ LoopAndFillEventSelection2D(tag,\ util,\ mc\_error\_bands,\ variables2D,\ kMC,\ *selectionCriteria[tag]);}}
+\DoxyCodeLine{00435\ \ \ \ \ }
+\DoxyCodeLine{00436\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nCut\ summary\ for\ MC\ Reco:"{}}\ <<\ \ tag\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ <<\ *selectionCriteria[tag]\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00437\ \ \ \ \ selectionCriteria[tag]-\/>resetStats();}
+\DoxyCodeLine{00438\ \ \ \}}
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00440\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag:truthtags)\{}
+\DoxyCodeLine{00441\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Loop\ and\ Fill\ MC\ Truth\ \ for\ "{}}\ <<\ \ tag\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \ \ LoopAndFillEventSelection(tag,\ util,\ truth\_error\_bands,\ variables1D,\ variables2D,\ kTruth,\ *selectionCriteria[tag],model,mcRescale,closure,mc\_reco\_to\_csv);}
+\DoxyCodeLine{00444\ \ \ \ \ \textcolor{comment}{//\ LoopAndFillEventSelection2D(tag,\ util,\ truth\_error\_bands,\ variables2D,\ kTruth,\ *selectionCriteria[tag]);}}
+\DoxyCodeLine{00445\ \ \ \ \ }
+\DoxyCodeLine{00446\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nCut\ summary\ for\ MC\ Truth:"{}}\ <<\ \ tag\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{comment}{//\ this\ is\ a\ special\ overload\ to\ allow\ printing\ truth}}
+\DoxyCodeLine{00448\ \ \ \ \ (*selectionCriteria[tag]).summarizeTruthWithStats(std::cout);}
+\DoxyCodeLine{00449\ \ \ \ \ selectionCriteria[tag]-\/>resetStats();}
+\DoxyCodeLine{00450\ \ \ \}}
+\DoxyCodeLine{00451\ \ \ \textcolor{comment}{//std::cout\ <<\ "{}\(\backslash\)nCut\ summary\ for\ MC:\(\backslash\)n"{}\ <<\ selectionCriteria\ <<\ "{}\(\backslash\)n"{};}}
+\DoxyCodeLine{00452\ }
+\DoxyCodeLine{00453\ \ \ \textcolor{comment}{//\ Sync\ CV\ hists}}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables1D)\ v-\/>SyncAllHists();}
+\DoxyCodeLine{00456\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables2D)\ v-\/>SyncAllHists();}
+\DoxyCodeLine{00457\ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00458\ \ \ \textcolor{comment}{//\ Plot}}
+\DoxyCodeLine{00459\ \ \ \textcolor{comment}{//=========================================}}
+\DoxyCodeLine{00460\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Done\ filling.\ Begin\ plotting.\(\backslash\)n"{}};}
+\DoxyCodeLine{00461\ }
+\DoxyCodeLine{00462\ \ \ std::string\ path(pl);}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \ \ std::string\ base\ =\ path.substr(path.find\_last\_of(\textcolor{stringliteral}{"{}/\(\backslash\)\(\backslash\)"{}})\ +\ 1);}
+\DoxyCodeLine{00465\ \ \ std::string\ outname\ =\ Form(\textcolor{stringliteral}{"{}\%s\_\%s\_\%d.root"{}},config.GetString(\textcolor{stringliteral}{"{}outRoot"{}}).c\_str(),base.c\_str(),prescale);}
+\DoxyCodeLine{00466\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ outname\ is\ "{}}\ <<\ outname\ <<\ \textcolor{stringliteral}{"{}\ prescale\ was\ "{}}\ <<\ prescale\ <<\ std::endl;}
+\DoxyCodeLine{00467\ \ \ \textcolor{comment}{//\ std::string\ outname\ =\ config.GetString("{}outRoot"{})+"{}\_"{}+pl+"{}\_"{}+prescale+"{}.root"{};}}
+\DoxyCodeLine{00468\ \ \ TFile*\ out=TFile::Open((dir.append(outname)).c\_str(),\textcolor{stringliteral}{"{}RECREATE"{}});}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \ \ \textcolor{comment}{//\ dump\ the\ json\ files}}
+\DoxyCodeLine{00471\ }
+\DoxyCodeLine{00472\ \ \ std::string\ top\ =\ config.ToString();}
+\DoxyCodeLine{00473\ \ \ TNamed\ topobj(\textcolor{stringliteral}{"{}main"{}},top.c\_str());}
+\DoxyCodeLine{00474\ \ \ topobj.Write();}
+\DoxyCodeLine{00475\ \ \ std::string\ var\ =\ configvar.ToString();}
+\DoxyCodeLine{00476\ \ \ TNamed\ varobj(\textcolor{stringliteral}{"{}varsFile"{}},var.c\_str());}
+\DoxyCodeLine{00477\ \ \ varobj.Write();}
+\DoxyCodeLine{00478\ \ \ std::string\ cuts\ =\ cutsConfig.ToString();}
+\DoxyCodeLine{00479\ \ \ TNamed\ cutsobj(\textcolor{stringliteral}{"{}cutsFile"{}},cuts.c\_str());}
+\DoxyCodeLine{00480\ \ \ cutsobj.Write();}
+\DoxyCodeLine{00481\ \ \ std::string\ sam\ =\ samplesConfig.ToString();}
+\DoxyCodeLine{00482\ \ \ TNamed\ samobj(\textcolor{stringliteral}{"{}samplesFile"{}},sam.c\_str());}
+\DoxyCodeLine{00483\ \ \ samobj.Write();}
+\DoxyCodeLine{00484\ \ \ \textcolor{comment}{//std::string\ git\ =\ git::commitHash();}}
+\DoxyCodeLine{00485\ \ \ \textcolor{comment}{//TNamed\ gitobj("{}gitVersion"{},git.c\_str());}}
+\DoxyCodeLine{00486\ \ \ \textcolor{comment}{//gitobj.Write();}}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables1D)\{}
+\DoxyCodeLine{00489\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Writing\ 1D\ hist\ to\ file"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00490\ \ \ \ \ v-\/>WriteAllHistogramsToFile(*out);}
+\DoxyCodeLine{00491\ \ \ \}}
+\DoxyCodeLine{00492\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ v\ :\ variables2D)\{}
+\DoxyCodeLine{00493\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Writing\ 2D\ hist\ to\ file"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00494\ \ \ \ \ v-\/>WriteAllHistogramsToFile2D(*out);}
+\DoxyCodeLine{00495\ \ \ \}}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \ \ PlotUtils::MnvH1D*\ h\_pot\ =\ \textcolor{keyword}{new}\ PlotUtils::MnvH1D(\textcolor{stringliteral}{"{}POT\_summary"{}},\textcolor{stringliteral}{"{}data,\ mc,\ Prescaled\ mc"{}},\ 3,\ 0.,\ 3.);}
+\DoxyCodeLine{00498\ }
+\DoxyCodeLine{00499\ \ \ h\_pot-\/>Fill(0.5,\ util.m\_data\_pot);}
+\DoxyCodeLine{00500\ \ \ h\_pot-\/>Fill(1.5,\ util.m\_mc\_pot);}
+\DoxyCodeLine{00501\ \ \ h\_pot-\/>Fill(2.5,\ util.m\_mc\_pot/prescale);\ \ \textcolor{comment}{//\ compensate\ for\ prescale}}
+\DoxyCodeLine{00502\ \ \ h\_pot-\/>Print();}
+\DoxyCodeLine{00503\ \ \ h\_pot-\/>Write();}
+\DoxyCodeLine{00504\ \ \ \textcolor{comment}{//\ make\ compatible\ with\ Amit}}
+\DoxyCodeLine{00505\ \ \ TVector2\ *pot\ =\ \textcolor{keyword}{new}\ TVector2(\ util.m\_data\_pot,util.m\_mc\_pot/prescale);}
+\DoxyCodeLine{00506\ \ \ out-\/>WriteTObject(\ pot,\ \textcolor{stringliteral}{"{}pot"{}}\ );}
+\DoxyCodeLine{00507\ \ \ out-\/>Close();}
+\DoxyCodeLine{00508\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Successfully\ wrote\ everything\ to\ file\ "{}}\ <<\ outname\ <<\ std::endl;}
+\DoxyCodeLine{00509\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Done"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00510\ \}}
+
+\end{DoxyCode}

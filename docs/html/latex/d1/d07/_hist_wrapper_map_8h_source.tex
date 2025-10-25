@@ -1,0 +1,232 @@
+\doxysection{Hist\+Wrapper\+Map.\+h}
+\hypertarget{_hist_wrapper_map_8h_source}{}\label{_hist_wrapper_map_8h_source}\index{make\_hists/include/HistWrapperMap.h@{make\_hists/include/HistWrapperMap.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ \ HistWrapperMap.h}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ \ Created\ by\ Heidi\ Schellman\ (research)\ on\ 11/4/16.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ make\ a\ map\ of\ histwrappers\ with\ the\ same\ name\ title\ and\ binning.}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ HistWrapperMap\_h}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ HistWrapperMap\_h}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\#define\ HSTDBG}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}PlotUtils/HistWrapper.h"{}}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\#include\ "{}PlotUtils/DefaultCVUniverse.h"{}}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ \#include\ "{}MinervaUnfold/MnvResponse.h"{}}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ \#include\ "{}utils/UniverseDecoder.h"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{namespace\ }PlotUtils\{}
+\DoxyCodeLine{00029\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{class\ }HistWrapperMap:\textcolor{keyword}{public}\ T\ \{}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ std::map<const\ std::string,\ HistWrapper<T>\ >\ m\_hists;}
+\DoxyCodeLine{00036\ \ \ std::map<\ std::string,\ std::vector<T*>\ >\ m\_univs;}
+\DoxyCodeLine{00037\ \ \ std::string\ m\_name\ =\ \textcolor{stringliteral}{"{}NULL"{}};}
+\DoxyCodeLine{00038\ \ \ std::string\ m\_title\ =\ \textcolor{stringliteral}{"{}NULL"{}};}
+\DoxyCodeLine{00039\ \ \ \textcolor{keywordtype}{int}\ m\_nbins\ =\ 0;}
+\DoxyCodeLine{00040\ \ \ \textcolor{keywordtype}{int}\ m\_nrecobins\ =\ 0;}
+\DoxyCodeLine{00041\ \ \ \textcolor{keywordtype}{double}\ m\_xmin\ =\ 0.0;}
+\DoxyCodeLine{00042\ \ \ \textcolor{keywordtype}{double}\ m\_xmax\ =\ 0.0;}
+\DoxyCodeLine{00043\ \ \ \textcolor{keywordtype}{double}\ m\_xrecomin\ =\ 0.0;}
+\DoxyCodeLine{00044\ \ \ \textcolor{keywordtype}{double}\ m\_xrecomax\ =\ 0.0;}
+\DoxyCodeLine{00045\ \ \ std::vector<double>\ m\_bins;}
+\DoxyCodeLine{00046\ \ \ std::vector<double>\ m\_recobins;}
+\DoxyCodeLine{00047\ \ \ std::map<\ std::string,\ std::vector<T*>\ >\ m\_universes;\ \ \textcolor{comment}{//\ if\ you\ are\ using\ a\ vector\ need\ to\ add\ that}}
+\DoxyCodeLine{00048\ \ \ \textcolor{comment}{//\ std::map<\ std::string,\ MinervaUnfold::MnvResponse\ *>\ m\_response;}}
+\DoxyCodeLine{00049\ \ \ \textcolor{keywordtype}{bool}\ m\_fixedbins;}
+\DoxyCodeLine{00050\ \ \ \textcolor{keywordtype}{int}\ m\_count;}
+\DoxyCodeLine{00051\ \ \ std::map<const\ std::string,\ bool>\ m\_hashist;}
+\DoxyCodeLine{00052\ \ \ std::map<const\ std::string,\ bool>\ m\_hasresponse;}
+\DoxyCodeLine{00053\ \ \ std::vector<std::string>\ m\_tags;}
+\DoxyCodeLine{00054\ \ \ std::map<std::string,int>\ m\_response\_bands;\ \textcolor{comment}{//\ map\ that\ tells\ you\ how\ many}}
+\DoxyCodeLine{00055\ \ \ std::map<const\ T*,int>\ m\_decoder;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ HistWrapperMap()\{\};}
+\DoxyCodeLine{00060\ \ \ \textcolor{comment}{//\ constructor}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \textcolor{keyword}{inline}\ \ HistWrapperMap(\ \textcolor{keyword}{const}\ std::string\ name,\ \textcolor{keyword}{const}\ std::string\ title,\ \textcolor{keyword}{const}\ Int\_t\ nbins,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ xmin,\textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ xmax,\ \ std::map<\ std::string,std::vector<T*>>\ univs,\ \textcolor{keyword}{const}\ std::vector<std::string>\ tags)\{}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ just\ store\ the\ config}}
+\DoxyCodeLine{00066\ \ \ \ \ m\_name\ =\ name;}
+\DoxyCodeLine{00067\ \ \ \ \ m\_title\ =\ title;}
+\DoxyCodeLine{00068\ \ \ \ \ m\_nbins\ =\ nbins;}
+\DoxyCodeLine{00069\ \ \ \ \ m\_xmin\ =\ xmin;}
+\DoxyCodeLine{00070\ \ \ \ \ m\_xmax\ =\ xmax;}
+\DoxyCodeLine{00071\ \ \ \ \ m\_nrecobins\ =\ nbins;}
+\DoxyCodeLine{00072\ \ \ \ \ m\_xrecomin\ =\ xmin;}
+\DoxyCodeLine{00073\ \ \ \ \ m\_xrecomax\ =\ xmax;}
+\DoxyCodeLine{00074\ \ \ \ \ m\_fixedbins\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ \ \ \ m\_count\ =\ 0;}}
+\DoxyCodeLine{00076\ \ \ \ \ m\_univs\ =\ univs;}
+\DoxyCodeLine{00077\ \ \ \ \ m\_tags\ =\ tags;}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\{}
+\DoxyCodeLine{00079\ \ \ \ \ \ std::string\ hist\_name\ =\ \textcolor{stringliteral}{"{}h\_\_\_"{}}+tag\ +\textcolor{stringliteral}{"{}\_\_\_"{}}+\ name;}
+\DoxyCodeLine{00080\ \ \ \ \ \ \textcolor{comment}{//\ std::string\ hist\_name\ =\ name\ +\ "{}\_"{}\ +\ tag;}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ m\_hists[tag]\ =\ PlotUtils::HistWrapper<T>(hist\_name.c\_str(),\ title.c\_str(),\ nbins,\ xmin,\ xmax,\ univs);}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ m\_hashist[tag]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ \ \ \ \ m\_decoder\ =\ UniverseDecoder(univs);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \textcolor{comment}{//\ map\ that\ helps\ you\ find\ the\ index\ of\ a\ universe.}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ std::map<const\ T*,int>\ UniverseDecoder(\textcolor{keyword}{const}\ std::map<\ std::string,\ std::vector<T*>\ >\ univs)\textcolor{keyword}{const}\{}
+\DoxyCodeLine{00092\ \ \ \ \ std::map<const\ T*,\ int>\ decoder;}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\ univ:univs)\{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ std::string\ name\ =\ univ.first;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ std::vector<T*>\ pointers\ =\ univ.second;}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ pointers.size();\ i++)\{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ decoder[pointers[i]]\ =\ i;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00099\ \ \ \ \ \}}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordflow}{return}\ decoder;}
+\DoxyCodeLine{00101\ \ \ \}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \textcolor{comment}{//\ constructor\ for\ case\ where\ you\ are\ not\ building\ a\ response.}}
+\DoxyCodeLine{00106\ \ \ \textcolor{keyword}{inline}\ \ HistWrapperMap(\ \textcolor{keyword}{const}\ std::string\ name,\ \textcolor{keyword}{const}\ std::string\ title,\ \textcolor{keyword}{const}\ Int\_t\ nbins,\ \textcolor{keyword}{const}\ std::vector<double>\ bins,\ \ std::map<\ std::string,\ std::vector<T*>\ >\ univs,\ std::vector<std::string>\ tags)\{}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ just\ store\ the\ config}}
+\DoxyCodeLine{00108\ \ \ \ \ m\_name\ =\ name;}
+\DoxyCodeLine{00109\ \ \ \ \ m\_title\ =\ title;}
+\DoxyCodeLine{00110\ \ \ \ \ m\_nbins\ =\ nbins;}
+\DoxyCodeLine{00111\ \ \ \ \ m\_bins\ \ =\ bins;}
+\DoxyCodeLine{00112\ \textcolor{comment}{//\ \ \ \ m\_nrecobins\ =\ nbins;}}
+\DoxyCodeLine{00113\ \textcolor{comment}{//\ \ \ \ m\_recobins\ =\ bins;}}
+\DoxyCodeLine{00114\ \ \ \ \ m\_fixedbins\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{//\ \ \ \ m\_count\ =\ 0\ ;}}
+\DoxyCodeLine{00116\ \ \ \ \ m\_univs\ =\ univs;}
+\DoxyCodeLine{00117\ \ \ \ \ m\_tags\ =\ tags;}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \textcolor{comment}{//std::string\ hist\_name\ =\ tag\ +"{}\_"{}+\ name;}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ std::string\ hist\_name\ =\ \textcolor{stringliteral}{"{}h\_\_\_"{}}+tag+\textcolor{stringliteral}{"{}\_\_\_"{}}+name;}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ m\_hists[tag]\ =\ PlotUtils::HistWrapper<T>(hist\_name.c\_str(),\ title.c\_str(),\ nbins,\ bins,\ univs);}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ m\_hashist[tag]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00123\ \ \ \ \ \}}
+\DoxyCodeLine{00124\ \ \ \ \ m\_decoder\ =\ UniverseDecoder(univs);}
+\DoxyCodeLine{00125\ \ \ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ AppendName(\textcolor{keyword}{const}\ std::string\ n,\ \textcolor{keyword}{const}\ std::vector<std::string>\ tags)\{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag\ :\ tags)\{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ m\_hists[tag].hist-\/>SetName(Form(\textcolor{stringliteral}{"{}\%s\_\_\_\%s"{}},(m\_hists[tag].hist-\/>GetName()),n.c\_str()));}
+\DoxyCodeLine{00131\ \ \ \ \ \ \}}
+\DoxyCodeLine{00132\ \ \ \ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \textcolor{comment}{//\ \ can\ we\ make\ this\ smarter?}}
+\DoxyCodeLine{00136\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Fill(\textcolor{keyword}{const}\ std::string\ tag,\ \textcolor{keyword}{const}\ T*\ universe,\ \textcolor{keyword}{const}\ Double\_t\ value,\ \textcolor{keyword}{const}\ Double\_t\ weight=1.0)\{}
+\DoxyCodeLine{00137\ \ \ \ \ m\_hists[tag].FillUniverse(universe,\ value,\ weight);}
+\DoxyCodeLine{00138\ \ \ \}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ }
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ GetNhists()\{\textcolor{keywordflow}{return}\ m\_hists.size();\}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \textcolor{keyword}{inline}\ MnvH1D*\ GetHist(\textcolor{keyword}{const}\ std::string\ tag)\{}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_hists.count(tag)>0)\ \textcolor{keywordflow}{return}\ m\_hists[tag].hist;}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00147\ \ \ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \textcolor{comment}{//\ inline\ MinervaUnfold::MnvResponse*\ GetResponse(const\ std::string\ tag)\{}}
+\DoxyCodeLine{00150\ \ \ \textcolor{comment}{//\ \ \ if\ (m\_response.count(tag)>0)\ return\ m\_response[tag];}}
+\DoxyCodeLine{00151\ \ \ \textcolor{comment}{//\ \ \ return\ 0;}}
+\DoxyCodeLine{00152\ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{comment}{//\ \ \ inline\ MnvH2D*\ GetMigrationMatrix(const\ std::string\ tag)\{}}
+\DoxyCodeLine{00155\ \textcolor{comment}{//\ \ \ \ \ MnvH2D*\ matrix;}}
+\DoxyCodeLine{00156\ \textcolor{comment}{//\ \ \ \ \ MnvH1D*\ dummy;}}
+\DoxyCodeLine{00157\ \textcolor{comment}{//\ \ \ \ \ MnvH1D*\ dummy2;}}
+\DoxyCodeLine{00158\ \textcolor{comment}{//}}
+\DoxyCodeLine{00159\ \textcolor{comment}{//\ \ \ \ \ if\ (m\_response.count(tag)>0)\{}}
+\DoxyCodeLine{00160\ \textcolor{comment}{//\ \#ifdef\ HSTDBG}}
+\DoxyCodeLine{00161\ \textcolor{comment}{//\ \ \ \ \ \ \ std::cout\ <<\ "{}\ HistWrapperMap::Migration\ matrix\ has\ size\ "{}\ <<\ m\_response[tag]-\/>GetMigrationMatrix()-\/>GetErrorBandNames().size()\ <<\ std::endl;}}
+\DoxyCodeLine{00162\ \textcolor{comment}{//\ \ \ \ \ \ \ std::cout\ <<\ "{}\ HistWrapperMap::getting\ migration\ matrix\ "{}\ <<\ m\_response[tag]-\/>GetMigrationMatrix()-\/>GetName()\ <<\ std::endl;}}
+\DoxyCodeLine{00163\ \textcolor{comment}{//\ \#endif}}
+\DoxyCodeLine{00164\ \textcolor{comment}{//\ \ \ \ \ \ \ matrix\ =\ m\_response[tag]-\/>GetMigrationMatrix();}}
+\DoxyCodeLine{00165\ \textcolor{comment}{//\ \ \ \ \ \ \ return\ matrix;}}
+\DoxyCodeLine{00166\ \textcolor{comment}{//\ \ \ \ \ \}}}
+\DoxyCodeLine{00167\ \textcolor{comment}{//\ \ \ \ \ return\ 0;}}
+\DoxyCodeLine{00168\ \textcolor{comment}{//\ \ \ \}}}
+\DoxyCodeLine{00169\ \textcolor{comment}{//}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Scale(\textcolor{keyword}{const}\ std::string\ tag,\ \textcolor{keywordtype}{double}\ scale)\{}
+\DoxyCodeLine{00174\ \ \ \ \ m\_hists[tag].hist-\/>Scale(scale);}
+\DoxyCodeLine{00175\ \ \ \}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Write(\textcolor{keyword}{const}\ std::string\ tag,\ Int\_t\ option\ =\ 0)\{}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ look\ at\ all\ tags\ "{}}\ <<\ tag\ <<\ std::endl;}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_hashist[tag])\{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\ try\ to\ write\ hist\ "{}}\ <<\ tag\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ m\_hists[tag].hist-\/>GetName()\ <<\ \ std::endl;}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ m\_hists[tag].hist-\/>Write();}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \textcolor{comment}{//\ if(m\_hasresponse[tag])\{}}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ std::cout\ <<\ "{}\ try\ to\ write\ response\ "{}\ <<\ tag\ <<\ "{}\ "{}\ <<\ m\_hists[tag].hist-\/>GetName()\ \ <<\ std::endl;}}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ PlotUtils::MnvH2D*\ h\_migration;}}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ PlotUtils::MnvH1D*\ h\_reco;}}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ PlotUtils::MnvH1D*\ h\_truth;}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ //\ \ \ \ \ \ \ \ h\_migration-\/>SetDirectory(0);}}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ //\ \ \ \ \ \ \ \ h\_reco-\/>SetDirectory(0);}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ //\ \ \ \ \ \ \ \ h\_truth-\/>SetDirectory(0);}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ std::cout\ <<\ "{}\ GetMigrationObjects\ will\ now\ complain\ because\ I\ passed\ it\ pointers\ to\ uninitiated\ MnvH2D/1D\ to\ fill\ please\ ignore"{}\ <<\ std::endl;}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ m\_response[tag]-\/>GetMigrationObjects(\ h\_migration,\ h\_reco,\ h\_truth);}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ std::cout\ <<\ h\_migration\ <<\ std::endl;}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ if\ (h\_reco-\/>GetEntries()\ >\ 0)\{}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ h\_migration-\/>Write();}}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ h\_reco-\/>Write();}}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ h\_truth-\/>Write();}}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \}}}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \};}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \textcolor{comment}{//\ inline\ void\ DeleteResponse()\{}}
+\DoxyCodeLine{00210\ \ \ \textcolor{comment}{//\ \ \ for\ (auto\ resp:\ m\_response)\{}}
+\DoxyCodeLine{00211\ \ \ \textcolor{comment}{//\ \ \ \ \ std::cout\ <<\ "{}delete\ migration\ matrix"{}\ <<\ resp.second-\/>GetMigrationMatrix()-\/>GetName()\ ;}}
+\DoxyCodeLine{00212\ \ \ \textcolor{comment}{//\ \ \ \ \ delete\ resp.second;}}
+\DoxyCodeLine{00213\ \ \ \textcolor{comment}{//\ \ \ \}}}
+\DoxyCodeLine{00214\ \ \ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \textcolor{comment}{//\ voodoo\ you\ sometimes\ need}}
+\DoxyCodeLine{00217\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ SyncCVHistos()\{}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ tag:m\_tags)\{}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ m\_hists[tag].SyncCVHistos();}
+\DoxyCodeLine{00220\ \ \ \ \ \}}
+\DoxyCodeLine{00221\ \ \ \};}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \};}
+\DoxyCodeLine{00225\ \};}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HistWrapperMap\_h\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

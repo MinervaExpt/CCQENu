@@ -1,0 +1,111 @@
+\doxysection{utilities Directory Reference}
+\hypertarget{dir_4ce92160be800aa67c883df87930081c}{}\label{dir_4ce92160be800aa67c883df87930081c}\index{utilities Directory Reference@{utilities Directory Reference}}
+\doxysubsubsection*{Directories}
+\begin{DoxyCompactItemize}
+\item 
+directory \mbox{\hyperlink{dir_604de6efdcd0bfdbbb9282100ddfb41f}{tuple\+\_\+finder}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+New script that submits a job to the grid. ~\newline
+
+
+This is intended for CCQEMAT, which has an executable a config file and a prescale
+
+Your MAT distribution should be in the base directory (\$\+BASEDIR) and the whole thing gets tarred up and sent.
+
+On Unix, you need to (ONCE)
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/r\ /exp/minerva/app/users/schellma/MNV9/jsoncpp-\/build\ \$BASEDIR\ \#\ where\ BASEDIR\ is\ where\ MAT\ and\ MAT-\/MINERvA\ and\ CCQENu\ live}
+
+\end{DoxyCode}
+
+
+And at each session you need to
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{jobsub\_client}
+
+\end{DoxyCode}
+\hypertarget{README.md_autotoc_md4}{}\doxysubsection{\texorpdfstring{and whatever you need to get root.}{and whatever you need to get root.}}\label{README.md_autotoc_md4}
+Your executable should be in a subdirectory which is RELATIVE to {\ttfamily \$BASEDIR} -\/ ie {\ttfamily CCQENu/make\+\_\+hists} or something similar.
+
+you then invoke {\ttfamily Submit\+Jobs\+To\+Grid\+\_\+\+MAT.\+py} with your config and playlists and the results come back in a tagged subdirectory of {\ttfamily -\/-\/outdir}
+
+Here is an example how it works. You can find this in file {\ttfamily testp4.\+sh}
+
+My whole MAT setup is in {\ttfamily \$APP/\+NEWMAT} so that needs to go into the tarball. The directory I run the MAT from is {\ttfamily \$APP/\+NEWMAT/\+CCQENu/make\+\_\+hists} so I set RUNDIR to that
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ APP=/exp/minerva/app/users/\$USER}
+\DoxyCodeLine{export\ SCRATCH=/pnfs/minerva/scratch/users/\$USER}
+\DoxyCodeLine{export\ BLUE=/exp/minerva/data/users/\$USER\ \ \ }
+\DoxyCodeLine{}
+\DoxyCodeLine{export\ BASEDIR=\$APP/MNV9\ \ \ \ \#\ \ YOU\ NEED\ TO\ CHANGE\ THIS\ TO\ WHERE\ YOUR\ MAT\ CODE\ IS\ !!!!!!!!!\ }
+\DoxyCodeLine{}
+\DoxyCodeLine{python\ \$BASEDIR/CCQENu/utilities/SubmitJobsToGrid\_MAT.py\ -\/-\/stage=CCQEMAT\ -\/-\/outdir=\$SCRATCH/test\ \(\backslash\)}
+\DoxyCodeLine{\ -\/-\/basedir=\$BASEDIR\ -\/-\/rundir=CCQENu/make\_hists\ -\/-\/playlist=minervame5A\ -\/-\/model=MnvTunev2\ -\/-\/tag=testP4\ \(\backslash\)}
+\DoxyCodeLine{\ -\/-\/mail\ -\/-\/prescale=1\ -\/-\/config=p4\_test\ -\/-\/exe=sidebands\_v2\ -\/-\/sample=QElike\ -\/-\/setup=CCQENu/utilities/setup\_batch\_mat9.sh\ \(\backslash\)}
+\DoxyCodeLine{\ -\/-\/tmpdir=\$SCRATCH/tmp\ -\/-\/expected-\/lifetime=24h\ -\/-\/memory=3000\ \ \ \#-\/-\/debug\ -\/-\/notimestamp}
+
+\end{DoxyCode}
+
+
+{\ttfamily setup\+\_\+batch\+\_\+mat9.\+sh} is the setup script that runs on the remote node. This is for Alma9. If you need to run on SL7, use the old {\ttfamily setup\+\_\+batch\+\_\+mat.\+sh}
+
+You will want to measure the memory and time for a job, memory is pretty constant from playlist to playlist but expect to use time of about 5 x the 5A time for the longest.
+
+The script bigsub.\+sh can make your submit file (like the above) into a full expt submit for Anti\+Neutrino.
+
+{\ttfamily ./bigsub.sh testp4.\+sh} ~\newline
+
+
+creates {\ttfamily bigtestp4.\+sh.\+sh} ~\newline
+
+
+Here is the help file
+
+{\ttfamily python Submit\+Jobs\+To\+Grid\+\_\+\+MAT.\+py -\/-\/help}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ :\ SubmitJobsToGrid\_MAT.py[opts]}
+\DoxyCodeLine{}
+\DoxyCodeLine{Options:}
+\DoxyCodeLine{\ \ -\/h,\ -\/-\/help\ \ \ \ \ \ \ \ \ \ \ \ show\ this\ help\ message\ and\ exit}
+\DoxyCodeLine{\ \ -\/-\/outdir=OUTDIR\ \ \ \ \ \ \ Directory\ to\ write\ tagged\ output\ directory\ to}
+\DoxyCodeLine{\ \ -\/-\/tardir=TARDIR\ \ \ \ \ \ \ Tarball\ location}
+\DoxyCodeLine{\ \ -\/-\/basedir=BASEDIRPATH}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Base\ directory\ for\ making\ tarball\ (full\ path)}
+\DoxyCodeLine{\ \ -\/-\/rundir=RUNDIR\ \ \ \ \ \ \ relative\ path\ in\ basedir\ for\ the\ directory\ you\ run}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ from,\ if\ different}
+\DoxyCodeLine{\ \ -\/-\/setup=SETUP\ \ \ \ \ \ \ \ \ relative\ path\ in\ basedir\ to\ the\ setup\ script}
+\DoxyCodeLine{\ \ -\/-\/config=CONFIG\ \ \ \ \ \ \ relative\ path\ in\ rundir\ for\ json\ config\ file\ (CCQEMAT)}
+\DoxyCodeLine{\ \ -\/-\/stage=STAGE\ \ \ \ \ \ \ \ \ Process\ type}
+\DoxyCodeLine{\ \ -\/-\/sample=SAMPLE\ \ \ \ \ \ \ Sample\ type}
+\DoxyCodeLine{\ \ -\/-\/playlist=PLAYLIST\ \ \ Playlist\ type}
+\DoxyCodeLine{\ \ -\/-\/playlist=PLAYLIST\ \ \ Playlist\ type}
+\DoxyCodeLine{\ \ -\/-\/model=MODEL\ \ \ \ \ \ \ \ \ [OPTIONAL]\ Model\ tune\ type\ to\ set\ \$MYMODEL\ for}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MinervaModel.\ Defaults\ to\ MnvTunev1}
+\DoxyCodeLine{\ \ -\/-\/prescale=PRESCALE\ \ \ Prescale\ MC\ by\ this\ factor\ (CCQEMAT)}
+\DoxyCodeLine{\ \ -\/-\/tag=TAG\ \ \ \ \ \ \ \ \ \ \ \ \ Tag\ your\ release}
+\DoxyCodeLine{\ \ -\/-\/mail\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Want\ mail\ after\ job\ completion\ or\ failure}
+\DoxyCodeLine{\ \ -\/-\/sametar\ \ \ \ \ \ \ \ \ \ \ \ \ Recycle\ the\ same\ tar\ file\ for\ jobsubmission}
+\DoxyCodeLine{\ \ -\/-\/tarfilename=TARFILENAME}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Name\ of\ the\ tarfile\ you\ want\ to\ use}
+\DoxyCodeLine{\ \ -\/-\/memory=MEMORY\ \ \ \ \ \ \ memory\ request\ in\ MB}
+\DoxyCodeLine{\ \ -\/-\/notimestamp\ \ \ \ \ \ \ \ \ Flag\ to\ TURN\ OFF\ time\ stamp\ in\ the\ tag}
+\DoxyCodeLine{\ \ -\/-\/debug\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ debug\ script\ locally\ so\ no\ ifdh}
+\DoxyCodeLine{\ \ -\/-\/tmpdir=TMPDIR\ \ \ \ \ \ \ temporary\ local\ directory\ to\ store\ tarfile\ during\ this}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ script}
+\DoxyCodeLine{\ \ -\/-\/exe=THEEXE\ \ \ \ \ \ \ \ \ \ relative\ path\ for\ the\ executable\ (CCQEMAT)}
+\DoxyCodeLine{\ \ -\/-\/expected-\/lifetime=LIFETIME}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ job\ lifetime\ in\ format\ like\ 12h,\ 1d,\ 60m}
+
+\end{DoxyCode}
+ 

@@ -18,7 +18,7 @@ class chi2fct3d_angles:
     
     def DoEval( self, pars):
         chisq = []   
-        print ("DoEval pars", pars)
+        #print ("DoEval pars", pars)
         for i in range(0,self.samplesize):
             errsx = self.errors[i][0]**2
             errsy = self.errors[i][1]**2
