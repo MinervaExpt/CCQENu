@@ -26,6 +26,7 @@
 
 //ROOT includes
 #include "MnvH1D.h"
+#include "PlotUtils/HistogramUtils.h"
 #include "TInterpreter.h"
 #include "TROOT.h"
 #include "TH1F.h"
@@ -911,7 +912,9 @@ int main(int argc, char* argv[]) {
 		    t5.SetTextAlign(22);
 		    t5.SetNDC(1);
 		    t5.SetTextSize(.03);
-		    mnvPlotter.DrawErrorSummary(bkgsub_slices[side][i]);
+		    //mnvPlotter.axis_maximum = 0.2;
+			mnvPlotter.DrawErrorSummary(bkgsub_slices[side][i]);
+		    //mnvPlotter.axis_maximum = MnvHist::AutoAxisLimit;
 		    std::string label6;
 			t5.Draw("same");
 		    cF.Print(TString(pixheader + "_bkgsub_errors_"+binVarName+"_slice"+i+".png").Data());
@@ -1021,7 +1024,9 @@ int main(int argc, char* argv[]) {
 	    t5.SetTextAlign(22);
 	    t5.SetNDC(1);
 	    t5.SetTextSize(.03);
-	    mnvPlotter.DrawErrorSummary(bkgsub_combined[side]);
+	    mnvPlotter.axis_maximum = 0.2;
+	    mnvPlotter.DrawErrorSummary(bkgsub_combined[side],"TL");
+	    mnvPlotter.axis_maximum = MnvHist::AutoAxisLimit;
 	    std::string label6;
 		t5.Draw("same");
 	    cF.Print(TString(pixheader_combined + "_bkgsub_errors_combined.png").Data());

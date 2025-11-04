@@ -646,6 +646,7 @@ public:
 	
 	// TMVA
 
+	virtual double bdtgResponse() const;
 	virtual double bdtgQELike() const;
 	virtual double bdtg1ChargedPion() const;
 	virtual double bdtg1NeutralPion() const;

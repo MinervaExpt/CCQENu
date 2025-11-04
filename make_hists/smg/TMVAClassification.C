@@ -73,6 +73,8 @@ int main( int argc, char** argv )
 		std::cout << " arguments are:\n [path/to/]TMVAMulticlass <path/to/config> " << std::endl;
 		exit(0);
 	}
+	std::string path(pl);
+	std::string base = path.substr(path.find_last_of("/\\") + 1);
 
 	std::string configfilename(pl+".json");
 	NuConfig config;
@@ -225,8 +227,8 @@ int main( int argc, char** argv )
 	TTree *background     = (TTree*)input->Get(bkgdT.c_str());
 
 	// Create a ROOT output file where TMVA will store ntuples, histograms, etc.
-	
-	TString outfileName("TMVAC.root");
+	TString outfileName = std::string(base+"_"+std::to_string(ntrees)+"_"+strlrnrt.substr(0,strlrnrt.find("."))+"dot"+strlrnrt.substr(2,strlrnrt.find("."))+".root");
+	//TString outfileName("TMVAC.root");
 	std::unique_ptr<TFile> outputFile{TFile::Open(outfileName, "RECREATE")};
 	if (!outputFile || outputFile->IsZombie()) {
 		throw std::runtime_error("ERROR: could not open output file");
@@ -243,7 +245,7 @@ int main( int argc, char** argv )
 	// All TMVA output can be suppressed by removing the "!" (not) in
 	// front of the "Silent" argument in the option string
 	auto factory = std::make_unique<TMVA::Factory>(
-		"TMVAClassification", outputFile.get(),
+		std::string(base+"_"+std::to_string(ntrees)), outputFile.get(),
 		"!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification");
 	auto dataloader_raii = std::make_unique<TMVA::DataLoader>("dataset");
 	auto *dataloader = dataloader_raii.get();

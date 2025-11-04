@@ -171,18 +171,6 @@ void LoopAndFillEventSelection(std::string tag,
 				double aux_weight = 1.;
 
 				if(tmva_variable_size > 0 && data_mc_truth != kTruth){
-					/*v1 = universe->GetMultiplicity();
-					v2 = universe->GetProtonScore1_0();
-					v3 = universe->GetPrimaryProtonTrackVtxGap();
-					v4 = universe->GetMuonToPrimaryProtonAngle();
-					v5 = universe->ProtonRatioTdEdX2TrackLength_0();
-					v6 = universe->GetPrimaryProtonFractionVisEnergyInCone();
-					v7 = universe->GetNumClustsPrimaryProtonEnd();
-					v8 = universe->GetNBlobs();
-					v9 = universe->GetImprovedNMichel();
-					v10 = universe->GetRecoilEnergyGeV();
-					v11 = universe->GetImprovedMichel_Sum_Views();
-					std::vector<float> var_values = {v1,v2,v3,v4,v5,v6,v7,v8,v9,v10,v11};*/
 					std::vector<float> var_values = fund.GetVectorOfValues(universe,var_names);
 					CVUniverse::ComputeTMVAResponse(sample,var_values);
 				}

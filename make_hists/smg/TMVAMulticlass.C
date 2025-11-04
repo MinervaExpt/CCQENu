@@ -42,6 +42,8 @@ int main( int argc, char** argv )
 		std::cout << " arguments are:\n [path/to/]TMVAMulticlass <path/to/config> " << std::endl;
 		exit(0);
 	}
+	std::string path(pl);
+	std::string base = path.substr(path.find_last_of("/\\") + 1);
 
 	std::string configfilename(pl+".json");
 	NuConfig config;
@@ -83,10 +85,11 @@ int main( int argc, char** argv )
 	std::cout << "==> Start TMVAMulticlass" << std::endl;
 
 	// Create a new root output file.
-	TString outfileName = std::string("Multiclassed_"+config.GetString("Tag")+"_"+infilename.substr(0, infilename.find("."))+"_"+std::to_string(ntrees)+"_"+strlrnrt.substr(0,strlrnrt.find("."))+"dot"+strlrnrt.substr(2,strlrnrt.find("."))+".root");
+	//TString outfileName = std::string("Multiclassed_"+config.GetString("Tag")+"_"+infilename.substr(0, infilename.find("."))+"_"+std::to_string(ntrees)+"_"+strlrnrt.substr(0,strlrnrt.find("."))+"dot"+strlrnrt.substr(2,strlrnrt.find("."))+".root");
+	TString outfileName = std::string(base+"_"+std::to_string(ntrees)+"_"+strlrnrt.substr(0,strlrnrt.find("."))+"dot"+strlrnrt.substr(2,strlrnrt.find("."))+".root");
 	TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
 
-	TMVA::Factory *factory = new TMVA::Factory( std::string("TMVAMulticlass_"+config.GetString("Tag")+"_"+std::to_string(ntrees)), outputFile,
+	TMVA::Factory *factory = new TMVA::Factory( std::string(base+"_"+std::to_string(ntrees)), outputFile,
 		                                         "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Multiclass" );
 	TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset");
 

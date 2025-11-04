@@ -516,6 +516,7 @@ public:
 		trueintfunctions["EventRecordTrueEtaCount"] = &CVUNIVERSE::GetEventRecordTrueEtaCount;
 		
 		// TMVA
+		recofunctions["bdtgResponse"] = &CVUNIVERSE::bdtgResponse;
 		recofunctions["bdtgQELike"] = &CVUNIVERSE::bdtgQELike;
 		recofunctions["bdtg1ChargedPion"] = &CVUNIVERSE::bdtg1ChargedPion;
 		recofunctions["bdtg1NeutralPion"] = &CVUNIVERSE::bdtg1NeutralPion;

@@ -2218,6 +2218,20 @@ namespace {
 		SetVectorResponse(response_vec);
 		return 1;
 	}*/
+	double CVUniverse::bdtgResponse() const {
+		if (_is_response_vec_filled) {
+			if (_is_tmva_model_loaded) {
+				return m_response_map["Signal"];
+			}
+			else {
+				return m_response_vec[0];
+			}
+		}
+		else {
+			std::cout << "WARNING: RESPONSE VECTOR NOT FILLED." << std::endl;
+			return -9999.;
+		}
+	}
 	double CVUniverse::bdtgQELike() const {
 		if (_is_response_vec_filled) {
 			if (_is_tmva_model_loaded) {

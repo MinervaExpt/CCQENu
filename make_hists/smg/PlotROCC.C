@@ -11,8 +11,8 @@
 
 int main()
 {
-	std::vector<std::string> tags = {"multipion_bdt_2track"};//{"1track","2track"};//}{"1track","2track","3ptrack"};
-	std::vector<std::string> title_tags = {"Multipion 2 tracks"};//{"1 track","2 tracks"};//{"1 track","2 tracks","3+ tracks"};
+	std::vector<std::string> tags = {"qelike_bdt_2track"};//{"1track","2track"};//}{"1track","2track","3ptrack"};
+	std::vector<std::string> title_tags = {"QELike 2 tracks"};//{"1 track","2 tracks"};//{"1 track","2 tracks","3+ tracks"};
 	//std::vector<int> ntrees = {100,200,300,500,1000};
 	std::vector<int> ntrees = {100};
 	std::vector<std::string> learnrate = {"5"};
@@ -32,7 +32,7 @@ int main()
 
 				TCanvas *c1 = new TCanvas("c1","ROC Curves",200,10,1200,800);
 				c1->SetGrid();
-				c1->DrawFrame(0., 0., 1., 1.);
+				//c1->DrawFrame(0., 0., 1., 1.);
 				TMultiGraph *mg = new TMultiGraph();
 				/*std::string title = "ROC Curves - "+title_tags[i]+" - "+std::to_string(ntrees[j])+" Trees - Learning Rate=0."+learnrate[k];
 				mg->SetTitle(title.c_str());
