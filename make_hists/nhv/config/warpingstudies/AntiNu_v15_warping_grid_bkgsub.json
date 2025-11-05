@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "BkgFittingSub_${MYSAMPLE}_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "BkgFittingSub_firstpass_fullsyst_recoil0mm_logprotonscorecut_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -27,8 +27,8 @@
   "mcRecoToCSV": false,
   "statusbar": false,
   "runsamples": [ 
-    "${MYSAMPLE}"
-    // "QElike",
+    // "${MYSAMPLE}"
+    "QElike",
     // "QElike_maxrecoil",
     // "QElike_maxrecoil_hiEAvail"
     // "QElike_2track"
@@ -36,10 +36,10 @@
     // "QElike_0blob",
     // "QElike_1blob"
     // "QElikeNeutrons"//,
-    // "TrackSideband",
+    "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband"//,
-    // "BlobSideband",
+    "BlobSideband"//,
     // "MultipBlobSideband"
   ],
   "AnalyzeVariables": [],

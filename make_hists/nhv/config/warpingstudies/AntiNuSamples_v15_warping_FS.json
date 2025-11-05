@@ -47,13 +47,13 @@
                 "for": [
                     "selected_reco"
                 ]
-            },
-            "qelikenot": {
-                // "for": ["selected_reco", "selected_truth", "truth", "response"]                
-                "for": [
-                    "selected_reco"
-                ]
-            }
+            }//,
+            // "qelikenot": {
+            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // }
         },
         "legend_entries": {
             "data": "Data",
@@ -61,8 +61,8 @@
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
             // "multipion": "N#pi",
-            "other": "Other",
-            "qelikenot": "QELike Not"
+            "other": "Other"//,
+            // "qelikenot": "QELike Not"
         }
     },
     "QElike_old": {
@@ -82,10 +82,10 @@
         "categories": {
             "qelike": {
                 "for": [
-                    "selected_reco",
-                    "selected_truth",
+                    "selected_reco"//,
+                    // "selected_truth",
                     // "truth",
-                    "response"
+                    // "response"
                 ]
                 // "for": [
                 //     "selected_reco"
@@ -505,7 +505,13 @@
         "reco": "BlobSideband",
         "phase_space": "phase_space",
         "signal": ["qelike"],
-        "background": ["neutralpion", "chargedpion", "multipion", "other", "qelikenot"],
+        "background": [
+            "neutralpion",
+            "chargedpion",
+            "multipion",
+            "other"//,
+            // "qelikenot"
+        ],
         "categories": {
             "qelike": {
                 // "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -522,10 +528,10 @@
             // },
             "other": {
                 "for": ["selected_reco"]
-            },
-            "qelikenot": {
-                "for": ["selected_reco"]
-            }
+            }//,
+            // "qelikenot": {
+            //     "for": ["selected_reco"]
+            // }
         },
         "legend_entries": {
             "data": "Data",
@@ -533,8 +539,8 @@
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
             // "multipion": "N#pi",
-            "other": "Other",
-            "qelikenot": "QELike Not"
+            "other": "Other"//,
+            // "qelikenot": "QELike Not"
         }
     },
     "TrackSideband": {
@@ -542,7 +548,13 @@
         "reco": "TrackSideband",
         "phase_space": "phase_space",
         "signal": ["qelike"],
-        "background": ["neutralpion", "chargedpion", "multipion", "other", "qelikenot"],
+        "background": [
+            "neutralpion",
+            "chargedpion",
+            "multipion",
+            "other"//,
+            // "qelikenot"
+        ],
         "categories": {
             "qelike": {
                 // "for": ["selected_reco", "selected_truth", "truth", "response"]
@@ -559,10 +571,10 @@
             // },
             "other": {
                 "for": ["selected_reco"]
-            },
-            "qelikenot": {
-                "for": ["selected_reco"]
-            }
+            }//,
+            // "qelikenot": {
+            //     "for": ["selected_reco"]
+            // }
         },
         "legend_entries": {
             "data": "Data",
@@ -570,8 +582,8 @@
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
             // "multipion": "N#pi",
-            "other": "Other",
-            "qelikenot": "QELike Not"
+            "other": "Other"//,
+            // "qelikenot": "QELike Not"
         }
     }, 
     "LoPionThetaSideband": {
