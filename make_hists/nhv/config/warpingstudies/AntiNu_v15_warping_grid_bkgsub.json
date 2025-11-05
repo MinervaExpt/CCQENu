@@ -13,7 +13,7 @@
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
   "recoName": "MasterAnaDev",
-  "tunedmc": "none",
+  "tunedmc": "untuned",
   "warpedmc": "${MYWARP}",
   "closure": 0,
   "TuneCategories": [
