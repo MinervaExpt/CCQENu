@@ -265,6 +265,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetEAvailFromBlobsGeV() const;
 
+    virtual double GetSumProtonKEGeV() const;
+
     virtual double GetEAvailLeadingBlobGeV() const;
 
     virtual double GetEAvailNoNonVtxBlobsGeV() const;
@@ -282,6 +284,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetTrueEAvailWithNeutronsGeV() const;
 
     virtual double GetTrueEAvailWiggledGeV() const;
+
+    virtual double GetTrueSumProtonKEGeV() const;
 
     virtual double GetEAvailResolutionGeV() const;
 

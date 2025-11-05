@@ -1292,15 +1292,7 @@ double CVUniverse::GetEAvailDropCandsGeV() const {
     // return recoil - edepGeV;
 
     double edep = 0.0;
-    // std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetNeutEvent();
-    // std::vector<std::unique_ptr<NeutronMultiplicity::NeutCand>>& neutcands = neutevent->GetNeutCands();
-    // if (neutcands.size() == 0) return recoil;
-    // int maxNCands_neutron = m_maxNCands_neutron;
-    // for (unsigned int i = 0; i < neutcands.size(); i++) {
-    //     if (i == 1 && recoil > 0.3) break;
-    //     if (i == m_maxNCands_neutron) break;  // defaults to 9999
-    //     edep += neutcands[i]->GetCandRecoEDep();
-    // }
+
 
     // if (neutevent->GetNNeutCands() == 0) return recoil;
     if (m_neutevent->GetNNeutCands() == 0) return recoil;
@@ -1322,25 +1314,9 @@ double CVUniverse::GetEAvailGeV() const {
     // if (GetNMADBlobs() == 0 || recoil > 0.5) return recoil;
 
     if (GetNMADBlobs() == 0) return recoil;
-
-    // double edepGeV = GetTotNeutBlobEGeV();
-    // return recoil - edepGeV;
-
-    // double edep = 0.0;
-    // std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetNeutEvent();
-
-    // if (neutevent->GetNNeutCands() == 0) return recoil;
-    // for (unsigned int i = 0; i < neutevent->GetNNeutCands(); i++) {
-    //     // if (i == 1 && recoil > 0.3) break;
-    //     // if (recoil > 0.3 && i == m_maxNCands_neutron) break;  // defaults to 9999
-    //     edep += neutevent->GetNeutCand(i)->GetCandRecoEDep();
-    // }
-
     if (m_neutevent->GetNNeutCands() == 0) return recoil;
     double edep = 0.0;
     for (unsigned int i = 0; i < m_neutevent->GetNNeutCands(); i++) {
-        // if (i == 1 && recoil > 0.3) break;
-        // if (recoil > 0.3 && i == m_maxNCands_neutron) break;  // defaults to 9999
         edep += m_neutevent->GetNeutCand(i)->GetCandRecoEDep();
     }
     // if (edep != 0)
@@ -1367,6 +1343,40 @@ double CVUniverse::GetEAvailFromBlobsGeV() const {
         eavail -= m_neutevent->GetNeutCand(i)->GetCandRecoEDep();
     }
     return eavail * MeVGeV;
+}
+
+double CVUniverse::GetSumProtonKEGeV() const {
+    // This adds up all the tracked proton KE, plus the blobs from protons
+    double total = 0.0;
+    double trackE = 0.0;
+    // Add trackE's first 
+    if (CVUniverse::GetMultiplicity() >= 2){
+        int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
+        // trackE += CVUniverse::GetTotalProtonEnergy(0);  // This includes clusters at the end of the track
+        // TODO: maybe should just take the track T and use the blobs to handle the energies for clusters? Use below instead
+        trackE += CVUniverse::GetProtonTfromdEdx(0);
+
+        // This is from the calo and has calo constraint on it
+        // trackE += GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_calib_energy").c_str());
+        if (n_sec_proton_scores > 0) {
+            for (int i = 0; i < n_sec_proton_scores; i++) {
+                // trackE += CVUniverse::GetTotalProtonEnergy(i);  // This includes clusters at the end of the track
+                // TODO: maybe should just take the track T and use the blobs to handle the energies for clusters? Use below instead
+                trackE += CVUniverse::GetProtonTfromdEdx(i+1);
+            // for (int i = 0; i < n_sec_proton_scores; i++) {
+
+                // same as calib_energy in primary
+                // trackE += GetVecElem(std::string(MinervaUniverse::GetTreeName() + "sec_protons_T_fromCalo").c_str(),i); 
+            }
+        }
+    }
+    total += trackE;
+    // Now add blobs
+    if (m_neutevent->GetNProtonCands() == 0) return total * MeVGeV;
+    for (unsigned int i = 0; i < m_neutevent->GetNProtonCands(); i ++) {
+        total += m_neutevent->GetProtonCand(i)->GetCandRecoEDep();
+    }
+    return total * MeVGeV;
 }
 
 double CVUniverse::GetEAvailLeadingBlobGeV() const {
@@ -1514,6 +1524,19 @@ double CVUniverse::GetTrueEAvailWiggledGeV() const {
         Eavail += abs(TMath::Gaus(0.0, 50.0));
     // return std::max(0.0, Eavail * MeVGeV);
     return Eavail * MeVGeV;
+}
+
+double CVUniverse::GetTrueSumProtonKEGeV() const {
+    double total = 0.0;
+    int pdgsize = GetInt("mc_nFSPart");
+    for (int i = 0; i < pdgsize; i++) {
+        int pdg = GetVecElem("mc_FSPartPDG", i);
+        double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
+        if (pdg == 2212) 
+            total += energy - 938.27;
+        else continue;
+    }
+    return total * MeVGeV;
 }
 
 double CVUniverse::GetEAvailResolutionGeV() const { // Hard coding to double check issues 

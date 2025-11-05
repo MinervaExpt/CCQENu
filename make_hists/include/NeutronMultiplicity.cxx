@@ -334,11 +334,15 @@ void NeutEvent::Reset() {
     if (m_ncands == 0) return;
     m_cands.clear();
     m_neutcands.clear();
+    m_protoncands.clear();
     m_trueneutcands.clear();
+    m_trueprotoncands.clear();
 
     m_ncands = 0;
     m_nneutcands = 0;
+    m_nprotoncands = 0;
     m_ntrueneutcands = 0;
+    m_ntrueprotoncands = 0;
 }
 
 // void NeutEvent::SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath) {
@@ -491,11 +495,16 @@ void NeutEvent::SetNeutCands() {
         std::cout << " m_neutcands set already. Clearing..." << std::endl;
         m_neutcands.clear();
         m_nneutcands = 0;
+        m_protoncands.clear();
+        m_nprotoncands = 0;
     }
     for (int i = 0; i < m_ncands; i++) {
         if (GetCandIsNeut(i)) {
             m_neutcands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
             m_nneutcands += 1;
+        } else {
+            m_protoncands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
+            m_nprotoncands += 1;
         }
     }
     _is_neutcands_set = true;
@@ -506,17 +515,24 @@ void NeutEvent::SetTrueNeutCands() {
     if (_is_trueneutcands_set) {
         m_trueneutcands.clear();
         m_ntrueneutcands = 0;
+        m_trueprotoncands.clear();
+        m_nprotoncands = 0;
     }
     for (int i = 0; i < m_ncands; i++) {
         // Only check if it's fiducial and is a true neutron
-        if (CandPassFiducial(i) && (m_cands[i]->GetCandTruthTopPID() == 2112 || abs(m_cands[i]->GetCandTruthTopPID()) == 13 || m_cands[i]->GetCandTruthTopPID() == 0)) {
-            m_trueneutcands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
-            m_ntrueneutcands +=1;
+        if (CandPassFiducial(i)) {
+            if (m_cands[i]->GetCandTruthTopPID() == 2112 || abs(m_cands[i]->GetCandTruthTopPID()) == 13 || m_cands[i]->GetCandTruthTopPID() == 0) {
+                m_trueneutcands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
+                m_ntrueneutcands += 1;
+            }
+            if (m_cands[i]->GetCandTruthTopPID() == 2212) {
+                m_trueprotoncands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
+                m_ntrueprotoncands += 1;
+            }
         }
     }
     _is_trueneutcands_set = true;
 }
-
 
 std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetCands() {
     // Be careful with this, it doesn't necessarily have anything in those cands
@@ -546,10 +562,22 @@ const std::unique_ptr<NeutCand>& NeutEvent::GetNeutCand(int index) {
     return m_neutcands[index];
 }
 
+const std::unique_ptr<NeutCand>& NeutEvent::GetProtonCand(int index) {
+    assert(_is_neutcands_set);
+    assert(index < m_nprotoncands);
+    return m_protoncands[index];
+}
+
 const std::unique_ptr<NeutCand>& NeutEvent::GetTrueNeutCand(int index) {
     assert(_is_trueneutcands_set);
     assert(index < m_ntrueneutcands);
     return m_trueneutcands[index];
+}
+
+const std::unique_ptr<NeutCand>& NeutEvent::GetTrueProtonCand(int index) {
+    assert(_is_trueneutcands_set);
+    assert(index < m_ntrueprotoncands);
+    return m_trueprotoncands[index];
 }
 
 int NeutEvent::GetNCands() {
@@ -563,10 +591,22 @@ int NeutEvent::GetNNeutCands() {
     return m_nneutcands;
 }
 
+int NeutEvent::GetNProtonCands() {
+    if (m_ncands == 0) return 0;
+
+    assert(_is_neutcands_set);
+    return m_nprotoncands;
+}
+
 int NeutEvent::GetNTrueNeutCands() {
     // assert(_is_cands_set);
     assert(_is_trueneutcands_set);
     return m_ntrueneutcands;
+}
+
+int NeutEvent::GetNTrueProtonCands() {
+    assert(_is_trueneutcands_set);
+    return m_ntrueprotoncands;
 }
 
 bool NeutEvent::GetIsTruthSet() {

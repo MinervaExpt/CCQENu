@@ -13,16 +13,16 @@
             "neutralpion",
             "chargedpion",
             // "multipion",
-            "other",
-            "qelikenot"
+            "other"//,
+            // "qelikenot"
         ],
         "categories": {
             "qelike": {
                 "for": [
-                    "selected_reco",
-                    "selected_truth",
+                    "selected_reco"//,
+                    // "selected_truth",
                     // "truth",
-                    "response"
+                    // "response"
                 ]
                 // "for": [
                 //     "selected_reco"

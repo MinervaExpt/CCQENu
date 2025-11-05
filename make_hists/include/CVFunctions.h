@@ -109,10 +109,13 @@ class CVFunctions {
 
         recofunctions["OffsetRecoilEnergyGeV"] = &CVUNIVERSE::GetOffsetRecoilEnergyGeV;
 
+        recofunctions["SumProtonKEGeV"] = &CVUNIVERSE::GetSumProtonKEGeV;
+        truefunctions["TrueSumProtonKEGeV"] = &CVUNIVERSE::GetTrueSumProtonKEGeV;
+
         recofunctions["EAvailFromBlobsGeV"] = &CVUNIVERSE::GetEAvailFromBlobsGeV;
         recofunctions["EAvailGeV"] = &CVUNIVERSE::GetEAvailGeV;
         recofunctions["EAvailLeadingBlobGeV"] = &CVUNIVERSE::GetEAvailLeadingBlobGeV;
-        
+
         recofunctions["EAvailNoNonVtxBlobsGeV"] = &CVUNIVERSE::GetEAvailNoNonVtxBlobsGeV;
 
         truefunctions["TrueEAvailGeV"] = &CVUNIVERSE::GetTrueEAvailGeV;

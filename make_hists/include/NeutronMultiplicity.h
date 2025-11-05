@@ -129,14 +129,17 @@ class NeutEvent {
 
     // More complicated stuff
 
-
    public:
-    int m_ncands = 0;                                             // total number of cands in event
-    int m_nneutcands = 0;                                         // total number of cands passing neutron selection
-    int m_ntrueneutcands = 0;                                     // total number of cands passing neutron selection
-    std::vector<std::unique_ptr<NeutCand>> m_cands = {};          // the candidates the event has
-    std::vector<std::unique_ptr<NeutCand>> m_neutcands = {};      // the candidates that pass neutron selection
-    std::vector<std::unique_ptr<NeutCand>> m_trueneutcands = {};  // the candidates that pass neutron selection
+    int m_ncands = 0;      // total number of cands in event
+    int m_nneutcands = 0;  // total number of cands passing neutron selection
+    int m_nprotoncands = 0;
+    int m_ntrueneutcands = 0;  // total number of cands passing neutron selection
+    int m_ntrueprotoncands = 0;
+    std::vector<std::unique_ptr<NeutCand>> m_cands = {};            // the candidates the event has
+    std::vector<std::unique_ptr<NeutCand>> m_neutcands = {};        // the candidates that pass neutron selection
+    std::vector<std::unique_ptr<NeutCand>> m_protoncands = {};      // the candidates that pass neutron selection
+    std::vector<std::unique_ptr<NeutCand>> m_trueneutcands = {};    // the candidates that pass neutron selection
+    std::vector<std::unique_ptr<NeutCand>> m_trueprotoncands = {};  // the candidates that pass neutron selection
 
    public:
     // TOOD: make neutron config vars in CVUniverse
@@ -178,11 +181,15 @@ class NeutEvent {
     
     const std::unique_ptr<NeutronMultiplicity::NeutCand>& GetCand(int index);  // This makes a copy of a cand to access info outside of neutevent
     const std::unique_ptr<NeutCand>& GetNeutCand(int index);
+    const std::unique_ptr<NeutCand>& GetProtonCand(int index);
     const std::unique_ptr<NeutCand>& GetTrueNeutCand(int index);
+    const std::unique_ptr<NeutCand>& GetTrueProtonCand(int index);
 
     int GetNCands();
     int GetNNeutCands();
+    int GetNProtonCands();
     int GetNTrueNeutCands();
+    int GetNTrueProtonCands();
 
     double GetTotNeutCandEDep(int max_ncands);
 
