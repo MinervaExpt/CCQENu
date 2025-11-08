@@ -9,5 +9,5 @@
 
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=MnvTunev2 --tag=AL9 \
- --mail --prescale=100 --config=p6_run --exe=sidebands_v2 --sample=QElike --setup=CCQENu/utilities/setup_batch_mat9_v1.sh \
+ --mail --prescale=100 --config=p6_run --exe=sidebands_v2 --sample=QElike --setup=CCQENu/utilities/setup_batch_al9_v1.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=3000   #--debug --notimestamp

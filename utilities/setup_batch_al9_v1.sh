@@ -14,9 +14,9 @@ spack load cmake
 export IFDH_CP_MAXRETRIES=0\0\0\0\0  # no retries
 # set up the MAT
 #use to be source $BASEDIR/opt/build/setup.sh
-export WHEREIPUTMYCODE=/exp/minerva/app/users/schellma/MNV9
-export WHEREIPUTTHEMAT=${WHEREIPUTTHECODE}
-export BASEDIR=${WHEREIPUTMYCODE}
+#export WHEREIPUTMYCODE=/exp/minerva/app/users/schellma/MNV9
+#export WHEREIPUTTHEMAT=${WHEREIPUTTHECODE}
+#export BASEDIR=${WHEREIPUTMYCODE}
 export CCQEMAT=${BASEDIR}/CCQENu/make_hists
 export UTILITIES=${BASEDIR}/CCQENu/utilities
 OLD_PATH=${PATH}
