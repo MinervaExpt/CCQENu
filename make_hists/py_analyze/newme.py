@@ -4,7 +4,7 @@
 TEST = False # only does Enu
 DEBUG = False # even more printout
 STOP1 = False # just does readin
-rescale = True # expect a fit of some sort
+rescale = False # expect a fit of some sort
 
 import os,sys
 from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixDSym, TVectorD

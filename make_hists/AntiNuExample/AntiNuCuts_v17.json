@@ -1,0 +1,439 @@
+
+{ // reconstruction level definitions
+    "Comments":["v17 change the muonmatchtrack code to be correct for p6","v13 fix - Apply IsCC and pdg only to signal, not to background",
+    "v16 add in Inclusive antiNufor studies",
+        "v13 - make CCQELike a single cut so you can reverse it.",
+      "v9 - May 28, 2022, remove the FULL cuts and stick with all angles",
+    "also add QElikeNot which is complement to QElike with recoil cut reversed"],
+    "QElike":[
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"Z Vertex","min":5980,"max":8422,"variable":"ZVertex"},
+    {"name":"Has New MINOS Match Track","equals":1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
+    {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
+    {"name":"Max MuonMomentumPar ","max":50.0,"variable":"PparMuGeV"},
+    {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
+    {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
+  ],
+  "QElikeNu": [
+    {
+      "name": "NoDeadTime",
+      "max": 1,
+      "variable": "DeadTime"
+    },
+    {
+      "name": "ApothemX",
+      "max": 850,
+      "variable": "ApothemX"
+    },
+    {
+      "name": "ApothemY",
+      "max": 850,
+      "variable": "ApothemY"
+    },
+    {
+      "name": "Z Vertex",
+      "min": 5980,
+      "max": 8422,
+      "variable": "ZVertex"
+    },
+    {
+      "name": "Has MINOS Match",
+      "equals": -1,
+      "variable": "IsMinosMatchTrack"
+    }, // -1 for some reason
+    {
+      "name": "NuHelicity",
+      "equals": 1,
+      "variable": "NuHelicity"
+    }, // 2 for anti-neutrino
+    {
+      "name": "Max Muon Angle in Degrees",
+      "max": 20.0,
+      "variable": "ThetamuDegrees"
+    },
+    // {
+    //   "name": "Min MuonMomentumPar ",
+    //   "min": 1.5,
+    //   "variable": "PparMuGeV"
+    // },
+    // {
+    //   "name": "Max MuonMomentumPar ",
+    //   "max": 15.0,
+    //   "variable": "PparMuGeV"
+    // },
+    {
+      "name": "Max Multiplicity",
+      "min": 1,
+      "max": 2,
+      "variable": "Multiplicity"
+    },
+    {
+      "name": "GoodRecoil",
+      "equals": 1,
+      "variable": "GoodRecoil"
+    }
+  ],
+    "QElikeAllN":[
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"Z Vertex","min":5980,"max":8422,"variable":"ZVertex"},
+    {"name":"Has MINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
+    {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
+    {"name":"Max MuonMomentumPar ","max":50.0,"variable":"PparMuGeV"},
+    {"name":"Max Multiplicity","max":100,"variable":"Multiplicity"},
+    {"name":"GoodRecoil","equals":1,"variable":"GoodRecoil"}
+  ],
+    "QElikeNot":[
+    {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+    {"name":"ApothemX","max":850,"variable":"ApothemX"},
+    {"name":"ApothemY","max":850,"variable":"ApothemY"},
+    {"name":"Z Vertex","min":5980,"max":8422,"variable":"ZVertex"},
+    {"name":"Has MINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+    {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+    {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
+    {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
+    {"name":"Max MuonMomentumPar ","max":50.0,"variable":"PparMuGeV"},
+    {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"},
+    {"name":"GoodRecoil","equals":0,"variable":"GoodRecoil"}
+  ],
+  "NoRecoil":[
+      {"name":"NoDeadTime","max":1,"variable":"DeadTime"},
+      {"name":"ApothemX","max":850,"variable":"ApothemX"},
+      {"name":"ApothemY","max":850,"variable":"ApothemY"},
+      {"name":"Z Vertex","min":5980,"max":8422,"variable":"ZVertex"},
+      {"name":"Has MINOS Match","equals":-1,"variable":"IsMinosMatchTrack"}, // -1 for some reason
+      {"name":"NuHelicity","equals":2,"variable":"NuHelicity"},  // 2 for anti-neutrino
+      {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"ThetamuDegrees"},
+      {"name":"Min MuonMomentumPar ","min":1.5,"variable":"PparMuGeV"},
+      {"name":"Max MuonMomentumPar ","max":50.0,"variable":"PparMuGeV"},
+      {"name":"Max Multiplicity","max":1,"variable":"Multiplicity"}
+    ],
+    "EHadronic": [
+      {
+        "name": "NoDeadTime",
+        "max": 1,
+        "variable": "DeadTime"
+      },
+      {
+        "name": "ApothemX",
+        "max": 850,
+        "variable": "ApothemX"
+      },
+      {
+        "name": "ApothemY",
+        "max": 850,
+        "variable": "ApothemY"
+      },
+      {
+        "name": "Z Vertex",
+        "min": 5980,
+        "max": 8422,
+        "variable": "ZVertex"
+      },
+      {
+        "name": "Has MINOS Match",
+        "equals": -1,
+        "variable": "IsMinosMatchTrack"
+      }, // -1 for some reason
+      {
+        "name": "NuHelicity",
+        "equals": 2,
+        "variable": "NuHelicity"
+      }, // 2 for anti-neutrino
+      {
+        "name": "Max Muon Angle in Degrees",
+        "max": 20.0,
+        "variable": "ThetamuDegrees"
+      },
+      {
+        "name": "Min MuonMomentumPar ",
+        "min": 1.5,
+        "variable": "PparMuGeV"
+      },
+      {
+        "name": "Max MuonMomentumPar ",
+        "max": 50.0,
+        "variable": "PparMuGeV"
+      },
+      {
+        "name": "Max Multiplicity",
+        "max": 1,
+        "variable": "Multiplicity"
+      },
+      { "name": "Min Ehadronic",
+        "min":0.100,
+        "variable": "CalRecoilEnergyGeVCalibrated"
+      }   
+    ],
+    "Inclusive": [
+      {
+        "name": "NoDeadTime",
+        "max": 1,
+        "variable": "DeadTime"
+      },
+      {
+        "name": "ApothemX",
+        "max": 850,
+        "variable": "ApothemX"
+      },
+      {
+        "name": "ApothemY",
+        "max": 850,
+        "variable": "ApothemY"
+      },
+      {
+        "name": "Z Vertex",
+        "min": 5980,
+        "max": 8422,
+        "variable": "ZVertex"
+      },
+      {
+        "name": "Has MINOS Match",
+        "equals": -1,
+        "variable": "IsMinosMatchTrack"
+      }, // -1 for some reason
+      {
+        "name": "NuHelicity",
+        "equals": 2,
+        "variable": "NuHelicity"
+      },
+       // 2 for anti-neutrino
+      // {
+      //   "name": "Max Muon Angle in Degrees",
+      //   "max": 20.0,
+      //   "variable": "ThetamuDegrees"
+      // },
+      // {
+      //   "name": "Min MuonMomentumPar ",
+      //   "min": 1.5,
+      //   "variable": "PparMuGeV"
+      // },
+      // {
+      //   "name": "Max MuonMomentumPar ",
+      //   "max": 15.0,
+      //   "variable": "PparMuGeV"
+      // },
+       {
+         "name": "Max Multiplicity",
+         "min": 1,
+         "variable": "Multiplicity"
+       }
+    ],
+    "InclusiveNu": [ // this selects neutrinos, not antineutrinos
+      {
+        "name": "NoDeadTime",
+        "max": 1,
+        "variable": "DeadTime"
+      },
+      {
+        "name": "ApothemX",
+        "max": 850,
+        "variable": "ApothemX"
+      },
+      {
+        "name": "ApothemY",
+        "max": 850,
+        "variable": "ApothemY"
+      },
+      {
+        "name": "Z Vertex",
+        "min": 5980,
+        "max": 8422,
+        "variable": "ZVertex"
+      },
+      {
+        "name": "Has MINOS Match",
+        "equals": -1,
+        "variable": "IsMinosMatchTrack"
+      }, // -1 for some reason
+      {
+        "name": "NuHelicity",
+        "equals": 1,
+        "variable": "NuHelicity"
+      },
+      // 2 for anti-neutrino
+      // {
+      //   "name": "Max Muon Angle in Degrees",
+      //   "max": 20.0,
+      //   "variable": "ThetamuDegrees"
+      // },
+      // {
+      //   "name": "Min MuonMomentumPar ",
+      //   "min": 1.5,
+      //   "variable": "PparMuGeV"
+      // },
+      // {
+      //   "name": "Max MuonMomentumPar ",
+      //   "max": 15.0,
+      //   "variable": "PparMuGeV"
+      // },
+      {
+        "name": "Max Multiplicity",
+        "min": 1,
+        "variable": "Multiplicity"
+      }
+    ],
+  // phase space definitions
+  "phase_space":[
+    {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
+    {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
+    {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"},
+    {"name":"TrueMuonMomentumPar Min","min":1.5,"variable":"TruePparMuGeV"},
+    {"name":"TrueMuonMomentumPar Max","max":50.0,"variable":"TruePparMuGeV"},
+    {"name":"Max Muon Angle in Degrees","max":20.0,"variable":"TrueThetamuDegrees"}
+  ],
+  "phase_space_all_angles":[
+    {"name":"TrueApothemX","max":850,"variable":"TrueApothemX"},
+    {"name":"TrueApothemY","max":850,"variable":"TrueApothemY"},
+    {"name":"Z Vertex","min":5980,"max":8422,"variable":"TrueZVertex"},
+    {"name":"TrueMuonMomentumPar Min","min":1.5,"variable":"TruePparMuGeV"},
+    {"name":"TrueMuonMomentumPar Max","max":50.0,"variable":"TruePparMuGeV"}
+  ],
+  "phase_space_inclusive": [
+    {
+        "name": "TrueApothemX",
+        "max": 850,
+        "variable": "TrueApothemX"
+    },
+    {
+        "name": "TrueApothemY",
+        "max": 850,
+        "variable": "TrueApothemY"
+    },
+    {
+        "name": "Z Vertex",
+        "min": 5980,
+        "max": 8422,
+        "variable": "TrueZVertex"
+    }
+    // {
+    //     "name": "TrueMuonMomentumPar Min",
+    //     "min": 1.5,
+    //     "variable": "TruePparMuGeV"
+    // },
+    // {
+    //     "name": "TrueMuonMomentumPar Max",
+    //     "max": 15.0,
+    //     "variable": "TruePparMuGeV"
+    // }
+],
+  
+  // signal definitions
+ "qelike":[
+    {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.0}
+  ],
+  "qelikeNu": [
+    {
+      "name": "PDG",
+      "equals": 14,
+      "variable": "TruthNuPDG"
+    },
+    {
+      "name": "TruthIsCC",
+      "equals": 1,
+      "variable": "TruthIsCC"
+    },
+    {
+      "name": "TruthIsCCQELike",
+      "equals": 1,
+      "variable": "TruthIsCCQELike",
+      "protonKECutMeV": 12000.0
+    }
+  ],
+  "inclusive": [
+    {
+      "name": "PDG",
+      "equals": -14,
+      "variable": "TruthNuPDG"
+    },
+    {
+      "name": "TruthIsCC",
+      "equals": 1,
+      "variable": "TruthIsCC"
+    }
+  ],
+  "inclusiveNu": [
+    {
+      "name": "PDG",
+      "equals": 14,
+      "variable": "TruthNuPDG"
+    },
+    {
+      "name": "TruthIsCC",
+      "equals": 1,
+      "variable": "TruthIsCC"
+    }
+  ],
+  "wrongsign": [
+    {
+        "name": "PDG",
+        "equals": 14,
+        "variable": "TruthNuPDG"
+    },
+    {
+        "name": "TruthIsCC",
+        "equals": 1,
+        "variable": "TruthIsCC"
+    }
+],
+ "qelike1p":[
+    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.0},
+    {"name":"MCIntType","max":7,"variable":"MCIntType"}
+  ],
+ "qelike2p2h":[
+    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":1,"variable":"TruthIsCCQELike","protonKECutMeV":120.0},
+    {"name":"MCIntType","equals":8,"variable":"MCIntType"}
+  ],
+  "qelikeNunot":[
+    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELike","equals":0,"variable":"TruthIsCCQELike","protonKECutMeV":12000.0}
+  ],
+  "qelikenot": [
+    //{"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+    //{"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {
+      "name": "TruthIsCCQELike",
+      "equals": 0,
+      "variable": "TruthIsCCQELike",
+      "protonKECutMeV": 120.0
+    }
+  ],
+  "qelike_np":[
+  //  {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+  //  {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELikeAll","equals":1,"variable":"TruthIsCCQELikeAll"}
+  ],
+  "qelike1p_np":[
+   // {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+   // {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELikeAll","equals":1,"variable":"TruthIsCCQELikeAll"},
+    {"name":"MCIntType","max":7,"variable":"MCIntType"}
+  ],
+  "qelike2p2h_np":[
+   // {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+   // {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELikeAll","equals":1,"variable":"TruthIsCCQELikeAll"},
+    {"name":"MCIntType","equals":8,"variable":"MCIntType"}
+  ],
+  "qelikenot_np":[
+   // {"name":"PDG","equals":-14,"variable":"TruthNuPDG"},
+   // {"name":"TruthIsCC","equals":1,"variable":"TruthIsCC"},
+    {"name":"TruthIsCCQELikeAll","equals":0,"variable":"TruthIsCCQELikeAll"}
+  ],
+  "data":[] // data doesn't cut anything at truth level
+}
+

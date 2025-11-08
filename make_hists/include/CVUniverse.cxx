@@ -7,6 +7,7 @@
 // your "Get" functions the way you want them. In that case, you  don't need to
 // re-write them here.
 // ========================================================================
+#define NEWMATCH
 #ifndef CVUNIVERSE_cxx
 #define CVUNIVERSE_cxx
 
@@ -292,7 +293,11 @@ double CVUniverse::GetWeight() const {
     // if(wgt_geant != 1.0) std::cout << ShortName() << wgt_geant << std::endl;
 
     // MINOS muon tracking efficiency
+    #ifndef NEWMATCH
     if (!IsTruth() && IsMinosMatchMuon()) wgt_mueff = GetMinosEfficiencyWeight();
+    #else
+    if (!IsTruth() && GetIsMinosMatchTrack()) wgt_mueff = GetMinosEfficiencyWeight();
+    #endif
 
     return wgt_flux_and_cv * wgt_genie * wgt_2p2h * wgt_rpa * wgt_mueff * wgt_geant;
 }
@@ -311,7 +316,11 @@ double CVUniverse::GetWeight() const {
 bool CVUniverse::FastFilter() const {
     bool result = false;
     // if (GetMultiplicity() < 1) return result;
-    if (GetIsMinosMatchTrack() != -1) return result;
+    #ifdef NEWMATCH # this changes with new definition
+        if (GetIsMinosMatchTrack() == 0) return result;
+    #else
+        if (GetIsMinosMatchTrack() != -1) return result;
+    #endif
     if (GetZVertex() < 5980 || GetZVertex() > 8422) return result;
     if (GetApothemX() > 850.) return result;
     if (GetApothemY() > 850.) return result;
@@ -328,7 +337,14 @@ int CVUniverse::GetDeadTime() const { return GetInt("phys_n_dead_discr_pair_upst
 
 
 
-int CVUniverse::GetIsMinosMatchTrack() const { return GetInt("muon_is_minos_match_track"); }
+int CVUniverse::GetIsMinosMatchTrack() const {
+    #ifdef NEWMATCH
+        return GetInt("isMinosMatchTrack");
+    #else
+        return GetInt("muon_is_minos_match_track");
+    #endif
+}
+
 double CVUniverse::GetEnuHadGeV() const { return CVUniverse::GetEmuGeV() + CVUniverse::GetHadronEGeV(); }  // GetEnuGeV()?
 double CVUniverse::GetTrueEnuGeV() const { return GetDouble("mc_incomingE") * MeVGeV; }
 
