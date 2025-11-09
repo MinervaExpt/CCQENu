@@ -2,15 +2,20 @@
 # BASEDIR needs to be the directory that contains your MAT/MAT-MINERvA/UnfoldUtils/Analysis code
 # RUNDIR is where your analysis executable actually lie, in this case in $BASEDIR/CCQENu/make_hists
 echo " this uses a spack 1.0 setup"
-echo "setup-batch_al9_v1.sh"
-source /cvmfs/dune.opensciencegrid.org/spack/setup-env.sh
-echo "Activate dune-workflow"
-spack env activate dune-workflow
+echo "setup-batch_al9_v2.sh"
+#source /cvmfs/dune.opensciencegrid.org/spack/setup-env.sh
+. /cvmfs/dune.opensciencegrid.org/dune-spack/spack-develop-fermi/setup-env.sh
+echo "Activate dune-tutorial"
+spack env activate dune-tutorial
 echo "load GCC and CMAKE so don't use system"
 echo "GCC"
 spack load gcc@12.5.0 arch=linux-almalinux9-x86_64_v2 
 echo "CMAKE"
 spack load cmake 
+echo "IFDHC"
+spack load ifdhc
+echo "IFDHC-CONFIG"
+spack load ifdhc-config
 export IFDH_CP_MAXRETRIES=0\0\0\0\0  # no retries
 # set up the MAT
 export CCQEMAT=${BASEDIR}/CCQENu/make_hists
