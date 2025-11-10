@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "FallCollab1Dhep02_allblobs1D_1track_2d_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "ERemovedTest_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -43,10 +43,12 @@
     // "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "NeutCandsEdep",
-    "NeutCandsTrackEndDist",
-    "NeutCandsvtxSphereDist",
-    "NeutCandsMuonCosTheta"//,
+    "ERemoved",
+    "EAvail"
+    // "NeutCandsEdep",
+    // "NeutCandsTrackEndDist",
+    // "NeutCandsvtxSphereDist",
+    // "NeutCandsMuonCosTheta"//,
     // "NeutCandsTopMCPID"
     // // "NBlobs",
     // "Multiplicity",
@@ -124,10 +126,11 @@
     // // "NProtonPionTracks"
   ],
   "Analyze2DVariables": [
-        "NeutCandsEdep_NeutCandsTopMCPID",
-        "NeutCandsTrackEndDist_NeutCandsTopMCPID",
-        "NeutCandsvtxSphereDist_NeutCandsTopMCPID",
-        "NeutCandsMuonCosTheta_NeutCandsTopMCPID" //,
+    "EAvail_ERemoved"
+        // "NeutCandsEdep_NeutCandsTopMCPID",
+        // "NeutCandsTrackEndDist_NeutCandsTopMCPID",
+        // "NeutCandsvtxSphereDist_NeutCandsTopMCPID",
+        // "NeutCandsMuonCosTheta_NeutCandsTopMCPID" //,
         // "NeutCandsTopMCPID"
   ],
   //   // "LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",

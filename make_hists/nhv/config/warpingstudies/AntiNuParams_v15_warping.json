@@ -12,6 +12,7 @@
         "recoil_branch": "recoil_energy_nonmuon_nonvtx0mm"
     },
     "NeutronConfig": {
+        "doneutron":false,
         // "maxNCands": 2,
         // "vtxdist_min": 100.0,
         // "vtx_zdist_min": 100.0,
@@ -24,7 +25,7 @@
         // "muoncone_min": 15.0,
         // "muondist_min": 100.0,
         "vtxdist_edep_funct": true,
-        "trackenddist_edep_funct": false,
+        "trackenddist_edep_funct": true,
         "edep_min": 1.5,
         // "Is3D": 1,
         "muonangle_edep_funct": true//,

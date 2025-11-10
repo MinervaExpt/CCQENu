@@ -181,8 +181,10 @@ void LoopAndFillEventSelection(std::string tag,
                 auto universe = error_band_universes[iuniv];
 
                 universe->SetEntry(i);
+                // if (doneutron) {
                 if (data_mc_truth == kMC || data_mc_truth == kTruth) universe->SetNeutEvent(true);
                 else universe->SetNeutEvent(false);
+                // }
                 // Process this event/universe
                 // double weight = 1;
                 // if (universe->ShortName() == "cv" ) weight = data_mc_truth == kData ? 1. : universe->GetWeight();

@@ -59,10 +59,16 @@ class NeutCand {
     void SetReco(int blobID, int is3D, int view, int nclusters, int nHIclusters, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath);
     void SetReco(int blobID, int is3D, int view, int nclusters, int nHIclusters, double recoEDep, double clusterMaxE, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector endposition, ROOT::Math::XYZVector flightpath, ROOT::Math::XYZVector trackendpath);
 
+    // minimum viable needed for my selection
+    void SetReco(int blobID, int is3D, int view, double recoEDep, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector flightpath);
+    void SetReco(int blobID, int is3D, int view, double recoEDep, ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector flightpath, ROOT::Math::XYZVector trackendpath);
+
     // SetBlobID(int index);
 
     // truth functions
     void SetTruth(int truthPID, int truthTopMCPID, ROOT::Math::XYZVector TopMomentum);
+    // minimum viable needed for my selection
+    void SetTruth(int truthPID, int truthTopMCPID);
 
     int GetCandBlobID();
     int GetCandIs3D();
@@ -90,6 +96,7 @@ class NeutCand {
 // class to hold all the neutron candidates for an event
 class NeutEvent {
    private:
+    bool m_doneutron = true;
     // set up via config, contain info to check cands by
     double m_vtxdist_max = -1.;                // in mm
     double m_vtxdist_min = -1.;                // in mm
@@ -162,7 +169,7 @@ class NeutEvent {
     // NeutEvent();
     // void SetCands(int n_neutcands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath);
     void SetCands(int ncands, ROOT::Math::XYZVector vtx, ROOT::Math::XYZVector mupath, ROOT::Math::XYZVector trackend);
-
+    bool GetDoNeutron() { return m_doneutron;}
    private:
     // void ClearCands();  // This is to clean up, called internally in SetCands if some cands are set.
     void SetNeutCands();
@@ -172,6 +179,10 @@ class NeutEvent {
     void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<int> views, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<ROOT::Math::XYZVector> begpositions, std::vector<ROOT::Math::XYZVector> endpositions);
     void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<int> views, std::vector<int> nclusters, std::vector<int> nHIclusters, std::vector<double> EDeps, std::vector<double> clusterMaxEs, std::vector<ROOT::Math::XYZVector> begpositions, std::vector<ROOT::Math::XYZVector> endpositions);
     void SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ);
+
+    // Minimum needed for my selection, reduces number of getters needed
+    void SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<int> views, std::vector<double> EDeps, std::vector<ROOT::Math::XYZVector> begpositions);
+    void SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs);
 
     bool GetIsTruthSet();
 

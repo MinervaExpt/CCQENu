@@ -324,6 +324,10 @@ bool CVUniverse::SetNeutronConfig(NuConfig neutron_config, bool print) {
 }
 
 void CVUniverse::SetNeutEvent(bool dotruth) {
+    // if (CVUniverse::m_neutron_config->IsMember("doneutron")){
+    //     if (CVUniverse::m_neutron_config->GetBool("doneutron"))
+    //         return;
+    // }
     // std::cout << "_is neut_event_set ";
     if (_is_neut_event_set) {
         // std::cout << "true" << std::endl;
@@ -335,34 +339,33 @@ void CVUniverse::SetNeutEvent(bool dotruth) {
         this->m_neutevent = std::make_shared<NeutronMultiplicity::NeutEvent>(CVUniverse::m_neutron_config);
         _is_neut_event_set = true;
     }
+    if (!m_neutevent->GetDoNeutron())
+        return;
     ROOT::Math::XYZVector pmu(GetMuon4V().X(), GetMuon4V().Y(), GetMuon4V().Z());
     ROOT::Math::XYZVector vtx(GetVec<double>("vtx").at(0), GetVec<double>("vtx").at(1), GetVec<double>("vtx").at(2));
     std::vector<ROOT::Math::XYZVector> blobbegpositions = GetBlobsBegPos();
-    std::vector<ROOT::Math::XYZVector> blobendpositions = GetBlobsEndPos();
+    // std::vector<ROOT::Math::XYZVector> blobendpositions = GetBlobsEndPos();
     this->m_neutevent->SetCands(CVUniverse::GetNMADBlobs(),
                                 vtx,
                                 pmu,
                                 CVUniverse::GetPrimaryProtonTrackEnd());
-    // this->m_neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()),
-    //                            GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()),
-    //                            GetVec<int>((GetAnaToolName() + "_Blob2DView").c_str()),
-    //                            GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()),
-    //                            GetVec<double>((GetAnaToolName() + "_BlobClusterMaxE").c_str()),
-    //                            blobbegpositions, blobendpositions);
+
     this->m_neutevent->SetReco(GetVec<int>((GetAnaToolName() + "_BlobID").c_str()),
                                GetVec<int>((GetAnaToolName() + "_BlobIs3D").c_str()),
                                GetVec<int>((GetAnaToolName() + "_Blob2DView").c_str()),
-                               GetVec<int>((GetAnaToolName() + "_BlobNClusters").c_str()),
-                               GetVec<int>((GetAnaToolName() + "_BlobNHeavyIonizingClusters").c_str()),
+                            //    GetVec<int>((GetAnaToolName() + "_BlobNClusters").c_str()),
+                            //    GetVec<int>((GetAnaToolName() + "_BlobNHeavyIonizingClusters").c_str()),
                                GetVec<double>((GetAnaToolName() + "_BlobTotalE").c_str()),
-                               GetVec<double>((GetAnaToolName() + "_BlobClusterMaxE").c_str()),
-                               blobbegpositions, blobendpositions);
+                            //    GetVec<double>((GetAnaToolName() + "_BlobClusterMaxE").c_str()),
+                               blobbegpositions//, 
+                            //    blobendpositions
+                            );
     if (dotruth) {
         this->m_neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()),
-                                    GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()),
-                                    GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPx").c_str()),
-                                    GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPy").c_str()),
-                                    GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPz").c_str()));
+                                    GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()));//,
+                                    // GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPx").c_str()),
+                                    // GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPy").c_str()),
+                                    // GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPz").c_str()));
     }
 
 }
@@ -1325,6 +1328,16 @@ double CVUniverse::GetEAvailGeV() const {
     return recoil - edep * MeVGeV;
 }
 
+double CVUniverse::GetERemovedGeV() const {
+    if (GetNMADBlobs() == 0) return 0.0;
+    if (m_neutevent->GetNNeutCands() == 0) return 0.0;
+    double edep = 0.0;
+    for (unsigned int i = 0; i < m_neutevent->GetNNeutCands(); i++) {
+        edep += m_neutevent->GetNeutCand(i)->GetCandRecoEDep();
+    }
+    return edep * MeVGeV;
+}
+
 double CVUniverse::GetEAvailFromBlobsGeV() const {
     if (GetNMADBlobs() == 0) return 0.0;
     double eavail = 0.0;
@@ -2114,6 +2127,60 @@ int CVUniverse::GetPlotNeutCandMCPID() const {
     }
 }
 
+double CVUniverse::GetRemovalEnergyEfficiency() const {
+    if (GetNMADBlobs() == 0)
+        return 1.0;
+    
+    int ncands = m_neutevent->GetNCands();
+    if (ncands == 0 )
+        return 1.0;
+    int ntrueneutcands = m_neutevent->GetNTrueNeutCands();
+    if (ntrueneutcands == 0) {
+        
+    }
+}
+
+// This is GENIE parent of all blobs
+int CVUniverse::GetPlotBlobCandTopMCPID(int index) const {
+    if (GetNMADBlobs() < index + 1) {
+        return -9999;
+    }
+    // std::unique_ptr<NeutronMultiplicity::NeutEvent> neutevent = CVUniverse::GetTruthNeutEvent();
+    // int nneutcands = neutevent->GetNNeutCands();
+    int ncands = m_neutevent->GetNCands();
+    if (ncands < index + 1)
+        return -9999;
+    // int pid = neutevent->GetNeutCand(index)->GetCandTruthTopPID();
+    int pid = m_neutevent->GetCand(index)->GetCandTruthTopPID();
+    // std::cout << "pid      for cand " << index << "\t" << pid << "\n";
+
+    // if (pid == 0 || pid == -1) // is zero for blobs with no genie parent?
+    if (pid == -1)
+        return -9999;
+    if (pid == 2112)  // neutron
+        return 1;
+    else if (pid == 2212)  // proton
+        return 2;
+    else if (pid == 111)  // pi0
+        return 3;
+    else if (pid == 211)  // pi+
+        return 4;
+    else if (pid == -211)  // pi-
+        return 5;
+    else if (pid == 22)  // photon
+        return 6;
+    else if (abs(pid) == 11)  // electron
+        return 7;
+    else if (abs(pid) == 13)  // muon
+        return 8;
+    else if (pid == 0)  // no genie parent
+        return 9;
+    else {
+        // std::cout << "other pid = " << pid << std::endl;
+        return 10;
+    }
+}
+
 int CVUniverse::GetPlotNeutCandTopMCPID(int index) const {
     if (GetNMADBlobs() < index + 1) {
         return -9999;
@@ -2130,23 +2197,23 @@ int CVUniverse::GetPlotNeutCandTopMCPID(int index) const {
     // if (pid == 0 || pid == -1) // is zero for blobs with no genie parent?
     if (pid == -1)
         return -9999;
-    if (pid == 2112)          // neutron
-        return 1;  
-    else if (pid == 2212)     // proton
-        return 2; 
-    else if (pid == 111)      // pi0
-        return 3; 
-    else if (pid == 211)      // pi+
-        return 4; 
-    else if (pid == -211)     // pi-
-        return 5;  
-    else if (pid == 22)       // photon
-        return 6;  
+    if (pid == 2112)  // neutron
+        return 1;
+    else if (pid == 2212)  // proton
+        return 2;
+    else if (pid == 111)  // pi0
+        return 3;
+    else if (pid == 211)  // pi+
+        return 4;
+    else if (pid == -211)  // pi-
+        return 5;
+    else if (pid == 22)  // photon
+        return 6;
     else if (abs(pid) == 11)  // electron
-        return 7; 
+        return 7;
     else if (abs(pid) == 13)  // muon
-        return 8; 
-    else if (pid == 0)        // no genie parent
+        return 8;
+    else if (pid == 0)  // no genie parent
         return 9;
     else {
         // std::cout << "other pid = " << pid << std::endl;

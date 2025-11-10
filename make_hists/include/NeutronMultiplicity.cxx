@@ -85,11 +85,43 @@ void NeutCand::SetReco(int blobID, int is3D, int view, int nclusters, int nHIclu
     _is_candtrackend_set = true;
 }
 
+void NeutCand::SetReco(int blobID, int is3D, int view,
+                       double recoEDep,
+                       ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector flightpath) {
+    m_recoset = true;
+    m_blobID = blobID;
+    m_is3D = is3D;
+    m_view = view;
+    m_recoEDep = recoEDep;
+    m_begposition = begposition;
+    m_flightpath = flightpath;
+}
+
+void NeutCand::SetReco(int blobID, int is3D, int view, 
+                       double recoEDep, 
+                       ROOT::Math::XYZVector begposition, ROOT::Math::XYZVector flightpath, ROOT::Math::XYZVector trackend) {
+    m_recoset = true;
+    m_blobID = blobID;
+    m_is3D = is3D;
+    m_view = view;
+    m_recoEDep = recoEDep;
+    m_begposition = begposition;
+    m_flightpath = flightpath;
+    m_trackend = trackend;
+    _is_candtrackend_set = true;
+}
+
 void NeutCand::SetTruth(int truthPID, int truthTopMCPID, ROOT::Math::XYZVector TopMomentum) {
     m_truthset = true;
     m_truthPID = truthPID;
     m_truthTopMCPID = truthTopMCPID;
     m_TopMomentum = TopMomentum;
+}
+
+void NeutCand::SetTruth(int truthPID, int truthTopMCPID) {
+    m_truthset = true;
+    m_truthPID = truthPID;
+    m_truthTopMCPID = truthTopMCPID;
 }
 
 int NeutCand::GetCandBlobID() {
@@ -246,6 +278,8 @@ NeutEvent::NeutEvent(NuConfig config) {
 NeutEvent::NeutEvent() {}
 
 void NeutEvent::SetConfig(NuConfig config) {
+    if (config.IsMember("doneutron")) m_doneutron = config.GetBool("doneutron");
+    if (!m_doneutron) return;
     if (config.IsMember("vtxdist_max")) m_vtxdist_max = config.GetDouble("vtxdist_max");
     if (config.IsMember("vtxdist_min")) m_vtxdist_min = config.GetDouble("vtxdist_min");
     if (config.IsMember("vtx_zdist_min")) m_vtx_zdist_min = config.GetDouble("vtx_zdist_min");
@@ -320,6 +354,7 @@ void NeutEvent::SetConfig(NuConfig config) {
 
 void NeutEvent::Reset() {
     if (!_is_cands_set) return;
+    if (!m_doneutron) return;
     _is_cands_set = false;
     _is_neutcands_set = false;
     _is_trueneutcands_set = false;
@@ -461,6 +496,47 @@ void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::v
     this->SetNeutCands();
 }
 
+void NeutEvent::SetReco(std::vector<int> blobIDs, std::vector<int> is3Ds, std::vector<int> views, std::vector<double> EDeps, std::vector<ROOT::Math::XYZVector> begpositions) {
+    if (blobIDs.size() != m_ncands) {
+        std::cout << "ERROR: NeutronMultiplicity::NeutEvent::SetReco number of blobs doesn't match input.\n\tblobIDs.size() " << blobIDs.size() << "m_ncands " << m_ncands << std::endl;
+        exit(1);
+    }
+    // Avoid filling with uninited memory
+    if (m_ncands == 0) {
+        _recoset = true;
+        return;
+    }
+    for (int i = 0; i < m_ncands; i++) {
+        ROOT::Math::XYZVector flightpath = ROOT::Math::XYZVector();
+        if (!is3Ds[i]) {
+            // std::cout << "view: " << views[i] << std::endl;
+            // std::cout << "\tstart blob pos:\t" << begpositions[i].X() << "\t" << begpositions[i].Y() << "\t" << begpositions[i].Z() << std::endl;
+
+            if (views[i] == 1) {
+                begpositions[i].SetXYZ(begpositions[i].X(), m_vtx.Y(), begpositions[i].Z());
+            } else {
+                ROOT::Math::XYZVector tmp_begpos = ROOT::Math::VectorUtil::RotateZ(begpositions[i], NeutronMultiplicity::view_angles[views[i]]);
+                ROOT::Math::XYZVector tmp_vtx = ROOT::Math::VectorUtil::RotateZ(m_vtx, NeutronMultiplicity::view_angles[views[i]]);
+                // std::cout << "\tmid blob pos:  \t" << tmp_begpos.X() << "\t" << tmp_begpos.Y() << "\t" << tmp_begpos.Z() << std::endl;
+                // std::cout << "\tmid vtx pos:   \t" << tmp_vtx.X() << "\t" << tmp_vtx.Y() << "\t" << tmp_vtx.Z() << std::endl;
+                tmp_begpos.SetXYZ(tmp_begpos.X(), tmp_vtx.Y(), tmp_begpos.Z());
+                begpositions[i] = ROOT::Math::VectorUtil::RotateZ(tmp_begpos, -view_angles[views[i]]);
+            }
+            // std::cout << "\tend blob pos:  \t" << begpositions[i].X() << "\t" << begpositions[i].Y() << "\t" << begpositions[i].Z() << std::endl;
+        }
+        flightpath = begpositions[i] - m_vtx;
+
+        if (!m_evthastrack)
+            m_cands[i]->SetReco(blobIDs[i], is3Ds[i], views[i], EDeps[i], begpositions[i], flightpath);
+        else
+            m_cands[i]->SetReco(blobIDs[i], is3Ds[i], views[i], EDeps[i], begpositions[i], flightpath, m_trackend);
+    }
+    std::sort(m_cands.begin(), m_cands.end(), compare_cands);
+    _recoset = true;
+
+    this->SetNeutCands();
+}
+
 void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs, std::vector<double> truthTopMomentumsX, std::vector<double> truthTopMomentumsY, std::vector<double> truthTopMomentumsZ) {
     if (truthPIDs.size() != m_ncands) {
         std::cout << "ERROR: NeutronMultiplicity::NeutEvent::SetTruth number of blobs doesn't match input.\n\truthPIDs.size() " << truthPIDs.size() << "m_ncands " << m_ncands << std::endl;
@@ -485,6 +561,32 @@ void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMC
         }
     }
     
+    _truthset = true;
+    this->SetTrueNeutCands();
+}
+
+void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMCPIDs) {
+    if (truthPIDs.size() != m_ncands) {
+        std::cout << "ERROR: NeutronMultiplicity::NeutEvent::SetTruth number of blobs doesn't match input.\n\truthPIDs.size() " << truthPIDs.size() << "m_ncands " << m_ncands << std::endl;
+        exit(1);
+    }
+    // Avoid filling with uninited memory
+    if (m_ncands == 0) {
+        _truthset = true;
+        return;
+    }
+    for (int i = 0; i < m_ncands; i++) {
+        int blobID(m_cands[i]->m_blobID);
+        m_cands[i]->SetTruth(truthPIDs[blobID], truthTopMCPIDs[blobID]);
+    }
+    if (_is_neutcands_set) {
+        for (auto& cand : m_neutcands) {
+            int blobID(cand->m_blobID);
+            // std::cout << "neutblobid " << blobID << std::endl;
+            cand->SetTruth(truthPIDs[blobID], truthTopMCPIDs[blobID]);
+        }
+    }
+
     _truthset = true;
     this->SetTrueNeutCands();
 }
@@ -551,61 +653,61 @@ std::vector<std::unique_ptr<NeutCand>>& NeutEvent::GetTrueNeutCands() {
 }
 
 const std::unique_ptr<NeutCand>& NeutEvent::GetCand(int index) {
-    assert(_is_cands_set);
+    assert(_is_cands_set && m_doneutron);
     assert(index < m_ncands);
     return m_cands[index];
 }
 
 const std::unique_ptr<NeutCand>& NeutEvent::GetNeutCand(int index) {
-    assert(_is_neutcands_set);
+    assert(_is_neutcands_set && m_doneutron);
     assert(index < m_nneutcands);
     return m_neutcands[index];
 }
 
 const std::unique_ptr<NeutCand>& NeutEvent::GetProtonCand(int index) {
-    assert(_is_neutcands_set);
+    assert(_is_neutcands_set && m_doneutron);
     assert(index < m_nprotoncands);
     return m_protoncands[index];
 }
 
 const std::unique_ptr<NeutCand>& NeutEvent::GetTrueNeutCand(int index) {
-    assert(_is_trueneutcands_set);
+    assert(_is_trueneutcands_set && m_doneutron);
     assert(index < m_ntrueneutcands);
     return m_trueneutcands[index];
 }
 
 const std::unique_ptr<NeutCand>& NeutEvent::GetTrueProtonCand(int index) {
-    assert(_is_trueneutcands_set);
+    assert(_is_trueneutcands_set && m_doneutron);
     assert(index < m_ntrueprotoncands);
     return m_trueprotoncands[index];
 }
 
 int NeutEvent::GetNCands() {
-    assert(_is_cands_set);
+    assert(_is_cands_set && m_doneutron);
     return m_ncands;
 }
 
 int NeutEvent::GetNNeutCands() {
     // assert(_is_cands_set);
-    assert(_is_neutcands_set);
+    assert(_is_neutcands_set && m_doneutron);
     return m_nneutcands;
 }
 
 int NeutEvent::GetNProtonCands() {
     if (m_ncands == 0) return 0;
 
-    assert(_is_neutcands_set);
+    assert(_is_neutcands_set && m_doneutron);
     return m_nprotoncands;
 }
 
 int NeutEvent::GetNTrueNeutCands() {
     // assert(_is_cands_set);
-    assert(_is_trueneutcands_set);
+    assert(_is_trueneutcands_set && m_doneutron);
     return m_ntrueneutcands;
 }
 
 int NeutEvent::GetNTrueProtonCands() {
-    assert(_is_trueneutcands_set);
+    assert(_is_trueneutcands_set && m_doneutron);
     return m_ntrueprotoncands;
 }
 

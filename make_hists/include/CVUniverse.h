@@ -263,6 +263,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetEAvailGeV() const;
 
+    virtual double GetERemovedGeV() const;
+
     virtual double GetEAvailFromBlobsGeV() const;
 
     virtual double GetSumProtonKEGeV() const;
@@ -426,6 +428,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     // virtual double GetTotNeutBlobEGeV(double recoil) const;
     virtual double GetTrueTotNeutBlobEGeV() const;
     virtual int GetPlotNeutCandMCPID() const;
+
+    virtual double GetRemovalEnergyEfficiency() const;
+
+    virtual int GetPlotBlobCandTopMCPID(int index) const;
 
     virtual int GetPlotNeutCandTopMCPID(int index) const;
     virtual int GetPlotLeadingNeutCandTopMCPID() const;

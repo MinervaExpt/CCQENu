@@ -3,18 +3,18 @@
   "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
-  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance_hd.json",
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance.json",
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping_hep01.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "FallCollab1Dhep02_no2p2htune_allblobsremoval_EAvailDists_types_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "SumProtonKE_Test_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
   "recoName": "MasterAnaDev",
   "tunedmc": "untuned",
-  "warpedmc": "no2p2htune",
+  "warpedmc": "none",
   "closure": 0,
   "TuneCategories": [
     "qelike",
@@ -25,6 +25,7 @@
   "DoTypes": true,
   "pdg": -14,
   "mcRecoToCSV": false,
+  "statusbar": true,
   "runsamples": [
     "QElike"//,
     // "QElike_2track"
@@ -32,10 +33,10 @@
     // "QElike_0blob",
     // "QElike_1blob"
     // "QElikeNeutrons"//,
-    // "TrackSideband",
+    "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband"//,
-    // "BlobSideband",
+    "BlobSideband",
     // "MultipBlobSideband"
   ],
   "AnalyzeVariables": [
@@ -47,7 +48,6 @@
     // "NNeutBlobs",
     // "recoil",
     // "NeutCandsTopMCPID"
-
     // "NeutCandMCPID",
     // "LeadingIsoBlobsPrimaryMCPID"
     // "NBlobs",
@@ -63,6 +63,7 @@
     // "Q2QE" //,
     // "FitQ2QE",
     "EAvail",
+    "SumProtonKE",
     // "EAvailNoNonVtxBlobs",
     // "pzmuHD",
     // "ptmuHD",

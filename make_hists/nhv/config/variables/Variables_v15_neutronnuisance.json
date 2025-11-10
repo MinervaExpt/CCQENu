@@ -1270,6 +1270,37 @@
       ],
       "fluxnorm": false
     },
+    "ERemoved": {
+      "reco": "ERemovedGeV",
+      "true": "TrueEAvailGeV",
+      "name": "ERemoved",
+      "title": "E_{Removed} in GeV",
+      "bins": [
+        0.0,
+        0.005,
+        0.01,
+        0.015,
+        0.02,
+        0.03,
+        0.05,
+        0.1,
+        0.2,
+        0.4,
+        0.8
+      ],
+      // "bins": [
+      //   // -0.5,
+      //   0.0,
+      //   0.04,
+      //   0.1,
+      //   0.18,
+      //   0.3,
+      //   0.5,
+      //   1.0
+      //   // 0.75
+      // ],
+      "fluxnorm": false
+    },
     "EAvailFromBlobs": {
       "reco": "EAvailFromBlobsGeV",
       "true": "TrueEAvailGeV",
@@ -1488,6 +1519,24 @@
       "for": [
         "selected_reco"
       ]
+    },
+    "SumProtonKE": {
+      "reco": "SumProtonKEGeV",
+      "true": "TrueSumProtonKEGeV",
+      "name": "SumProtonKE",
+      "title": "#Sigma T_{p}",
+      "bins": [
+        // -0.5,
+        0.0,
+        0.04,
+        0.1,
+        0.18,
+        0.3,
+        0.5,
+        1.0
+        // 0.75
+      ],
+      "fluxnorm": false
     }
   }
 }
