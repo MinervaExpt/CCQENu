@@ -28,7 +28,7 @@
   "statusbar": true,
   "runsamples": [ 
     // "${MYSAMPLE}"
-    "QElike"//,
+    "QElike",
     // "QElike_maxrecoil",
     // "QElike_maxrecoil_hiEAvail"
     // "QElike_2track"
@@ -36,10 +36,10 @@
     // "QElike_0blob",
     // "QElike_1blob"
     // "QElikeNeutrons"//,
-    // "TrackSideband",
+    "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband"//,
-    // "BlobSideband"//,
+    "BlobSideband"//,
     // "MultipBlobSideband"
   ],
   "AnalyzeVariables": [],
