@@ -587,9 +587,14 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         std::string sample(tag, 0, tag.find("___"));
         for (int i = 0; i < m_fitSamples.size(); i++) {
             if (m_fitSamples[i] == sample) {
-                if (m_dofitFill_x) values.first += i * (GetBinVecX().back() - GetBinVecX()[0]);
-                if (m_dofitFill_y) values.second += i * (GetBinVecY().back() - GetBinVecY()[0]);
-                break;
+                if (m_dofitFill_x) values.first += (double)i * (GetBinVecX().back() - GetBinVecX()[0]);
+                else values.first = values.first;
+                if (m_dofitFill_y) values.second += (double)i * (GetBinVecY().back() - GetBinVecY()[0]);
+                else
+                    values.second = values.second;
+
+                // break;
+                return values;
             }
         }
         return values;
@@ -599,11 +604,25 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     void FillForFit2D(std::string tag, CVUniverse* univ, 
                     const double x_value, const double y_value,
                     const double weight, const double scale = 1.0) {
+        // std::string sample(tag, 0, tag.find("___"));
+        // if (sample != "QElike") {
+        //     std::cout << sample << " before check fitfill " << std::setprecision(4) << x_value << "\t" << std::setprecision(4) << y_value << std::endl;
+        // }
         if (!m_dofitFill_x && !m_dofitFill_y) return;
-        if (x_value < GetBinVecX()[0] || x_value > GetBinVecX().back() || y_value < GetBinVecY()[0] || y_value > GetBinVecY().back()) return;  // Not worried about under or overflow here, and can mess up hist filling
-
+        // if (sample != "QElike") {
+        //     std::cout << sample << " before check vals " << std::setprecision(4) << x_value << "\t" << std::setprecision(4) << y_value << std::endl;
+        // }
+        if (x_value < GetBinVecX()[0] || x_value > GetBinVecX().back() || y_value < GetBinVecY()[0] || y_value > GetBinVecY().back()) {
+            return;  // Not worried about under or overflow here, and can mess up hist filling
+        }
+        // if (sample != "QElike") {
+        //     std::cout << sample << " before fill vals " << std::setprecision(4) << x_value << "\t" << std::setprecision(4) << y_value << std::endl;
+        // }
         if (hasMC[tag] && m_tunedmc != "tuned") {
             std::pair<double,double> values = GetFitFillValue(tag, x_value, y_value);
+            // if (sample != "QElike") {
+            //     std::cout << sample << " \tfill vals " << std::setprecision(4) << values.first << "\t" << std::setprecision(4) << values.second << std::endl;
+            // }
             m_selected_mc_forfit.Fill2D(tag, univ, values.first, values.second, weight);
         }
         if (hasTunedMC[tag] && scale >= 0.) {
@@ -614,11 +633,27 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
 
     // overload Fill fit histogram (via NHV's scheme) for Data
     void FillForFit2D(std::string tag, CVUniverse* univ, const double x_value, const double y_value) {
+        std::string sample(tag, 0, tag.find("___"));
+        // if (sample != "QElike") {
+        //     std::cout << sample << " before check fitfill " << std::setprecision(4) << x_value << "\t" << std::setprecision(4) << y_value << std::endl;
+        // }
         if (!m_dofitFill_x && !m_dofitFill_y) return;
+        // if (sample != "QElike") {
+        //     std::cout << sample << " before check vals " << std::setprecision(4) << x_value << "\t" << std::setprecision(4) << y_value << std::endl;
+        // }
         if (x_value < GetBinVecX()[0] || x_value > GetBinVecX().back() || y_value < GetBinVecY()[0] || y_value > GetBinVecY().back()) return;  // Not worried about under or overflow here, and can mess up hist filling
 
         if (hasData[tag]) {
             std::pair<double, double> values = GetFitFillValue(tag, x_value, y_value);
+            // if (sample != "QElike") {
+            //     std::cout << sample << " \tfill vals " << std::setprecision(4) << values.first << "\t" << std::setprecision(4) << values.second << std::endl;
+            // }
+            if (values.first > m_fitbinning_x.back() || values.second > m_fitbinning_y.back()) {
+                std::cout << " in fit overflow  " << std::setprecision(4) << values.first << "\t" << std::setprecision(4) << values.second << std::endl;
+            }
+            if (values.first < m_fitbinning_x[0] || values.second < m_fitbinning_y[0]) {
+                std::cout << " in fit underflow " << std::setprecision(4) << values.first << "\t" << std::setprecision(4) << values.second << std::endl;
+            }
             m_selected_data_forfit.Fill2D(tag, univ, values.first, values.second);
         }
     }
