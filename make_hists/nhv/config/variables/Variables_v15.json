@@ -509,6 +509,7 @@
       "fluxnorm": false
     },
     "FitQ2QE": {
+      "dofitfill": false,
       "reco": "Q2QEGeV",
       "true": "TrueQ2QEGeV",
       "name": "Q2QE",
