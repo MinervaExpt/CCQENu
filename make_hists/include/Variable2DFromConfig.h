@@ -163,8 +163,8 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     HM2D m_tuned_selected_mc_forfit;
     HM2D m_selected_data_forfit;
    private:
-    bool m_dofitFill_x;
-    bool m_dofitFill_y;
+    bool m_dofitFill_x = false;
+    bool m_dofitFill_y = false;
     std::vector<double> m_fitbinning_x;
     std::vector<double> m_fitbinning_y;
     std::vector<std::string> m_fitSamples;  // list of the tags for each sample
