@@ -4,7 +4,6 @@
 # hms 9-10-2023
 
 
-
 import sys,os,math
 import ROOT
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas,TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
@@ -12,16 +11,33 @@ import PlotUtils
 import math
 # from PlotUtils import HyperDimLinearizer, GridCanvas
 
-TEST=False
-noData=False  # use this to plot MC only types
-sigtop=True # use this to place signal on top of background
+TEST = False
+noData = False  # use this to plot MC only types
+sigtop = True  # use this to place signal on top of background
 
 frac_max = 0.7
 
-pzmuHDbins = [1.5, 3., 6., 10., 15.]
-ptmuHDbins = [0.0,0.1,0.3,0.7,1.25,2.5]
-recoilHDbins = [0.0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5]
-global_bins3d = [recoilHDbins,ptmuHDbins,pzmuHDbins]
+pzmuHDbins = [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 7, 8, 9, 10, 15]
+ptmuHDbins = [
+    0,
+    0.075,
+    0.15,
+    0.25,
+    0.325,
+    0.4,
+    0.475,
+    0.55,
+    0.7,
+    0.85,
+    1,
+    1.25,
+    1.5,
+    2.5,
+]
+recoilHDbins = [0.0, 0.045, 0.1125, 0.2025, 0.315, 0.5, 1.0]
+
+
+global_bins3d = [recoilHDbins, ptmuHDbins, pzmuHDbins]
 analysistype = 1 # for 1D full linear
 IncludeSysBool = False
 pzmu_ptmu_recoil_bins3d = [pzmuHDbins,ptmuHDbins,recoilHDbins]
@@ -30,17 +46,33 @@ ptmu_pzmu_recoil_bins3d = [ptmuHDbins,pzmuHDbins,recoilHDbins]
 global_bins_dict = {"pzmu_ptmu_recoil":[pzmuHDbins,ptmuHDbins,recoilHDbins], "recoil_ptmu_pzmu":[recoilHDbins,ptmuHDbins,pzmuHDbins], "ptmu_pzmu_recoil": [ptmuHDbins,pzmuHDbins,recoilHDbins]}
 # Plotting and canvas stuff
 
-vars_todo = ["recoil_ptmu_pzmu"]
+vars_todo = ["pzmu_ptmu_recoil"]
 samples_todo = ["QElike"]
-order_signal = list(["other","multipion","neutralpion","chargedpion","qelike","data"])
-order_sideband = list(["qelike","other","multipion","neutralpion","chargedpion","data"])
+order_signal = list(
+    [
+        "other",
+        #  "multipion",
+        "neutralpion",
+        "chargedpion",
+        "qelike",
+        "data",
+    ]
+)
+order_sideband = list(
+    ["qelike", 
+     "other", 
+    #  "multipion", 
+     "neutralpion", 
+     "chargedpion", 
+     "data"]
+)
 
 catscolors = {
 "data":ROOT.kBlack, 
 "qelike":ROOT.kBlue-6,
 "chargedpion":ROOT.kMagenta-6,
 "neutralpion":ROOT.kRed-6,
-"multipion":ROOT.kGreen-6,
+# "multipion":ROOT.kGreen-6,
 "other":ROOT.kYellow-6}
 
 catsnames = {
@@ -48,7 +80,7 @@ catsnames = {
 "qelike":"QElike",
 "chargedpion":"1#pi^{+/-}",
 "neutralpion":"1#pi^{0}",
-"multipion":"N#pi",
+# "multipion":"N#pi",
 "other":"Other"}
 
 
@@ -192,8 +224,6 @@ def ScaleStack(stack_list, multipliers=None):
             out_stack_list.append(stack_list[i])
 
     return out_stack_list
-
-
 
 
 def PlotDataMCOnGrid(grid_canvas, title, data_list, stack_list, multipliers = None, plotmax = None, bin_range_string_list = None):

@@ -40,7 +40,7 @@ noData = global_noData  # dummy bc dumb
 dotypes = False  # use this if ou want to do by types
 # dotuned=False  # use this if you have tuned hists
 doratio = True  # use this if you want to include a data/mc ratio
-# projY = True
+projY = False
 
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
 
@@ -76,16 +76,12 @@ def GetHistDict(i_file, POTScale):
         if ("types" in parse[4]) and (not dotypes):
             continue
         if ("types" not in parse[4]) and dotypes:
-            if cat == "data":
-                index = 0
-            else: continue
+            continue
         if "simulfit" in parse[4]:
             continue
         if hist == "h":
             continue
-        if hist != "hHD" and cat != "data" and (not dotypes):
-            continue        
-        if hist != "h2D" and dotypes:
+        if hist != "hHD" and cat != "data":
             continue
         if cat == "data" and hist != "h2D":
             continue
@@ -95,28 +91,18 @@ def GetHistDict(i_file, POTScale):
         #     continue
         if sample not in samplestodo:
             continue
-        
-        flag = ""
-        index = -1
+
         if "tuned" in parse[4]:
             sample += "_Tuned"
-            flag = "tuned_type_"
-        else:
-            flag = "types_"
-        if dotypes and "types" in parse[4]:
-            index = int(parse[4].replace(flag,""))
-            if cat in backgrounds or cat == "qelikenot":
-                index += 10
-
         if hist == "hHD":
             if "_" in variable:
                 if len(variable.split("_")) == 3:
                     # Skip 2D vars that don't have the PID as a y axis
                     if (
-                        variable.split("_")[2].find("NeutCandTopMCPID") == -1
-                        and variable.split("_")[2].find("NeutCandsTopMCPID") == -1
+                        variable.split("_")[2].find("ProtonCandMCPID") == -1
+                        and variable.split("_")[2].find("ProtonCandsMCPID") == -1
                     ):
-                        print("Missing NeutCandTopMCPID in ", variable)
+                        print("Missing ProtonCandMCPID in ", variable)
                         continue
                     # Add to list to loop over later
                     if variable not in varsHDtodo:
@@ -135,17 +121,6 @@ def GetHistDict(i_file, POTScale):
             else:
                 print("Skipping variable that isn't formatted properly: ", variable)
                 continue
-        if hist == "h2D" and dotypes:
-            if "_" in variable:
-                if len(variable.split("_")) == 2:
-                    if variable not in vars2Dtodo:
-                        vars2Dtodo.append(variable)
-                else:
-                    print("Skipping variable that isn't formatted properly: ", variable)
-                    continue
-            else:
-                print("Skipping variable that isn't formatted properly: ", variable)
-                continue
 
         print("adding hist to the list ", name)
         if sample not in groups.keys():
@@ -154,89 +129,52 @@ def GetHistDict(i_file, POTScale):
             groups[sample][variable] = {}
         if cat not in groups[sample][variable].keys():
             groups[sample][variable][cat] = {}
-        if dotypes and index not in groups[sample][variable][cat].keys():
-            if index < 0:
-                print("do types but no types found?")
-                sys.exit(1)
-            groups[sample][variable][cat][index] = {}
-            
-            
+
         # print("\t",sample, variable, cat)
         h = i_file.Get(name).Clone()
         if h.GetEntries() <= 0:
             print("hist ", name, " has no entries, skipping...")
             continue
-
+        h.SetFillColor(catscolors[cat])
+        # h.SetLineColor(catscolors[cat] + 1)
+        h.SetLineColor(ROOT.TColor.GetColorDark(catscolors[cat]))
         if "data" in cat:
             if h.GetEntries() <= 0:
                 continue
+            # h.SetMarkerStyle(20)
+            # h.SetMarkerSize(1.5)
         else:
             h.Scale(POTScale)
-        if not dotypes:
-            h.SetFillColor(catscolors[cat])
-            # h.SetLineColor(catscolors[cat] + 1)
-            h.SetLineColor(ROOT.TColor.GetColorDark(catscolors[cat]))
-            groups[sample][variable][cat] = h
-        else:
-            tmpindex = index
-            if cat in backgrounds or cat == "qelikenot":
-                tmpindex -= 10
-                h.SetFillStyle(3244)
-            h.SetFillColor(type_colors[tmpindex])
-            # h.SetLineColor(catscolors[cat] + 1)
-            h.SetLineColor(ROOT.TColor.GetColorDark(type_colors[tmpindex])) # TODO this might not work for these colors
-            groups[sample][variable][cat][index] = h
+        # if cat in backgrounds:
+        #     h.SetFillStyle(3244)
 
-
+        groups[sample][variable][cat] = h
     # do the plotting
     if "qelikenot" not in backgrounds:
         backgrounds.append("qelikenot")
         print("Combining backgrounds to make a background total")
         for a_sample in groups.keys():
             for b_var in groups[a_sample].keys():
-                if not dotypes:
-                    if "_" not in b_var:
+                if "_" not in b_var:
+                    continue
+                if len(b_var.split("_"))!=3:
+                    continue
+                if "qelikenot" in groups[a_sample][b_var].keys():
+                    continue
+                groups[a_sample][b_var]["qelikenot"] = {}
+                first_cat = True
+                for c_cat in backgrounds:
+                    if c_cat == "qelikenot":
                         continue
-                    if len(b_var.split("_"))!=3:
+                    tmp_hist = groups[a_sample][b_var][c_cat].Clone()
+                    if first_cat:
+                        groups[a_sample][b_var]["qelikenot"] = tmp_hist.Clone(
+                            tmp_hist.GetName().replace(c_cat, "qelikenot")
+                        )
+                        first_cat = False
                         continue
-                    if "qelikenot" in groups[a_sample][b_var].keys():
-                        continue
-                    groups[a_sample][b_var]["qelikenot"] = {}
-                    first_cat = True
-                    for c_cat in backgrounds:
-                        if c_cat == "qelikenot":
-                            continue
-                        tmp_hist = groups[a_sample][b_var][c_cat].Clone()
-                        if first_cat:
-                            groups[a_sample][b_var]["qelikenot"] = tmp_hist.Clone(
-                                tmp_hist.GetName().replace(c_cat, "qelikenot")
-                            )
-                            first_cat = False
-                            continue
-                        groups[a_sample][b_var]["qelikenot"].Add(tmp_hist)
-                else:
-                    if "_" not in b_var:
-                        continue
-                    if len(b_var.split("_"))!=2:
-                        continue
-                    if "qelikenot" in groups[a_sample][b_var].keys():
-                        continue
-                    groups[a_sample][b_var]["qelikenot"] = {}
-                    
-                    first_cat = True
-                    for c_cat in backgrounds:
-                        if c_cat == "qelikenot":
-                            continue
-                        for index in groups[a_sample][b_var][c_cat].keys():
-                            tmp_hist = groups[a_sample][b_var][c_cat][index].Clone()
-                            if first_cat:
-                                groups[a_sample][b_var]["qelikenot"][index] = tmp_hist.Clone(
-                                    tmp_hist.GetName().replace(c_cat, "qelikenot")
-                                )
-                            else:
-                                groups[a_sample][b_var]["qelikenot"][index].Add(tmp_hist)
-                        if first_cat:
-                            first_cat = False
+                    groups[a_sample][b_var]["qelikenot"].Add(tmp_hist)
+
     return groups
 
 
@@ -301,7 +239,7 @@ def MakePlotDir(subdir=""):
         os.mkdir(os.path.join(plotdir, subdir))
     return os.path.join(plotdir, subdir)
 
-def PanelCanvas(name, n_xbins, n_ybins, x_size=2000, y_size=1500):
+def PanelCanvas(name, n_xbins, n_ybins, x_size=1000, y_size=750):
     """name is the name for the canvas
     title is the title for the canvas
     n_xbins and n_ybins are number of x and y bins of each 2D hist
@@ -327,7 +265,7 @@ def PanelCanvas(name, n_xbins, n_ybins, x_size=2000, y_size=1500):
     return gc2
 
 
-def CCQECanvas(name, title, xsize=1800, ysize=1200):
+def CCQECanvas(name, title, xsize=1000, ysize=1800):
     c2 = ROOT.TCanvas(name, title, xsize, ysize)
     # c2.SetLeftMargin(0.1)
     c2.SetRightMargin(0.15)
@@ -336,7 +274,8 @@ def CCQECanvas(name, title, xsize=1800, ysize=1200):
     c2.SetBottomMargin(0.1)
     return c2
 
-def MakeHistPretty(hist,pidtype,cat,projwidth=1.):
+
+def MakeHistPretty(hist,pid,cat,projwidth=1.):
     """
     hist is the projected 1D hist you are looking at
     pid is the zbin/particle hist you are looking at
@@ -349,20 +288,13 @@ def MakeHistPretty(hist,pidtype,cat,projwidth=1.):
         # hist.SetMarkerSize(1.5)
         hist.SetMarkerColor(ROOT.kBlack)
         hist.SetLineColor(ROOT.kBlack)
-    elif not do types:
-        if pidtype == -1:
+    else:
+        if pid == -1:
             print("something wrong with ", hist.GetName())
-        hist.SetFillColor(bin_pid_colors[pidtype])
-        hist.SetLineColor(bin_pid_colors[pidtype])
+        hist.SetFillColor(bin_pid_colors[pid])
+        hist.SetLineColor(bin_pid_colors[pid])
         if cat in backgrounds:
             hist.SetFillStyle(3244)
-    else:
-        hist.SetFillColor(type_colors[pidtype])
-        hist.SetLineColor(type_colors[pidtype])
-        if cat in backgrounds:
-            hist.SetfillStyle(3244)
-
-
     return hist
 
 def CCQELegend(xlow, ylow, xhigh, yhigh):
@@ -491,6 +423,10 @@ var_short_names = {
     "EAvail": "E_{Avail}",
     "recoil": "recoil",
     "pzmu": "p_{||}",
+    "Q2QE": "Q^{2}_{QE}",
+    "PrimaryProtonScore": "Primary Proton Score",
+    "ProtonScores": "All Proton Scores",
+    "ProtonTfromdEdx": "Proton T"
 }
 
 
@@ -592,7 +528,7 @@ if len(sys.argv) > 2:
 f = TFile.Open(filename, "READONLY")
 plotdirbase = os.getenv("OUTPUTLOC")
 
-plotdir = MakePlotDir("neutnuisancePlotsHD")
+plotdir = MakePlotDir("ProtonScorePlotsHD")
 dirname = filename.replace(".root", "_neutnuisanceplots")
 for cat in catstodo:
     dirname += "_" + cat
@@ -610,7 +546,7 @@ POTScale = dataPOT / mcPOTprescaled
 print("POTScale: ", POTScale)
 
 groups = {}
-scaleX = ["Q2QE"]
+logvars = ["Q2QE"]
 groups = GetHistDict(f, POTScale)
 
 if not noData:
@@ -622,7 +558,6 @@ ROOT.gStyle.SetOptStat(0)
 # template = "%s___%s___%s___%s"
 
 for a_sample in groups.keys():
-
     # for b_var in groups[a_sample].keys():
     if "_Tuned" in a_sample:
         dotuned = True
@@ -633,6 +568,8 @@ for a_sample in groups.keys():
     for b_var in varsHDtodo:
         if b_var not in groups[a_sample].keys():
             continue
+        xvar = b_var.split("_")[0]
+        yvar = b_var.split("_")[1]
         noData = global_noData
         data_var = b_var.split("_")[0]+"_"+b_var.split("_")[1]
         if data_var not in vars2Dtodo:
@@ -700,92 +637,73 @@ for a_sample in groups.keys():
                 if analysistype in [2,3] and zbin == 4:
                     h2D_dict[zbin][c_cat].Add(tmp_h2D_list[zbin-1])
 
-        # h2D dict now has the 2D reco hists of the vars of interest for each pid
-
-        proton_neutron_dict = {
-            "proton": TH2D(),
-            "muneut": TH2D(),
-            "tot": TH2D(),
-            "protonratio": TH2D(),
-            "muneutratio": TH2D(),
-        }
+        pionproton_h2d_dict = {"pi":TH2D(), "proton":TH2D(),"total":TH2D()}
         firstcat = True
         for c_cat in cat_order:
-            if c_cat == "data":
-                continue
             if analysistype in [0,1]:
                 if firstcat:
-                    proton_neutron_dict["proton"] = h2D_dict[2][c_cat].Clone()
-                    proton_neutron_dict["muneut"] = h2D_dict[1][c_cat].Clone()
-                    proton_neutron_dict["muneut"].Add(h2D_dict[8][c_cat])
+                    pionproton_h2d_dict["pi"] = h2D_dict[5][c_cat].Clone()
+                    pionproton_h2d_dict["proton"] = h2D_dict[2][c_cat].Clone()
                     firstcat = False
                 else:
-                    proton_neutron_dict["proton"].Add(h2D_dict[2][c_cat])
-                    proton_neutron_dict["muneut"].Add(h2D_dict[1][c_cat])
-                    proton_neutron_dict["muneut"].Add(h2D_dict[8][c_cat])
+                    pionproton_h2d_dict["pi"].Add(h2D_dict[5][c_cat])
+                    pionproton_h2d_dict["proton"].Add(h2D_dict[2][c_cat])
             else:
                 if firstcat:
-                    proton_neutron_dict["proton"] = h2D_dict[1][c_cat].Clone()
-                    proton_neutron_dict["muneut"] = h2D_dict[0][c_cat].Clone()
-                    proton_neutron_dict["muneut"].Add(h2D_dict[7][c_cat])
+                    pionproton_h2d_dict["pi"] = h2D_dict[4][c_cat].Clone()
+                    pionproton_h2d_dict["proton"] = h2D_dict[1][c_cat].Clone()
                     firstcat = False
                 else:
-                    proton_neutron_dict["proton"].Add(h2D_dict[1][c_cat])
-                    proton_neutron_dict["muneut"].Add(h2D_dict[0][c_cat])
-                    proton_neutron_dict["muneut"].Add(h2D_dict[7][c_cat])
-        # TODO figure out var names
-        proton_neutron_dict["proton"].Scale(1.0, "width")
-        proton_neutron_dict["muneut"].Scale(1.0, "width")
-        xvar = b_var.split("_")[0]
-        yvar = b_var.split("_")[1]
+                    pionproton_h2d_dict["pi"].Add(h2D_dict[4][c_cat])
+                    pionproton_h2d_dict["proton"].Add(h2D_dict[1][c_cat])
+        # TODO make naming smarter
         xvarname = var_short_names[xvar]
         yvarname = var_short_names[yvar]
-        proton_neutron_dict["proton"].SetLineColor(ROOT.kRed + 1)
-        proton_neutron_dict["muneut"].SetLineColor(ROOT.kBlue + 2)
-        proton_neutron_dict["proton"].GetXaxis().SetTitle(xvarname)
-        proton_neutron_dict["muneut"].GetYaxis().SetTitle(yvarname)
-        proton_neutron_dict["proton"].GetXaxis().CenterTitle()
-        proton_neutron_dict["muneut"].GetYaxis().CenterTitle()
+        pionproton_h2d_dict["pi"].Scale(1.0,"width")
+        pionproton_h2d_dict["proton"].Scale(1.0, "width")
+        pionproton_h2d_dict["pi"].SetLineColor(ROOT.kRed+1)
+        pionproton_h2d_dict["proton"].SetLineColor(ROOT.kBlue + 2)
+        pionproton_h2d_dict["proton"].GetXaxis().SetTitle(xvarname)
+        pionproton_h2d_dict["proton"].GetYaxis().SetTitle(yvarname)
+        pionproton_h2d_dict["proton"].GetXaxis().CenterTitle()
+        pionproton_h2d_dict["proton"].GetYaxis().CenterTitle()
 
-        proton_neutron_dict["total"] = proton_neutron_dict["proton"].Clone("total")
-        proton_neutron_dict["total"].Add(proton_neutron_dict["muneut"])
+        pionproton_h2d_dict["total"] = pionproton_h2d_dict["proton"].Clone("total")
+        pionproton_h2d_dict["total"].Add(pionproton_h2d_dict["pi"])
 
-        proton_neutron_dict["protonratio"] = proton_neutron_dict["proton"].Clone()
-        proton_neutron_dict["protonratio"].Divide(
-            proton_neutron_dict["protonratio"], proton_neutron_dict["total"],1.0,1.0
+        pionproton_h2d_dict["protonratio"] = pionproton_h2d_dict["proton"].Clone(
+            "protonratio"
         )
-        proton_neutron_dict["muneutratio"] = proton_neutron_dict["muneut"].Clone()
-        proton_neutron_dict["muneutratio"].Divide(
-            proton_neutron_dict["muneutratio"], proton_neutron_dict["total"], 1.0, 1.0
-        )
-        boxleg = CCQELegend(0.85,0.57,0.97,0.43)
+        pionproton_h2d_dict["protonratio"].Divide(pionproton_h2d_dict["protonratio"], pionproton_h2d_dict["total"] , 1.,1.)
 
-        proton_neutron_dict["proton"].SetTitle(
-            "Raw %s vs. %s in %s" % (yvarname, xvarname, a_sample)
+        pionproton_h2d_dict["piratio"] = pionproton_h2d_dict["pi"].Clone(
+            "piratio"
         )
-        proton_neutron_dict["protonratio"].SetTitle(
+        pionproton_h2d_dict["piratio"].Divide(pionproton_h2d_dict["piratio"], pionproton_h2d_dict["total"], 1.,1.)
+
+        leg = CCQELegend(0.85,0.57,0.97,0.43)
+
+        pionproton_h2d_dict["proton"].SetTitle("Raw %s vs. %s in %s"%(yvarname,xvarname,a_sample))
+        pionproton_h2d_dict["protonratio"].SetTitle(
             "Ratio %s vs. %s in %s" % (yvarname, xvarname, a_sample)
         )
 
-        dummyproton = proton_neutron_dict["proton"].Clone()
-        dummyproton.SetFillColor(ROOT.kRed + 1)
-        boxleg.AddEntry(dummyproton, "Proton", "f")
-        dummymuneut = proton_neutron_dict["muneut"].Clone()
-        dummymuneut.SetFillColor(ROOT.kBlue+2)
-        boxleg.AddEntry(dummymuneut, "n, #mu", "f")
+        dummyproton = pionproton_h2d_dict["proton"].Clone()
+        dummyproton.SetFillColor(ROOT.kBlue+2)
+        leg.AddEntry(dummyproton,"Proton","f")
+        dummypion = pionproton_h2d_dict["pi"].Clone()
+        dummypion.SetFillColor(ROOT.kRed + 1)
+        leg.AddEntry(dummypion, "#pi^{#pm}", "f")
 
         rawcanvas = CCQECanvas(
-            "BoxRaw_%s_%s_%s" % (a_sample, xvar, yvar),
-            "%s vs. %s in %s" % (yvarname, xvarname, a_sample),
+            "Raw_%s_%s_%s"% (a_sample, xvar, yvar), "%s vs. %s in %s" % (yvarname, xvarname, a_sample)
         )
-        if xvar in ["NeutCandEdep", "NeutCandsEdep"]:
+        if xvar in ["Q2QE"]:
             rawcanvas.SetLogx()
-        if yvar in ["NeutCandEdep", "NeutCandsEdep"]:
-            rawcanvas.SetLogy()
-        proton_neutron_dict["proton"].Draw("BOX")
-        proton_neutron_dict["muneut"].Draw("BOX same")
-        boxleg.Draw()
-        thename = "BoxRaw_%s_%s_%s_%s" % ("raw", a_sample, xvar, yvar)
+        pionproton_h2d_dict["proton"].Draw("BOX")
+        pionproton_h2d_dict["pi"].Draw("BOX same")
+        leg.Draw()
+        thename = "%s_%s_%s_%s" % ("raw",a_sample, xvar, yvar)
 
         canvas_name = thename + "_FinalStates"
         if dotuned:
@@ -799,17 +717,15 @@ for a_sample in groups.keys():
         del rawcanvas
 
         ratiocanvas = CCQECanvas(
-            "BoxRatio_%s_%s_%s" % (a_sample, xvar, yvar),
+            "Ratio_%s_%s_%s" % (a_sample, xvar, yvar),
             "Raio %s vs. %s in %s" % (yvarname, xvarname, a_sample),
         )
-        if xvar in ["NeutCandEdep", "NeutCandsEdep"]:
+        if xvar in ["Q2QE"]:
             ratiocanvas.SetLogx()
-        if yvar in ["NeutCandEdep", "NeutCandsEdep"]:
-            ratiocanvas.SetLogy()
-        proton_neutron_dict["protonratio"].Draw("BOX")
-        proton_neutron_dict["muneutratio"].Draw("BOX same")
-        boxleg.Draw()
-        thename = "BoxRatio_%s_%s_%s" % (a_sample, yvarname, xvarname)
+        pionproton_h2d_dict["protonratio"].Draw("BOX")
+        pionproton_h2d_dict["piratio"].Draw("BOX same")
+        leg.Draw()
+        thename = "%s_%s_%s" % (a_sample, yvarname, xvarname)
 
         canvas_name = thename + "_FinalStates"
         if dotuned:
@@ -821,220 +737,6 @@ for a_sample in groups.keys():
         ratiocanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
 
         del ratiocanvas
-
-        new_bin_pid_order = [-1] + new_bin_pid_order
-        print("new_bin_pid_order with data", new_bin_pid_order)
-
-        for projY in [True, False]:
-            proj_bin_range = []
-            n_projbins_raw = 0
-            if projY:
-                n_projbins_raw = n_xbins
-            else:
-                n_projbins_raw = n_ybins
-
-            if analysistype in [0,1]:
-                proj_bin_range = range(1,n_projbins_raw-1)
-            if analysistype in [2,3]:
-                proj_bin_range = range(0,n_projbins_raw)
-
-            grid_dict = {}
-            # for projbin in range(1,n_xbins):
-            for projbin in proj_bin_range:
-                if projbin not in grid_dict.keys():
-                    grid_dict[projbin] = {}
-                # ystack = THStack("stack", "")
-                tmp_mctot=TH1D()
-                firstmc = True
-                for c_cat in cat_order:
-                    for zbin in new_bin_pid_order:
-                        if zbin == -1 and noData:
-                            continue
-                        # print("zbin", zbin)
-                        if zbin not in grid_dict[projbin].keys():
-                            grid_dict[projbin][zbin] = {}
-                        if zbin == -1 and c_cat!="data":
-                            continue
-                        if zbin != -1 and c_cat == "data":
-                            continue
-                        tmp_hist2D = TH2D(h2D_dict[zbin][c_cat].Clone())
-                        if projY:
-                            tmp_proj_name ="projY_%0.3d"%projbin
-                            width = tmp_hist2D.GetXaxis().GetBinWidth(projbin)
-                            tmp_proj = tmp_hist2D.ProjectionY(tmp_proj_name, projbin, projbin)
-                        else:
-                            tmp_proj_name ="projX_%0.3d"%projbin
-                            width = tmp_hist2D.GetYaxis().GetBinWidth(projbin)
-                            tmp_proj = tmp_hist2D.ProjectionX(tmp_proj_name, projbin, projbin)
-
-                        # print("pid", zbin)
-                        tmp_proj = MakeHistPretty(tmp_proj,zbin,c_cat, width)
-                        if c_cat != "data":
-                            if firstmc:
-                                tmp_mctot = tmp_proj.Clone()
-                                firstmc = False
-                            else:
-                                tmp_mctot.Add(tmp_proj)
-                            grid_dict[projbin][zbin][c_cat] = tmp_proj
-                        elif not noData:
-                            grid_dict[projbin]["data"] = tmp_proj
-                grid_dict[projbin]["mctot"] = tmp_mctot
-
-            # Get the max to get multipliers for these
-            global_max = 0.0
-            for projbin in grid_dict.keys():
-                smax = grid_dict[projbin]["mctot"].GetMaximum()
-                if not noData:
-                    dmax = grid_dict[projbin]["data"].GetMaximum()
-                    global_max = max(smax*1.2, dmax*1.2, global_max)
-                else:
-                    global_max = max(smax*1.2, global_max)
-            print(global_max)
-            bin_scales = []
-            print(grid_dict.keys())
-            for projbin in grid_dict.keys():
-                tmp_pad_max = 0.0
-                tmp_pad_scale = 1.0
-                if not noData:
-                    dmax = grid_dict[projbin]["data"].GetMaximum()
-                    mcmax = grid_dict[projbin]["mctot"].GetMaximum()
-                    tmp_pad_max = 1.2 * max(dmax,mcmax)
-                else:
-                    tmp_pad_max = 1.2 * grid_dict[projbin]["mctot"].GetMaximum()
-                if tmp_pad_max == 0:
-                    tmp_pad_max = 1.0
-                tmp_pad_scale = eval('{:.{p}g}'.format(global_max / tmp_pad_max, p=3))
-
-                grid_dict[projbin]["multiplier"] = tmp_pad_scale
-                tmp_stack = THStack("stack","")
-                if not noData:
-                    grid_dict[projbin]["data"].Scale(tmp_pad_scale)
-                grid_dict[projbin]["mctot"].Scale(tmp_pad_scale)
-                for c_cat in cat_order:
-                    # if c_cat in ["data","mctot","stack","multiplier"]:
-                    if c_cat in ["data","mctot","stack","multiplier"]:
-                        continue
-                    for zbin in new_bin_pid_order:
-                        if zbin == -1:
-                            continue
-                        # print(c_cat, zbin)
-                        tmp_hist = TH1D(grid_dict[projbin][zbin][c_cat].Clone())
-                        tmp_hist.Scale(tmp_pad_scale)
-                        tmp_stack.Add(tmp_hist)
-                # grid_dict[projbin]["stack"] = None
-                grid_dict[projbin]["stack"] = tmp_stack
-
-            n_xbins_noflow = n_xbins
-            n_ybins_noflow = n_ybins
-            if analysistype in [0,1]:
-                n_xbins_noflow = n_xbins - 2 
-                n_ybins_noflow = n_ybins - 2 
-
-            thename = "%s_%s___%s" % (a_sample, b_var, data_var)
-            if projY:
-                n_xcanvasbins = n_ybins_noflow
-                n_ycanvasbins = n_xbins_noflow
-                thename+="_projY"
-            else:
-                n_xcanvasbins = n_xbins_noflow
-                n_ycanvasbins = n_ybins_noflow
-                thename+="_projX"
-
-            gc2 = PanelCanvas(thename,n_xcanvasbins,n_ycanvasbins)
-
-            pad_index = 1
-            for projbin in grid_dict.keys():
-                pad = gc2.cd(pad_index)
-                pad_index+=1
-                # smax = grid_dict[projbin]["stack"].GetMaximum()
-                if not noData:
-                    # dmax = grid_dict[projbin]["data"].GetMaximum()
-                    grid_dict[projbin]["data"].SetMaximum(global_max)
-                    grid_dict[projbin]["data"].SetMinimum(0)
-                    grid_dict[projbin]["data"].GetXaxis().SetNdivisions(505)
-                    grid_dict[projbin]["data"].GetYaxis().SetNdivisions(505)
-                    grid_dict[projbin]["data"].Draw("")
-
-                # if b_var.split("_")[1] in ["LeadingNeutCandEdep","EAvail"] and projY:
-                if b_var.split("_")[1] in ["NeutCandEdep","NeutCandsEdep"] and projY:
-                    pad.SetLogx()
-                # if b_var.split("_")[0] in ["LeadingNeutCandEdep","EAvail"] and projY == False:
-                if (
-                    b_var.split("_")[0] in ["NeutCandEdep", "NeutCandsEdep"]
-                    and projY == False
-                ):
-                    pad.SetLogx()
-                if not noData:
-                    grid_dict[projbin]["stack"].Draw("Hist,same")
-                    grid_dict[projbin]["data"].Draw("PE,same")
-                    grid_dict[projbin]["data"].Draw("AXIS,same")
-                else:
-                    # grid_dict[projbin]["stack"].Draw("")
-                    grid_dict[projbin]["mctot"].SetTitle(data_var)
-
-                    grid_dict[projbin]["mctot"].SetMaximum(global_max)
-                    grid_dict[projbin]["mctot"].SetMinimum(0)
-                    grid_dict[projbin]["mctot"].GetXaxis().SetNdivisions(505)
-                    grid_dict[projbin]["mctot"].GetYaxis().SetNdivisions(505)
-                    grid_dict[projbin]["mctot"].Draw("")
-
-                    grid_dict[projbin]["stack"].Draw("Hist,same")
-                    grid_dict[projbin]["mctot"].Draw("AXIS,same")
-
-                multip = grid_dict[projbin]["multiplier"]
-                multip_latex = ROOT.TLatex()
-                multip_latex.SetTextAlign(32)
-                multip_latex.SetNDC()
-                multip_latex.SetTextFont(42)
-                multip_latex.SetTextSize(0.028)
-                multip_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.1),"#times {:g}".format(float('{:.{p}g}'.format(multip, p=2))))
-
-                if projY:
-                    tmp_projaxis_bins = bins[0]
-                    tmp_var = b_var.split("_")[0]
-                else: 
-                    tmp_projaxis_bins = bins[1]
-                    tmp_var = b_var.split("_")[1]
-                if tmp_var not in var_short_names.keys():
-                    tmp_varshort = "var"
-                else: 
-                    tmp_varshort = var_short_names[tmp_var]
-                if analysistype in [0,1]:
-                    loedge = tmp_projaxis_bins[projbin-1]
-                    hiedge = tmp_projaxis_bins[projbin]
-                else: 
-                    loedge = tmp_projaxis_bins[projbin]
-                    hiedge = tmp_projaxis_bins[projbin+1]
-                range_string = "{min} < {var} < {max}".format(min = round(loedge,2), var = tmp_varshort, max = round(hiedge,2))
-
-                binrange_latex = ROOT.TLatex()
-                binrange_latex.SetTextAlign(33) # top right
-                binrange_latex.SetNDC()
-                binrange_latex.SetTextFont(42)
-                binrange_latex.SetTextSize(0.025)
-                binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
-
-            if b_var.split("_")[1] in ["NeutCandEdep", "NeutCandsEdep"] and projY:
-                gc2.SetLogx()
-            if (
-                b_var.split("_")[0] in ["NeutCandEdep", "NeutCandsEdep"]
-                and projY == False
-            ):
-                gc2.SetLogx()
-            gc2.SetYTitle("Counts/unit")
-            gc2.SetXTitle(b_var.split("_")[1])
-            gc2.SetHistTexts()
-            # gc2.ResetPads()
-            gc2.Draw()
-            # gc2.ResetPads()
-            # gc2.Print("")
-
-            canvas_name = thename + "_FinalStates"
-            if dotuned:
-                canvas_name = thename + "_FinalStates_tuned"
-            gc2.Print(os.path.join(outdirname, canvas_name + ".png"))
-
-            del gc2
 
         # stack_first = 0
         # if stack_first == 0:
@@ -1242,53 +944,3 @@ for a_sample in groups.keys():
         # if dotuned:
         #     canvas_name = thename + "_FinalStates_tuned"
         # cc.Print(os.path.join(outdirname, canvas_name + ".png"))
-    if not dotypes: continue
-    print("Doing type histograms")
-    for b_var in vars2Dtodo:
-        if b_var not in groups[a_sample].keys():
-            continue
-        noData = global_noData
-        if not noData:
-            if dotuned:
-                data_sample_name = tunedname
-            if b_var not in groups[data_sample_name].keys():
-                print("Couldn't find data_var. Skipping", b_var)
-                noData = True
-                # continue 
-            elif "data" not in groups[data_sample_name][b_var].keys():
-                print("Couldn't find data_var. Skipping", b_var)
-                noData = True
-            else:
-                data = groups[data_sample_name][b_var]["data"][0].Clone()
-                data.SetMarkerColor(ROOT.kBlack)
-                data.SetLineColor(ROOT.kBlack)
-        
-        qelike_dummy = groups[data_sample_name][b_var]["qelike"][1].Clone("dummy")
-
-        nxbins_raw = qelike_dummy.GetNbinsX()
-        nybins_raw = qelike_dummy.GetNbinsY()
-        thename = "%s_types_%s___%s" % (a_sample, b_var, data_var)
-
-        for projY in [True,False]:
-            nxbins_canvas = nxbins_raw
-            nybins_canvas = nybins_raw
-            thename += "_projX"
-            nprojbins = nxbins_raw
-
-            if projY:
-                nxbins_canvas = nybins_raw
-                nybins_canvas = nxbins_raw
-                thename.replace("projX","projY")
-
-                nprojbins = nybins_raw
-
-            grid_dict = {}
-            
-            for projbin in range(1,nprojbins+1):
-                
-
-            gc2 = PanelCanvas(thename,nxbins_canvas,nybins_canvas)
-
-
-
-        

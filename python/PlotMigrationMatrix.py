@@ -4,7 +4,12 @@ from PlotUtils import MnvH1D, MnvH2D, MnvPlotter
 import os
 import sys
 from array import array
+import datetime
 
+
+mydate = datetime.datetime.now()
+month = mydate.strftime("%B")
+year = mydate.strftime("%Y")
 # Set this to make bins with no content with some content for plotting purposes only (does not affect normalization)
 set_nozero = True
 set_logz = False
@@ -16,6 +21,11 @@ categorytodo = "qelike"
 var_names = {
     "recoil": {"reco": "Recoil", "truth": "E_{Avail}", "units": "(GeV)"},
     "EAvail": {"reco": "E_{Avail} (MADBlobs)", "truth": "E_{Avail}", "units": "(GeV)"},
+    "EAvail_nohi": {
+        "reco": "E_{Avail} (MADBlobs)",
+        "truth": "E_{Avail}",
+        "units": "(GeV)",
+    },
     "EAvailLeadingBlob": {
         "reco": "E_{Avail} (Leading MADBlob)",
         "truth": "E_{Avail}",
@@ -54,6 +64,29 @@ var_names = {
     },
 }
 
+
+def MakePlotDir(subdir=""):
+    """
+    Subdir is the one for all plots that this script should ouptut. You will need to add
+    any other subdirs in the script itself (e.g. based off input file name)
+    """
+    plotdir = ""
+    base_plotdir = os.environ.get("PLOTSLOC")
+    if base_plotdir != None:
+        plotdir = os.path.join(base_plotdir, month + year)
+    else:
+        plotdir = os.path.join("/Users/nova/git/plots/", month + year)
+    if not os.path.exists(plotdir):
+        print("Can't find plot dir. Making it now... ", plotdir)
+        os.mkdir(plotdir)
+    if subdir == "":
+        return plotdir
+    if not os.path.exists(os.path.join(plotdir, subdir)):
+        print("Can't find plot dir. Making it now... ", os.path.join(plotdir, subdir))
+        os.mkdir(os.path.join(plotdir, subdir))
+    return os.path.join(plotdir, subdir)
+
+
 def CCQECanvas(name,title,xsize=1000,ysize=1000):
     c2 = ROOT.TCanvas()
     # c2 = ROOT.TCanvas(name,title,xsize,ysize)
@@ -75,16 +108,20 @@ def main():
     print("Looking at file "+filename1)
     f = ROOT.TFile(filename1, "READONLY")
 
-    base_plotdir = os.environ.get('PLOTSLOC')
-    if base_plotdir != None:
-        plotdir = base_plotdir
-    else:
-        plotdir = "/Users/nova/git/plots/Summer2025MnvWeek/MigrationMatrices/"
-    print("outdir ", plotdir)
-    if not os.path.exists(plotdir): os.mkdir(plotdir)
+    # base_plotdir = os.environ.get('PLOTSLOC')
+    # if base_plotdir != None:
+    #     plotdir = os.path.join(base_plotdir,month+year)
+    #     if not os.path.exists(plotdir): os.mkdir(plotdir)
+    #     plotdir = os.path.join(plotdir,"MigrationPlots")
+    # else:
+    #     plotdir = os.path.join("/Users/nova/git/plots/",month+year,"MigrationPlots")
+    # print("outdir ", plotdir)
+    # if not os.path.exists(plotdir): os.mkdir(plotdir)
+
+    plotdir = MakePlotDir("MigrationPlots")
     filebasename1=os.path.basename(filename1)
     # outfilename=filebasename1.replace(".root","_2DPlots")
-    outdirname=os.path.join(plotdir,"Summer2025MnvWeek/MigrationPlots/lowbins/",filebasename1.replace(".root","_migrationplots"))
+    outdirname=os.path.join(plotdir,filebasename1.replace(".root","_migrationplots"))
     if not os.path.exists(outdirname): os.mkdir(outdirname)
 
     hist_dict = {}
@@ -116,10 +153,11 @@ def main():
             mnv = MnvPlotter()
             if set_logz:
                 mnv_canvas.SetLogz()
-            mnv.SetBlackbodyPalette()
+            # mnv.SetBlackbodyPalette()
             # mnv.SetWhiteRainbowPalette()
             # mnv.SetRedHeatPalette()
             # mnv.SetROOT6Palette(ROOT.kBird)
+            mnv.SetROOT6Palette(ROOT.kBird)
 
             hist = hist_dict[response_name].Clone()
             hist.GetXaxis().CenterTitle()
@@ -128,7 +166,7 @@ def main():
             if hist_dict[response_name].GetNbinsX()>=20:
                 text_opt = True
             mnv.DrawNormalizedMigrationHistogram(
-                hist, True, False, False, text_opt
+                hist, True, False, True, text_opt
             )
             raw_outname = os.path.join(outdirname,"mnv_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
 
@@ -161,7 +199,10 @@ def main():
                     reco_binning.append(reco_hist.GetXaxis().GetBinUpEdge(bin))
                 for bin in range(1,true_hist.GetNbinsX()+1):
                     true_binning.append(true_hist.GetXaxis().GetBinUpEdge(bin))
-                reco_binning = array('d', reco_binning)
+                # if var in ["EAvail"] and reco_binning[0] == 0:
+                #     reco_binning[0] = 0.001
+                #     true_binning[0] = 0.001
+                reco_binning = array("d", reco_binning)
                 true_binning = array('d',true_binning)
                 raw_matrix.SetBins(nbinsx, reco_binning, nbinsy, true_binning)
 
@@ -188,17 +229,27 @@ def main():
 
             x_title = "Reco"
             y_title = "True"
-            if parse[0] in ["h2D","hHD"]:
+            if parse[0] in ["h2D", "hHD"]:
                 var_parse = var.split("_")
-                for var in var_parse:
-                    x_title+= " "+ var_names[var]["reco"]
-                    y_title+= " "+ var_names[var]["truth"]
+                for var1D in var_parse:
+                    if var1D not in var_names.keys():
+                        var_names[var1D] = {}
+                        var_names[var1D]["reco"] = var
+                        var_names[var1D]["truth"] = var
+                        var_names[var1D]["units"] = "<units>"
+                    x_title += " " + var_names[var1D]["reco"]
+                    y_title += " " + var_names[var1D]["truth"]
                 norm_matrix.GetXaxis().SetTitle(x_title)
                 norm_matrix.GetYaxis().SetTitle(y_title)
                 raw_matrix.GetXaxis().SetTitle(x_title)
                 raw_matrix.GetYaxis().SetTitle(y_title)
 
             else:
+                if var not in var_names.keys():
+                    var_names[var] = {}
+                    var_names[var]["reco"] = var
+                    var_names[var]["truth"] = var
+                    var_names[var]["units"] = "<units>"
                 # norm_matrix.SetMaximum(1.0)
                 norm_matrix.GetXaxis().SetTitle(x_title+" "+var_names[var]["reco"]+" "+var_names[var]["units"])
                 norm_matrix.GetYaxis().SetTitle(y_title+" "+var_names[var]["truth"]+" "+var_names[var]["units"])
@@ -247,15 +298,15 @@ def main():
                     # norm_canvas.cd()
                     norm_matrix.Draw("colz text")
 
-            if "Q2QE" in var:
-                norm_canvas.SetLogx()
-                norm_canvas.SetLogy()        
+            # if "Q2QE" in var or "EAvail" in var:
+            #     norm_canvas.SetLogx()
+            #     norm_canvas.SetLogy()  
             if set_logz:
                 norm_canvas.SetLogz()
 
             norm_outname = os.path.join(outdirname,"normd_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
             norm_canvas.Print(norm_outname)
-
+            # del norm_canvas
             # Do the raw ones now
             # mnv.SetROOT6Palette(ROOT.kNeon)
 
@@ -273,10 +324,11 @@ def main():
                 raw_canvas.SetLogy()        
             if set_logz:
                 raw_canvas.SetLogz()
-            # raw_canvas.SetLogz()
-
+            raw_canvas.SetLogz()
+            # raw_canvas.Set
             raw_outname = os.path.join(outdirname,"raw_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
             raw_canvas.Print(raw_outname)
+            # del raw_canvas
 
     print("All done! uwu")
 

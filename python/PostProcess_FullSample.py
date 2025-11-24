@@ -154,7 +154,12 @@ scaled_comb_hist_dict = {}
 combined_hist_dict = {}
 global_scaled_comb_hist_dict = {}
 for play in playlists:
-    print("Total Sample Data POT scale: ", global_tot_datapot / potmc[play])
+    print("Starting with play list ", play)
+    print("\tMC POT   ", potmc[play])
+    print("\tData POT ", potdata[play])
+    print("\tPOT corr ", potcorr[play])
+
+    print("\tTotal Sample Data POT scale: ", global_tot_datapot / potmc[play])
     for histname in key_dir["hists"]:
         # print("histname ", histname)
 

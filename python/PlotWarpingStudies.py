@@ -66,7 +66,7 @@ def main():
     outdirname = os.path.join(plotdir, "transwarp_plots")
     if not os.path.exists(outdirname):
         os.mkdir(outdirname)
-    canvas = ROOT.TCanvas("chi2", "chi2")
+    canvas = ROOT.TCanvas("chi2", "chi2", 1800,1500)
     canvas.SetRightMargin(0.17)
     # canvas.SetLogx()
     # canvas.SetLogy()
@@ -140,28 +140,28 @@ def main():
         chi2summary_hist.Draw("axis, same")
         if "_Clousure_" in file_name:
             chi2summary_hist.getYaxis().SetRangeUser(0,ymax*1.2)
-        # if "Clousure" not in file_name:
-        #     ndfLine = ROOT.TLine(1, yNDF, chi2summary_hist.GetXaxis().GetXmax(), yNDF)
-        #     ndfLine.SetLineWidth(lineWidth-2)
-        #     ndfLine.SetLineStyle(ROOT.kDashed)
-        #     ndfLine.Draw()
+        if "Clousure" not in file_name:
+            ndfLine = ROOT.TLine(1, yNDF, chi2summary_hist.GetXaxis().GetXmax(), yNDF)
+            ndfLine.SetLineWidth(lineWidth-2)
+            ndfLine.SetLineStyle(ROOT.kDashed)
+            ndfLine.Draw()
 
-        #     doubleNDFLine = ROOT.TLine(
-        #         1, 2 * yNDF, chi2summary_hist.GetXaxis().GetXmax(), 2 * yNDF
-        #     )
-        #     print("yNDF=",yNDF)
-        #     doubleNDFLine.SetLineColor(ROOT.kRed)
-        #     doubleNDFLine.SetLineWidth(lineWidth-2)
-        #     doubleNDFLine.SetLineStyle(ROOT.kDashed)
-        #     doubleNDFLine.Draw()
+            doubleNDFLine = ROOT.TLine(
+                1, 2 * yNDF, chi2summary_hist.GetXaxis().GetXmax(), 2 * yNDF
+            )
+            print("yNDF=",yNDF)
+            doubleNDFLine.SetLineColor(ROOT.kRed)
+            doubleNDFLine.SetLineWidth(lineWidth-2)
+            doubleNDFLine.SetLineStyle(ROOT.kDashed)
+            doubleNDFLine.Draw()
 
         # leg = ROOT.TLegend(0.6, 0.6, 0.9, 0.9)
         leg = ROOT.TLegend(0.52, 0.6, 0.82, 0.9)
         leg.AddEntry(chi2avg_hist)
         leg.AddEntry(chi2med_hist)
-        # if "_Clousure_" not in file_name:
-        #     leg.AddEntry(ndfLine, "Number of Bins", "l")
-        #     leg.AddEntry(doubleNDFLine, "2x Number of Bins", "l")
+        if "_Clousure_" not in file_name:
+            leg.AddEntry(ndfLine, "Number of Bins", "l")
+            leg.AddEntry(doubleNDFLine, "2x Number of Bins", "l")
         # leg.AddEntry(iterLine, str(iterChosen) + " iterations", "l")
         leg.Draw()
         out_file_name = "plots_"+file_name.replace(".root", "warp_chi2_niter.png")

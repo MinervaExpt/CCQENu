@@ -4,20 +4,21 @@
 # hms 9-10-2023
 
 
-
 from re import L
 import sys,os
 import ROOT
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
 
 TEST=False
-noData=True  # use this to plot MC only types
+noData=False  # use this to plot MC only types
 sigtop=True # use this to place signal on top of background
 dotuned=False
+dowarp = False
+
+
+
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
-
 legendfontsize = 0.042
-
 
 
 def CCQECanvas(name,title,xsize=1100,ysize=720):
@@ -69,17 +70,21 @@ catsnames = {
 "chargedpion":"1#pi^{#pm}",
 "neutralpion":"1#pi^{0}",
 "multipion":"N#pi",
-"other":"Other"}
+"other":"Other"
+}
+
 catscolors = {
 "data":ROOT.kBlack, 
 "qelike":ROOT.kBlue-6,
 "chargedpion":ROOT.kMagenta-6,
 "neutralpion":ROOT.kRed-6,
 "multipion":ROOT.kGreen-6,
-"other":ROOT.kYellow-6}
+"other":ROOT.kYellow-6
+}
 
 
 samplenames = {
+    "QElike_warped": "no 2p2h tune",
     "QElike": "QElike Signal Sample",
     "QElike_2track": "QElike 2 track Sample",
     "QElike0Blob": "QElike Signal w/o Blobs",
@@ -102,7 +107,7 @@ if len(sys.argv)> 2:
 
 f = TFile.Open(filename,"READONLY")
 
-plotdir = "/Users/nova/git/plots/Winter2025MinervaCollab"
+plotdir = "/Users/nova/git/plots/October2025/Dists1D"
 filebasename=os.path.basename(filename)
 dirname = os.path.join(plotdir,filebasename.replace(".root","_FinalStates"))
 if not os.path.exists(dirname): os.mkdir(dirname)
@@ -185,7 +190,7 @@ for k in keys:
     h = f.Get(name).Clone()
     if h.GetEntries() <= 0: continue
     h.SetFillColor(catscolors[cat])
-    h.SetLineColor(catscolors[cat]+1)
+    h.SetLineColor(ROOT.kBlack)
     
     if "data" in cat:
         index = 0
@@ -205,7 +210,7 @@ for k in keys:
     groups[hist][sample][variable][cat]=h
 
         #print ("data",groups[hist][sample][variable][c])
-    
+
 # "h___MultiplicitySideband___qelike___pzmu___reconstructed"
 # h___MultipBlobSideband___other___pzmu___reconstructed
 # do the plotting
@@ -216,13 +221,20 @@ bestorder = []
 
 ROOT.gStyle.SetOptStat(0)
 template = "%s___%s___%s___%s"
-
+print("here")
 for a_hist in groups.keys():
     if a_hist != "h": continue # no 2D
     #print ("a is",a)
     for b_sample in groups[a_hist].keys():
+
+        datasample = b_sample
+        if b_sample == "QElike_warped":
+            datasample = "QElike"
+        if b_sample == "QElike" and dowarp: continue
+
         for c_var in groups[a_hist][b_sample].keys():
-        
+            print("here")
+
             first = 0
             leg = CCQELegend(0.6,0.75,1.,0.95)
             leg.SetNColumns(2)
@@ -232,15 +244,15 @@ for a_hist in groups.keys():
             cc = CCQECanvas(name,name)
             if c_var in scaleX:
                 cc.SetLogx()
-            if c_var in scaleY:
-                cc.SetLogy()
+            # if c_var in scaleY:
+            cc.SetLogy()
             
             data = TH1D()
-            if len(groups[a_hist][b_sample][c_var]["data"]) < 1:
+            if len(groups[a_hist][datasample][c_var]["data"]) < 1:
                 print (" no data",a_hist,b_sample,c_var)
                 continue
             
-            data = TH1D(groups[a_hist][b_sample][c_var]["data"])
+            data = TH1D(groups[a_hist][datasample][c_var]["data"])
             plottitle=samplenames[b_sample]
             if dotuned:
                 plottitle = "Tuned "+plottitle
@@ -317,7 +329,4 @@ for a_hist in groups.keys():
             if dotuned:
                 canvas_name = thename+"_FinalStates_tuned"
             cc.Print(dirname+"/"+canvas_name+".png")
-            
-    
-
-
+            del cc

@@ -4,17 +4,45 @@
 # hms 9-10-2023
 
 
-
 import sys,os
 import ROOT
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
+import datetime
+
+mydate = datetime.datetime.now()
+month = mydate.strftime("%B")
+year = mydate.strftime("%Y")
+
 
 TEST=False
 noData=False  # use this to plot MC only types
-sigtop=False # use this to place signal on top of background
+sigtop=True # use this to place signal on top of background
 manualrange = False
+dowarp = True
 
-def CCQECanvas(name,title,xsize=1100,ysize=750):
+def MakePlotDir(subdir=""):
+    """
+    Subdir is the one for all plots that this script should ouptut. You will need to add
+    any other subdirs in the script itself (e.g. based off input file name)
+    """
+    plotdir = ""
+    base_plotdir = os.environ.get("PLOTSLOC")
+    if base_plotdir != None:
+        plotdir = os.path.join(base_plotdir, month + year)
+    else:
+        plotdir = os.path.join("/Users/nova/git/plots/", month + year)
+    if not os.path.exists(plotdir):
+        print("Can't find plot dir. Making it now... ", plotdir)
+        os.mkdir(plotdir)
+    if subdir == "":
+        return plotdir
+    if not os.path.exists(os.path.join(plotdir, subdir)):
+        print("Can't find plot dir. Making it now... ", os.path.join(plotdir, subdir))
+        os.mkdir(os.path.join(plotdir, subdir))
+    return os.path.join(plotdir, subdir)
+
+
+def CCQECanvas(name,title,xsize=1000,ysize=1500):
     c2 = ROOT.TCanvas(name,title,xsize,ysize)
     # c2.SetLeftMargin(0.10)
     # c2.SetRightMargin(0.05)
@@ -56,7 +84,8 @@ process=["data","QE","RES","DIS","COH","","","","2p2h",""]
 whichcats = ["data","qelike","qelikenot"]
 
 samplenames = {
-    "QElike": "QElike 1 track Sample",
+    "QElike": "QElike",
+    "QElike_warped": "no 2p2h tune",
     "QElike_2track": "QElike 2track Sample",
     "QElike0Blob": "QElike Signal w/o Blobs",
     "QElike1Blob": "QElike Signal w/ 1 Blob",
@@ -107,9 +136,11 @@ if len(sys.argv)> 2:
 f = TFile.Open(filename,"READONLY")
 
 dirname = filename.replace(".root","_types")
-plotdir = "/Users/nova/git/plots/Winter2025MinervaCollab"
-outdirname = os.path.join(plotdir,dirname)
-if not os.path.exists(outdirname): os.mkdir(outdirname)
+plotdir = MakePlotDir("typePlots1D")
+outdirname = os.path.join(plotdir, dirname)
+if not os.path.exists(outdirname): 
+    print(outdirname)
+    os.mkdir(outdirname)
 
 keys = f.GetListOfKeys()
 
@@ -117,14 +148,18 @@ h_pot = f.Get("POT_summary")
 dataPOT = h_pot.GetBinContent(1)
 mcPOTprescaled = h_pot.GetBinContent(2)
 POTScale = dataPOT / mcPOTprescaled
-    
+
 groups = {}
 scaleX = ["Q2QE"]
 scaleY = [
-    "recoil"#, 
+    # "EAvail",
+    # "recoil"#, 
     # "CosMuonPionAngle"
 ]
-
+prettyvarnames = {
+    "EAvail": "E_{Avail}",
+    "recoil": "recoil"
+}
 
 # find all the valid histogram and group by keywords
 ncats = 0
@@ -199,10 +234,10 @@ for k in keys:
         h.Scale(1.,"width")
         h.SetMarkerStyle(20)
         groups[hist][sample][variable][cat][index]=h
+    print(" got hist ", name) 
         #print ("data",groups[hist][sample][variable][c])
-    
-        
-    
+
+
 # do the plotting
 
 
@@ -214,10 +249,15 @@ template = "%s___%s___%s___%s"
 
 for a_hist in groups.keys():
     if a_hist != "h": continue # no 2D
-    #print ("a is",a)
+    # print ("a is",a)
     for b_sample in groups[a_hist].keys():
+        datasample = b_sample
+        if b_sample == "QElike_warped":
+            datasample = "QElike"
+        if dowarp and b_sample == "QElike":
+            continue
         for c_var in groups[a_hist][b_sample].keys():
-        
+
             first = 0
             leg = CCQELegend(0.5,0.7,0.9,0.9)
             leg.SetNColumns(2)
@@ -229,25 +269,24 @@ for a_hist in groups.keys():
                 cc.SetLogx()
             if c_var in scaleY:
                 cc.SetLogy()
-            
+
             data = TH1D()
             # if len(groups[a_hist][b_sample][c_var]["data"]) < 1:
             #     print (" no data",a_hist,b_sample,c_var)
             #     continue
-            
 
             if noData:
                 dmax = 0.0
-            #data.Draw("PE")
+            # data.Draw("PE")
             if not noData: 
-                data = TH1D(groups[a_hist][b_sample][c_var]["data"][0])
-                data.SetTitle(samplenames[b_sample])
+                data = TH1D(groups[a_hist][datasample][c_var]["data"][0])
+                data.SetTitle("%s %s"%(samplenames[b_sample],prettyvarnames[c_var]))
                 data.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
                 dmax = data.GetMaximum()
                 leg.AddEntry(data,"data","pe")
-                
+
                 data.Print()
-            
+
             # do the MC
             # move the first category to the top of the plot
 
@@ -258,29 +297,34 @@ for a_hist in groups.keys():
             if sigtop:
                 bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
                 # assume data = type 0, signal is type 1, rest are after that
-                #print ("pre-bestorder",bestorder)
+                print ("pre-bestorder",bestorder)
+                
                 if not noData:
-                    signal = bestorder[1]
-                    bestorder = bestorder[2:]
-                    bestorder.append(signal)
+                    if not dowarp:
+                        signal = bestorder[1]
+                        bestorder = bestorder[2:]
+                        bestorder.append(signal)
+                    else:
+                        bestorder = ["qelikenot", "qelike"]
                 else:
                     signal = bestorder[0]
                     bestorder = bestorder[1:]
                     bestorder.append(signal)
             else:
                 bestorder = list(groups[a_hist][b_sample][c_var].keys()).copy()
-            #print ("bestorder",bestorder)
+            print ("bestorder",bestorder)
             for d_type in bestorder:
+                print("d_type", d_type)
                 if d_type == "data": 
                     continue
                 if first == 0: # make a stack
                     stack = THStack(name.replace(flag,"stack"),"")
                 first+=1
                 for index in groups[a_hist][b_sample][c_var][d_type].keys(): #fill the stack
-                    #print("index",index,bestorder,groups[a_hist][b_sample][c][d])
+                    # print("index",index,bestorder,groups[a_hist][b_sample][c][d])
                     if index == 0: continue
                     if index not in groups[a_hist][b_sample][c_var][d_type]: continue
-                    #print ("do this one ",  index,bestorder)
+                    # print ("do this one ",  index,bestorder)
                     h = groups[a_hist][b_sample][c_var][d_type][index]
                     stack.Add(h)
                     leg.AddEntry(h,process[index],'f')
@@ -290,8 +334,7 @@ for a_hist in groups.keys():
                     data.GetXaxis().SetRangeUser(0.,90.)            
                 elif b_sample == "HiPionThetaSideband":
                     data.GetXaxis().SetRangeUser(90.,180.)
-            #print ("max",smax,dmax)
-
+            # print ("max",smax,dmax)
 
             if not noData:
                 if smax > dmax:
@@ -304,16 +347,18 @@ for a_hist in groups.keys():
                     data.SetMaximum(8000)
                     data.SetMinimum(0)
                     data.GetXaxis().SetRangeUser(-1.0,-0.5)
-                if c_var == "recoil":
+                if c_var in ["recoil","EAvail"]:
                     if c_var not in scaleY:
                         data.SetMinimum(0)
                         stack.SetMinimum(0)
+                        data.SetMaximum(1800000)
+                        stack.SetMaximum(1800000)
                     else:
                         # stack.Divide(data,1.)
                         data.SetMinimum(50)
                         stack.SetMinimum(50)
-                        data.SetMaximum(1000000)
-                        stack.SetMinimum(1000000)
+                        # data.SetMaximum(1000000)
+                        # stack.SetMinimum(1000000)
 
                 if not noData: 
                     data.Draw("PE")
@@ -332,7 +377,7 @@ for a_hist in groups.keys():
                     stack.GetXaxis().SetLabelSize(0.07)
                     stack.GetXaxis().SetTitle("PID of parent of particle reconstructed as blob")
                     stack.GetXaxis().CenterTitle()
-                stack.GetYaxis().SetTitle("Counts/unit (bin width normalized)")
+                stack.GetYaxis().SetTitle("Counts/unit")
                 # stack.SetMaximum(smax*1.5)
                 # stack.SetMinimum(0.0)
 
@@ -353,6 +398,4 @@ for a_hist in groups.keys():
             if manualrange: 
                 outname = os.path.join(outdirname,thename+"_"+flag+"_manualxrange.png")
             cc.Print(outname)
-            
-    
-
+            del cc

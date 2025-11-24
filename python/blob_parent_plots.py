@@ -399,7 +399,17 @@ for a_hist in groups.keys():
 
                         h = groups[a_hist][b_sample][c_var][d_type][index]
                         stack.Add(h)
-                        leg.AddEntry(h,process[index],'f')
+                        leg.AddEntry(h, process[index], "f")
+
+                for index in reversed(groups[a_hist][b_sample]["qelike"].keys()):
+                    if index == 0:
+                        continue
+                    if index not in groups[a_hist][b_sample][c_var]["qelike"]:
+                        continue
+                    for d_type in reversed(bestorder):
+                        h = groups[a_hist][b_sample][c_var][d_type][index]
+                        leg.AddEntry(h, process[index], "f")
+
             smax = stack.GetMaximum()
             # print ("max",smax,dmax)
             max_multiplier = 1.4
