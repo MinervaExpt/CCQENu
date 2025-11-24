@@ -19,6 +19,7 @@ python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
 
+export MYSAMPLE=QElike
 export MYWARP=no2p2htune
 export MYMODEL=MnvTunev1
 
