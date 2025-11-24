@@ -15,35 +15,37 @@ import subprocess
 
 # outdir = "/Users/nova/git/output/Summer25Collab/transwarp/stattest"
 
-outdir_base = "/Users/nova/git/output/Summer25Collab/transwarp/recoilstudy_newbinning/"
+outdir_base = "/Users/nova/git/output/September2025/warpingstudies/fullfiducial_protontracks_pscore_03_allcands/"
 
 
 # variables = ["recoil", "EAvail", "EAvailNoNonVtxBlobs", "ptmu"]
 # variables = ["ptmu"]
 
 studies = [
-    "recoilcut",
+    ""
+    # "recoilcut",
     # "nocut",
     # "lowbins",
 ]
 
 samples = {
-    "recoilcut": "QElike_maxrecoil",
-    "nocut": "QElike",
-    "lowbins": "QElike",
+    "": "QElike",
+    # "recoilcut": "QElike_maxrecoil",
+    # "nocut": "QElike",
+    # "lowbins": "QElike",
 }
 
 variables = [
-    "recoil",
-    # "EAvail",
+    # "recoil",
+    "EAvail",
     # "EAvailNoNonVtxBlobs",
     # "ptmu",
-    "EAvailLeadingBlob",
+    # "EAvailLeadingBlob",
 ]
 
 bins = {
-    "recoil": 5,
-    "EAvail": 5,
+    "recoil": 6,
+    "EAvail": 6,
     "EAvailNoNonVtxBlobs": 5,
     "ptmu": 13,
     "EAvailLeadingBlob": 5,
@@ -59,11 +61,13 @@ cwd = os.getcwd()
 f_list = [1, 2, 3, 4, 4.437, 5, 6, 7, 8, 9, 10]
 uncfactors = {
     "recoil": {
+        "": 5.6,
         "recoilcut": 7.9, #good
         "nocut": 4.9, #good
         "lowbins": 7.2, #good
     },
     "EAvail": {
+        "": 10.5,
         "recoilcut": 8.2, #good
         "nocut": 6.0, #good
         "lowbins": 9.0, #good
@@ -74,6 +78,7 @@ uncfactors = {
         "lowbins": 6.8, #good
     },
     "ptmu": {
+        "": 6.2, #good
         "recoilcut": 6.5, #good
         "nocut": 7.0, #good
         "lowbins": 7.0, #good

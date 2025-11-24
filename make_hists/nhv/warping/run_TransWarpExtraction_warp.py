@@ -44,7 +44,8 @@ def MakePlotDir(subdir=""):
     return os.path.join(plotdir, subdir)
 
 
-studies = [""
+studies = [
+    "",
     # "nocut_oldbinning",
     # "recoilcut",
     # "nocut",
@@ -52,6 +53,7 @@ studies = [""
 ]
 
 samples = {
+    "": "QElike",
     "nocut_oldbinning": "QElike",
     "recoilcut": "QElike_maxrecoil",
     "nocut": "QElike",
@@ -73,12 +75,14 @@ warps = [
 
 uncfactors = {
     "recoil": {
+        "": 5.6,
         "nocut_oldbinning": 6.0,
         "recoilcut": 7.9,  # good
         "nocut": 4.9,  # good
         "lowbins": 7.2,  # good
     },
     "EAvail": {
+        "": 10.5,
         "nocut_oldbinning": 6.0,
         "recoilcut": 8.2,  # good
         "nocut": 6.0,  # good
@@ -91,6 +95,7 @@ uncfactors = {
         "lowbins": 6.8,  # good
     },
     "ptmu": {
+        "": 5.6,
         "nocut_oldbinning": 7.9,
         "recoilcut": 6.5,  # good
         "nocut": 7.0,  # good
@@ -103,10 +108,18 @@ uncfactors = {
     },
 }
 
+warps_base_path = (
+    "/Users/nova/git/output/October2025/eventloopout/allblobs_fullremoval_1and2track/"
+)
 
-warps_base_path = "/Users/nova/git/output/September2025/eventloopout/warpingstudies/fullfiducial_protontracks"
-outdir_base = "/Users/nova/git/output/Summer25Collab/transwarp/recoilstudy_newbinning"
-outdir_base = MakePlotDir("warpingstudies/fullfiducial_protontracks")
+# if len(sys.argv) == 1:
+#     print("python3 run_TransWarpExtraction.py <dir with subdirs for warps> <TODO: optional base warp, default MnvTunev1>")
+#     print("going with default: ", warps_base_path)
+# else:
+#     warps_base_path = sys.argv[1]
+
+output_basename = os.path.basename(warps_base_path)
+outdir_base = MakePlotDir(os.path.join("warpingstudies/", output_basename))
 
 # nowarp_base_path = os.path.join(warps_base_path, "MnvTunev1")
 # mnvtunewarp_base_path = os.path.join(warps_base_path, "MnvTunev2")
@@ -191,13 +204,13 @@ iters_list = [
     23,
     24,
     25,
-    26,
-    27,
-    28,
-    29,
-    30,
-    40,
-    50,
+    # 26,
+    # 27,
+    # 28,
+    # 29,
+    # 30,
+    # 40,
+    # 50,
     # 60,
     # 70,
     # 80,
@@ -335,6 +348,8 @@ for study in studies:
                 "--migration",
                 "h___%s___qelike___%s___response_migration%s"
                 % (samples[study], var, nopotscale_hist_tag),
+                # "h___%s___qelike___%s___response_migration_noPOTscale"
+                # % (samples[study], var),
                 "--num_iter",
                 iters,
                 "--num_uni",
@@ -345,6 +360,8 @@ for study in studies:
                 "1",
                 "--corr_factor",
                 str(uncfactors[var][study]),
+                # "--exclude_bins",
+                # "4,5"
                 # "-P",
                 # str(POTScale),
             ]

@@ -3,26 +3,81 @@ import sys
 import ROOT 
 import subprocess 
 from PlotUtils import MnvH1D, MnvH2D
+import datetime
+
 # How to run. Closure test, MnvTune v2
 # python run_TransWarpExtraction_f.py
 # nohup python run_TransWarpExtraction_f.py >& Tela_run_TransWarpExtraction_f.txt &
 
+mydate = datetime.datetime.now()
+month = mydate.strftime("%B")
+year = mydate.strftime("%Y")
+
 # ----------------------------
 # Running TransWarpExtraction
 # ----------------------------
+def MakePlotDir(subdir=""):
+    """
+    Subdir is the one for all plots that this script should ouptut. You will need to add
+    any other subdirs in the script itself (e.g. based off input file name)
+    """
+    plotdir = ""
+    base_plotdir = os.environ.get("OUTPUTLOC")
+    if base_plotdir != None:
+        plotdir = os.path.join(base_plotdir, month + year)
+    else:
+        plotdir = os.path.join("/Users/nova/git/output/", month + year)
+    if not os.path.exists(plotdir):
+        print("Can't find plot dir. Making it now... ", plotdir)
+        os.mkdir(plotdir)
+    if subdir == "":
+        return plotdir
+    if not os.path.exists(os.path.join(plotdir, subdir)):
+        print("Can't find plot dir. Making it now... ", os.path.join(plotdir, subdir))
+        os.mkdir(os.path.join(plotdir, subdir))
+    return os.path.join(plotdir, subdir)
 
-# scaled_tag = "_noPOTscale"
+
+warps_base_path = "/Users/nova/git/output/September2025/eventloopout/warpingstudies/fullfiducial_protontracks_pscore_03_allcands"
+
+if len(sys.argv) == 1:
+    print(
+        "python3 run_TransWarpExtraction.py <dir with subdirs for warps> <TODO: optional base warp, default MnvTunev1>"
+    )
+    print("going with default: ", warps_base_path)
+else:
+    warp_base_path = sys.argv[1]
+
+output_basename = os.path.basename(warps_base_path)
+outdir_base = MakePlotDir(os.path.join("warpingstudies/", output_basename))
+
+# # scaled_tag = "_noPOTscale"
 scaled_tag = ""
-warps_base_path = (
-    "/Users/nova/git/output/Summer25Collab/eventloopout/recoilstudy_newbinning"
-)
-outdir_base = "/Users/nova/git/output/Summer25Collab/transwarp/recoilstudy_newbinning"
+# warps_base_path = (
+#     "/Users/nova/git/output/Summer25Collab/eventloopout/recoilstudy_newbinning"
+# )
+# outdir_base = "/Users/nova/git/output/Summer25Collab/transwarp/recoilstudy_newbinning"
 
-studies = ["recoilcut", "nocut", "lowbins"]
+studies = [
+    "",
+    # "recoilcut",
+    # "nocut",
+    # "lowbins"
+]
 
-samples = {"recoilcut": "QElike_maxrecoil", "nocut": "QElike", "lowbins": "QElike"}
+samples = {
+    "recoilcut": "QElike_maxrecoil", 
+    "nocut": "QElike", 
+    "lowbins": "QElike"
+}
 
-variables = ["recoil", "EAvail", "EAvailNoNonVtxBlobs", "ptmu", "EAvailLeadingBlob"]
+variables = [
+    "recoil", 
+    "EAvail", 
+    # "EAvailNoNonVtxBlobs", 
+    "ptmu", 
+    # "EAvailLeadingBlob"
+]
 
 num_iter = "1,2,3,4,5,6,7,8,9,10,20,50,100"
 num_uni = 500
@@ -43,12 +98,18 @@ exefile = open(exefilename, "w")
 output_file_list = []
 for study in studies:
     outdir = os.path.join(outdir_base,study,"stattest")
-
+    if not os.path.exists(os.path.join(outdir)):
+        os.mkdir(os.path.join(outdir))
+    sample = "QElike"
+    if study in samples.keys():
+        sample = samples[study]
+    
+    
     nowarp_dir_list = os.listdir(os.path.join(warps_base_path,study,"MnvTunev1"))
     nowarpfile_name = ""
     for file_name in nowarp_dir_list:
         # if "combined_" in file_name and "potscaled_" not in file_name:
-        if "totaldatapotscaled_combined_" in file_name:
+        if "potscaled_combined" in file_name and "totaldata" not in file_name:
             nowarpfile_name = os.path.join(
                 warps_base_path, study, "MnvTunev1", file_name
             )
@@ -78,7 +139,7 @@ for study in studies:
             # for f in [1, 2, 3, 4, 4.697, 5, 6, 7, 8, 9, 10]: #nu
             output_file_basename = (
                 "TransWarpOut_StatUncTest_%s_%s_MnvTunev1_%s_f%0.3f.root"
-                % (var, samples[study], study, f)
+                % (var, sample, study, f)
             )
             output_file_name = os.path.join(outdir, output_file_basename)
             # input_file_name = "/minerva/data/users/%s/NukeHists/%s/%s/Hists_TransWarpInput_SISQ2CutAnalysis_MnvTunev2_t54_z82_%s_%s.root" % (os.getenv("USER"), os.getenv("NUKECC_TAG"), playlist, label, os.getenv("NUKECC_TAG"))
@@ -92,27 +153,27 @@ for study in studies:
                 nowarpfile_name,
                 "--data",
                 "h___%s___qelike___%s___reconstructed%s"
-                % (samples[study], var, scaled_tag),
+                % (sample, var, scaled_tag),
                 "--data_truth_file",
                 nowarpfile_name,
                 "--data_truth",
                 "h___%s___qelike___%s___selected_truth%s"
-                % (samples[study], var, scaled_tag),
+                % (sample, var, scaled_tag),
                 "--reco_file",
                 nowarpfile_name,
                 "--reco",
                 "h___%s___qelike___%s___reconstructed%s"
-                % (samples[study], var, scaled_tag),
+                % (sample, var, scaled_tag),
                 "--truth_file",
                 nowarpfile_name,
                 "--truth",
                 "h___%s___qelike___%s___selected_truth%s"
-                % (samples[study], var, scaled_tag),
+                % (sample, var, scaled_tag),
                 "--migration_file",
                 nowarpfile_name,
                 "--migration",
                 "h___%s___qelike___%s___response_migration%s"
-                % (samples[study], var, scaled_tag),
+                % (sample, var, scaled_tag),
                 "--num_iter",
                 "1,2,3,4,5,6,7,8,9,10,20,50,100 ",
                 "--num_uni",
@@ -136,23 +197,23 @@ for study in studies:
             #     + " --data_file "
             #     + nowarpfile_name
             #     + " --data "
-            #     + "h___%s___qelike___%s___reconstructed" % (samples[study], var)
+            #     + "h___%s___qelike___%s___reconstructed" % (sample, var)
             #     + " --data_truth_file "
             #     + nowarpfile_name
             #     + " --data_truth "
-            #     + "h___%s___qelike___%s___selected_truth" % (samples[study], var)
+            #     + "h___%s___qelike___%s___selected_truth" % (sample, var)
             #     + " --reco_file "
             #     + nowarpfile_name
             #     + " --reco "
-            #     + "h___%s___qelike___%s___reconstructed" % (samples[study], var)
+            #     + "h___%s___qelike___%s___reconstructed" % (sample, var)
             #     + " --truth_file "
             #     + nowarpfile_name
             #     + " --truth "
-            #     + "h___%s___qelike___%s___selected_truth" % (samples[study], var)
+            #     + "h___%s___qelike___%s___selected_truth" % (sample, var)
             #     + " --migration_file "
             #     + nowarpfile_name
             #     + " --migration "
-            #     + "h___%s___qelike___%s___response_migration" % (samples[study], var)
+            #     + "h___%s___qelike___%s___response_migration" % (sample, var)
             #     + " --num_iter "
             #     + "1,2,3,4,5,6,7,8,9,10,20,50,100 "
             #     + " --num_uni "

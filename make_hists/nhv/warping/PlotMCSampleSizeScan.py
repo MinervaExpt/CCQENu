@@ -106,7 +106,7 @@ for i,g in enumerate(mygraphs):
         # g.GetXaxis().SetLimits(2.0, 30.0)
         # g.GetYaxis().SetRangeUser(0.5, 15.0)
         g.GetXaxis().SetLimits(0.0, 11.0)
-        g.GetYaxis().SetRangeUser(nbins * 0.6, 1.2 * chi2_iter1_f1)
+        g.GetYaxis().SetRangeUser(nbins * 0.8, 1.2 * chi2_iter1_f1)
         # g.GetYaxis().SetRangeUser(0.7 * float(sys.argv[2]), 1.2 * chi2_iter1_f1)
         # g.GetYaxis().SetRangeUser(0.7 * float(sys.argv[2]), float(sys.argv[4]))
         # g.GetYaxis().SetRangeUser(3.0, float(sys.argv[4]))
