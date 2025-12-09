@@ -590,7 +590,8 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     void InitializeResponse(T reco_univs, const std::vector<std::string> tags, std::string tail = "") {
         // Check if response is configured for this var
         if (std::count(m_for.begin(), m_for.end(), "response") < 1) {
-            // std::cout << "VariableFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
+            std::cout << "VariableFromConfig Warning: response is disabled for this variable " << GetName() << std::endl;
+            // std::cout <<
             for (auto tag : tags) {
                 hasResponse[tag] = false;
             }
@@ -599,9 +600,13 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
         // Check that the var has both MC reco and truth configured, set bool to true
         for (auto tag : tags) {
-            assert(hasMC[tag]);
-            assert(hasSelectedTruth[tag]);
-            hasResponse[tag] = true;
+            if (!hasMC[tag] || !hasSelectedTruth[tag]) {
+                std::cout << " VariableFromConfig: variable " << m_name << " with tag " << tag << " has no truth or mc tag" << std::endl;
+            }
+            // assert(hasMC[tag]);
+            // assert(hasSelectedTruth[tag]);
+            if (hasMC[tag] && hasSelectedTruth[tag])
+                hasResponse[tag] = true;
         }
 
         std::vector<double> bins = GetBinVec();

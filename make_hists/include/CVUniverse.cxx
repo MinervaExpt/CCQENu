@@ -1329,13 +1329,94 @@ double CVUniverse::GetEAvailGeV() const {
 }
 
 double CVUniverse::GetERemovedGeV() const {
-    if (GetNMADBlobs() == 0) return 0.0;
-    if (m_neutevent->GetNNeutCands() == 0) return 0.0;
+    if (GetNMADBlobs() == 0) return 0.001;
+    if (m_neutevent->GetNNeutCands() == 0) return 0.001;
     double edep = 0.0;
     for (unsigned int i = 0; i < m_neutevent->GetNNeutCands(); i++) {
         edep += m_neutevent->GetNeutCand(i)->GetCandRecoEDep();
     }
+    if (edep == 0.0) edep += 1.0;
     return edep * MeVGeV;
+}
+
+double CVUniverse::GetERemovedEAvailRatio() const {
+    if (CVUniverse::GetEAvailGeV() == 0) return 100000.;
+    if (CVUniverse::GetERemovedGeV() == 0.001) return 0.0;
+    return CVUniverse::GetERemovedGeV() / CVUniverse::GetEAvailGeV();
+}
+
+double CVUniverse::GetERemovedRecoilRatio() const {
+    if (CVUniverse::GetRecoilEnergyGeV() == 0) return 100000.;
+    if (CVUniverse::GetERemovedGeV() == 0.001) return 0.0;
+    return CVUniverse::GetERemovedGeV() / CVUniverse::GetRecoilEnergyGeV();
+}
+
+double CVUniverse::GetEExcessGeV() const {
+    // This is the excess energy removed from recoil in EAvail reco i.e., proton activity that's removed that should be left in
+    // This requires true level info from MC
+    if (GetNMADBlobs() == 0) return 0.001;
+    if (m_neutevent->GetNNeutCands() == 0) return 0.001;
+    double edep = 0.0;
+    for (unsigned int i = 0; i < m_neutevent->GetNNeutCands(); i++) {
+        if (m_neutevent->GetNeutCand(i)->GetCandTruthTopPID() == 2212)
+            edep += m_neutevent->GetNeutCand(i)->GetCandRecoEDep();
+    }
+    if (edep == 0.0) edep += 1.0;
+    return edep * MeVGeV;
+}
+
+double CVUniverse::GetVisEMissingGeV() const {
+    // This is the energy that should not have been removed but was e.g., visible proton blobs
+    // This requires true level info from MC
+    double edep = 0.0;
+    if (GetNMADBlobs() == 0) {
+        return 0.001;
+    }
+
+    int ntrueneutcands = m_neutevent->GetNTrueNeutCands();
+    if (ntrueneutcands == 0) return 0.001;
+
+    int nneutcands = m_neutevent->GetNNeutCands();
+    if (nneutcands == 0) {
+        for (unsigned int i = 0; i < ntrueneutcands; i++) {
+            edep += m_neutevent->GetTrueNeutCand(i)->GetCandRecoEDep();
+        }
+        if (edep == 0.0) edep += 1.0;
+        return edep * MeVGeV;
+    }
+
+    std::vector<int> blobids = {};
+    for (unsigned int i = 0; i < nneutcands; i++) {
+        blobids.push_back(m_neutevent->GetNeutCand(i)->GetCandBlobID());
+    }
+    for (unsigned int i = 0; i < ntrueneutcands; i++) {
+        if (find(blobids.begin(),blobids.end(),m_neutevent->GetTrueNeutCand(i)->GetCandBlobID()) != blobids.end())
+            edep += m_neutevent->GetTrueNeutCand(i)->GetCandRecoEDep();
+    }
+    if (edep == 0.0) edep += 1.0;
+    return edep * MeVGeV;
+}
+
+double CVUniverse::GetEAvailFromTruthBlobsGeV() const {
+    // This is the Eavail calculation if you perfectly selected all the non proton blobs
+    // This requires true level info from MC
+
+    double recoil = GetRecoilEnergyGeV();  // regular recoil
+    if (GetNMADBlobs() == 0) return recoil;
+    if (m_neutevent->GetNTrueNeutCands() == 0) return recoil;
+    double edep = 0.0;
+    for (unsigned int i = 0; i < m_neutevent->GetNTrueNeutCands(); i ++) {
+        edep += m_neutevent->GetTrueNeutCand(i)->GetCandRecoEDep();
+    }
+
+    return recoil - edep * MeVGeV;
+}
+
+double CVUniverse::GetInvisEMissingGeV() const {
+    // This is the risidual from true EAvail minus the reco EAvail calculated from true blobs
+    // This requires true level info from MC
+
+    return GetTrueEAvailGeV() - GetEAvailFromTruthBlobsGeV();
 }
 
 double CVUniverse::GetEAvailFromBlobsGeV() const {

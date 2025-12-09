@@ -353,9 +353,10 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             return;
         }
         for (auto tag : tags) {
-            assert(hasMC[tag]);
-            assert(hasSelectedTruth[tag]);
-            hasResponse[tag] = true;
+            // assert(hasMC[tag]);
+            // assert(hasSelectedTruth[tag]);
+            if (hasMC[tag] && hasSelectedTruth[tag])
+                hasResponse[tag] = true;
         }
 
         std::vector<double> xbins = GetBinVecX();

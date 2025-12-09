@@ -729,13 +729,13 @@ double NeutEvent::GetTotNeutCandEDep(int max_ncands) {
 bool NeutEvent::GetCandIsNeut(int index) {
     if (m_ncands == 0) return true;
     return (CandPassMuonAngle(index) && 
-            CandPassMuonDist(index) && 
+            // CandPassMuonDist(index) &&
             CandPassFiducial(index) && 
             CandPassVtxDist(index) && 
-            CandPassVtxZDist(index) &&
+            // CandPassVtxZDist(index) &&
             CandPassEDep(index) && 
-            CandPassIs3D(index) &&
-            CandPassVtxBox(index) &&
+            // CandPassIs3D(index) &&
+            // CandPassVtxBox(index) &&
             CandPassTrackEndDist(index)
         );
 }
