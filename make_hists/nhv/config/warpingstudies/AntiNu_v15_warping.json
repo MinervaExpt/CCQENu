@@ -8,7 +8,7 @@
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
   "outRoot": "ERemovedTest_tuned_${MYPLAYLIST}_${MYMODEL}",
-  "scalefileIn": "/Users/nova/git/output/November2025/bkgfitting/fitfill_bkgfit_newprotonscore_recoil0mm_fullsyst/combined_5A_6A_6B_6C_6D_6E_6F_6G_6H_6I_6JBkgFittingSub_fitfill_firstpass_fullsyst_recoil0mm_logprotonscorecut_minervameCombined_MnvTunev1_AntiNu_v15_warping_grid_bkgsub_1_recoil_FractionFitOutVals.root",
+  "scalefileIn": "${CCQEMAT}/data/combined_5A_6A_6B_6C_6D_6E_6F_6G_6H_6I_6JBkgFittingSub_fitfill_firstpass_fullsyst_recoil0mm_logprotonscorecut_minervameCombined_MnvTunev1_AntiNu_v15_warping_grid_bkgsub_1_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
