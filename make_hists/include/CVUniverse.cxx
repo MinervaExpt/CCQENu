@@ -361,6 +361,7 @@ void CVUniverse::SetNeutEvent(bool dotruth) {
                             //    blobendpositions
                             );
     if (dotruth) {
+        // if (CVUniverse::GetNMADBlobs() != 0) std::cout << "truth set " << CVUniverse::GetNMADBlobs() << std::endl;
         this->m_neutevent->SetTruth(GetVec<int>((GetAnaToolName() + "_BlobMCPID").c_str()),
                                     GetVec<int>((GetAnaToolName() + "_BlobTopMCPID").c_str()));//,
                                     // GetVec<double>((GetAnaToolName() + "_BlobMCTopTrackPx").c_str()),
@@ -371,7 +372,10 @@ void CVUniverse::SetNeutEvent(bool dotruth) {
 }
 
 void CVUniverse::ResetNeutEvent() {
-    this->m_neutevent->Reset();
+    if (_is_neut_event_set) {
+        this->m_neutevent->Reset();
+        // _is_neut_event_set = false;
+    }
 }
 
 // ========================================================================
@@ -1329,11 +1333,28 @@ double CVUniverse::GetEAvailGeV() const {
 }
 
 double CVUniverse::GetERemovedGeV() const {
-    if (GetNMADBlobs() == 0) return 0.001;
-    if (m_neutevent->GetNNeutCands() == 0) return 0.001;
+    if (GetNMADBlobs() == 0) {
+        return 0.0;
+        // return 0.001;
+    }
+    if (m_neutevent->GetNNeutCands() == 0) {
+        return 0.0;
+        // return 0.001;
+    }
     double edep = 0.0;
     for (unsigned int i = 0; i < m_neutevent->GetNNeutCands(); i++) {
         edep += m_neutevent->GetNeutCand(i)->GetCandRecoEDep();
+    }
+    // if (edep == 0.0) edep += 1.0;
+    return edep * MeVGeV;
+}
+
+double CVUniverse::GetERemovedFromTruthBlobsGeV() const {
+    if (GetNMADBlobs() == 0) return 0.001;
+    if (m_neutevent->GetNTrueNeutCands() == 0) return 0.001;
+    double edep = 0.0;
+    for (unsigned int i = 0; i < m_neutevent->GetNTrueNeutCands(); i++) {
+        edep += m_neutevent->GetTrueNeutCand(i)->GetCandRecoEDep();
     }
     if (edep == 0.0) edep += 1.0;
     return edep * MeVGeV;
@@ -1341,60 +1362,90 @@ double CVUniverse::GetERemovedGeV() const {
 
 double CVUniverse::GetERemovedEAvailRatio() const {
     if (CVUniverse::GetEAvailGeV() == 0) return 100000.;
-    if (CVUniverse::GetERemovedGeV() == 0.001) return 0.0;
+    // if (CVUniverse::GetERemovedGeV() == 0) return 0.0;
     return CVUniverse::GetERemovedGeV() / CVUniverse::GetEAvailGeV();
 }
 
 double CVUniverse::GetERemovedRecoilRatio() const {
     if (CVUniverse::GetRecoilEnergyGeV() == 0) return 100000.;
-    if (CVUniverse::GetERemovedGeV() == 0.001) return 0.0;
+    // if (CVUniverse::GetERemovedGeV() == 0) return 0.0;
     return CVUniverse::GetERemovedGeV() / CVUniverse::GetRecoilEnergyGeV();
 }
 
 double CVUniverse::GetEExcessGeV() const {
-    // This is the excess energy removed from recoil in EAvail reco i.e., proton activity that's removed that should be left in
+    // This is the excess energy left in EAvail from recoil in EAvail reco i.e., neutron activity that hasn't been removed
     // This requires true level info from MC
-    if (GetNMADBlobs() == 0) return 0.001;
-    if (m_neutevent->GetNNeutCands() == 0) return 0.001;
-    double edep = 0.0;
-    for (unsigned int i = 0; i < m_neutevent->GetNNeutCands(); i++) {
-        if (m_neutevent->GetNeutCand(i)->GetCandTruthTopPID() == 2212)
-            edep += m_neutevent->GetNeutCand(i)->GetCandRecoEDep();
+    if (GetNMADBlobs() == 0) {
+        return 0.0;
+        // return 0.001;
     }
-    if (edep == 0.0) edep += 1.0;
+    if (m_neutevent->GetNTrueNeutCands() == 0 || m_neutevent->GetNProtonCands() == 0) {
+        return 0.0;
+        // return 0.001;
+    }
+    double edep = 0.0;
+    for (unsigned int i = 0; i < m_neutevent->GetNProtonCands(); i++) {
+        int pid = m_neutevent->GetProtonCand(i)->GetCandTruthTopPID(); 
+        if (pid == 2112 || abs(pid) == 13 || pid == 0)
+            edep += m_neutevent->GetProtonCand(i)->GetCandRecoEDep();
+    }
+    if (edep * MeVGeV > GetEAvailGeV())
+        std::cout << "EExcess greater than eavail\t" << edep * MeVGeV << "\t" << GetEAvailGeV() << std::endl;
+    // if (edep == 0.0) edep += 1.0;
     return edep * MeVGeV;
 }
 
+double CVUniverse::GetEExcessERemovedRatio() const {
+    if (CVUniverse::GetERemovedGeV() == 0) {
+        return -1.0;
+    }
+    double ratio = CVUniverse::GetEExcessGeV() / CVUniverse::GetERemovedGeV();
+    if (ratio == 0.0) return -1.0;
+    return ratio;
+}
+
 double CVUniverse::GetVisEMissingGeV() const {
-    // This is the energy that should not have been removed but was e.g., visible proton blobs
+    // This is the energy that should not have been removed but was e.g., visible proton blobs misID'd as neutrons
     // This requires true level info from MC
     double edep = 0.0;
     if (GetNMADBlobs() == 0) {
-        return 0.001;
+        return 0.0;
+        // return 0.001;
     }
-
-    int ntrueneutcands = m_neutevent->GetNTrueNeutCands();
-    if (ntrueneutcands == 0) return 0.001;
-
     int nneutcands = m_neutevent->GetNNeutCands();
     if (nneutcands == 0) {
-        for (unsigned int i = 0; i < ntrueneutcands; i++) {
-            edep += m_neutevent->GetTrueNeutCand(i)->GetCandRecoEDep();
-        }
-        if (edep == 0.0) edep += 1.0;
-        return edep * MeVGeV;
+        return 0.0;
+        // return 0.001;
     }
-
-    std::vector<int> blobids = {};
     for (unsigned int i = 0; i < nneutcands; i++) {
-        blobids.push_back(m_neutevent->GetNeutCand(i)->GetCandBlobID());
+        if (m_neutevent->GetNeutCand(i)->GetCandTruthTopPID() == 2212) {
+            edep += m_neutevent->GetNeutCand(i)->GetCandRecoEDep();
+        }
     }
-    for (unsigned int i = 0; i < ntrueneutcands; i++) {
-        if (find(blobids.begin(),blobids.end(),m_neutevent->GetTrueNeutCand(i)->GetCandBlobID()) != blobids.end())
-            edep += m_neutevent->GetTrueNeutCand(i)->GetCandRecoEDep();
-    }
-    if (edep == 0.0) edep += 1.0;
+    // if (edep == 0.0) edep += 1.0;
     return edep * MeVGeV;
+
+    // int ntrueneutcands = m_neutevent->GetNTrueNeutCands();
+    // if (ntrueneutcands == 0) return 0.001;
+
+    // if (nneutcands == 0) {
+    //     for (unsigned int i = 0; i < ntrueneutcands; i++) {
+    //         edep += m_neutevent->GetTrueNeutCand(i)->GetCandRecoEDep();
+    //     }
+    //     if (edep == 0.0) edep += 1.0;
+    //     return edep * MeVGeV;
+    // }
+
+    // std::vector<int> blobids = {};
+    // for (unsigned int i = 0; i < nneutcands; i++) {
+    //     blobids.push_back(m_neutevent->GetNeutCand(i)->GetCandBlobID());
+    // }
+    // for (unsigned int i = 0; i < ntrueneutcands; i++) {
+    //     if (find(blobids.begin(),blobids.end(),m_neutevent->GetTrueNeutCand(i)->GetCandBlobID()) != blobids.end())
+    //         edep += m_neutevent->GetTrueNeutCand(i)->GetCandRecoEDep();
+    // }
+    // if (edep == 0.0) edep += 1.0;
+    // return edep * MeVGeV;
 }
 
 double CVUniverse::GetEAvailFromTruthBlobsGeV() const {

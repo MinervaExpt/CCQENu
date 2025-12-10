@@ -117,9 +117,11 @@ class CVFunctions {
         recofunctions["EAvailLeadingBlobGeV"] = &CVUNIVERSE::GetEAvailLeadingBlobGeV;
 
         recofunctions["ERemovedGeV"] = &CVUNIVERSE::GetERemovedGeV;
+        recofunctions["ERemovedFromTruthBlobsGeV"] = &CVUNIVERSE::GetERemovedFromTruthBlobsGeV;
         recofunctions["ERemovedEAvailRatio"] = &CVUNIVERSE::GetERemovedEAvailRatio;
         recofunctions["ERemovedRecoilRatio"] = &CVUNIVERSE::GetERemovedRecoilRatio;
         recofunctions["EExcessGeV"] = &CVUNIVERSE::GetEExcessGeV;
+        recofunctions["EExcessERemovedRatio"] = &CVUNIVERSE::GetEExcessERemovedRatio;
         recofunctions["VisEMissingGeV"] = &CVUNIVERSE::GetVisEMissingGeV;
         recofunctions["InvisEMissingGeV"] = &CVUNIVERSE::GetInvisEMissingGeV;
         recofunctions["EAvailFromTruthBlobsGeV"] = &CVUNIVERSE::GetEAvailFromTruthBlobsGeV;

@@ -182,8 +182,8 @@ void LoopAndFillEventSelection(std::string tag,
 
                 universe->SetEntry(i);
                 // if (doneutron) {
-                if (data_mc_truth == kMC || data_mc_truth == kTruth) universe->SetNeutEvent(true);
-                else universe->SetNeutEvent(false);
+                // if (data_mc_truth == kMC || data_mc_truth == kTruth) universe->SetNeutEvent(true);
+                // else universe->SetNeutEvent(false);
                 // }
                 // Process this event/universe
                 // double weight = 1;
@@ -202,6 +202,8 @@ void LoopAndFillEventSelection(std::string tag,
                 // Fill
                 //=========================================
                 if (data_mc_truth == kMC) {
+                    // universe->SetNeutEvent(true);
+
 #ifdef CLOSUREDETAIL
                     if (closure && universe->ShortName() == "cv" && selection.isMCSelected(*universe, event, weight).all()) {
                         std::cout << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all() << " " << tag << selection.isSignal(*universe) << " " << universe->ShortName() << std::endl;
@@ -209,6 +211,7 @@ void LoopAndFillEventSelection(std::string tag,
                     }
 #endif
                     if (selection.isMCSelected(*universe, event, weight).all() && selection.isSignal(*universe)) {
+                        universe->SetNeutEvent(true);
                         // if (warp!=1.) std::cout << "warp " << warp << "  tmp_weight " << tmp_weight << "   weight " << weight << std::endl;
                         // double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
                         const double q2qe = universe->GetQ2QEGeV();
@@ -276,6 +279,8 @@ void LoopAndFillEventSelection(std::string tag,
                     }
                 } else if (data_mc_truth == kTruth) {
                     if (selection.isEfficiencyDenom(*universe, weight)) {
+                        universe->SetNeutEvent(true);
+
                         const double q2qe = universe->GetTrueQ2QEGeV();
                         double scale = 1.0;
                         if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv);  // Only calculate the per-universe weight for events that will actually use it.
@@ -290,10 +295,11 @@ void LoopAndFillEventSelection(std::string tag,
                     }
 #endif
                     if (selection.isDataSelected(*universe, event).all()) {
+                        universe->SetNeutEvent(false);
                         FillData(tag, universe, variables, variables2D, variablesHD);
                     }
                 }
-                // universe->ResetNeutEvent();
+                universe->ResetNeutEvent();
             }  // End universes
         }  // End error bands
     }  // End entries loop

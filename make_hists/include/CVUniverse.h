@@ -265,11 +265,15 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetERemovedGeV() const;
 
+    virtual double GetERemovedFromTruthBlobsGeV() const;
+
     virtual double GetERemovedEAvailRatio() const;
 
     virtual double GetERemovedRecoilRatio() const;
 
     virtual double GetEExcessGeV() const;
+
+    virtual double GetEExcessERemovedRatio() const;
 
     virtual double GetVisEMissingGeV() const;
 

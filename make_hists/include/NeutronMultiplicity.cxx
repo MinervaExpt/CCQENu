@@ -559,8 +559,14 @@ void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMC
             ROOT::Math::XYZVector TopMomentum(truthTopMomentumsX[blobID], truthTopMomentumsY[blobID], truthTopMomentumsZ[blobID]);
             cand->SetTruth(truthPIDs[blobID], truthTopMCPIDs[blobID], TopMomentum);
         }
+        for (auto& cand : m_protoncands) {
+            int blobID(cand->m_blobID);
+            // std::cout << "neutblobid " << blobID << std::endl;
+            ROOT::Math::XYZVector TopMomentum(truthTopMomentumsX[blobID], truthTopMomentumsY[blobID], truthTopMomentumsZ[blobID]);
+            cand->SetTruth(truthPIDs[blobID], truthTopMCPIDs[blobID], TopMomentum);
+        }
     }
-    
+
     _truthset = true;
     this->SetTrueNeutCands();
 }
@@ -585,6 +591,11 @@ void NeutEvent::SetTruth(std::vector<int> truthPIDs, std::vector<int> truthTopMC
             // std::cout << "neutblobid " << blobID << std::endl;
             cand->SetTruth(truthPIDs[blobID], truthTopMCPIDs[blobID]);
         }
+        for (auto& cand : m_protoncands) {
+            int blobID(cand->m_blobID);
+            // std::cout << "neutblobid " << blobID << std::endl;
+            cand->SetTruth(truthPIDs[blobID], truthTopMCPIDs[blobID]);
+        }
     }
 
     _truthset = true;
@@ -604,7 +615,7 @@ void NeutEvent::SetNeutCands() {
         if (GetCandIsNeut(i)) {
             m_neutcands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
             m_nneutcands += 1;
-        } else {
+        } else if (CandPassFiducial(i)) {
             m_protoncands.emplace_back(std::make_unique<NeutCand>(NeutCand(*m_cands[i])));
             m_nprotoncands += 1;
         }
