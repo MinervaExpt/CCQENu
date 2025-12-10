@@ -123,6 +123,7 @@ class CVFunctions {
         recofunctions["EExcessGeV"] = &CVUNIVERSE::GetEExcessGeV;
         recofunctions["EExcessERemovedRatio"] = &CVUNIVERSE::GetEExcessERemovedRatio;
         recofunctions["VisEMissingGeV"] = &CVUNIVERSE::GetVisEMissingGeV;
+        recofunctions["VisResidualGeV"] = &CVUNIVERSE::GetVisResidualGeV;
         recofunctions["InvisEMissingGeV"] = &CVUNIVERSE::GetInvisEMissingGeV;
         recofunctions["EAvailFromTruthBlobsGeV"] = &CVUNIVERSE::GetEAvailFromTruthBlobsGeV;
 

@@ -277,6 +277,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetVisEMissingGeV() const;
 
+    virtual double GetVisResidualGeV() const;
+
     virtual double GetEAvailFromTruthBlobsGeV() const;
 
     virtual double GetInvisEMissingGeV() const;

@@ -1373,13 +1373,13 @@ double CVUniverse::GetERemovedRecoilRatio() const {
 }
 
 double CVUniverse::GetEExcessGeV() const {
-    // This is the excess energy left in EAvail from recoil in EAvail reco i.e., neutron activity that hasn't been removed
+    // This is the excess energy left in EAvail reco from recoil i.e., neutron activity that wasn't removed
     // This requires true level info from MC
     if (GetNMADBlobs() == 0) {
         return 0.0;
         // return 0.001;
     }
-    if (m_neutevent->GetNTrueNeutCands() == 0 || m_neutevent->GetNProtonCands() == 0) {
+    if (m_neutevent->GetNProtonCands() == 0) {
         return 0.0;
         // return 0.001;
     }
@@ -1405,7 +1405,7 @@ double CVUniverse::GetEExcessERemovedRatio() const {
 }
 
 double CVUniverse::GetVisEMissingGeV() const {
-    // This is the energy that should not have been removed but was e.g., visible proton blobs misID'd as neutrons
+    // This is the visible energy that should not have been removed but was e.g., visible proton blobs misID'd as neutrons
     // This requires true level info from MC
     double edep = 0.0;
     if (GetNMADBlobs() == 0) {
@@ -1448,6 +1448,11 @@ double CVUniverse::GetVisEMissingGeV() const {
     // return edep * MeVGeV;
 }
 
+double CVUniverse::GetVisResidualGeV() const {
+    // This measures how much the excess and visible missing energy cancel each other out
+    return CVUniverse::GetEExcessGeV() - CVUniverse::GetVisEMissingGeV();
+}
+
 double CVUniverse::GetEAvailFromTruthBlobsGeV() const {
     // This is the Eavail calculation if you perfectly selected all the non proton blobs
     // This requires true level info from MC
@@ -1465,6 +1470,7 @@ double CVUniverse::GetEAvailFromTruthBlobsGeV() const {
 
 double CVUniverse::GetInvisEMissingGeV() const {
     // This is the risidual from true EAvail minus the reco EAvail calculated from true blobs
+    // This is the invisible energy not included in reco Eavail
     // This requires true level info from MC
 
     return GetTrueEAvailGeV() - GetEAvailFromTruthBlobsGeV();

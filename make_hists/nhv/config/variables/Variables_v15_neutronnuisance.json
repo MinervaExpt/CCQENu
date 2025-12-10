@@ -1438,24 +1438,53 @@
         "selected_reco"
       ]      
     },
+    "VisResidual": {
+      "reco": "VisResidualGeV",
+      "true": "TrueEAvailGeV",
+      "name": "VisResidual",
+      "title": "E_{Excess} - E_{Missing, vis} in GeV",
+      "nbins": 11,
+      "min": -0.3,
+      "max": 0.3,
+      // "bins": [
+      //   0.001,
+      //   0.005,
+      //   0.01,
+      //   0.015,
+      //   0.02,
+      //   0.03,
+      //   0.05,
+      //   0.1,
+      //   0.2,
+      //   0.4,
+      //   0.8
+      // ],
+      "fluxnorm": false,
+      "for": [
+        "selected_reco"
+      ]
+    },
     "InvisEMissing": {
       "reco": "InvisEMissingGeV",
       "true": "TrueEAvailGeV",
       "name": "InvisEMissing",
       "title": "Non visible Missing Energy in GeV",
-      "bins": [
-        0.001,
-        0.005,
-        0.01,
-        0.015,
-        0.02,
-        0.03,
-        0.05,
-        0.1,
-        0.2,
-        0.4,
-        0.8
-      ],
+      "nbins": 11,
+      "min": -0.6,
+      "max": 0.6,
+      // "bins": [
+      //   0.001,
+      //   0.005,
+      //   0.01,
+      //   0.015,
+      //   0.02,
+      //   0.03,
+      //   0.05,
+      //   0.1,
+      //   0.2,
+      //   0.4,
+      //   0.8
+      // ],
       "fluxnorm": false,
       "for": [
         "selected_reco"

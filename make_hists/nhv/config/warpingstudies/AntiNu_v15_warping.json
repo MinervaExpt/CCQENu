@@ -52,7 +52,8 @@
     "EExcessERemovedRatio",
     "EExcess",
     "VisEMissing",
-    "InvisEMissing"
+    "InvisEMissing",
+    "VisResidual"
   ],
   "Analyze2DVariables": [
     "EAvail_ERemoved",
@@ -65,7 +66,10 @@
     "recoil_ERemovedRecoilRatio",
     "EAvail_EExcessERemovedRatio",
     "ERemoved_EExcessERemovedRatio",
+    "EAvail_VisResidual",
+    "VisResidual_InvisEMissing",
     "EExcess_VisEMissing",
+    "EExcess_InvisEMissing",
     "EAvail_EExcess",
     "EAvail_VisEMissing",
     "EAvail_InvisEMissing",
