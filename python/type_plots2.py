@@ -18,7 +18,7 @@ TEST=False
 noData=False  # use this to plot MC only types
 sigtop=True # use this to place signal on top of background
 manualrange = False
-dowarp = True
+dowarp = False
 
 def MakePlotDir(subdir=""):
     """
@@ -248,16 +248,18 @@ ROOT.gStyle.SetOptStat(0)
 template = "%s___%s___%s___%s"
 
 for a_hist in groups.keys():
+    print("in a_hist loop")
     if a_hist != "h": continue # no 2D
     # print ("a is",a)
     for b_sample in groups[a_hist].keys():
+        print("in b_sample loop")
         datasample = b_sample
         if b_sample == "QElike_warped":
             datasample = "QElike"
         if dowarp and b_sample == "QElike":
             continue
         for c_var in groups[a_hist][b_sample].keys():
-
+            print("in c_var loop for ",c_var)
             first = 0
             leg = CCQELegend(0.5,0.7,0.9,0.9)
             leg.SetNColumns(2)
@@ -351,8 +353,8 @@ for a_hist in groups.keys():
                     if c_var not in scaleY:
                         data.SetMinimum(0)
                         stack.SetMinimum(0)
-                        data.SetMaximum(1800000)
-                        stack.SetMaximum(1800000)
+                        data.SetMaximum(1000000)
+                        stack.SetMaximum(1000000)
                     else:
                         # stack.Divide(data,1.)
                         data.SetMinimum(50)

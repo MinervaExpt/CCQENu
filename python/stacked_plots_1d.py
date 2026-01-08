@@ -10,7 +10,7 @@ import ROOT
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
 
 TEST=False
-noData=False  # use this to plot MC only types
+global_noData=False  # use this to plot MC only types
 sigtop=True # use this to place signal on top of background
 dotuned=False
 dowarp = False
@@ -164,7 +164,6 @@ for k in keys:
     #print ("cats",groups[d][s][variable].keys())
     # if len(groups[hist][sample][variable].keys())-1 > ncats:
     #     ncats = len(groups[hist][sample][variable].keys())-1
-
 # now that the structure is created, stuff histograms into it after scaling for POT
 for k in keys:
     name = k.GetName()
@@ -211,6 +210,31 @@ for k in keys:
 
         #print ("data",groups[hist][sample][variable][c])
 
+for a_hist in groups.keys():
+    if a_hist != "h": continue # no 2D
+    #print ("a is",a)
+    for b_sample in groups[a_hist].keys():
+
+        datasample = b_sample
+        if b_sample == "QElike_warped":
+            datasample = "QElike"
+        if b_sample == "QElike" and dowarp: continue
+
+        for c_var in groups[a_hist][b_sample].keys():
+            firstmc = True
+            for d_cat in groups[a_hist][b_sample][c_var].keys():
+                if d_cat in ["data","mctot"]:
+                    continue
+                if firstmc:
+                    mctot = groups[a_hist][b_sample][c_var][d_cat].Clone("mctot")
+                    firstmc = False
+                else:
+                    mctot.Add(groups[a_hist][b_sample][c_var][d_cat])
+            groups[a_hist][b_sample][c_var]["mctot"] = mctot
+                
+            
+
+
 # "h___MultiplicitySideband___qelike___pzmu___reconstructed"
 # h___MultipBlobSideband___other___pzmu___reconstructed
 # do the plotting
@@ -233,6 +257,9 @@ for a_hist in groups.keys():
         if b_sample == "QElike" and dowarp: continue
 
         for c_var in groups[a_hist][b_sample].keys():
+            noData = global_noData
+            if "data" not in groups[a_hist][b_sample][c_var].keys():
+                noData = False
             print("here")
 
             first = 0
@@ -248,9 +275,9 @@ for a_hist in groups.keys():
             cc.SetLogy()
             
             data = TH1D()
-            if len(groups[a_hist][datasample][c_var]["data"]) < 1:
-                print (" no data",a_hist,b_sample,c_var)
-                continue
+            # if len(groups[a_hist][datasample][c_var]["data"]) < 1:
+            #     print (" no data",a_hist,b_sample,c_var)
+            #     continue
             
             data = TH1D(groups[a_hist][datasample][c_var]["data"])
             plottitle=samplenames[b_sample]
@@ -322,9 +349,18 @@ for a_hist in groups.keys():
             leg.Draw()
             prelim = AddPreliminary()
             prelim.DrawLatex(0.6,0.72,"MINER#nuA Work In Progress")
+
+            chi2 = groups[a_hist][b_sample][c_var]["data"].Chi2Test(groups[a_hist][b_sample][c_var]["mctot"], "CHI2")
+            chi2_latex = ROOT.TLatex()
+            chi2_latex.SetNDC()
+            chi2_latex.SetTextSize(legendfontsize-0.004)
+            chi2_latex.SetTextAlign(11)
+            chi2_latex.DrawLatex(0.6,0.69,"#chi^{2} = %d"%chi2)
+
             titleonplot = MakeTitleOnPlot()
             titleonplot.DrawLatex(0.37,0.85,plottitle)
             cc.Draw()
+
             canvas_name=thename+"_FinalStates"
             if dotuned:
                 canvas_name = thename+"_FinalStates_tuned"

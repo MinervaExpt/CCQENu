@@ -349,7 +349,7 @@ def MakeHistPretty(hist,pidtype,cat,projwidth=1.):
         # hist.SetMarkerSize(1.5)
         hist.SetMarkerColor(ROOT.kBlack)
         hist.SetLineColor(ROOT.kBlack)
-    elif not do types:
+    elif not dotypes:
         if pidtype == -1:
             print("something wrong with ", hist.GetName())
         hist.SetFillColor(bin_pid_colors[pidtype])
@@ -1242,52 +1242,52 @@ for a_sample in groups.keys():
         # if dotuned:
         #     canvas_name = thename + "_FinalStates_tuned"
         # cc.Print(os.path.join(outdirname, canvas_name + ".png"))
-    if not dotypes: continue
-    print("Doing type histograms")
-    for b_var in vars2Dtodo:
-        if b_var not in groups[a_sample].keys():
-            continue
-        noData = global_noData
-        if not noData:
-            if dotuned:
-                data_sample_name = tunedname
-            if b_var not in groups[data_sample_name].keys():
-                print("Couldn't find data_var. Skipping", b_var)
-                noData = True
-                # continue 
-            elif "data" not in groups[data_sample_name][b_var].keys():
-                print("Couldn't find data_var. Skipping", b_var)
-                noData = True
-            else:
-                data = groups[data_sample_name][b_var]["data"][0].Clone()
-                data.SetMarkerColor(ROOT.kBlack)
-                data.SetLineColor(ROOT.kBlack)
+    # if not dotypes: continue
+    # print("Doing type histograms")
+    # for b_var in vars2Dtodo:
+    #     if b_var not in groups[a_sample].keys():
+    #         continue
+    #     noData = global_noData
+    #     if not noData:
+    #         if dotuned:
+    #             data_sample_name = tunedname
+    #         if b_var not in groups[data_sample_name].keys():
+    #             print("Couldn't find data_var. Skipping", b_var)
+    #             noData = True
+    #             # continue 
+    #         elif "data" not in groups[data_sample_name][b_var].keys():
+    #             print("Couldn't find data_var. Skipping", b_var)
+    #             noData = True
+    #         else:
+    #             data = groups[data_sample_name][b_var]["data"][0].Clone()
+    #             data.SetMarkerColor(ROOT.kBlack)
+    #             data.SetLineColor(ROOT.kBlack)
         
-        qelike_dummy = groups[data_sample_name][b_var]["qelike"][1].Clone("dummy")
+    #     qelike_dummy = groups[data_sample_name][b_var]["qelike"][1].Clone("dummy")
 
-        nxbins_raw = qelike_dummy.GetNbinsX()
-        nybins_raw = qelike_dummy.GetNbinsY()
-        thename = "%s_types_%s___%s" % (a_sample, b_var, data_var)
+    #     nxbins_raw = qelike_dummy.GetNbinsX()
+    #     nybins_raw = qelike_dummy.GetNbinsY()
+    #     thename = "%s_types_%s___%s" % (a_sample, b_var, data_var)
 
-        for projY in [True,False]:
-            nxbins_canvas = nxbins_raw
-            nybins_canvas = nybins_raw
-            thename += "_projX"
-            nprojbins = nxbins_raw
+    #     for projY in [True,False]:
+    #         nxbins_canvas = nxbins_raw
+    #         nybins_canvas = nybins_raw
+    #         thename += "_projX"
+    #         nprojbins = nxbins_raw
 
-            if projY:
-                nxbins_canvas = nybins_raw
-                nybins_canvas = nxbins_raw
-                thename.replace("projX","projY")
+    #         if projY:
+    #             nxbins_canvas = nybins_raw
+    #             nybins_canvas = nxbins_raw
+    #             thename.replace("projX","projY")
 
-                nprojbins = nybins_raw
+    #             nprojbins = nybins_raw
 
-            grid_dict = {}
+    #         grid_dict = {}
             
-            for projbin in range(1,nprojbins+1):
+    #         for projbin in range(1,nprojbins+1):
                 
 
-            gc2 = PanelCanvas(thename,nxbins_canvas,nybins_canvas)
+    #         gc2 = PanelCanvas(thename,nxbins_canvas,nybins_canvas)
 
 
 

@@ -143,7 +143,7 @@ def main():
         tuned_tag = "untuned"
         if("tuned" in parse[4]):
             tuned_tag = "tuned"
-            continue
+            # continue
         if not do_manual:
             print("in do_mnvplotter")
             mnv_canvas_title = "Migration Row norm'd, " + sample + "_"+ tuned_tag

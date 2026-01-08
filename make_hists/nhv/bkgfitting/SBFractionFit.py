@@ -6,11 +6,18 @@ import os
 import sys
 import math
 import ctypes
-import json
+import json, re
 import numpy as np
 import time
+from array import array
 
 # names associated with each category: data for full data, qelike for MC signal, qelikenot for MC bkg
+
+skip_univs = [
+    "NeutronInelasticExclusives",
+]
+
+dosimulfithists = True
 combinefirstbins = False
 category_list = [
     "data", 
@@ -35,7 +42,7 @@ scale_var = "Q2QE"
 fit_var = "recoil"
 scaletype = "area"
 
-variable_list = ["FitQ2QE_recoil"]
+variable_list = ["FitQ2QE_Fitrecoil"]
 # names associated with each "sample" e.g. QElike, QElikeALL
 sample_list = [
     "QElike", 
@@ -100,7 +107,9 @@ def GetDataMCHistDict(rfile):
             continue
         if hist_category!='data' and useTuned>0 and 'tuned' not in hist_type:
             continue
-        if hist_type!='reconstructed_simulfit':
+        if dosimulfithists and hist_type not in ['reconstructed_simulfit','reconstructed_simulfit_noPOTscale']:
+            continue
+        if not dosimulfithists and hist_type!='reconstructed':
             continue
         print("found hist ",hist_name)
         hist_dict[hist_name]=rfile.Get(hist_name).Clone()
@@ -157,6 +166,36 @@ def GetDummyHistCV(rfile, variable_name=scale_var):
     print("No suitable hist to make a dummy with. Exiting...")
     sys.exit()
 
+def GetDummyHistFromBins(i_bins):
+    # Make a dummy 1D hist to get binning. Just grabs first 1D Q2QE plot
+    dummy_th1d = ROOT.TH1D()
+    dummy_mnvh1d = MnvH1D()
+    bins = array("d", i_bins)
+    dummy_th1d.SetBins(len(i_bins) - 1, bins)
+    dummy_mnvh1d = MnvH1D(dummy_th1d)
+    return dummy_mnvh1d, dummy_th1d
+
+    # histkeys_list = rfile.GetListOfKeys()
+    # for histkey in histkeys_list:
+    #     hist_name = histkey.GetName()
+    #     # TODO: This is hardcoded, should change it
+    #     if hist_name.find("___"+variable_name+"___") == -1:
+    #         continue
+    #     else:
+    #         dummy_mnvh1d = rfile.Get(hist_name).Clone()
+    #         dummy_th1d = dummy_mnvh1d.GetCVHistoWithStatError().Clone()
+
+    #         # Clears hist, leaves only binning
+    #         dummy_mnvh1d.ClearAllErrorBands()
+
+    #         dummy_mnvh1d.Reset("ICES")
+    #         dummy_th1d.Reset("ICES")
+
+            # return dummy_mnvh1d, dummy_th1d
+
+    # print("No suitable hist to make a dummy with. Exiting...")
+    # sys.exit()
+
 def PrintFitResults(fit, function):
     print("Function: ", function.GetExpFormula())
     print("chi2: ", function.GetChisquare())
@@ -193,7 +232,7 @@ def ScaleMC(i_data_hist,i_mctot_hist,i_qelike_hist,i_qelikenot_hist):
     qelike_hist=i_qelike_hist.Clone()
     qelikenot_hist=i_qelikenot_hist.Clone()
 
-    min_bin = 6 #1
+    min_bin = 1 #6
     max_xbin = data_hist.GetNbinsX()
     area_scale = (data_hist.Integral(min_bin, max_xbin)) / (mctot_hist.Integral(min_bin, max_xbin))
 
@@ -236,10 +275,10 @@ def RunFractionFitter(i_hist_dict):
         mc_hist_list.append(i_hist_dict[cat].Clone())
 
     # Get min and max bin for fitting (underflow is 0, overflow is nbins+1)
-    # min_bin = 1
+    min_bin = 1
     max_bin = i_hist_dict["mctot"].GetNbinsX()
 
-    print(">>>>>>>>>max_bin ", max_bin)
+    print("\tmin_bin ", min_bin, "\tmax_bin ", max_bin)
 
     # Calculate & store pre-fit fractions of MC samples.
     mc_frac_list = GetMCFracList(i_hist_dict)
@@ -263,15 +302,21 @@ def RunFractionFitter(i_hist_dict):
         #     fit.Constrain(i, 0.0, 0.05)   
 
         # Set(<name>,<fraction>,<stepsize>,<lowerbound>,<upperbound>)
-        virtual_fitter.Config().ParSettings(i).Set(mc_category_list[i], mc_frac_list[i], mc_frac_list[i]*0.01)#, 0.0, 1.0) # Switched step size to be the bin width of 25 recoil bins
+        virtual_fitter.Config().ParSettings(i).Set(mc_category_list[i], mc_frac_list[i], 0.001)#mc_frac_list[i]*0.01)#, 0.0, 1.0) # Switched step size to be the bin width of 25 recoil bins
         # Constrain the fit to between [0,1], since they are fracs and area-normed
-        # if mc_frac_list[i] < 0.01:
-        #     virtual_fitter.Config().ParSettings(i).Fix()
+        # if mc_frac_list[i] < 0.05:
+            # virtual_fitter.Config().ParSettings(i).Fix()
         if mc_category_list[i] in fixed_cats_list:
             virtual_fitter.Config().ParSettings(i).Fix()
         else:
-            # fit.Constrain(i, mc_frac_list[i]*0.05, mc_frac_list[i]*5.)
-            fit.Constrain(i, 0., 1.)
+            upper = mc_frac_list[i]*2.0
+            lower = 0.01
+            if upper > 1.0:
+                upper = 1.0
+            if lower < mc_frac_list[i]*0.05:
+                lower = mc_frac_list[i]*0.05
+            fit.Constrain(i, upper, lower)
+            # fit.Constrain(i, 0., 1.)
 
     # Set the bin range you want to fit on
     fit.SetRangeX(min_bin, max_bin)
@@ -309,7 +354,7 @@ def GetOutVals(fit, prefit_frac_list):
         fit_frac_err_list.append(fit_err)
         scale_list.append(scale)
         scale_err_list.append(scale_err)
-        print("==========",mc_category_list[i]," fit_frac: ", fit_frac, "\t fit_err: ", fit_err, "\t scale: ", scale, "\t scale_err: ", scale_err)
+        # print("==========",mc_category_list[i]," fit_frac: ", fit_frac, "\t fit_err: ", fit_err, "\t scale: ", scale, "\t scale_err: ", scale_err)
 
     return fit_frac_list, fit_frac_err_list, scale_list, scale_err_list
 
@@ -415,12 +460,43 @@ def GetFitBinning(rfile):
     binning = vars_dict['1D']['Q2QE']['recobins']
     return binning
 
+def GetVarBinning(i_file, var2D_name):
+    bins = []
+    bigvarconfig_string = ""
+    if "varsFile" not in i_file.GetListOfKeys():
+        bigvarconfig_string = i_file.Get("varsFile_5A").GetTitle()
+    else:
+        bigvarconfig_string = i_file.Get("varsFile").GetTitle()
+    # print(bigvarconfig_string)
+    bigvarconfig_dict = json.loads(re.sub("//.*","",bigvarconfig_string,flags=re.MULTILINE))
+    if var2D_name in bigvarconfig_dict["2D"].keys():
+        var2Dconfig = bigvarconfig_dict["2D"][var2D_name]
+        axisvars = [var2Dconfig["xvar"],var2Dconfig["yvar"]]
+    else:
+        axisvars = var2D_name.split("_")
+    vars1Dconfig = bigvarconfig_dict["1D"]
+    for var in axisvars:
+        varconfig = vars1Dconfig[var]
+        if "bins" in varconfig.keys():
+            bins1D = [float(bin) for bin in varconfig["bins"]]
+            bins.append(bins1D)
+            continue
+        elif "nbins" in varconfig.keys():
+            min = varconfig["min"]
+            max = varconfig["max"]
+            width = (max - min)/varconfig["nbins"]
+            bins1D = [min + bin*width for bin in range(0,varconfig["nbins"]+1)]
+            # print(bins1D)
+            bins.append(bins1D)
+    # print(bins)
+    return bins
+
 
 def main():
     # This automatically does SetDirectory(0) to all hists. Makes code faster,
     # clean up easier, and mitigates segfault.
     ROOT.TH1.AddDirectory(ROOT.kFALSE)
-
+    n_totunivs = 0
     # Read in a file
     timestr = time.strftime("%Y%m%d-%H%M%S")
 
@@ -434,21 +510,28 @@ def main():
 
     outfilebase = filename.replace(".root","_"+recoil_type+".root")
     # dummy q2 and recoil hists, both mnvhnd and th2d
-    dummy_scalevar_mnvh1d, dummy_scalevar_th1d = GetDummyHistCV(infile, scale_var)
+    # dummy_scalevar_mnvh1d, dummy_scalevar_th1d = GetDummyHistCV(infile, scale_var)
 
-    dummy_fitvar_mnvh1d, dummy_fitvar_th1d = GetDummyHistCV(infile, recoil_type)
+    # dummy_fitvar_mnvh1d, dummy_fitvar_th1d = GetDummyHistCV(infile, recoil_type)
 
-    n_xbins = dummy_scalevar_mnvh1d.GetNbinsX()
+    # n_xbins = dummy_scalevar_mnvh1d.GetNbinsX()
+
+    fitvar2Dbins = GetVarBinning(infile, variable_list[0])
+    n_xbins = len(fitvar2Dbins[0]) - 1 
+    dummy_scalevar_mnvh1d, dummy_scalevar_th1d = GetDummyHistFromBins(fitvar2Dbins[0])
+    dummy_fitvar_mnvh1d, dummy_fitvar_th1d = GetDummyHistFromBins(fitvar2Dbins[0])
 
     # raw_data_mnvh2d_dict, raw_mc_mnvh2d_dict = GetDataMCHistDict(infile)
     raw_hist_dict = GetDataMCHistDict(infile)
     category_dict = {}
     for category in category_list:
         category_dict[category] = {"hist":None, "list":[]}
+        print("making hist for cat", category)
         for hist_name in raw_hist_dict.keys():
             splitnames_list = hist_name.split('___')
             hist_sample = splitnames_list[1]
             hist_category = splitnames_list[2]
+            # print(hist_category)
             if hist_category!=category:
                 continue
             for sample in sample_list:
@@ -456,6 +539,8 @@ def main():
                     continue
                 else:
                     category_dict[category]["list"].append(raw_hist_dict[hist_name].Clone())
+                    print("    appended hist", hist_name)
+        print(len(category_dict[category]["list"]))
         category_dict[category]["hist"] = MakeLongHist2D(category_dict[category]["list"])
 
     # Make an mctotal, kind of have to hack this
@@ -489,9 +574,12 @@ def main():
     for univ_name in category_dict["qelike"]["hist"].GetVertErrorBandNames():
         universe_names_list.append(univ_name)
 
-    for univ_name in universe_names_list:
-        print("  Starting universe ", univ_name, "...")
-
+    for raw_univ_name in universe_names_list:
+        print("  Starting universe ", raw_univ_name, "...")
+        univ_name = raw_univ_name
+        if raw_univ_name in skip_univs:
+            print("\tjust using CV for ", raw_univ_name)
+            univ_name == "cv"
         scale_univhist_dict = {}
         frac_univhist_dict = {}
         for cat in mc_category_list:
@@ -499,20 +587,24 @@ def main():
             frac_univhist_dict[cat] = []
 
         fitbin_cat_univ_hist_dict = {}
-        if univ_name == "cv":
+        if raw_univ_name == "cv":
             n_universes = 1
         else:
-            n_universes = category_dict["qelike"]["hist"].GetVertErrorBand(univ_name).GetNHists()
-
+            n_universes = category_dict["qelike"]["hist"].GetVertErrorBand(raw_univ_name).GetNHists()
+        n_totunivs+=n_universes
         for univ in range(0,n_universes):
             print("  Starting universe ", univ, "...")
             tmp_th2d_dict = {}
             
             for key in category_dict:
-                if univ_name == "cv" or key == "data":
+                if raw_univ_name not in skip_univs:
+                    if univ_name == "cv" or key == "data":
+                        tmp_th2d = category_dict[key]["hist"].GetCVHistoWithStatError().Clone()
+                    else:
+                        tmp_th2d = category_dict[key]["hist"].GetVertErrorBand(univ_name).GetHist(univ).Clone()                        
+
+                else: 
                     tmp_th2d = category_dict[key]["hist"].GetCVHistoWithStatError().Clone()
-                else:
-                    tmp_th2d = category_dict[key]["hist"].GetVertErrorBand(univ_name).GetHist(univ).Clone()                        
                 if key in mc_category_list:
                     scale_univhist_dict[key].append(dummy_scalevar_th1d.Clone())
                     frac_univhist_dict[key].append(dummy_scalevar_th1d.Clone())
@@ -530,7 +622,7 @@ def main():
                     fitbin_cat_univ_hist_dict[fitbin][cat] = []
                 prefit_th1d_dict = {}
 
-                if univ_name == 'cv': 
+                if raw_univ_name == 'cv': 
                     prefit_mnvh1d_dict[fitbin] = {}
                     fit_mnvh1d_dict[fitbin] = {}
 
@@ -544,22 +636,22 @@ def main():
                     else:
                         tmp_fitbin_th1d = tmp_th2d_dict[key].ProjectionY(proj_name, fitbin, fitbin, "e")
 
-                    tmp_fitbin_th1d.Rebin(3)
+                    # tmp_fitbin_th1d.Rebin(3)
 
                     # if rebin>1.:
                     #     tmp_fitbin_th1d.Rebin(rebin)
                     prefit_th1d_dict[key] = tmp_fitbin_th1d
                     print("     Number of entries in ", key,": ", tmp_fitbin_th1d.GetEntries())
                     # Need to make a MnvH1D of each fitbin before the fit. Using 'cv' universe so this only happens once (rather than doing this step needlessly in every universe)
-                    if univ_name == 'cv':
-                        print(">>>>>>>>> key: ",key)
+                    if raw_univ_name == 'cv':
+                        # print(">>>>>>>>> key: ",key)
                         if 'tuned' in key:
                             tmpname = key.replace('_tuned','')
                             prefit_mnvh1d_name = "h___"+outsample_name+"__" + tmpname + "___" + recoil_type + "_" + fitbin_name + "___prefit_tuned"
                         else:
                             prefit_mnvh1d_name = "h___"+outsample_name+"__" + key + "___" + recoil_type + "_" + fitbin_name + "___prefit"
 
-                        print(prefit_mnvh1d_name)
+                        # print(prefit_mnvh1d_name)
                         prefit_fitvar_mnvh = category_dict[key]["hist"].ProjectionY(prefit_mnvh1d_name, fitbin, fitbin, "e").Clone()
                         # if rebin>1.:
                         #     prefit_fitvar_mnvh.Rebin(rebin)
@@ -608,7 +700,7 @@ def main():
                 # Moved chi2 stuff to "if 'cv'" part at end of this loop
                 # postfit_chi2 = prefit_th1d_dict["data"].Chi2Test(fit_th1d_dict["mctot"],"UW,CHI2")
 
-                if univ_name == "cv":
+                if raw_univ_name == "cv":
                     print("        Calculating chi2 for the CV and storing")
                     # chi2 of hists before the fit
                     prefit_chi2 = prefit_th1d_dict["data"].Chi2Test(prefit_th1d_dict["mctot"], "UW,CHI2")
@@ -642,7 +734,7 @@ def main():
                     tmp_fit_mctot_mnvh1d.SetName("h___"+outsample_name+"__mctot___"+fit_var+"_"+fitbin_name+"___fit")
                     fit_mnvh1d_dict[fitbin]["mctot"] = tmp_fit_mctot_mnvh1d
                 else:
-                    print("        Filling hists for error band ", univ_name, "...")  
+                    print("        Filling hists for error band ", raw_univ_name, "...")  
                     for i in range(len(mc_category_list)):
                         cat = mc_category_list[i]
                         print("                Inside cat loop for ", cat)
@@ -657,17 +749,17 @@ def main():
                         fitbin_cat_univ_hist_dict[fitbin][cat].append(fit_th1d_dict[cat])
                         # kind of hacky but oh well
                         if univ == n_universes - 1:
-                            fit_mnvh1d_dict[fitbin][cat].AddVertErrorBand(univ_name, fitbin_cat_univ_hist_dict[fitbin][cat])               
+                            fit_mnvh1d_dict[fitbin][cat].AddVertErrorBand(raw_univ_name, fitbin_cat_univ_hist_dict[fitbin][cat])               
                 # end if "cv"/else
             # end fitbin loop
         # end n_universes loop
-        if univ_name == "cv":
+        if raw_univ_name == "cv":
             print("    Done filling CVs...")
         else:
-            print("    Adding vert error band ", univ_name, " to scale/frac MnvH1Ds...")
+            print("    Adding vert error band ", raw_univ_name, " to scale/frac MnvH1Ds...")
             for cat in mc_category_list:
-                scalefrac_mnvh1d_dict[cat]["fraction"].AddVertErrorBand(univ_name,frac_univhist_dict[cat])
-                scalefrac_mnvh1d_dict[cat]["scale"].AddVertErrorBand(univ_name,scale_univhist_dict[cat])
+                scalefrac_mnvh1d_dict[cat]["fraction"].AddVertErrorBand(raw_univ_name,frac_univhist_dict[cat])
+                scalefrac_mnvh1d_dict[cat]["scale"].AddVertErrorBand(raw_univ_name,scale_univhist_dict[cat])
     # end univ_name loop
     print("Done filling hists... ")
     print("Syncing bands... ")
@@ -709,7 +801,7 @@ def main():
         scalefrac_mnvh1d_dict[category]["scale"].Write()
     outvalfile.cd()
     outvalfile.Close()
-
+    print("ntotunivs ", n_totunivs)
     print("Done writing hists to file!")
     print(histfile_name)
     print(outvalfile_name)
