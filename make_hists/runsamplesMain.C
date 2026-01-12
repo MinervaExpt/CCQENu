@@ -158,42 +158,61 @@ int main(const int argc, const char *argv[]) {
         std::cout << "runsamplesMain: MinervaModel NOT configured or set in main config. Defaulting to MnvTunev1." << std::endl;
         modeltune = "MnvTunev1";
     }
+
+    std::string tunever = "";
+
+    if (modeltune.find("MnvTunev") != std::string::npos)
+        tunever = modeltune.erase(0, 8);
+    std::vector<std::string> tunelist;
+    size_t pos = 0;
+    std::string token;
+    while ((pos = tunever.find(".")) != std::string::npos) {
+        token = tunever.substr(0, pos);
+        tunelist.push_back(token);
+        tunever.erase(0, pos + 1);
+    }
+    tunelist.push_back(tunever);
+    while (tunelist.size() != 3) {
+        tunelist.push_back("0");
+    }
+    std::cout << "MnvTune version: \t";
+    for (auto i : tunelist) {
+        std::cout << i << "\t";
+    }
+    std::cout << std::endl;
+
     std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>> MnvTune;
-    if (modeltune == "MnvTunev1" || modeltune == "MnvTunev2") {
+    // Baseline stuff
+    if (tunelist[0] == "1" || tunelist[0] == "2" || tunelist[0] == "4") {
         MnvTune.emplace_back(new PlotUtils::FluxAndCVReweighter<CVUniverse, PlotUtils::detail::empty>());
-        bool NonResPiReweight = true;
-        bool DeuteriumGeniePiTune = false;                                                                                                   // Deut should be 0? for v1?
-        MnvTune.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse, PlotUtils::detail::empty>(NonResPiReweight, DeuteriumGeniePiTune));  // Deut should be 0? for v1?
-        if (warpedmc != "no2p2htune") { // Skip this to do a weird warp
-            MnvTune.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
-        } else {
-            std::cout << "weight_warper: warp set to no2p2htune, so turning that off WARNING: no longer using proper MnvTunev1 or v2" << std::endl;
-        }
+
         MnvTune.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
         MnvTune.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
-    }
-    if (modeltune == "MnvTunev2") {
-        MnvTune.emplace_back(new PlotUtils::LowQ2PiReweighter<CVUniverse, PlotUtils::detail::empty>("JOINT"));
-    }
-    if (modeltune == "MnvTunev4") {
-        MnvTune.emplace_back(new PlotUtils::FluxAndCVReweighter<CVUniverse, PlotUtils::detail::empty>());
+
         bool NonResPiReweight = true;
-        bool DeuteriumGeniePiTune = true;                                                                                                    // Deut should be true for v4
-        MnvTune.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse, PlotUtils::detail::empty>(NonResPiReweight, DeuteriumGeniePiTune));  // Deut should be 0? for v1?
-        if (warpedmc != "no2p2htune") {                                                                                                      // Skip this to do a weird warp
-            MnvTune.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
-        } else {
+        bool DeuteriumGeniePiTune = false;  // Deut should be 0? for v1?
+        if (tunelist[0] == "4")
+            DeuteriumGeniePiTune = true;   // Deut should be true? for v4?
+        MnvTune.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse, PlotUtils::detail::empty>(NonResPiReweight, DeuteriumGeniePiTune));
+
+        if (warpedmc == "no2p2htune") {  // Skip this to do a weird warp
             std::cout << "weight_warper: warp set to no2p2htune, so turning that off WARNING: no longer using proper MnvTunev1 or v2" << std::endl;
+        } else {
+            MnvTune.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
         }
-        MnvTune.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
-        MnvTune.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
-        MnvTune.emplace_back(new PlotUtils::LowQ2PiReweighter<CVUniverse, PlotUtils::detail::empty>("MENU1PI"));
     }
-    if (modeltune == "MnvTunev1.2" || modeltune == "MnvTunev2.2") {
+    // Low Q2 pion stuff
+    if (tunelist[0] == "2" || tunelist[0] == "4") {
+        std::string fittype;
+        if (tunelist[0] == "2") fittype = "JOINT";
+        if (tunelist[0] == "4") fittype = "MENU1PI";
+        MnvTune.emplace_back(new PlotUtils::LowQ2PiReweighter<CVUniverse, PlotUtils::detail::empty>(fittype));
+    }
+    // Diffractive stuff
+    if (tunelist[1] == "2") {
         MnvTune.emplace_back(new CoherentPiReweighter<CVUniverse, PlotUtils::detail::empty>);
         MnvTune.emplace_back(new DiffractiveReweighter<CVUniverse, PlotUtils::detail::empty>);
     }
-
     PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTune));
 
     //====================MC Reco tuning for bkg subtraction=====================
