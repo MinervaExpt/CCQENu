@@ -1,0 +1,14 @@
+{
+    "name": "MnvTunev2",
+    "comments": [
+        "New implementation, kind of mimicing Andrew's 01/09/2026 NHV"
+    ],
+    "FluxAndCV": "FluxAndCV",
+    "MINOSEfficiency": "MINOSEfficiency",
+    "RPA": "RPA",
+    "GENIE": {
+        "useNonResPi": true,
+        "useDeuteriumPionTune": false
+    },
+    "LowQ2Pi": "JOINT"
+}

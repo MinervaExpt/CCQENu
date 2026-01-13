@@ -40,6 +40,7 @@
 #include "include/weight_warper.h"
 #include "utils/CoherentPiReweighter.h"
 #include "utils/DiffractiveReweighter.h"
+#include "include/ModelFromConfig.h"
 // #include "include/plotting_pdf.h"
 #include "TROOT.h"
 #include "TStyle.h"
