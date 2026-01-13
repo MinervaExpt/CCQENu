@@ -45,6 +45,8 @@
   ],
   "AnalyzeVariables": [
     "EAvail",
+    "EAvailoldbins",
+    "EAvailoldbinscutoff",
     // "NNeutCands",
     // "TotalNeutBlobE",
     // "EAvail_nohi",
@@ -56,7 +58,9 @@
   ],
   "Analyze2DVariables": [
     "recoil_ptmu",
-    "EAvail_ptmu"//,
+    "EAvail_ptmu",
+    "EAvailoldbins_ptmu",
+    "EAvailoldbinscutoff_ptmu"
   //   "EAvailNoNonVtxBlobs_ptmu"
   ], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
