@@ -115,7 +115,7 @@
     "MuonMinerva",
     "geant4",
     "response"//,
-    "MoNANeutronInelastic"
+    // "MoNANeutronInelastic"
   ],
   "fluxUniverses": 500, //100, //10,
   "NuEConstraint":1, 

@@ -74,6 +74,8 @@ include/GetStacked.h
 include/HistHyperDWrapperMap.h
 include/Hist2DWrapperMap.h
 include/HistWrapperMap.h
+include/NeutronMultiplicity.h
+include/ModelFromConfig.h
 include/ResponseWrapperMap.h
 include/Response2DWrapperMap.h
 include/ResponseHyperDWrapperMap.h
@@ -84,7 +86,6 @@ include/VariableFromConfig.h
 # include/plotting_pdf.h
 include/weight_MCreScale.h
 include/weight_warper.h
-include/NeutronMultiplicity.h
 fits/ScaleFactors.h
 fits/MultiScaleFactors.h
 fits/DoTheFit.h
