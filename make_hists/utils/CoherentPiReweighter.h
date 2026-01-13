@@ -11,9 +11,9 @@
 // Reweighter includes
 #include "PlotUtils/Reweighter.h"
 // #include "PlotUtils/weighters/weightCoherentPi.cxx"
-
+namespace CCQENu {
 template <class UNIVERSE, class EVENT = PlotUtils::detail::empty>
-class CoherentPiReweighter : public Reweighter<UNIVERSE, EVENT> {
+class CoherentPiReweighter : public PlotUtils::Reweighter<UNIVERSE, EVENT> {
    public:
     CoherentPiReweighter() = default;
     virtual ~CoherentPiReweighter() = default;
@@ -33,6 +33,7 @@ class CoherentPiReweighter : public Reweighter<UNIVERSE, EVENT> {
     // virtual bool IsCompatible(const PionReweighter& /*other*/) const { return true; }
     // virtual std::vector<UNIVERSE*> GetRequiredUniverses() const { return std::vector<UNIVERSE*>{}; }
 };
+}
 
 
 #endif  // PLOTUTILS_CoherentPiREWEIGHTER_H

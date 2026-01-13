@@ -16,10 +16,10 @@
 
 #include "PlotUtils/Reweighter.h"
 
-namespace PlotUtils {
+namespace CCQENu {
 
 template <class UNIVERSE, class EVENT = PlotUtils::detail::empty>
-class DiffractiveReweighter : public Reweighter<UNIVERSE, EVENT> {
+class DiffractiveReweighter : public PlotUtils::Reweighter<UNIVERSE, EVENT> {
    public:
     DiffractiveReweighter() = default;
     virtual ~DiffractiveReweighter() = default;
