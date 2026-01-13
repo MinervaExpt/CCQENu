@@ -440,7 +440,7 @@ for a_sample in groups.keys():
             canvas_name += "_tuned"
 
         cc.Print(os.path.join(outdirname, canvas_name + ".png"))
-        cc.Print(os.path.join(outdirname, canvas_name + ".C"))
+        cc.Print(os.path.join(outdirname, "source", canvas_name + ".C"))
 
         del cc
 

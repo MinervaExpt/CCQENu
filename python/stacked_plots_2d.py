@@ -572,6 +572,7 @@ for a_sample in groups.keys():
             if dotuned:
                 canvas_name = gridname + "_FinalStates_tuned"
             gc2.Print(os.path.join(outdirname, canvas_name + ".png"))
+            gc2.Print(os.path.join(outdirname, "source", canvas_name + ".C"))
 
             if noData:
                 del gc2
@@ -645,6 +646,7 @@ for a_sample in groups.keys():
                 raio_canvas_name = gridname + "_FinalStates_Ratio_tuned"
             # gc2_ratio.Print(os.path.join(outdirname, raio_canvas_name + ".png"))
             gc2.Print(os.path.join(outdirname, raio_canvas_name + ".png"))
+            gc2.Print(os.path.join(outdirname, "source", raio_canvas_name + ".C"))
 
             # del gc2_ratio
             del gc2
