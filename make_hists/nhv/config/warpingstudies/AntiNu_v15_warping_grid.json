@@ -4,14 +4,15 @@
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_sigonly.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "FallCollabWarp_fullblobremoval_migration_1and2track_${MYPLAYLIST}_${MYMODEL}",
-  "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
+  "outRoot": "NewBinning500MeVCutoff_${MYPLAYLIST}_${MYMODEL}",
+  "scalefileIn": "${CCQEMAT}/data/combined_5A_6A_6B_6C_6D_6E_6F_6G_6H_6I_6JBkgFittingSub_fitfill_firstpass_fullsyst_recoil0mm_logprotonscorecut_minervameCombined_MnvTunev1_AntiNu_v15_warping_grid_bkgsub_1_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
+  "modeltuneFile": "${CCQEMAT}/nhv/config/modeltunes/${MYMODEL}.json",
   "recoName": "MasterAnaDev",
   "tunedmc": "both",
   "warpedmc": "${MYWARP}",
@@ -25,7 +26,7 @@
   "DoTypes": false,
   "pdg": -14,
   "mcRecoToCSV": false,
-  "statusbar": true,
+  "statusbar": false,
   "runsamples": [ 
     "${MYSAMPLE}"
     // "QElike",
@@ -44,8 +45,8 @@
   ],
   "AnalyzeVariables": [
     "EAvail",
-    "NNeutCands",
-    "TotalNeutBlobE",
+    // "NNeutCands",
+    // "TotalNeutBlobE",
     // "EAvail_nohi",
     // "EAvailNoNonVtxBlobs",
     // "EAvailWithNeutrons",
@@ -53,11 +54,11 @@
     "recoil",
     "ptmu"
   ],
-  "Analyze2DVariables": [],
-  //   "recoil_ptmu",
-  //   "EAvail_ptmu",
+  "Analyze2DVariables": [
+    "recoil_ptmu",
+    "EAvail_ptmu"//,
   //   "EAvailNoNonVtxBlobs_ptmu"
-  // ], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
+  ], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
   "signal": {
     "QElike": "qelike" //,
