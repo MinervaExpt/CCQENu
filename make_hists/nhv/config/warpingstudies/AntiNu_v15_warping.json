@@ -12,6 +12,7 @@
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
+  "modeltuneFile": "${CCQEMAT}/nhv/config/modeltunes/${MYMODEL}.json",
   "recoName": "MasterAnaDev",
   "tunedmc": "both",
   "warpedmc": "none",
@@ -114,9 +115,9 @@
     "MuonMinerva",
     "geant4",
     "response"//,
-    // "MoNANeutronInelastic"
+    "MoNANeutronInelastic"
   ],
-  "fluxUniverses": 100, //100, //10,
+  "fluxUniverses": 500, //100, //10,
   "NuEConstraint":1, 
   "Geant4NeutronCV":1,
   "Geant4Elastics":1//,
