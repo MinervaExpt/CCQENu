@@ -132,6 +132,8 @@ int main(const int argc, const char *argv[]) {
     PlotUtils::MinervaUniverse::SetMHRWeightElastics(config.GetInt("Geant4Elastics"));
     PlotUtils::MinervaUniverse::SetTreeName(reco_tree_name);
 
+    // PlotUtils::MinervaUniverse::SetZExpansionFaReweight(false);
+    
     // if (config.IsMember("RPAMaterials")){
     //     PlotUtils::MinervaUniverse::RPAMaterials(config.GetInt("RPAMaterials"));
     // }

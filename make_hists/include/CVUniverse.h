@@ -239,6 +239,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     static int SetRecoilBranch(NuConfig RecoilBranchConfig, bool print);
 
+    static std::string GetRecoilBranchName();
+
     virtual double GetVertexEnergyGeV() const;
 
     virtual double GetRecoilEnergy100mmGeV() const;

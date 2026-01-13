@@ -1225,6 +1225,9 @@ int CVUniverse::SetRecoilBranch(NuConfig RecoilBranchConfig, bool print) {
         return 1;
     }
 }
+std::string CVUniverse::GetRecoilBranchName() {
+    return m_recoil_branch;
+}
 
 // double CVUniverse::GetCalRecoilEnergy() const {
 //     bool neutrinoMode = GetAnalysisNuPDG() > 0;
@@ -2191,6 +2194,7 @@ void CVUniverse::PrintMADBlobs() const {
         //                   << std::endl;
     }
 }
+
 
 // TODO: Still need calo correction on this.
 double CVUniverse::GetTotNeutBlobEGeV() const {
