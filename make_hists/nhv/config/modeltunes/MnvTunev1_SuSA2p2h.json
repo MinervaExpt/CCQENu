@@ -1,5 +1,5 @@
 {
-    "name": "MnvTunev4",
+    "name": "MnvTunev1_no2p2htune",
     "comments": [
         "New implementation, kind of mimicing Andrew's 01/09/2026 NHV"
     ],
@@ -8,8 +8,8 @@
     "RPA": "RPA",
     "GENIE": {
         "useNonResPi": true,
-        "useDeuteriumPionTune": true
+        "useDeuteriumPionTune": false
     },
     "LowRecoil2p2h": "CV",
-    "LowQ2Pi": "MENU1PI"
+    "SuSAFromValencia2p2h": "SuSAFromValencia2p2h"
 }
