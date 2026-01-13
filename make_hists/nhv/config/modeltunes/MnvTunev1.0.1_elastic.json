@@ -1,5 +1,5 @@
 {
-    "name": "MnvTunev4.3_SuSA2p2h",
+    "name": "MnvTunev1.0.1_elastic",
     "comments": [
         "New implementation, kind of mimicing Andrew's 01/09/2026 NHV"
     ],
@@ -8,8 +8,11 @@
     "RPA": "RPA",
     "GENIE": {
         "useNonResPi": true,
-        "useDeuteriumPionTune": true
+        "useDeuteriumPionTune": false
     },
-    "LowQ2Pi": "MENU1PI",
-    "SuSAFromValencia2p2h": "SuSAFromValencia2p2h"
+    "LowRecoil2p2h": "CV",
+    "FSI": {
+        "useElastic": true,
+        "useAbsorption": false
+    }
 }
