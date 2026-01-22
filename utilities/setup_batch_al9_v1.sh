@@ -3,7 +3,8 @@
 # RUNDIR is where your analysis executable actually lie, in this case in $BASEDIR/CCQENu/make_hists
 echo " this uses a spack 1.0 setup"
 echo "setup-batch_al9_v1.sh"
-source /cvmfs/dune.opensciencegrid.org/spack/setup-env.sh
+#source /cvmfs/dune.opensciencegrid.org/spack/setup-env.sh
+source /cvmfs/dune.opensciencegrid.org/spack/v1.0/share/spack/setup-env.sh
 echo "Activate dune-workflow"
 spack env activate dune-workflow
 echo "load GCC and CMAKE so don't use system"
