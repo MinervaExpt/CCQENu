@@ -4,14 +4,34 @@
 echo " this uses a spack 1.0 setup"
 echo "setup-batch_al9_v1.0.sh"
 #source /cvmfs/dune.opensciencegrid.org/spack/setup-env.sh
-source /cvmfs/dune.opensciencegrid.org/spack/v1.0/share/spack/setup-env.sh
-echo "Activate dune-workflow"
-spack env activate dune-workflow
+
+# the 1.1 version is currently bad. 
+# source /cvmfs/dune.opensciencegrid.org/spack/v1.1/share/spack/setup-env.sh
+# echo "Activate dune-stable"
+# echo "load GCC"
+# echo "GCC"
+# spack load gcc@12.5.0 arch=linux-almalinux9-x86_64_v2 
+
+# echo "PY-PIP"                       
+# spack load py-pip@23.1.2%gcc@11.4.1 arch=linux-almalinux9-x86_64_v3
+
+# echo "CMAKE"
+# spack load cmake 
+
+# revert to earliest v1 version
+
+echo "setup-tutorial.sh"
+. /cvmfs/dune.opensciencegrid.org/dune-spack/spack-develop-fermi/setup-env.sh
+spack env activate dune-tutorial
+echo "Activate dune-tutorial"
+
 echo "load GCC and CMAKE so don't use system"
 echo "GCC"
 spack load gcc@12.5.0 arch=linux-almalinux9-x86_64_v2 
-#echo "CMAKE"
-#spack load cmake 
+echo "CMAKE"
+spack load cmake 
+
+
 export IFDH_CP_MAXRETRIES=0\0\0\0\0  # no retries
 echo "which root"
 which root
@@ -22,9 +42,9 @@ gcc --version
 echo "which python"
 which python
 python --version
-echo "which cmake"
-which cmake
-cmake --version
+#echo "which cmake"
+#which cmake
+#cmake --version
 # set up the MAT
 #use to be source $BASEDIR/opt/build/setup.sh
 #export WHEREIPUTMYCODE=/exp/minerva/app/users/schellma/MNV9
@@ -65,17 +85,3 @@ export DATALOC=remote
 export MYSAMPLE=QElike
 export MYMODEL=MnvTunev1
 
-#source $HOME/Alma9/test-paths.sh
-# test-paths.sh
-echo "which root"
-which root
-root --version
-echo "which gcc"
-which gcc
-gcc --version
-echo "which python"
-which python
-python --version
-echo "which cmake"
-which cmake
-cmake --version
