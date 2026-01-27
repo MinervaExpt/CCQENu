@@ -1,5 +1,5 @@
 #export _CONDOR_SCRATCH_DIR=$PWD
-#export INPUT_TAR_DIR_LOCAL=$APP
+export INPUT_TAR_DIR_LOCAL=/exp/minerva/data/users/$USER
 
 # example test batch job to run on minervagpvm01 to run CCQEMAT
 # other option (not tested yet) is the EventLoop from the tutorial
@@ -10,4 +10,4 @@
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=MnvTunev2 --tag=AL9-workflow \
  --mail --prescale=10000 --config=p6_run --exe=sidebands_v2 --sample=QElike --setup=CCQENu/utilities/setup_batch_al9_v1.sh \
- --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=3000   #--debug --notimestamp
+ --tmpdir=$/exp/data/minerva/users/$USER/tmp --expected-lifetime=4h --memory=3000   #--debug --notimestamp
