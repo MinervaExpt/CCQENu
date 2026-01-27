@@ -1,0 +1,19 @@
+{
+    "name": "MnvTunev4.3.1_absorption",
+    "comments": [
+        "New implementation, kind of mimicing Andrew's 01/09/2026 NHV"
+    ],
+    "FluxAndCV": "FluxAndCV",
+    "MINOSEfficiency": "MINOSEfficiency",
+    "RPA": "RPA",
+    "GENIE": {
+        "useNonResPi": true,
+        "useDeuteriumPionTune": true
+    },
+    "LowRecoil2p2h": "CV",
+    "LowQ2Pi": "MENU1PI",
+    "FSI": {
+        "useElastic": false,
+        "useAbsorption": true
+    }
+}

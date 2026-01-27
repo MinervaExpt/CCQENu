@@ -1,0 +1,18 @@
+{
+    "name": "MnvTunev1.0.1",
+    "comments": [
+        "New implementation, kind of mimicing Andrew's 01/09/2026 NHV"
+    ],
+    "FluxAndCV": "FluxAndCV",
+    "MINOSEfficiency": "MINOSEfficiency",
+    "RPA": "RPA",
+    "GENIE": {
+        "useNonResPi": true,
+        "useDeuteriumPionTune": false
+    },
+    "LowRecoil2p2h": "CV",
+    "FSI": {
+        "useElastic": true,
+        "useAbsorption": true
+    }
+}
