@@ -93,6 +93,7 @@ class ModelFromConfig {
             useNonResPi ? std::cout << " with useNonResPi turned ON" : std::cout << " with useNonResPi turned OFF";
             useDeuteriumPionTune ? std::cout << " and useDeuteriumPionTune turned ON" : std::cout << " and useDeuteriumPionTune turned OFF";
             std::cout << std::endl;
+            if (useDeuteriumPionTune) { PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune(true); }
 
             MnvTuneVec.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse, PlotUtils::detail::empty>(useNonResPi, useDeuteriumPionTune));
         }

@@ -27,6 +27,7 @@
 #include "PlotUtils/ResponseSystematics.h"
 #include "include/MonaSystematics.h"
 #include "utils/NuConfig.h"
+#include "include/ModelFromConfig.h"
 
 namespace systematics {
 
@@ -41,6 +42,14 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
     // unsigned int kNFluxUniverses = config.GetInt("fluxUniverses");
     //  get a list of systematics to turn on from systematics
     std::vector<std::string> flags = config.GetStringVector("systematics");
+
+    NuConfig modeltune_config;
+    std::string tunename = "MnvTunev1";
+    if (config.IsMember("modeltuneFile")) {
+        std::string modeltunefilename = config.GetString("modeltuneFile");
+        modeltune_config.Read(modeltunefilename);
+        if (modeltune_config.IsMember("name")) tunename = modeltune_config.GetString("name");
+    }
 
     // CV
     error_bands[std::string("cv")].push_back(new CVUniverse(chain));
@@ -94,8 +103,9 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
     //========================================================================
     // MnvTunes
     //========================================================================
-    // RPA
 
+    // These are part of nearly all minerva tunes
+    // RPA
     if (std::find(flags.begin(), flags.end(), "RPA") != flags.end()) {
         std::cout << " do RPA systematics " << std::endl;
         UniverseMap bands_rpa = PlotUtils::GetRPASystematicsMap<CVUniverse>(chain);
@@ -120,6 +130,19 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
         error_bands.insert(bands_geant.begin(), bands_geant.end());
     } else {
         std::cout << "Warning:  geant4 systematics are turned off" << std::endl;
+    }
+
+    // This is for v2 and v4
+    if (std::find(flags.begin(), flags.end(), "LowQ2Pi") != flags.end()) {
+        if (modeltune_config.IsMember("LowQ2Pi")) {
+            std::cout << " do LowQ2Pi tune systematics with channel " << modeltune_config.GetString("LowQ2Pi") << std::endl;
+            UniverseMap bands_lowQ2pi = PlotUtils::GetLowQ2PiSystematicsMap<CVUniverse>(chain, modeltune_config.GetString("LowQ2Pi"));
+            error_bands.insert(bands_lowQ2pi.begin(), bands_lowQ2pi.end());
+        } else {
+            std::cout << " Warning: lowq2pion systematics requested but not implemented for model " << tunename << std::endl;
+        }
+    } else {
+        std::cout << "Warning:  lowq2pion systematics are turned off" << std::endl;
     }
 
     //========================================================================
@@ -179,8 +202,8 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
     if (std::find(flags.begin(), flags.end(), "response") != flags.end()) {
         bool use_ID = false;
         bool use_OD = false;
-        std::string name_tag = CVUniverse::GetRecoilBranchName();
-        // std::string name_tag = "allNonMuonClusters";
+        // std::string name_tag = CVUniverse::GetRecoilBranchName();
+        std::string name_tag = "allNonMuonClusters";
         bool neutron = false;
         bool part_response = false;
         bool proton = false;
@@ -188,6 +211,7 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
         bool use_tracker = true;
         bool use_ecal = false;
         bool use_hcal = false;
+        bool use_p4 = true;
 
         UniverseMap response_systematics;
         std::cout << " using version " << responseSystematicsVersion << " of response systematics" << std::endl;
@@ -195,8 +219,8 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
             response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, neutron, part_response, proton);  // Not totally sure what the args do here
         } else {
             if (responseSystematicsVersion == "2024") {
-                // response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, use_ID, use_OD, name_tag, neutron, part_response, proton, use_nucl, use_tracker, use_ecal, use_hcal);  // Not totally sure what the args do here
-                response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, name_tag);  // Not totally sure what the args do here
+                response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, use_ID, use_OD, name_tag, neutron, part_response, proton, use_nucl, use_tracker, use_ecal, use_hcal);  // Not totally sure what the args do here
+                // response_systematics = PlotUtils::GetResponseSystematicsMap<CVUniverse>(chain, name_tag);  // Not totally sure what the args do here
             } else {
                 std::cout << " unknown responseSystematicsVersion set; will not do response " << responseSystematicsVersion << std::endl;
                 assert(0);

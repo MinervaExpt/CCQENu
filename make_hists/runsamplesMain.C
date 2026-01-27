@@ -109,9 +109,10 @@ int main(const int argc, const char *argv[]) {
     // Setup systematics-related constants
     // TODO These should be handled by PU::MacroUtil
 
+    // this is now obselete
     // PlotUtils::MinervaUniverse::SetNonResPiReweight(config.GetInt("NonResPiReweight"));
-
-    // PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune (config.GetInt("DeuteriumGeniePiTune"));
+    // This is used in v4 only, and reduces some systematics somehow, set by ModelFromConfig
+    // PlotUtils::MinervaUniverse::SetDeuteriumGeniePiTune(config.GetInt("DeuteriumGeniePiTune"));
 
     // this is new as of ~2024
     PlotUtils::MinervaUniverse::RPAMaterials(true);
@@ -132,7 +133,7 @@ int main(const int argc, const char *argv[]) {
     PlotUtils::MinervaUniverse::SetMHRWeightElastics(config.GetInt("Geant4Elastics"));
     PlotUtils::MinervaUniverse::SetTreeName(reco_tree_name);
 
-    // PlotUtils::MinervaUniverse::SetZExpansionFaReweight(false);
+    PlotUtils::MinervaUniverse::SetZExpansionFaReweight(false);
     
     // if (config.IsMember("RPAMaterials")){
     //     PlotUtils::MinervaUniverse::RPAMaterials(config.GetInt("RPAMaterials"));
@@ -241,7 +242,7 @@ int main(const int argc, const char *argv[]) {
     std::cout << ">>>>>>>>>> MnvTune vec size is \t" << MnvTune.size() << std::endl;
 
     Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTune));
-
+    if (PlotUtils::MinervaUniverse::UseDeuteriumGeniePiTune()) std::cout << " >>>>>>>>>>> MINERvAUniverse: UseDeuteriumGeniePiTune" << std::endl;
     //====================MC Reco tuning for bkg subtraction=====================
     // Initialize the rescale for tuning MC reco for background subtraction later
 

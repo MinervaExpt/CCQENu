@@ -18,3 +18,24 @@ python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_neutronblob_warpingstudy \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=4000   --sample=${MYSAMPLE} #--debug --notimestamp
+
+
+export MYSAMPLE=QElike
+export MYWARP=none
+
+export MYMODEL=MnvTunev2
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/warping/January2026/allblobs_fullremoval_1and2track_newmodels/${MYMODEL} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame6C --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_neutronblob_warpingstudy \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=4000   --sample=${MYSAMPLE} #--debug --notimestamp
+
+
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/warping/January2026/allblobs_fullremoval_1and2track_newmodels/${MYMODEL} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame6D --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_neutronblob_warpingstudy \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=4000   --sample=${MYSAMPLE} #--debug --notimestamp
+
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/warping/January2026/allblobs_fullremoval_1and2track_newmodels/${MYMODEL} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame6I --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_neutronblob_warpingstudy \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=4h --memory=4000   --sample=${MYSAMPLE} #--debug --notimestamp
