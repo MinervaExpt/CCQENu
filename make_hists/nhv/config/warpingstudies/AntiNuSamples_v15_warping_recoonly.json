@@ -6,27 +6,57 @@
         "name": "QElike",
         "reco": "QElike",
         "phase_space": "phase_space",
-        "signal": ["qelike"],
-        "background": ["qelikenot"],
+        "signal": [
+            "qelike"
+        ],
+        "background": [
+            "neutralpion",
+            "chargedpion",
+            // "multipion",
+            "other" //,
+            // "qelikenot"
+        ],
         "categories": {
             "qelike": {
-                // "for": ["selected_reco"]
                 "for": [
-                    "selected_reco"//,
-                    // "selected_truth",
-                    // "truth",
-                    // "response"
+                    "selected_reco"
                 ]
             },
-            "qelikenot": {
-                "for": ["selected_reco"]
-                // "for": ["selected_reco", "selected_truth", "truth", "response"]
-            }
+            "neutralpion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "chargedpion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            // "multipion": {
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // },
+            "other": {
+                "for": [
+                    "selected_reco"
+                ]
+            } //,
+            // "qelikenot": {
+            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // }
         },
         "legend_entries": {
             "data": "Data",
-            "qelike": "QELike",
-            "qelikenot": "QELikeNot",
+            "qelike": "QElike",
+            "neutralpion": "1#pi^{0}",
+            "chargedpion": "1#pi^{+/-}",
+            // "multipion": "N#pi",
+            "other": "Other" //,
+            // "qelikenot": "QELike Not"
         }
     },
     "QElike_old": {
@@ -325,7 +355,11 @@
             "qelike"
         ],
         "background": [
-            "qelikenot"
+            "neutralpion",
+            "chargedpion",
+            // "multipion",
+            "other" //,
+            // "qelikenot"
         ],
         "categories": {
             "qelike": {
@@ -333,16 +367,41 @@
                     "selected_reco"
                 ]
             },
-            "qelikenot": {
+            "neutralpion": {
                 "for": [
                     "selected_reco"
                 ]
-            }
+            },
+            "chargedpion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            // "multipion": {
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // },
+            "other": {
+                "for": [
+                    "selected_reco"
+                ]
+            } //,
+            // "qelikenot": {
+            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // }
         },
         "legend_entries": {
             "data": "Data",
-            "qelike": "QELike",
-            "qelikenot": "QELikeNot",
+            "qelike": "QElike",
+            "neutralpion": "1#pi^{0}",
+            "chargedpion": "1#pi^{+/-}",
+            // "multipion": "N#pi",
+            "other": "Other" //,
+            // "qelikenot": "QELike Not"
         }
     },
     "TrackSideband": {
@@ -353,7 +412,11 @@
             "qelike"
         ],
         "background": [
-            "qelikenot"
+            "neutralpion",
+            "chargedpion",
+            // "multipion",
+            "other" //,
+            // "qelikenot"
         ],
         "categories": {
             "qelike": {
@@ -361,16 +424,41 @@
                     "selected_reco"
                 ]
             },
-            "qelikenot": {
+            "neutralpion": {
                 "for": [
                     "selected_reco"
                 ]
-            }
+            },
+            "chargedpion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            // "multipion": {
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // },
+            "other": {
+                "for": [
+                    "selected_reco"
+                ]
+            } //,
+            // "qelikenot": {
+            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // }
         },
         "legend_entries": {
             "data": "Data",
-            "qelike": "QELike",
-            "qelikenot": "QELikeNot",
+            "qelike": "QElike",
+            "neutralpion": "1#pi^{0}",
+            "chargedpion": "1#pi^{+/-}",
+            // "multipion": "N#pi",
+            "other": "Other" //,
+            // "qelikenot": "QELike Not"
         }
     },
     "LoPionThetaSideband": {
