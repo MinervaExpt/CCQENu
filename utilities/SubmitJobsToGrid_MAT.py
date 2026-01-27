@@ -190,7 +190,7 @@ print ("******************************************************")
 #output_dir = "$CONDOR_DIR_HISTS/"  (this doesn't work right now)
 if(not os.path.exists(opts.outdir)):
     print ("Looks like opts.outdir doesn't exist",opts.outdir, "...Making it now")
-    os.mkdirs(outdir)
+    os.makedirs(outdir)
     # sys.exit(1)
 theoutdir = os.path.join(opts.outdir,opts.playlist+"_"+opts.sample+"_"+tag_name)
 print ("output dir",theoutdir)
