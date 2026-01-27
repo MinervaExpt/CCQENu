@@ -189,8 +189,9 @@ print ("******************************************************")
 # This is the output directory after the job is finished
 #output_dir = "$CONDOR_DIR_HISTS/"  (this doesn't work right now)
 if(not os.path.exists(opts.outdir)):
-    print ("Looks like opts.outdir doesn't exist",opts.outdir)
-    sys.exit(1)
+    print ("Looks like opts.outdir doesn't exist",opts.outdir, "...Making it now")
+    os.mkdirs(outdir)
+    # sys.exit(1)
 theoutdir = os.path.join(opts.outdir,opts.playlist+"_"+opts.sample+"_"+tag_name)
 print ("output dir",theoutdir)
 # Make outdir if not exist
