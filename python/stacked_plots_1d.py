@@ -39,14 +39,25 @@ doratio = True
 dotypes = False
 
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
-legendfontsize = 0.042
-_xsize = 1800.0
-_ysize = 1200.0
+_xsize = 1200.0
+_ysize = 900.0
 
 latex_x = 0.55
 latex_y = 0.43
 
+pad_lmarg = 0.07
+pad_rmarg = 0.04
+topmarg = 0.05
+bottommarg = 0.3
 
+legendfontsize = 0.05
+legx1 = 0.7
+legx2 = 1.0
+legy1 = 0.65
+legy2 = 0.95
+
+lat_xoffset = 0.06
+lat_yoffset = 0.04
 def MakePlotDir(subdir=""):
     """
     Subdir is the one for all plots that this script should ouptut. You will need to add
@@ -85,15 +96,17 @@ def MakeDataMCRatio(i_data, i_mctot):
 
 def CCQECanvas(name,title,xsize=1100,ysize=720):
     c2 = ROOT.TCanvas(name, title, round(xsize), round(ysize))
+    # c2 = ROOT.TCanvas(name, title)
     # c2.SetLeftMargin(0.1)
-    c2.SetRightMargin(0.04)
+    # c2.SetRightMargin(0.04)
     # c2.SetLeftMargin(0.1)
-    c2.SetTopMargin(0.04)
+    # c2.SetTopMargin(0.04)
     # c2.SetBottomMargin(0.1)
     return c2
 
 def CCQELegend(xlow,ylow,xhigh,yhigh):
     leg = ROOT.TLegend(xlow,ylow,xhigh,yhigh)
+    # leg = ROOT.TLegend(abs(xlow-xhigh),abs(ylow-yhigh))
     leg.SetFillStyle(0)
     leg.SetBorderSize(0)
     leg.SetTextSize(legendfontsize)
@@ -105,7 +118,7 @@ def AddPreliminary():
     color = ROOT.kRed +1
     latex = ROOT.TLatex()
     latex.SetNDC()
-    latex.SetTextSize(legendfontsize-0.004)
+    latex.SetTextSize(legendfontsize*0.9)
     latex.SetTextColor(color)
     latex.SetTextFont(font)
     latex.SetTextAlign(11)
@@ -177,6 +190,12 @@ outdirname = os.path.join(plotdir, dirname)
 if not os.path.exists(outdirname):
     print(outdirname)
     os.mkdir(outdirname)
+
+source_outdirname = os.path.join(outdirname, "source")
+if not os.path.exists(source_outdirname):
+    print(source_outdirname)
+    os.mkdir(source_outdirname)
+
 keys = f.GetListOfKeys()
 
 keys = f.GetListOfKeys()
@@ -277,8 +296,9 @@ for a_sample in groups.keys():
                 ])
         
         # Set up the legend
-        leg = CCQELegend(0.6,0.75,1.,0.95)
-        leg.SetNColumns(2)
+        leg = CCQELegend(legx1,legy1,legx2,legy2)
+        leg = CCQELegend(legx1,legy1,legx2,legy2)
+        # leg.SetNColumns(2)
 
         # Make a dummy data hist and put the data in it if needed
         data = MnvH1D()
@@ -302,7 +322,13 @@ for a_sample in groups.keys():
             else:
                 mctot.Add(groups[a_sample][b_var][c_cat])
             stack.Add(groups[a_sample][b_var][c_cat])
+            # leg.AddEntry(groups[a_sample][b_var][c_cat],catsnames[c_cat],"f")
+        for c_cat in mc_order[::-1]:
             leg.AddEntry(groups[a_sample][b_var][c_cat],catsnames[c_cat],"f")
+            if c_cat not in groups[a_sample][b_var].keys():
+                continue
+            if c_cat in ["data","mctot","stack"]:
+                continue
         if not noData:
             leg.AddEntry(data,"data","pe") # TODO need to figure out how to order this properly
 
@@ -313,19 +339,31 @@ for a_sample in groups.keys():
         thetitle = "%s %s"%(a_sample,b_var)
         ysize = _ysize
         xsize = _xsize
-        if doratio and not noData:
-            ysize = 1.2 * _ysize
-        cc = CCQECanvas(thename, thetitle, xsize, ysize)
+        # if doratio and not noData:
+        #     ysize = 1.2 * _ysize
+        # cc = CCQECanvas(thename, thetitle, xsize, ysize)
+        cc = ROOT.TCanvas(thename, thetitle, round(xsize), round(ysize))
+        cc.SetLeftMargin(0.15)
+        cc.SetRightMargin(0.15)
+        cc.SetBottomMargin(0.15)
+        cc.SetFrameLineWidth(1)
 
         # If do ratio, set up the top and bottom pads for the hists
         if doratio and not noData:
             top = TPad("hist", "hist", 0, 0.278, 1, 1)
-            top.SetRightMargin(0.04)
+            top.SetRightMargin(pad_rmarg)
+            top.SetLeftMargin(pad_lmarg)
+            top.SetTopMargin(topmarg)
             top.SetBottomMargin(0)
-            top.SetTopMargin(0.04)
+            top.SetFrameLineWidth(1)
+
             bottom = TPad("Ratio", "Ratio", 0, 0, 1, 0.278)
-            bottom.SetRightMargin(0.04)
+            bottom.SetRightMargin(pad_rmarg)
+            bottom.SetLeftMargin(pad_lmarg)
+            bottom.SetBottomMargin(bottommarg)
             bottom.SetTopMargin(0)
+            bottom.SetFrameLineWidth(1)
+
             top.Draw()
             bottom.Draw()
 
@@ -336,14 +374,14 @@ for a_sample in groups.keys():
             top.cd()
         
         # Do stack first
-        stack.Draw("")
+        stack.Draw()
 
         # set up its y axis
         stack.GetYaxis().SetTitle("Counts/unit")
         stack.GetYaxis().CenterTitle()
         stack.GetYaxis().SetTitleOffset(0.6)
         stack.GetYaxis().SetTitleSize(0.05)
-        stack.GetYaxis().SetLabelSize(stack.GetYaxis().GetLabelSize() * 1.4)
+        stack.GetYaxis().SetLabelSize(0.05)
 
         # set up its x axis if relevant
         x_title = ""
@@ -369,10 +407,10 @@ for a_sample in groups.keys():
 
         if doratio and not noData:
             bottom.cd()
-            bottom.SetBottomMargin(0.3)
 
             # make the ratio and make it pretty
             mctot.SetFillStyle(1001)
+            ratio = MnvH1D()
             ratio = MakeDataMCRatio(data, mctot)
             ratio.SetMinimum(0.5)
             ratio.SetMaximum(1.5)
@@ -384,8 +422,9 @@ for a_sample in groups.keys():
             ratio.GetYaxis().SetTitle("Data / MC")
             ratio.GetYaxis().CenterTitle()
             ratio.GetYaxis().SetTitleSize(0.05 * areaScale)
-            ratio.GetYaxis().SetLabelSize(ratio.GetYaxis().GetLabelSize() * areaScale*1.2)
-            ratio.GetYaxis().SetNdivisions(-505)
+            ratio.GetYaxis().SetTitleOffset(0.6 / areaScale)
+            ratio.GetYaxis().SetLabelSize(0.05 * areaScale)
+            ratio.GetYaxis().SetNdivisions(205)
 
             ratio.GetXaxis().SetTitle(x_title)
             ratio.GetXaxis().CenterTitle()
@@ -395,6 +434,7 @@ for a_sample in groups.keys():
             ratio.Draw()
 
             # Now do mc uncertainties
+            mcerror = TH1D()
             mcerror = TH1D(mctot.GetTotalError(False, True, False))
             for bin in range(1, mcerror.GetXaxis().GetNbins() + 1):
                 mcerror.SetBinError(bin, max(mcerror.GetBinContent(bin), 1.0e-9))
@@ -405,6 +445,7 @@ for a_sample in groups.keys():
             mcerror.Draw("same E2")
 
             # Now do a line at 1
+            straightline = TH1D()
             straightline = mcerror.Clone()
             straightline.SetFillStyle(0)
             straightline.Draw("hist same")
@@ -416,21 +457,18 @@ for a_sample in groups.keys():
         # Dress plot with text
         prelim = AddPreliminary()
         titleonplot = MakeTitleOnPlot()
-        prelim.DrawLatex(latex_x, latex_y, "MINER#nuA Work In Progress")
+        # prelim.DrawLatex(latex_x, latex_y, "MINER#nuA Work In Progress")
+        prelim.DrawLatex(legx1-lat_xoffset, legy1-2*lat_yoffset-0.01, "MINER#nuA Work In Progress")
         titleonplot.DrawLatex(0.37, 0.9, plottitle)
         # calculate chi2 and do that too
         if not noData:
-            # # tdata= TH1D()
-            # tdata = data.GetCVHistoWithError()
-            # tmctot = mctot.GetCVHistoWithError()
-            # chi2 = tdata.Chi2Test(tmctot, "CHI2,UW")
             plotter = MnvPlotter()
             chi2 = plotter.Chi2DataMC(data,mctot)
             chi2_latex = ROOT.TLatex()
             chi2_latex.SetNDC()
-            chi2_latex.SetTextSize(legendfontsize-0.004)
+            chi2_latex.SetTextSize(legendfontsize*0.9)
             chi2_latex.SetTextAlign(11)
-            chi2_latex.DrawLatex(0.6,0.69, "#chi^{2} = "+ "{:g}".format(float('{:.{p}g}'.format(chi2, p=5))))
+            chi2_latex.DrawLatex(legx1-lat_xoffset,legy1-lat_yoffset, "#chi^{2} = "+ "{:g}".format(float('{:.{p}g}'.format(chi2, p=5))))
             # chi2_latex.DrawLatex(0.6,0.69, "#chi^{2} = "+str(chi2))
             del plotter
         canvas_name = thename + "_FinalStates"
@@ -438,11 +476,14 @@ for a_sample in groups.keys():
             canvas_name = thename + "Types"
         if dotuned:
             canvas_name += "_tuned"
-
+        cc.cd()
         cc.Print(os.path.join(outdirname, canvas_name + ".png"))
-        cc.Print(os.path.join(outdirname, "source", canvas_name + ".C"))
+        cc.Print(os.path.join(source_outdirname, canvas_name + ".C"))
 
-        del cc
+        del cc, stack, mctot
+        if doratio and not noData:
+            print("deleting data stuff")
+            del top, bottom, ratio, straightline, mcerror
 
 # # now that the structure is created, stuff histograms into it after scaling for POT
 # for k in keys:

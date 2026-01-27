@@ -1,10 +1,68 @@
 import os
 import sys
 import subprocess
+import datetime
+mydate = datetime.datetime.now()
+month = mydate.strftime("%B")
+year = mydate.strftime("%Y")
 
 # How to run. Closure test, MnvTune v2
 # python run_TransWarpExtraction_f.py
 # nohup python run_TransWarpExtraction_f.py >& Tela_run_TransWarpExtraction_f.txt &
+
+def MakePlotDir(subdir=""):
+    """
+    Subdir is the one for all plots that this script should ouptut. You will need to add
+    any other subdirs in the script itself (e.g. based off input file name)
+    """
+    plotdir = ""
+    base_plotdir = os.environ.get("PLOTSLOC")
+    if base_plotdir != None:
+        plotdir = os.path.join(base_plotdir, month + year)
+    else:
+        plotdir = os.path.join("/Users/nova/git/plots/", month + year)
+    if not os.path.exists(plotdir):
+        print("Can't find plot dir. Making it now... ", plotdir)
+        os.mkdir(plotdir)
+    if subdir == "":
+        return plotdir
+    if not os.path.exists(os.path.join(plotdir, subdir)):
+        print("Can't find plot dir. Making it now... ", os.path.join(plotdir, subdir))
+        os.mkdir(os.path.join(plotdir, subdir))
+    return os.path.join(plotdir, subdir)
+
+def MakeOutputDir(subdir=""):
+    """
+    Subdir is the one for all output root files that this script should ouptut. You will need to add
+    any other subdirs in the script itself (e.g. based off input file name)
+    """
+    outputdir = ""
+    base_outputdir = os.environ.get("OUTPUTLOC")
+    if base_outputdir != None:
+        outputdir = os.path.join(base_outputdir, month + year)
+    else:
+        outputdir = os.path.join("/Users/nova/git/output/", month + year)
+    if not os.path.exists(outputdir):
+        print("Can't find output dir. Making it now... ", outputdir)
+        os.mkdir(outputdir)
+    if subdir == "":
+        return outputdir
+    if not os.path.exists(os.path.join(outputdir, subdir)):
+        print("Can't find plot dir. Making it now... ", os.path.join(outputdir, subdir))
+        os.mkdir(os.path.join(outputdir, subdir))
+    return os.path.join(outputdir, subdir)
+
+# This is where warping studies files should live
+warping_outdirbase = MakeOutputDir("warpingstudies")
+
+# This is for input root files 
+eventloopout_dirbase = os.path.join(warping_outdirbase,"eventloopout")
+
+# This is for the outputs of this script
+closure_outdirbase = os.path.join(warping_outdirbase,"closure")
+if not os.path.exists(closure_outdirbase):
+    print(closure_outdirbase)
+    os.mkdir(closure_outdirbase)
 
 # ----------------------------
 # Running TransWarpExtraction

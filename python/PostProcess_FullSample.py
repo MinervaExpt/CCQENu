@@ -8,8 +8,8 @@ ROOT.TH1.AddDirectory(ROOT.kFALSE)
 
 
 base_playlists = ["5A", "6A", "6B", "6C", "6D", "6E", "6F", "6G", "6H", "6I", "6J"]
+missing = False
 template = sys.argv[1]
-prescale = "1000"
 potdata = {}
 potmc = {}
 potcorr = {}
@@ -22,18 +22,26 @@ if templatepath != "":
     dir_list = os.listdir(templatepath)
 else:
     dir_list = os.listdir()
+
 playlists = []
+found_playlists = {}
 for play in base_playlists:
+    found_playlists[play] = False
     for file_name in dir_list:
         playname = "minervame" + play
         if playname in file_name and playname not in playlists:
             print(file_name)
             playlists.append(play)
+            found_playlists[play] = True
         # elif playname in playlists:
         #     print("Duplicate file for playlist",playname,":",file_name)
 
+for play in found_playlists.keys():
+    if not found_playlists[play]:
+        print("Missing playlist ", play, " will also guess POT scaling to totaldata POT")
+        missing = True
 
-list = "_".join(playlists)
+joined_playlist_name = "_".join(playlists)
 # First find the list of hists that are in each playlist
 # Check the first template file (should be the 5A one) to get a list of hists
 f_template = ROOT.TFile.Open(template, "READONLY")
@@ -150,16 +158,22 @@ print("Total combined data pot: ", tot_potdata)
 print("Total combined mctot pot: ", tot_potmctot)
 print("Total combined mc pot: ", tot_potmc)
 
+# This dictionary is for histograms that are scaled by DataPOT/MCPOT in that playlist
 scaled_comb_hist_dict = {}
+
+# This is the dictionary for histograms that are combined without scaling
 combined_hist_dict = {}
+
+# This is the playlist for histograms scaled by a global data POT that's hard coded, really only useful if you need Data POT equiv and you're missing some playlists
 global_scaled_comb_hist_dict = {}
+
 for play in playlists:
     print("Starting with play list ", play)
     print("\tMC POT   ", potmc[play])
     print("\tData POT ", potdata[play])
     print("\tPOT corr ", potcorr[play])
 
-    print("\tTotal Sample Data POT scale: ", global_tot_datapot / potmc[play])
+    print("\tFull Sample Data POT scale: ", global_tot_datapot / potmc[play])
     for histname in key_dir["hists"]:
         # print("histname ", histname)
 
@@ -176,23 +190,21 @@ for play in playlists:
                 continue
             # TODO: If it's migration, make an unscaled copy? not sure if makes sense...
             if "migration" in histname:
-                scaled_comb_hist_dict[histname + "_noPOTscale"] = tmp_hist.Clone(
-                    histname + "_noPOTscale"
-                )
-                global_scaled_comb_hist_dict[histname + "_noPOTscale"] = tmp_hist.Clone(
-                    histname + "_noPOTscale"
-                )
+                scaled_comb_hist_dict[histname + "_noPOTscale"] = tmp_hist.Clone(histname + "_noPOTscale")
+                global_scaled_comb_hist_dict[histname + "_noPOTscale"] = tmp_hist.Clone(histname + "_noPOTscale")
+            
+            # This is the unscaled hist
+            combined_hist_dict[histname + "_noPOTscale"] = tmp_hist.Clone(histname + "_noPOTscale")
             # Scale all mc hists
-            combined_hist_dict[histname + "_noPOTscale"] = tmp_hist.Clone(
-                histname + "_noPOTscale"
-            )
+
+            # This is the hist that is scaled to its respective data POT, this is generally more useful, but will not give you Data POT equivalent if you're missing playlists
             scaled_tmphist = tmp_hist.Clone(histname)
             scaled_tmphist.Scale(potcorr[play])
             scaled_comb_hist_dict[histname] = scaled_tmphist
+
+            # This one uses hard coded Data POT to scale the MC to a Data POT equivalent, this is really only useful if you're missing some playlists
             global_scaled_tmphist = tmp_hist.Clone(histname)
-            global_scaled_tmphist.Scale(
-                potcorr[play] * global_tot_datapot / tot_potdata
-            )
+            global_scaled_tmphist.Scale(potcorr[play] * global_tot_datapot / tot_potdata)
             global_scaled_comb_hist_dict[histname] = global_scaled_tmphist
         # do the same all the other playlists and add them to the first
         else:
@@ -228,18 +240,17 @@ for play in playlists:
 # Make a new file to write out everything. It'll include the combined hists,
 filename = template.replace("5A", "Combined")
 filepath = os.path.dirname(filename)
-outfilename = os.path.join(
-    filepath, "potscaled_combined_" + list + os.path.basename(filename)
-)
-raw_outfilename = os.path.join(
-    filepath, "combined_" + list + os.path.basename(filename)
-)
-globalscale_outfilename = os.path.join(
-    filepath, "totaldatapotscaled_combined_" + list + os.path.basename(filename)
-)
+if missing:
+    outfilename = os.path.join(filepath, "potscaled_combined_" + joined_playlist_name + "_" + os.path.basename(filename))
+    raw_outfilename = os.path.join(filepath, "combined_" + joined_playlist_name + "_" + os.path.basename(filename))
+    globalscale_outfilename = os.path.join(filepath, "totaldatapotscaled_combined_" + joined_playlist_name + "_" + os.path.basename(filename))
+else:
+    outfilename = os.path.join(filepath, "potscaled_combined_" + "FullSample_" + os.path.basename(filename))
+    raw_outfilename = os.path.join(filepath, "combined_" + "FullSample_" + os.path.basename(filename))
+    # globalscale_outfilename = os.path.join(filepath, "totaldatapotscaled_combined_" + "FullSample_" + os.path.basename(filename))
+
 f_out = ROOT.TFile.Open(outfilename, "RECREATE")
 f_out_raw = ROOT.TFile.Open(raw_outfilename, "RECREATE")
-f_out_global = ROOT.TFile.Open(globalscale_outfilename, "RECREATE")
 
 print("writing out misc files...")
 for key in out_misc_dict.keys():
@@ -247,32 +258,41 @@ for key in out_misc_dict.keys():
     f_out.WriteTObject(out_misc_dict[key], key)
     f_out_raw.cd()
     f_out_raw.WriteTObject(out_misc_dict[key], key)
-    f_out_global.cd()
-    f_out_global.WriteTObject(out_misc_dict[key], key)
+
     # print("\t",key," written to file")
 
 f_out.cd()
 f_out.WriteTObject(tot_h_POT, "Combined_POT_Summary")
 f_out_raw.cd()
 f_out_raw.WriteTObject(tot_h_POT, "Combined_POT_Summary")
-f_out_global.cd()
-f_out_global.WriteTObject(tot_h_POT, "Combined_POT_Summary")
+
 
 # print("\t Combined_POT_Summary written to file")
 
 for key in scaled_comb_hist_dict.keys():
     f_out.cd()
     f_out.WriteTObject(scaled_comb_hist_dict[key], key)
+print("Done writing POTscaled to file ", outfilename)
+
 for key in combined_hist_dict.keys():
     f_out_raw.cd()
     f_out_raw.WriteTObject(combined_hist_dict[key], key)
-for key in global_scaled_comb_hist_dict.keys():
+print("Done writing non-POTscaled to file ", raw_outfilename)
+
+# Now do the global scale for missing playlists
+if missing:
+    f_out_global = ROOT.TFile.Open(globalscale_outfilename, "RECREATE")
+    for key in out_misc_dict.keys():
+        f_out_global.cd()
+        f_out_global.WriteTObject(out_misc_dict[key], key)
     f_out_global.cd()
-    f_out_global.WriteTObject(global_scaled_comb_hist_dict[key], key)
+    f_out_global.WriteTObject(tot_h_POT, "Combined_POT_Summary")
+    for key in global_scaled_comb_hist_dict.keys():
+        f_out_global.cd()
+        f_out_global.WriteTObject(global_scaled_comb_hist_dict[key], key)
+    print("Done writing total data POTscaled to file ", globalscale_outfilename)
+
 
     # print("\t",key," written to file")
 # for key in combined_hist_dict.keys():
 
-print("Done writing POTscaled to file ", outfilename)
-print("Done writing non-POTscaled to file ", raw_outfilename)
-print("Done writing total data POTscaled to file ", globalscale_outfilename)
