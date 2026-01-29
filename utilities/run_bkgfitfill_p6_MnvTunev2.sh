@@ -12,7 +12,7 @@
 # QElike
 # export MYSAMPLE=QElike
 export MYWARP=none
-export MYMODEL=MnvTunev4.3.1
+export MYMODEL=MnvTunev2
 
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/bkgfitting/eventloopout/January2026/fitfill_bkgfit_fullsyst_${MYMODEL} \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL} \

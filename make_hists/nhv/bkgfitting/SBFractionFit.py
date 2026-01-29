@@ -282,7 +282,7 @@ def RunFractionFitter(i_hist_dict):
 
     # Calculate & store pre-fit fractions of MC samples.
     mc_frac_list = GetMCFracList(i_hist_dict)
-
+    print(">>>>>>>>>>>>>>>>>> mc_frac_list: ",mc_frac_list)
     # Make a list of the MC hists for the fitter...
     # mc_list = ROOT.TObjArray(2)
     # mc_list.append(qelike_hist)
@@ -309,12 +309,13 @@ def RunFractionFitter(i_hist_dict):
         if mc_category_list[i] in fixed_cats_list:
             virtual_fitter.Config().ParSettings(i).Fix()
         else:
-            upper = mc_frac_list[i]*2.0
+            upper = mc_frac_list[i]*3.0
             lower = 0.01
             if upper > 1.0:
                 upper = 1.0
             if lower < mc_frac_list[i]*0.05:
                 lower = mc_frac_list[i]*0.05
+            print("\t\t\t >>>>>>>>> lower: %f, \tupper: %f"%(lower,upper))
             fit.Constrain(i, upper, lower)
             # fit.Constrain(i, 0., 1.)
 
@@ -766,11 +767,32 @@ def main():
     for cat in scalefrac_mnvh1d_dict.keys():
         SyncBands(scalefrac_mnvh1d_dict[cat]["fraction"])
         SyncBands(scalefrac_mnvh1d_dict[cat]["scale"])
+    plotter = MnvPlotter()
+
     for fitbin in fit_mnvh1d_dict.keys():
         for cat in fit_mnvh1d_dict[fitbin]:
             SyncBands(fit_mnvh1d_dict[fitbin][cat])
         for cat in prefit_mnvh1d_dict[fitbin]:
             SyncBands(prefit_mnvh1d_dict[fitbin][cat])
+    print(">>>>>>>>> chi2 in fitbin:")
+    for fitbin in fit_mnvh1d_dict.keys():
+
+        tmp_data = prefit_mnvh1d_dict[fitbin]["data"].Clone()
+        tmp_prefitmctot = prefit_mnvh1d_dict[fitbin]["mctot"].Clone()
+        tmp_fitmctot = fit_mnvh1d_dict[fitbin]["mctot"].Clone()
+
+        tmp_preareascale = tmp_data.Integral(min_bin, max_xbin)/tmp_prefitmctot.Integral(min_bin, max_xbin)
+        tmp_prefitmctot.Scale(tmp_preareascale)
+        pre_chi2 = plotter.Chi2DataMC(tmp_data,tmp_prefitmctot)
+
+        # tmp_areascale = tmp_data.Integral(min_bin, max_xbin)/tmp_fitmctot.Integral(min_bin, max_xbin)
+        # tmp_fitmctot.Scale(tmp_areascale)
+        post_chi2 = plotter.Chi2DataMC(tmp_data,tmp_fitmctot)
+        print(">>>>>>>>> \tprefit: %f \t postfit: %f"%(pre_chi2,post_chi2))
+
+
+
+
 
     histfile_tail = "_FractionFitHists.root"
     histfile_name = outfilebase.replace(".root", histfile_tail)
