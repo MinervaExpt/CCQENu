@@ -278,9 +278,13 @@ void LoopAndFillEventSelection(std::string tag,
                         // Done Sending MC Reco value to CSV
                     }
                 } else if (data_mc_truth == kTruth) {
-                    if (selection.isEfficiencyDenom(*universe, weight)) {
-                        universe->SetNeutEvent(true);
+                    // std::cout << "in truth loop, before selection" << std::endl;
 
+                    if (selection.isEfficiencyDenom(*universe, weight)) {
+                        // std::cout << "in truth loop selection, before setneutevent" << std::endl;
+
+                        // universe->SetNeutEvent(true);
+                        // std::cout << "in truth loop, before GetTrueQ2QE" << std::endl;
                         const double q2qe = universe->GetTrueQ2QEGeV();
                         double scale = 1.0;
                         if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv);  // Only calculate the per-universe weight for events that will actually use it.
