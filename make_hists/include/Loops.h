@@ -481,7 +481,8 @@ void LoopAndFillTMVA(std::vector<int> file_entries,
                      std::string outNameBase,
                      std::vector<std::string> recotags,
                      std::vector<std::string> branches={},
-                     bool closure=false, bool use_prog_bar=false) {
+                     bool closure=false, bool use_prog_bar=false,
+		     double tmva_weight=1.) {
 
 	gROOT->ProcessLine("#include <vector>");
 
@@ -702,6 +703,7 @@ void LoopAndFillTMVA(std::vector<int> file_entries,
 							MCIntType = universe->GetMCIntType();
 							
 							wgt = model.GetWeight(*universe, event);
+							wgt = wgt*tmva_weight;
 							Q2QE = universe->GetQ2QEGeV();
 							PperpMuGeV = universe->GetPperpMuGeV();
 							PparMuGeV = universe->GetPparMuGeV();

@@ -157,12 +157,16 @@ int main(const int argc, const char *argv[] ) {
   // Check if sending events to csv file
 	bool mc_reco_to_csv = 0;
 	bool tmva_trees = 0;
+	double tmva_weight = 1.;
 	std::vector<std::string> branches;
 	if (config.IsMember("mcRecoToCSV")) {
 		mc_reco_to_csv = config.GetBool("mcRecoToCSV");
 	}
 	if (config.IsMember("tmvaTrees")) {
 		tmva_trees = config.GetBool("tmvaTrees");
+		if (config.IsMember("tmvaWeight")) {
+			tmva_weight = config.GetDouble("tmvaWeight");
+		}
 	}
 	// Check if using progress bar during loops
 	bool use_prog_bar = 0;
@@ -424,7 +428,7 @@ int main(const int argc, const char *argv[] ) {
 		if (tmva_trees) {
 			branches = config.GetStringVector("tmvaBranches");
 			LoopAndFillTMVA(file_entries, nentries, mc_error_bands, variables1D, selectionCriteria, model, outNameBase, 
-				              recotags, branches, closure, use_prog_bar);
+				              recotags, branches, closure, use_prog_bar, tmva_weight);
 		}
 		
 		if (mc_reco_to_csv) {

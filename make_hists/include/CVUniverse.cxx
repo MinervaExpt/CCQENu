@@ -471,7 +471,7 @@ namespace {
 	bool CVUniverse::FastFilter() const {
 		bool result = false;
 		// if (GetMultiplicity() < 1) return result;
-		if (GetIsMinosMatchTrack() != -1) return result;
+		if (GetIsMinosMatchTrack() != 1) return result;
 		if (GetZVertex() < 5980 || GetZVertex() > 8422) return result;
 		if (GetApothemX() > 850.) return result;
 		if (GetApothemY() > 850.) return result;
@@ -485,7 +485,14 @@ namespace {
 	
 	// ----------------------- Analysis-related Variables ------------------------
 
-	int CVUniverse::GetIsMinosMatchTrack() const { return GetInt("muon_is_minos_match_track"); }
+	int CVUniverse::GetIsMinosMatchTrack() const { 
+		if(MinervaUniverse::GetTreeName()=="MasterAnaDev") {
+			return GetInt("isMinosMatchTrack");
+		}
+		else {
+			return 1;
+		}
+	}
 	double CVUniverse::GetEnuHadGeV() const { return CVUniverse::GetEmuGeV()+CVUniverse::GetHadronEGeV(); } // GetEnuGeV()?
 	double CVUniverse::GetTrueEnuGeV() const { return GetDouble("mc_incomingE")*MeVGeV; }
 
@@ -514,7 +521,8 @@ namespace {
 			// Q2 = 2.0*GetEnuCCQE() * ( GetEmu() - GetPmu() * cos( GetThetamu() ) ) - pow( MinervaUnits::M_mu, 2 );
 			double q2 = PlotUtils::qSquaredCCQE( GetEmu(), GetPmu(), GetThetamu(), charge )*MeVGeV*MeVGeV;
 			//  if(q2 < q2min)q2 =  q2min;
-			return q2;
+			if(q2<0.001) return 0.001;
+			else return q2;
 		}
 		// return Q2;
 	}
