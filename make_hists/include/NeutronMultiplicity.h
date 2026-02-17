@@ -137,9 +137,9 @@ class NeutEvent {
     // More complicated stuff
 
    public:
-    int m_ncands = 0;      // total number of cands in event
-    int m_nneutcands = 0;  // total number of cands passing neutron selection
-    int m_nprotoncands = 0;
+    int m_ncands = 0;          // total number of cands in event
+    int m_nneutcands = 0;      // total number of cands passing neutron selection
+    int m_nprotoncands = 0;    // total number of cands that are proton
     int m_ntrueneutcands = 0;  // total number of cands passing neutron selection
     int m_ntrueprotoncands = 0;
     std::vector<std::unique_ptr<NeutCand>> m_cands = {};            // the candidates the event has

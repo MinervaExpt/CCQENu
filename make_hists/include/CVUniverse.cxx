@@ -1247,7 +1247,7 @@ double CVUniverse::GetVertexEnergyGeV() const {
 }
 
 double CVUniverse::GetRecoilEnergy100mmGeV() const {
-    return GetDouble("recoil_energy_nonmuon_nonvtx100mm");
+    return GetDouble("recoil_energy_nonmuon_nonvtx100mm")*MeVGeV;
 }
 
 double CVUniverse::GetCalRecoilEnergy() const {
@@ -1389,7 +1389,9 @@ double CVUniverse::GetEExcessGeV() const {
     double edep = 0.0;
     for (unsigned int i = 0; i < m_neutevent->GetNProtonCands(); i++) {
         int pid = m_neutevent->GetProtonCand(i)->GetCandTruthTopPID(); 
-        if (pid == 2112 || abs(pid) == 13 || pid == 0)
+        // check if blob id'd as proton is a neutron, muon, or non genie blob
+        // if (pid == 2112 || abs(pid) == 13 || pid == 0)
+        if (pid != 2212)
             edep += m_neutevent->GetProtonCand(i)->GetCandRecoEDep();
     }
     if (edep * MeVGeV > GetEAvailGeV())
