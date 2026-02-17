@@ -619,15 +619,97 @@ std::vector<MnvHistoType*> DoNormalization(std::map<const std::string, NuConfig*
 template std::vector<MnvH1D*> DoNormalization<MnvH1D>(std::map<const std::string, NuConfig*> configs, std::string basename, std::map<std::string, bool> FluxNorm, double norm, MnvH1D* effcorr, MnvH1D* ialltruhist, MnvH1D* h_flux_dewidthed, std::string outname);
 template std::vector<MnvH2D*> DoNormalization<MnvH2D>(std::map<const std::string, NuConfig*> configs, std::string basename, std::map<std::string, bool> FluxNorm, double norm, MnvH2D* effcorr, MnvH2D* ialltruhist, MnvH1D* h_flux_dewidthed, std::string outname);
 
+template <class MnvHistoType>
+std::map<int, MnvHistoType*> DoTypesNormalization(std::map<const std::string, NuConfig*> configs, std::string basename, std::map<std::string, bool> FluxNorm, double norm, std::map<int,MnvHistoType*> ialltru_typehists, MnvH1D* h_flux_dewidthed, const std::string outname) {
+    NuConfig* config = configs["main"];
+    std::string csvdir = std::string("./csv_") + outname;
+    std::filesystem::create_directory(csvdir.c_str());
+    std::cout << "Doing types normalization" << std::endl;
+    int typeindex = 0;
+    std::map<int,MnvHistoType*> sigmaMC_types = {};
+    for (auto type : ialltru_typehists){
+        MnvHistoType* hist= type.second;
+        std::string sigmaMCname = basename + Form("_sigmaMC_types_%d", typeindex);
+        std::cout << " sigma mc type hist name " << sigmaMCname << std::endl;
+        typeindex++;
+        MnvHistoType* tmp_sigmaMC = (MnvHistoType*)hist->Clone(sigmaMCname.c_str());
+        tmp_sigmaMC->SetDirectory(0);
+        sigmaMC_types[type.first] = tmp_sigmaMC;
+    }
+
+
+    // Integrated flux normalization for non-energy variables
+    // Set by 'fluxnorm':false on 1D variables in the variables config
+    // if (!FluxNorm["fluxnorm"]) {
+    std::cout << " Using flat flux normalization. " << std::endl;
+    // Returns integrated flux hist in bins input hist
+
+    for (auto type : sigmaMC_types) {
+        MnvHistoType* theflux = GetFluxFlat(configs, type.second);
+        theflux->AddMissingErrorBandsAndFillWithCV(*type.second);
+        type.second->AddMissingErrorBandsAndFillWithCV(*theflux);
+        type.second->Divide(type.second,theflux);
+        // target normalization
+        type.second->Scale(norm);
+        SyncBands(type.second);
+    }
+    // }
+    // // Energy dependent flux normalization
+    // // Set by 'fluxnorm':true on 1D variables in the variables config
+    // else {
+    //     std::cout << " Using energy dependent flux normalization. " << std::endl;
+    //     // Returns flux hist in bins of energy variable of input hist (for 2D the bins on the non-energy axis are integrated)
+    //     MnvHistoType* h_flux_ebins = GetFluxEbins(h_flux_dewidthed, ialltruhist, *config, FluxNorm);
+
+    //     // TODO: Flipped the order of the Divide and Scale steps. Does this matter?
+    //     h_flux_ebins->AddMissingErrorBandsAndFillWithCV(*sigma);
+    //     h_flux_ebins->SetName(std::string("h_flux_ebins_" + basename).c_str());
+    //     h_flux_ebins->Write();
+    //     sigma->AddMissingErrorBandsAndFillWithCV(*h_flux_ebins);
+    //     sigma->Divide(sigma, h_flux_ebins);
+    //     // target normalization
+    //     sigma->Scale(norm);
+
+    //     SyncBands(sigma);
+    //     // if (DEBUG) sigma->GetSysErrorMatrix("Unfolding").Print();
+
+    //     h_flux_ebins->AddMissingErrorBandsAndFillWithCV(*sigmaMC);
+    //     sigmaMC->AddMissingErrorBandsAndFillWithCV(*h_flux_ebins);
+    //     sigmaMC->Divide(sigmaMC, h_flux_ebins, 1.0, 1.0);
+    //     // target normalization
+    //     sigmaMC->Scale(norm);
+    // }
+    // SyncBands(sigma);
+    // SyncBands(sigmaMC);
+
+    for (auto type : sigmaMC_types) {
+        if (type.second->InheritsFrom("TH2")) {
+            MnvH2D* sigma2DMC = dynamic_cast<MnvH2D*>(type.second->Clone());
+            sigma2DMC->MnvH2DToCSV(sigma2DMC->GetName(), csvdir, 1.E39, false, true, true, true);
+            sigma2DMC->Delete();
+        } else {
+            MnvH1D* sigma1DMC = dynamic_cast<MnvH1D*>(type.second->Clone());
+            sigma1DMC->MnvH1DToCSV(sigma1DMC->GetName(), csvdir, 1.E39, false, true, true, true);
+            sigma1DMC->Delete();
+        }
+    }
+    return sigmaMC_types;
+}
+
+template std::map<int, MnvH1D*> DoTypesNormalization<MnvH1D>(std::map<const std::string, NuConfig*> configs, std::string basename, std::map<std::string, bool> FluxNorm, double norm, std::map<int, MnvH1D*> ialltru_typehists, MnvH1D* h_flux_dewidthed, std::string outname);
+template std::map<int, MnvH2D*> DoTypesNormalization<MnvH2D>(std::map<const std::string, NuConfig*> configs, std::string basename, std::map<std::string, bool> FluxNorm, double norm, std::map<int, MnvH2D*> ialltru_typehists, MnvH1D* h_flux_dewidthed, std::string outname);
+
 //============================= GetCrossSection ================================
 
 // dummy for backwards compatibility config > map of config*
 template <class MnvHistoType>
 int GetCrossSection(std::string sample, std::string variable, std::string basename,
-                    std::map<std::string, std::map<std::string, MnvHistoType*> > histsND,
-                    std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
+                    std::map<std::string, std::map<std::string, MnvHistoType*>> histsND,
+                    std::map<std::string, std::map<std::string, MnvH2D*>> responseND,
                     NuConfig oneconfig, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                    MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub, bool usetune, std::string outname) {
+                    MinervaUnfold::MnvUnfold unfold, double num_iter, 
+                    bool DEBUG, bool hasbkgsub, bool usetune,
+                    std::string outname) {
     std::map<const std::string, NuConfig*> configmap;
     configmap["main"] = &oneconfig;
     std::cout << " pass single config into map" << std::endl;
@@ -640,10 +722,31 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
 
 template <class MnvHistoType>
 int GetCrossSection(std::string sample, std::string variable, std::string basename,
-                    std::map<std::string, std::map<std::string, MnvHistoType*> > histsND,
-                    std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
+                    std::map<std::string, std::map<std::string, MnvHistoType*>> histsND,
+                    std::map<std::string, std::map<std::string, MnvH2D*>> responseND,
                     std::map<const std::string, NuConfig*> configs, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                    MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG, bool hasbkgsub, bool usetune, std::string outname) {
+                    MinervaUnfold::MnvUnfold unfold, double num_iter, 
+                    bool DEBUG, bool hasbkgsub, bool usetune,
+                    std::string outname) {
+    // Dummy for backwards compatability if you don't have type histograms
+    std::map<std::string, std::map<std::string,std::map<int, MnvHistoType*>>> emptymap = std::map<std::string, std::map<std::string,std::map<int, MnvHistoType*>>>();
+    return GetCrossSection(sample, variable, basename,
+                           histsND,
+                           responseND,
+                           emptymap,
+                           configs, canvas, norm, POTScale, h_flux_dewidthed,
+                           unfold, num_iter, DEBUG, hasbkgsub, usetune, outname);
+}
+
+template <class MnvHistoType>
+int GetCrossSection(std::string sample, std::string variable, std::string basename,
+                    std::map<std::string, std::map<std::string, MnvHistoType*>> histsND,
+                    std::map<std::string, std::map<std::string, MnvH2D*>> responseND,
+                    std::map<std::string, std::map<std::string, std::map<int, MnvHistoType*>>> type_histsND,
+                    std::map<const std::string, NuConfig*> configs, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
+                    MinervaUnfold::MnvUnfold unfold, double num_iter, 
+                    bool DEBUG, bool hasbkgsub, bool usetune,
+                    std::string outname) {
     bool binwid = true;
     int logscale = 0;  // 0 for none, 1 for x, 2 for y, 3 for both
 
@@ -653,6 +756,8 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     std::cout << " at the top of GetXsec " << sample << std::endl;
     // this can come out of the sample information:
     // configs["main"]->Print();
+
+    if (POTScale < 0.) std::cout << " Looks like things are POTScaled already. I will skip that... " << std::endl;
     NuConfig sigkey = configs["main"]->GetConfig("signal");
     // sigkey.Print();
     std::string sig = sigkey.GetString(sample);
@@ -665,8 +770,9 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
         // bkgkey.Print();
         std::cout << bkgkey.CheckMember(sample) << std::endl;
         bkglist = bkgkey.GetStringVector(sample);
+        bkglist.erase(find(bkglist.begin(), bkglist.end(), "qelikenot"));
         std::cout << " got bkg ";
-         for (auto bkg : bkglist) {
+        for (auto bkg : bkglist) {
             std::cout << bkg;
         }
         std::cout << std::endl;
@@ -702,47 +808,64 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     // Scale POT for all MC hists, except response (get segfault if done this way...) -NHV
 
     bool hasdata = false;
-    std::cout << " starting on variable " << sample << " " << variable << std::endl;
-    for (auto types : histsND) {
-        std::string type = types.first;
+    if (POTScale >= 0.) {
+        std::cout << " starting on variable " << sample << " " << variable << std::endl;
+        for (auto types : histsND) {
+            std::string type = types.first;
 
-        std::cout << "hists key " << type << std::endl;
-        for (auto categories : histsND[type]) {
-            std::string category = categories.first;
-            std::cout << "category " << category << std::endl;
-            if (category == "data") hasdata = true;
-            if (category.find(dat) == std::string::npos) {
-                if (histsND[type][category] != 0) {
-                    // // Need to make an unscaled copy of the hists for background subtraction and eff correction other things;
-                    // MnvHistoType* noscale_hist = histsND[type][category]->Clone();
-                    // histsND[type][category+"_noPOTScale"] = noscale_hist;
+            std::cout << "hists key " << type << std::endl;
+            for (auto categories : histsND[type]) {
+                std::string category = categories.first;
+                std::cout << "category " << category << std::endl;
+                if (category == "data") hasdata = true;
+                if (category.find(dat) == std::string::npos) {
+                    if (histsND[type][category] != 0) {
+                        // // Need to make an unscaled copy of the hists for background subtraction and eff correction other things;
+                        // MnvHistoType* noscale_hist = histsND[type][category]->Clone();
+                        // histsND[type][category+"_noPOTScale"] = noscale_hist;
 
-                    // These are POT scaled things for comparison
-                    double t = histsND[type][category]->Integral();
-                    histsND[type][category]->Scale(POTScale);
-                    std::cout << " POTScaled " << histsND[type][category]->GetName() << " " << t << " " << histsND[type][category]->Integral() << std::endl;
+                        // These are POT scaled things for comparison
+                        double t = histsND[type][category]->Integral();
+                        histsND[type][category]->Scale(POTScale);
+                        std::cout << " POTScaled " << histsND[type][category]->GetName() << " " << t << " " << histsND[type][category]->Integral() << std::endl;
+                    }
+                }
+            }
+        }
+        for (auto types : type_histsND) {
+            std::string type = types.first;
+
+            std::cout << "hists key " << type << std::endl;
+            for (auto categories : type_histsND[type]) {
+                std::string category = categories.first;
+                std::cout << "category " << category << std::endl;
+                if (category.find(dat) == std::string::npos) {
+                    for (auto inttype : type_histsND[type][category]) {
+                        double t = inttype.second->Integral();
+                        inttype.second->Scale(POTScale);
+                        std::cout << " POTScaled " << inttype.second->GetName() << " " << t << " " << inttype.second->Integral() << std::endl;
+                    }
+                }
+            }
+        }
+        if (!hasdata) return hasdata;
+
+        // TODO: Does response need to be POT norm'd?
+        for (auto types : responseND) {
+            std::string type = types.first;
+            std::cout << "response key " << type << std::endl;
+            for (auto categories : responseND[type]) {
+                std::string category = categories.first;
+                if (category.find(dat) == std::string::npos) {
+                    if (responseND[type][category] != 0) {
+                        double t = responseND[type][category]->Integral();
+                        responseND[type][category]->Scale(POTScale);
+                        std::cout << " POTScaled " << responseND[type][category]->GetName() << " " << t << " " << responseND[type][category]->Integral() << std::endl;
+                    }
                 }
             }
         }
     }
-    if (!hasdata) return hasdata;
-    
-    // TODO: Does response need to be POT norm'd?
-    for (auto types : responseND) {
-        std::string type = types.first;
-        std::cout << "response key " << type << std::endl;
-        for (auto categories : responseND[type]) {
-            std::string category = categories.first;
-            if (category.find(dat) == std::string::npos) {
-                if (responseND[type][category] != 0) {
-                    double t = responseND[type][category]->Integral();
-                    responseND[type][category]->Scale(POTScale);
-                    std::cout << " POTScaled " << responseND[type][category]->GetName() << " " << t << " " << responseND[type][category]->Integral() << std::endl;
-                }
-            }
-        }
-    }
-
     // Assign each input histogram type used for doing the analysis.
     // MnvHistoType can be MnvH1D or MnvH2D so far. Response is always MnvH2D.
     MnvHistoType* idatahist = histsND["reconstructed"][dat];
@@ -757,7 +880,7 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     }
     // std::cout << "using signal " << imcsighist->GetName() << std::endl;
     //  Backgrounds come from several channels, so need to loop over them
-    std::map<std::string,MnvHistoType*> imcbkghistmap;
+    std::map<std::string, MnvHistoType*> imcbkghistmap;
     MnvHistoType* ibkgsubhist;  // TODO: does this need a map?
 
     // // These are not POT scaled
@@ -792,7 +915,7 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
 
     // if (hasbkgsub) ibkgsubhist = histsND["fitted"]["bkgsub"];
 
-    // TODO: do I need non POT scaled hists here? 
+    // TODO: do I need non POT scaled hists here?
 
     if (DEBUG) std::cout << "test pointers " << ibkgsubhist << std::endl;
     MnvHistoType* iseltruhist;
@@ -804,15 +927,25 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     }
 
     if (DEBUG) std::cout << "test pointers " << ibkgsubhist << " " << iseltruhist << std::endl;
-    MnvHistoType* ialltruhist;
+
+    // MnvHistoType* ialltruhist;
+    // if (histsND.count("all_truth_tuned") && usetune) {
+    //     ialltruhist = histsND["all_truth_tuned"][sig];
+    //     std::cout << " using " << ialltruhist->GetName() << std::endl;
+    // } else {
+    //     ialltruhist = histsND["all_truth"][sig];
+    // }
+    MnvHistoType* ialltruhist = histsND["all_truth"][sig];
+    MnvHistoType* ialltruhist_tuned;
+    std::map<int, MnvHistoType*> ialltruhist_inttypemap = type_histsND["all_truth"][sig];
 
     if (histsND.count("all_truth_tuned") && usetune) {
-        ialltruhist = histsND["all_truth_tuned"][sig];
-        std::cout << " using " << ialltruhist->GetName() << std::endl;
-    } else {
-        ialltruhist = histsND["all_truth"][sig];
+        ialltruhist_tuned = histsND["all_truth_tuned"][sig];
+        std::cout << " using tuned alltruhist " << ialltruhist_tuned->GetName() << std::endl;
+        std::map<int, MnvHistoType*> ialltruhist_tuned_inttypemap = type_histsND["all_truth_tuned"][sig];
     }
     if (DEBUG) std::cout << "test pointers " << sig << " " << iseltruhist->GetName() << ialltruhist << std::endl;
+
     MnvH2D* iresponse;
     MnvHistoType* iresponse_reco = imcsighist;
     MnvHistoType* iresponse_truth = iseltruhist;
@@ -1015,7 +1148,7 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
         return 2;
     }
     bool fluxhere = false;  // this was just a test to see if using bin by bin to see the error might be interesting.
-    std::vector<MnvHistoType*> vecEffCorr = DoEfficiencyCorrection(basename, unsmeared, iseltruhist, ialltruhist, fluxhere);
+    std::vector<MnvHistoType*> vecEffCorr = usetune ? DoEfficiencyCorrection(basename, unsmeared, iseltruhist, ialltruhist_tuned, fluxhere) : DoEfficiencyCorrection(basename, unsmeared, iseltruhist, ialltruhist, fluxhere);
     if (fluxhere) {
         h_flux_dewidthed->PopVertErrorBand("Flux");
     }
@@ -1076,6 +1209,17 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     sigmaMC->Write();
     sigmaMC->Print();
 
+    for (auto type : ialltruhist_inttypemap) {
+        std::cout << " all tru type " << type.first << std::endl;
+        type.second->Print();
+    }
+    std::map<int, MnvHistoType*> sigmaMC_typemap = DoTypesNormalization(configs, basename, fluxnorm, norm, ialltruhist_inttypemap, h_flux_dewidthed, outname);
+    for (auto type : sigmaMC_typemap) {
+        MnvHistoType* sigmaMC_type = type.second;
+        sigmaMC_type->Write();
+        sigmaMC_type->Print();
+    }
+
     PlotCVAndError(canvas, sigma, sigmaMC, stuned + sample + "_" + "sigma", true, logscale, binwid);
     PlotErrorSummary(canvas, sigma, stuned + sample + "_" + "Cross Section Systematics", 0);
 
@@ -1088,32 +1232,54 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
 
     //=====================================Exit======================================
     return 0;
-}
+    }
 
 template int GetCrossSection<MnvH1D>(std::string sample, std::string variable, std::string basename,
-                                     std::map<std::string, std::map<std::string, MnvH1D*> > histsND,
-                                     std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
+                                     std::map<std::string, std::map<std::string, MnvH1D*>> histsND,
+                                     std::map<std::string, std::map<std::string, MnvH2D*>> responseND,
+                                     std::map<std::string, std::map<std::string, std::map<int, MnvH1D*>>> type_histsND,
                                      std::map<const std::string, NuConfig*> configs, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false,
-                                     std::string outname="");
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, 
+                                     bool DEBUG = false, bool hasbksub = false, bool usetune = false,
+                                     std::string outname = "");
 
 template int GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,
-                                     std::map<std::string, std::map<std::string, MnvH2D*> > histsND,
-                                     std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
+                                     std::map<std::string, std::map<std::string, MnvH2D*>> histsND,
+                                     std::map<std::string, std::map<std::string, MnvH2D*>> responseND,
+                                     std::map<std::string, std::map<std::string, std::map<int, MnvH2D*>>> type_histsND,
                                      std::map<const std::string, NuConfig*> configs, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false,
-                                     std::string outname="");
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, 
+                                     bool DEBUG = false, bool hasbksub = false, bool usetune = false,
+                                     std::string outname = "");
 
 template int GetCrossSection<MnvH1D>(std::string sample, std::string variable, std::string basename,
-                                     std::map<std::string, std::map<std::string, MnvH1D*> > histsND,
-                                     std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
-                                     NuConfig mainconfig, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false,
-                                     std::string outname);
+                                     std::map<std::string, std::map<std::string, MnvH1D*>> histsND,
+                                     std::map<std::string, std::map<std::string, MnvH2D*>> responseND,
+                                     std::map<const std::string, NuConfig*> configs, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, 
+                                     bool DEBUG = false, bool hasbksub = false, bool usetune = false,
+                                     std::string outname = "");
 
 template int GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,
-                                     std::map<std::string, std::map<std::string, MnvH2D*> > histsND,
-                                     std::map<std::string, std::map<std::string, MnvH2D*> > responseND,
+                                     std::map<std::string, std::map<std::string, MnvH2D*>> histsND,
+                                     std::map<std::string, std::map<std::string, MnvH2D*>> responseND,
+                                     std::map<const std::string, NuConfig*> configs, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, 
+                                     bool DEBUG = false, bool hasbksub = false, bool usetune = false,
+                                     std::string outname = "");
+
+template int GetCrossSection<MnvH1D>(std::string sample, std::string variable, std::string basename,
+                                     std::map<std::string, std::map<std::string, MnvH1D*>> histsND,
+                                     std::map<std::string, std::map<std::string, MnvH2D*>> responseND,
                                      NuConfig mainconfig, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
-                                     MinervaUnfold::MnvUnfold unfold, double num_iter, bool DEBUG = false, bool hasbksub = false, bool usetune = false,
-                                     std::string outname="");
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, 
+                                     bool DEBUG = false, bool hasbksub = false, bool usetune = false,
+                                     std::string outname = "");
+
+template int GetCrossSection<MnvH2D>(std::string sample, std::string variable, std::string basename,
+                                     std::map<std::string, std::map<std::string, MnvH2D*>> histsND,
+                                     std::map<std::string, std::map<std::string, MnvH2D*>> responseND,
+                                     NuConfig mainconfig, TCanvas& canvas, double norm, double POTScale, MnvH1D* h_flux_dewidthed,
+                                     MinervaUnfold::MnvUnfold unfold, double num_iter, 
+                                     bool DEBUG = false, bool hasbksub = false, bool usetune = false,
+                                     std::string outname = "");

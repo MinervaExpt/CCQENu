@@ -497,7 +497,8 @@ int main(const int argc, const char *argv[]) {
         v->InitializeDataHistograms(data_error_bands, datatags);
         v->InitializeTruthHistograms(truth_error_bands, truthtags);
         v->InitializeResponse(mc_error_bands, responsetags);
-        v->InitializeTunedMCHistograms(mc_error_bands, truth_error_bands, selected_reco_tags, responsetags);
+        // v->InitializeTunedMCHistograms(mc_error_bands, truth_error_bands, selected_reco_tags, responsetags);
+        v->InitializeTunedMCHistograms(mc_error_bands, truth_error_bands, selected_reco_tags, responsetags, selected_truth_tags, truthtags);
         variables1D.push_back(v);
     }
 
@@ -509,7 +510,8 @@ int main(const int argc, const char *argv[]) {
         v->InitializeDataHistograms2D(data_error_bands, datatags);
         v->InitializeTruthHistograms2D(truth_error_bands, truthtags);
         v->InitializeResponse2D(mc_error_bands, responsetags);
-        v->InitializeTunedMCHistograms2D(mc_error_bands, truth_error_bands, selected_reco_tags, responsetags);
+        // v->InitializeTunedMCHistograms2D(mc_error_bands, truth_error_bands, selected_reco_tags, responsetags);
+        v->InitializeTunedMCHistograms2D(mc_error_bands, truth_error_bands, selected_reco_tags, responsetags, selected_truth_tags, truthtags);
         variables2D.push_back(v);
     }
 

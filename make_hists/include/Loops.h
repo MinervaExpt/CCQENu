@@ -290,6 +290,9 @@ void LoopAndFillEventSelection(std::string tag,
                         if (!closure) scale = mcRescale.GetScale(cat, q2qe, uni_name, iuniv);  // Only calculate the per-universe weight for events that will actually use it.
                         if (closure) scale = 1.0;
                         FillSignalTruth(tag, universe, weight, variables, variables2D, variablesHD, scale);
+                        if (universe->ShortName() == "cv") {
+                            FillTrueType(tag, universe, weight, variables, variables2D, scale);  // only use cv and variables for now
+                        }
                     }
                 } else {  // kData
 #ifdef CLOSUREDETAIL

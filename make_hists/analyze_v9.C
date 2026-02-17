@@ -14,6 +14,7 @@ bool DEBUG = 1;
 #include "TError.h"
 #include "TF2.h"
 #include "TFile.h"
+#include "TH1D.h"
 #include "TH2D.h"
 #include "TROOT.h"
 #include "TStyle.h"
@@ -73,6 +74,7 @@ int main(const int argc, const char* argv[]) {
     std::string inputname;
     std::string configloc;
     bool singlesample;
+    bool dointtypes = false;
     std::string asample = "";
     bool hasbkgsub;
     bool usetune;
@@ -92,7 +94,8 @@ int main(const int argc, const char* argv[]) {
         allconfigs["varsFile"] = new NuConfig(std::string(f->Get("varsFile")->GetTitle()));
         allconfigs["cutsFile"] = new NuConfig(std::string(f->Get("cutsFile")->GetTitle()));
         allconfigs["samplesFile"] = new NuConfig(std::string(f->Get("samplesFile")->GetTitle()));
-       
+        allconfigs["paramsFile"] = new NuConfig(std::string(f->Get("paramsFile")->GetTitle()));
+        allconfigs["modeltuneFile"] = new NuConfig(std::string(f->Get("modeltuneFile")->GetTitle()));
 
         singlesample = 0;
         // see if the root file has already had fits done - these will be used in the cross section fit.
@@ -128,6 +131,10 @@ int main(const int argc, const char* argv[]) {
         allconfigs["cutsFile"] = new NuConfig(varsconfig.Read(main->GetString("cutsFile")));
         NuConfig samplesconfig;
         allconfigs["samplesFile"] = new NuConfig(samplesconfig.Read(main->GetString("samplesFile")));
+        NuConfig paramsconfig;
+        allconfigs["paramsFile"] = new NuConfig(paramsconfig.Read(main->GetString("paramsFile")));
+        NuConfig modeltuneconfig;
+        allconfigs["modeltuneFile"] = new NuConfig(modeltuneconfig.Read(main->GetString("modeltuneFile")));
         std::cout << "done reading in configs" << std::endl;
                 
         if (argc > 4) {
@@ -180,19 +187,23 @@ int main(const int argc, const char* argv[]) {
     // type is reconstructed, truth...
     // category is qelike, qelikenot ...
 
-    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH1D*> > > > hists1D;
+    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH1D*>>>> hists1D;
 
-    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH2D*> > > > hists2D;
+    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, std::map<int, MnvH1D*>>>>> type_hists1D;
 
-    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH2D*> > > > response1D;
+    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH2D*>>>> hists2D;
 
-    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH2D*> > > > response2D;
+    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, std::map<int, MnvH2D*>>>>> type_hists2D;
 
-  std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH1D*> > > > histsHD;
+    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH2D*>>>> response1D;
 
-  std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH2D*> > > > responseHD;
+    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH2D*>>>> response2D;
 
-  //f->ls();
+    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH1D*>>>> histsHD;
+
+    std::map<std::string, std::map<std::string, std::map<std::string, std::map<std::string, MnvH2D*>>>> responseHD;
+
+    // f->ls();
 
     std::vector<std::string> keys;
 
@@ -203,15 +214,28 @@ int main(const int argc, const char* argv[]) {
     std::vector<std::string> variables;
     std::vector<std::string> categories;
     std::vector<std::string> types;
-
+    std::vector<int> int_types;
+    
     // this is the old read in the POT.  They are also in a vector which Amit like having
-    TH1D* h_pot = (TH1D*)f->Get("POT_summary");
-    h_pot->Print("ALL");
+    TList* f_keys = f->GetListOfKeys();
 
-    double dataPOT = h_pot->GetBinContent(1);
-    double mcPOTprescaled = h_pot->GetBinContent(3);
-    double POTScale = dataPOT / mcPOTprescaled;
-    delete h_pot;
+    double dataPOT = 1.;
+    double mcPOTprescaled = 1.;
+    double POTScale = -1.;
+    if (!f->GetKey("Combined_POT_Summary")) {
+        TH1D* h_pot = (TH1D*)f->Get("POT_summary");
+        h_pot->Print("ALL");
+        dataPOT = h_pot->GetBinContent(1);
+        mcPOTprescaled = h_pot->GetBinContent(3);
+        POTScale = dataPOT / mcPOTprescaled;
+        delete h_pot;
+    } else {
+        TH1D* h_pot = (TH1D*)f->Get("Combined_POT_Summary");
+        h_pot->Print("ALL");
+        dataPOT = h_pot->GetBinContent(1);
+        delete h_pot;
+    }
+
     double norm = 1. / dataPOT / targets;
     TNamed targetobj("targets", Form("%6e", targets));
 
@@ -219,6 +243,7 @@ int main(const int argc, const char* argv[]) {
 
     std::cout << " POT MC " << mcPOTprescaled << std::endl;
     std::cout << " POT DATA " << dataPOT << std::endl;
+    std::cout << " POTScale " << POTScale << std::endl;
 
     for (auto k : *f->GetListOfKeys()) {
         keys.push_back(k->GetName());
@@ -236,16 +261,12 @@ int main(const int argc, const char* argv[]) {
         std::string category = parsekey[2];
         std::string variable = parsekey[3];
         std::string type = parsekey[4];
+        int int_type = -1;
+        // if (type.find("type")!= string::npos) {
+        //     std::cout << " found a type" << type << std::endl;
+        //     continue;
+        // }
         
-        if (type.find("type")!= string::npos) {
-            std::cout << " found a type" << type << std::endl;
-            continue;
-        }
-        
-        
-        
-         
-
         // build lists of all valid tags
         // only count sample that you requested
         if (!checktag(SampleRequest, sample)) {
@@ -266,20 +287,31 @@ int main(const int argc, const char* argv[]) {
             variables.push_back(variable);
             std::cout << " add a variable: " << variable << std::endl;
         }
-        if (!checktag(types, type)) {
+        // This adds the type excluding the "types" mcint hists
+        if (!checktag(types, type) && type.find("_types_") == string::npos) {
             types.push_back(type);
             std::cout << " add a type: " << type << std::endl;
         }
+        // this will make a new "category" for each type hist
+        if (type.find("_types_") != string::npos) {
+            std::string tmp_type = type.substr(0, type.find("_types_"));
+            int_type = std::stoi(type.substr(type.find("_types_")+7));
+            std::cout << " add an int type: " << int_type << ", for type " << tmp_type << std::endl;
+            int_types.push_back(int_type);
+            dointtypes = true;
+            type = type.erase(type.find("_types_"), -1);
+        }
+
         // get the histogram
         TNamed* me = f->GetKey(key.c_str());
         std::cout << " Done with parsing" << std::endl;
 
         // 1D hists
-        if (key.find("h2D") == std::string::npos && key.find("hHD")==std::string::npos) {
+        if (key.find("h2D") == std::string::npos && key.find("hHD") == std::string::npos) {
             // if response in name its a 2D so do a cast to MnvH2D
             if (key.find("migration") != std::string::npos) {
                 MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
-                
+
                 if (hist != 0) {
                     SyncBands(hist);
                     response1D[sample][variable][type][category] = hist->Clone();
@@ -293,81 +325,119 @@ int main(const int argc, const char* argv[]) {
                 }
             }
             // it's normal so it's a 1D.
-            else  {
-                MnvH1D* temp = (MnvH1D*)(f->Get(key.c_str()));
-                
-                if (temp != 0) {
-                    SyncBands(temp);
-                    hists1D[sample][variable][type][category] = temp->Clone();
-                    hists1D[sample][variable][type][category]->Print();
-                    hists1D[sample][variable][type][category]->SetDirectory(0);
-                    std::cout << " hist 1D " << sample << " " << variable << " " << type << " " << category << " " << hists1D[sample][variable][type][category]->GetName() << std::endl;
-                    delete temp;
+            else {
+                if (key.find("_types_") != std::string::npos) {
+                    TH1D* t_temp = (TH1D*)(f->Get(key.c_str()));
+                    // MnvH1D* t_temp = (MnvH1D*)(f->Get(key.c_str()));
+                    if (t_temp != 0) {
+                        // type_hists1D[sample][variable][type][category][int_type] = (TH1D*)t_temp->Clone();
+                        // Need to convert these to MnvH1D so it plays nice with the GetXSec function
+                        type_hists1D[sample][variable][type][category][int_type] = new MnvH1D(*t_temp);
+                        type_hists1D[sample][variable][type][category][int_type]->Print();
+                        type_hists1D[sample][variable][type][category][int_type]->SetDirectory(0);
+                        std::cout << " type hist 1D " << sample << " " << variable << " " << type << " " << category << " " << " " << int_type << " " << type_hists1D[sample][variable][type][category][int_type]->GetName() << std::endl;
+                        delete t_temp;
+                    } else {
+                        std::cout << "could not read " << key << std::endl;
+                        type_hists1D[sample][variable][type][category][int_type] = 0;
+                    }
                 } else {
-                    std::cout << "could not read " << key << std::endl;
-                    hists1D[sample][variable][type][category] = 0;
+                    MnvH1D* temp = (MnvH1D*)(f->Get(key.c_str()));
+
+                    if (temp != 0) {
+                        SyncBands(temp);
+                        hists1D[sample][variable][type][category] = temp->Clone();
+                        hists1D[sample][variable][type][category]->Print();
+                        hists1D[sample][variable][type][category]->SetDirectory(0);
+                        std::cout << " hist 1D " << sample << " " << variable << " " << type << " " << category << " " << hists1D[sample][variable][type][category]->GetName() << std::endl;
+                        delete temp;
+                    } else {
+                        std::cout << "could not read " << key << std::endl;
+                        hists1D[sample][variable][type][category] = 0;
+                    }
                 }
             }
-       }
+        }
 
         // 2D hists
-        else if (hNd == "h2D" || (key.find("h2D") != std::string::npos && (key.find("hHD") == std::string::npos) )) {
+        else if (hNd == "h2D" || (key.find("h2D") != std::string::npos && (key.find("hHD") == std::string::npos))) {
             std::vector<std::string> partsof2D = split(variable, "_");
-            MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
-            
-            // Check if response is in its name
-            if (hist != 0) {
-                SyncBands(hist);
-                if (key.find("migration") != std::string::npos) {
+            // MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
+
+            // // Check if response is in its name
+            // if (hist != 0) {
+            //     SyncBands(hist);
+            if (key.find("migration") != std::string::npos) {
+                MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
+                if (hist != 0) {
+                    SyncBands(hist);
                     response2D[sample][variable][type][category] = hist->Clone();
                     response2D[sample][variable][type][category]->Print();
                     response2D[sample][variable][type][category]->SetDirectory(0);
                     std::cout << " 2D migration " << sample << " " << variable << " " << type << " " << category << std::endl;
                     delete hist;
                 } else {
+                    std::cout << "could not read " << key << std::endl;
+                    response2D[sample][variable][type][category] = 0;
+                }
+            } else if (key.find("_types_") != std::string::npos) {
+                TH2D* t_temp = (TH2D*)(f->Get(key.c_str()));
+                if (t_temp != 0) {
+                    // type_hists2D[sample][variable][type][category][int_type] = (TH2D*)t_temp->Clone();
+                    // Need to convert these to MnvH1D so it plays nice with the GetXSec function
+                    type_hists2D[sample][variable][type][category][int_type] = new MnvH2D(*t_temp);
+                    type_hists2D[sample][variable][type][category][int_type]->Print();
+                    type_hists2D[sample][variable][type][category][int_type]->SetDirectory(0);
+                    std::cout << " type hist 2D " << sample << " " << variable << " " << type << " " << category << " " << " " << int_type << " " << type_hists2D[sample][variable][type][category][int_type]->GetName() << std::endl;
+                    std::cout << " here" << std::endl;
+                    delete t_temp;
+                } else {
+                    std::cout << "could not read " << key << std::endl;
+                    type_hists1D[sample][variable][type][category][int_type] = 0;
+                }
+            } else {
+                MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
+                if (hist != 0) {
+                    SyncBands(hist);
                     hists2D[sample][variable][type][category] = hist->Clone();
                     hists2D[sample][variable][type][category]->Print();
                     hists2D[sample][variable][type][category]->SetDirectory(0);
                     std::cout << " hist 2D " << sample << " " << variable << " " << type << " " << category << std::endl;
                     delete hist;
-                }
-            } else {
-                std::cout << "could not read " << key << std::endl;
-                if (key.find("migration") != std::string::npos) {
-                    response2D[sample][variable][type][category] = 0;
                 } else {
-                    hists2D[sample][variable][type][category] = 0;
+                    std::cout << "could not read " << key << std::endl;
+                    response2D[sample][variable][type][category] = 0;
                 }
             }
-    } else if (hNd == "hHD") {
-      // if response in name its a 2D so do a cast to MnvH2D
-      if (key.find("migration") != std::string::npos) {
-        MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
-        if (hist != 0) {
-          responseHD[sample][variable][type][category] = hist->Clone();
-          // response1D[sample][variable][type][category]->Print();
-          responseHD[sample][variable][type][category]->SetDirectory(0);
-          std::cout << " migration " << sample << " " << variable << " " << type << " " << category << std::endl;
-          delete hist;
-        } else {
-          std::cout << "could not read " << key << std::endl;
-          responseHD[sample][variable][type][category] = 0;
-        }
-      }
-      // it's normal so it's a 1D.
-      else {
-        MnvH1D* temp = (MnvH1D*)(f->Get(key.c_str()));
-        if (temp != 0) {
-          histsHD[sample][variable][type][category] = temp->Clone();
-          histsHD[sample][variable][type][category]->Print();
-          histsHD[sample][variable][type][category]->SetDirectory(0);
-          std::cout << " hist 1D " << sample << " " << variable << " " << type << " " << category << " " << histsHD[sample][variable][type][category]->GetName() << std::endl;
-          delete temp;
-        } else {
-          std::cout << "could not read " << key << std::endl;
-          histsHD[sample][variable][type][category] = 0;
-        }
-      }
+        } else if (hNd == "hHD") {
+            // if response in name its a 2D so do a cast to MnvH2D
+            if (key.find("migration") != std::string::npos) {
+                MnvH2D* hist = (MnvH2D*)(f->Get(key.c_str()));
+                if (hist != 0) {
+                    responseHD[sample][variable][type][category] = hist->Clone();
+                    // response1D[sample][variable][type][category]->Print();
+                    responseHD[sample][variable][type][category]->SetDirectory(0);
+                    std::cout << " migration " << sample << " " << variable << " " << type << " " << category << std::endl;
+                    delete hist;
+                } else {
+                    std::cout << "could not read " << key << std::endl;
+                    responseHD[sample][variable][type][category] = 0;
+                }
+            }
+            // it's normal so it's a 1D.
+            else {
+                MnvH1D* temp = (MnvH1D*)(f->Get(key.c_str()));
+                if (temp != 0) {
+                    histsHD[sample][variable][type][category] = temp->Clone();
+                    histsHD[sample][variable][type][category]->Print();
+                    histsHD[sample][variable][type][category]->SetDirectory(0);
+                    std::cout << " hist 1D " << sample << " " << variable << " " << type << " " << category << " " << histsHD[sample][variable][type][category]->GetName() << std::endl;
+                    delete temp;
+                } else {
+                    std::cout << "could not read " << key << std::endl;
+                    histsHD[sample][variable][type][category] = 0;
+                }
+            }
         }
     }
 
@@ -424,6 +494,23 @@ int main(const int argc, const char* argv[]) {
             }
         }
     }
+    for (auto s : type_hists1D) {
+        auto sample = s.first;
+        for (auto v : type_hists1D[sample]) {
+            auto variable = v.first;
+            for (auto t : type_hists1D[sample][variable]) {
+                auto type = t.first;
+                for (auto c : type_hists1D[sample][variable][type]) {
+                    auto category = c.first;
+                    for (auto i : type_hists1D[sample][variable][type][category]) {
+                        auto int_type = i.first;
+                        std::cout << " write out " << type_hists1D[sample][variable][type][category][int_type]->GetName() << std::endl;
+                        type_hists1D[sample][variable][type][category][int_type]->Write();
+                    }
+                }
+            }
+        }
+    }
 
     o->cd();
     for (auto config : allconfigs) {
@@ -459,7 +546,11 @@ int main(const int argc, const char* argv[]) {
                 basename = "h_" + variable;
             }
             std::cout << "basename is " << basename << std::endl;
-            int exit = GetCrossSection(sample, variable, basename, hists1D[sample][variable], response1D[sample][variable], allconfigs, canvas1D, norm, POTScale, h_flux_dewidthed, unfold, num_iter, DEBUG, hasbkgsub, usetune, pdfname);
+            int exit = GetCrossSection(sample, variable, basename,
+                                       hists1D[sample][variable], response1D[sample][variable], type_hists1D[sample][variable],
+                                       allconfigs, canvas1D, norm, POTScale, h_flux_dewidthed, unfold, num_iter,
+                                       DEBUG, hasbkgsub, usetune,
+                                       pdfname);
 
             if (DEBUG) std::cout << exit << std::endl;
         }
@@ -500,6 +591,38 @@ int main(const int argc, const char* argv[]) {
 
     canvas1Dres.Print(pdfend1Dres.c_str(), "pdf");
 
+    for (auto s : hists2D) {
+        auto sample = s.first;
+        for (auto v : hists2D[sample]) {
+            auto variable = v.first;
+            for (auto t : hists2D[sample][variable]) {
+                auto type = t.first;
+                for (auto c : hists2D[sample][variable][type]) {
+                    auto category = c.first;
+                    std::cout << " write out " << hists2D[sample][variable][type][category]->GetName() << std::endl;
+                    hists2D[sample][variable][type][category]->Write();
+                }
+            }
+        }
+    }
+    for (auto s : type_hists2D) {
+        auto sample = s.first;
+        for (auto v : type_hists2D[sample]) {
+            auto variable = v.first;
+            for (auto t : type_hists2D[sample][variable]) {
+                auto type = t.first;
+                for (auto c : type_hists2D[sample][variable][type]) {
+                    auto category = c.first;
+                    for (auto i : type_hists2D[sample][variable][type][category]) {
+                        auto int_type = i.first;
+                        std::cout << " write out " << type_hists2D[sample][variable][type][category][int_type]->GetName() << std::endl;
+                        type_hists2D[sample][variable][type][category][int_type]->Write();
+                    }
+                }
+            }
+        }
+    }
+
     // Set up pdf for 2D plots.
     TCanvas canvas2D(pdffilename2D.c_str());
     canvas2D.SetLeftMargin(0.15);
@@ -522,7 +645,11 @@ int main(const int argc, const char* argv[]) {
             if (singlesample) {
                 basename = "h_" + variable;
             }
-            int exit = GetCrossSection(sample, variable, basename, hists2D[sample][variable], response2D[sample][variable], allconfigs, canvas2D, norm, POTScale, h_flux_dewidthed, unfold, num_iter, DEBUG, hasbkgsub, usetune, pdfname);
+            int exit = GetCrossSection(sample, variable, basename,
+                                       hists2D[sample][variable], response2D[sample][variable], type_hists2D[sample][variable],
+                                       allconfigs, canvas2D, norm, POTScale, h_flux_dewidthed, unfold, num_iter,
+                                       DEBUG, hasbkgsub, usetune,
+                                       pdfname);
             if (DEBUG) std::cout << exit << std::endl;
         }
     }

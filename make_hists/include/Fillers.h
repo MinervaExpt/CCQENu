@@ -273,11 +273,58 @@ void FillType(std::string tag, CVUniverse *univ, double weight,
         if (v->hasType[tag]) {
             // double reco_val = v->GetRecoValue(*univ, 0);
             int type = univ->GetMCIntType();
-            for (int i = 0; i < v->GetRecoIndex(*univ); i++) {
-                double reco_val = v->GetRecoValue(*univ, i);
-                // This will fill both tuned and untuned
-                v->FillType(tag, type, reco_val, weight, scale);
+            double reco_val = v->GetRecoValue(*univ);
+            // This will fill both tuned and untuned
+            v->FillType(tag, type, reco_val, weight, scale);            
+            // This will fill both tuned and untuned
+            if (v->hasSelectedTruth[tag]) {
+                double true_val = v->GetTrueValue(*univ);
+                v->FillSelectedTrueType(tag, type, true_val, weight, scale);
             }
+        }
+    }
+    for (auto v2 : variables2D) {
+        if (v2->m_do_argvalue_x || v2->m_do_argvalue_y) continue;  // TODO
+        if (v2->hasType[tag]) {
+            // double reco_val = v->GetRecoValue(*univ, 0);
+            int type = univ->GetMCIntType();
+            double reco_xval = v2->GetRecoValueX(*univ);
+            double reco_yval = v2->GetRecoValueY(*univ);
+            // This will fill both tuned and untuned
+            v2->FillType(tag, type, reco_xval, reco_yval, weight, scale);
+            if (v2->hasSelectedTruth[tag]) {
+                double true_valx = v2->GetTrueValueX(*univ);
+                double true_valy = v2->GetTrueValueY(*univ);
+                // This will fill both tuned and untuned
+                v2->FillSelectedTrueType(tag, type, true_valx, true_valy, weight, scale);
+            }
+        }
+    }
+}
+
+void FillTrueType(std::string tag, CVUniverse* univ, double weight,
+              std::vector<CCQENu::VariableFromConfig*> variables,
+              std::vector<CCQENu::Variable2DFromConfig*> variables2D,
+              double scale) {
+    for (auto v : variables) {
+        if (v->m_do_argvalue) continue;  // TODO
+        if (v->hasType[tag] && v->hasTruth[tag]) {
+            // double reco_val = v->GetRecoValue(*univ, 0);
+            int type = univ->GetMCIntType();
+            double val = v->GetTrueValue(*univ);
+            // This will fill both tuned and untuned
+            v->FillTrueType(tag, type, val, weight, scale);
+        }
+    }
+    for (auto v2 : variables2D) {
+        if (v2->m_do_argvalue_x || v2->m_do_argvalue_y) continue;  // TODO
+        if (v2->hasType[tag] && v2->hasTruth[tag]) {
+            // double reco_val = v->GetRecoValue(*univ, 0);
+            int type = univ->GetMCIntType();
+            double xval = v2->GetTrueValueX(*univ);
+            double yval = v2->GetTrueValueY(*univ);
+            // This will fill both tuned and untuned
+            v2->FillTrueType(tag, type, xval, yval, weight, scale);
         }
     }
 }

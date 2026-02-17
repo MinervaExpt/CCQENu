@@ -45,13 +45,11 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     
     PointerToCVUniverseArgFunction m_pointer_to_ArgGetRecoValueX;
     PointerToCVUniverseArgFunction m_pointer_to_ArgGetTrueValueX;
-    // PointerToCVUniverseFunction m_pointer_to_RecoIndexX;
-    // PointerToCVUniverseFunction m_pointer_to_TrueIndexX;
 
     PointerToCVUniverseArgFunction m_pointer_to_ArgGetRecoValueY;
     PointerToCVUniverseArgFunction m_pointer_to_ArgGetTrueValueY;
-    // PointerToCVUniverseFunction m_pointer_to_RecoIndexY;
-    // PointerToCVUniverseFunction m_pointer_to_TrueIndexY;
+
+    bool m_dotypes = false;
 
    public:
     bool m_do_argvalue_x = false;
@@ -140,6 +138,10 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             m_pointer_to_ArgGetRecoValueY = y.GetPointerToArgRecoFunction();
             m_pointer_to_RecoIndex = y.GetPointerToRecoIndexFunction();
         }
+
+        if (x.GetDoTypes() || y.GetDoTypes()) {
+            m_dotypes = true;
+        }
     };
 
     typedef std::map<std::string, std::vector<CVUniverse*>> UniverseMap;
@@ -162,6 +164,16 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     HM2D m_selected_mc_forfit;
     HM2D m_tuned_selected_mc_forfit;
     HM2D m_selected_data_forfit;
+
+    typedef std::map<int, TH2D*> TYPES;
+    typedef std::map<std::string, TYPES> TYPEMAP;
+    TYPEMAP m_types;
+    TYPEMAP m_tuned_types;
+    TYPEMAP m_seltrue_types;
+    TYPEMAP m_tuned_seltrue_types;
+    TYPEMAP m_alltrue_types;
+    TYPEMAP m_tuned_alltrue_types;
+
    private:
     bool m_dofitFill_x = false;
     bool m_dofitFill_y = false;
@@ -178,6 +190,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     std::map<const std::string, bool> hasTruth;
     std::map<const std::string, bool> hasSelectedTruth;
     std::map<const std::string, bool> hasResponse;
+    std::map<const std::string, bool> hasType;
     std::vector<std::string> m_tags;
     std::vector<std::string> m_for;
     std::string m_tunedmc = "both";
@@ -185,7 +198,14 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     inline virtual std::string GetUnits() { return m_units; };
 
     inline virtual void SetUnits(std::string units) { m_units = units; };
+    
+    void SetDoTypes(const bool dotypes) {
+        m_dotypes = dotypes;
+    }
 
+    bool GetDoTypes() {
+        return m_dotypes;
+    }
     //=======================================================================================
     // INITIALIZE ALL HISTOGRAMS
     //=======================================================================================
@@ -226,6 +246,23 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             m_selected_mc_forfit = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), m_fitbinning_x, m_fitbinning_y, m_fitbinning_x, m_fitbinning_y, univs, tags);  // Hist2DWrapper doesn't need nbins for variable binning
             m_selected_mc_forfit.AppendName("reconstructed_simulfit", tags);                                                                                                                       // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
         }
+
+        if (m_dotypes) {
+            for (auto tag : tags) {
+                for (int i = 0; i < 11; i++) {
+                    std::string myname = "h2D___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___reconstructed_types_%d", i);
+
+                    m_types[tag][i] = new TH2D(myname.c_str(), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xrecobins.size() - 1, xrecobins.data(), yrecobins.size() - 1, yrecobins.data());
+                    m_types[tag][i]->SetTitle((GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str());
+                }
+
+                hasType[tag] = true;
+            }
+        } else {
+            for (auto tag : tags) {
+                hasType[tag] = false;
+            }
+        }
     }
 
     template <typename T>
@@ -251,6 +288,21 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
 
         m_selected_mc_truth = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins, ybins, univs, tags);  // Hist2DWrapper doesn't need nbins for variable binning
         m_selected_mc_truth.AppendName("selected_truth", tags);                                                                                                 // patch to conform to CCQENU standardm_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
+        if (m_dotypes) {
+            for (auto tag : tags) {
+                for (int i = 0; i < 11; i++) {
+                    std::string myname = "h2D___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___selected_truth_types_%d", i);
+
+                    m_seltrue_types[tag][i] = new TH2D(myname.c_str(), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins.size() - 1, xbins.data(), ybins.size()-1, ybins.data());
+                    m_seltrue_types[tag][i]->SetTitle((GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str());
+                }
+                hasType[tag] = true;
+            }
+        } else {
+            for (auto tag : tags) {
+                hasType[tag] = false;
+            }
+        }
     }
 
     template <typename T>
@@ -276,6 +328,21 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
 
         m_signal_mc_truth = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins, ybins, univs, tags);
         m_signal_mc_truth.AppendName("all_truth", tags);
+        if (m_dotypes) {
+            for (auto tag : tags) {
+                for (int i = 0; i < 11; i++) {
+                    std::string myname = "h2D___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___all_truth_types_%d", i);
+
+                    m_alltrue_types[tag][i] = new TH2D(myname.c_str(), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins.size() - 1, xbins.data(), ybins.size() - 1, ybins.data());
+                    m_alltrue_types[tag][i]->SetTitle((GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str());
+                }
+                hasType[tag] = true;
+            }
+        } else {
+            for (auto tag : tags) {
+                hasType[tag] = false;
+            }
+        }
     }
 
     template <typename T>
@@ -302,17 +369,24 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
     }
 
     template <typename T>
-    void InitializeTunedMCHistograms2D(T reco_univs, T truth_univs, const std::vector<std::string> tuned_tags, const std::vector<std::string> response_tags) {
+    void InitializeTunedMCHistograms2D(T reco_univs, T truth_univs, const std::vector<std::string> tuned_tags, const std::vector<std::string> response_tags, const std::vector<std::string> selected_truth_tags = {"default"}, const std::vector<std::string> truth_tags = {"default"}) {
+        std::vector<std::string> tmp_seltrue_tags = selected_truth_tags[0] == "default" ? tuned_tags : selected_truth_tags;
+        std::vector<std::string> tmp_alltrue_tags = truth_tags[0] == "default" ? tuned_tags : truth_tags;
         if (m_tunedmc == "untuned") {
             // std::cout << "Variable2DFromConfig Warning: tunedmc is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tuned_tags) {
                 hasTunedMC[tag] = false;
             }
+            for (auto tag : tmp_seltrue_tags) hasTunedMC[tag] = false;
+            for (auto tag : tmp_alltrue_tags) hasTunedMC[tag] = false;
             return;
         }
         for (auto tag : tuned_tags) {
             hasTunedMC[tag] = true;
         }
+        for (auto tag : tmp_seltrue_tags) hasTunedMC[tag] = true;
+        for (auto tag : tmp_alltrue_tags) hasTunedMC[tag] = true;
+
         std::vector<double> xbins = GetBinVecX();
         std::vector<double> ybins = GetBinVecY();
         std::vector<double> xrecobins = GetRecoBinVecX();
@@ -323,14 +397,43 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         if (std::count(m_for.begin(), m_for.end(), "selected_reco") >= 1) {
             m_tuned_selected_mc_reco = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins, ybins, xrecobins, yrecobins, reco_univs, tuned_tags);
             m_tuned_selected_mc_reco.AppendName("reconstructed_tuned", tuned_tags);
+            if (m_dotypes) {
+                for (auto tag : tuned_tags) {
+                    for (int i = 0; i < 11; i++) {
+                        std::string myname = "h2D___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___reconstructed_tuned_types_%d", i);
+                        m_tuned_types[tag][i] = new TH2D(myname.c_str(), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xrecobins.size() - 1, xrecobins.data(), yrecobins.size() - 1, yrecobins.data());
+                        m_tuned_types[tag][i]->SetTitle((GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str());
+                    }
+                }
+            }
         }
         if (std::count(m_for.begin(), m_for.end(), "selected_truth") >= 1) {
-            m_tuned_selected_mc_truth = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins, ybins, reco_univs, tuned_tags);
-            m_tuned_selected_mc_truth.AppendName("selected_truth_tuned", tuned_tags);
+            std::cout << " initializing selected truht tuned hist " << std::endl;
+            m_tuned_selected_mc_truth = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins, ybins, reco_univs, tmp_seltrue_tags);
+            m_tuned_selected_mc_truth.AppendName("selected_truth_tuned", tmp_seltrue_tags);
+            if (m_dotypes) {
+                for (auto tag : tmp_seltrue_tags) {
+                    std::cout << " initializing selected truht tuned type plot " << tag << std::endl;
+                    for (int i = 0; i < 11; i++) {
+                        std::string myname = "h2D___" + tag + "___" + Form("%s", GetName().c_str()) + Form("__selected_truth_tuned_types_%d", i);
+                        m_tuned_seltrue_types[tag][i] = new TH2D(myname.c_str(), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins.size() - 1, xbins.data(), ybins.size() - 1, ybins.data());
+                        m_tuned_seltrue_types[tag][i]->SetTitle((GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str());
+                    }
+                }
+            }
         }
         if (std::count(m_for.begin(), m_for.end(), "truth") >= 1) {
-            m_tuned_signal_mc_truth = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins, ybins, truth_univs, tuned_tags);
-            m_tuned_signal_mc_truth.AppendName("all_truth_tuned", tuned_tags);
+            m_tuned_signal_mc_truth = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins, ybins, truth_univs, truth_tags);
+            m_tuned_signal_mc_truth.AppendName("all_truth_tuned", truth_tags);
+            if (m_dotypes) {
+                for (auto tag : truth_tags) {
+                    for (int i = 0; i < 11; i++) {
+                        std::string myname = "h2D___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___all_truth_tuned_types_%d", i);
+                        m_tuned_alltrue_types[tag][i] = new TH2D(myname.c_str(), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins.size() - 1, xbins.data(), ybins.size() - 1, ybins.data());
+                        m_tuned_alltrue_types[tag][i]->SetTitle((GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str());
+                    }
+                }
+            }
         }
         if (std::count(m_for.begin(), m_for.end(), "response") >= 1) {
             m_tuned_response = RM2D(Form("%s", GetName().c_str()), reco_univs, xrecobins, xbins, yrecobins, ybins, response_tags, "_tuned");
@@ -393,6 +496,27 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
                         m_tuned_selected_mc_forfit.Write(tag);
                         std::cout << " write out tuned selected mc for fit histogram " << m_tuned_selected_mc_forfit.GetHist(tag)->GetName() << std::endl;
                     }
+                }
+            }
+            if (m_dotypes) {
+                std::cout << " write out types hists for " << tag << std::endl;
+                for (auto h : m_types[tag]) {
+                    ((TH2D*)h.second)->Write();
+                }
+                for (auto h : m_tuned_types[tag]) {
+                    ((TH2D*)h.second)->Write();
+                }
+                for (auto h : m_seltrue_types[tag]) {
+                    ((TH2D*)h.second)->Write();
+                }
+                for (auto h : m_tuned_seltrue_types[tag]) {
+                    ((TH2D*)h.second)->Write();
+                }
+                for (auto h : m_alltrue_types[tag]) {
+                    ((TH2D*)h.second)->Write();
+                }
+                for (auto h : m_tuned_alltrue_types[tag]) {
+                    ((TH2D*)h.second)->Write();
                 }
             }
             if (hasSelectedTruth[tag]) {
@@ -659,6 +783,34 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
         }
     }
 
+    void FillType(std::string tag, const int type, const double x_value, const double y_value, const double weight, const double scale = 1.0) {
+        if (!m_dotypes) return;
+
+        if (hasMC[tag] && m_tunedmc != "tuned") {
+            m_types[tag][type]->Fill(x_value, y_value, weight);
+        }
+        if (hasTunedMC[tag] && scale >= 0.) {
+            // std::cout << " tuned fill" << tag << " " << type << " " << value << " " << scale << std::endl;
+            m_tuned_types[tag][type]->Fill(x_value, y_value, weight * scale);
+        }
+    }
+
+    void FillSelectedTrueType(std::string tag, const int type, const double x_value, const double y_value, const double weight, const double scale = 1.0) {
+        if (!m_dotypes) return;
+        if (hasSelectedTruth[tag]) {
+            if (m_tunedmc != "tuned") m_seltrue_types[tag][type]->Fill(x_value, y_value, weight);
+            if (hasTunedMC[tag] && scale >= 0.) m_tuned_seltrue_types[tag][type]->Fill(x_value, y_value, weight * scale);
+        }
+    }
+
+    void FillTrueType(std::string tag, const int type, const double x_value, const double y_value, const double weight, const double scale = 1.0) {
+        if (!m_dotypes) return;
+
+        if (hasTruth[tag]) {
+            if (m_tunedmc != "tuned") m_alltrue_types[tag][type]->Fill(x_value, y_value, weight);
+            if (hasTunedMC[tag] && scale >= 0.) m_tuned_alltrue_types[tag][type]->Fill(x_value, y_value, weight * scale);
+        }
+    }
     // helper to return the actual numeric index corresponding to a universe  ie, allows map from name,index space to pure universe space.
 
     //  inline int UniverseIndex(CVUniverse* univ){
