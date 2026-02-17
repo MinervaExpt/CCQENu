@@ -370,8 +370,13 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
 
     template <typename T>
     void InitializeTunedMCHistograms2D(T reco_univs, T truth_univs, const std::vector<std::string> tuned_tags, const std::vector<std::string> response_tags, const std::vector<std::string> selected_truth_tags = {"default"}, const std::vector<std::string> truth_tags = {"default"}) {
-        std::vector<std::string> tmp_seltrue_tags = selected_truth_tags[0] == "default" ? tuned_tags : selected_truth_tags;
-        std::vector<std::string> tmp_alltrue_tags = truth_tags[0] == "default" ? tuned_tags : truth_tags;
+        std::vector<std::string> tmp_seltrue_tags = {};
+        if (selected_truth_tags.size() != 0)
+            tmp_seltrue_tags = selected_truth_tags[0] == "default" ? tuned_tags : selected_truth_tags;
+        std::vector<std::string> tmp_alltrue_tags = {};
+        if (truth_tags.size() != 0)
+            tmp_alltrue_tags = truth_tags[0] == "default" ? tuned_tags : truth_tags;
+
         if (m_tunedmc == "untuned") {
             // std::cout << "Variable2DFromConfig Warning: tunedmc is disabled for this variable " << GetName() << std::endl;
             for (auto tag : tuned_tags) {
@@ -408,12 +413,10 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             }
         }
         if (std::count(m_for.begin(), m_for.end(), "selected_truth") >= 1) {
-            std::cout << " initializing selected truht tuned hist " << std::endl;
             m_tuned_selected_mc_truth = HM2D(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins, ybins, reco_univs, tmp_seltrue_tags);
             m_tuned_selected_mc_truth.AppendName("selected_truth_tuned", tmp_seltrue_tags);
             if (m_dotypes) {
                 for (auto tag : tmp_seltrue_tags) {
-                    std::cout << " initializing selected truht tuned type plot " << tag << std::endl;
                     for (int i = 0; i < 11; i++) {
                         std::string myname = "h2D___" + tag + "___" + Form("%s", GetName().c_str()) + Form("__selected_truth_tuned_types_%d", i);
                         m_tuned_seltrue_types[tag][i] = new TH2D(myname.c_str(), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins.size() - 1, xbins.data(), ybins.size() - 1, ybins.data());

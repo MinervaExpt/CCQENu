@@ -38,7 +38,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     // typedef PlotUtils::MnvH1D MH1D;
 
     bool m_doresolution;
-    bool m_dotypes;
+    bool m_dotypes = false;
 
     // these bools for filling a hist using NHV's simultaneous fit over several samples using TFractionFitter
     bool m_dofitFill = false; // if variable has this set up (in variable config as "dofitFill")
@@ -559,8 +559,12 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
     template <typename T>
     // void InitializeTunedMCHistograms(T reco_univs, T truth_univs, const std::vector<std::string> tuned_tags, const std::vector<std::string> response_tags) {
     void InitializeTunedMCHistograms(T reco_univs, T truth_univs, const std::vector<std::string> tuned_tags, const std::vector<std::string> response_tags, const std::vector<std::string> selected_truth_tags = {"default"}, const std::vector<std::string> truth_tags = {"default"}) {
-        std::vector<std::string> tmp_seltrue_tags = selected_truth_tags[0] == "default" ? tuned_tags : selected_truth_tags;
-        std::vector<std::string> tmp_alltrue_tags = truth_tags[0] == "default" ? tuned_tags : truth_tags;
+        std::vector<std::string> tmp_seltrue_tags = {};
+        if (selected_truth_tags.size() != 0) 
+            tmp_seltrue_tags = selected_truth_tags[0] == "default" ? tuned_tags : selected_truth_tags;
+        std::vector<std::string> tmp_alltrue_tags = {};
+        if (truth_tags.size() != 0)
+            tmp_alltrue_tags = truth_tags[0] == "default" ? tuned_tags : truth_tags;
 
         if (m_tunedmc == "untuned") {
             // std::cout << "VariableFromConfig Warning: tunedmc is disabled for this variable " << GetName() << std::endl;
@@ -580,19 +584,51 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
 
         std::vector<double> bins = GetBinVec();
         std::vector<double> recobins = GetRecoBinVec();
+        std::string axislabel = (GetName() + ";" + m_xaxis_label + ";counts/bin");
 
         // Check which categories are configured and add a tuned version
         if (std::count(m_for.begin(), m_for.end(), "selected_reco") >= 1) {  // use recobins
             m_tuned_selected_mc_reco = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label).c_str(), GetNRecoBins(), recobins, reco_univs, tuned_tags);
             m_tuned_selected_mc_reco.AppendName("reconstructed_tuned", tuned_tags);
+            if (m_dotypes) {
+                for (auto tag : tuned_tags) {
+                    // for (int i = 0; i < 11; i++) {
+                    for (int i = 0; i < 11; i++) {
+                        std::string myname = "h___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___reconstructed_tuned_types_%d", i);
+                        m_tuned_types[tag][i] = new TH1D(myname.c_str(), axislabel.c_str(), recobins.size() - 1, recobins.data());
+                        m_tuned_types[tag][i]->SetTitle(axislabel.c_str());
+                    }
+                    hasTunedType[tag] = true;
+                }
+            }
         }
         if (std::count(m_for.begin(), m_for.end(), "selected_truth") >= 1) {  // use bins
             m_tuned_selected_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label).c_str(), GetNBins(), bins, reco_univs, tmp_seltrue_tags);
             m_tuned_selected_mc_truth.AppendName("selected_truth_tuned", tmp_seltrue_tags);
+            if (m_dotypes) {
+                for (auto tag : tmp_seltrue_tags) {
+                    for (int i = 0; i < 11; i++) {
+                        std::string myname = "h___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___selected_truth_tuned_types_%d", i);
+                        m_tuned_seltrue_types[tag][i] = new TH1D(myname.c_str(), axislabel.c_str(), bins.size() - 1, bins.data());
+                        m_tuned_seltrue_types[tag][i]->SetTitle(axislabel.c_str());
+                    }
+                    hasTunedType[tag] = true;
+                }
+            }
         }
         if (std::count(m_for.begin(), m_for.end(), "truth") >= 1) {  // use bins
             m_tuned_signal_mc_truth = HM(Form("%s", GetName().c_str()), (GetName() + ";" + m_xaxis_label).c_str(), GetNBins(), bins, truth_univs, tmp_alltrue_tags);
             m_tuned_signal_mc_truth.AppendName("all_truth_tuned", tmp_alltrue_tags);
+            if (m_dotypes) {
+                for (auto tag : tmp_alltrue_tags) {
+                    for (int i = 0; i < 11; i++) {
+                        std::string myname = "h___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___all_truth_tuned_types_%d", i);
+                        m_tuned_alltrue_types[tag][i] = new TH1D(myname.c_str(), axislabel.c_str(), bins.size() - 1, bins.data());
+                        m_tuned_alltrue_types[tag][i]->SetTitle(axislabel.c_str());
+                    }
+                    hasTunedType[tag] = true;
+                }
+            }
         }
 
         if (m_doresolution) {
@@ -607,40 +643,7 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
             m_tuned_selected_mc_forfit.AppendName("reconstructed_simulfit_tuned", tuned_tags);  // patch to conform to CCQENU standard m_selected_mc_truth.AppendName("_truth",tags); // patch to conform to CCQENU standard
             std::cout << " created m_tuned_selected_mc_forfit " << GetName() << std::endl;
         }
-        std::string axislabel = (GetName() + ";" + m_xaxis_label + ";counts/bin");
-        if (m_dotypes) {
-            if (std::count(m_for.begin(), m_for.end(), "selected_reco") >= 1) {  // use recobins
-                for (auto tag : tuned_tags) {
-                    // for (int i = 0; i < 11; i++) {
-                    for (int i = 0; i < 11; i++) {
-                        std::string myname = "h___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___reconstructed_tuned_types_%d", i);
-                        m_tuned_types[tag][i] = new TH1D(myname.c_str(), axislabel.c_str(), recobins.size() - 1, recobins.data());
-                        m_tuned_types[tag][i]->SetTitle(axislabel.c_str());
-                    }
-                    hasTunedType[tag] = true;
-                }
-            } 
-            if (std::count(m_for.begin(), m_for.end(), "selected_truth") >= 1) {  // use bins
-                for (auto tag : tmp_seltrue_tags) {
-                    for (int i = 0; i < 11; i++) {
-                        std::string myname = "h___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___selected_truth_tuned_types_%d", i);
-                        m_tuned_seltrue_types[tag][i] = new TH1D(myname.c_str(), axislabel.c_str(), bins.size() - 1, bins.data());
-                        m_tuned_seltrue_types[tag][i]->SetTitle(axislabel.c_str());
-                    }
-                    hasTunedType[tag] = true;
-                }
-            }
-            if (std::count(m_for.begin(), m_for.end(), "truth") >= 1) {  // use bins
-                for (auto tag : tmp_alltrue_tags) {
-                    for (int i = 0; i < 11; i++) {
-                        std::string myname = "h___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___all_truth_tuned_types_%d", i);
-                        m_tuned_alltrue_types[tag][i] = new TH1D(myname.c_str(), axislabel.c_str(), bins.size() - 1, bins.data());
-                        m_tuned_alltrue_types[tag][i]->SetTitle(axislabel.c_str());
-                    }
-                    hasTunedType[tag] = true;
-                }
-            }
-        } else {
+        if (!m_dotypes) {
             for (auto tag : tuned_tags) {
                 hasTunedType[tag] = false;
             }
