@@ -1,0 +1,141 @@
+{
+  "version": 15,
+  "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
+  "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_sigonly.json",
+  "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
+  "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
+  "outRoot": "LowPtHighEavailTest_500MeVrecoil100mmcut_${MYPLAYLIST}_${MYMODEL}",
+  "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals.root",
+  "prescale": 999,
+  "playlist": "minervame6B",
+  "MinervaModel": "${MYMODEL}",
+  "modeltuneFile": "${CCQEMAT}/nhv/config/modeltunes/${MYMODEL}.json",
+  "recoName": "MasterAnaDev",
+  "tunedmc": "both",
+  "warpedmc": "none",
+  "closure": 0,
+  "TuneCategories": [
+    "qelike",
+    "chargedpion",
+    "neutralpion"
+  ],
+  "DoResolution": false,
+  "DoTypes": true,
+  "pdg": -14,
+  "mcRecoToCSV": true,
+  "statusbar": false,
+  "runsamples": [
+    "QElike"//,
+    // "QElike_old"
+    // "QElike_maxrecoil"//,
+    // "QElike_maxrecoil_hiEAvail",
+    // "QElike_hiEAvail"
+    // "QElikeNeut"
+    // "QElike_0blob",
+    // "QElike_1blob"
+    // "QElikeNeutrons"//,
+    // "TrackSideband",
+    // "LoPionThetaSideband",
+    // "HiPionThetaSideband"//,
+    // "BlobSideband"//,
+    // "MultipBlobSideband"
+  ], 
+  "AnalyzeVariables": [
+    "EAvail",
+    "ptmu"
+    // "ERemoved",
+    // "EAvailTotalResidual",
+    // // "ERemovedFromTruthBlobs",
+    // "EAvail",
+    // // "ptmu",
+    // // "pzmu"
+    // // "EAvailFromTruthBlobs",
+    // "ERemovedEAvailRatio",
+    // "ERemovedRecoilRatio",
+    // "EExcessERemovedRatio",
+    // "EExcess",
+    // "VisEMissing",
+    // "InvisEMissing",
+    // "VisResidual"
+  ],
+  "Analyze2DVariables": [],
+    // "EAvail_EAvailTotalResidual",
+    // "EAvailTrueAsReco_EAvailTotalResidual",
+    // "EAvail_ERemovedEAvailRatio",
+    // // "recoil_ERemovedRecoilRatio",
+    // // "EAvail_EExcessERemovedRatio",
+    // // "ERemoved_EExcessERemovedRatio",
+    // "EAvail_VisResidual",
+    // "EAvailTrueAsReco_VisResidual",
+    // // "VisResidual_InvisEMissing",
+    // // "EExcess_VisEMissing",
+    // // "EExcess_InvisEMissing",
+    // "EAvail_EExcess",
+    // "EAvailTrueAsReco_EExcess",
+    // "EAvail_VisEMissing",
+    // "EAvailTrueAsReco_VisEMissing",
+    // "EAvail_InvisEMissing",
+    // "EAvailTrueAsReco_InvisEMissing" //,
+    // // "EAvail_ptmu",
+    // // "EAvail_pzmu",
+    // // "pzmu_ptmu"
+  // ],
+  //   "EAvail_ERemoved",
+  //   "EAvail_ERemovedFromTruthBlobs",
+  //   "EAvail_recoil",
+  //   "recoil_ERemoved",
+  //   "recoil_ERemovedFromTruthBlobs",
+  //   "EAvail_EAvailFromTruthBlobs",
+  //   "recoil_EExcess",
+  //   "recoil_VisEMissing",
+  //   "recoil_InvisEMissing"
+  // ],
+  "AnalyzeHyperDVariables": [],
+  "signal": {
+    "QElike": "qelike",
+    "QElike_old": "qelike_old" //,
+  }, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
+  "background": {
+    "QElike": [
+      "qelikenot",
+      "chargedpion",
+      "neutralpion",
+      "other"
+    ],
+    "QElike_old": [
+      "qelikenot_old",
+      "chargedpion",
+      "neutralpion",
+      "other_old"
+    ]//,
+  },
+  "data": {
+    "QElike": "data",
+    "QElike_old": "data" //,
+  }, 
+  "responseSystematicsVersion": "2024",
+  "systematics": [
+    "Flux"//,
+    // "MuonMINOS",
+    // "MuonResolution",
+    // "MINOSEfficiency",
+    // "Angle",
+    // "GENIE",
+    // "GenieRvx1pi",
+    // "RPA",
+    // "2p2h",
+    // "MuonMinerva",
+    // "geant4",
+    // "response",
+    // "LowQ2Pi"//,
+    // "MoNANeutronInelastic"
+  ],
+  "fluxUniverses": 2, //100, //10,
+  "NuEConstraint":1, 
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1//,
+  //"RPAMaterials":0 
+}

@@ -150,6 +150,17 @@ void LoopAndFillEventSelection(std::string tag,
         // csvFile << ";Arachne" << std::endl;
         csvFile << std::endl;
     }
+    if (data_mc_truth == kData && mc_reco_to_csv) {
+        std::string csvFileName = "data_reco_entries_" + sample + "_" + cat + ".csv";
+        csvFile.open(csvFileName);
+        csvFile << "Entry";
+        for (auto v : variables) {
+            if (v->hasData[tag]) csvFile << ";" << v->GetName();
+        }
+        csvFile << ";run;subrun;gate;slice";
+        // csvFile << ";Arachne" << std::endl;
+        csvFile << std::endl;
+    }
 
     // status bar stuff
     double bar_progress = 0.;   // how many chars has the bar progressed
@@ -272,7 +283,7 @@ void LoopAndFillEventSelection(std::string tag,
                             csvFile << ";" << universe->GetInt("mc_run");
                             csvFile << ";" << universe->GetInt("mc_subrun");
                             csvFile << ";" << universe->GetInt("mc_nthEvtInFile") + 1;
-                            csvFile << ";" << universe->GetVecElem("slice_numbers", 0);
+                            csvFile << ";" << universe->GetVecElem("slice_numbers", 0) << std::endl;;
                             // csvFile << ";" << universe->StringTrueArachneLink() << std::endl;
                         }
                         // Done Sending MC Reco value to CSV
@@ -304,6 +315,32 @@ void LoopAndFillEventSelection(std::string tag,
                     if (selection.isDataSelected(*universe, event).all()) {
                         universe->SetNeutEvent(false);
                         FillData(tag, universe, variables, variables2D, variablesHD);
+                        if (mc_reco_to_csv && universe->ShortName() == "cv") {
+                            csvFile << i;
+                            for (auto v : variables) {
+                                if (v->hasData[tag]) {
+                                    if (!v->m_do_argvalue) {
+                                        csvFile << ";" << v->GetRecoValue(*universe);
+                                        continue;
+                                    }
+                                    std::vector<double> fill_vals = v->GetArgRecoValue(*universe, v->GetRecoIndex(*universe));
+                                    csvFile << ";{";
+                                    for (int i = 0; i < fill_vals.size(); i++) {
+                                        csvFile << fill_vals[i];
+                                        if (i == fill_vals.size() - 1) {
+                                            csvFile << "};";
+                                            break;
+                                        }
+                                        csvFile << ",";
+                                    }
+                                }
+                            }
+                            csvFile << ";" << universe->GetInt("ev_run");
+                            csvFile << ";" << universe->GetInt("ev_subrun");
+                            csvFile << ";" << universe->GetInt("ev_gate");
+                            csvFile << ";" << universe->GetVecElem("slice_numbers", 0) << std::endl;
+                            // csvFile << ";" << universe->StringTrueArachneLink() << std::endl;
+                        }
                     }
                 }
                 universe->ResetNeutEvent();
@@ -315,6 +352,13 @@ void LoopAndFillEventSelection(std::string tag,
         std::string csvFileName = "mc_reco_entries_" + sample + "_" + cat + ".csv";
         std::cout << std::endl;
         std::cout << "MC Reco events for " << sample << " category " << cat << " saved to " << csvFileName;
+        std::cout << std::endl;
+    }
+    if (data_mc_truth == kData && mc_reco_to_csv) {
+        csvFile.close();
+        std::string csvFileName = "data_reco_entries_" + sample + "_" + cat + ".csv";
+        std::cout << std::endl;
+        std::cout << "Data events for " << sample << " category " << cat << " saved to " << csvFileName;
         std::cout << std::endl;
     }
 }
