@@ -656,7 +656,9 @@ int main(const int argc, const char* argv[]) {
     std::cout << " end of 2D loop" << std::endl;
     canvas2D.Print(pdfend2D.c_str(), "pdf");
     // Close pdf for 2D plots.
-
+    std::cout << " printed 1D to " << pdffilename1D << std::endl;
+    std::cout << " printed 2D to " << pdffilename2D << std::endl;
+    std::cout << " wrote hists to " << outroot << std::endl;
     o->Close();
     exit(0);
 }

@@ -320,7 +320,7 @@ template std::vector<MnvH2D*> DoRatioUnfolding<MnvH2D>(std::string basename, Mnv
 
 // Dummy template. Do not use.
 template <class MnvHistoType>
-MnvHistoType* DoResponseUnfolding(std::string basename, MnvH2D* iresponse, MnvHistoType* imcsighist, MnvHistoType* iseltruhist, MnvHistoType* bkgsub, MnvHistoType* idatahist, MinervaUnfold::MnvUnfold unfold, double num_iter) {
+MnvHistoType* DoResponseUnfolding(std::string basename, MnvH2D* iresponse, MnvHistoType* imcsighist, MnvHistoType* iseltruhist, MnvHistoType* bkgsub, MnvHistoType* idatahist, MinervaUnfold::MnvUnfold unfold, double num_iter, double max_num_iter = -1) {
     std::string unsmearedname = std::string(bkgsub->GetName()) + "_notunfolded";
     MnvHistoType* unsmeared = (MnvHistoType*)idatahist->Clone(unsmearedname.c_str());
     unsmeared->SetDirectory(0);
@@ -331,7 +331,7 @@ MnvHistoType* DoResponseUnfolding(std::string basename, MnvH2D* iresponse, MnvHi
 
 // 1D
 template <>
-MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* iresponse, MnvH1D* imcsighist, MnvH1D* iseltruhist, MnvH1D* bkgsub, MnvH1D* idatahist, MinervaUnfold::MnvUnfold unfold, double num_iter) {
+MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* iresponse, MnvH1D* imcsighist, MnvH1D* iseltruhist, MnvH1D* bkgsub, MnvH1D* idatahist, MinervaUnfold::MnvUnfold unfold, double num_iter, double max_num_iter) {
     MnvH2D* migration = (MnvH2D*)iresponse->Clone();
     if (migration == 0) {
         std::cout << " no migration, stop here for " << basename << std::endl;
@@ -342,8 +342,8 @@ MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* iresponse, Mnv
     SyncBands(migration);
     // you can't put the cv in as the unfolding code does not expect it.
     migration->PopVertErrorBand("cv");
-
     std::string unsmearedname = std::string(bkgsub->GetName()) + "_unfolded";
+    if (num_iter != max_num_iter) unsmearedname += ("iter" + std::to_string(int(num_iter))).c_str();
     MnvH1D* unsmeared;  // = (MnvH1D*)iseltruhist->Clone(unsmearedname.c_str());
                         // make an unsmeared without error bands so that the unfolding can add them
     unsmeared = new MnvH1D(*dynamic_cast<const TH1D*>((iseltruhist)->Clone(unsmearedname.c_str())));
@@ -381,7 +381,7 @@ MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* iresponse, Mnv
 template <>
 MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* iresponse,
                                     MnvH2D* imcsighist, MnvH2D* iseltruhist, MnvH2D* bkgsub, MnvH2D* idatahist,
-                                    MinervaUnfold::MnvUnfold unfold, double num_iter) {
+                                    MinervaUnfold::MnvUnfold unfold, double num_iter, double max_num_iter) {
     MnvH2D* migration = (MnvH2D*)iresponse->Clone();
     if (migration == 0) {
         std::cout << " no migration, stop here for " << basename << std::endl;
@@ -395,7 +395,7 @@ MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* iresponse,
     // std::cout << " Data has  size " << bkgsub->GetErrorBandNames().size() << std::endl;
 
     std::string unsmearedname = std::string(bkgsub->GetName()) + "_unfolded";
-    // HMS MnvH2D* unsmeared = (MnvH2D*)idatahist->Clone(unsmearedname.c_str());
+    if (num_iter != max_num_iter) unsmearedname += ("iter" + std::to_string(int(num_iter))).c_str();
     MnvH2D* unsmeared = (MnvH2D*)iseltruhist->Clone(unsmearedname.c_str());
     unsmeared->SetDirectory(0);
     bkgsub->Print();
@@ -476,9 +476,12 @@ std::vector<MnvHistoType*> DoUnfolding(std::string basename, MnvH2D* iresponse,
         std::cout << " use response unfolding for " << basename << std::endl;
         // Output is a vector of size one < (unsmeared variable hist) >
         std::vector<MnvHistoType*> unsmearedVec;
-        MnvHistoType* unsmeared = DoResponseUnfolding(basename, iresponse, imcsighist, iseltruhist, bkgsub, idatahist, unfold, num_iter);
-        SyncBands(unsmeared);
-        unsmearedVec.push_back(unsmeared);
+        for (int i = 1; i < num_iter + 1; i++){
+            std::cout << " unfolding iteration " << std::to_string(i) << std::endl;
+            MnvHistoType* unsmeared = DoResponseUnfolding(basename, iresponse, imcsighist, iseltruhist, bkgsub, idatahist, unfold, double(i), num_iter);
+            SyncBands(unsmeared);
+            unsmearedVec.push_back(unsmeared);
+        }
 
         return unsmearedVec;
     }
@@ -1120,12 +1123,19 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     }
     if (unsmearedVec.size() > 0) {
         // Output for Bayesian unfolding, does not include the "unsmearing"
-        unsmeared = unsmearedVec[0];
+        // unsmeared = unsmearedVec[0];
+        // if (DEBUG) unsmeared->Print();
+        // unsmeared->Write();
+        // PlotCVAndError(canvas, bkgsub, unsmeared, stuned + sample + "_" + "Data Before and After Unsmearing", true, logscale, binwid);
+        unsmeared = unsmearedVec.back();
         if (DEBUG) unsmeared->Print();
-        unsmeared->Write();
-        PlotCVAndError(canvas, bkgsub, unsmeared, stuned + sample + "_" + "Data Before and After Unsmearing", true, logscale, binwid);
+        for (int i = 0; i < unsmearedVec.size(); i++) {
+            if (DEBUG) unsmearedVec[i]->Print();
+            unsmearedVec[i]->Write();
+            PlotCVAndError(canvas, bkgsub, unsmearedVec[i], (stuned + sample + "_" + "Data Before and After Unsmearing" +"_iter" + std::to_string(i+1)).c_str(), true, logscale, binwid);
+        }
     }
-    if (unsmearedVec.size() == 2) {
+    if (unsmearedVec.size() == 2 && iresponse == 0) {
         // Output for crude ratio unfolding, DOES include "unsmearing" hist, so this picks that up
         MnvHistoType* unsmearing = unsmearedVec[1];
         if (DEBUG) unsmearing->Print();

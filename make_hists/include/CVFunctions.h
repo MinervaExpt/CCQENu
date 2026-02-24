@@ -119,17 +119,20 @@ class CVFunctions {
         recofunctions["ERemovedGeV"] = &CVUNIVERSE::GetERemovedGeV;
         recofunctions["ERemovedFromTruthBlobsGeV"] = &CVUNIVERSE::GetERemovedFromTruthBlobsGeV;
         recofunctions["ERemovedEAvailRatio"] = &CVUNIVERSE::GetERemovedEAvailRatio;
+        truefunctions["TrueERemovedRecoilRatio"] = &CVUNIVERSE::GetTrueERemovedEAvailRatio;
         recofunctions["ERemovedRecoilRatio"] = &CVUNIVERSE::GetERemovedRecoilRatio;
         recofunctions["EExcessGeV"] = &CVUNIVERSE::GetEExcessGeV;
         recofunctions["EExcessERemovedRatio"] = &CVUNIVERSE::GetEExcessERemovedRatio;
         recofunctions["VisEMissingGeV"] = &CVUNIVERSE::GetVisEMissingGeV;
         recofunctions["VisResidualGeV"] = &CVUNIVERSE::GetVisResidualGeV;
         recofunctions["InvisEMissingGeV"] = &CVUNIVERSE::GetInvisEMissingGeV;
+        recofunctions["EAvailTotalResidualGeV"] = &CVUNIVERSE::GetEAvailTotalResidualGeV;
         recofunctions["EAvailFromTruthBlobsGeV"] = &CVUNIVERSE::GetEAvailFromTruthBlobsGeV;
 
         recofunctions["EAvailNoNonVtxBlobsGeV"] = &CVUNIVERSE::GetEAvailNoNonVtxBlobsGeV;
 
         truefunctions["TrueEAvailGeV"] = &CVUNIVERSE::GetTrueEAvailGeV;
+        recofunctions["TrueEAvailGeV"] = &CVUNIVERSE::GetTrueEAvailGeV;
         truefunctions["TrueEAvailWithNeutronsGeV"] = &CVUNIVERSE::GetTrueEAvailWithNeutronsGeV;
         truefunctions["TrueEAvailWiggledGeV"] = &CVUNIVERSE::GetTrueEAvailWiggledGeV;
 

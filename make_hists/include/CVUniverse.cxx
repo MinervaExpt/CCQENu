@@ -1364,9 +1364,15 @@ double CVUniverse::GetERemovedFromTruthBlobsGeV() const {
 }
 
 double CVUniverse::GetERemovedEAvailRatio() const {
-    if (CVUniverse::GetEAvailGeV() == 0) return 100000.;
+    if (CVUniverse::GetEAvailGeV() == 0) return -1;
     // if (CVUniverse::GetERemovedGeV() == 0) return 0.0;
     return CVUniverse::GetERemovedGeV() / CVUniverse::GetEAvailGeV();
+}
+
+double CVUniverse::GetTrueERemovedEAvailRatio() const {
+    if (CVUniverse::GetTrueEAvailGeV() == 0) return -1;
+    // if (CVUniverse::GetERemovedGeV() == 0) return 0.0;
+    return CVUniverse::GetERemovedGeV() / CVUniverse::GetTrueEAvailGeV();
 }
 
 double CVUniverse::GetERemovedRecoilRatio() const {
@@ -1479,6 +1485,10 @@ double CVUniverse::GetInvisEMissingGeV() const {
     // This requires true level info from MC
 
     return GetTrueEAvailGeV() - GetEAvailFromTruthBlobsGeV();
+}
+
+double CVUniverse::GetEAvailTotalResidualGeV() const {
+    return CVUniverse::GetVisResidualGeV() - CVUniverse::GetInvisEMissingGeV();
 }
 
 double CVUniverse::GetEAvailFromBlobsGeV() const {

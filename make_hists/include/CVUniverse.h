@@ -271,6 +271,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetERemovedEAvailRatio() const;
 
+    virtual double GetTrueERemovedEAvailRatio() const;
+
     virtual double GetERemovedRecoilRatio() const;
 
     virtual double GetEExcessGeV() const;
@@ -284,6 +286,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetEAvailFromTruthBlobsGeV() const;
 
     virtual double GetInvisEMissingGeV() const;
+
+    virtual double GetEAvailTotalResidualGeV() const;
 
     virtual double GetEAvailFromBlobsGeV() const;
 
