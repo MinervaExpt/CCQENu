@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_sigonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "Winter26Collab_fullsyst_extract_500MeVRecoil100mmcut_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "Winter26Collab_fullsyst_extract_types_500MeVRecoil100mm_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -23,7 +23,7 @@
     "neutralpion"
   ],
   "DoResolution": false,
-  "DoTypes": false,
+  "DoTypes": true,
   "pdg": -14,
   "mcRecoToCSV": false,
   "statusbar": false,
@@ -46,21 +46,24 @@
   "AnalyzeVariables": [
     "EAvail",
     // "EAvailoldbins",
-    "EAvailoldbinscutoff",
+    // "EAvailoldbinscutoff",
     // "NNeutCands",
     // "TotalNeutBlobE",
     // "EAvail_nohi",
     // "EAvailNoNonVtxBlobs",
     // "EAvailWithNeutrons",
     // "CalibEAvailWithNeutrons",
-    "recoil",
-    "ptmu"
+    // "recoil",
+    "ptmu",
+    "pzmu"
   ],
   "Analyze2DVariables": [
-    "recoil_ptmu",
+    // "recoil_ptmu",
     "EAvail_ptmu",
+    "EAvail_pzmu",
+    "pzmu_ptmu"
     // "EAvailoldbins_ptmu",
-    "EAvailoldbinscutoff_ptmu"
+    // "EAvailoldbinscutoff_ptmu"
   //   "EAvailNoNonVtxBlobs_ptmu"
   ], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
