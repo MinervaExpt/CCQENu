@@ -1679,6 +1679,21 @@
       // ],
       "fluxnorm": false
     },
+    "recoil100mm": {
+      // "dofitFill": true,
+      "reco": "RecoilEnergy100mmGeV",
+      "true": "TrueEAvailGeV",
+      "name": "recoil100",
+      "title": "Recoil_{100mm} (GeV)",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 1.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ],
+      "fluxnorm": false
+    },
     "recoil_nohi": {
       // "dofitFill": true,
       "reco": "RecoilEnergyGeV",
