@@ -13,7 +13,6 @@
 export MYSAMPLE=QElike
 export MYWARP=none
 
-
 export MYMODEL=MnvTunev4.3.1
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/February2026/xsec/fixed_recoil100mm500MeVcut_100flux/${MYMODEL} \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract \
