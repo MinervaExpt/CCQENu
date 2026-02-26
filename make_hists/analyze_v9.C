@@ -89,13 +89,21 @@ int main(const int argc, const char* argv[]) {
         inputname = std::string(argv[1]);
         f = TFile::Open(inputname.c_str(), "READONLY");
         // f->ls();
-
-        allconfigs["main"] = new NuConfig(std::string(f->Get("main")->GetTitle()));
-        allconfigs["varsFile"] = new NuConfig(std::string(f->Get("varsFile")->GetTitle()));
-        allconfigs["cutsFile"] = new NuConfig(std::string(f->Get("cutsFile")->GetTitle()));
-        allconfigs["samplesFile"] = new NuConfig(std::string(f->Get("samplesFile")->GetTitle()));
-        allconfigs["paramsFile"] = new NuConfig(std::string(f->Get("paramsFile")->GetTitle()));
-        allconfigs["modeltuneFile"] = new NuConfig(std::string(f->Get("modeltuneFile")->GetTitle()));
+        if (!f->GetKey("main")) {
+            allconfigs["main"] = new NuConfig(std::string(f->Get("main_5A")->GetTitle()));
+            allconfigs["varsFile"] = new NuConfig(std::string(f->Get("varsFile_5A")->GetTitle()));
+            allconfigs["cutsFile"] = new NuConfig(std::string(f->Get("cutsFile_5A")->GetTitle()));
+            allconfigs["samplesFile"] = new NuConfig(std::string(f->Get("samplesFile_5A")->GetTitle()));
+            allconfigs["paramsFile"] = new NuConfig(std::string(f->Get("paramsFile_5A")->GetTitle()));
+            allconfigs["modeltuneFile"] = new NuConfig(std::string(f->Get("modeltuneFile_5A")->GetTitle()));
+        } else {
+            allconfigs["main"] = new NuConfig(std::string(f->Get("main")->GetTitle()));
+            allconfigs["varsFile"] = new NuConfig(std::string(f->Get("varsFile")->GetTitle()));
+            allconfigs["cutsFile"] = new NuConfig(std::string(f->Get("cutsFile")->GetTitle()));
+            allconfigs["samplesFile"] = new NuConfig(std::string(f->Get("samplesFile")->GetTitle()));
+            allconfigs["paramsFile"] = new NuConfig(std::string(f->Get("paramsFile")->GetTitle()));
+            allconfigs["modeltuneFile"] = new NuConfig(std::string(f->Get("modeltuneFile")->GetTitle()));
+        }
 
         singlesample = 0;
         // see if the root file has already had fits done - these will be used in the cross section fit.
@@ -222,18 +230,19 @@ int main(const int argc, const char* argv[]) {
     double dataPOT = 1.;
     double mcPOTprescaled = 1.;
     double POTScale = -1.;
+    TH1D* h_pot;
     if (!f->GetKey("Combined_POT_Summary")) {
-        TH1D* h_pot = (TH1D*)f->Get("POT_summary");
+        h_pot = (TH1D*)f->Get("POT_summary");
         h_pot->Print("ALL");
         dataPOT = h_pot->GetBinContent(1);
         mcPOTprescaled = h_pot->GetBinContent(3);
         POTScale = dataPOT / mcPOTprescaled;
-        delete h_pot;
+        // delete h_pot;
     } else {
-        TH1D* h_pot = (TH1D*)f->Get("Combined_POT_Summary");
+        h_pot = (TH1D*)f->Get("Combined_POT_Summary");
         h_pot->Print("ALL");
         dataPOT = h_pot->GetBinContent(1);
-        delete h_pot;
+        // delete h_pot;
     }
 
     double norm = 1. / dataPOT / targets;
@@ -460,6 +469,7 @@ int main(const int argc, const char* argv[]) {
         pdfname = outname;
     }
     TFile* o = TFile::Open(outroot.c_str(), "RECREATE");
+    h_pot->Write();
     targetobj.Write();
     h_flux_dewidthed->Write();
     std::string pdffilename1D = pdfname + "_1D.pdf";
@@ -545,6 +555,8 @@ int main(const int argc, const char* argv[]) {
             if (singlesample) {
                 basename = "h_" + variable;
             }
+            if (variable == "ptmu" || variable == "pzmu") num_iter = 4;
+            if (variable == "EAvail") num_iter = 10;
             std::cout << "basename is " << basename << std::endl;
             int exit = GetCrossSection(sample, variable, basename,
                                        hists1D[sample][variable], response1D[sample][variable], type_hists1D[sample][variable],
@@ -645,6 +657,9 @@ int main(const int argc, const char* argv[]) {
             if (singlesample) {
                 basename = "h_" + variable;
             }
+            if (variable == "EAvail_ptmu") num_iter = 10;
+            if (variable == "pzmu_ptmu") num_iter = 6;
+
             int exit = GetCrossSection(sample, variable, basename,
                                        hists2D[sample][variable], response2D[sample][variable], type_hists2D[sample][variable],
                                        allconfigs, canvas2D, norm, POTScale, h_flux_dewidthed, unfold, num_iter,

@@ -4,10 +4,10 @@
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_sigonly.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "Winter26Collab_fullsyst_extract_types_500MeVRecoil100mm_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "Winter26Collab_fullsyst_100flux_extract_types_500MeVRecoil100mm_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -54,14 +54,14 @@
     // "EAvailWithNeutrons",
     // "CalibEAvailWithNeutrons",
     // "recoil",
-    "ptmu",
-    "pzmu"
+    "ptmu"//,
+    // "pzmu"
   ],
   "Analyze2DVariables": [
     // "recoil_ptmu",
     "EAvail_ptmu",
-    "EAvail_pzmu",
-    "pzmu_ptmu"
+    "EAvail_pzmu"//,
+    // "pzmu_ptmu"
     // "EAvailoldbins_ptmu",
     // "EAvailoldbinscutoff_ptmu"
   //   "EAvailNoNonVtxBlobs_ptmu"
@@ -105,7 +105,7 @@
     "response",
     "LowQ2Pi"
   ],
-  "fluxUniverses": 200, //100, //10,
+  "fluxUniverses": 100, //100, //10,
   "NuEConstraint": 1,
   "Geant4NeutronCV": 1,
   "Geant4Elastics": 1 //,

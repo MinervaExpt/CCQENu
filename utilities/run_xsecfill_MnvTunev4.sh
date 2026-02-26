@@ -15,7 +15,7 @@ export MYWARP=none
 
 
 export MYMODEL=MnvTunev4.3.1
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/February2026/xsec/recoil100mm500MeVcut_200flux/${MYMODEL} \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/February2026/xsec/fixed_recoil100mm500MeVcut_100flux/${MYMODEL} \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=36h --memory=6000   --sample=${MYSAMPLE} #--debug --notimestamp

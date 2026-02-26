@@ -418,7 +418,7 @@ class Variable2DFromConfig : public PlotUtils::Variable2DBase<CVUniverse> {
             if (m_dotypes) {
                 for (auto tag : tmp_seltrue_tags) {
                     for (int i = 0; i < 11; i++) {
-                        std::string myname = "h2D___" + tag + "___" + Form("%s", GetName().c_str()) + Form("__selected_truth_tuned_types_%d", i);
+                        std::string myname = "h2D___" + tag + "___" + Form("%s", GetName().c_str()) + Form("___selected_truth_tuned_types_%d", i);
                         m_tuned_seltrue_types[tag][i] = new TH2D(myname.c_str(), (GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str(), xbins.size() - 1, xbins.data(), ybins.size() - 1, ybins.data());
                         m_tuned_seltrue_types[tag][i]->SetTitle((GetName() + ";" + m_xaxis_label + ";" + m_yaxis_label).c_str());
                     }
