@@ -1,5 +1,5 @@
 {
-  "version":17, // turn off tunes, add flux
+  "version":18, // turn off tunes, add flux
    // Run major variables in batch, use v16 of cuts, add closure
   "mcIn":"${CCQEMAT}/playlists/${DATALOC}_p6/${MYPLAYLIST}_MC.txt",
   "dataIn":"${CCQEMAT}/playlists/${DATALOC}_p6/${MYPLAYLIST}_Data.txt", // hack for type plot of resolution
@@ -13,7 +13,7 @@
   "scalefileIn":"${CCQEMAT}/data/FullSample_${MYMODEL}_Q2QErecoil.root", // location of anti-nu background tuning
   "TuneCategories":["qelike","qelikenot"], // categories that have tunes
   "pdg":-14, // I'm anti-neutrino
-  "cutsFile":"${CCQEMAT}/AntiNuExample/AntiNuCuts_v17.json", // describe the cuts, choose them in samples
+  "cutsFile":"${CCQEMAT}/AntiNuExample/AntiNuCuts_v18.json", // describe the cuts, choose them in samples
   "varsFile":"${CCQEMAT}/AntiNuExample/Variables_v16.json", // describe the variables, choose them below
   "samplesFile":"${CCQEMAT}/AntiNuExample/AntiNuSamples_v16.json",  // describe the samples, cuts are chosen here
   "runsamples":["${MYSAMPLE}"], // chose which samples to run can provide a list or chose 1 using the batch
@@ -31,16 +31,30 @@
     "MuonResolution",
     "MINOSEfficiency",
     "Angle",
-    "GENIE",
-    "Flux",
-    "GenieRvx1pi",
-    "RPA",
-    "2p2h",
-    "MuonMinerva",
-    "geant4",
-    "response"
+    // "GENIE",
+    // "GenieRvx1pi",
+    // "RPA",
+    // "2p2h",
+    // "MuonMinerva",
+    // "geant4",
+     "response"
   ],
-  "fluxUniverses": 10, // # of flux universes set low to run fast!
+  // "systematics": [
+  //   "Flux",
+  //   "MuonMINOS",
+  //   "MuonResolution",
+  //   "MINOSEfficiency",
+  //   "Angle",
+  //   "GENIE",
+  //   "Flux",
+  //   "GenieRvx1pi",
+  //   "RPA",
+  //   "2p2h",
+  //   "MuonMinerva",
+  //   "geant4",
+  //   "response"
+  // ],
+  "fluxUniverses": 2, // # of flux universes set low to run fast!
   "NuEConstraint": 1, // apply constraints to flux
   "Geant4NeutronCV": 1, // set true by default docdb 28556
   "Geant4Elastics": 1 // set to true by default

@@ -199,7 +199,7 @@ int main(int argc, char* argv[]) {
     // read in the data and parse it
     
     TFile* inputFile = TFile::Open(inputFileName.c_str(),"READ");
-    TFile* outputfile = TFile::Open(outputFileName.c_str(),"RECREATE");
+    TFile* outputfile = TFile::Open((varName+"_"+outputFileName).c_str(),"RECREATE");
     //loop on all entries of this directory
     
     

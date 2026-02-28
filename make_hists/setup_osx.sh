@@ -19,4 +19,4 @@ export MYPLAYLIST=minervame5A
 export PRESCALE=100
 export DATALOC=local
 export MYMODEL=MnvTunev2
-export MYSAMPLE=Multiplicity1
+export MYSAMPLE=QElike

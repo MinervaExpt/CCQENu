@@ -1,4 +1,4 @@
-{ "Comments":["mod for public data","v9 taken from Sean 2022-05-28"],
+{ "Comments":["mod for public data 2026","v9 taken from Sean 2022-05-28"],
   "version":10,  
   "mcIn":"./playlists/${DATALOC}_public/Short_MediumEnergy_FHC_StandardMC_Playlist${MYPLAYLIST}.txt",
   "dataIn":"./playlists/${DATALOC}_public/Short_MediumEnergy_FHC_Data_Playlist${MYPLAYLIST}.txt",
@@ -28,9 +28,11 @@
           "MichelSideBand":"data",
           "BlobSideBand":"data",
           "MicBlobSideBand":"data"},
+  "responseSystematicsVersion": "2024",
   //"systematics":["GENIE","Flux","GenieRvx1pi","RPA","2p2h","MuonMinerva",
   //               "MuonMINOS","MuonResolution","MINOSEfficiency","Angle"],
-  "systematics":["RPA","2p2h","MuonMinerva", "MuonMINOS","MuonResolution","MINOSEfficiency","Angle"],
+
+  "systematics":["RPA","2p2h","MuonMinerva", "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","response"],
   "fluxUniverses":2,
   "NuEConstraint":1,
   "DeuteriumGeniePiTune":1, // set to true?

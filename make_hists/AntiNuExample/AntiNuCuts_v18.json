@@ -141,7 +141,7 @@
         "name": "Has MINOS Match",
         "equals": 1,
         "variable": "IsMinosMatchTrack"
-      }, // -1 for some reason
+      }, 
       {
         "name": "NuHelicity",
         "equals": 2,
