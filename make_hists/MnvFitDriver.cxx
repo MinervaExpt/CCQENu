@@ -169,6 +169,8 @@ int main(int argc, char* argv[]) {
     std::string inputFileName=config.GetString("InputFile");
     std::string outputFileName = config.GetString("OutputFile");
     bool logPlot = config.GetBool("LogPlot");
+    bool logXPlot = config.GetBool("LogXPlot");
+    std::string pixDir = config.GetString("PixDir");
     double logMinimum = config.GetDouble("LogMinimum");
     std::vector<std::string> sidebands = config.GetStringVector("Sidebands");
     std::vector<std::string> categories = config.GetStringVector("Categories");
@@ -290,6 +292,7 @@ int main(int argc, char* argv[]) {
     mnvPlotter.draw_normalized_to_bin_width = false;
     TCanvas cF("fit","fit");
     if (logPlot) gPad->SetLogy(1);
+    if (logXPlot) gPad->SetLogx(1);
     std::map<const std::string, MnvH1D*> tot;
     std::map<const std::string, MnvH1D*> pre;
     std::map<const std::string, MnvH1D*> bkg;
@@ -394,7 +397,7 @@ int main(int argc, char* argv[]) {
         dataHist[side]->SetTitle(dataHist[side]->GetName());
         std::cout << dataHist[side]->GetTitle() << " "  << chidof << std::endl;
         mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot[side], 1., "TR");
-        TString pixheader = TString("pix/" + side + "_" + varName+"_");
+        TString pixheader = TString(pixDir + "/" + side + "_" + varName+"_");
 
         cF.Print(TString(pixheader + "_postfit_compare.png").Data());
 
@@ -425,7 +428,7 @@ int main(int argc, char* argv[]) {
     newconfig.Write();
 
     for (auto side:sidebands){
-        TString pixheader = TString("pix/" + side + "_" + varName + "_");
+        TString pixheader = TString(pixDir + "/" + side + "_" + varName + "_");
 
         std::string label;
         label = side+" "+varName;

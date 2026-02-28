@@ -7,7 +7,7 @@
 // your "Get" functions the way you want them. In that case, you  don't need to
 // re-write them here.
 // ========================================================================
-#define NEWMATCH
+#define NEWMATCH 1
 #ifndef CVUNIVERSE_cxx
 #define CVUNIVERSE_cxx
 
