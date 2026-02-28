@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "Winter26Collab_fullsyst_100flux_extract_types_500MeVRecoil100mm_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "Winter26Collab_warpingtest_500MeVRecoil100mm_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -46,21 +46,21 @@
   "AnalyzeVariables": [
     "EAvail",
     // "EAvailoldbins",
-    // "EAvailoldbinscutoff",
+    "EAvailoldbinscutoff",
     // "NNeutCands",
     // "TotalNeutBlobE",
     // "EAvail_nohi",
     // "EAvailNoNonVtxBlobs",
     // "EAvailWithNeutrons",
     // "CalibEAvailWithNeutrons",
-    // "recoil",
+    "recoil",
     "ptmu"//,
     // "pzmu"
   ],
   "Analyze2DVariables": [
     // "recoil_ptmu",
-    "EAvail_ptmu",
-    "EAvail_pzmu"//,
+    "EAvail_ptmu"//,
+    // "EAvail_pzmu"//,
     // "pzmu_ptmu"
     // "EAvailoldbins_ptmu",
     // "EAvailoldbinscutoff_ptmu"
@@ -75,7 +75,7 @@
   }, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
   "background": {
     "QElike": [
-      "charged_pion",
+      "chargedpion",
       "neutralpion",
       "other"
     ] //,
@@ -92,20 +92,20 @@
   "responseSystematicsVersion": "2024",
   "systematics": [
     "Flux",
-    "MuonMINOS",
-    "MuonResolution",
-    "MINOSEfficiency",
-    "Angle",
-    "GENIE",
-    "GenieRvx1pi",
-    "RPA",
-    "2p2h",
-    "MuonMinerva",
-    "geant4",
-    "response",
-    "LowQ2Pi"
+    // "MuonMINOS",
+    // "MuonResolution",
+    // "MINOSEfficiency",
+    // "Angle",
+    // "GENIE",
+    // "GenieRvx1pi",
+    // "RPA",
+    // "2p2h",
+    // "MuonMinerva",
+    // "geant4",
+    // "response",
+    // "LowQ2Pi"
   ],
-  "fluxUniverses": 100, //100, //10,
+  "fluxUniverses": 2, //100, //10,
   "NuEConstraint": 1,
   "Geant4NeutronCV": 1,
   "Geant4Elastics": 1 //,

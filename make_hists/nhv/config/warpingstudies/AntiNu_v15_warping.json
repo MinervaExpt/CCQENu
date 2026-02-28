@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "Winter26Collab_recoil100mmplot_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "Winter26Collab_miscrecoplots_oldbins_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -44,12 +44,13 @@
     // "MultipBlobSideband"
   ], 
   "AnalyzeVariables": [
-    "recoil100mm"
+    // "recoil100mm"
     // "ERemoved",
     // "EAvailTotalResidual",
     // // "ERemovedFromTruthBlobs",
-    // "EAvail",
-    // // "ptmu",
+    "EAvail",
+    "EAvailoldbins",
+    "ptmu"//,
     // // "pzmu"
     // // "EAvailFromTruthBlobs",
     // "ERemovedEAvailRatio",
