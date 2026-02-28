@@ -1,0 +1,17 @@
+{"InputFile":"$FITFILE",
+    "Sidebands":["QElike","MichelSideBand","BlobSideBand","MicBlobSideBand"],
+    "IncludeInFit":["QElike","MichelSideBand","BlobSideBand","MicBlobSideBand"],
+    "Categories":["qelike","1chargedpion","1neutralpion","multipion"],
+ "Backgrounds":["1chargedpion","1neutralpion","multipion"],
+ "Span":3,
+ "Rebin":1,
+ "Variable":"Q2QE",
+    "FitType":"FastChi2",
+  "OutputFile":"Fit1N_v0.root",
+  "PixDir":"./pix0",
+  "LogPlot":false,
+  "LogXPlot":true,
+  "LogMinimum":0.1,
+  "Template":"h___%s___%s___%s___reconstructed",
+  "FitTemplate":"h___%s___%s___%s___fitted"
+}
