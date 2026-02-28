@@ -316,11 +316,11 @@ double CVUniverse::GetWeight() const {
 bool CVUniverse::FastFilter() const {
     bool result = false;
     // if (GetMultiplicity() < 1) return result;
-    #ifdef NEWMATCH # this changes with new definition
-        if (GetIsMinosMatchTrack() == 0) return result;
-    #else
-        if (GetIsMinosMatchTrack() != -1) return result;
-    #endif
+    // #ifdef NEWMATCH # this changes with new definition
+    //     if (GetIsMinosMatchTrack() == 0) return result;
+    // #else
+    //     if (GetIsMinosMatchTrack() != -1) return result;
+    // #endif
     if (GetZVertex() < 5980 || GetZVertex() > 8422) return result;
     if (GetApothemX() > 850.) return result;
     if (GetApothemY() > 850.) return result;

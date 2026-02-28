@@ -206,8 +206,8 @@ class CVFunctions {
 
         recointfunctions["HasMichelElectron"] = &CVUNIVERSE::GetHasMichelElectron;
         recointfunctions["HasImprovedMichelElectron"] = &CVUNIVERSE::GetHasImprovedMichelElectron;
-        recointfunctions["NMichel"] = &CVUNIVERSE::GetNMichel;
-        recofunctions["NMichel"] = &CVUNIVERSE::GetNMichel;
+        recointfunctions["ImprovedNMichel"] = &CVUNIVERSE::GetNMichel;
+        recofunctions["ImprovedNMichel"] = &CVUNIVERSE::GetNMichel;
         recointfunctions["ImprovedNMichel"] = &CVUNIVERSE::GetImprovedNMichel;
         recofunctions["ImprovedNMichel"] = &CVUNIVERSE::GetImprovedNMichel;
         recointfunctions["FittedNMichel"] = &CVUNIVERSE::GetFittedNMichel;
@@ -472,6 +472,7 @@ class CVFunctions {
     };
 
     const PointerToCVUniverseIntFunction GetRecoIntFunction(const std::string name) {
+        std::cout << "CVFunction" << name << std::endl;
         assert(recointfunctions.count(name));
         return recointfunctions[name];
     };
