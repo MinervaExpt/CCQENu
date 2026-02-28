@@ -162,6 +162,7 @@ var_short_names = {
     "VisEMissing": "Vis E_{Missing}",
     "InvisEMissing": "Invis E_{Missing}",
     "recoil": "recoil",
+    "ptmu": "p_{T}"
 }
 
 if len(sys.argv) == 1:
@@ -509,7 +510,10 @@ for a_sample in groups.keys():
                 if not noData:
                     # dmax = grid_dict[projbin]["data"].GetMaximum()
                     grid_dict[projbin]["data"].SetMaximum(global_max)
-                    grid_dict[projbin]["data"].SetMinimum(0)
+                    if projY and b_var.split("_")[1] not in scaleY:
+                        grid_dict[projbin]["data"].SetMinimum(0)
+                    if not projY and b_var.split("_")[0] not in scaleY:
+                        grid_dict[projbin]["data"].SetMinimum(0)
                     grid_dict[projbin]["data"].GetXaxis().SetNdivisions(505)
                     grid_dict[projbin]["data"].GetYaxis().SetNdivisions(505)
                     grid_dict[projbin]["data"].Draw("")
@@ -563,6 +567,10 @@ for a_sample in groups.keys():
                     pad.SetLogx()
                 if not projY and b_var.split("_")[0] in scaleX:
                     pad.SetLogx()
+                if projY and b_var.split("_")[1] in scaleY:
+                    pad.SetLogy()
+                if not projY and b_var.split("_")[0] in scaleY:
+                    pad.SetLogy()
 
             gc2.SetHistTexts()
             gc2.Draw()
