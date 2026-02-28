@@ -78,11 +78,17 @@ def main():
 
         ymax = -1.
         # filebasename1=os.path.basename(filename1)
-        for var in max_chi2_dict.keys():
-            if "_"+var+"_" not in file_name: continue
-            for study in max_chi2_dict[var].keys():
-                if "_"+study+"_" not in file_name: continue
-                ymax = max_chi2_dict[var][study]
+        ymax = 250
+
+        if "ptmu" in file_name and "EAvail" not in file_name:
+            ymax = 50
+        # for var in max_chi2_dict.keys():
+        #     if "_"+var+"_" not in file_name: 
+        #         ymax = 1500
+        #     for study in max_chi2_dict[var].keys():
+        #         ymax = 
+                # if "_"+study+"_" not in file_name: continue
+                # ymax = max_chi2_dict[var][study]
         # Expects CCQENu naming convention
 
         print("Looking for hists...")
