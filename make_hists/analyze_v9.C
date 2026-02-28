@@ -239,6 +239,7 @@ int main(const int argc, const char* argv[]) {
         POTScale = dataPOT / mcPOTprescaled;
         // delete h_pot;
     } else {
+        std::cout << " found a combined POT summary, not going to potscale..." << std::endl;
         h_pot = (TH1D*)f->Get("Combined_POT_Summary");
         h_pot->Print("ALL");
         dataPOT = h_pot->GetBinContent(1);

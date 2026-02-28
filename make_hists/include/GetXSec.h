@@ -331,7 +331,11 @@ MnvHistoType* DoResponseUnfolding(std::string basename, MnvH2D* iresponse, MnvHi
 
 // 1D
 template <>
-MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* iresponse, MnvH1D* imcsighist, MnvH1D* iseltruhist, MnvH1D* bkgsub, MnvH1D* idatahist, MinervaUnfold::MnvUnfold unfold, double num_iter, double max_num_iter) {
+MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename,
+                                    MnvH2D* iresponse, MnvH1D* imcsighist, MnvH1D* iseltruhist,
+                                    MnvH1D* bkgsub, MnvH1D* idatahist,
+                                    MinervaUnfold::MnvUnfold unfold,
+                                    double num_iter, double max_num_iter) {
     MnvH2D* migration = (MnvH2D*)iresponse->Clone();
     if (migration == 0) {
         std::cout << " no migration, stop here for " << basename << std::endl;
@@ -379,9 +383,11 @@ MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* iresponse, Mnv
 
 // Response unfolding for 2D histos
 template <>
-MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* iresponse,
-                                    MnvH2D* imcsighist, MnvH2D* iseltruhist, MnvH2D* bkgsub, MnvH2D* idatahist,
-                                    MinervaUnfold::MnvUnfold unfold, double num_iter, double max_num_iter) {
+MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename,
+                                    MnvH2D* iresponse, MnvH2D* imcsighist, MnvH2D* iseltruhist,
+                                    MnvH2D* bkgsub, MnvH2D* idatahist,
+                                    MinervaUnfold::MnvUnfold unfold,
+                                    double num_iter, double max_num_iter) {
     MnvH2D* migration = (MnvH2D*)iresponse->Clone();
     if (migration == 0) {
         std::cout << " no migration, stop here for " << basename << std::endl;
@@ -395,12 +401,16 @@ MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* iresponse,
     // std::cout << " Data has  size " << bkgsub->GetErrorBandNames().size() << std::endl;
 
     std::string unsmearedname = std::string(bkgsub->GetName()) + "_unfolded";
-    if (num_iter != max_num_iter) unsmearedname += ("iter" + std::to_string(int(num_iter))).c_str();
+    if (num_iter != max_num_iter) {
+        unsmearedname += ("iter" + std::to_string(int(num_iter))).c_str();
+        std::cout << " showing successive iterations of unfolding..." << unsmearedname << std::endl;
+    }
     MnvH2D* unsmeared = (MnvH2D*)iseltruhist->Clone(unsmearedname.c_str());
     unsmeared->SetDirectory(0);
     bkgsub->Print();
     iseltruhist->Print();
     imcsighist->Print();
+    std::cout << "unsmeared name before " << unsmeared->GetName() << std::endl;
 
     // now to get the covariance matrix for the unfolding itself using only the central value  This is the method Amit used
     // make an empty covariance matrix for the unfolding to give back to you
@@ -446,6 +456,8 @@ MnvH2D* DoResponseUnfolding<MnvH2D>(std::string basename, MnvH2D* iresponse,
     unsmeared->FillSysErrorMatrix("Unfolding", unfoldingCov);
     // Commenting out since may not be necessary.
     SyncBands(unsmeared);
+    unsmeared->SetName(unsmearedname.c_str());
+    std::cout << "unsmeared name after " << unsmeared->GetName() << std::endl;
     return unsmeared;
 };
 
@@ -768,17 +780,19 @@ int GetCrossSection(std::string sample, std::string variable, std::string basena
     NuConfig bkgkey;
     std::vector<std::string> bkglist;
     if (!hasbkgsub) {
-        // this likely needs to be fixed
-        bkgkey = configs["main"]->GetConfig("background");
-        // bkgkey.Print();
-        std::cout << bkgkey.CheckMember(sample) << std::endl;
-        bkglist = bkgkey.GetStringVector(sample);
-        bkglist.erase(find(bkglist.begin(), bkglist.end(), "qelikenot"));
-        std::cout << " got bkg ";
-        for (auto bkg : bkglist) {
-            std::cout << bkg;
-        }
-        std::cout << std::endl;
+        // std::cout << " looking for backgrounds" << std::endl;
+        // // this likely needs to be fixed
+        // bkgkey = configs["main"]->GetConfig("background");
+        // // bkgkey.Print();
+        // std::cout << bkgkey.CheckMember(sample) << std::endl;
+        // bkglist = bkgkey.GetStringVector(sample);
+        // bkglist.erase(find(bkglist.begin(), bkglist.end(), "qelikenot"));
+        // std::cout << " got bkg ";
+        // for (auto bkg : bkglist) {
+        //     std::cout << bkg;
+        // }
+        // std::cout << std::endl;
+        bkglist = {"chargedpion","neutralpion","other"};
     }
     NuConfig datkey = configs["main"]->GetConfig("data");
     std::string dat = datkey.GetString(sample);
