@@ -20,8 +20,10 @@ doTransWarpPOTScale = False
 
 doExcludebin = False
 
+doClosure = False 
 do1D = True
 do2D = False
+dotuned = True
 
 excludebin = 1
 
@@ -29,9 +31,18 @@ excludebins = [
     1,
 ]
 
-unfolding_model = "MnvTunev1"
+unfolding_model = "MnvTune4.3.1"
 
-dotuned = False
+exclude_models = [
+    # "MnvTunev4.3",
+    # "MnvTunev4.3.1_SuSA2p2h",
+    # "MnvTunev4.3.1_elastic",
+    # "MnvTunev4.3.1_absorption",
+    # "MnvTunev4.3.1_no2p2htune",
+    # "MnvTunev1.0.1",
+    # "MnvTunev1.0.1_elastic",
+    # "MnvTunev1.0.1_absorption",
+]
 
 catstodo = [
     "qelike"
@@ -165,7 +176,7 @@ if not os.path.exists(unfoldingmodel_input_dirbase):
     print("ERROR: unfoldingmodel eventloop out dir does not exist. Looked for it here:\n\t", unfoldingmodel_input_dirbase)
     sys.exit(1)
 
-model_list = [model for model in os.listdir(eventloopout_dirbase) if os.path.isdir(os.path.join(eventloopout_dirbase,model))]
+model_list = [model for model in os.listdir(eventloopout_dirbase) if (os.path.isdir(os.path.join(eventloopout_dirbase,model)) and model not in exclude_models)]
 print(model_list)
 
 
@@ -213,6 +224,7 @@ for k in keys:
     if "types" in recotrutype: continue
     if "simulfit" in recotrutype: continue
     if "tuned" in recotrutype and not dotuned: continue
+    if dotuned and "tuned" not in recotrutype: continue
     if "noPOTscale" in cat and not doTransWarpPOTScale: continue
     if "noPOTscale" not in cat and doTransWarpPOTScale: continue
     
@@ -233,11 +245,19 @@ for k in keys:
         nowarp_hist_name_dict[dim][variable][recotrutype] = {}
 
     nowarp_hist_name_dict[dim][variable][recotrutype] = name
+tunedtag = ""
+if dotuned:
+    tunedtag="_tuned"  
 
 recotrutypelist = [
-    "reconstructed", 
-    "selected_truth",
-    "response_migration"
+    "reconstructed%s"%(tunedtag), 
+    "selected_truth%s"%(tunedtag),
+    "response%s_migration"%(tunedtag)
+]
+tuned_recotrutypelist = [
+    "reconstructed_tuned", 
+    "selected_truth_tuned",
+    "response_tuned_migration"
 ]
 
 for a_dim in nowarp_hist_name_dict.keys():
@@ -250,11 +270,16 @@ for a_dim in nowarp_hist_name_dict.keys():
     skipped_vars = []
     for b_variable in nowarp_hist_name_dict[a_dim].keys():
         foundtypes = True
-        for testtype in recotrutypelist:
-            if not dotuned and (testtype not in nowarp_hist_name_dict[a_dim][b_variable].keys()):
-                foundtypes = False
-                break
-            if dotuned and (testtype+"_tuned" not in nowarp_hist_name_dict[a_dim][b_variable].keys()):
+        # for testtype in recotrutypelist:
+        #     if not dotuned and (testtype not in nowarp_hist_name_dict[a_dim][b_variable].keys()):
+        #         foundtypes = False
+        #         break
+        # for testtype in tuned_recotrutypelist:
+        #     if dotuned and (testtype not in nowarp_hist_name_dict[a_dim][b_variable].keys()):
+        #         foundtypes = False
+        #         break        
+        for testtype in tuned_recotrutypelist:
+            if testtype not in nowarp_hist_name_dict[a_dim][b_variable].keys():
                 foundtypes = False
                 break
         if not foundtypes:
@@ -262,72 +287,118 @@ for a_dim in nowarp_hist_name_dict.keys():
             continue
     for var in skipped_vars:
         print("skipping ", var)
-        nowarp_hist_name_dict.pop(var)
-        
+        nowarp_hist_name_dict[a_dim].pop(var)
+
+      
 # Loop over all the models now?
 commands= []
 
 output_file_list = []
-for model in model_list:
-    if model == unfolding_model:
-        continue
-    warp_model_input_dirbase = os.path.join(eventloopout_dirbase, model)
+# for model in model_list:
+#     if model == unfolding_model:
+#         continue
+#     warp_model_input_dirbase = os.path.join(eventloopout_dirbase, model)
 
-    tmp_warp_dir_list = os.listdir(warp_model_input_dirbase)
-    tmp_warp_file_name = ""
-    for file_name in tmp_warp_dir_list:
-        if "potscaled_combined_FullSample" in file_name:
-            tmp_warp_file_name = os.path.join(warp_model_input_dirbase, file_name)
-            print("looking at warp model", model, " file ", tmp_warp_file_name)
-    if tmp_warp_file_name == "":
-        print("Warning: Couldn't find eventloop file in",warp_model_input_dirbase,"\n\t Skipping warp model "+model+".....")
-        continue
-    tmp_warp_file = ROOT.TFile(tmp_warp_file_name, "READONLY")
-    warp_keys = tmp_warp_file.GetListOfKeys()
+#     tmp_warp_dir_list = os.listdir(warp_model_input_dirbase)
+#     tmp_warp_file_name = ""
+#     for file_name in tmp_warp_dir_list:
+#         if "potscaled_combined_FullSample" in file_name:
+#             tmp_warp_file_name = os.path.join(warp_model_input_dirbase, file_name)
+#             print("looking at warp model", model, " file ", tmp_warp_file_name)
+#     if tmp_warp_file_name == "":
+#         print("Warning: Couldn't find eventloop file in",warp_model_input_dirbase,"\n\t Skipping warp model "+model+".....")
+#         continue
+#     tmp_warp_file = ROOT.TFile(tmp_warp_file_name, "READONLY")
+#     warp_keys = tmp_warp_file.GetListOfKeys()
 
-    for a_dim in nowarp_hist_name_dict:
+for a_dim in nowarp_hist_name_dict:
+    num_dim = "1"
+    if a_dim in ["1D","HD"]:
         num_dim = "1"
-        if a_dim in ["1D","HD"]:
-            num_dim = "1"
-            if not do1D:
-                continue
-        elif a_dim in ["2D"]:
-            if not do2D:
-                continue
-            num_dim = "2"
-        for b_variable in nowarp_hist_name_dict[a_dim].keys():
-            foundtypes = True
-            tmp_warp_hist_name_dict = {}
-            for c_type in nowarp_hist_name_dict[a_dim][b_variable]:
-                nowarp_histname = nowarp_hist_name_dict[a_dim][b_variable][c_type]
-                test_nowarp_histname = nowarp_histname
-                if nowarp_histname not in warp_keys:
-                    test_nowarp_histname = nowarp_histname.replace("QElike","QElike_warped")
-                if test_nowarp_histname not in warp_keys:
-                    print("Can't find hist %s for model %s in %s"%(test_nowarp_histname, model, tmp_warp_file_name))
-                    foundtypes = False
-                    break
-                tmp_warp_hist_name_dict[c_type] = test_nowarp_histname
-            if not foundtypes:
-                print("Can't find all the hists for variable %s in  warp %s. Skipping this model..."%(b_variable, model))
-            unfold_reco_hist = nowarp_hist_name_dict[a_dim][b_variable]["reconstructed"]
-            unfold_true_hist = nowarp_hist_name_dict[a_dim][b_variable]["selected_truth"]
-            unfold_resp_hist = nowarp_hist_name_dict[a_dim][b_variable]["response_migration"]
+        if not do1D:
+            continue
+    elif a_dim in ["2D"]:
+        if not do2D:
+            continue
+        num_dim = "2"
+    for b_variable in nowarp_hist_name_dict[a_dim].keys():
+        print("Looking at variable ", b_variable)
 
-            warp_reco_hist = tmp_warp_hist_name_dict["reconstructed"]
-            warp_true_hist = tmp_warp_hist_name_dict["selected_truth"]
-            tmp_output_dir_name =  os.path.join(
-                warp_outdirbase,
-                "unfold%s_warp%s" % (unfolding_model, model)
+
+        for model in model_list:
+            unfold_reco_hist = nowarp_hist_name_dict[a_dim][b_variable]["reconstructed%s"%(tunedtag)]
+            unfold_true_hist = nowarp_hist_name_dict[a_dim][b_variable]["selected_truth%s"%(tunedtag)]
+            unfold_resp_hist = nowarp_hist_name_dict[a_dim][b_variable]["response%s_migration"%(tunedtag)]
+            tmp_num_uni = num_uni
+            if model == unfolding_model:
+                if not doClosure:
+                    continue
+                warp_reco_hist = unfold_reco_hist
+                warp_true_hist = unfold_true_hist
+
+                if not doClosure:
+                    continue
+                tmp_output_dir_name =  os.path.join(
+                    warp_outdirbase,
+                    "%sunfold%s_closure" % (tunedtag.replace("_",""),unfolding_model)
                 )
-            if not os.path.exists(tmp_output_dir_name):
-                os.mkdir(tmp_output_dir_name)
-            
-            output_file_name = os.path.join(
-                tmp_output_dir_name,
-                "TransWarpOut_Warp_%s_unfold%s_warp%s_%s_TransWarpDataPOTScale_%siters_%sunivs.root"
-                % ("QElike", unfolding_model, model, b_variable, str(iters_list[-1]), str(num_uni)),
-            )
+                if not os.path.exists(tmp_output_dir_name):
+                    os.mkdir(tmp_output_dir_name)
+                
+                output_file_name = os.path.join(
+                    tmp_output_dir_name,
+                    "TransWarpOut_Warp_%s_%sunfold%s_closure_%s_TransWarpDataPOTScale_%siters_%sunivs.root"
+                    % ("QElike",tunedtag.replace("_",""), unfolding_model, b_variable, str(iters_list[-1]), str(num_uni)),
+                )
+                tmp_num_uni = 100
+
+            else:
+                warp_model_input_dirbase = os.path.join(eventloopout_dirbase, model)
+
+                tmp_warp_dir_list = os.listdir(warp_model_input_dirbase)
+                tmp_warp_file_name = ""
+                for file_name in tmp_warp_dir_list:
+                    if "potscaled_combined_FullSample" in file_name:
+                        tmp_warp_file_name = os.path.join(warp_model_input_dirbase, file_name)
+                        print("looking at warp model", model, " file ", tmp_warp_file_name)
+                if tmp_warp_file_name == "":
+                    print("Warning: Couldn't find eventloop file in",warp_model_input_dirbase,"\n\t Skipping warp model "+model+".....")
+                    continue
+                
+                tmp_warp_file = ROOT.TFile(tmp_warp_file_name, "READONLY")
+                warp_keys = tmp_warp_file.GetListOfKeys()
+
+                tmp_warp_hist_name_dict = {}
+                foundtypes = True
+                for c_type in nowarp_hist_name_dict[a_dim][b_variable]:
+                    nowarp_histname = nowarp_hist_name_dict[a_dim][b_variable][c_type]
+                    print("nowarp_histname ", nowarp_histname)
+                    test_nowarp_histname = nowarp_histname.replace("_tuned","")
+                    if test_nowarp_histname not in warp_keys:
+                        print("Can't find hist %s for model %s in %s"%(test_nowarp_histname, model, tmp_warp_file_name))
+                        foundtypes = False
+                        break
+                    tmp_warp_hist_name_dict[c_type.replace("_tuned","")] = test_nowarp_histname
+                if not foundtypes:
+                    print("Can't find all the hists for variable %s in  warp %s. Skipping this model..."%(b_variable, model))
+                    continue
+
+
+                warp_reco_hist = tmp_warp_hist_name_dict["reconstructed"]
+                warp_true_hist = tmp_warp_hist_name_dict["selected_truth"]
+
+                tmp_output_dir_name =  os.path.join(
+                    warp_outdirbase,
+                    "%sunfold%s_warp%s" % (tunedtag.replace("_",""),unfolding_model, model)
+                    )
+                if not os.path.exists(tmp_output_dir_name):
+                    os.mkdir(tmp_output_dir_name)
+                
+                output_file_name = os.path.join(
+                    tmp_output_dir_name,
+                    "TransWarpOut_Warp_%s_%sunfold%s_warp%s_%s_TransWarpDataPOTScale_%siters_%sunivs.root"
+                    % ("QElike",tunedtag.replace("_",""), unfolding_model, model, b_variable, str(iters_list[-1]), str(num_uni)),
+                )
             if doExcludebin:
                 exbinfile_string = str("_".join([str(exbin) for exbin in exclude_bins]))
                 output_file_name.replace(".root","%s.root"%(exbinfile_string))
@@ -358,17 +429,16 @@ for model in model_list:
                 "--num_iter",
                 iters,
                 "--num_uni",
-                str(num_uni),
+                str(tmp_num_uni),
                 "--max_chi2",
                 "5000",
                 "--step_chi2",
                 "1",
                 "--num_dim",
                 num_dim,
-                # "--corr_factor",
-                # str(uncfactors[b_variable]),
+                # "--dolite",
             ]
-            if b_variable in uncfactors:
+            if b_variable in uncfactors and model != unfolding_model:
                 cmd.append("--corr_factor")
                 cmd.append(str(uncfactors[b_variable]))
             if doTransWarpPOTScale:
@@ -386,11 +456,14 @@ for model in model_list:
             output_file_list.append(output_file_name)
             print("here")
 
-pool = Pool(3)
-for i, returncode in enumerate(pool.imap(partial(call), commands)):
-    if returncode != 0:
-       print("%d command failed: %d" % (i, returncode))
-
+if not do2D:
+    pool = Pool(3)
+    for i, returncode in enumerate(pool.imap(partial(call), commands)):
+        if returncode != 0:
+            print("%d command failed: %d" % (i, returncode))
+else:
+    for cmd in commands:
+        subprocess.run(cmd)
 print(
     "Done with warps using unfolding model %s and warps %s"%(
         unfolding_model, 
