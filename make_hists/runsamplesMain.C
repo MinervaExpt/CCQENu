@@ -146,6 +146,7 @@ int main(const int argc, const char *argv[] ) {
     modeltune="MnvTunev1";
   }
   std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse,PlotUtils::detail::empty>>> MnvTune;
+  MnvTune.emplace_back(new PlotUtils::GeantNeutronCVReweighter<CVUniverse, NeutronEvent>()); 
   if(modeltune=="MnvTunev1" || modeltune=="MnvTunev2"){
     MnvTune.emplace_back(new PlotUtils::FluxAndCVReweighter<CVUniverse, PlotUtils::detail::empty>());
       bool NonResPiReweight = true;
