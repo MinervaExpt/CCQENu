@@ -19,12 +19,12 @@
 #include "weighters/FSIReweighter.h"
 #include "weighters/FluxAndCVReweighter.h"
 #include "weighters/GENIEReweighter.h"
+#include "weighters/GeantNeutronCVReweighter.h"
 #include "weighters/LowQ2PiReweighter.h"
 #include "weighters/LowRecoil2p2hReweighter.h"
 #include "weighters/MINOSEfficiencyReweighter.h"
 #include "weighters/RPAReweighter.h"
 #include "weighters/SuSAFromValencia2p2hReweighter.h"
-
 
 namespace CCQENu {
 typedef std::vector<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>*> TuneVec;
@@ -70,6 +70,14 @@ class ModelFromConfig {
         m_tunex = stoi(tunelist[0]);
         m_tuney = stoi(tunelist[1]);
         m_tunez = stoi(tunelist[2]);
+
+        // This is used for everymodel. This should be applied to reco and truth (eff denominator)
+        if (config.IsMember("GeantNeutronCV")) {
+            std::cout << "ModelFromConfig: set up GeantNeutronCV Reweighter" << std::endl;
+            MnvTuneVec.emplace_back(new PlotUtils::GeantNeutronCVReweighter<CVUniverse, PlotUtils::detail::empty>());
+        } else {
+            std::cout << "WARNING: ModelFromConfig did not set up GeantNeutronCV. You need this for most models..." << std::endl;
+        }
 
         // Base tune stuff, included in v1, v2, and v4. v4 has some variation. Warps vary things too
         if (config.IsMember("FluxAndCV")) {
