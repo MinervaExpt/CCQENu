@@ -85,6 +85,22 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
         // UniverseMap bands_genie = PlotUtils::GetStandardGenieSystematicsMap<CVUniverse>(chain);
         std::cout << " do GENIE systematcs " << std::endl;
         UniverseMap bands_genie = PlotUtils::GetGenieSystematicsMap<CVUniverse>(chain);
+        
+        // if you're doing the elastic bug fix, need to get rid of one of these universes bc it breaks under the tune
+        if (modeltune_config.IsMember("FSI")) {
+            if (modeltune_config.GetConfig("FSI").GetBool("useElastic")) {
+                std::cout << "\telastic FSI bug fix implemented, removing GENIE_FrElas_N band..." << std::endl;
+                UniverseMap tmp_bands_genie;
+                for (auto band : bands_genie) {
+                    if ((band.first).find("FrElas_N")!=std::string::npos) {
+                        std::cout << "found band " << band.first << " and removing..." << std::endl;
+                        continue;
+                    }
+                    tmp_bands_genie[band.first] = band.second;
+                }
+                bands_genie = tmp_bands_genie;
+            }
+        }
         error_bands.insert(bands_genie.begin(), bands_genie.end());
     } else {
         std::cout << "Warning:  GENIE systematics are turned off" << std::endl;
