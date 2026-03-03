@@ -64,6 +64,7 @@ void weight_MCreScale::read(TString filename) {
         std::cout << "weight_MCreScale::read: WARNING: Cannot find input file for weight_MCreScale: " << filename << std::endl;
         std::cout << "                                 Defaulting to no tuning." << std::endl;
         m_tunedmc = "untuned";
+        return;
     }
     if (m_mnvh_Scales.size() < 1) {
         std::cout << "weight_MCreScale: failed to find signal or background scale fractions in " << filename << std::endl;

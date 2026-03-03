@@ -247,6 +247,7 @@ int main(const int argc, const char *argv[]) {
     // Initialize the rescale for tuning MC reco for background subtraction later
 
     PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(config);
+    tunedmc = mcRescale.m_tunedmc;
 
     //===========================================================================
     // Systematics

@@ -14,7 +14,7 @@
   "MinervaModel": "${MYMODEL}",
   "modeltuneFile": "${CCQEMAT}/config/modeltunes/${MYMODEL}.json",
   "recoName": "MasterAnaDev",
-  "tunedmc": "untuned",
+  "tunedmc": "both",
   "warpedmc": "${MYWARP}",
   "closure": 0,
   "TuneCategories": [
