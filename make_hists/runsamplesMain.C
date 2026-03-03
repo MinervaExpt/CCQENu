@@ -136,32 +136,97 @@ int main(const int argc, const char *argv[] ) {
   
 
       //=== MODELS === needs a driver
+  std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>> MnvTune;
+  NuConfig modeltuneConfig;
+
+  if (config.IsMember("modeltuneFile")) {
+      std::string modeltunefilename = config.GetString("modeltuneFile");
+      // if (warpedmc == "no2p2htune") {  // Skip this to do a weird warp
+      //     std::size_t pos = modeltunefilename.find(".json");
+      //     modeltunefilename.insert(pos, "_no2p2htune");
+      //     std::cout << "runsamplesmain: warp set to no2p2htune, using the tune config" << modeltunefilename << std::endl;
+      // }
+      std::cout << " using config for model tune " << modeltunefilename << std::endl;
+      modeltuneConfig.Read(modeltunefilename);
+      CCQENu::ModelFromConfig* modeltune = new CCQENu::ModelFromConfig(modeltuneConfig);
+      // MnvTune = modeltune->GetModelTunesFromConfig();
+
+      std::vector<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>*> tunevec = modeltune->GetModelTunesFromConfig();
+      for (auto tune : tunevec) {
+          MnvTune.emplace_back(tune);
+      }
+      std::cout << ">>>>>>>>>> MnvTune vec size is \t" << MnvTune.size() << std::endl;
+
+  } else {
       std::string modeltune = "MnvTunev1";
-  if(config.IsMember("MinervaModel")){ //TODO
-    modeltune = config.GetString("MinervaModel");
-    std::cout << "runsamplesMain: MinervaModel configured in main config and set to " << modeltune << std::endl;
-  }
-  else{
-    std::cout << "runsamplesMain: MinervaModel NOT configured or set in main config. Defaulting to MnvTunev1." << std::endl;
-    modeltune="MnvTunev1";
-  }
-  std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse,PlotUtils::detail::empty>>> MnvTune;
-  MnvTune.emplace_back(new PlotUtils::GeantNeutronCVReweighter<CVUniverse, NeutronEvent>()); 
-  if(modeltune=="MnvTunev1" || modeltune=="MnvTunev2"){
-    MnvTune.emplace_back(new PlotUtils::FluxAndCVReweighter<CVUniverse, PlotUtils::detail::empty>());
-      bool NonResPiReweight = true;
-      bool DeuteriumGeniePiTune = false; // Deut should be 0? for v1?
-    MnvTune.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse,PlotUtils::detail::empty>(NonResPiReweight,DeuteriumGeniePiTune));  // Deut should be 0? for v1?
-    MnvTune.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
-    MnvTune.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
-    MnvTune.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
-  }
-  if(modeltune=="MnvTunev2"){
-    MnvTune.emplace_back(new PlotUtils::LowQ2PiReweighter<CVUniverse, PlotUtils::detail::empty>("JOINT"));
-  }
+      if (config.IsMember("MinervaModel")) {  // TODO
+          modeltune = config.GetString("MinervaModel");
+          std::cout << "runsamplesMain: MinervaModel configured in main config and set to " << modeltune << std::endl;
+      } else {
+          std::cout << "runsamplesMain: MinervaModel NOT configured or set in main config. Defaulting to MnvTunev1." << std::endl;
+          modeltune = "MnvTunev1";
+      }
 
-  PlotUtils::Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTune));
+      std::string tunever = "";
 
+      if (modeltune.find("MnvTunev") != std::string::npos)
+          tunever = modeltune.erase(0, 8);
+      std::vector<std::string> tunelist;
+      size_t pos = 0;
+      std::string token;
+      while ((pos = tunever.find(".")) != std::string::npos) {
+          token = tunever.substr(0, pos);
+          tunelist.push_back(token);
+          tunever.erase(0, pos + 1);
+      }
+      tunelist.push_back(tunever);
+      while (tunelist.size() != 3) {
+          tunelist.push_back("0");
+      }
+      std::cout << "MnvTune version: \t";
+      for (auto i : tunelist) {
+          std::cout << i << "\t";
+      }
+      std::cout << std::endl;
+
+      // std::vector<std::unique_ptr<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>>> MnvTune;
+      // Baseline stuff
+      if (tunelist[0] == "1" || tunelist[0] == "2" || tunelist[0] == "4") {
+          MnvTune.emplace_back(new PlotUtils::FluxAndCVReweighter<CVUniverse, PlotUtils::detail::empty>());
+
+          MnvTune.emplace_back(new PlotUtils::MINOSEfficiencyReweighter<CVUniverse, PlotUtils::detail::empty>());
+          MnvTune.emplace_back(new PlotUtils::RPAReweighter<CVUniverse, PlotUtils::detail::empty>());
+
+          bool NonResPiReweight = true;
+          bool DeuteriumGeniePiTune = false;  // Deut should be 0? for v1?
+          if (tunelist[0] == "4")
+              DeuteriumGeniePiTune = true;  // Deut should be true? for v4?
+          MnvTune.emplace_back(new PlotUtils::GENIEReweighter<CVUniverse, PlotUtils::detail::empty>(NonResPiReweight, DeuteriumGeniePiTune));
+
+          // if (warpedmc == "no2p2htune") {  // Skip this to do a weird warp
+          //     std::cout << "weight_warper: warp set to no2p2htune, so turning that off WARNING: no longer using proper MnvTunev1 or v2" << std::endl;
+          // } else {
+          //     MnvTune.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
+          // }
+          MnvTune.emplace_back(new PlotUtils::LowRecoil2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
+      }
+      // Low Q2 pion stuff
+      if (tunelist[0] == "2" || tunelist[0] == "4") {
+          std::string fittype;
+          if (tunelist[0] == "2") fittype = "JOINT";
+          if (tunelist[0] == "4") fittype = "MENU1PI";
+          MnvTune.emplace_back(new PlotUtils::LowQ2PiReweighter<CVUniverse, PlotUtils::detail::empty>(fittype));
+      }
+      // Diffractive stuff
+      if (tunelist[1] == "2") {
+          MnvTune.emplace_back(new CCQENu::CoherentPiReweighter<CVUniverse, PlotUtils::detail::empty>);
+          MnvTune.emplace_back(new CCQENu::DiffractiveReweighter<CVUniverse, PlotUtils::detail::empty>);
+      }
+  }
+  std::cout << ">>>>>>>>>> MnvTune vec size is \t" << MnvTune.size() << std::endl;
+
+  Model<CVUniverse, PlotUtils::detail::empty> model(std::move(MnvTune));
+  if (PlotUtils::MinervaUniverse::UseDeuteriumGeniePiTune()) std::cout << " >>>>>>>>>>> MINERvAUniverse: UseDeuteriumGeniePiTune" << std::endl;
   //====================MC Reco tuning for bkg subtraction======================
   // Initialize the rescale for tuning MC reco for background subtraction later
   PlotUtils::weight_MCreScale mcRescale = weight_MCreScale(config);
@@ -508,4 +573,4 @@ int main(const int argc, const char *argv[] ) {
   out->Close();
   std::cout << "Successfully wrote everything to file " << outname << std::endl;
   std::cout << "Done" << std::endl;
-}
+  }
