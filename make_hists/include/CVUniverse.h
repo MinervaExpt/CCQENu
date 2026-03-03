@@ -99,6 +99,14 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetWeight() const;
 
+    virtual double GetCoherentPiWeight() const;
+
+    virtual double GetDiffractiveWeight() const;
+
+    virtual bool IsInPlastic() const;
+
+    virtual bool IsInHexagon(double x, double y, double apothem) const;
+
     // ========================================================================
     // Write a "Get" function for all quantities access by your analysis.
     // For composite quantities (e.g. Enu) use a calculator function.
