@@ -29,10 +29,11 @@
   "statusbar": true,
   "runsamples": [ 
     // "${MYSAMPLE}"
-    "QElike",
+    // "QElike",
     // "QElike_maxrecoil",
     // "QElike_maxrecoil_hiEAvail"
-    // "QElike_2track"
+    "QElike1track",
+    "QElike2track",
     // "QElikeNeut"
     // "QElike_0blob",
     // "QElike_1blob"
