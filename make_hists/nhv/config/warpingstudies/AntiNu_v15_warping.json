@@ -12,7 +12,7 @@
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
-  "modeltuneFile": "${CCQEMAT}/nhv/config/modeltunes/${MYMODEL}.json",
+  "modeltuneFile": "${CCQEMAT}/config/modeltunes/${MYMODEL}.json",
   "recoName": "MasterAnaDev",
   "tunedmc": "both",
   "warpedmc": "none",
