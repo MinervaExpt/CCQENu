@@ -1,0 +1,16 @@
+{
+    "name": "MnvTunev4.3_2p2hnp",
+    "comments": [
+        "New implementation, kind of mimicing Andrew's 01/09/2026 NHV"
+    ],
+    "GeantNeutronCV": "GeantNeutronCV",
+    "FluxAndCV": "FluxAndCV",
+    "MINOSEfficiency": "MINOSEfficiency",
+    "RPA": "RPA",
+    "GENIE": {
+        "useNonResPi": true,
+        "useDeuteriumPionTune": true
+    },
+    "LowRecoil2p2h": "np",
+    "LowQ2Pi": "MENU1PI"
+}
