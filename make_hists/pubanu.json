@@ -1,8 +1,8 @@
 {
   "version":18, // turn off tunes, add flux
    // Run major variables in batch, use v16 of cuts, add closure
-  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_public/MediumEnergy_RHC_StandardMC_Playlist{5A}.txt",
-  "dataIn":"${CCQEMAT}/playlists/${DATALOC}_public/MediumEnergy_RHC_Data_Playlist{5A}.txt", // hack for type plot of resolution
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_public/MediumEnergy_RHC_StandardMC_Playlist${5A}.txt",
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}_public/MediumEnergy_RHC_Data_Playlist${5A}.txt", // hack for type plot of resolution
   "prescale":999,
   "playlist":"minervame${MYPLAYLIST}",
   "DoResolution":1,
