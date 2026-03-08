@@ -1,0 +1,22 @@
+{
+  "InputFile":"/Users/schellma/Dropbox/ccqe/sean/NuFit_MAD_MultiPionCut_1track_All_multother_QEcutBin8_bkgdScaled_Q2QE_2D.root",
+  "Samples":["1track_MultiPionCut"],
+  "Categories":["qelike","bkgsub"], 
+  "Data":"bkgsub",
+  "Signal":"qelike",
+  "Migration":"response",
+  "data_types1D":{
+    "bkgsub":["fitted_combined"],
+    "qelike":["reconstructed","fitted_combined","selected_truth","all_truth","response_truth","response_reconstructed"]
+  },
+  "data_types2D":{
+    "bkgsub":[],
+    "qelike": ["response_migration"]
+  },
+  "Variables":["Q2QE"],
+  "PixDir":"./pix",
+  "LogPlot":false,
+  "LogMinimum":1.0,
+  "Template":"h___%s___%s___%s___reconstructed",
+  "FitTemplate":"h___%s___%s___%s___fitted_combined"
+}
