@@ -20,7 +20,7 @@ from MatrixUtils import checktag, ToVectorD, ToMatrixDSym, scaleHist, map2TObjAr
 from GetXSec import GetCrossSection 
 
 from RebinFlux import GetFlux
-from plotting_pdf import PlotCVAndError
+from plotting_pdf import PlotCVAndError,PlotErrorSummary
 from GetTarget import GetTarget
 
 
@@ -49,6 +49,8 @@ def addentry(thing,one,two,three,four,value):
     if DEBUG: print ("added",thing[one][two][three][four].GetName(),one,two,three,four,value.GetName())
 
 class CrossSectionExtractor:
+
+    ''' Class that does cross section extraction after data grab '''
     def __init__(self, grabber, plotter):
         self.hists1D = grabber.hists1D
         self.allconfigs = grabber.allconfigs
@@ -56,10 +58,14 @@ class CrossSectionExtractor:
         self.grabber = grabber
         
     def unfold(self,iterations=4):
+        ''' method that unfolds background subtracted data '''
+
         input_stage = "fitted_combined"
         stage = "unfolded"
+        
         for sample in self.allconfigs["Cross"]["Samples"]:
             for variable in self.allconfigs["Cross"]["Variables"]:
+                logscale = self.allconfigs["Cross"]["Scales"][variable]
                 data_cat = self.allconfigs["Cross"]["Data"]
                 signal_cat = self.allconfigs["Cross"]["Signal"]
                 
@@ -68,6 +74,7 @@ class CrossSectionExtractor:
                 unfolded_name = (data_hist.GetName()) + "_"+stage
                 migration = self.hists1D[sample][signal_cat][variable][migration+"_migration"]
                 true_sel_hist = self.hists1D[sample][signal_cat][variable]["selected_truth"]
+
                 unfolded_hist= MnvH1D()
                 unfolded_hist= MnvH1D((true_sel_hist).GetCVHistoWithStatError())
                 unfolded_hist.SetName(unfolded_name)
@@ -95,12 +102,13 @@ class CrossSectionExtractor:
                     
                     data_hist.Print("ALL")
                     unfolded_hist.Print("ALL")
-                    PlotCVAndError(self.plotter.canvas1D, data_hist,unfolded_hist,"unfolding before and after",True,1)
-                    self.plotter.canvas1D.Print(f"pix/{sample}_{variable}_unfoldingeffect.png")
-                    data_hist.Print("ALL")
-                    unfolded_hist.Print("ALL")
-                    PlotCVAndError(self.plotter.canvas1D, unfolded_hist,true_sel_hist,"unfolded data and selected",True,1)
-                    self.plotter.canvas1D.Print(f"pix/{sample}_{variable}_{stage}.png")
+                    PlotCVAndError(self.plotter.canvas1D, data_hist,unfolded_hist,"unfolding before and after",True,logscale)
+                    
+
+                   
+                    PlotCVAndError(self.plotter.canvas1D, unfolded_hist,true_sel_hist,sample+": Unfolded data",True,1)
+                    PlotErrorSummary(self.plotter.canvas1D, unfolded_hist, sample+": Unfolded Systematics", logscale%2)
+                    #self.plotter.canvas1D.Print(f"pix/{sample}_{variable}_{stage}.png")
                     #cE.Print(f"unfolding_{sample}_{variable}.png")
 
     def efficiency(self):
@@ -108,6 +116,7 @@ class CrossSectionExtractor:
         stage="effcorr"
         for sample in self.allconfigs["Cross"]["Samples"]:
             for variable in self.allconfigs["Cross"]["Variables"]:
+                logscale = self.allconfigs["Cross"]["Scales"][variable]
                 data_cat = self.allconfigs["Cross"]["Data"]
                 mc_cat = self.allconfigs["Cross"]["Signal"]
                 
@@ -135,26 +144,28 @@ class CrossSectionExtractor:
                 corrected_hist = MnvH1D()
                 corrected_hist = unfolded_hist.Clone(corrected_name)
                 corrected_hist.Divide(corrected_hist,efficiency_hist)
+                SyncBands(corrected_hist)
                 addentry(self.hists1D, sample, data_cat, variable, stage, corrected_hist)
 
                 if PLOTS:
                     
-                    PlotCVAndError(self.plotter.canvas1D, efficiency_hist,efficiency_hist,"efficiency",True,1,False) # remove binwid
-                    #self.plotter.canvas1D.Print(f"pix/{sample}_{variable}_efficiency.png")
-                    
-                    PlotCVAndError(self.plotter.canvas1D, corrected_hist,unfolded_hist,"after and before efficiency correction",True,logscale=1,binwid=True)
-                    #self.plotter.canvas1D.Print(f"pix/{sample}_{variable}_effcoreffect.png")
+                    PlotCVAndError(self.plotter.canvas1D, efficiency_hist,efficiency_hist,sample+": Efficiency Correction",True,1,False) # remove binwid                   
+                    PlotErrorSummary(self.plotter.canvas1D, efficiency_hist, sample + ": Efficiency Systematics", logscale%2)
 
-                    PlotCVAndError(self.plotter.canvas1D, corrected_hist,true_all_hist,"effcor compared to selected",True,logscale=1,binwid=True)
-                    #self.plotter.canvas1D.Print(f"pix/{sample}_{variable}_effcor.png")
+                    PlotCVAndError(self.plotter.canvas1D, corrected_hist,true_all_hist,sample+": Efficiency Corrected Data",True,logscale=1,binwid=True)
+                    PlotErrorSummary(self.plotter.canvas1D, corrected_hist, sample+": Efficiency Corrected Systematics", logscale%2)
+                    
 
 
     def flux(self):
+        '''Method that does a flux/target correction to corrected counts to make a cross section'''
+
         input_stage = "effcorr"
         stage="sigma"
         mcstage="sigmaMC"
         for sample in self.allconfigs["Cross"]["Samples"]:
             for variable in self.allconfigs["Cross"]["Variables"]:
+                logscale = self.allconfigs["Cross"]["Scales"][variable]
                 data_cat = self.allconfigs["Cross"]["Data"]
                 mc_cat = self.allconfigs["Cross"]["Signal"]
                 
@@ -168,27 +179,34 @@ class CrossSectionExtractor:
                 sigmaMC_name=true_all_hist.GetName()+"_"+mcstage
                 sigmaMC_hist = MnvH1D()
                 sigmaMC_hist = true_all_hist.Clone(sigmaMC_name)
+
+                # get the target and POT normalizations
+
                 norm = self.norm(ismc=False)
                 normMC = self.norm(ismc=True)
                 
                 if (not self.allconfigs["Cross"]["FluxNorm"][variable]): 
                     print(" Using flat flux normalization. " )
                     # Returns integrated flux hist in bins input hist
-                    print(self.allconfigs.keys())
-                    if "main" in self.allconfigs.keys():
-                        print (self.allconfigs["main"])
+                    
                     theflux_hist = GetFluxFlat(self.allconfigs, sigma_hist)
 
                     theflux_hist.AddMissingErrorBandsAndFillWithCV(sigma_hist)
+
                     sigma_hist.AddMissingErrorBandsAndFillWithCV(theflux_hist)
+
                     sigma_hist.Divide(sigma_hist, theflux_hist)
-                    # target normalization
+
+                    # target/POT normalization
                     sigma_hist.Scale(norm)
 
                     theflux_hist.AddMissingErrorBandsAndFillWithCV(sigmaMC_hist)
+
                     sigmaMC_hist.AddMissingErrorBandsAndFillWithCV(theflux_hist)
+
                     sigmaMC_hist.Divide(sigmaMC_hist, theflux_hist)
-                    # target normalization
+
+                    # target/POT normalization
                     sigmaMC_hist.Scale(normMC)
                 else:
                     print("energy dependent flux not implemented yet")
@@ -201,20 +219,12 @@ class CrossSectionExtractor:
 
                 if PLOTS:
                     
-                    PlotCVAndError(self.plotter.canvas1D, sigma_hist,sigmaMC_hist,"cross sections",True,logscale=1,binwid=True)
-                    #self.plotter.canvas1D.Print(f"pix/{sample}_{variable}_effcor.png")
-
-
-            
-                    
-
-
-    
-        # Implement the logic to extract the cross section from the fit result
-        # using the provided cross section model
+                    PlotCVAndError(self.plotter.canvas1D, sigma_hist,sigmaMC_hist,"Cross Section Compared to Tuned "+self.grabber.model,True,logscale,binwid=True)
+                    PlotErrorSummary(self.plotter.canvas1D, sigma_hist, sample+": Cross Section Systematics", logscale%2)
         pass
 
     def norm(self,ismc):
+        ''' method to get POT and target information for normalization'''
         f = self.grabber.data_file
         h_pot = TH1D()
         h_pot = f.Get("POT_summary")
@@ -226,7 +236,7 @@ class CrossSectionExtractor:
         target = GetTarget(type=self.allconfigs["Cross"]["Target"],ismc=ismc)
         norm = 1. / dataPOT / target
         
-        self.targetobj = TNamed("targets", "%6e"%target)
+        #self.targetobj = TNamed("targets", "%6e"%target)
 
         print(" integrated luminosity is " , 1 / norm / 1.E24 , "barns^-1" )
 
@@ -234,10 +244,16 @@ class CrossSectionExtractor:
         print(" POT DATA " , dataPOT )
 
         print(" POT Scale",POTScale)
+
+        #TODO: store normalization information
+
         return norm
 
 class DataGrabber:
+    ''' class to grab data from a fit file '''
+
     def __init__(self, config, plotter):
+        '''  store the config and input data file'''
         self.config = config
         self.data_source = config["InputFile"]
         self.data_file = TFile.Open(self.data_source,'READ')
@@ -250,11 +266,12 @@ class DataGrabber:
         self.datatypes1D = self.allconfigs["Cross"]["data_types1D"] 
         self.datatypes2D = self.allconfigs["Cross"]["data_types2D"]
         self.plotter = plotter
-
-    
+        self.model = self.allconfigs["main"]["MinervaModel"]
 
     def grab(self):
-        # Implement the logic to grab the necessary data from the data source
+        ''' Implement the logic to grab the necessary data from the data source 
+        This filters out intermediate information 
+        '''
 
         for sample in self.allconfigs["Cross"]["Samples"]:
             for category in self.allconfigs["Cross"]["Categories"]:
@@ -284,21 +301,26 @@ class DataGrabber:
                             continue
                         addentry(self.hists1D, sample, category, variable, data_type, hist)
                         if DEBUG: print ("grabbed",self.hists1D[sample][category][variable][data_type].GetName(),sample,category,variable,data_type)
-        for sample in self.allconfigs["Cross"]["Samples"]:
-            for variable in self.allconfigs["Cross"]["Variables"]:
-                data_cat = self.allconfigs["Cross"]["Data"]
-                signal_cat = self.allconfigs["Cross"]["Signal"]
-                types = self.allconfigs["Cross"]["data_types1D"]
-                if DEBUG: print (types)
-                data_hist = self.hists1D[sample][data_cat][variable]["fitted_combined"]
-                mc_hist = self.hists1D[sample][signal_cat][variable]["reconstructed"]
+
+        if PLOTS:
+            for sample in self.allconfigs["Cross"]["Samples"]:
+                for variable in self.allconfigs["Cross"]["Variables"]:
+                    logscale = self.allconfigs["Cross"]["Scales"][variable]
+                    data_cat = self.allconfigs["Cross"]["Data"]
+                    signal_cat = self.allconfigs["Cross"]["Signal"]
+                    types = self.allconfigs["Cross"]["data_types1D"]
+                    if DEBUG: print (types)
+                    data_hist = self.hists1D[sample][data_cat][variable]["fitted_combined"]
+                    mc_hist = self.hists1D[sample][signal_cat][variable]["reconstructed"]
                 
-                if PLOTS:
-                    PlotCVAndError(self.plotter.canvas1D, data_hist,mc_hist,"subtracted",True,self.plotter.scales[variable])
-                    self.plotter.canvas1D.Print(f"pix/{sample}_{variable}_subtracted.png")
+
+                    PlotCVAndError(self.plotter.canvas1D, data_hist,mc_hist,sample + ": Background subtracted data compared to "+self.model,True,self.plotter.scales[variable])
+                    PlotErrorSummary(self.plotter.canvas1D, data_hist, sample + ": Background subtracted data Systematics", logscale%2)
+                   
         pass
 
     def write(self, outname):
+        ''' method to write root file with hists and configuration'''
         out = TFile.Open(outname,"RECREATE")
         out.cd()
         
@@ -320,11 +342,41 @@ class DataGrabber:
             object.Write()
         
         print ("close output file")
-        out.ls()
+
         out.Close()
         pass
 
+    def store(self, outdir):
+        ''' method to write tables and config files to outdir'''
+    
+        if not os.path.exists(outdir):
+            print ("making output directory",outdir)
+            os.mkdir(outdir)
+        
+        for sample in self.hists1D.keys():
+            for category in self.hists1D[sample].keys():
+                for variable in self.hists1D[sample][category].keys():
+                    for data_type in self.hists1D[sample][category][variable].keys():
+                        if "sigma" in data_type:
+                            print ("dump the numbers")
+                            hist = self.hists1D[sample][category][variable][data_type]
+                            hist.MnvH1DToCSV(hist.GetName(),outdir, 1.E39, False, True, True, True)
+        # write out the configs
+
+        for key, config in self.allconfigs.items():
+            print (" Store config ", key )
+            obj = commentjson.dumps(config)
+            f = open(os.path.join(outdir,key+".json"),'w')
+            f.write(obj)
+            f.close()
+            
+        
+        print ("close output file")
+        
+        pass
+
     def delete(self):
+        ''' method to delete the histograms, needs work '''
         del self.hists1D
         
 
@@ -335,6 +387,7 @@ class DataGrabber:
 
 
 class Plotter:
+    ''' class that holds plotter configurations'''
 
     def __init__(self,config,pdffilename):
         self.pdfname = pdffilename
@@ -352,29 +405,43 @@ class Plotter:
 
     
     
-    def close(self,pdfname):
+    def close(self):
+        ''' method to close a pdf file '''
         self.canvas1D.Print(self.pdfname+")", "pdf")
-
+        pass
     
 
 
 
 if __name__ == "__main__":
-    configfilename = "XNu.json"
+    
+    ## read in a config file
+    configfilename = "temp.json"
+    if len(sys.argv) > 1:
+        configfilename = sys.argv[1]
     configfile = open(configfilename,'r')
     config = commentjson.load(configfile)
     configfile.close()
+
+    # set up the plotter
     pdffilename1D= configfilename.replace("json","pdf")
     plotter = Plotter(config,pdffilename1D)
 
+    # set up and grab the data
+
     grabber = DataGrabber(config,plotter)
     grabber.grab()
+
+    # set up and do the cross section extraction
+
     cross = CrossSectionExtractor(grabber,plotter)
     cross.unfold(4)
     cross.efficiency()
     cross.flux()
 
+
     # close the pdf file
-    plotter.canvas1D.Print(pdffilename1D+")", "pdf")
+    plotter.close()
     grabber.write(configfilename.replace(".json",".root"))
+    grabber.store(os.path.join("csv",configfilename.replace(".json","")))
     grabber.delete()
