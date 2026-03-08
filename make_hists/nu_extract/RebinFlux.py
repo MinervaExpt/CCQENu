@@ -322,10 +322,10 @@ def  GetFluxEbins2D(h_flux, ihist , configmap, FluxEnormBool):  ## fixme varpars
 # implementation of GetFlux for a special histogram
 
 # backwards compatibility
-def  GetFluxFlat(config,   h):
-      allconfigs = {}
-      allconfigs["main"] = (config)
-      return GetFluxFlat(allconfigs,h)
+# def  GetFluxFlat(config,   h):
+#       allconfigs = {}
+#       allconfigs["main"] = (config)
+#       return GetFluxFlat(allconfigs,h)
   
 
 #template<class MnvHistoType>
