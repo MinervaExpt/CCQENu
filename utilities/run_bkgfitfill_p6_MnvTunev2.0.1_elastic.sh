@@ -14,7 +14,7 @@
 export MYWARP=none
 export MYMODEL=MnvTunev2.0.1_elastic
 
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/March2026/bkgfitting/${MYMODEL}/fix_1track2track_geanthadroncv_fitfill_bkgfit_200flux_${MYMODEL} \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/March2026/bkgfitting/${MYMODEL}/fix_geanthadroncv_fitfill_bkgfit_200flux_${MYMODEL} \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL} \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=36h --memory=5000   #--sample=${MYSAMPLE} #--debug --notimestamp
