@@ -360,7 +360,8 @@ class DataGrabber:
                         if "sigma" in data_type:
                             print ("dump the numbers")
                             hist = self.hists1D[sample][category][variable][data_type]
-                            hist.MnvH1DToCSV(hist.GetName(),outdir, 1.E39, False, True, True, True)
+                            #void MnvH1DToCSV(std::string name, std::string directory="", double scale=1.0, bool fullprecision=true, bool errors=true, bool percentage = true, bool binwidth = true);
+                            hist.MnvH1DToCSV(name=hist.GetName(),directory=outdir, scale=1.E41, fullprecision=False,errors= True,  percentage=True, binwidth=True)
         # write out the configs
 
         for key, config in self.allconfigs.items():
