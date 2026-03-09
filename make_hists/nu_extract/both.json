@@ -1,6 +1,6 @@
 {
   "InputFiles":{"1track_MultiPionCut":"/Users/schellma/Dropbox/ccqe/sean/NuFit_MAD_MultiPionCut_1track_All_multother_QEcutBin8_bkgdScaled_Q2QE_2D.root",
-  "2track_MultiPionCut": "/Users/schellma/Dropbox/ccqe/sean/NuFit_MAD_MultiPionCut_2track_All_multother_QEcutBin8_bkgdScaled_Q2QE_2D.root",
+  "2track_MultiPionCut": "/Users/schellma/Dropbox/ccqe/sean/NuFit_MAD_MultiPionCut_2track_All_multother_QEcutBin8_bkgdScaled_Q2QE_2D.root"
   },
   "Target":"Nucleons", // can be Protons, Neutrons or Nucleons
   "Samples":["1track_MultiPionCut","2track_MultiPionCut"],
