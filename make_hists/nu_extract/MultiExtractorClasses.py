@@ -2,6 +2,9 @@
 
 ## note figure out what do_cov_area_norm does.  3-8-2026
 
+#TODO: store normalization information
+#TODO: need to be able to use scaled MC distributions in unfolding/efficiency.  
+
 import os,sys
 from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixD, TVectorD,TString, gPad
 from PlotUtils import MnvH1D, MnvH2D, MnvPlotter
@@ -106,7 +109,7 @@ class CrossSectionExtractor:
                     
                     #data_hist.Print("ALL")
                     #unfolded_hist.Print("ALL")
-                    PlotCVAndError(self.plotter.canvas1D, data_hist,unfolded_hist,"unfolding before and after",True,logscale)
+                    PlotCVAndError(self.plotter.canvas1D, data_hist,unfolded_hist,sample+": unfolding before and after",True,logscale)
                     
 
                    
@@ -229,7 +232,7 @@ class CrossSectionExtractor:
 
                 if PLOTS:
                     
-                    PlotCVAndError(self.plotter.canvas1D, sigma_hist,sigmaMC_hist,"Cross Section Compared to Tuned "+self.grabber.model,True,logscale+2,binwid=True)
+                    PlotCVAndError(self.plotter.canvas1D, sigma_hist,sigmaMC_hist,sample+": Cross Section "+self.grabber.model,True,logscale,binwid=True)
                     PlotErrorSummary(self.plotter.canvas1D, sigma_hist, sample+": Cross Section Systematics", logscale%2)
         pass
 
@@ -255,7 +258,7 @@ class CrossSectionExtractor:
 
         print(" POT Scale",POTScale)
 
-        #TODO: store normalization information
+        
 
         return norm
 
@@ -368,6 +371,16 @@ class DataGrabber:
         
         pass
 
+    def print(self,types=[],option=""):
+        for sample in self.hists1D.keys():
+            for category in self.hists1D[sample].keys():
+                for variable in self.hists1D[sample][category].keys():
+                    for data_type in self.hists1D[sample][category][variable].keys():
+                        if types != [] and data_type not in types: continue
+                        count = self.hists1D[sample][category][variable][data_type].Integral()
+                        print (f"Totals: {sample} {category} {variable} {data_type} {count}")
+        
+
     def write(self, outname):
         ''' method to write root file with hists and configuration'''
         out = TFile.Open(outname,"RECREATE")
@@ -445,7 +458,7 @@ class Plotter:
         self.canvas1D.SetLeftMargin(0.15)
         self.canvas1D.SetRightMargin(0.15)
         self.canvas1D.SetBottomMargin(0.15)
-        self.canvas1D.SetTopMargin(0.15)
+        self.canvas1D.SetTopMargin(0.10)
         self.canvas1D.Print(pdffilename+"(", "pdf")
         self.logx=0
         self.scales=config["Scales"]
@@ -481,6 +494,7 @@ if __name__ == "__main__":
 
     grabber = DataGrabber(config,plotter)
     grabber.grab()
+    grabber.print(["fitted_combined","reconstructed"])
     
     # set up and do the cross section extraction
 
