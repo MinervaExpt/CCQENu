@@ -1,8 +1,8 @@
 {
   "version":18, // turn off tunes, add flux
    // Run major variables in batch, use v16 of cuts, add closure
-  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_public/MediumEnergy_RHC_StandardMC_Playlist${5A}.txt",
-  "dataIn":"${CCQEMAT}/playlists/${DATALOC}_public/MediumEnergy_RHC_Data_Playlist${5A}.txt", // hack for type plot of resolution
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_public/MediumEnergy_RHC_StandardMC_Playlist${MYPLAYLIST}.txt",
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}_public/MediumEnergy_RHC_Data_Playlist${MYPLAYLIST}.txt", // hack for type plot of resolution
   "prescale":999,
   "playlist":"minervame${MYPLAYLIST}",
   "DoResolution":1,
@@ -18,7 +18,7 @@
   "samplesFile":"${CCQEMAT}/AntiNuExample/AntiNuSamples_v16.json",  // describe the samples, cuts are chosen here
   "runsamples":["${MYSAMPLE}"], // chose which samples to run can provide a list or chose 1 using the batch
   "outRoot":"v17_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // name for output files
-    "AnalyzeVariables":["Q2QE","Q0QE","pzmu","ptmu","Enu","EnuCCQE","ThetamuDegrees","recoil"], // choose the 1D variables
+  "AnalyzeVariables":["Q2QE","Q0QE","pzmu","ptmu","Enu","EnuCCQE","ThetamuDegrees","recoil"], // choose the 1D variables
   "Analyze2DVariables":["pzmu_ptmu"], // choose 2D variables, 1D variables must be chosen
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"}, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
