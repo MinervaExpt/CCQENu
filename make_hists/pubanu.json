@@ -8,7 +8,7 @@
   "DoResolution":1,
   "MinervaModel":"${MYMODEL}", // set this as an environmental to MnvTunev1 or MnvTunev2
   "recoName":"MasterAnaDev", // change if running on MAT tuples
-  "tunedmc":"untuned", // uses the tunes if available
+  "tunedmc":"both", // uses the tunes if available
   "closure":0, // set to 1 if you want to do closure test, otherwise 0
   "scalefileIn":"${CCQEMAT}/data/FullSample_${MYMODEL}_Q2QErecoil.root", // location of anti-nu background tuning
   "TuneCategories":["qelike","qelikenot"], // categories that have tunes
@@ -24,19 +24,19 @@
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
   "data":{"QElike":"data","Background":"data","QElikeNP":"data","QElikeALLAngles":"data"},
   // turn on/off systematics
-  "responseSystematicsVersion":"2024",
+  //"responseSystematicsVersion":"2024",
   "systematics": [
     "Flux",
     "MuonMINOS",
     "MuonResolution",
     "MINOSEfficiency",
     "Angle",
-    // "GENIE",
-    // "GenieRvx1pi",
-    // "RPA",
-    // "2p2h",
-    // "MuonMinerva",
-    // "geant4",
+    "GENIE",
+    "GenieRvx1pi",
+    "RPA",
+    "2p2h",
+    "MuonMinerva",
+    "geant4",
      "response"
   ],
   // "systematics": [
