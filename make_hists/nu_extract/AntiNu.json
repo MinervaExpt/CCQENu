@@ -1,0 +1,51 @@
+{
+  "InputFiles":{
+    //"1track_MultiPionCut":"/Users/schellma/Dropbox/ccqe/sean/NuFit_MAD_MultiPionCut_1track_All_multother_QEcutBin8_bkgdScaled_Q2QE_2D.root",
+  //"2track_MultiPionCut": "/Users/schellma/Dropbox/ccqe/sean/NuFit_MAD_MultiPionCut_2track_All_multother_QEcutBin8_bkgdScaled_Q2QE_2D.root"
+  "QElike":"/Users/schellma/Dropbox/ccqe/p4_run/ccqemadd.root"
+  },
+  "Target":"Nucleons", // can be Protons, Neutrons or Nucleons
+  
+  "Data_Cat":"data",
+  "Signal_Cat":"qelike",
+  "Backgrounds":["qelikenot"], // only use if doing Background stage
+
+  "Samples": [
+    "QElike"
+  ],
+  "Categories": [
+    "data",
+    "qelike",
+    "qelikenot"
+  ],
+  "Data_Type": "reconstructed",
+  "Signal_Type": "reconstructed",
+  "Background_Type": "reconstructed",
+  "Migration":"response",
+  // these data_types below are used to load in the right set of histograms
+  "data_types1D":{
+    "data":["reconstructed"],
+    "qelike":["reconstructed","selected_truth","all_truth","response_truth","response_reconstructed"],
+    "qelikenot": [
+      "reconstructed"
+    ]
+  },
+  "data_types2D":{
+    "data":[],
+    "qelike": ["response_migration"],
+    "qelikenot": []
+  },
+  "Variables":["Q2QE"],
+  "Scales":{"Q2QE":1},    // scale = logx + 2* logy
+  "FluxNorm":{"Q2QE":false}, // true = do bin by bin
+  "PixDir":"./pix",
+  "LogMinimum":0.1,
+  "Stages":{
+    "Background":{"In":"reconstructed","Out":"bkgsub"},
+    "Unfold":{"In":"bkgsub","Out":"unfolded"},
+    "Efficiency":{"In":"unfolded","Out":"effcorr"},
+    "Flux":{"In":"effcorr","Out":"sigma"}
+  }
+  //"Template":"h___%s___%s___%s___reconstructed",
+  //"FitTemplate":"h___%s___%s___%s___fitted_combined"
+}

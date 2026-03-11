@@ -5,9 +5,13 @@
   "Target":"Nucleons", // can be Protons, Neutrons or Nucleons
   "Samples":["1track_MultiPionCut","2track_MultiPionCut"],
   "Categories":["qelike","bkgsub"], 
-  "Data":"bkgsub",
-  "Signal":"qelike",
+  "Data_Cat":"bkgsub",
+  "Signal_Cat":"qelike",
+  "Backgrounds":[],
   "Migration":"response",
+  "Data_Type":"fitted_combined",
+  "Signal_Type":"reconstructed",
+  "Background_Type":"reconstructed",
   "data_types1D":{
     "bkgsub":["fitted_combined"],
     "qelike":["reconstructed","selected_truth","all_truth","response_truth","response_reconstructed"]
@@ -18,10 +22,14 @@
   },
   "Variables":["Q2QE"],
   "Scales":{"Q2QE":1},    // scale = logx + 2* logy
-  "FluxNorm":{"Q2QE":false},
+  "FluxNorm":{"Q2QE":false}, // true = do bin by bin
   "PixDir":"./pix",
-  "LogPlot":false,
-  "LogMinimum":1.0,
-  "Template":"h___%s___%s___%s___reconstructed",
-  "FitTemplate":"h___%s___%s___%s___fitted_combined"
+  "LogMinimum":0.1,
+  "Stages":{
+    "Unfold":{"In":"fitted_combined","Out":"unfolded"},
+    "Efficiency":{"In":"unfolded","Out":"effcorr"},
+    "Flux":{"In":"effcorr","Out":"sigma"}
+  }
+  //"Template":"h___%s___%s___%s___reconstructed",
+  //"FitTemplate":"h___%s___%s___%s___fitted_combined"
 }

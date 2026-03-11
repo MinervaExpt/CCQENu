@@ -53,6 +53,17 @@ def addentry(thing,one,two,three,four,value):
     else:
         print ("Found a duplicate item",one,two,three,four)
     pass
+
+def fractionator(hist1, hist2,newname):
+    ''' get the fraction of hist1 in hist1+hist2 without double counting errors'''
+    den = hist1.Clone("temp")
+    den.Add(hist2)
+    num = hist1.Clone(newname)
+    num.Divide(num,den, 1., 1., "B")
+    del den
+    return num
+    
+    
     
 
 class CrossSectionExtractor:
@@ -63,22 +74,57 @@ class CrossSectionExtractor:
         self.allconfigs = grabber.allconfigs
         self.plotter = plotter
         self.grabber = grabber
+
+    def background(self):
+        input_stage = self.grabber.allconfigs["Cross"]["Stages"]["Background"]["In"]
+        output_stage = self.grabber.allconfigs["Cross"]["Stages"]["Background"]["Out"]
+        for sample in self.allconfigs["Cross"]["Samples"]:
+            for variable in self.allconfigs["Cross"]["Variables"]:
+
+                data_cat = self.allconfigs["Cross"]["Data_Cat"]            
+                bkg_cat = "bkgtot"
+                sig_cat = self.allconfigs["Cross"]["Signal_Cat"]
+                
+                sig_type = self.allconfigs["Cross"]["Signal_Type"]
+                bkg_hist = self.hists1D[sample][bkg_cat][variable][sig_type]
+                sig_hist = self.hists1D[sample][sig_cat][variable][sig_type]
+                new_name = self.hists1D[sample][data_cat][variable][input_stage].GetName()+"_"+input_stage
+                
+                bkgsub_hist = self.hists1D[sample][data_cat][variable][input_stage].Clone(new_name)
+                bkgsub_hist.AddMissingErrorBandsAndFillWithCV(sig_hist)
+                
+
+                signal_fraction = fractionator(sig_hist,bkg_hist,newname=sample+"_"+variable+"_signal_fraction")
+                bkgsub_hist.Multiply(bkgsub_hist,signal_fraction)
+                addentry(self.hists1D, sample, data_cat, variable, output_stage, bkgsub_hist)
+                
+                if PLOTS:
+                    logscale = self.allconfigs["Cross"]["Scales"][variable]
+
+                    PlotCVAndError(self.plotter.canvas1D, signal_fraction,signal_fraction,sample+": Signal Fraction",True,1,False) # remove binwid                   
+                    PlotErrorSummary(self.plotter.canvas1D, signal_fraction, sample + ": Signal Fraction Systematics", logscale%2)
+
+                    PlotCVAndError(self.plotter.canvas1D,bkgsub_hist,sig_hist,sample+": Background Subtracted Data",True,logscale)
+                    PlotErrorSummary(self.plotter.canvas1D, bkgsub_hist, sample + ": Background Subtracted Data Systematics", logscale%2)
+                                   
+                
+
         
     def unfold(self,iterations=4):
         ''' method that unfolds background subtracted data '''
 
-        input_stage = "fitted_combined"
-        stage = "unfolded"
+        input_stage = self.grabber.allconfigs["Cross"]["Stages"]["Unfold"]["In"]
+        output_stage = self.grabber.allconfigs["Cross"]["Stages"]["Unfold"]["Out"]
         
         for sample in self.allconfigs["Cross"]["Samples"]:
             for variable in self.allconfigs["Cross"]["Variables"]:
                 logscale = self.allconfigs["Cross"]["Scales"][variable]
-                data_cat = self.allconfigs["Cross"]["Data"]
-                signal_cat = self.allconfigs["Cross"]["Signal"]
+                data_cat = self.allconfigs["Cross"]["Data_Cat"]
+                signal_cat = self.allconfigs["Cross"]["Signal_Cat"]
                 
                 migration = self.allconfigs["Cross"]["Migration"]
                 data_hist = self.hists1D[sample][data_cat][variable][input_stage]
-                unfolded_name = (data_hist.GetName()) + "_"+stage
+                unfolded_name = (data_hist.GetName()) + "_"+output_stage
                 migration = self.hists1D[sample][signal_cat][variable][migration+"_migration"]
                 true_sel_hist = self.hists1D[sample][signal_cat][variable]["selected_truth"]
 
@@ -102,7 +148,7 @@ class CrossSectionExtractor:
 
                 unfolded_hist.FillSysErrorMatrix("Unfolding", covmatrix)
                 SyncBands(unfolded_hist)
-                addentry(self.hists1D, sample, data_cat, variable, stage, unfolded_hist)
+                addentry(self.hists1D, sample, data_cat, variable, output_stage, unfolded_hist)
                 unfolded_hist.Print()
 
                 if PLOTS:
@@ -113,21 +159,21 @@ class CrossSectionExtractor:
                     
 
                    
-                    PlotCVAndError(self.plotter.canvas1D, unfolded_hist,true_sel_hist,sample+": Unfolded data",True,1)
+                    PlotCVAndError(self.plotter.canvas1D, unfolded_hist,true_sel_hist,sample+": Unfolded data",True,logscale)
                     PlotErrorSummary(self.plotter.canvas1D, unfolded_hist, sample+": Unfolded Systematics", logscale%2)
                     #self.plotter.canvas1D.Print(f"pix/{sample}_{variable}_{stage}.png")
                     #cE.Print(f"unfolding_{sample}_{variable}.png")
 
     def efficiency(self,thesample):
-        input_stage = "unfolded"
-        stage="effcorr"
+        input_stage = self.grabber.allconfigs["Cross"]["Stages"]["Efficiency"]["In"]
+        output_stage = self.grabber.allconfigs["Cross"]["Stages"]["Efficiency"]["Out"]
         for sample in self.grabber.hists1D.keys():
             print ("efficiency correcting",sample)
             if sample != thesample: continue
             for variable in self.allconfigs["Cross"]["Variables"]:
                 logscale = self.allconfigs["Cross"]["Scales"][variable]
-                data_cat = self.allconfigs["Cross"]["Data"]
-                mc_cat = self.allconfigs["Cross"]["Signal"]
+                data_cat = self.allconfigs["Cross"]["Data_Cat"]
+                mc_cat = self.allconfigs["Cross"]["Signal_Cat"]
                 
                 unfolded_hist = self.hists1D[sample][data_cat][variable][input_stage]
                 true_sel_hist = self.hists1D[sample][mc_cat][variable]["selected_truth"]
@@ -135,7 +181,7 @@ class CrossSectionExtractor:
                 efficiency_name = true_sel_hist.GetName().replace("selected_truth","efficiency")
                 efficiency_hist = MnvH1D()
                 efficiency_hist = true_sel_hist.Clone(efficiency_name)
-                efficiency_hist.Divide(efficiency_hist,true_all_hist)
+                efficiency_hist.Divide(efficiency_hist,true_all_hist,1.,1.,"B")
 
                 efficiency_hist.PopVertErrorBand("Flux")
 
@@ -149,12 +195,12 @@ class CrossSectionExtractor:
 
 
 
-                corrected_name=unfolded_hist.GetName()+"_"+stage
+                corrected_name=unfolded_hist.GetName()+"_"+output_stage
                 corrected_hist = MnvH1D()
                 corrected_hist = unfolded_hist.Clone(corrected_name)
                 corrected_hist.Divide(corrected_hist,efficiency_hist)
                 SyncBands(corrected_hist)
-                addentry(self.hists1D, sample, data_cat, variable, stage, corrected_hist)
+                addentry(self.hists1D, sample, data_cat, variable, output_stage, corrected_hist)
 
                 if PLOTS:
                     if sample == "merged":
@@ -172,24 +218,25 @@ class CrossSectionExtractor:
     def flux(self,thesample):
         '''Method that does a flux/target correction to corrected counts to make a cross section'''
 
-        input_stage = "effcorr"
-        stage="sigma"
-        mcstage="sigmaMC"
+        input_stage = self.grabber.allconfigs["Cross"]["Stages"]["Flux"]["In"]
+        output_stage = self.grabber.allconfigs["Cross"]["Stages"]["Flux"]["Out"]
+
+        mcoutput_stage=output_stage+"MC"
         for sample in self.grabber.hists1D.keys():
             if sample != thesample: continue
             for variable in self.allconfigs["Cross"]["Variables"]:
                 logscale = self.allconfigs["Cross"]["Scales"][variable]
-                data_cat = self.allconfigs["Cross"]["Data"]
-                mc_cat = self.allconfigs["Cross"]["Signal"]
+                data_cat = self.allconfigs["Cross"]["Data_Cat"]
+                mc_cat = self.allconfigs["Cross"]["Signal_Cat"]
                 
                 effcorr_hist = self.hists1D[sample][data_cat][variable][input_stage]
                 true_all_hist = self.hists1D[sample][mc_cat][variable]["all_truth"]
                 
-                sigma_name=effcorr_hist.GetName()+"_"+stage
+                sigma_name=effcorr_hist.GetName()+"_"+output_stage
                 sigma_hist = MnvH1D()
                 sigma_hist = effcorr_hist.Clone(sigma_name)
 
-                sigmaMC_name=true_all_hist.GetName()+"_"+mcstage
+                sigmaMC_name=true_all_hist.GetName()+"_"+ mcoutput_stage
                 sigmaMC_hist = MnvH1D()
                 sigmaMC_hist = true_all_hist.Clone(sigmaMC_name)
 
@@ -226,9 +273,9 @@ class CrossSectionExtractor:
                     pass
 
 
-                addentry(self.hists1D, sample, data_cat, variable, stage, sigma_hist)
+                addentry(self.hists1D, sample, data_cat, variable, output_stage, sigma_hist)
 
-                addentry(self.hists1D, sample, mc_cat, variable, mcstage, sigmaMC_hist)
+                addentry(self.hists1D, sample, mc_cat, variable, mcoutput_stage, sigmaMC_hist)
 
                 if PLOTS:
                     
@@ -330,20 +377,39 @@ class DataGrabber:
                         addentry(self.hists1D, sample, category, variable, data_type, hist)
                         if DEBUG: print ("grabbed",self.hists1D[sample][category][variable][data_type].GetName(),sample,category,variable,data_type)
 
-        if PLOTS:
-            for sample in self.allconfigs["Cross"]["Samples"]:
-                for variable in self.allconfigs["Cross"]["Variables"]:
-                    logscale = self.allconfigs["Cross"]["Scales"][variable]
-                    data_cat = self.allconfigs["Cross"]["Data"]
-                    signal_cat = self.allconfigs["Cross"]["Signal"]
-                    types = self.allconfigs["Cross"]["data_types1D"]
-                    #if DEBUG: print (types)
-                    data_hist = self.hists1D[sample][data_cat][variable]["fitted_combined"]
-                    mc_hist = self.hists1D[sample][signal_cat][variable]["reconstructed"]
+# make an MCTOT and plot if request
+        
+        for sample in self.allconfigs["Cross"]["Samples"]:
+            for variable in self.allconfigs["Cross"]["Variables"]:
                 
+                data_cat = self.allconfigs["Cross"]["Data_Cat"]
+                signal_cat = self.allconfigs["Cross"]["Signal_Cat"]
+                background_cats = self.allconfigs["Cross"]["Backgrounds"]
+                data_type = self.allconfigs["Cross"]["Data_Type"]
+                signal_type = self.allconfigs["Cross"]["Signal_Type"]
+                background_type = self.allconfigs["Cross"]["Background_Type"]
+                data_hist = self.hists1D[sample][data_cat][variable][data_type]
+                mc_hist = self.hists1D[sample][signal_cat][variable][signal_type]
+                mctot_hist = mc_hist.Clone(mc_hist.GetName()+"_mctot")
+                bkgtot_hist = mc_hist.Clone(mc_hist.GetName()+"_bkgtot")
+                bkgtot_hist.Reset()
+                for bkg_cat in background_cats:
+                    bkg_hist = self.hists1D[sample][bkg_cat][variable][background_type]
+                    mctot_hist.Add(bkg_hist)
+                    bkgtot_hist.Add(bkg_hist)
+                
+                addentry(self.hists1D,sample,"mctot",variable,signal_type,mctot_hist)
+                addentry(self.hists1D,sample,"bkgtot",variable,signal_type,bkgtot_hist)
 
-                    PlotCVAndError(self.plotter.canvas1D, data_hist,mc_hist,sample + ": Background subtracted data compared to "+self.model,True,self.plotter.scales[variable])
-                    PlotErrorSummary(self.plotter.canvas1D, data_hist, sample + ": Background subtracted data Systematics", logscale%2)
+                if DEBUG: print ("created",self.hists1D[sample]["mctot"][variable][signal_type].GetName(),sample,category,variable,signal_type) 
+                if DEBUG: print ("created",self.hists1D[sample]["bkgtot"][variable][background_type].GetName(),sample,category,variable,background_type)   
+
+
+            
+                if PLOTS:
+                    logscale = self.allconfigs["Cross"]["Scales"][variable]
+                    PlotCVAndError(self.plotter.canvas1D, data_hist,mctot_hist,sample + ": data compared to "+self.model,True,self.plotter.scales[variable])
+                    PlotErrorSummary(self.plotter.canvas1D, data_hist, sample + ": Data", logscale%2)
                    
         pass
 
@@ -379,7 +445,7 @@ class DataGrabber:
                         if types != [] and data_type not in types: continue
                         count = self.hists1D[sample][category][variable][data_type].Integral()
                         print (f"Totals: {sample} {category} {variable} {data_type} {count}")
-        
+        pass
 
     def write(self, outname):
         ''' method to write root file with hists and configuration'''
@@ -479,7 +545,7 @@ class Plotter:
 if __name__ == "__main__":
     
     ## read in a config file
-    configfilename = "both.json"
+    configfilename = "AntiNu.json"
     if len(sys.argv) > 1:
         configfilename = sys.argv[1]
     configfile = open(configfilename,'r')
@@ -494,11 +560,19 @@ if __name__ == "__main__":
 
     grabber = DataGrabber(config,plotter)
     grabber.grab()
-    grabber.print(["fitted_combined","reconstructed"])
+
+    cross = CrossSectionExtractor(grabber,plotter)
+
+    if "Background" in config["Stages"]:
+        cross.background()
+
+    
+
+    #grabber.print(["fitted_combined","reconstructed"])
     
     # set up and do the cross section extraction
 
-    cross = CrossSectionExtractor(grabber,plotter)
+    
     cross.unfold(4)
     
     # merge the samples after unfolding
