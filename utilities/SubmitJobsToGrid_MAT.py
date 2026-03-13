@@ -71,6 +71,7 @@ def writeSetups(mywrapper,basedirname,setup):
     writewrap(mywrapper,"echo \"in code directory\"\n")
     writewrap(mywrapper,"pwd\n")
     writewrap(mywrapper,"ls -lt \n")
+    writewrap(mywrapper,"basedirname %s"%basedirname)
     topdir = "$INPUT_TAR_DIR_LOCAL/" + basedirname
     writewrap(mywrapper,"cd "+topdir+"\n")
     writewrap(mywrapper,"export BASEDIR=$PWD\n")
@@ -217,7 +218,9 @@ if not os.path.exists(opts.basedirpath):
     print ("--basedir seems not to exist", opts.basedirpath)
     sys.exit(1)
 basedirpath=os.path.dirname(opts.basedirpath)
+
 basedirname=os.path.basename(opts.basedirpath)
+print ("basedirname",basedirname)
 
 pathtoexe=os.path.join(opts.basedirpath,opts.rundir,opts.theexe)
 print (" check the executable path structure",pathtoexe,os.path.exists(pathtoexe))
