@@ -159,6 +159,9 @@ void LoopAndFillEventSelection(std::string tag,
         if (data_mc_truth == kMC || data_mc_truth == kData){
             if (!cvUniv->FastFilter()) continue;
         }
+        if (data_mc_truth == kTruth) {
+            if (!cvUniv->TrueFastFilter()) continue;
+        }
         const double cvWeight = (data_mc_truth == kData || closure) ? 1. : model.GetWeight(*cvUniv, event);  // detail may be used for more complex things
         // TODO: Is this scaled cvWeight necessary?
         // const double cvWeightScaled = (data_mc_truth kData) ? 1. : cvWeight*mcRescale.GetScale(q2qe, "cv");

@@ -319,14 +319,21 @@ bool CVUniverse::FastFilter() const {
     // #ifdef NEWMATCH # this changes with new definition
     //     if (GetIsMinosMatchTrack() == 0) return result;
     // #else
-    //     if (GetIsMinosMatchTrack() != -1) return result;
+    if (GetIsMinosMatchTrack() != 1) return result;
     // #endif
     if (GetZVertex() < 5980 || GetZVertex() > 8422) return result;
     if (GetApothemX() > 850.) return result;
     if (GetApothemY() > 850.) return result;
     return true;
 }
-bool CVUniverse::TrueFastFilter() const { return true; }
+bool CVUniverse::TrueFastFilter() const {
+    // loose geometrical cuts
+    bool result = false;
+    if (GetTrueZVertex() < 5980 -500.|| GetTrueZVertex() > 8422 + 500.) return result;
+    if (GetTrueApothemX() > 850.+100.) return result;
+    if (GetTrueApothemY() > 850.+100.) return result;
+    return true;
+}
 
 double CVUniverse::GetEventID() const { return GetDouble("eventID"); }
 int CVUniverse::GetMultiplicity() const { return GetInt("multiplicity"); }
