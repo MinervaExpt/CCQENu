@@ -20,7 +20,7 @@ POPFITPARAMETERS=True # have to do this for now to keep unfolding happy about ma
 print ("have imported common packages")
 
 from MatrixUtils import checktag, ToVectorD, ToMatrixDSym, scaleHist, map2TObjArray, TexFigure3
-from GetXSec import GetCrossSection 
+#from GetXSec import GetCrossSection 
 
 from RebinFlux import GetFlux
 from plotting_pdf import PlotCVAndError,PlotErrorSummary
