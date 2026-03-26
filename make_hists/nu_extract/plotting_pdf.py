@@ -347,6 +347,7 @@ def PlotCVAndError1D(cE, idatahist,  ihist, label, cov_area = do_cov_area_norm, 
     
     print ("datahist",type(datahist))
     mnvPlotter.DrawDataMCWithErrorBand(datahist, hist, mcScale, "TL", useHistTitles, 0, 0, cov_area, statPlusSys)
+    #gPad.BuildLegend()
     stat = TH1D()
     stat = datahist.GetCVHistoWithStatError()
     

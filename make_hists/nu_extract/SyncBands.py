@@ -20,3 +20,19 @@ def SyncBands(thehist):
           band.SetBinContent(i,theCVHisto.GetBinContent(i))
           band.SetBinError(i,theCVHisto.GetBinError(i))
 
+def CopyBands(hista,histb):
+    '''make certain error bands are consistent hista bands move to histb'''
+    print ("CopyBands",hista.GetName(),histb.GetName())
+    namesa = hista.GetVertErrorBandNames()
+    namesb = histb.GetVertErrorBandNames()
+    if len(namesa) == len(namesb): pass
+    # diff = list(set(namesa) - set(namesb))
+    # print ("difference in names",diff)
+    # if len(diff) == 0: pass
+    histb.AddMissingErrorBandsAndFillWithCV(hista)
+    SyncBands(histb)
+    #namesa = hista.GetVertErrorBandNames()
+    #diff = list(set(namesa) - set(namesb))
+    #print ("difference in names",diff)
+    #if len(diff) == 0: pass
+    #histb.AddMissingErrorBandsAndFillWithCV(hista)

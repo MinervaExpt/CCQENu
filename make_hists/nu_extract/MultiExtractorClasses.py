@@ -122,11 +122,12 @@ class CrossSectionExtractor:
                 data_cat = self.allconfigs["Cross"]["Data_Cat"]
                 signal_cat = self.allconfigs["Cross"]["Signal_Cat"]
                 
-                migration = self.allconfigs["Cross"]["Migration"]
+                migration_type = self.allconfigs["Cross"]["Migration_Type"]
+                selected_type = self.allconfigs["Cross"]["Selected_Type"]
                 data_hist = self.hists1D[sample][data_cat][variable][input_stage]
                 unfolded_name = (data_hist.GetName()) + "_"+output_stage
-                migration = self.hists1D[sample][signal_cat][variable][migration+"_migration"]
-                true_sel_hist = self.hists1D[sample][signal_cat][variable]["selected_truth"]
+                migration = self.hists1D[sample][signal_cat][variable][migration_type+"_migration"]
+                true_sel_hist = self.hists1D[sample][signal_cat][variable][selected_type]
 
                 unfolded_hist= MnvH1D()
                 unfolded_hist= MnvH1D((true_sel_hist).GetCVHistoWithStatError())
@@ -164,21 +165,23 @@ class CrossSectionExtractor:
                     #self.plotter.canvas1D.Print(f"pix/{sample}_{variable}_{stage}.png")
                     #cE.Print(f"unfolding_{sample}_{variable}.png")
 
-    def efficiency(self,thesample):
+    def efficiency(self,thesamples):
         input_stage = self.grabber.allconfigs["Cross"]["Stages"]["Efficiency"]["In"]
         output_stage = self.grabber.allconfigs["Cross"]["Stages"]["Efficiency"]["Out"]
         for sample in self.grabber.hists1D.keys():
             print ("efficiency correcting",sample)
-            if sample != thesample: continue
+            if sample not in thesamples: continue
             for variable in self.allconfigs["Cross"]["Variables"]:
                 logscale = self.allconfigs["Cross"]["Scales"][variable]
                 data_cat = self.allconfigs["Cross"]["Data_Cat"]
                 mc_cat = self.allconfigs["Cross"]["Signal_Cat"]
-                
+                selected_type = self.allconfigs["Cross"]["Selected_Type"]
+                truth_type = self.allconfigs["Cross"]["Truth_Type"]
                 unfolded_hist = self.hists1D[sample][data_cat][variable][input_stage]
-                true_sel_hist = self.hists1D[sample][mc_cat][variable]["selected_truth"]
-                true_all_hist = self.hists1D[sample][mc_cat][variable]["all_truth"]
-                efficiency_name = true_sel_hist.GetName().replace("selected_truth","efficiency")
+                
+                true_sel_hist = self.hists1D[sample][mc_cat][variable][selected_type]
+                true_all_hist = self.hists1D[sample][mc_cat][variable][truth_type]
+                efficiency_name = true_sel_hist.GetName().replace(selected_type,"efficiency")
                 efficiency_hist = MnvH1D()
                 efficiency_hist = true_sel_hist.Clone(efficiency_name)
                 efficiency_hist.Divide(efficiency_hist,true_all_hist,1.,1.,"B")
@@ -215,7 +218,7 @@ class CrossSectionExtractor:
                     
 
 
-    def flux(self,thesample):
+    def flux(self,thesamples):
         '''Method that does a flux/target correction to corrected counts to make a cross section'''
 
         input_stage = self.grabber.allconfigs["Cross"]["Stages"]["Flux"]["In"]
@@ -223,14 +226,14 @@ class CrossSectionExtractor:
 
         mcoutput_stage=output_stage+"MC"
         for sample in self.grabber.hists1D.keys():
-            if sample != thesample: continue
+            if sample not in thesamples: continue
             for variable in self.allconfigs["Cross"]["Variables"]:
                 logscale = self.allconfigs["Cross"]["Scales"][variable]
                 data_cat = self.allconfigs["Cross"]["Data_Cat"]
                 mc_cat = self.allconfigs["Cross"]["Signal_Cat"]
-                
+                truth_type = self.allconfigs["Cross"]["Truth_Type"]
                 effcorr_hist = self.hists1D[sample][data_cat][variable][input_stage]
-                true_all_hist = self.hists1D[sample][mc_cat][variable]["all_truth"]
+                true_all_hist = self.hists1D[sample][mc_cat][variable][truth_type]
                 
                 sigma_name=effcorr_hist.GetName()+"_"+output_stage
                 sigma_hist = MnvH1D()
@@ -384,7 +387,7 @@ class DataGrabber:
                 
                 data_cat = self.allconfigs["Cross"]["Data_Cat"]
                 signal_cat = self.allconfigs["Cross"]["Signal_Cat"]
-                background_cats = self.allconfigs["Cross"]["Backgrounds"]
+                background_cats = self.allconfigs["Cross"]["Background_Cat"]
                 data_type = self.allconfigs["Cross"]["Data_Type"]
                 signal_type = self.allconfigs["Cross"]["Signal_Type"]
                 background_type = self.allconfigs["Cross"]["Background_Type"]
@@ -575,13 +578,16 @@ if __name__ == "__main__":
     
     cross.unfold(4)
     
+    grabber.merge(config["Samples"])
+    
+
+    # efficiency correction 
+
+    cross.efficiency(["merged"])
+
     # merge the samples after unfolding
 
-    grabber.merge(config["Samples"])
-
-    # efficiency correction for just the merged sample
-
-    cross.efficiency("merged")
+    
 
     # flux normalization for just the merged sample
 
