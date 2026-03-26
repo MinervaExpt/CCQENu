@@ -1,0 +1,50 @@
+{
+  "InputFiles":{
+  "QElike":"/Users/schellma/Dropbox/ccqe/pub_run/pub_v18.root"
+  },
+  "Target":"Nucleons", // can be Protons, Neutrons or Nucleons
+  "POTScale":1, //1 if you need to POT scale
+  "Data_Cat":"data",
+  "Signal_Cat":"qelike",
+  "Background_Cat":["qelikenot"], // only use if doing Background stage
+
+  "Samples": [
+    "QElike"
+  ],
+  "Categories": [
+    "data",
+    "qelike",
+    "qelikenot"
+  ],
+  "Data_Type": "reconstructed",
+  "Signal_Type": "reconstructed_tuned",
+  "Background_Type": "reconstructed_tuned",
+  "Selected_Type":"selected_truth_tuned",
+  "Truth_Type":"all_truth_tuned",
+  "Migration_Type":"response_tuned",
+  // these data_types below are used to load in the right set of histograms
+  "data_types1D":{
+    "data":["reconstructed"],
+    "qelike":["reconstructed_tuned","selected_truth_tuned","all_truth_tuned","response_tuned_truth","response_tuned_reco"],
+    "qelikenot": [
+      "reconstructed_tuned"
+    ]
+  },
+  "data_types2D":{
+    "data":[],
+    "qelike": ["response_tuned_migration"],
+    "qelikenot": []
+  },
+  "Variables":["Q2QE","EnuCCQE"],
+  "Scales":{"Q2QE":1,
+    "EnuCCQE":2},    // scale = logx + 2* logy
+  "FluxNorm":{"Q2QE":false,"EnuCCQE":false}, // true = do bin by bin
+  "PixDir":"./pix",
+  "LogMinimum":0.1,
+  "Stages":{
+    "Background":{"In":"reconstructed","Out":"bkgsub_tuned"},
+    "Unfold":{"In":"bkgsub_tuned","Out":"unfolded_tuned"},
+    "Efficiency":{"In":"unfolded_tuned","Out":"effcorr_tuned"},
+    "Flux":{"In":"effcorr_tuned","Out":"sigma_tuned"}
+  }
+}
