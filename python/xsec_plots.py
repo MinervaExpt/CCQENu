@@ -81,6 +81,127 @@ skipvar_list = [
     # "EAvail",
 ]
 
+errorbandsgroups = {
+    "BeamAngle": [
+        "BeamAngleX", 
+        "BeamAngleY", 
+    ],
+    "Flux": [
+        "Flux",
+    ],
+    "GENIE": [
+        "GENIE_AGKYxF1pi", 
+        "GENIE_AhtBY", 
+        "GENIE_BhtBY", 
+        "GENIE_CCQEPauliSupViaKF", 
+        "GENIE_CV1uBY", 
+        "GENIE_CV2uBY", 
+        "GENIE_EtaNCEL", 
+        "GENIE_FrAbs_N", 
+        "GENIE_FrAbs_pi", 
+        "GENIE_FrCEx_N", 
+        "GENIE_FrCEx_pi", 
+        "GENIE_FrElas_N", 
+        "GENIE_FrElas_pi", 
+        "GENIE_FrInel_N", 
+        "GENIE_FrPiProd_N", 
+        "GENIE_FrPiProd_pi", 
+        "GENIE_MFP_N", 
+        "GENIE_MFP_pi", 
+        "GENIE_MaCCQE", 
+        "GENIE_MaNCEL", 
+        "GENIE_MaRES", 
+        "GENIE_MvRES", 
+        "GENIE_NormDISCC", 
+        "GENIE_NormNCRES", 
+        "GENIE_RDecBR1gamma", 
+        "GENIE_Rvn1pi", 
+        "GENIE_Rvn2pi", 
+        "GENIE_Rvp1pi", 
+        "GENIE_Rvp2pi", 
+        "GENIE_Theta_Delta2Npi", 
+        "GENIE_VecFFCCQEshape",     
+    ],
+    "GEANT": [
+        "GEANT_Neutron", 
+        "GEANT_Pion", 
+        "GEANT_Proton", 
+    ],
+    "response": [
+        "response_em", 
+        "response_meson", 
+        "response_other",
+        "response_proton",         
+    ],
+    "Tune": [
+        "LowQ2Pi", 
+        "Low_Recoil_2p2h_Tune", 
+        "RPA_HighQ2", 
+        "RPA_LowQ2", 
+    ],
+    "MINOS": [
+        "MINOS_Reconstruction_Efficiency", 
+    ], 
+    "Muon": [
+        "Muon_Energy_MINERvA", 
+        "Muon_Energy_MINOS", 
+        "Muon_Energy_Resolution", 
+    ]
+
+}
+
+errorbands = [ 
+    "BeamAngleX", 
+    "BeamAngleY", 
+    "Flux", 
+    "GEANT_Neutron", 
+    "GEANT_Pion", 
+    "GEANT_Proton", 
+    "GENIE_AGKYxF1pi", 
+    "GENIE_AhtBY", 
+    "GENIE_BhtBY", 
+    "GENIE_CCQEPauliSupViaKF", 
+    "GENIE_CV1uBY", 
+    "GENIE_CV2uBY", 
+    "GENIE_EtaNCEL", 
+    "GENIE_FrAbs_N", 
+    "GENIE_FrAbs_pi", 
+    "GENIE_FrCEx_N", 
+    "GENIE_FrCEx_pi", 
+    "GENIE_FrElas_N", 
+    "GENIE_FrElas_pi", 
+    "GENIE_FrInel_N", 
+    "GENIE_FrPiProd_N", 
+    "GENIE_FrPiProd_pi", 
+    "GENIE_MFP_N", 
+    "GENIE_MFP_pi", 
+    "GENIE_MaCCQE", 
+    "GENIE_MaNCEL", 
+    "GENIE_MaRES", 
+    "GENIE_MvRES", 
+    "GENIE_NormDISCC", 
+    "GENIE_NormNCRES", 
+    "GENIE_RDecBR1gamma", 
+    "GENIE_Rvn1pi", 
+    "GENIE_Rvn2pi", 
+    "GENIE_Rvp1pi", 
+    "GENIE_Rvp2pi", 
+    "GENIE_Theta_Delta2Npi", 
+    "GENIE_VecFFCCQEshape", 
+    "LowQ2Pi", 
+    "Low_Recoil_2p2h_Tune", 
+    "MINOS_Reconstruction_Efficiency", 
+    "Muon_Energy_MINERvA", 
+    "Muon_Energy_MINOS", 
+    "Muon_Energy_Resolution", 
+    "RPA_HighQ2", 
+    "RPA_LowQ2", 
+    "response_em", 
+    "response_meson", 
+    "response_other",
+    "response_proton", 
+]
+
 def MakePlotDir(subdir=""):
     """
     Subdir is the one for all plots that this script should ouptut. You will need to add
@@ -1933,7 +2054,10 @@ for a_hist in analyze_hists.keys():
             tmp_sigma_tuned = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded_effcorr_sigma_tuned"]
             tmp_sigmamc = analyze_hists[a_hist][b_sample][c_var]["sigmaMC"]
             tmp_sigmamc_tuned = analyze_hists[a_hist][b_sample][c_var]["sigmaMC_tuned"]
-
+            
+            print(tmp_sigmamc_tuned.GetVertErrorBandNames())
+            sys.exit(1)
+            
             found_typessigma = False
             found_typessigmatuned = False
             if a_hist in analyze_typeshists:
