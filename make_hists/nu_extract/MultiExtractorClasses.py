@@ -1,4 +1,4 @@
-# classes for extracting a cross section from a fit
+# classes for extracting a cross section from a fit 
 
 ## note figure out what do_cov_area_norm does.  3-8-2026
 
@@ -15,12 +15,13 @@ from RebinFlux import GetFluxFlat
 
 DEBUG=True
 PLOTS=True
-POPFITPARAMETERS=True # have to do this for now to keep unfolding happy about match between data and mc. HMS 3-7-2026
+POPFITPARAMETERS=False 
+# have to do this for now to keep unfolding happy about match between data and mc. HMS 3-7-2026
 
 print ("have imported common packages")
 
 from MatrixUtils import checktag, ToVectorD, ToMatrixDSym, scaleHist, map2TObjArray, TexFigure3
-##from GetXSec import GetCrossSection 
+from SyncBands import SyncBands
 
 from RebinFlux import GetFlux
 from plotting_pdf import PlotCVAndError,PlotErrorSummary
@@ -69,11 +70,14 @@ def fractionator(hist1, hist2,newname):
 class CrossSectionExtractor:
 
     ''' Class that does cross section extraction after data grab '''
-    def __init__(self, grabber, plotter):
-        self.hists1D = grabber.hists1D
-        self.allconfigs = grabber.allconfigs
-        self.plotter = plotter
-        self.grabber = grabber
+    def __init__(self, thegrabber, theplotter):
+        self.hists1D = thegrabber.hists1D
+        self.hists2D = thegrabber.hists1D
+        self.allconfigs = thegrabber.allconfigs
+        self.plotter = theplotter
+        self.grabber = thegrabber
+        pass
+
 
     def background(self):
         input_stage = self.grabber.allconfigs["Cross"]["Stages"]["Background"]["In"]
@@ -315,12 +319,12 @@ class CrossSectionExtractor:
 class DataGrabber:
     ''' class to grab data from a fit file '''
 
-    def __init__(self, config, plotter):
+    def __init__(self, theconfig, theplotter):
         '''  store the config and input data file'''
-        self.config = config
-        self.data_source = config["InputFiles"]
+        self.config = theconfig
+        self.data_source = theconfig["InputFiles"]
 
-        self.samples = config["Samples"]
+        self.samples = theconfig["Samples"]
         self.data_files = {}
         self.samples_pot = {}
         count = 0
@@ -339,11 +343,11 @@ class DataGrabber:
         for key in ["main","varsFile","cutsFile","samplesFile"]:
             self.allconfigs[key] = commentjson.loads(self.data_files[self.reference_sample].Get(key).GetTitle())
         
-        self.allconfigs["Cross"]=config
+        self.allconfigs["Cross"]=theconfig
         self.hists1D = {}
         self.datatypes1D = self.allconfigs["Cross"]["data_types1D"] 
         self.datatypes2D = self.allconfigs["Cross"]["data_types2D"]
-        self.plotter = plotter
+        self.plotter = theplotter
         self.model = self.allconfigs["main"]["MinervaModel"]
 
     def grab(self):
@@ -366,7 +370,8 @@ class DataGrabber:
                             bands = hist.GetErrorBandNames()
                             if "FitVariations" in bands:
                                 hist.PopVertErrorBand("FitVariations")
-            
+                        
+
                         addentry(self.hists1D, sample, category, variable, data_type, hist)
                         if DEBUG: print ("grabbed",self.hists1D[sample][category][variable][data_type].GetName(),sample,category,variable,data_type)
 
@@ -404,8 +409,8 @@ class DataGrabber:
                 addentry(self.hists1D,sample,"mctot",variable,signal_type,mctot_hist)
                 addentry(self.hists1D,sample,"bkgtot",variable,signal_type,bkgtot_hist)
 
-                if DEBUG: print ("created",self.hists1D[sample]["mctot"][variable][signal_type].GetName(),sample,category,variable,signal_type) 
-                if DEBUG: print ("created",self.hists1D[sample]["bkgtot"][variable][background_type].GetName(),sample,category,variable,background_type)   
+                if DEBUG: print ("created",self.hists1D[sample]["mctot"][variable][signal_type].GetName(),sample,"mctot",variable,signal_type) 
+                if DEBUG: print ("created",self.hists1D[sample]["bkgtot"][variable][background_type].GetName(),sample,"bkgtot",variable,background_type)   
 
 
             
@@ -416,7 +421,7 @@ class DataGrabber:
                    
         pass
 
-    def merge(self, mergesamples=[]):
+    def merge(self, mergesamples=None):
         ''' method to merge disjoint samples
         it does not merge the total truth as that has no 
         selection applied
@@ -440,7 +445,7 @@ class DataGrabber:
         
         pass
 
-    def print(self,types=[],option=""):
+    def print(self,types=None,option=""):
         for sample in self.hists1D.keys():
             for category in self.hists1D[sample].keys():
                 for variable in self.hists1D[sample][category].keys():
@@ -462,15 +467,15 @@ class DataGrabber:
                         self.hists1D[sample][category][variable][data_type].Write()
         # write out the configs
 
-        for key, config in self.allconfigs.items():
+        for key, theconfig in self.allconfigs.items():
             print (" write out config ", key )
-            obj = commentjson.dumps(config)
+            obj = commentjson.dumps(theconfig)
             #print (obj)
-            object = TNamed()   
-            object.SetName(key)
-            object.SetTitle(obj)
-            #object.Print()
-            object.Write()
+            anobject = TNamed()   
+            anobject.SetName(key)
+            anobject.SetTitle(obj)
+            #anobject.Print()
+            anobject.Write()
         
         print ("close output file")
 
@@ -495,9 +500,9 @@ class DataGrabber:
                             hist.MnvH1DToCSV(name=hist.GetName(),directory=outdir, scale=1.E41, fullprecision=False,errors= True,  percentage=True, binwidth=True)
         # write out the configs
 
-        for key, config in self.allconfigs.items():
+        for key, theconfig in self.allconfigs.items():
             print (" Store config ", key )
-            obj = commentjson.dumps(config)
+            obj = commentjson.dumps(theconfig)
             f = open(os.path.join(outdir,key+".json"),'w')
             f.write(obj)
             f.close()
@@ -506,6 +511,33 @@ class DataGrabber:
         print ("close output file")
         
         pass
+
+    def addAllMissingErrorBands(self):
+        ''' method to make sure all histograms have the same error bands'''
+        allbands = {}
+
+        for sample in self.hists1D.keys():
+            for category in self.hists1D[sample].keys():
+                for variable in self.hists1D[sample][category].keys():
+                    for data_type in self.hists1D[sample][category][variable].keys():
+                        hist = self.hists1D[sample][category][variable][data_type]
+                        bands = hist.GetErrorBandNames()
+                        for band in bands:
+                            if band not in allbands:
+                                allbands[band] = self.hists1D[sample][category][variable][data_type]
+
+        for sample in self.hists1D.keys():
+            for category in self.hists1D[sample].keys():
+                for variable in self.hists1D[sample][category].keys():
+                    for data_type in self.hists1D[sample][category][variable].keys():
+                        hist = self.hists1D[sample][category][variable][data_type]
+                        bands = hist.GetErrorBandNames()
+                        for band in allbands.keys():
+                            if band not in bands:
+                                self.hists1D[sample][category][variable][data_type].AddMissingErrorBandsAndFillWithCV(allbands[band])
+                                if DEBUG: print ("added missing band",band,"to",hist.GetName())                
+        SyncBands(self.hists1D[sample][category][variable][data_type])
+        return True
 
     def delete(self):
         ''' method to delete the histograms, needs work '''
@@ -521,7 +553,7 @@ class DataGrabber:
 class Plotter:
     ''' class that holds plotter configurations'''
 
-    def __init__(self,config,pdffilename):
+    def __init__(self,theconfig,pdffilename):
         self.pdfname = pdffilename
         self.canvas1D = TCanvas(pdffilename)
         self.canvas1D.SetLeftMargin(0.15)
@@ -563,6 +595,7 @@ if __name__ == "__main__":
 
     grabber = DataGrabber(config,plotter)
     grabber.grab()
+    grabber.addAllMissingErrorBands()
 
     cross = CrossSectionExtractor(grabber,plotter)
 
