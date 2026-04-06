@@ -181,7 +181,7 @@
                    "min":0.,
                    "max":10.,
                    "fluxnorm":false},
-    "MichelCount":{"reco":"NMichel",
+    "MichelCount":{"reco":"ImprovedNMichel",
                    "true":"TrueChargedPionCount",
                    "name":"MichelCount",
                    "title":"Number of Michel Candidates (Old)",

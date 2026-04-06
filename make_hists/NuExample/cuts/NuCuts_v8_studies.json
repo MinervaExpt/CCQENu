@@ -29,7 +29,7 @@
   ],
   "BlobStudy_1track":[
 	{"name":"Multiplicity","equals":1,"variable":"Multiplicity"},
-    {"name":"MichelCount","equals":0,"variable":"NMichel"},
+    {"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
     {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
     {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
@@ -43,7 +43,7 @@
   ],
   "BlobStudy_multitrack":[
 	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
-    {"name":"MichelCount","equals":0,"variable":"NMichel"},
+    {"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
     {"name":"IsPrimaryProton","equals":1,"variable":"IsPrimaryProton"},
     {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
@@ -84,7 +84,7 @@
   "QElike":[
 	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
-    {"name":"MichelCount","equals":0,"variable":"NMichel"},
+    {"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
     {"name":"IsSingleProton","equals":1,"variable":"IsSingleProton"},
     {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
@@ -99,7 +99,7 @@
   "MichelSideBand":[
 	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
     {"name":"NBlobs","max":1,"variable":"NBlobs"},
-    {"name":"MichelCount","min":1,"variable":"NMichel"},
+    {"name":"MichelCount","min":1,"variable":"ImprovedNMichel"},
     {"name":"IsSingleProton","equals":1,"variable":"IsSingleProton"},
     {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
@@ -114,7 +114,7 @@
   "BlobSideBand":[
 	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
-    {"name":"MichelCount","equals":0,"variable":"NMichel"},
+    {"name":"MichelCount","equals":0,"variable":"ImprovedNMichel"},
     {"name":"IsSingleProton","equals":1,"variable":"IsSingleProton"},
     {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
@@ -129,7 +129,7 @@
   "MicBlobSideBand":[
 	{"name":"Multiplicity","min":2,"variable":"Multiplicity"},
     {"name":"NBlobs","min":2,"variable":"NBlobs"},
-    {"name":"MichelCount","min":1,"variable":"NMichel"},
+    {"name":"MichelCount","min":1,"variable":"ImprovedNMichel"},
     {"name":"IsSingleProton","equals":1,"variable":"IsSingleProton"},
     {"name":"AllExtraTracksProtons","equals":1,"variable":"AllExtraTracksProtons"},
     {"name":"NuHelicity","equals":1,"variable":"NuHelicity"},  // 2 for anti-neutrino
