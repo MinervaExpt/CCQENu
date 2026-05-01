@@ -1,8 +1,9 @@
 import sys,os,string
-from ROOT import *
+from ROOT import TH1D,TH2D,TFile,TCanvas,TLegend,TLine,TLatex,TGraphErrors,TGraphAsymmErrors
 from  PlotUtils import *
 
 scale = 1.E40
+scale = 1.0
 binwidth=True
 fullprecision = True
 syserrors = False
@@ -34,7 +35,7 @@ def read2d(fname):
             cvs[i]=cvs[i].strip()
             cv.append(cvs[i].split(","))
             for j in range(0,len(cv[i])):
-                cv[i][j] = atof(cv[i][j].strip())
+                cv[i][j] = float(cv[i][j].strip())
                 
     else:
         cv = {}
@@ -46,7 +47,7 @@ def read2d(fname):
                 cv[name] = []
             row = []
             for j in range(1,len(cvs[i])):
-                row.append(atof(cvs[i][j]))
+                row.append(fload(cvs[i][j]))
             cv[name].append(row)
                 
     #print (fname,cv)
@@ -69,7 +70,7 @@ def readbins(fname):
         entry = {}
         row = []
         for j in range(1,len(cvs[i])):
-            row.append(atof(cvs[i][j]))
+            row.append(float(cvs[i][j]))
         entry["name"] = name
         entry["values"] = row
         cv.append(entry)
@@ -87,7 +88,7 @@ def read1d(fname):
     # (cvs[0],cvs[2])
     cv = []
     for i in range(0,len(cvs)):
-        cv.append(atof(cvs[i]))
+        cv.append(float(cvs[i]))
         
     #print (cv)
     f.close()
