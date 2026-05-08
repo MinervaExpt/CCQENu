@@ -156,7 +156,7 @@ def isCCQELike(mytree, RHC=True):
         if tmp_pdg == good_muon:
             n_goodmu += 1
             i_muon = i
-            print("inside", i_muon)
+            # print("inside", i_muon)
             continue
         if tmp_pdg == -good_muon:
             n_badmu += 1
@@ -612,13 +612,13 @@ def main():
             qelike_counter += 1
             if "QElike" in samplestodo:
                 if "EAvail" in varstodo:
-                    print("Filling eavail")
+                    # print("Filling eavail")
                     hist_dict["QElike"]["EAvail"].Fill(eavail)
                 if "ptmu" in varstodo:
-                    print("Filling ptmu")
+                    # print("Filling ptmu")
                     hist_dict["QElike"]["ptmu"].Fill(Pt)
                 if "ptmu_EAvail" in varstodo:
-                    print("Filling ptmu_eavail")
+                    # print("Filling ptmu_eavail")
                     hist_dict["QElike"]["ptmu_EAvail"].Fill(Pt,eavail)
         
         if isCCQELikeHyp(e, setRHC): 
@@ -631,7 +631,7 @@ def main():
                 if "ptmu_EAvail" in varstodo:
                     hist_dict["QElikeHyp"]["ptmu_EAvail"].Fill(Pt,eavail)
 
-    print(qelike_counter)
+    print("qelike evts: , qelike_counter)
     full_ofilename = os.path.join(outputdir, ofilename)
     myoutput = ROOT.TFile(full_ofilename, "RECREATE")
     
