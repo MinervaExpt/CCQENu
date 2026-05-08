@@ -80,9 +80,10 @@ def getMuonMomentum(mytree, RHC = True):
     
     for p in range(0,nfsp):
         if(pdg[p] == muonpdg):
-            muon_mom.SetX(px[p])
-            muon_mom.SetY(py[p])
-            muon_mom.SetZ(pz[p])
+            muon_mon.SetXYZ(px[p],py[p],pz[p])
+            # muon_mom.SetX(px[p])
+            # muon_mom.SetY(py[p])
+            # muon_mom.SetZ(pz[p])
             break
     return muon_mom
 
@@ -228,7 +229,7 @@ def isCCQELike(mytree, RHC=True):
     
     # px = mytree.px[i_muon]
     # py = mytree.py[i_muon]
-    pmu_vec = ROOT.TVector()
+    pmu_vec = ROOT.TVector3()
     pmu_vec.SetX(mytree.px[i_muon])
     pmu_vec.SetY(mytree.py[i_muon])
     pmu_vec.SetZ(pz)
@@ -374,7 +375,7 @@ def isCCQELikeHyp(mytree, RHC = True):
     
     # px = mytree.px[i_muon]
     # py = mytree.py[i_muon]
-    pmu_vec = ROOT.TVector()
+    pmu_vec = ROOT.TVector3()
     pmu_vec.SetX(mytree.px[i_muon])
     pmu_vec.SetY(mytree.py[i_muon])
     pmu_vec.SetZ(pz)
@@ -443,7 +444,7 @@ def getptmuGeV(mytree, RHC = True):
     py = mytree.py[i_muon]
 
     # pz = mytree.pz[i_muon]
-    # pmu_vec = ROOT.TVector()
+    # pmu_vec = ROOT.TVector3()
     # pmu_vec.SetX(px)
     # pmu_vec.SetY(py)
     # pmu_vec.SetZ(pz)
