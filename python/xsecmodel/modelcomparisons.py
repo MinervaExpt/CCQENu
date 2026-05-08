@@ -584,11 +584,10 @@ def main():
     print("entering loop")
     for e in mytree:
     # for e in tqdm(mytree, desc="Processing"):
+        counter += 1
         if counter%100 != 0 and dosmalltest:
             continue
-
-        counter += 1
-
+        
         if counter%100000==0:
             print("%d00k"%(counter/100000))
 
