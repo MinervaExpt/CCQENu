@@ -55,6 +55,10 @@ pad_rmarg = 0.04
 topmarg = 0.05
 bottommarg = 0.3
 
+# This is to set how tall the ratio should be in the pad
+ratio_frac = 0.3 #0.278
+
+
 legendfontsize = 0.05
 legx1 = 0.7
 legx2 = 1.0
@@ -65,15 +69,15 @@ legy2 = 0.95
 lat_xoffset = 0.0
 lat_yoffset = 0.04
 
-typeslinewidth = 3
+typeslinewidth = 5
 
 scaleX = ["Q2QE"]
 scaleY = ["EAvail","E_{Avail}"]#"recoil","EAvail"]
 
 skipstage_list = [
-    # "bkgsub",
-    # "unfolded",
-    # "effcorr",
+    "bkgsub",
+    "unfolded",
+    "effcorr",
     # "sigma"
 ]
 
@@ -216,11 +220,16 @@ def MakePlotDir(subdir=""):
     if not os.path.exists(plotdir):
         print("Can't find plot dir. Making it now... ", plotdir)
         os.mkdir(plotdir)
+    else:
+        print("found dir ", plotdir)
     if subdir == "":
         return plotdir
     if not os.path.exists(os.path.join(plotdir, subdir)):
         print("Can't find plot dir. Making it now... ", os.path.join(plotdir, subdir))
         os.mkdir(os.path.join(plotdir, subdir))
+    else:
+        print("found dir ", plotdir)
+
     return os.path.join(plotdir, subdir)
 
 def GetInputHistDict(f, input_dict = {}):
@@ -566,14 +575,14 @@ def DrawDataMCPlot1D(i_data_hist, i_mc_hist, x_title, y_title, outdirname, canva
     mc_hist.SetLineWidth(3)
 
     # if doratio:
-    top = TPad("hist", "hist", 0, 0.278, 1, 1)
+    top = TPad("hist", "hist", 0, ratio_frac, 1, 1)
     top.SetRightMargin(pad_rmarg)
     top.SetLeftMargin(pad_lmarg)
     top.SetTopMargin(topmarg)
     top.SetBottomMargin(0)
     top.SetFrameLineWidth(1)
 
-    bottom = TPad("Ratio", "Ratio", 0, 0, 1, 0.278)
+    bottom = TPad("Ratio", "Ratio", 0, 0, 1, ratio_frac)
     bottom.SetRightMargin(pad_rmarg)
     bottom.SetLeftMargin(pad_lmarg)
     bottom.SetBottomMargin(bottommarg)
@@ -759,14 +768,14 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
     mc_hist.SetLineWidth(6)
 
     # if doratio:
-    top = TPad("hist", "hist", 0, 0.278, 1, 1)
+    top = TPad("hist", "hist", 0, ratio_frac, 1, 1)
     top.SetRightMargin(pad_rmarg)
     top.SetLeftMargin(pad_lmarg)
     top.SetTopMargin(topmarg)
     top.SetBottomMargin(0)
     top.SetFrameLineWidth(1)
 
-    bottom = TPad("Ratio", "Ratio", 0, 0, 1, 0.278)
+    bottom = TPad("Ratio", "Ratio", 0, 0, 1, ratio_frac)
     bottom.SetRightMargin(pad_rmarg)
     bottom.SetLeftMargin(pad_lmarg)
     bottom.SetBottomMargin(bottommarg)
@@ -839,7 +848,9 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
 
     # ratio = MnvH1D()
     # ratio = MakeDataMCRatio(data_hist,mc_band)
-    ratio = MakeDataMCRatio(data_hist, mc_hist)
+    mnv_ratio = MakeDataMCRatio(mnv_data, mnv_mc)
+    ratio = mnv_ratio.GetCVHistoWithError()
+    ratio_stat = mnv_ratio.GetCVHistoWithStatError()
     typesratiodict= MakeTypesMCRatioDict(typehistdict, mc_hist)
 
     ratio.SetFillStyle(1001)
@@ -863,7 +874,7 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
     ratio.GetXaxis().SetLabelSize(ratio.GetXaxis().GetLabelSize() * areaScale*1.5)
     ratio.SetLineWidth(round(2 / areaScale))
     ratio.Draw("E1 X0")
-
+    ratio_stat.Draw("E1 X0 SAME")
     # Now do mc uncertainties
     mcerror = TH1D()
     mnv_mc.SetFillStyle(1001)
@@ -872,7 +883,7 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
         mcerror.SetBinError(bin, max(mcerror.GetBinContent(bin), 1.0e-9))
         mcerror.SetBinContent(bin, 1.0)
     mcerror.SetLineColor(ROOT.kRed)
-    mcerror.SetLineWidth(round(typeslinewidth*2))
+    mcerror.SetLineWidth(typeslinewidth)
     # mcerror.SetFillColorAlpha(ROOT.kPink + 1, 0.4)
     mcerror.SetFillColor(ROOT.kRed-10)
     mcerror.Draw("same E2")
@@ -884,7 +895,7 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
     straightline.Draw("hist same")
 
     for key in typesratiodict:
-        typesratiodict[key].SetLineWidth(round(typeslinewidth*2))
+        typesratiodict[key].SetLineWidth(typeslinewidth)
         typesratiodict[key].Draw("HIST SAME")
 
     ratio.Draw("same")
@@ -895,6 +906,348 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
     # titleonplot.DrawLatex(0.37, 0.9, plottitle)
 
     canvas_name = thename + "_Types"
+
+    # if dotuned:
+    #     canvas_name += "_tuned" 
+
+
+    cc.Print(os.path.join(outdirname, canvas_name + ".png"))
+    cc.Print(os.path.join(outdirname, "source", canvas_name + ".C"))
+
+    cc.cd()
+    cc.Clear()
+    cc.Modified()
+    cc.Update()
+    del cc
+
+def DrawDataMCTypesPlot1D_AxisChange(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title, y_title, outdirname, canvas_name, canvas_title):
+    tmp_pad_rmarg = pad_rmarg + 0.02
+    mnvPlotter = SetupErrorSummary(MnvPlotter(8))
+
+    # thename = "%s_%s_%s"%(b_sample,c_var,"sigma")
+    # thetitle = "%s %s %s"%(b_sample,c_var,"sigma")
+    thename = canvas_name
+    thetitle = canvas_title
+    ysize = _ysize
+    xsize = _xsize
+    cc = ROOT.TCanvas(thename, thetitle, round(xsize), round(ysize))
+    cc.SetLeftMargin(0.25)
+    cc.SetRightMargin(0.15)
+    cc.SetBottomMargin(0.15)
+    cc.SetFrameLineWidth(1)
+
+    mnv_data = i_data_hist.Clone()
+    mnv_mc = i_mctot_hist.Clone()
+    
+    mnv_data.Scale(1.0, "width")
+    mnv_mc.Scale(1.0, "width")
+
+    typehistdict = {}
+    for key in i_mc_typeshistdict:
+        hist = i_mc_typeshistdict[key].GetCVHistoWithStatError()
+        hist.Scale(1.0, "width")
+        hist.SetLineWidth(typeslinewidth)
+        typehistdict[typesnames[key]] = hist
+
+    mnv_data.Print()
+
+    mnv_data.SetMarkerStyle(20)
+    mnv_data.SetMarkerColor(ROOT.kBlack)
+    mnv_data.SetLineWidth(2)
+    mnv_data.SetLineColor(ROOT.kBlack)
+    mnv_data.SetLineStyle(1)
+    mnv_data.SetMarkerSize(1.5)
+
+    data_hist = mnv_data.GetCVHistoWithError(True,False)
+    data_stat = mnv_data.GetCVHistoWithStatError()
+
+    data_hist.SetMaximum(1.2* max(mnv_data.GetMaximum(),mnv_mc.GetMaximum()))
+
+    # mc_band = mnv_mc.GetCVHistoWithError(True,False)
+    # mc_band.SetFillColor(ROOT.kRed-10)
+    # mc_band.SetFillStyle(1001)
+    # mc_band.SetLineColor(ROOT.kRed)
+    # mc_band.SetMarkerStyle(0)
+
+    mc_hist = mnv_mc.GetCVHistoWithError(True,False)
+    mc_hist.SetFillColor(0)
+    mc_hist.SetLineColor(typescolors[0])
+    mc_hist.SetLineStyle(1)
+    mc_hist.SetLineWidth(typeslinewidth)
+
+    # This is for figuring out how wide to make the pads for the hists, hardcoded for now
+    left_histwidth = 0.015
+    tot_histwidth = 0.5
+    leftfrac = left_histwidth/tot_histwidth
+    rightfrac = 1.0 - leftfrac
+
+
+    # Other info to correctly get margins
+    marginwidth = 1.0 - tmp_pad_rmarg - pad_lmarg
+
+    rightscale = 10.0
+
+    # Now make all the left and right hists
+    data_hist_right = data_hist.Clone()
+    data_hist_right.GetXaxis().SetRangeUser(left_histwidth, tot_histwidth)
+    # data_hist_right.Scale(rightscale)
+    # data_hist_right.SetMaximum(1.2*data_hist_right.GetBinContent(2))
+    data_hist_right.SetMaximum(1.2 * mnv_data.GetMaximum()/10.0)
+    data_hist_right.GetYaxis().SetLabelSize(0.05)
+
+    data_hist_left = data_hist.Clone()
+    data_hist_left.GetXaxis().SetRangeUser(0.0, left_histwidth)
+
+    data_hist_lr = {"left": data_hist_left, "right": data_hist_right}
+
+    data_stat_right = data_stat.Clone()
+    data_stat_right.GetXaxis().SetRangeUser(left_histwidth, tot_histwidth)
+    # data_stat_right.Scale(rightscale)
+    data_stat_left = data_stat.Clone()
+    data_stat_left.GetXaxis().SetRangeUser(0.0, left_histwidth)
+    data_stat_lr = {"left": data_stat_left, "right": data_stat_left}
+
+    mc_hist_left = mc_hist.Clone()
+    mc_hist_left.GetXaxis().SetRangeUser(0.0,left_histwidth)
+    mc_hist_right = mc_hist.Clone()
+    # mc_hist_right.Scale(rightscale)
+
+    mc_hist_right.GetXaxis().SetRangeUser(left_histwidth, tot_histwidth)
+    mc_hist_lr = {"left": mc_hist_left, "right": mc_hist_right}
+
+    typehistdict_right = {}
+    typehistdict_left = {}
+    typeskeys = typehistdict.keys()
+
+    for key in typeskeys:
+        tmp_left = typehistdict[key].Clone()
+        tmp_left.GetXaxis().SetRangeUser(0.0, left_histwidth)
+        typehistdict_left[key] = tmp_left
+        tmp_right = typehistdict[key].Clone()
+        # tmp_right.Scale(rightscale)
+        tmp_right.GetXaxis().SetRangeUser(left_histwidth, tot_histwidth)
+        typehistdict_right[key] = tmp_right
+    typehistdict_lr = {"left":typehistdict_left, "right":typehistdict_right}
+    # # if doratio:
+    top = TPad("hist", "hist", 0, ratio_frac, 1, 1)
+    top.SetRightMargin(tmp_pad_rmarg)
+    top.SetLeftMargin(pad_lmarg)
+    top.SetTopMargin(topmarg)
+    top.SetBottomMargin(0)
+    top.SetFrameLineWidth(1)
+
+    bottom = TPad("Ratio", "Ratio", 0, 0, 1, ratio_frac)
+    bottom.SetRightMargin(tmp_pad_rmarg)
+    bottom.SetLeftMargin(pad_lmarg)
+    bottom.SetBottomMargin(bottommarg)
+    bottom.SetTopMargin(0)
+    bottom.SetFrameLineWidth(3)
+
+    # top_right = TPad("hist1", "hist1", pad_lmarg + leftfrac * marginwidth, ratio_frac, 1 - tmp_pad_rmarg, 1-topmarg*(1-ratio_frac))
+    # top_right.SetRightMargin(0)
+    top_right = TPad("hist1", "hist1", pad_lmarg + leftfrac * marginwidth, ratio_frac, 1.0, 1-topmarg*(1-ratio_frac))
+    top_right.SetRightMargin(tmp_pad_rmarg*(1/(1-(pad_lmarg + leftfrac * marginwidth))))
+    top_right.SetLeftMargin(0.0)
+    top_right.SetTopMargin(0)
+    top_right.SetBottomMargin(0)
+    top_right.SetFrameLineWidth(3)
+    top.Draw()
+    top_right.Draw()
+    bottom.Draw()
+    rightArea = top_right.GetWNDC() * top_right.GetHNDC()
+    bottomArea = bottom.GetWNDC() * bottom.GetHNDC()
+    topArea = top.GetWNDC() * top.GetHNDC()
+    # topArea = leftArea + rightArea
+    areaScale = topArea / bottomArea
+
+    # areaScale_l = rightArea / leftArea
+    # areaScale_r = topArea / rightArea
+
+    # top.cd()
+
+    # data_hist.Draw("HIST")
+    ROOT.gStyle.SetErrorX(0)
+    ROOT.gStyle.SetEndErrorSize(20)
+
+    # top_right.cd()
+    # for lr in ["right","left"]:
+    for lr in ["right"]:
+        if lr == "right":
+            top_right.cd()
+        if lr == "left" :
+            top_left.cd()
+        
+        data_hist_lr[lr].Draw("axis y+")
+        if "COH" in typeskeys:
+            typehistdict_lr[lr]["COH"].Draw("HIST SAME")
+        if "DIS" in typeskeys:
+            typehistdict_lr[lr]["DIS"].Draw("HIST SAME")
+        if "RES" in typeskeys:
+            typehistdict_lr[lr]["RES"].Draw("HIST SAME")
+        if "2p2h" in typeskeys:
+            typehistdict_lr[lr]["2p2h"].Draw("HIST SAME")
+        if "QE" in typeskeys:
+            typehistdict_lr[lr]["QE"].Draw("HIST SAME")
+        mc_hist_lr[lr].Draw("HIST SAME")
+
+        data_stat_lr[lr].Draw("SAME AP E2 Z XO")
+        data_hist_lr[lr].Draw("Same E1 X0")
+
+        if lr == "right":
+            leg_pos = "TR"
+            titlewidth = mnvPlotter.GetLegendWidthInLetters(["Data","MnvTunev431","COH","RES","DIS","2p2h","QE"])
+            # print(titlewidth)
+            x1 = ctypes.c_double(0)
+            y1 = ctypes.c_double(0)
+            x2 = ctypes.c_double(0)
+            y2 = ctypes.c_double(0)
+            mnvPlotter.DecodeLegendPosition(x1,y1,x2,y2, leg_pos, 2+len(typehistdict.keys()), titlewidth, legendfontsize)
+
+            leg = TLegend(x1,y1,x2,y2)
+            leg.SetTextSize(legendfontsize)
+            leg.SetNColumns(1)
+            leg.SetBorderSize(0)
+            leg.SetFillColor(-1)
+            leg.AddEntry(mc_hist_lr[lr], "MnvTune4.3.1","fl")
+            if "QE" in typeskeys:
+                leg.AddEntry(typehistdict_lr[lr]["QE"], "QE","fl")
+            if "2p2h" in typeskeys:
+                leg.AddEntry(typehistdict_lr[lr]["2p2h"], "2p2h","fl")
+            if "RES" in typeskeys:
+                leg.AddEntry(typehistdict_lr[lr]["RES"], "RES","fl")
+            if "DIS" in typeskeys:
+                leg.AddEntry(typehistdict_lr[lr]["DIS"], "DIS","fl")
+            if "COH" in typeskeys:
+                leg.AddEntry(typehistdict_lr[lr]["COH"], "COH","fl")
+            leg.AddEntry(data_hist_lr[lr], "Data","p")
+
+            leg.Draw()
+        # top_left.cd()
+
+    # # Move to top pad for hists
+    top.cd()
+    # if c_var in scaleY:
+    #     top_right.SetLogy()
+
+    data_hist.GetYaxis().SetTitle(y_title)
+    data_hist.GetYaxis().CenterTitle()
+    data_hist.GetYaxis().SetTitleOffset(0.9)
+    data_hist.GetYaxis().SetTitleSize(0.05)
+    data_hist.GetYaxis().SetLabelSize(0.05)
+
+    data_hist.Draw("axis")
+
+
+    # if not issmooth:
+    # mc_band.Draw("SAME E2")
+    typeskeys = typehistdict.keys()
+    if "COH" in typeskeys:
+        typehistdict["COH"].Draw("HIST SAME")
+    if "DIS" in typeskeys:
+        typehistdict["DIS"].Draw("HIST SAME")
+    if "RES" in typeskeys:
+        typehistdict["RES"].Draw("HIST SAME")
+    if "2p2h" in typeskeys:
+        typehistdict["2p2h"].Draw("HIST SAME")
+    if "QE" in typeskeys:
+        typehistdict["QE"].Draw("HIST SAME")
+    # mc_hist.Draw("SAME HIST X0")
+    mc_hist.Draw("HIST SAME")
+    data_hist.Draw("Same E1 X0")
+    data_stat.Draw("SAME AP E2 Z XO")
+    bottom.cd()
+
+    # ratio = MnvH1D()
+    # ratio = MakeDataMCRatio(data_hist,mc_band)
+    mnv_ratio = MakeDataMCRatio(mnv_data, mnv_mc)
+    ratio = mnv_ratio.GetCVHistoWithError()
+    ratio_stat = mnv_ratio.GetCVHistoWithStatError()
+    typesratiodict= MakeTypesMCRatioDict(typehistdict, mc_hist)
+
+    ratio.SetFillStyle(1001)
+    ratio.SetMinimum(0.0)
+    ratio.SetMaximum(2.0)
+    ratio.SetLineWidth(round(ratio.GetLineWidth()*areaScale))
+    ratio.SetLineColor(ROOT.kBlack)
+
+    ratio_stat.SetLineWidth(ratio.GetLineWidth())
+    ratio_stat.SetLineColor(ROOT.kBlack)
+
+
+    ratio.SetTitle("")            
+    ratio.GetYaxis().SetTitle("Data / MC")
+    ratio.GetYaxis().CenterTitle()
+    ratio.GetYaxis().SetTitleSize(0.05 * areaScale)
+    ratio.GetYaxis().SetTitleOffset(0.9 / areaScale)
+    ratio.GetYaxis().SetLabelSize(0.05 * areaScale)
+    ratio.GetYaxis().SetNdivisions(205)
+
+    # ratio.GetXaxis().SetTitle(vars_info[c_var]["title"])
+    ratio.GetXaxis().SetTitle(x_title)
+    ratio.GetXaxis().CenterTitle()
+    ratio.GetXaxis().SetTitleSize(0.05 * areaScale)
+    ratio.GetXaxis().SetLabelSize(ratio.GetXaxis().GetLabelSize() * areaScale*1.5)
+    ratio.SetLineWidth(round(2 / areaScale))
+    ratio.Draw("E1 X0")
+    ratio_stat.Draw("SAME AP E2 Z XO")
+    # Now do mc uncertainties
+    mcerror = TH1D()
+    mnv_mc.SetFillStyle(1001)
+    mcerror = TH1D(mnv_mc.GetTotalError(False, True, False))
+    for bin in range(0, mcerror.GetXaxis().GetNbins() + 2):
+        mcerror.SetBinError(bin, max(mcerror.GetBinContent(bin), 1.0e-9))
+        mcerror.SetBinContent(bin, 1.0)
+    mcerror.SetLineColor(typescolors[0])
+    mcerror.SetLineWidth(typeslinewidth)
+    # mcerror.SetFillColorAlpha(ROOT.kPink + 1, 0.4)
+    mcerror.SetFillColor(ROOT.kRed-10)
+    # mcerror.Draw("same E2")
+
+    # Now do a line at 1
+    straightline = TH1D()
+    straightline = mcerror.Clone()
+    straightline.SetFillStyle(0)
+    straightline.SetFillColor(typescolors[0])
+    straightline.Draw("hist same")
+
+    for key in typesratiodict:
+        typesratiodict[key].SetLineWidth(typeslinewidth)
+        typesratiodict[key].Draw("HIST SAME")
+
+    ratio.Draw("same")
+
+    top_right.cd()
+    prelim = AddPreliminary()
+    # titleonplot = MakeTitleOnPlot()
+    prelim.DrawLatex(x1.value-lat_xoffset, y1.value-2*lat_yoffset-0.01, "MINER#nuA Work In Progress")
+
+    multip_text = ROOT.TLatex()
+    multip_text.SetNDC()
+    multip_text.SetTextSize(0.05*1.03)
+    multip_text.SetTextAlign(11)
+    multip_text.SetTextFont(42)
+    multip_text.DrawLatex(0.04,0.9, "10 #times")
+    
+    top.cd()
+    axismultip_text = ROOT.TLatex()
+    axismultip_text.SetNDC()
+    axismultip_text.SetTextSize(0.05)
+    axismultip_text.SetTextAlign(33)
+    axismultip_text.SetTextFont(42)
+    axismultip_text.DrawLatex(1-tmp_pad_rmarg/2, .995, "#times10^{#minus36}")
+
+    top_right.cd()
+    arrow = ROOT.TArrow(0.00, 0.85, 0.25, 0.85, 0.05, "|>")
+    arrow.SetLineWidth(3)
+    arrow.SetAngle(40)
+    arrow.DrawArrow(0.2, 0.1, 0.2, 0.7, 0.05)
+    # top.cd()
+    # prelim = AddPreliminary()
+    # # titleonplot = MakeTitleOnPlot()
+    # prelim.DrawLatex(x1.value-lat_xoffset, y1.value-2*lat_yoffset-0.01, "MINER#nuA Work In Progress")
+    # # titleonplot.DrawLatex(0.37, 0.9, plottitle)
+
+    canvas_name = thename + "_Types_altaxis"
 
     # if dotuned:
     #     canvas_name += "_tuned" 
@@ -1154,11 +1507,11 @@ def DrawDataMCPlot2D(i_data_hist, i_mc_hist, x_title, x_bins, y_title, y_bins, z
         data_mnvprojtot = MnvH1D()
         mc_mnvprojtot = MnvH1D()
         if projaxis == "x":
-            data_mnvprojtot = data_mnv2d_unscaled.ProjectionX("%s_proj%s"%(data_mnv2d_unscaled.GetName(),projaxis), 0, data_mnv2d_unscaled.GetNbinsY()+2, "width e")
-            mc_mnvprojtot = mc_mnv2d_unscaled.ProjectionX("%s_proj%s"%(mc_mnv2d_unscaled.GetName(),projaxis), 0, mc_mnv2d_unscaled.GetNbinsY()+2, "width e")
+            data_mnvprojtot = data_mnv2d_unscaled.ProjectionX("%s_proj%s"%(data_mnv2d_unscaled.GetName(),projaxis), 0, data_mnv2d_unscaled.GetNbinsY()+2, "width")# e")
+            mc_mnvprojtot = mc_mnv2d_unscaled.ProjectionX("%s_proj%s"%(mc_mnv2d_unscaled.GetName(),projaxis), 0, mc_mnv2d_unscaled.GetNbinsY()+2, "width")# e")
         if projaxis == "y":
-            data_mnvprojtot = data_mnv2d_unscaled.ProjectionY("%s_proj%s"%(data_mnv2d_unscaled.GetName(),projaxis), 0, data_mnv2d_unscaled.GetNbinsX()+2, "width e")
-            mc_mnvprojtot = mc_mnv2d_unscaled.ProjectionY("%s_proj%s"%(mc_mnv2d_unscaled.GetName(),projaxis), 0, mc_mnv2d_unscaled.GetNbinsX()+2, "width e")
+            data_mnvprojtot = data_mnv2d_unscaled.ProjectionY("%s_proj%s"%(data_mnv2d_unscaled.GetName(),projaxis), 0, data_mnv2d_unscaled.GetNbinsX()+2, "width")# e")
+            mc_mnvprojtot = mc_mnv2d_unscaled.ProjectionY("%s_proj%s"%(mc_mnv2d_unscaled.GetName(),projaxis), 0, mc_mnv2d_unscaled.GetNbinsX()+2, "width")# e")
 
         # thename = "%s_%s_%s_proj%s"%(b_sample,c_var,"sigma",projaxis)
         # thetitle = "%s %s %s proj%s"%(b_sample,c_var,"sigma",projaxis)
@@ -1472,6 +1825,8 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x
 
         # First do the total projection
         DrawDataMCTypesPlot1D(data_mnvprojtot, mc_mnvprojtot, mc_typestotproj_dict, proj_xtitle, z_title, outdirname, thename+"_totalproj", canvas_title+" total proj")
+        if "E_{Avail}" in proj_xtitle:
+            DrawDataMCTypesPlot1D_AxisChange(data_mnvprojtot, mc_mnvprojtot, mc_typestotproj_dict, proj_xtitle, z_title, outdirname, thename+"_totalproj", canvas_title+" total proj")
 
         print("canvas n x bins: ",canvas_nxbins,",\t canvas n y bins: ",canvas_nybins)
 
@@ -1519,10 +1874,10 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x
             data_hist_list[i].Scale(tmp_pad_scale)
             data_stat_list[i].Scale(tmp_pad_scale)
             mc_hist_list[i].Scale(tmp_pad_scale)
-            mc_hist_list[i].SetLineWidth(typeslinewidth*2)
+            mc_hist_list[i].SetLineWidth(typeslinewidth)
             for key in mc_typesproj_listdict:
                 mc_typesproj_listdict[key][i].Scale(tmp_pad_scale)
-                mc_typesproj_listdict[key][i].SetLineWidth(typeslinewidth*2)
+                mc_typesproj_listdict[key][i].SetLineWidth(typeslinewidth)
             # mc_band_list[i].Scale(tmp_pad_scale)
 
             data_hist_list[i].SetMaximum(1.2 * global_max) #max(data_hist_list[i].GetMaximum(),mc_hist_list[i].GetMaximum()))
@@ -1816,11 +2171,17 @@ catscolors = {
 
 typescolors = {
     0: ROOT.kP8Red,     # total mc
-    1: ROOT.kP6Grape,   # QE
+    # 1: ROOT.kP6Grape,   # QE
     2: ROOT.kP8Orange,  # RES
-    3: ROOT.kP8Cyan,    # DIS
+    # 3: ROOT.kP8Cyan,    # DIS
+    # 4: ROOT.kP8Azure,   # COH
+    # 8: ROOT.kP8Green,   # 2p2h
+    # 0: ROOT.kP6Red,     # total mc
+    1: ROOT.kP6Violet,   # QE
+    # 2: ROOT.kP6Yellow,  # RES
+    3: ROOT.kP6Gray,    # DIS
     4: ROOT.kP8Azure,   # COH
-    8: ROOT.kP8Green,   # 2p2h
+    8: ROOT.kP6Blue,   # 2p2h
 }
 
 typesnames = {
@@ -1881,10 +2242,10 @@ raw_filename = sys.argv[1]
 if len(sys.argv)> 2:
     flag = "tuned_type_"
 
-if "_tuned_analyzev9" in raw_filename:
+if "_tuned_analyze9" in raw_filename:
     tuned_filename = raw_filename
     untuned_filename = raw_filename.replace("_tuned_","_untuned_")
-elif "_untuned_analyzev9":
+elif "_untuned_analyze9":
     untuned_filename = raw_filename
     tuned_filename = raw_filename.replace("_untuned_","_tuned_")
 
@@ -1894,14 +2255,15 @@ untuned_f = TFile.Open(untuned_filename,"READONLY")
 plotdirbase = os.getenv("OUTPUTLOC")
 
 plotdir = MakePlotDir("XSecPlots")
-dirname = untuned_filename.replace("_untuned_analyzev9.root", "_XSec")
+dirname = untuned_filename.replace("_untuned_analyze9.root", "_XSec")
 
 # outfilename=filebasename1.replace(".root","_2DPlots")
 outdirname = os.path.join(plotdir, dirname)
 if not os.path.exists(outdirname):
     print(outdirname)
     os.mkdir(outdirname)
-
+else:
+    print("found dir ", outdirname)
 # source_outdirname = os.path.join(outdirname, "source")
 # if not os.path.exists(source_outdirname):
 #     print(source_outdirname)
@@ -2055,8 +2417,8 @@ for a_hist in analyze_hists.keys():
             tmp_sigmamc = analyze_hists[a_hist][b_sample][c_var]["sigmaMC"]
             tmp_sigmamc_tuned = analyze_hists[a_hist][b_sample][c_var]["sigmaMC_tuned"]
             
-            print(tmp_sigmamc_tuned.GetVertErrorBandNames())
-            sys.exit(1)
+            # print(tmp_sigmamc_tuned.GetVertErrorBandNames())
+            # sys.exit(1)
             
             found_typessigma = False
             found_typessigmatuned = False
