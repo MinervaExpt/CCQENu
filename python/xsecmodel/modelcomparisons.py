@@ -631,7 +631,7 @@ def main():
                 if "ptmu_EAvail" in varstodo:
                     hist_dict["QElikeHyp"]["ptmu_EAvail"].Fill(Pt,eavail)
 
-    print("qelike evts: , qelike_counter)
+    print("qelike evts: ", qelike_counter)
     full_ofilename = os.path.join(outputdir, ofilename)
     myoutput = ROOT.TFile(full_ofilename, "RECREATE")
     
