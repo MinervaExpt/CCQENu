@@ -5,7 +5,8 @@
 
 import ROOT
 import sys, os
-from PlotUtils import MnvH1D, MnvH2D
+# from PlotUtils import MnvH1D, MnvH2D
+import PlotUtils
 import math
 import array 
 import json, re
