@@ -584,8 +584,8 @@ def main():
     print("entering loop")
     for e in mytree:
     # for e in tqdm(mytree, desc="Processing"):
-        if counter==25000000 and dosmalltest:
-            break
+        if counter%100 != 0 and dosmalltest:
+            continue
 
         counter += 1
 
