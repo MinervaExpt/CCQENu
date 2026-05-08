@@ -535,7 +535,7 @@ def main():
     # Make an output director
     ofiletag = "xseccomp_"+ fname
     outputdirbase = MakeOutputDir("modelxsec")
-    outputdir = os.path.join(outputdirbase, fname.replace(".root",""))
+    outputdir = os.path.join(outputdirbase, os.path.basename(fname).replace(".root",""))
     if not os.path.exists(outputdir):
         print("Can't find output dir. Making it now...", outputdir)
         os.mkdir(outputdir)
