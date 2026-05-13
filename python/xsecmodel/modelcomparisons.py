@@ -635,10 +635,9 @@ def main():
                     # print("Filling ptmu")
                     hist_dict["raw"]["QElike"]["ptmu"].Fill(Pt)
                     hist_dict["fluxnorm"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
-                if "ptmu_EAvail" in varstodo:
-                    # print("Filling ptmu_eavail")
-                    hist_dict["raw"]["QElike"]["ptmu_EAvail"].Fill(Pt,eavail)
-                    hist_dict["fluxnorm"]["QElike"]["ptmu_EAvail"].Fill(Pt,eavail,scalefactor)
+                if "EAvail_ptmu" in varstodo:
+                    hist_dict["raw"]["QElike"]["EAvail_ptmu"].Fill(eavail,Pt)
+                    hist_dict["fluxnorm"]["QElike"]["EAvail_ptmu"].Fill(eavail,Pt,scalefactor)
         
         if isCCQELikeHyp(e, setRHC): 
             qelikehyp_counter += 1
@@ -649,9 +648,9 @@ def main():
                 if "ptmu" in varstodo:
                     hist_dict["raw"]["QElikeHyp"]["ptmu"].Fill(Pt)
                     hist_dict["fluxnorm"]["QElikeHyp"]["ptmu"].Fill(Pt,scalefactor)
-                if "ptmu_EAvail" in varstodo:
-                    hist_dict["raw"]["QElikeHyp"]["ptmu_EAvail"].Fill(Pt,eavail)
-                    hist_dict["fluxnorm"]["QElikeHyp"]["ptmu_EAvail"].Fill(Pt,eavail,scalefactor)
+                if "EAvail_ptmu" in varstodo:
+                    hist_dict["raw"]["QElikeHyp"]["EAvail_ptmu"].Fill(eavail,Pt)
+                    hist_dict["fluxnorm"]["QElikeHyp"]["EAvail_ptmu"].Fill(eavail,Pt,scalefactor)
 
     print("qelike evts: ", qelike_counter)
     full_ofilename = os.path.join(outputdir, ofilename)
