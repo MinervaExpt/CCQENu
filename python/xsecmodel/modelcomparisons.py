@@ -26,7 +26,8 @@ dosmalltest = True
 varstodo = [
     "EAvail",
     "ptmu",
-    "EAvail_ptmu"
+    "EAvail_ptmu",
+    # "Q2QE"
 ]
 
 # varstodo2d = [
@@ -532,13 +533,20 @@ def main():
         print("ERROR: try python3 modelcomparison.py <Flattree root file>")
         sys.exit(1)
     fname = sys.argv[1]
-    # f = ROOT.TFile(fname, "READ")
-    tchainname = "FlatTree_VARS"
-    mychain = ROOT.TChain(tchainname)
-    mychain.AddFile(fname)
+    if "root://fndca1.fnal.gov:" in fname:
+        print("looks like you're using a xrd path...")
+        tchainname = "FlatTree_VARS"
+        mychain = ROOT.TChain(tchainname)
+        mychain.AddFile(fname)
+        mytree = mychain
+        # This is to get the file name in a useable format to make the output file and output location
+        fname.replace("root://fndca1.fnal.gov:1094","")
+        fname.replace("fnal.gov//","")
+    else:
+        print("You gave me a raw path. WARNING: if you're looking at a file in pnfs you're doing something bad, use xrd instead")
+        f = ROOT.TFile(fname, "READ")
+        mytree = f.Get("FlatTree_VARS")
 
-    fname.replace("root://fndca1.fnal.gov:1094","")
-    fname.replace("fnal.gov//","")
     print(fname)
     # Make an output director
     ofiletag = "xseccomp_"+ fname
@@ -559,8 +567,6 @@ def main():
 
     ofilename = os.path.basename(fname).replace(".root","%s.root"%(ofilename_tail))
     # Get the tree from the file, will use this later
-    # mytree = f.Get("FlatTree_VARS")
-    mytree = mychain
     # Set up the hists for output
     # Get the var config from the json, this is hardcoded
     bigvarconfig_dict = {}
@@ -570,12 +576,16 @@ def main():
         bigvarconfig_dict = json.loads(re.sub("//.*", "", bigvarconfig_string, flags = re.MULTILINE))
     
     # Make a dict of histograms for output
-    hist_dict = {}
-    for sample in samplestodo:
-        if sample not in hist_dict: hist_dict[sample] = {}
-        for var in varstodo:
-            hist_dict[sample][var] = GetHistToFill(var, sample, bigvarconfig_dict)
-            hist_dict[sample][var].Print()
+    hist_dict = {"raw":{},"fluxnorm":{}}
+    for norm in hist_dict.keys():
+        for sample in samplestodo:
+            if sample not in hist_dict[norm]: hist_dict[norm][sample] = {}
+            sample_name = sample
+            if norm == "raw":
+                sample_name+="_raw"
+            for var in varstodo:
+                hist_dict[norm][sample][var] = GetHistToFill(var, sample_name, bigvarconfig_dict)
+                hist_dict[norm][sample][var].Print()
         
 
 
@@ -619,23 +629,29 @@ def main():
             if "QElike" in samplestodo:
                 if "EAvail" in varstodo:
                     # print("Filling eavail")
-                    hist_dict["QElike"]["EAvail"].Fill(eavail,scalefactor)
+                    hist_dict["raw"]["QElike"]["EAvail"].Fill(eavail)
+                    hist_dict["fluxnorm"]["QElike"]["EAvail"].Fill(eavail,scalefactor)
                 if "ptmu" in varstodo:
                     # print("Filling ptmu")
-                    hist_dict["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                    hist_dict["raw"]["QElike"]["ptmu"].Fill(Pt)
+                    hist_dict["fluxnorm"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
                 if "ptmu_EAvail" in varstodo:
                     # print("Filling ptmu_eavail")
-                    hist_dict["QElike"]["ptmu_EAvail"].Fill(Pt,eavail,scalefactor)
+                    hist_dict["raw"]["QElike"]["ptmu_EAvail"].Fill(Pt,eavail)
+                    hist_dict["fluxnorm"]["QElike"]["ptmu_EAvail"].Fill(Pt,eavail,scalefactor)
         
         if isCCQELikeHyp(e, setRHC): 
             qelikehyp_counter += 1
             if "QElikeHyp" in samplestodo:
                 if "EAvail" in varstodo:
-                    hist_dict["QElikeHyp"]["EAvail"].Fill(eavail,scalefactor)
+                    hist_dict["raw"]["QElikeHyp"]["EAvail"].Fill(eavail)
+                    hist_dict["fluxnorm"]["QElikeHyp"]["EAvail"].Fill(eavail,scalefactor)
                 if "ptmu" in varstodo:
-                    hist_dict["QElikeHyp"]["ptmu"].Fill(Pt,scalefactor)
+                    hist_dict["raw"]["QElikeHyp"]["ptmu"].Fill(Pt)
+                    hist_dict["fluxnorm"]["QElikeHyp"]["ptmu"].Fill(Pt,scalefactor)
                 if "ptmu_EAvail" in varstodo:
-                    hist_dict["QElikeHyp"]["ptmu_EAvail"].Fill(Pt,eavail,scalefactor)
+                    hist_dict["raw"]["QElikeHyp"]["ptmu_EAvail"].Fill(Pt,eavail)
+                    hist_dict["fluxnorm"]["QElikeHyp"]["ptmu_EAvail"].Fill(Pt,eavail,scalefactor)
 
     print("qelike evts: ", qelike_counter)
     full_ofilename = os.path.join(outputdir, ofilename)
@@ -643,10 +659,11 @@ def main():
     
 
     print("writing hists...")
-    for sample in hist_dict:
-        for var in hist_dict[sample]:
-            print("\t%s"%(hist_dict[sample][var].GetName()))
-            hist_dict[sample][var].Write()
+    for norm in hist_dict:
+        for sample in hist_dict[norm]:
+            for var in hist_dict[norm][sample]:
+                print("\t%s"%(hist_dict[norm][sample][var].GetName()))
+                hist_dict[norm][sample][var].Write()
     
     print("done writing hists to %s"%(full_ofilename))
 
