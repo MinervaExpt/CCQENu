@@ -21,7 +21,7 @@ mydate = datetime.datetime.now()
 month = mydate.strftime("%B")
 year = mydate.strftime("%Y")
 
-dosmalltest = True
+dosmalltest = False
 
 varstodo = [
     "EAvail",
@@ -662,8 +662,9 @@ def main():
     for norm in hist_dict:
         for sample in hist_dict[norm]:
             for var in hist_dict[norm][sample]:
-                print("\t%s"%(hist_dict[norm][sample][var].GetName()))
+                print("\tWriting hist %s"%(hist_dict[norm][sample][var].GetName()))
                 hist_dict[norm][sample][var].Write()
+                hist_dict[norm][sample][var].Print()
     
     print("done writing hists to %s"%(full_ofilename))
 
