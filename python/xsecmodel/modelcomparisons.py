@@ -563,7 +563,7 @@ def main():
     for var in varstodo:
         ofilename_tail += "_"+var
     if dosmalltest:
-        ofilename_tail += "_halfstats"
+        ofilename_tail += "_PRESCALE100"
 
     ofilename = os.path.basename(fname).replace(".root","%s.root"%(ofilename_tail))
     # Get the tree from the file, will use this later
