@@ -539,6 +539,7 @@ def main():
 
     fname.replace("root://fndca1.fnal.gov:1094","")
     fname.replace("fnal.gov//","")
+    print(fname)
     # Make an output director
     ofiletag = "xseccomp_"+ fname
     outputdirbase = MakeOutputDir("modelxsec")
