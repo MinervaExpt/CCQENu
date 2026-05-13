@@ -570,7 +570,8 @@ def main():
     # Set up the hists for output
     # Get the var config from the json, this is hardcoded
     bigvarconfig_dict = {}
-    varConfig_path = os.path.join(os.environ.get("CCQEMAT"), "nhv/config/variables/Variables_v15.json")
+    varConfig_path = os.path.join(os.environ.get("CCQEMAT"), "nhv/config/variables/Variables_v15_neutronnuisance.json")
+    print("\tI am looking at variable config file ", varConfig_path)
     with open(varConfig_path, "r") as varConfig_file:
         bigvarconfig_string = varConfig_file.read()
         bigvarconfig_dict = json.loads(re.sub("//.*", "", bigvarconfig_string, flags = re.MULTILINE))
