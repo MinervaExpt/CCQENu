@@ -4,6 +4,7 @@
 # Loosely based on several other MINERvAn's scripts
 
 import ROOT
+import XRootD
 import sys, os
 # from PlotUtils import MnvH1D, MnvH2D
 # import PlotUtils
