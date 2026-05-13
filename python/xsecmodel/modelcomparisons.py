@@ -675,7 +675,7 @@ def main():
         Eav = e.Eav # eavail from the flat tree itself (I don't trust this...)
         eavail = getEAvailGeV(e) # calculated eavail matching my CVUniverse
 
-        fluxcorr = GetFluxCorrection(e.enu) # calculated correction for flux stuff
+        fluxcorr = GetFluxCorrection(e.Enu_true) # calculated correction for flux stuff
         scalefactor_rw = fScaleFactor * fluxcorr
 
         tmp_weights = {
