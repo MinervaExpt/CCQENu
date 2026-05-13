@@ -202,7 +202,7 @@ def isCCQELike(mytree, RHC=True):
             n_neutron += 1
             continue
     # Check particle content first
-    if n_goodmu > 1:
+    if n_goodmu != 1:
         return False
     # print("n muminus: %s\tn muplus: %s\tn meson: %s\tn gamma: %s\tn baryon: %s\tn electrons: %s\t"%(n_muminus,n_muplus,n_meson,n_gamma,n_baryon,n_electrons))
     # if RHC:
@@ -360,13 +360,16 @@ def isCCQELikeHyp(mytree, RHC = True):
     # if not (n_muminus == 1 and n_hyperon == 1 and n_muplus == 0 and n_meson == 0 and n_gamma == 0 and n_baryon == 0 and n_electrons == 0):
     #     return False   
     # Now check muon kinematics
-    if n_muplus > 1:
+    if n_hyperon != 1:
+        return False
+    if n_muplus != 1:
         return False
 
     if i_muon < 0:
         print("WARNING: isCCQELikeHyp: muon not found, got negative index, returning False")
         return False
-    
+
+
     pz = mytree.pz[i_muon]
     
     pzmingev = 1.5
