@@ -13,30 +13,34 @@ import array
 import json, re
 import datetime
 
-# from tqdm import trange
-# import tqdm
-# import time
-
+# this is to get date and times to build an output directory
 mydate = datetime.datetime.now()
 month = mydate.strftime("%B")
 year = mydate.strftime("%Y")
 
+# This prescales by 100 for faster run times
 dosmalltest = False
 
+# Variables you want to fill, you will need to define them on your own
 varstodo = [
     "EAvail",
     "ptmu",
-    "EAvail_ptmu",
-    # "Q2QE"
+    "EAvail_ptmu", # This one is 2D
+    # "Q2QE",      # TODO
 ]
 
-# varstodo2d = [
-#     "ptmu_EAvail"
-# ]
-
+# samples you're gonna run over (all hists are filled for each sample)
 samplestodo = [
-    "QElike",
-    "QElikeHyp"
+    "QElike",   # qelike def for Noah's analysis
+    "QElikeHyp" # qelike with added req for one hyperon in FS
+]
+
+# These are the different variations of the normalization you can use
+reweighttodo = [
+    "raw",       # no reweight at all
+    "nominal",   # the nominal fScaleFactor in the file used as a weight 
+    "reweight",  # the reweighted fScaleFactor using fluxcorrection as defined
+    "fluxcorr"   # the correction that is applied to the fScaleFactor TODO does this make any sense to have?
 ]
 
 setRHC = True
@@ -393,7 +397,6 @@ def isCCQELikeHyp(mytree, RHC = True):
     # Everything checked out at this point, so this is a qelike event
     return True
 
-
 def getEAvailGeV(mytree):
     # Eavail based on truth definition in CVUniverse
     # Some trees might just have this as Eav
@@ -526,7 +529,47 @@ def GetHistToFill(var, sample, varconfig_dict):
     hist = ROOT.TH1D(name, title, len(tmpbins)-1, array.array("d", tmpbins))
     hist.GetXaxis().SetTitle(title)
     return hist
-    
+
+def GetFluxCorrection(enu):
+    # This takes in the enu of the event and returns a correction, adapted from Anezka's script
+    # No corrections below 7.5 GeV
+    if enu < 7.5: return 1.0
+    ratio = 1.0
+    if enu < 4.5:
+        ratio = 1.095 
+    elif enu < 12.78:
+        # Polynomial shape from 4.5 to 12.78 GeV
+        enupolycoeffs = [
+            -4.11608956, 
+            3.66971952, 
+            -9.73158862E-1,
+            1.21054305E-1, 
+            -7.13034149E-3, 
+            1.60919755E-4
+        ]
+        tmpratio = 0.0
+        powenu = 1.0
+        for coeff in enupolycoeffs:
+            tmpratio += coeff * powenu
+            powenu *= enu
+        ratio = tmpratio
+    elif enu < 26.0:
+        ratio = 1.17
+    elif enu < 29.0:
+        ratio = 1.17 + (1.09 - 1.17) * (enu - 26.0) / (29.0 - 26.0)
+
+    elif enu < 48.0:
+        ratio = 1.09
+    elif enu < 80.0:
+        ratio = 1.09 + (2.5 - 1.09) * (enu - 48.0) / (80.0 - 48.0)
+
+    elif enu < 100.0:
+        ratio = 2.5 + (1.5 - 2.5) * (enu - 80.0) / (100.0 - 80.0)
+    else:
+        ratio = 1.5
+    return ratio
+
+
 
 # The script
 def main():
@@ -562,15 +605,15 @@ def main():
         print("found output dir ", outputdir) 
     ofilename_tail = "_"
     for sample in samplestodo:
-        ofilename_tail += "_"+sample
+        ofilename_tail += sample
     for var in varstodo:
-        ofilename_tail += "_"+var
+        ofilename_tail += var
+    for norm in reweighttodo:
+        ofilename_tail += norm
     if dosmalltest:
         ofilename_tail += "_PRESCALE100"
 
     ofilename = os.path.basename(fname).replace(".root","%s.root"%(ofilename_tail))
-    # Get the tree from the file, will use this later
-    # Set up the hists for output
     # Get the var config from the json, this is hardcoded
     bigvarconfig_dict = {}
     varConfig_path = os.path.join(os.environ.get("CCQEMAT"), "nhv/config/variables/Variables_v15_neutronnuisance.json")
@@ -580,8 +623,9 @@ def main():
         bigvarconfig_dict = json.loads(re.sub("//.*", "", bigvarconfig_string, flags = re.MULTILINE))
     
     # Make a dict of histograms for output
-    hist_dict = {"raw":{},"fluxnorm":{}}
-    for norm in hist_dict.keys():
+    hist_dict = {}
+    for norm in reweighttodo:
+        if norm not in hist_dict: hist_dict[norm] = {}
         for sample in samplestodo:
             if sample not in hist_dict[norm]: hist_dict[norm][sample] = {}
             sample_name = sample
@@ -590,10 +634,6 @@ def main():
             for var in varstodo:
                 hist_dict[norm][sample][var] = GetHistToFill(var, sample_name, bigvarconfig_dict)
                 hist_dict[norm][sample][var].Print()
-        
-
-
-
     # Now loop over events
     # these are counters that are useful to troubleshooting
     counter = 0
@@ -604,57 +644,107 @@ def main():
 
     print("entering loop")
     for e in mytree:
-    # for e in tqdm(mytree, desc="Processing"):
-        counter += 1
+        # count how many events you've looked at
+        counter += 1 
+        # If you are doing a small test, this will run on every 100 events
         if counter%100 != 0 and dosmalltest:
             continue
-        
+        # This prints progress
         if counter%100000==0:
             print("%d00k"%(counter/100000))
 
-        
-        coslep = e.CosLep
-        elep = e.ELep
-        fScaleFactor = e.fScaleFactor
-        pdglep = e.PDGLep
-        # TODO: check if this is okay to do... calc is diff from how I handle it in the qelike def
-        P = ROOT.TMath.Sqrt(elep*elep-0.105*0.105)
-        Pl = coslep*P
-        Pt = ROOT.TMath.Sqrt(1-coslep*coslep)*P
+        # Set up some variables
+        pdgnu = e.PDGnu
+        pdglep = e.PDGLep # PDG number for the primary lepton
+        coslep = e.CosLep # Cosine of the angle of the primary lepton
+        elep = e.ELep # Energy of the primary lepton
 
-        if coslep < 0.93969262078 or abs(pdglep) != 13: continue
+        scalefactor = e.fScaleFactor # scale factor to normalize the event (by flux and targets?)
+
+        # Intermediate check to throw out events where the primary lepton is too high angle or not a muon+ or not antinu
+        if coslep < 0.93969262078 or pdglep != -13 or pdgnu != -14: continue
+        # counter to see how many events make it this far
         phasespace_counter += 1
-        Eav = e.Eav
-        eavail = getEAvailGeV(e)
-        scalefactor = e.fScaleFactor
+
+        # Calculate some things from these variables 
+        # TODO: check if this is okay to do... calc is diff from how I handle it in the qelike def
+        P = ROOT.TMath.Sqrt(elep*elep-0.105*0.105) # muon momentum
+        Pl = coslep*P # longitudinal momentum
+        Pt = ROOT.TMath.Sqrt(1-coslep*coslep)*P # transverse momentum
+
+        Eav = e.Eav # eavail from the flat tree itself (I don't trust this...)
+        eavail = getEAvailGeV(e) # calculated eavail matching my CVUniverse
+
+        fluxcorr = GetFluxCorrection(e.enu) # calculated correction for flux stuff
+        scalefactor_rw = fScaleFactor * fluxcorr
+
+        tmp_weights = {
+            "raw": 1.0,
+            "nominal": scalefactor,
+            "reweight":scalefactor_rw,
+            "fluxcorr": fluxcorr,
+        }
+
+        # tmp_varvals = {
+        #     "EAvail": eavail,
+        #     "ptmu": Pt,
+        #     "EAvail_ptmu": [eavail, ptmu]
+        # }
 
         if isCCQELike(e, setRHC):
             qelike_counter += 1
-            if "QElike" in samplestodo:
-                if "EAvail" in varstodo:
-                    # print("Filling eavail")
-                    hist_dict["raw"]["QElike"]["EAvail"].Fill(eavail)
-                    hist_dict["fluxnorm"]["QElike"]["EAvail"].Fill(eavail,scalefactor)
-                if "ptmu" in varstodo:
-                    # print("Filling ptmu")
-                    hist_dict["raw"]["QElike"]["ptmu"].Fill(Pt)
-                    hist_dict["fluxnorm"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
-                if "EAvail_ptmu" in varstodo:
-                    hist_dict["raw"]["QElike"]["EAvail_ptmu"].Fill(eavail,Pt)
-                    hist_dict["fluxnorm"]["QElike"]["EAvail_ptmu"].Fill(eavail,Pt,scalefactor)
+            for norm in hist_dict:
+                weight = tmp_weights[norm]
+
+                if "QElike" in samplestodo:
+                    if "EAvail" in varstodo:
+                        # print("Filling eavail")
+                        hist_dict[norm]["QElike"]["EAvail"].Fill(eavail, weight)
+
+                        # hist_dict["raw"]["QElike"]["EAvail"].Fill(eavail)
+                        # hist_dict["nominal"]["QElike"]["EAvail"].Fill(eavail,scalefactor)
+                        # hist_dict["reweight"]["QElike"]["EAvail"].Fill(eavail,scalefactor)
+                        # hist_dict["fluxcorr"]["QElike"]["EAvail"].Fill(eavail,scalefactor)
+                        
+                    if "ptmu" in varstodo:
+                        # print("Filling ptmu")
+                        hist_dict[norm]["QElike"]["ptmu"].Fill(ptmu, weight)
+
+                        # hist_dict["raw"]["QElike"]["ptmu"].Fill(Pt)
+                        # hist_dict["nominal"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                        # hist_dict["reweight"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                        # hist_dict["fluxcorr"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                    if "EAvail_ptmu" in varstodo:
+                        hist_dict[norm]["QElike"]["EAvail_ptmu"].Fill(eavail, Pt, weight)
+
+                        # hist_dict["raw"]["QElike"]["EAvail_ptmu"].Fill(eavail,Pt)
+                        # hist_dict["nominal"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                        # hist_dict["reweight"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                        # hist_dict["fluxcorr"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
         
         if isCCQELikeHyp(e, setRHC): 
             qelikehyp_counter += 1
-            if "QElikeHyp" in samplestodo:
-                if "EAvail" in varstodo:
-                    hist_dict["raw"]["QElikeHyp"]["EAvail"].Fill(eavail)
-                    hist_dict["fluxnorm"]["QElikeHyp"]["EAvail"].Fill(eavail,scalefactor)
-                if "ptmu" in varstodo:
-                    hist_dict["raw"]["QElikeHyp"]["ptmu"].Fill(Pt)
-                    hist_dict["fluxnorm"]["QElikeHyp"]["ptmu"].Fill(Pt,scalefactor)
-                if "EAvail_ptmu" in varstodo:
-                    hist_dict["raw"]["QElikeHyp"]["EAvail_ptmu"].Fill(eavail,Pt)
-                    hist_dict["fluxnorm"]["QElikeHyp"]["EAvail_ptmu"].Fill(eavail,Pt,scalefactor)
+            for norm in hist_dict:
+                weight = tmp_weights[norm]
+                if "QElikeHyp" in samplestodo:
+                    if "EAvail" in varstodo:
+                        hist_dict[norm]["QElikeHyp"]["EAvail"].Fill(eavail, weight)
+                        # hist_dict["raw"]["QElikeHyp"]["EAvail"].Fill(eavail)
+                        # hist_dict["nominal"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                        # hist_dict["reweight"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                        # hist_dict["fluxcorr"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                    if "ptmu" in varstodo:
+                        hist_dict[norm]["QElikeHyp"]["ptmu"].Fill(Pt, weight)
+                        # hist_dict["raw"]["QElikeHyp"]["ptmu"].Fill(Pt)
+                        # hist_dict["nominal"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                        # hist_dict["reweight"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                        # hist_dict["fluxcorr"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                    if "EAvail_ptmu" in varstodo:
+                        hist_dict[norm]["QElikeHyp"]["EAvail_ptmu"].Fill(eavail, Pt, weight)
+                        # hist_dict["raw"]["QElikeHyp"]["EAvail_ptmu"].Fill(eavail,Pt)
+                        # hist_dict["nominal"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                        # hist_dict["reweight"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
+                        # hist_dict["fluxcorr"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
 
     print("qelike evts: ", qelike_counter)
     full_ofilename = os.path.join(outputdir, ofilename)
