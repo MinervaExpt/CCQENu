@@ -707,7 +707,7 @@ def main():
                         
                     if "ptmu" in varstodo:
                         # print("Filling ptmu")
-                        hist_dict[norm]["QElike"]["ptmu"].Fill(ptmu, weight)
+                        hist_dict[norm]["QElike"]["ptmu"].Fill(Pt, weight)
 
                         # hist_dict["raw"]["QElike"]["ptmu"].Fill(Pt)
                         # hist_dict["nominal"]["QElike"]["ptmu"].Fill(Pt,scalefactor)
