@@ -532,7 +532,7 @@ def main():
         print("ERROR: try python3 modelcomparison.py <Flattree root file>")
         sys.exit(1)
     fname = sys.argv[1]
-    f = ROOT.TFile(fname)
+    f = ROOT.TFile(fname, "READ")
 
     # Make an output director
     ofiletag = "xseccomp_"+ fname
