@@ -537,6 +537,8 @@ def main():
     mychain = ROOT.TChain(tchainname)
     mychain.AddFile(fname)
 
+    fname.remove("root://fndca1.fnal.gov:1094")
+    fname.remove("fnal.gov//")
     # Make an output director
     ofiletag = "xseccomp_"+ fname
     outputdirbase = MakeOutputDir("modelxsec")
