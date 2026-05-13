@@ -612,30 +612,30 @@ def main():
         phasespace_counter += 1
         Eav = e.Eav
         eavail = getEAvailGeV(e)
-
+        scalefactor = e.fScaleFactor
 
         if isCCQELike(e, setRHC):
             qelike_counter += 1
             if "QElike" in samplestodo:
                 if "EAvail" in varstodo:
                     # print("Filling eavail")
-                    hist_dict["QElike"]["EAvail"].Fill(eavail)
+                    hist_dict["QElike"]["EAvail"].Fill(eavail,scalefactor)
                 if "ptmu" in varstodo:
                     # print("Filling ptmu")
-                    hist_dict["QElike"]["ptmu"].Fill(Pt)
+                    hist_dict["QElike"]["ptmu"].Fill(Pt,scalefactor)
                 if "ptmu_EAvail" in varstodo:
                     # print("Filling ptmu_eavail")
-                    hist_dict["QElike"]["ptmu_EAvail"].Fill(Pt,eavail)
+                    hist_dict["QElike"]["ptmu_EAvail"].Fill(Pt,eavail,scalefactor)
         
         if isCCQELikeHyp(e, setRHC): 
             qelikehyp_counter += 1
             if "QElikeHyp" in samplestodo:
                 if "EAvail" in varstodo:
-                    hist_dict["QElikeHyp"]["EAvail"].Fill(eavail)
+                    hist_dict["QElikeHyp"]["EAvail"].Fill(eavail,scalefactor)
                 if "ptmu" in varstodo:
-                    hist_dict["QElikeHyp"]["ptmu"].Fill(Pt)
+                    hist_dict["QElikeHyp"]["ptmu"].Fill(Pt,scalefactor)
                 if "ptmu_EAvail" in varstodo:
-                    hist_dict["QElikeHyp"]["ptmu_EAvail"].Fill(Pt,eavail)
+                    hist_dict["QElikeHyp"]["ptmu_EAvail"].Fill(Pt,eavail,scalefactor)
 
     print("qelike evts: ", qelike_counter)
     full_ofilename = os.path.join(outputdir, ofilename)
