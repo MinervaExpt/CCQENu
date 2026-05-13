@@ -675,7 +675,7 @@ def main():
         eavail = getEAvailGeV(e) # calculated eavail matching my CVUniverse
 
         fluxcorr = GetFluxCorrection(e.Enu_true) # calculated correction for flux stuff
-        scalefactor_rw = fScaleFactor * fluxcorr
+        scalefactor_rw = scalefactor * fluxcorr
 
         tmp_weights = {
             "raw": 1.0,
