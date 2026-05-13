@@ -628,9 +628,8 @@ def main():
         if norm not in hist_dict: hist_dict[norm] = {}
         for sample in samplestodo:
             if sample not in hist_dict[norm]: hist_dict[norm][sample] = {}
-            sample_name = sample
-            if norm == "raw":
-                sample_name+="_raw"
+            sample_name = "%s___%s"%(sample,norm)
+            
             for var in varstodo:
                 hist_dict[norm][sample][var] = GetHistToFill(var, sample_name, bigvarconfig_dict)
                 hist_dict[norm][sample][var].Print()
