@@ -532,7 +532,10 @@ def main():
         print("ERROR: try python3 modelcomparison.py <Flattree root file>")
         sys.exit(1)
     fname = sys.argv[1]
-    f = ROOT.TFile(fname, "READ")
+    # f = ROOT.TFile(fname, "READ")
+    tchainname = "FlatTree_VARS"
+    mychain = ROOT.TChain(tchainname)
+    mychain.AddFile(fname)
 
     # Make an output director
     ofiletag = "xseccomp_"+ fname
@@ -553,8 +556,8 @@ def main():
 
     ofilename = os.path.basename(fname).replace(".root","%s.root"%(ofilename_tail))
     # Get the tree from the file, will use this later
-    mytree = f.Get("FlatTree_VARS")
-
+    # mytree = f.Get("FlatTree_VARS")
+    mytree = mychain
     # Set up the hists for output
     # Get the var config from the json, this is hardcoded
     bigvarconfig_dict = {}
