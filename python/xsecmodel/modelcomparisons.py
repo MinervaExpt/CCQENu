@@ -671,7 +671,7 @@ def main():
         Pl = coslep*P # longitudinal momentum
         Pt = ROOT.TMath.Sqrt(1-coslep*coslep)*P # transverse momentum
 
-        Eav = e.Eav # eavail from the flat tree itself (I don't trust this...)
+        # Eav = e.Eav # eavail from the flat tree itself (I don't trust this...)
         eavail = getEAvailGeV(e) # calculated eavail matching my CVUniverse
 
         fluxcorr = GetFluxCorrection(e.Enu_true) # calculated correction for flux stuff
