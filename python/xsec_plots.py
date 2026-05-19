@@ -43,6 +43,77 @@ dowarp = False
 doratio = True
 dotypes = False
 
+global_domodelcomp = True # Set to true if you want to do model comparisons, will need to give path to where files are
+
+modelcomptodo = [
+    # "Gv3_AR23",
+    "G18_02a",
+    "G18_02b",
+    "G18_10a",
+    "G18_10b",
+    "NEUT_tune_LFG",
+    "NEUT_tune_SF",
+    "NuWro_CH_LFG",
+    "NuWro_CH_SF",
+    # "GIBUU",
+]
+
+modelsampletodo = [
+    "QElike",
+    "QElikeHyp",
+]
+
+modelplotinfo = {
+    "G18_02a": {
+        "name": "GENIE v3.0.6 G18_02a_02_11a",
+        "shortname": "GENIEv3 G18_02a",
+        "color": ROOT.kBlack, # TODO
+        "linecolor":ROOT.kBlack,
+    },
+    "G18_02b": {
+        "name": "GENIE v3.0.6 G18_02b_02_11a",
+        "shortname": "GENIEv3 G18_02b",
+        "color": ROOT.kBlack, # TODO
+        "linecolor":ROOT.kBlack,
+    },
+    "G18_10a": {
+        "name": "GENIE v3.0.6 G18_10a_02_11a",
+        "shortname": "GENIEv3 G18_10a",
+        "color": ROOT.kBlack, # TODO
+        "linecolor":ROOT.kBlack,
+    },
+    "G18_10b": {
+        "name": "GENIE v3.0.6 G18_10b_02_11a",
+        "shortname": "GENIEv3 G18_10b",
+        "fillcolor": ROOT.kBlack, # TODO
+        "linecolor":ROOT.kBlack,
+    },
+    "NEUT_tune_LFG": {
+        "name": "NEUT v5.4.1 LFG",
+        "shortname": "NEUT LFG",
+        "fillcolor": ROOT.kBlack, # TODO
+        "linecolor":ROOT.kBlack,
+    },
+    "NEUT_tune_SF": {
+        "name": "NEUT v5.4.1 SF",
+        "shortname": "NEUT SF",
+        "fillcolor": ROOT.kBlack, # TODO
+        "linecolor":ROOT.kBlack,
+    },
+    "NuWro_CH_LFG": {
+        "name": "NuWro v21.09 LFG",
+        "shortname": "NuWro LFG",
+        "fillcolor": ROOT.kBlack, # TODO
+        "linecolor":ROOT.kBlack,
+    },
+    "NuWro_CH_SF": {
+        "name": "NuWro v21.09 SF",
+        "shortname": "NuWro SF",
+        "fillcolor": ROOT.kBlack, # TODO
+        "linecolor":ROOT.kBlack,
+    },
+}
+
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
 _xsize = 1200.0
 _ysize = 900.0
@@ -78,7 +149,8 @@ skipstage_list = [
     "bkgsub",
     "unfolded",
     "effcorr",
-    # "sigma"
+    # "sigma",
+    # "modelcomp",
 ]
 
 skipvar_list = [
@@ -232,6 +304,87 @@ def MakePlotDir(subdir=""):
 
     return os.path.join(plotdir, subdir)
 
+def GetModelCompFilePathsDict(pathtodir):
+    """
+    Get's all the file paths for the NUISANCE model comparisons. Expects files 
+    to be in subdirs of the pathtodir and looks for ones without a prescale. 
+    There should only be files for the 4 GENIEv3 options, and two each for NEUT
+    and NuWro. Returns a dictionary of the files keyed to model names
+    """
+    if not os.path.exists(pathtodir):
+        print("ERROR: path to modelcomp isn't there. Exiting.")
+        sys.exit(1)
+    path_dict = {}
+    subdir_list = os.listdir(pathtodir)
+    for model in modelcomptodo:
+        tmpsubdir = ""
+        for subdir in subdir_list:
+            if model not in subdir:
+                continue
+            print("\tFound subdir for model %s: %s"%(model,subdir))
+            tmpsubdir = subdir
+            break
+        if tmpsubdir == "":
+            print("WARNING: model %s requested but not found. Skipping..."%(model))
+            continue
+        
+        subdir_list.remove(tmpsubdir)
+        subdirpath = os.path.join(pathtodir,subdir)
+        # Now check if it has the right root files
+        modelfile_list = os.listdir(subdirpath)
+        filename = ""
+        for name in modelfile_list:
+            if ".root" not in name or "rawnominalreweight" in name:
+                continue
+            if "PRESCALE" in name:
+                continue
+            else:
+                print("\tfound file for model %s"%(model))
+                filename = name
+                break
+        if filename == "":
+            print("WARNING: skipping model %s requested because could not find file in %s"%(model,subdirpath))
+            continue
+        path_dict[model] = os.path.join(subdirpath,filename)
+    
+    return file_dict
+    
+def GetModelHistDict(f):
+    # Returned dict, dict structure is {histdim:{sample:{variable:{fluxnorm:TH1D()}}}
+    histdict = {}
+    keys = f.GetListOfKeys()
+    for k in keys:
+        name = k.GetName()
+        if "___" not in name:
+            continue
+        parse = name.split("___")
+        hist = parse[0]
+        sample = parse[1]
+        fluxnorm = parse[2]
+        variable = parse[3]
+
+        if "_" in variable and hist not in ["h2D","h2d"]:
+            hist = "h2D"
+        if sample not in modelsampletodo:
+            continue
+        
+        if hist not in histdict:
+            histdict[hist] = {}
+        if sample not in histdict[hist]:
+            histdict[hist][sample] = {}
+        if variable not in histdict[hist][sample]:
+            histdict[hist][sample][variable] = {}
+        if fluxnorm not in histdict[hist][sample][variable]:
+            histdict[hist][sample][variable][fluxnorm] = {}
+        else:
+            print("WARNING: GetModelHistDict() already have hist %s. Skipping for now..."%(name))
+            continue
+        h = f.Get(name).Clone()
+        if h.GetEntries() <= 0:
+            continue
+        histdict[hist][sample][variable][fluxnorm] = h
+    return histdict
+
 def GetInputHistDict(f, input_dict = {}):
     keys = f.GetListOfKeys()
     print("Making dict of source hists in file %s..."%(f.GetName()))
@@ -241,9 +394,6 @@ def GetInputHistDict(f, input_dict = {}):
             continue
         parse = name.split("___")
         if len(parse) < 5: continue
-        #print (parse)
-        # names look like : hist___Sample___category__variable___types_0
-        # if not flag in parse[4] and not "data" in parse[2]: continue
         hist = parse[0]
         sample = parse[1]
         cat = parse[2]
@@ -479,7 +629,6 @@ def GetAnalyzeTypesHistDict(f, tuned = False, analyze_dict = {}):
 
     return analyze_dict 
 
-
 def MakeDataMCRatio(i_data, i_mctot):
     mcratio = i_data.Clone(str(i_data.GetName().replace("data", "datamcratio")))
     mcratio.Divide(i_data, i_mctot)
@@ -705,7 +854,8 @@ def DrawDataMCPlot1D(i_data_hist, i_mc_hist, x_title, y_title, outdirname, canva
     cc.Update()
     del cc
 
-def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title, y_title, outdirname, canvas_name, canvas_title):
+def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title, y_title, outdirname, canvas_name, canvas_title, do_comparison = False):
+    # Set do_comparison to true if you want to do comparison of different input models
     mnvPlotter = SetupErrorSummary(MnvPlotter(8))
 
     # thename = "%s_%s_%s"%(b_sample,c_var,"sigma")
@@ -728,10 +878,15 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
 
     typehistdict = {}
     for key in i_mc_typeshistdict:
-        hist = i_mc_typeshistdict[key].GetCVHistoWithStatError()
+        hist = i_mc_typeshistdict[key].Clone()
+        if not do_comparison:
+            hist = i_mc_typeshistdict[key].GetCVHistoWithStatError()
         hist.Scale(1.0, "width")
         hist.SetLineWidth(6)
-        typehistdict[typesnames[key]] = hist
+        if not do_comparison:
+            typehistdict[typesnames[key]] = hist
+        else:
+            typehistdict[key] = hist
 
     mnv_data.Print()
 
@@ -788,34 +943,62 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
     bottomArea = bottom.GetWNDC() * bottom.GetHNDC()
     topArea = top.GetWNDC() * top.GetHNDC()
     areaScale = topArea / bottomArea
+
+    ROOT.gStyle.SetErrorX(0) # This turns off the horizontal error bars
+    ROOT.gStyle.SetEndErrorSize(20) # This makes the ticks at the end of the error bars longer
+
     # Move to top pad for hists
     top.cd()
     if c_var in scaleY:
         top.SetLogy()
     leg_pos = "TR"
 
+    # E1 draws a point with error bars, X0 turns off horizontal error bars
     data_hist.Draw("E1 X0")
     
     # if not issmooth:
     # mc_band.Draw("SAME E2")
+    for key in typehistdict.keys():
+        typehistdict[key].Draw("HIST SAME")
+
     typeskeys = typehistdict.keys()
-    if "COH" in typeskeys:
-        typehistdict["COH"].Draw("HIST SAME")
-    if "DIS" in typeskeys:
-        typehistdict["DIS"].Draw("HIST SAME")
-    if "RES" in typeskeys:
-        typehistdict["RES"].Draw("HIST SAME")
-    if "2p2h" in typeskeys:
-        typehistdict["2p2h"].Draw("HIST SAME")
-    if "QE" in typeskeys:
-        typehistdict["QE"].Draw("HIST SAME")
+    # # if not do_comparison:
+    # if "COH" in typeskeys:
+    #     typehistdict["COH"].Draw("HIST SAME")
+    # if "DIS" in typeskeys:
+    #     typehistdict["DIS"].Draw("HIST SAME")
+    # if "RES" in typeskeys:
+    #     typehistdict["RES"].Draw("HIST SAME")
+    # if "2p2h" in typeskeys:
+    #     typehistdict["2p2h"].Draw("HIST SAME")
+    # if "QE" in typeskeys:
+    #     typehistdict["QE"].Draw("HIST SAME")
+    # # else:
+    # #     if "G18_02a" in typeskeys:
+    # #         typehistdict["G18"].Draw("HIST SAME")
+
     # mc_hist.Draw("SAME HIST X0")
     mc_hist.Draw("HIST SAME")
 
     data_stat.Draw("SAME E1 X0")
     data_hist.Draw("Same E1 X0")
 
-    titlewidth = mnvPlotter.GetLegendWidthInLetters(["Data","MnvTunev431","COH","RES","DIS","2p2h","QE"])
+    legend_list = [
+        "Data", 
+        "MnvTune431", # basemodelname,
+    ]
+    if do_comparison:
+        legend_list += [modelplotinfo[model]["shortname"] for model in modelcomptodo]
+    else:
+        legend_list += [
+            "COH",
+            "RES",
+            "DIS",
+            "2p2h",
+            "QE"
+        ]
+    # titlewidth = mnvPlotter.GetLegendWidthInLetters(["Data","MnvTunev431","COH","RES","DIS","2p2h","QE"])
+    titlewidth = mnvPlotter.GetLegendWidthInLetters(legend_list)
     # print(titlewidth)
     x1 = ctypes.c_double(0)
     y1 = ctypes.c_double(0)
@@ -828,18 +1011,25 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
     leg.SetNColumns(1)
     leg.SetBorderSize(0)
     leg.SetFillColor(-1)
-    leg.AddEntry(mc_hist, "MnvTune4.3.1","fl")
-    if "QE" in typeskeys:
-        leg.AddEntry(typehistdict["QE"], "QE","fl")
-    if "2p2h" in typeskeys:
-        leg.AddEntry(typehistdict["2p2h"], "2p2h","fl")
-    if "RES" in typeskeys:
-        leg.AddEntry(typehistdict["RES"], "RES","fl")
-    if "DIS" in typeskeys:
-        leg.AddEntry(typehistdict["DIS"], "DIS","fl")
-    if "COH" in typeskeys:
-        leg.AddEntry(typehistdict["COH"], "COH","fl")
     leg.AddEntry(data_hist, "Data","p")
+    leg.AddEntry(mc_hist, "MnvTune4.3.1","fl")
+    if not do_comparison:
+        if "QE" in typeskeys:
+            leg.AddEntry(typehistdict["QE"], "QE","fl")
+        if "2p2h" in typeskeys:
+            leg.AddEntry(typehistdict["2p2h"], "2p2h","fl")
+        if "RES" in typeskeys:
+            leg.AddEntry(typehistdict["RES"], "RES","fl")
+        if "DIS" in typeskeys:
+            leg.AddEntry(typehistdict["DIS"], "DIS","fl")
+        if "COH" in typeskeys:
+            leg.AddEntry(typehistdict["COH"], "COH","fl")
+    else:
+        for model in modelcomptodo:
+            if model in typeskeys:
+                leg.AddEntry(typehistdict[model], modelplotinfo[model]["shortname"], "fl")
+        
+    # leg.AddEntry(data_hist, "Data","p")
 
     leg.Draw()
     
@@ -885,13 +1075,14 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
     mcerror.SetLineColor(ROOT.kRed)
     mcerror.SetLineWidth(typeslinewidth)
     # mcerror.SetFillColorAlpha(ROOT.kPink + 1, 0.4)
-    mcerror.SetFillColor(ROOT.kRed-10)
-    mcerror.Draw("same E2")
+    # mcerror.SetFillColor(ROOT.kRed-10)
+    # mcerror.Draw("same E2")
 
     # Now do a line at 1
     straightline = TH1D()
     straightline = mcerror.Clone()
     straightline.SetFillStyle(0)
+    straightline.SetFillcolor(typescolors[0])
     straightline.Draw("hist same")
 
     for key in typesratiodict:
@@ -904,8 +1095,9 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
     # titleonplot = MakeTitleOnPlot()
     prelim.DrawLatex(x1.value-lat_xoffset, y1.value-2*lat_yoffset-0.01, "MINER#nuA Work In Progress")
     # titleonplot.DrawLatex(0.37, 0.9, plottitle)
-
     canvas_name = thename + "_Types"
+    if do_comparison:
+        canvas_name = thename + "_ModelComp"
 
     # if dotuned:
     #     canvas_name += "_tuned" 
@@ -1482,7 +1674,14 @@ def GetMCHistsForPlot(mnv_mchist):
     hist.SetLineWidth(3)
 
     return hist, band
-    
+
+def GetModelHistForPlot(th_modelhist,model):
+    th_modelhist.SetFillColor(0)
+    th_modelhist.SetLineColor(modelplotinfo[model]["linecolor"]) # TODO
+    th_modelhist.SetLineStyle(1)
+    th_modelhist.SetLineWidth(3)
+
+
 def DrawDataMCPlot2D(i_data_hist, i_mc_hist, x_title, x_bins, y_title, y_bins, z_title, outdirname, canvas_name, canvas_title, do_ratio = False):
     mnvPlotter = SetupErrorSummary(MnvPlotter(8))
 
@@ -1751,7 +1950,7 @@ def DrawDataMCPlot2D(i_data_hist, i_mc_hist, x_title, x_bins, y_title, y_bins, z
             
         del gc
 
-def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x_bins, y_title, y_bins, z_title, outdirname, canvas_name, canvas_title, do_ratio = False):
+def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x_bins, y_title, y_bins, z_title, outdirname, canvas_name, canvas_title, do_ratio = False, do_comparison = False):
     mnvPlotter = SetupErrorSummary(MnvPlotter(8))    
     data_mnv2d = i_data_hist.Clone()
     mc_mnv2d = i_mc_hist.Clone()
@@ -1783,7 +1982,10 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x
         # print("******************2D Plotting typeskeys: ", typeskeys)
         for key in mc_typehistdict:
             tmp_list = MakeProjHistList(mc_typehistdict[key],projaxis)
-            mc_typesproj_listdict[typesnames[key]] = [hist.GetCVHistoWithStatError() for hist in tmp_list]
+            if not do comparison:
+                mc_typesproj_listdict[typesnames[key]] = [hist.GetCVHistoWithStatError() for hist in tmp_list]
+            else:
+                mc_typesproj_listdict[key] = tmp_list
         typeskeys = mc_typesproj_listdict.keys()
 
         # total projection to 1D
@@ -1824,8 +2026,8 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x
             proj_ytitle = x_title
 
         # First do the total projection
-        DrawDataMCTypesPlot1D(data_mnvprojtot, mc_mnvprojtot, mc_typestotproj_dict, proj_xtitle, z_title, outdirname, thename+"_totalproj", canvas_title+" total proj")
-        if "E_{Avail}" in proj_xtitle:
+        DrawDataMCTypesPlot1D(data_mnvprojtot, mc_mnvprojtot, mc_typestotproj_dict, proj_xtitle, z_title, outdirname, thename+"_totalproj", canvas_title+" total proj", do_comparison)
+        if "E_{Avail}" in proj_xtitle and not do_comparison:
             DrawDataMCTypesPlot1D_AxisChange(data_mnvprojtot, mc_mnvprojtot, mc_typestotproj_dict, proj_xtitle, z_title, outdirname, thename+"_totalproj", canvas_title+" total proj")
 
         print("canvas n x bins: ",canvas_nxbins,",\t canvas n y bins: ",canvas_nybins)
@@ -1893,19 +2095,20 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x
 
             data_hist_list[i].Draw("axis")
             # mc_band_list[i].Draw("SAME E2")
-            if "COH" in typeskeys:
-                mc_typesproj_listdict["COH"][i].Draw("HIST SAME")
-            if "DIS" in typeskeys:
-                mc_typesproj_listdict["DIS"][i].Draw("HIST SAME")
-            if "RES" in typeskeys:
-                mc_typesproj_listdict["RES"][i].Draw("HIST SAME")
-            if "2p2h" in typeskeys:
-                mc_typesproj_listdict["2p2h"][i].Draw("HIST SAME")
-            if "QE" in typeskeys:
-                mc_typesproj_listdict["QE"][i].Draw("HIST SAME")
-            # for key in mc_typesproj_listdict:
-            #     mc_typesproj_listdict[key][i].Draw("HIST L SAME")
-            # mc_hist_list[i].Draw("SAME HIST")
+
+            # Decided to just loop over types? maybe better way to do this...
+            # if "COH" in typeskeys:
+            #     mc_typesproj_listdict["COH"][i].Draw("HIST SAME")
+            # if "DIS" in typeskeys:
+            #     mc_typesproj_listdict["DIS"][i].Draw("HIST SAME")
+            # if "RES" in typeskeys:
+            #     mc_typesproj_listdict["RES"][i].Draw("HIST SAME")
+            # if "2p2h" in typeskeys:
+            #     mc_typesproj_listdict["2p2h"][i].Draw("HIST SAME")
+            # if "QE" in typeskeys:
+            #     mc_typesproj_listdict["QE"][i].Draw("HIST SAME")
+            for key in mc_typesproj_listdict:
+                mc_typesproj_listdict[key][i].Draw("HIST SAME")
             mc_hist_list[i].Draw("HIST SAME")
 
             data_stat_list[i].Draw("SAME E1 X0")
@@ -1936,28 +2139,35 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x
         leg.SetBorderSize(0)
         leg.SetFillColor(-1)
         leg.SetTextSize(round(legendfontsize/3))
-
-        leg.AddEntry(mc_hist_list[0], "MnvTune4.3.1","fl")
-        if "QE" in typeskeys:
-            leg.AddEntry(mc_typesproj_listdict["QE"][0], "QE","fl")
-        if "2p2h" in typeskeys:
-            leg.AddEntry(mc_typesproj_listdict["2p2h"][0], "2p2h","fl")
-        if "RES" in typeskeys:
-            leg.AddEntry(mc_typesproj_listdict["RES"][0], "RES","fl")
-        if "DIS" in typeskeys:
-            leg.AddEntry(mc_typesproj_listdict["DIS"][0], "DIS","fl")
-        if "COH" in typeskeys:
-            leg.AddEntry(mc_typesproj_listdict["COH"][0], "COH","fl")
         leg.AddEntry(data_hist_list[0], "Data","p")
+        leg.AddEntry(mc_hist_list[0], "MnvTune4.3.1","fl")
+        # Need to do these in order to put important stuff on top
+        if not do_comparison:
+            if "QE" in typeskeys:
+                leg.AddEntry(mc_typesproj_listdict["QE"][0], "QE","fl")
+            if "2p2h" in typeskeys:
+                leg.AddEntry(mc_typesproj_listdict["2p2h"][0], "2p2h","fl")
+            if "RES" in typeskeys:
+                leg.AddEntry(mc_typesproj_listdict["RES"][0], "RES","fl")
+            if "DIS" in typeskeys:
+                leg.AddEntry(mc_typesproj_listdict["DIS"][0], "DIS","fl")
+            if "COH" in typeskeys:
+                leg.AddEntry(mc_typesproj_listdict["COH"][0], "COH","fl")
+        else:
+            for model in modelcomptodo:
+                if model in typeskeys:
+                    leg.AddEntry(mc_typesproj_listdict[model], modelplotinfo[model]["shortname"], "fl")
+        # leg.AddEntry(data_hist_list[0], "Data","p")
         leg.Draw()
         pad.Modified()
 
         gc.SetHistTexts()
         gc.Draw()
-        # canvas_name = thename + "XSec_Proj" + projaxis + "_Types"
-
-        gc.Print(os.path.join(outdirname, thename + "_Types.png"))
-        gc.Print(os.path.join(outdirname,"source", thename + "_Types.C"))
+        sigma_canvas_name = thename + "_Types"
+        if do_comparison:
+            sigma_canvas_name = thename + "_ModelComp"
+        gc.Print(os.path.join(outdirname, sigma_canvas_name + ".png"))
+        gc.Print(os.path.join(outdirname,"source", sigma_canvas_name + ".C"))
         # del gc
 
         gc.cd()
@@ -2040,25 +2250,30 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x
         leg.SetBorderSize(0)
         leg.SetFillColor(-1)
         leg.SetTextSize(round(legendfontsize/3))
-
-        leg.AddEntry(mc_hist_list[0], "MnvTune4.3.1","fl")
-        if "QE" in typeskeys:
-            leg.AddEntry(mc_typesproj_listdict["QE"][0], "QE","fl")
-        if "2p2h" in typeskeys:
-            leg.AddEntry(mc_typesproj_listdict["2p2h"][0], "2p2h","fl")
-        if "RES" in typeskeys:
-            leg.AddEntry(mc_typesproj_listdict["RES"][0], "RES","fl")
-        if "DIS" in typeskeys:
-            leg.AddEntry(mc_typesproj_listdict["DIS"][0], "DIS","fl")
-        if "COH" in typeskeys:
-            leg.AddEntry(mc_typesproj_listdict["COH"][0], "COH","fl")
         leg.AddEntry(data_hist_list[0], "Data","p")
+        leg.AddEntry(mc_hist_list[0], "MnvTune4.3.1","fl")
+        if not do_comparison:
+            if "QE" in typeskeys:
+                leg.AddEntry(mc_typesproj_listdict["QE"][0], "QE","fl")
+            if "2p2h" in typeskeys:
+                leg.AddEntry(mc_typesproj_listdict["2p2h"][0], "2p2h","fl")
+            if "RES" in typeskeys:
+                leg.AddEntry(mc_typesproj_listdict["RES"][0], "RES","fl")
+            if "DIS" in typeskeys:
+                leg.AddEntry(mc_typesproj_listdict["DIS"][0], "DIS","fl")
+            if "COH" in typeskeys:
+                leg.AddEntry(mc_typesproj_listdict["COH"][0], "COH","fl")
+        else:
+            for model in modelcomptodo:
+                if model in typeskeys:
+                    leg.AddEntry(mc_typesproj_listdict[model], modelplotinfo[model]["shortname"], "fl")
+        # leg.AddEntry(data_hist_list[0], "Data","p")
         leg.Draw()
         pad.Modified()
         gc.SetHistTexts()
         gc.Draw()
-        gc.Print(os.path.join(outdirname, thename + "_Types_ratio.png"))
-        gc.Print(os.path.join(outdirname,"source", thename + "_Types_ratio.C"))
+        gc.Print(os.path.join(outdirname, thename + "_ModelComp_ratio.png"))
+        gc.Print(os.path.join(outdirname,"source", thename + "_ModelComp_ratio.C"))
 
         # # No do error summary
         # gc.cd()
@@ -2093,29 +2308,6 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x
 
 def DrawErrorSumary2D():
     return 0
-
-
-
-
-
-def CCQECanvas(name,title,xsize=1100,ysize=720):
-    c2 = ROOT.TCanvas(name, title, round(xsize), round(ysize))
-    # c2 = ROOT.TCanvas(name, title)
-    # c2.SetLeftMargin(0.1)
-    # c2.SetRightMargin(0.04)
-    # c2.SetLeftMargin(0.1)
-    # c2.SetTopMargin(0.04)
-    # c2.SetBottomMargin(0.1)
-    return c2
-
-def CCQELegend(xlow,ylow,xhigh,yhigh):
-    leg = ROOT.TLegend(xlow,ylow,xhigh,yhigh)
-    # leg = ROOT.TLegend(abs(xlow-xhigh),abs(ylow-yhigh))
-    leg.SetFillStyle(0)
-    leg.SetBorderSize(0)
-    leg.SetTextSize(legendfontsize)
-    return leg
-
 
 def AddPreliminary():
     font = 112
@@ -2235,12 +2427,17 @@ vars_info = {
     }
 }
 
-if len(sys.argv) == 1:
-    print ("enter root file name and optional 2nd argument to get tuned version")
-flag = "types_"
+domodelcomp = global_domodelcomp
+if len(sys.argv) == 1 and not global_domodelcomp:
+    print("python3 xsec_plots.py <path to analyze output files>")
+    sys.exit(1)
+if len(sys.argv) < 2 and global_domodelcomp:
+    print("python3 xsec_plots.py <path to analyze output file> <path to dir with model comps")
+    print("WARNING: no path specified for models for comparison... just doing it without models")
+    domodelcomp = False
+
+# First get the hists/files for the extracted cross section
 raw_filename = sys.argv[1]
-if len(sys.argv)> 2:
-    flag = "tuned_type_"
 
 if "_tuned_analyze9" in raw_filename:
     tuned_filename = raw_filename
@@ -2252,6 +2449,7 @@ elif "_untuned_analyze9":
 tuned_f = TFile.Open(tuned_filename,"READONLY")
 untuned_f = TFile.Open(untuned_filename,"READONLY")
 
+# Make your output directory if it doesn't exist, and store the path for later
 plotdirbase = os.getenv("OUTPUTLOC")
 
 plotdir = MakePlotDir("XSecPlots")
@@ -2291,6 +2489,7 @@ else:
 
 # keys = f.GetListOfKeys()
 
+# Get the POT summary and set up the POT scaling
 h_pot = untuned_f.Get("POT_summary")
 dataPOT = h_pot.GetBinContent(1)
 mcPOTprescaled = h_pot.GetBinContent(2)
@@ -2300,49 +2499,60 @@ if ("potscaled_combined_" in untuned_filename):
 print("POTScale: ",POTScale)
 
 
-# find all the valid histogram and group by keywords
+# Find all the valid histograms from the analyze_v9 files and group by keywords
+# First get the histograms that were inputs to analyze_v9
 print("Making dict of source hists...")
 print("\tLooking at untuned...")
 input_hists = GetInputHistDict(untuned_f)
 print("\tLooking at tuned...")
 input_hists = GetInputHistDict(tuned_f, input_hists)
+# Get the "type" histograms that are for the mcinttypes
 print("Making dict of source types hists...")
 input_typeshists = GetInputTypesHistDict(untuned_f)
 input_typeshists = GetInputTypesHistDict(tuned_f,input_typeshists)
-# print(input_typeshists)
-# sys.exit(1)
-# print(input_hists)
 
-analyze_stage_list = [
-    "mc_tot",
-    "mc_bkg_tot",
-    "signalfraction",
-    "bkgfraction",
-    "bkgsub",
-    "bkgsub_unfolded",
-    "bkgsub_unfolded_effcorr",
-    "efficiency",
-    "bkgsub_unfolded_effcorr_sigma",
-    "sigmaMC"
-]
+# analyze_stage_list = [
+#     "mc_tot",
+#     "mc_bkg_tot",
+#     "signalfraction",
+#     "bkgfraction",
+#     "bkgsub",
+#     "bkgsub_unfolded",
+#     "bkgsub_unfolded_effcorr",
+#     "efficiency",
+#     "bkgsub_unfolded_effcorr_sigma",
+#     "sigmaMC"
+# ]
 
 
+# Next get the histograms that were output by analyze_v9 (ie for each stage)
 print("Making dict of analyze hists...")
 print("\tLooking at untuned...")
 analyze_hists = GetAnalyzeHistDict(untuned_f, False)
 print("\tLooking at tuned...")
 analyze_hists = GetAnalyzeHistDict(tuned_f, True, analyze_hists)
-
+# And get their type histograms also (though really should only need them for the "truth" stage)
 print("Making dict of analyze types hists...")
 analyze_typeshists = GetAnalyzeTypesHistDict(untuned_f, False)
 analyze_typeshists = GetAnalyzeTypesHistDict(tuned_f, True, analyze_typeshists)
 
+# Next get the variable configs set up. This is useful for building the histograms and making plot info
 keys = tuned_f.GetListOfKeys()
 if "varsFile" not in keys:
     bigvarconfig_string = tuned_f.Get("varsFile_5A").GetTitle()
 else:
     bigvarconfig_string = tuned_f.Get("varsFile").GetTitle()
 bigvarconfig_dict = json.loads(re.sub("//.*", "", bigvarconfig_string, flags = re.MULTILINE))
+
+# Done with the analyze_v9 files, lets get the files for the model comparison. This has it's own method
+pathtodir_modelcomp = sys.argv[2]
+modelcomppath_dict = GetModelCompFilePathsDict(pathtodir_modelcomp)
+# Dict to put all the model hists in. Structure is {model:{histdim:{sample:{variable:{fluxnorm:TH1D()}}}
+model_hists = {}
+for model in modelcomppath_dict:
+    # Trying this out, feels very pythonic....
+    with TFile.Open(modelcomppath_dict[model],"READONLY") as tmpfile:
+        model_hists[model] = GetModelHistDict(tmpfile)
 
 
 # print(analyze_hists)
@@ -2439,12 +2649,9 @@ for a_hist in analyze_hists.keys():
             # print(input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"].keys())
 
             if a_hist in input_typeshists:
-
                 if b_sample in input_typeshists[a_hist].keys():
-
                     if c_var in input_typeshists[a_hist][b_sample].keys():
                         print("keys for input typehists: ", input_typeshists[a_hist][b_sample][c_var].keys())
-
                         if "reconstructed" in input_typeshists[a_hist][b_sample][c_var]["qelike"].keys():
                             print("found types inputhists")
                             found_inputtypes = True
@@ -2465,6 +2672,14 @@ for a_hist in analyze_hists.keys():
                 tmp_types_mcreco = input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"]
                 tmp_types_mcseltru = input_typeshists[a_hist][b_sample][c_var]["qelike"]["selected_truth_tuned"]
                 tmp_types_mcalltru = input_typeshists[a_hist][b_sample][c_var]["qelike"]["all_truth_tuned"]
+
+            tmp_model_hists = {}
+            for model in modelcomptodo:
+                if a_hist in model_hists[model]:
+                    if b_sample in model_hists[model][a_hist]:
+                        if c_var in model_hists[model][a_hist][b_sample]:
+                            tmp_model_hists[model] = model_hists[model][a_hist][b_sample][c_var]["reweight"]
+            
 
             tmp_canvas_basename = "%s_%s"%(b_sample,c_var)
             tmp_canvas_basetitle = "%s %s"%(b_sample,c_var)
@@ -2619,6 +2834,15 @@ for a_hist in analyze_hists.keys():
                             var_outdir, 
                             sigma_canvas_name, sigma_canvas_title
                         )
+                    if "modelcomp" not in skipstage_list:
+                        modelcomp_canvas_name = tmp_canvas_basename + "_sigma_modelcomp"
+                        modelcomp_canvas_title = tmp_canvas_basetitle + " sigma Model Comparison"
+                        DrawDataMCTypesPlot1D(
+                            tmp_sigma_tuned,tmpsigmamc, tmp_model_hists,
+                            "%s (%s)"%(var_title,var_units), sigma_ytitle, 
+                            var_outdir,
+                            modelcomp_canvas_name, modelcomp_canvas_title
+                        )
 
             if a_hist == "h2D":
                 print(">>>>>> doing 2D")
@@ -2745,6 +2969,16 @@ for a_hist in analyze_hists.keys():
                             sigma_ztitle, 
                             var_outdir, 
                             sigma_canvas_name, sigma_canvas_title
+                        )
+                    if "modelcomp" not in skipstage_list:
+                        modelcomp_canvas_name = tmp_canvas_basename + "_sigma_modelcomp"
+                        modelcomp_canvas_title = tmp_canvas_basetitle + " sigma Model Comparison"
+                        DrawDataMCTypesPlot2D(
+                            tmp_sigma_tuned, tmpsigmamc, tmp_model_hists,
+                            xvar_title, xvar_bins, yvar_title, yvar_bins,
+                            sigma_ztitle,
+                            var_outdir,
+                            modelcomp_canvas_name, modelcomp_canvas_title
                         )
                 # DrawErrorSummary2D()
 
