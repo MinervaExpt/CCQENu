@@ -426,10 +426,14 @@ def getEAvailGeV(mytree):
         if pdg[i] == 22:
             eavail += energy # add gammas
             continue
+        if abs(pdg[i]) == 3122: 
+            eavail += energy - 0.93827 - 0.13957 # lambda assuming it decays to pi- and proton
         if pdg[i] >= 2000:
             eavail += energy - 0.93827 # any other baryons add the energy minus proton mass
+            continue
         if pdg[i] <= -2000:
             eavail += energy + 0.93827 # weirdness for antibaryons?
+            continue
         else:
             eavail += energy
     return eavail
@@ -462,11 +466,13 @@ def getptmuGeV(mytree, RHC = True):
 
 def GetHistToFill(var, sample, varconfig_dict):
     # Makes a histogram to be filled later, uses NuConfig variable system
-    name = "h___%s___%s"%(sample,var) 
-    title = "%s %s"%(sample,var)
+    # name = "h___%s___%s"%(sample,var) 
+    # title = "%s %s"%(sample,var)
     # Make the name
     if "_" in var:
-        name.replace("h___","h2D___")
+        name = "h2D___%s___%s"%(sample,var) 
+        title = "%s %s"%(sample,var)
+        # name.replace("h___","h2D___")
         xbins = []
         ybins = []
         xtitle = ""
@@ -508,7 +514,8 @@ def GetHistToFill(var, sample, varconfig_dict):
         return hist
 
     # Now just do it for 1D
-    
+    name = "h___%s___%s"%(sample,var) 
+    title = "%s %s"%(sample,var)
     tmpbins = []
     if "bins" in varconfig_dict["1D"][var]:
         tmpbins = [float(tmpbin) for tmpbin in varconfig_dict["1D"][var]["bins"]]
