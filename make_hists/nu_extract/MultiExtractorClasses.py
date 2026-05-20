@@ -1,17 +1,31 @@
 # classes for extracting a cross section from a fit 
-
+''' HMS 4-4-2026'''
 ## note figure out what do_cov_area_norm does.  3-8-2026
 
 #TODO: store normalization information
 #TODO: need to be able to use scaled MC distributions in unfolding/efficiency.  
 
-import os,sys
-from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixD, TVectorD,TString, gPad
-from PlotUtils import MnvH1D, MnvH2D, MnvPlotter
+# pylint: disable=wildcard-import
+# pylint: disable=unnecessary-pass
+# pylint: disable=import-error
+# pylint: disable=trailing-whitespace
+# pylint: disable=invalid-name
+# pylint: disable=line-too-long
+# pylint: disable=superfluous-parens
+
+import os
+import sys
+from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixD
+from PlotUtils import MnvH1D, MnvH2D
 import commentjson
 from SyncBands import SyncBands
-from UnfoldUtils import MnvUnfold, MnvResponse
-from RebinFlux import GetFluxFlat
+from UnfoldUtils import MnvUnfold
+from RebinFlux import GetFlux, GetFluxFlat, GetFluxEbins1D
+#from MatrixUtils import ToVectorD, ToMatrixDSym, scaleHist, map2TObjArray, TexFigure3
+
+
+from plotting_pdf import PlotCVAndError,PlotErrorSummary
+from GetTarget import GetTarget
 
 DEBUG=True
 PLOTS=True
@@ -20,12 +34,6 @@ POPFITPARAMETERS=False
 
 print ("have imported common packages")
 
-from MatrixUtils import checktag, ToVectorD, ToMatrixDSym, scaleHist, map2TObjArray, TexFigure3
-from SyncBands import SyncBands
-
-from RebinFlux import GetFlux
-from plotting_pdf import PlotCVAndError,PlotErrorSummary
-from GetTarget import GetTarget
 
 
 def addentry(thing,one,two,three,four,value):
@@ -50,10 +58,11 @@ def addentry(thing,one,two,three,four,value):
         names = value.GetErrorBandNames()
         if len(names) > 0:
             SyncBands(value)
-        if DEBUG: print ("added",thing[one][two][three][four].GetName(),one,two,three,four,value.GetName())
+        if DEBUG: 
+            print ("added",thing[one][two][three][four].GetName(),one,two,three,four,value.GetName())
     else:
         print ("Found a duplicate item",one,two,three,four)
-    pass
+
 
 def fractionator(hist1, hist2,newname):
     ''' get the fraction of hist1 in hist1+hist2 without double counting errors'''
@@ -137,8 +146,10 @@ class CrossSectionExtractor:
                 unfolded_hist= MnvH1D((true_sel_hist).GetCVHistoWithStatError())
                 unfolded_hist.SetName(unfolded_name)
                 unfolded_hist.SetDirectory(0)
-                if DEBUG: print(" Migration matrix has size " , len(migration.GetErrorBandNames()) )
-                if DEBUG: print(" Data has  size " , len(data_hist.GetErrorBandNames()) )
+                if DEBUG: 
+                    print(" Migration matrix has size " , len(migration.GetErrorBandNames()) )
+                if DEBUG: 
+                    print(" Data has  size " , len(data_hist.GetErrorBandNames()) )
                 #  make an empty covariance matrix for the unfolding to give back to you
                 n = unfolded_hist.GetXaxis().GetNbins()
                 covmatrix = TMatrixD(n,n) 
@@ -174,7 +185,8 @@ class CrossSectionExtractor:
         output_stage = self.grabber.allconfigs["Cross"]["Stages"]["Efficiency"]["Out"]
         for sample in self.grabber.hists1D.keys():
             print ("efficiency correcting",sample)
-            if sample not in thesamples: continue
+            if sample not in thesamples: 
+                continue
             for variable in self.allconfigs["Cross"]["Variables"]:
                 logscale = self.allconfigs["Cross"]["Scales"][variable]
                 data_cat = self.allconfigs["Cross"]["Data_Cat"]
@@ -192,7 +204,7 @@ class CrossSectionExtractor:
 
                 efficiency_hist.PopVertErrorBand("Flux")
 
-                print("removed Flux Error band from efficiency" )
+                print("removed Flux Error band from efficiency and replace with CV" )
     
                 efficiency_hist.AddMissingErrorBandsAndFillWithCV(unfolded_hist)
                 SyncBands(efficiency_hist)
@@ -230,7 +242,8 @@ class CrossSectionExtractor:
 
         mcoutput_stage=output_stage+"MC"
         for sample in self.grabber.hists1D.keys():
-            if sample not in thesamples: continue
+            if sample not in thesamples: 
+                continue
             for variable in self.allconfigs["Cross"]["Variables"]:
                 logscale = self.allconfigs["Cross"]["Scales"][variable]
                 data_cat = self.allconfigs["Cross"]["Data_Cat"]
@@ -259,6 +272,7 @@ class CrossSectionExtractor:
                     theflux_hist = GetFluxFlat(self.allconfigs, sigma_hist)
 
                     theflux_hist.AddMissingErrorBandsAndFillWithCV(sigma_hist)
+                    addentry(self.hists1D, sample, "flat_flux", variable, output_stage, theflux_hist)
 
                     sigma_hist.AddMissingErrorBandsAndFillWithCV(theflux_hist)
 
@@ -273,11 +287,41 @@ class CrossSectionExtractor:
 
                     sigmaMC_hist.Divide(sigmaMC_hist, theflux_hist)
 
-                    # target/POT normalization
+                    # target/POT normalizationxzx
                     sigmaMC_hist.Scale(normMC)
                 else:
-                    print("energy dependent flux not implemented yet")
-                    pass
+                    print(" Using energy dependent flux normalization. " )
+                    print ("check",self.allconfigs["main"])
+                    h_flux_dewidthed = GetFlux(self.allconfigs)
+                    h_flux_ebins = GetFluxEbins1D(h_flux_dewidthed, sigma_hist)
+
+                    # Returns flux hist in bins of energy variable of input hist (for 2D the bins on the non-energy axis are integrated:
+                    
+                    # TODO: Flipped the order of the Divide and Scale steps. Does this matter?
+                    h_flux_ebins.AddMissingErrorBandsAndFillWithCV(sigma_hist)
+                    sigma_hist.AddMissingErrorBandsAndFillWithCV(h_flux_ebins)
+                    h_flux_ebins.SetName(("h_flux_ebins") )
+                    addentry(self.hists1D, sample, "ebin_flux", variable, output_stage, h_flux_ebins)
+                    
+                    #h_flux_ebins.Write()
+                    sigma_hist.AddMissingErrorBandsAndFillWithCV(h_flux_ebins)
+                    #sigma_hist.Print("ALL")
+                    h_flux_ebins.Print("ALL")
+                    sigma_hist.Divide(sigma_hist, h_flux_ebins)
+                    #sigma_hist.Print("ALL")
+                    
+                    # target normalization
+                    sigma_hist.Scale(norm)
+
+                    SyncBands(sigma_hist)
+                    # if (DEBUG): sigma.GetSysErrorMatrix("Unfolding"):.Print():
+
+                    h_flux_ebins.AddMissingErrorBandsAndFillWithCV(sigmaMC_hist)
+                    sigmaMC_hist.AddMissingErrorBandsAndFillWithCV(h_flux_ebins)
+                    sigmaMC_hist.Divide(sigmaMC_hist, h_flux_ebins, 1.0, 1.0)
+                    # target normalization
+                    sigmaMC_hist.Scale(norm)
+
 
 
                 addentry(self.hists1D, sample, data_cat, variable, output_stage, sigma_hist)
@@ -325,6 +369,7 @@ class DataGrabber:
         self.data_source = theconfig["InputFiles"]
 
         self.samples = theconfig["Samples"]
+        self.scaling = theconfig["POTScale"]
         self.data_files = {}
         self.samples_pot = {}
         count = 0
@@ -356,24 +401,37 @@ class DataGrabber:
         '''
 
         for sample in self.allconfigs["Cross"]["Samples"]:
+            if self.scaling:
+                datascale = self.samples_pot[sample].GetBinContent(1)
+                mcscale = self.samples_pot[sample].GetBinContent(3)
+                potscale = datascale / mcscale
+            else:
+                potscale = 1.0
+
             for category in self.allconfigs["Cross"]["Categories"]:
+                if category == self.allconfigs["Cross"]["Data_Cat"]:
+                    scalefactor = 1
+                else:
+                    scalefactor = potscale
                 for variable in self.allconfigs["Cross"]["Variables"]:
                     for data_type in self.datatypes1D[category]:
                         
                         hist_name = f"h___{sample}___{category}___{variable}___{data_type}"
                         hist = MnvH1D()
                         hist = self.data_files[sample].Get(hist_name)
+                        print ("looking for",hist_name, hist)
                         if hist == None:
                             print ("could not find",hist_name)
                             continue
-                        if POPFITPARAMETERS:
-                            bands = hist.GetErrorBandNames()
-                            if "FitVariations" in bands:
-                                hist.PopVertErrorBand("FitVariations")
+                        # if POPFITPARAMETERS:
+                        #     bands = hist.GetErrorBandNames()
+                        #     if "FitVariations" in bands:
+                        #         hist.PopVertErrorBand("FitVariations")
                         
-
+                        hist.Scale(scalefactor)
                         addentry(self.hists1D, sample, category, variable, data_type, hist)
-                        if DEBUG: print ("grabbed",self.hists1D[sample][category][variable][data_type].GetName(),sample,category,variable,data_type)
+                        if DEBUG: 
+                            print ("grabbed",self.hists1D[sample][category][variable][data_type].GetName(),sample,category,variable,data_type)
 
                     for data_type in self.datatypes2D[category]:
                         hist_name = f"h___{sample}___{category}___{variable}___{data_type}"
@@ -382,6 +440,7 @@ class DataGrabber:
                         if hist == None:
                             print ("could not find",hist_name)
                             continue
+                        hist.Scale(scalefactor)
                         addentry(self.hists1D, sample, category, variable, data_type, hist)
                         if DEBUG: print ("grabbed",self.hists1D[sample][category][variable][data_type].GetName(),sample,category,variable,data_type)
 
@@ -409,8 +468,10 @@ class DataGrabber:
                 addentry(self.hists1D,sample,"mctot",variable,signal_type,mctot_hist)
                 addentry(self.hists1D,sample,"bkgtot",variable,signal_type,bkgtot_hist)
 
-                if DEBUG: print ("created",self.hists1D[sample]["mctot"][variable][signal_type].GetName(),sample,"mctot",variable,signal_type) 
-                if DEBUG: print ("created",self.hists1D[sample]["bkgtot"][variable][background_type].GetName(),sample,"bkgtot",variable,background_type)   
+                if DEBUG: 
+                    print ("created",self.hists1D[sample]["mctot"][variable][signal_type].GetName(),sample,"mctot",variable,signal_type) 
+                if DEBUG: 
+                    print ("created",self.hists1D[sample]["bkgtot"][variable][background_type].GetName(),sample,"bkgtot",variable,background_type)   
 
 
             
@@ -446,11 +507,13 @@ class DataGrabber:
         pass
 
     def print(self,types=None,option=""):
+        ''' print the integral for all histograms '''
         for sample in self.hists1D.keys():
             for category in self.hists1D[sample].keys():
                 for variable in self.hists1D[sample][category].keys():
                     for data_type in self.hists1D[sample][category][variable].keys():
-                        if types != [] and data_type not in types: continue
+                        if types is not None and data_type not in types: 
+                            continue
                         count = self.hists1D[sample][category][variable][data_type].Integral()
                         print (f"Totals: {sample} {category} {variable} {data_type} {count}")
         pass
@@ -497,7 +560,7 @@ class DataGrabber:
                             print ("dump the numbers")
                             hist = self.hists1D[sample][category][variable][data_type]
                             #void MnvH1DToCSV(std::string name, std::string directory="", double scale=1.0, bool fullprecision=true, bool errors=true, bool percentage = true, bool binwidth = true);
-                            hist.MnvH1DToCSV(name=hist.GetName(),directory=outdir, scale=1.E41, fullprecision=False,errors= True,  percentage=True, binwidth=True)
+                            hist.MnvH1DToCSV(name=hist.GetName(),directory=outdir, scale=1.E39, fullprecision=False,errors= True,  percentage=True, binwidth=True)
         # write out the configs
 
         for key, theconfig in self.allconfigs.items():
@@ -535,8 +598,9 @@ class DataGrabber:
                         for band in allbands.keys():
                             if band not in bands:
                                 self.hists1D[sample][category][variable][data_type].AddMissingErrorBandsAndFillWithCV(allbands[band])
-                                if DEBUG: print ("added missing band",band,"to",hist.GetName())                
-        SyncBands(self.hists1D[sample][category][variable][data_type])
+                                if DEBUG: 
+                                    print ("added missing band",band,"to",hist.GetName())                
+                        SyncBands(self.hists1D[sample][category][variable][data_type])
         return True
 
     def delete(self):
@@ -562,7 +626,7 @@ class Plotter:
         self.canvas1D.SetTopMargin(0.10)
         self.canvas1D.Print(pdffilename+"(", "pdf")
         self.logx=0
-        self.scales=config["Scales"]
+        self.scales=theconfig["Scales"]
 
         pass
 
@@ -622,7 +686,7 @@ if __name__ == "__main__":
 
     cross.flux("merged")
 
-
+    grabber.print()
     # close the pdf file
     plotter.close()
 

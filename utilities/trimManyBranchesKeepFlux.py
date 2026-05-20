@@ -1,7 +1,7 @@
 import ROOT
 from ROOT import  TFile, TTree
 import os 
-
+DEBUG=False
 
 #  an example of copytree.C
 
@@ -18,7 +18,7 @@ def trimManyBranchesKeepFlux(infile, outfile, reco_cut, truth_cut):
 
     name = f.GetName()
     DATA = "Data" in name
-    MC = "mc" in name
+    MC = "mc" in name or "MC" in name
     T = f.Get("MasterAnaDev")
     if MC: TT = f.Get("Truth")
     TM = f.Get("Meta")
@@ -32,7 +32,7 @@ def trimManyBranchesKeepFlux(infile, outfile, reco_cut, truth_cut):
 
     #T.SetBranchStatus("mc_wgt_*",1)
     if MC: TT.SetBranchStatus("mc_wgt_*",1)
-
+    TM.SetBranchStatus("*",1)
     #  deactivate select branches
     T.SetBranchStatus("lattice*",0)
     T.SetBranchStatus("Signal*",0)
@@ -142,23 +142,26 @@ def trimManyBranchesKeepFlux(infile, outfile, reco_cut, truth_cut):
     T.SetBranchStatus("muon_theta_allNodes",0)
     T.SetBranchStatus("muon_iso_blobs*",0)
 
-    file =  TFile(outfile,"recreate")
+    newfile =  TFile(outfile,"recreate")
     # T.SetTreeIndex(0)  if MC: TT.SetTreeIndex(0)  TM.SetTreeIndex(0)
-    file.cd()
+    
     print ("copying tree with cut ", reco_cut)
     newtree = T.CopyTree(reco_cut)
-    if MC: newtruth = TT.CopyTree(truth_cut) 
-    meta = TM.CloneTree()
+    if MC: 
+        print ("copying tree with cut ", truth_cut)
+        newtruth = TT.CopyTree(truth_cut) 
+    meta = TM.CopyTree("")
+    newfile.cd()
     newtree.Write()
-    if MC: newtruth.Write()
+    if MC: 
+        newtruth.Write()
+    #TM.Scan()
+    #meta.Scan()
+    #meta.Print()
     meta.Write()
-    #if MC:truth.Write()
-    #meta.Write()
-    #tree.Write()
-    #if MC: truth.Print()
-    meta.Scan()
-    file.Write() #0,ROOT.TObject.kOverwrite)
-    file.Close()
+    
+    #newfile.Write() #0,ROOT.TObject.kOverwrite)
+    newfile.Close()
 
     # fLeaves().Remove(l1)
     # T.GetListOfLeaves().Remove(l2)
@@ -167,28 +170,43 @@ def trimManyBranchesKeepFlux(infile, outfile, reco_cut, truth_cut):
 
 def test( ):
     infile = "/Users/schellma/data/public/Data/Playlist1N/MasterAnaDev_data_AnaTuple_run00020329_Playlist.root"
-    reco_cut = "vtx[2] > 5000 && vtx[2] < 9000"
-    truth_cut = "mc_vtx[2] > 5000 && mc_vtx[2] < 9000"
+    #infile = "/Users/schellma/data/public/StandardMC/Playlist1N/MasterAnaDev_mc_AnaTuple_run00113270_Playlist.root"
+    infile = "/Users/schellma/data/p6/p6PrimeData/Merged_data_ana_me5A_DualVertex_P6Prime13FebDSECalFix/MasterAnaDev_data_AnaTuple_run00019596_Playlist.root"
+    reco_cut = "vtx[2] > 5000 && vtx[2] < 9000 && multiplicity > 0"
+    truth_cut = "mc_vtx[2] > 5000 && mc_vtx[2] < 9000 && mc_current == 1"
     dirname = os.path.dirname(infile)
-    outdir = dirname + "_trimmed"
+    outdir = dirname + "_trimmed3"
     if not os.path.exists(outdir):
         os.mkdir(outdir)
     #infile = "/Users/schellma/data/public/StandardMC/Playlist1N/MasterAnaDev_mc_AnaTuple_run00113270_Playlist.root"
-    outfile = os.path.join(outdir, os.path.basename(infile).replace(".root","_trimmed.root"))
+    outfile = os.path.join(outdir, os.path.basename(infile).replace(".root","_trimmed_test.root"))
     print ("writing to ", outfile )
     trimManyBranchesKeepFlux(infile, outfile, reco_cut, truth_cut)
 
 def loop(dirname, helicity=1):
-    reco_cut = "vtx[2] > 5000 && vtx[2] < 9000 && isMinosMatchTrack && MasterAnaDev_nuHelicity == %d"%(helicity)
-    truth_cut = "mc_vtx[2] > 5000 && mc_vtx[2] < 9000" 
-    outdir = os.path.dirname(dirname) + "_trimmed2"
-    if not os.path.exists(outdir):
-        os.mkdir(outdir)
+    count = 0
+    reco_cut = "vtx[2] > 5000 && vtx[2] < 9000 && multiplicity > 0 "
+    truth_cut = "mc_vtx[2] > 5000 && mc_vtx[2] < 9000 && mc_current == 1 "
+   
+    
     for filename in os.listdir(dirname):
+        count +=1
+        if DEBUG and count > 2: break
         if filename.endswith("Playlist.root"):
             print ("trimming ", filename)
             infile = os.path.join(dirname, filename)
-            outfile = os.path.join(outdir, filename.replace(".root","_trimmed2.root"))
+            outdir = os.path.dirname(infile).replace("/minerva/persistent","/minerva/scratch/users/%s"%os.getenv("USER"))
+            if not os.path.exists(outdir):
+                os.mkdir(outdir)
+            if "fnal.gov" in os.getenv("HOSTNAME"):
+                infile = infile.replace("/pnfs", "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr")
+            print ("infile ", infile)
+                            
+            outfile = os.path.join(outdir, filename.replace(".root","_trimmed.root"))
+            if os.path.exists(outfile):
+                print ("file exists, skipping ", outfile)
+                continue
+            print ("writing to ", outfile )
             trimManyBranchesKeepFlux(infile, outfile, reco_cut, truth_cut)
 
 if __name__ == "__main__":
@@ -196,10 +214,9 @@ if __name__ == "__main__":
 
 
     #test()
-    loop("/Users/schellma/data/public/Data/Playlist1N/",1)
+    #loop("/Users/schellma/data/public/Data/Playlist1N/",1)
 
-    loop("/Users/schellma/data/public/StandardMC/Playlist1N/",1)
-    
-
-
+    #loop("/Users/schellma/data/public/StandardMC/Playlist1N/",1)
+    loop("/pnfs/minerva/persistent/DataPreservation/p8/FullDetector/Playlist5A/",1)
+    #loop("/pnfs/minerva/persistent/DataPreservation/p8/Data/Playlist5A/",1)
 
