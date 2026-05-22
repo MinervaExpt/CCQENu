@@ -426,8 +426,19 @@ def getEAvailGeV(mytree):
         if pdg[i] == 22:
             eavail += energy # add gammas
             continue
-        if abs(pdg[i]) == 3122: 
-            eavail += energy - 0.93827 - 0.13957 # lambda assuming it decays to pi- and proton
+        if abs(pdg[i]) == 3122: # lambda
+            # eavail += energy - 0.93827 - 0.13957 # lambda assuming it decays to pi- and proton
+            eavail += energy - 1.1116 # lambda mass
+            continue
+        if abs(pdg[i]) == 3222 #sigma0
+            eavail += energy - 1.1193
+            continue
+        if abs(pdg[i]) == 3222 #sigma-
+            eavail += energy - 1.1198
+            continue
+        # if abs(pdg[i]) == 3222 #sigma+ # these don't really show up in qe
+        #     eavail += energy - 1.1
+        #     continue
         if pdg[i] >= 2000:
             eavail += energy - 0.93827 # any other baryons add the energy minus proton mass
             continue
