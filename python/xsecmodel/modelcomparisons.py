@@ -430,10 +430,10 @@ def getEAvailGeV(mytree):
             # eavail += energy - 0.93827 - 0.13957 # lambda assuming it decays to pi- and proton
             eavail += energy - 1.1116 # lambda mass
             continue
-        if abs(pdg[i]) == 3222 #sigma0
+        if abs(pdg[i]) == 3212: #sigma0
             eavail += energy - 1.1193
             continue
-        if abs(pdg[i]) == 3222 #sigma-
+        if abs(pdg[i]) == 3112: #sigma-
             eavail += energy - 1.1198
             continue
         # if abs(pdg[i]) == 3222 #sigma+ # these don't really show up in qe
