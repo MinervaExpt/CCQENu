@@ -1,5 +1,4 @@
-{
-  "Comments": [
+{"Comments": [
     "4-4-2023 added analysistype to HyperD vars",
     "2-13-2023 add multidim options",
     "10-9-2022 reproduce PRD",
@@ -7,10 +6,8 @@
     "6-5-2022 change the zstart cut to include the start",
     "add log10recoil"
   ],
-  "HyperD": {
-  },
-  "2D": {
-  },
+  "HyperD": {},
+  "2D": {},
   "1D": {
     "Q2QE": {
       "reco": "Q2QEGeV",
