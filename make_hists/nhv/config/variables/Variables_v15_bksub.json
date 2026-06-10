@@ -1,4 +1,5 @@
-{"Comments": [
+{
+  "Comments": [
     "4-4-2023 added analysistype to HyperD vars",
     "2-13-2023 add multidim options",
     "10-9-2022 reproduce PRD",
@@ -7,7 +8,13 @@
     "add log10recoil"
   ],
   "HyperD": {},
-  "2D": {},
+  "2D": {
+    "FitQ2QE_Fitrecoil": {
+      "name": "FitQ2QE_Fitrecoil",
+      "xvar": "FitQ2QE",
+      "yvar": "Fitrecoil"
+    }
+  },
   "1D": {
     "Q2QE": {
       "reco": "Q2QEGeV",
