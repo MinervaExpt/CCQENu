@@ -520,8 +520,11 @@
         0.025,
         0.05,
         0.1,
+        0.15,
         0.2,
+        0.3,
         0.4,
+        0.6,
         0.8,
         1.6,
         4.0
@@ -1382,7 +1385,7 @@
       "true": "TrueEAvailGeV",
       "name": "recoil",
       "title": "Recoil in GeV",
-      "nbins": 50,
+      "nbins": 48,
       "min": 0.0,
       "max": 0.5,
       // "bins": [
