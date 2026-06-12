@@ -102,7 +102,7 @@
     // "MoNANeutronInelastic",
     "LowQ2Pi" //,
   ],
-  "fluxUniverses": 2,//200,
+  "fluxUniverses": 200,//200,
   "NuEConstraint": 1,
   "Geant4NeutronCV": 1,
   "Geant4Elastics": 1 //,
