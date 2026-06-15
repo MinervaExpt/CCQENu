@@ -3342,16 +3342,17 @@ int CVUniverse::GetNProtonPionTracks() const {
 int CVUniverse::GetHasMultiPion() const {
     // This finds out if there are
     //  1. more than one charged pion signatures (ie 2 or more non-proton non-muon tracks)
-    //  2. more than one neutral pion signatures (ie 4 or more blobs), or
-    //  3. at least one charged pion signature AND one neutral pion signautre
+    //  2. at least one charged pion signature AND one neutral pion signautre
     // To be used for the multipi sideband (for antinu) as a reconstruction cut
+    // The blob sideband allows for N_blobs>=2, so we don't worry about the multi neutral pion case for this one
 
+    int n_pion_tracks = CVUniverse::GetNPionTracks();  // This counts how many tracks pass pion score
+    if (n_pion_tracks == 0) return 0; // if no pion tracks, return false
+    if (n_pion_tracks >= 2) return 1; // if 2 or more pion tracks, return true
+
+    // Anything that makes it here has one pion track, check to see if there's any pi0 signatures
     int n_blobs = CVUniverse::GetNBlobs();
-    if (n_blobs >= 4)  // This event has signature of 2 neutral pions, pass
-        return 1;
-    int n_pion_tracks = CVUniverse::GetNPionTracks(); // This counts how many tracks pass pion score
-    if (n_blobs + 2*n_pion_tracks >= 4) // If there's (at least 1 neutral pion & 1 charged pion) OR (at least 2 charged pions) then pass 
-        return 1;
+    if (n_blobs >= 2) return 1;
     // else
     return 0;
 }
