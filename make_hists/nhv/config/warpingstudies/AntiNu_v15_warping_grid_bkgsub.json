@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "FinerQ2Bins_FulSyst_FixSBs_multipi_BkgFittingSub_geanthadroncv_p8_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}",
+  "outRoot": "BetterRecoilBins_FinerQ2Bins_FulSyst_FixSBs_multipi_BkgFittingSub_geanthadroncv_p8_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}",
   "scalefileIn": "${CCQEMAT}/data/fits_test_no6H_openblobsb_recoil_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
