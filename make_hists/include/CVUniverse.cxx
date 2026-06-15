@@ -499,7 +499,7 @@ bool CVUniverse::IsInHexagon(double x, double y, double apothem) const {
 bool CVUniverse::FastFilter() const {
     bool result = false;
     // if (GetMultiplicity() < 1) return result;
-    if (GetIsMinosMatchTrack() != -1) return result;
+    // if (GetIsMinosMatchTrack() != -1) return result; // this is bad
     // if (GetZVertex() < 5980 || GetZVertex() > 8422) return result;
     // if (GetApothemX() > 850.) return result;
     // if (GetApothemY() > 850.) return result;
@@ -3528,7 +3528,7 @@ void CVUniverse::Print() const {
         << GetTruthNuPDG() << ","
         << GetTruthIsCC() << ","
         << GetTruthIsCCQELike() << ", "
-        << GetIsMinosMatchTrack() << ", "
+        // << GetIsMinosMatchTrack() << ", "
         << CVUniverse::GetRecoilEnergyGeV() << ", "
         << CVUniverse::GetTrueEAvailGeV() << ", "
         << std::endl;
