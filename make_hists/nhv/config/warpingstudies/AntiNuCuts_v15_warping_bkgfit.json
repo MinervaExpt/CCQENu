@@ -327,11 +327,11 @@
     {"name": "Min MuonMomentumPar ", "min": 1.5, "variable": "PparMuGeV"},
     {"name": "Max MuonMomentumPar ", "max": 15.0, "variable": "PparMuGeV"}
   ],
-  "MultipBlobSideband": [
+"MultipBlobSideband": [
+    // {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
     // {"name": "NBlobs", "min": 2, "variable": "NBlobs"},
     // {"name": "Min Multiplicity", "min": 2, "variable": "Multiplicity"},
     // {"name": "No IsAllTracksProtons", "equals": 0, "variable": "IsAllTracksProtons"},
-    {"name": "Max Recoil ", "max": 0.5, "variable": "RecoilEnergyGeV"},
     {"name": "Yes HasMultiPion", "equals": 1, "variable": "HasMultiPion"},
     {"name": "NoDeadTime", "max": 1, "variable": "DeadTime"},
     {"name": "HasVertex", "equals": 1, "variable": "HasInteractionVertex"},

@@ -12,8 +12,9 @@
         "background": [
             "neutralpion",
             "chargedpion",
-            // "multipion",
-            "other" //,
+            "multipion",
+            "other",
+            "other_np" //,
             // "qelikenot"
         ],
         "categories": {
@@ -32,12 +33,17 @@
                     "selected_reco"
                 ]
             },
-            // "multipion": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
+            "multipion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
             "other": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "other_np": {
                 "for": [
                     "selected_reco"
                 ]
@@ -54,8 +60,9 @@
             "qelike": "QElike",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
-            // "multipion": "N#pi",
-            "other": "Other" //,
+            "multipion": "N#pi",
+            "other": "Other",
+            "other_np": "Other" //,
             // "qelikenot": "QELike Not"
         }
     },
@@ -69,8 +76,9 @@
         "background": [
             "neutralpion",
             "chargedpion",
-            // "multipion",
-            "other" //,
+            "multipion",
+            "other",
+            "other_np"
             // "qelikenot"
         ],
         "categories": {
@@ -89,12 +97,17 @@
                     "selected_reco"
                 ]
             },
-            // "multipion": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
+            "multipion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
             "other": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "other_np": {
                 "for": [
                     "selected_reco"
                 ]
@@ -111,8 +124,9 @@
             "qelike": "QElike",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
-            // "multipion": "N#pi",
-            "other": "Other" //,
+            "multipion": "N#pi",
+            "other": "Other",
+            "other_np": "Other"//,
             // "qelikenot": "QELike Not"
         }
     },
@@ -471,8 +485,9 @@
         "background": [
             "neutralpion",
             "chargedpion",
-            // "multipion",
-            "other" //,
+            "multipion",
+            "other",
+            "other_np" //,
             // "qelikenot"
         ],
         "categories": {
@@ -491,12 +506,17 @@
                     "selected_reco"
                 ]
             },
-            // "multipion": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
+            "multipion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
             "other": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "other_np": {
                 "for": [
                     "selected_reco"
                 ]
@@ -513,8 +533,9 @@
             "qelike": "QElike",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
-            // "multipion": "N#pi",
-            "other": "Other" //,
+            "multipion": "N#pi",
+            "other": "Other",
+            "other_np": "Other" //,
             // "qelikenot": "QELike Not"
         }
     },
@@ -528,8 +549,9 @@
         "background": [
             "neutralpion",
             "chargedpion",
-            // "multipion",
-            "other" //,
+            "multipion",
+            "other",
+            "other_np" //,
             // "qelikenot"
         ],
         "categories": {
@@ -548,12 +570,17 @@
                     "selected_reco"
                 ]
             },
-            // "multipion": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
+            "multipion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
             "other": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "other_np": {
                 "for": [
                     "selected_reco"
                 ]
@@ -570,8 +597,9 @@
             "qelike": "QElike",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
-            // "multipion": "N#pi",
-            "other": "Other" //,
+            "multipion": "N#pi",
+            "other": "Other",
+            "other_np": "Other" //,
             // "qelikenot": "QELike Not"
         }
     },
@@ -639,7 +667,12 @@
             "qelike"
         ],
         "background": [
-            "qelikenot"
+            "neutralpion",
+            "chargedpion",
+            "multipion",
+            "other",
+            "other_np" //,
+            // "qelikenot"
         ],
         "categories": {
             "qelike": {
@@ -647,16 +680,47 @@
                     "selected_reco"
                 ]
             },
-            "qelikenot": {
+            "neutralpion": {
                 "for": [
                     "selected_reco"
                 ]
-            }
+            },
+            "chargedpion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "multipion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "other": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "other_np": {
+                "for": [
+                    "selected_reco"
+                ]
+            } //,
+            // "qelikenot": {
+            //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // }
         },
         "legend_entries": {
             "data": "Data",
-            "qelike": "QELike",
-            "qelikenot": "QELikeNot",
+            "qelike": "QElike",
+            "neutralpion": "1#pi^{0}",
+            "chargedpion": "1#pi^{+/-}",
+            "multipion": "N#pi",
+            "other": "Other",
+            "other_np": "Other" //,
+            // "qelikenot": "QELike Not"
         }
     },
     "ProtonSideband": {
