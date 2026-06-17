@@ -4,10 +4,10 @@
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS_truth.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "Extraction_dataandreco_June2026Fit_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "Extraction_truthonly_June2026Fit_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals_June2026.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -28,8 +28,8 @@
   "mcRecoToCSV": false,
   "statusbar": false,
   "runsamples": [ 
-    "${MYSAMPLE}"
-    // "QElike",
+    // "${MYSAMPLE}"
+    "QElike"
     // "QElike_maxrecoil",
     // "QElike_maxrecoil_hiEAvail"
     // "QElike_2track"
@@ -77,7 +77,9 @@
     "QElike": [
       "chargedpion",
       "neutralpion",
-      "other"
+      "other"//,
+      // "multipion",
+      // "other_np"
     ] //,
     // "Background": "qelikenot",
     // "QElikeNP": "qelikenot_np",

@@ -4,11 +4,11 @@
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS_npi.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "Extraction_dataandreco_June2026Fit_${MYPLAYLIST}_${MYMODEL}",
-  "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals_June2026.root",
+  "outRoot": "Extraction_dataandreco_June2026Fit_multipion_${MYPLAYLIST}_${MYMODEL}",
+  "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals_npi_June2026.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
@@ -20,7 +20,8 @@
   "TuneCategories": [
     "qelike",
     "chargedpion",
-    "neutralpion"
+    "neutralpion",
+    "multipion"
   ],
   "DoResolution": false,
   "DoTypes": true,
@@ -77,7 +78,8 @@
     "QElike": [
       "chargedpion",
       "neutralpion",
-      "other"
+      "multipion",
+      "other_np"
     ] //,
     // "Background": "qelikenot",
     // "QElikeNP": "qelikenot_np",
