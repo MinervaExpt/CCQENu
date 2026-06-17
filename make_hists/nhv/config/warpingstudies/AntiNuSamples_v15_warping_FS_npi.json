@@ -12,9 +12,9 @@
         "background": [
             "neutralpion",
             "chargedpion",
-            // "multipion",
+            "multipion",
             "other",
-            // "other_np" //,
+            "other_np" //,
             // "qelikenot"
         ],
         "categories": {
@@ -36,21 +36,21 @@
                     "selected_reco"
                 ]
             },
-            // "multipion": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
+            "multipion": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
             "other": {
                 "for": [
                     "selected_reco"
                 ]
-            }//,
-            // "other_np": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // } //,
+            },
+            "other_np": {
+                "for": [
+                    "selected_reco"
+                ]
+            } //,
             // "qelikenot": {
             //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
             //     "for": [
@@ -63,9 +63,9 @@
             "qelike": "QElike",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
-            // "multipion": "N#pi",
-            "other": "Other"//,
-            // "other_np": "Other" //,
+            "multipion": "N#pi",
+            "other": "Other",
+            "other_np": "Other" //,
             // "qelikenot": "QELike Not"
         }
     },
