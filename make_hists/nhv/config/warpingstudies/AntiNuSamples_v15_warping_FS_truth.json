@@ -9,14 +9,14 @@
         "signal": [
             "qelike"
         ],
-        "background": [
-            // "neutralpion",
-            // "chargedpion",
-            // "multipion",
-            // "other"//,
-            // "other_np"
-            // "qelikenot"
-        ],
+        // "background": [
+        //     // "neutralpion",
+        //     // "chargedpion",
+        //     // "multipion",
+        //     // "other"//,
+        //     // "other_np"
+        //     // "qelikenot"
+        // ],
         "categories": {
             "qelike": {
                 "for": [
