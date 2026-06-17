@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS_truth.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "Extraction_truthonly_June2026Fit_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "Extraction_truthonly_June2026Fit_fullsyst100Flux_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals_June2026.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -107,7 +107,7 @@
     "response",
     "LowQ2Pi"
   ],
-  "fluxUniverses": 200, //100, //10,
+  "fluxUniverses": 100, //100, //10,
   "NuEConstraint": 1,
   "Geant4NeutronCV": 1,
   "Geant4Elastics": 1 //,

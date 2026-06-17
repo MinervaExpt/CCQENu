@@ -14,22 +14,24 @@ export MYSAMPLE=QElike
 export MYWARP=none
 export MYMODEL=MnvTunev2.0.1
 
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/xsec/newfitting_p8/${MYMODEL}/no_multipion/truth/ \
- --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract \
- --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_truth --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/xsec/newfitting_p8_multipion_100flux/${MYMODEL}/datareco/ \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract_nonpi_reco \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_npi --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=36h --memory=6000   --sample=${MYSAMPLE} #--debug --notimestamp
 
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/xsec/newfitting_p8/${MYMODEL}/no_multipion/truth_multipion/ \
- --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/xsec/newfitting_p8_multipion_100flux/${MYMODEL}/truth/ \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract_multipion_truth \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_truth_npi --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=36h --memory=6000   --sample=${MYSAMPLE} #--debug --notimestamp
 
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/xsec/newfitting_p8/${MYMODEL}/no_multipion/datareco/ \
- --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/xsec/newfitting_p8_no_multipion_100flux/${MYMODEL}/datareco/ \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract_nonpi_reco \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=36h --memory=6000   --sample=${MYSAMPLE} #--debug --notimestamp
 
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/xsec/newfitting_p8/${MYMODEL}/no_multipion/datareco_multipion/ \
- --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract \
- --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_npi --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/xsec/newfitting_p8_no_multipion_100flux/${MYMODEL}/truth/ \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract_nonpi_truth \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_truth --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=36h --memory=6000   --sample=${MYSAMPLE} #--debug --notimestamp
+
+
