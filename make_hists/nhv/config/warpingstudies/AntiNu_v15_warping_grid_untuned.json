@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_sigonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "NewModels_NoRecoil100mmcut_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "warpingstudy_June2026_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -46,7 +46,7 @@
   "AnalyzeVariables": [
     "EAvail",
     // "EAvailoldbins",
-    "EAvailoldbinscutoff",
+    "EAvailhibin",
     // "NNeutCands",
     // "TotalNeutBlobE",
     // "EAvail_nohi",
@@ -60,7 +60,7 @@
     "recoil_ptmu",
     "EAvail_ptmu",
     // "EAvailoldbins_ptmu",
-    "EAvailoldbinscutoff_ptmu"
+    "EAvailhibin_ptmu"
   //   "EAvailNoNonVtxBlobs_ptmu"
   ], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
   "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
