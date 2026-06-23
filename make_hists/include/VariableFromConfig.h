@@ -714,22 +714,6 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                         // std::cout << h.second->GetName() << std::endl;
                         ((TH1D*)h.second)->Write();
                     }
-                    for (auto h : m_seltrue_types[tag]) {
-                        // std::cout << h.second->GetName() << std::endl;
-                        ((TH1D*)h.second)->Write();
-                    }
-                    for (auto h : m_tuned_seltrue_types[tag]) {
-                        // std::cout << h.second->GetName() << std::endl;
-                        ((TH1D*)h.second)->Write();
-                    }
-                    for (auto h : m_alltrue_types[tag]) {
-                        // std::cout << h.second->GetName() << std::endl;
-                        ((TH1D*)h.second)->Write();
-                    }
-                    for (auto h : m_tuned_alltrue_types[tag]) {
-                        // std::cout << h.second->GetName() << std::endl;
-                        ((TH1D*)h.second)->Write();
-                    }
                 }
                 if (hasTunedMC[tag]) {
                     m_tuned_selected_mc_reco.Write(tag);
@@ -750,6 +734,16 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                         m_resolution.Write(tag);
                         m_resolution.GetHist(tag)->Print("ALL");
                     }
+                    if (m_dotypes) {
+                        for (auto h : m_seltrue_types[tag]) {
+                            // std::cout << h.second->GetName() << std::endl;
+                            ((TH1D*)h.second)->Write();
+                        }
+                        for (auto h : m_tuned_seltrue_types[tag]) {
+                            // std::cout << h.second->GetName() << std::endl;
+                            ((TH1D*)h.second)->Write();
+                        }
+                    }
                 }
                 if (hasTunedMC[tag]) {
                     m_tuned_selected_mc_truth.Write(tag);
@@ -768,6 +762,17 @@ class VariableFromConfig : public PlotUtils::VariableBase<CVUniverse> {
                 if (hasTunedMC[tag]) {
                     m_tuned_signal_mc_truth.Write(tag);
                     std::cout << " write out tuned mc histogram " << m_tuned_signal_mc_truth.GetHist(tag)->GetName() << std::endl;
+                }
+                if (m_dotypes) {
+                    std::cout << " write out types hists for tag " << tag << std::endl;
+                    for (auto h : m_alltrue_types[tag]) {
+                        // std::cout << h.second->GetName() << std::endl;
+                        ((TH1D*)h.second)->Write();
+                    }
+                    for (auto h : m_tuned_alltrue_types[tag]) {
+                        // std::cout << h.second->GetName() << std::endl;
+                        ((TH1D*)h.second)->Write();
+                    }
                 }
             }
             if (hasResponse[tag]) {
