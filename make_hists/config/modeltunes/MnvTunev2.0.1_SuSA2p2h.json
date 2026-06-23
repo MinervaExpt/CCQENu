@@ -12,7 +12,6 @@
         "useDeuteriumPionTune": false
     },
     "SuSAFromValencia2p2h": "SuSAFromValencia2p2h",
-    // "LowRecoil2p2h": "CV",
     "LowQ2Pi": "JOINT",
     "FSI": {
         "useElastic": true,
