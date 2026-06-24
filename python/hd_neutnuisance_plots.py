@@ -7,6 +7,7 @@
 # from re import L
 import sys, os
 import ROOT
+ROOT.gROOT.SetBatch(True) # Run in batch mode
 from ROOT import (
     gROOT,
     gStyle,
@@ -242,8 +243,10 @@ def GetHistDict(i_file, POTScale):
 
 def GetHDBinning(i_file, varHD_name):
     bins = []
-
-    bigvarconfig_string = i_file.Get("varsFile").GetTitle()
+    if "varsFile" in i_file.GetListOfKeys():
+        bigvarconfig_string = i_file.Get("varsFile").GetTitle()
+    else:
+        bigvarconfig_string = i_file.Get("varsFile_5A").GetTitle()
     # print(bigvarconfig_string)
     bigvarconfig_dict = json.loads(re.sub("//.*","",bigvarconfig_string,flags=re.MULTILINE))
     if varHD_name in bigvarconfig_dict["HyperD"].keys():
@@ -269,7 +272,10 @@ def GetHDBinning(i_file, varHD_name):
     return bins
 
 def GetHDAnalysisType(i_file,varHD_name):
-    bigvarconfig_string = i_file.Get("varsFile").GetTitle()
+    if "varsFile" in i_file.GetListOfKeys():
+        bigvarconfig_string = i_file.Get("varsFile").GetTitle()
+    else:
+        bigvarconfig_string = i_file.Get("varsFile_5A").GetTitle()
     # print(bigvarconfig_string)
     bigvarconfig_dict = json.loads(re.sub("//.*","",bigvarconfig_string,flags=re.MULTILINE))
     if varHD_name not in bigvarconfig_dict["HyperD"].keys():
@@ -602,11 +608,13 @@ if not os.path.exists(outdirname):
     print(outdirname)
     os.mkdir(outdirname)
 
-
-h_pot = f.Get("POT_summary")
-dataPOT = h_pot.GetBinContent(1)
-mcPOTprescaled = h_pot.GetBinContent(2)
-POTScale = dataPOT / mcPOTprescaled
+if ("potscaled_combined_" in filename):
+    POTScale = 1.0
+else:
+    h_pot = f.Get("POT_summary")
+    dataPOT = h_pot.GetBinContent(1)
+    mcPOTprescaled = h_pot.GetBinContent(2)
+    POTScale = dataPOT / mcPOTprescaled
 print("POTScale: ", POTScale)
 
 groups = {}
@@ -622,7 +630,6 @@ ROOT.gStyle.SetOptStat(0)
 # template = "%s___%s___%s___%s"
 
 for a_sample in groups.keys():
-
     # for b_var in groups[a_sample].keys():
     if "_Tuned" in a_sample:
         dotuned = True

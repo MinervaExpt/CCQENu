@@ -463,11 +463,13 @@ if not os.path.exists(outdirname):
     print(outdirname)
     os.mkdir(outdirname)
 
-
-h_pot = f.Get("POT_summary")
-dataPOT = h_pot.GetBinContent(1)
-mcPOTprescaled = h_pot.GetBinContent(2)
-POTScale = dataPOT / mcPOTprescaled
+if ("potscaled_combined_" in filename):
+    POTScale = 1.0
+else:
+    h_pot = f.Get("POT_summary")
+    dataPOT = h_pot.GetBinContent(1)
+    mcPOTprescaled = h_pot.GetBinContent(2)
+    POTScale = dataPOT / mcPOTprescaled
 print("POTScale: ", POTScale)
 
 groups = {}
