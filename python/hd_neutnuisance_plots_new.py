@@ -103,9 +103,32 @@ def GetHistDict(i_file, POTScale):
             continue
         if cat == "data" and hist != "h2D":
             continue
+        if "tuned" in types:
+            flag = "reconstructed_tuned_types_"
+        index = 0
+        if "types" in types:
+            if not dotypes:
+                continue
+            tmp_index = int(parse[4].replace(flag,""))
+            if tmp_index == 0:
+                continue
+            index = tmp_index
+        h = f.Get(name).Clone()
+        if h.GetEntries() <= 0 and index not in [1,2,3,4,8]: 
+        # if h.GetEntries() <= 0 and index not in [1,2,3,8]: 
+            continue
+        if hist not in groups.keys():
+            groups[hist] = {}
+        if sample not in groups[hist].keys():
+            groups[hist][sample] = {}
+        if variable not in groups[hist][sample].keys():
+            groups[hist][sample][variable] = {}
+        if cat not in groups[hist][sample][variable].keys():
+            groups[hist][sample][variable][cat] = {}
+        if index not in groups[hist][sample][variable][cat]:
+            groups[hist][sample][variable][cat][index] = {}
 
 def GetHistDict_old(i_file, POTScale):
-# def GetHistDict(i_file, POTScale):
     groups = {}
     keys = i_file.GetListOfKeys()
 
@@ -290,7 +313,6 @@ def GetHistDict_old(i_file, POTScale):
                         if first_cat:
                             first_cat = False
     return groups
-
 
 
 def GetHDBinning(i_file, varHD_name):
