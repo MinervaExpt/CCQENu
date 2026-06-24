@@ -18,30 +18,58 @@ year = mydate.strftime("%Y")
 # nohup python run_TransWarpExtraction_f.py >& Tela_run_TransWarpExtraction_f.txt &
 doTransWarpPOTScale = False
 
-doExcludebin = False
+doExcludebin = True
 
 doClosure = False 
-do1D = True
-do2D = False
+do1D = False
+do2D = True
 dotuned = True
 
-excludebin = 1
+exclude_bin = 1
 
-excludebins = [
-    1,
-]
+exclude_bins = {
+    "EAvailhibin": [8],
+    "EAvailhibin_ptmu": [
+        18,
+        28,
+        38,
+        48,
+        58,
+        68,
+        78,
+        88,
+        98,
+        108,
+        118,
+        128,
+        138
+    ]
+}
 
-unfolding_model = "MnvTune4.3.1"
+# unfolding_model = "MnvTune4.3.1"
+unfolding_model = "MnvTune2.0.1"
 
 exclude_models = [
-    # "MnvTunev4.3",
-    # "MnvTunev4.3.1_SuSA2p2h",
-    # "MnvTunev4.3.1_elastic",
-    # "MnvTunev4.3.1_absorption",
-    # "MnvTunev4.3.1_no2p2htune",
-    # "MnvTunev1.0.1",
-    # "MnvTunev1.0.1_elastic",
-    # "MnvTunev1.0.1_absorption",
+    "MnvTunev4.3",
+    "MnvTunev4.3.1",
+    "MnvTunev4.3.1_SuSA2p2h",
+    "MnvTunev4.3.1_elastic",
+    "MnvTunev4.3.1_absorption",
+    "MnvTunev4.3.1_no2p2htune",
+    "MnvTunev1.0.1",
+    "MnvTunev1.0.1_elastic",
+    "MnvTunev1.0.1_absorption",
+    "Mnvtunev2.0.1",
+    "MnvTunev2",
+    "MnvTunev2.0.1_absorption",
+    "MnvTunev2.0.1_elastic",
+    # "MnvTunev2.0.1_no2p2htune",
+    # "MnvTunev2.0.1_SuSA2p2h",
+]
+
+skip_vars = [
+    "recoil",
+    "recoil_ptmu"
 ]
 
 catstodo = [
@@ -96,8 +124,11 @@ uncfactors = {
     "recoil": 5.6,
     "EAvail": 10.5,
     "EAvailoldbins":10.5,
+    "EAvailhibin":10.5,
     "EAvailoldbinscutoff":10.5,
-    "ptmu": 5.6
+    "ptmu": 5.6,
+    "EAvail_ptmu": 10.5,
+    "EAvailhibin_ptmu": 10.5,
 }
 
 # ----------------------------
@@ -159,7 +190,7 @@ if len(sys.argv) == 3:
     unfolding_model = sys.argv[2]
 
 # This is where warping studies files should live
-warping_outdirbase = MakeOutputDir("warpingstudies")
+warping_outdirbase = MakeOutputDir(os.path.join("eventloopout","warpingstudies"))
 
 study_outdirbase = os.path.join(warping_outdirbase, studytag)
 if not os.path.exists(study_outdirbase):
@@ -227,7 +258,7 @@ for k in keys:
     if dotuned and "tuned" not in recotrutype: continue
     if "noPOTscale" in cat and not doTransWarpPOTScale: continue
     if "noPOTscale" not in cat and doTransWarpPOTScale: continue
-    
+    if variable in skip_vars: continue
     if sample not in ["QElike", "QElike_warped"]: continue
 
     if cat not in catstodo: continue # basically just qelike
@@ -324,7 +355,8 @@ for a_dim in nowarp_hist_name_dict:
     for b_variable in nowarp_hist_name_dict[a_dim].keys():
         print("Looking at variable ", b_variable)
 
-
+        # if b_variable!="EAvailhibin":
+        #     continue
         for model in model_list:
             unfold_reco_hist = nowarp_hist_name_dict[a_dim][b_variable]["reconstructed%s"%(tunedtag)]
             unfold_true_hist = nowarp_hist_name_dict[a_dim][b_variable]["selected_truth%s"%(tunedtag)]
@@ -400,8 +432,11 @@ for a_dim in nowarp_hist_name_dict:
                     % ("QElike",tunedtag.replace("_",""), unfolding_model, model, b_variable, str(iters_list[-1]), str(num_uni)),
                 )
             if doExcludebin:
-                exbinfile_string = str("_".join([str(exbin) for exbin in exclude_bins]))
-                output_file_name.replace(".root","%s.root"%(exbinfile_string))
+                # exbinfile_string = str("_".join([str(exbin) for exbin in exclude_bins]))
+                # output_file_name.replace(".root","%s.root"%(exbinfile_string))
+                if b_variable in exclude_bins:
+                    exbinfile_string = str("_".join([str(exbin) for exbin in exclude_bins[b_variable]]))
+                    output_file_name.replace(".root","_%s_%s.root"%("exbins",exbinfile_string))
             cmd = [
                 "TransWarpExtraction",
                 "--output_file",
@@ -441,15 +476,28 @@ for a_dim in nowarp_hist_name_dict:
             if b_variable in uncfactors and model != unfolding_model:
                 cmd.append("--corr_factor")
                 cmd.append(str(uncfactors[b_variable]))
+            # if b_variable=="EAvailhibin":
+            #     cmd.append("--exclude_bins")
+            #     cmd.append(str(8))
+            # elif b_variable=="EAvailhibin_ptmu":
+            #     cmd.append("--exclude_bins")
+            #     cmd.append("18,28,38,48,58,68,78,88,98,108,118,128,138")
             if doTransWarpPOTScale:
                 print("Really running with -P option set to ", POTScale)
                 cmd.append("-P")
                 cmd.append(str(POTScale))
             if doExcludebin:
-                print("WARNING: excluding bin ", excludebin)
-                cmd.append("-x")
-                exbincmd_string = str(",".join([str(exbin) for exbin in exclude_bins]))
-                cmd.append(str(exbincmd_string))
+                print("WARNING: excluding bin ", exclude_bin)
+                # cmd.append("-x")
+                # exbincmd_string = str(",".join([str(exbin) for exbin in exclude_bins]))
+                # cmd.append(str(exbincmd_string))
+                if b_variable in exclude_bins:
+                    cmd.append("-x")
+                    exbincmd_string = str(",".join([str(exbin) for exbin in exclude_bins[b_variable]]))
+                    cmd.append(str(exbincmd_string))
+                    print("WARNING: excluding bin ", exbincmd_string)
+                else:
+                    print("WARNING: said to do exclude bin but variable %s not found in exclude_bins"%(b_variable))
             print(" ".join(cmd))
             commands.append(cmd)
             # subprocess.run(cmd)
