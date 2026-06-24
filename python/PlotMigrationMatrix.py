@@ -16,7 +16,7 @@ set_logz = False
 do_manual = True
 # do_manual = False
 categorytodo = "qelike"
-
+legendfontsize = 0.05
 
 var_names = {
     "recoil": {"reco": "Recoil", "truth": "E_{Avail}", "units": "(GeV)"},
@@ -64,6 +64,17 @@ var_names = {
     },
 }
 
+
+def AddPreliminary():
+    font = 112
+    color = ROOT.kRed +1
+    latex = ROOT.TLatex()
+    latex.SetNDC()
+    latex.SetTextSize(0.03)
+    latex.SetTextColor(color)
+    latex.SetTextFont(font)
+    latex.SetTextAlign(11)
+    return latex
 
 def MakePlotDir(subdir=""):
     """
@@ -168,6 +179,9 @@ def main():
             mnv.DrawNormalizedMigrationHistogram(
                 hist, True, False, True, text_opt
             )
+            prelim = AddPreliminary()
+            prelim.DrawLatex(0.5, 0.17, "MINER#nuA Work In Progress")
+
             raw_outname = os.path.join(outdirname,"mnv_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
 
             mnv_canvas.Print(raw_outname)
@@ -303,6 +317,8 @@ def main():
             #     norm_canvas.SetLogy()  
             if set_logz:
                 norm_canvas.SetLogz()
+            prelim = AddPreliminary()
+            prelim.DrawLatex(0.5, 0.17, "MINER#nuA Work In Progress")
 
             norm_outname = os.path.join(outdirname,"normd_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
             norm_canvas.Print(norm_outname)
@@ -318,6 +334,8 @@ def main():
 
             raw_canvas.cd()
             raw_matrix.Draw("colz")
+            prelim = AddPreliminary()
+            prelim.DrawLatex(0.5, 0.17, "MINER#nuA Work In Progress")
 
             if "Q2QE" in var:
                 raw_canvas.SetLogx()

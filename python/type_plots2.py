@@ -144,11 +144,11 @@ if not os.path.exists(outdirname):
 
 keys = f.GetListOfKeys()
 
-h_pot = f.Get("POT_summary")
-dataPOT = h_pot.GetBinContent(1)
-mcPOTprescaled = h_pot.GetBinContent(2)
-POTScale = dataPOT / mcPOTprescaled
-
+# h_pot = f.Get("POT_summary")
+# dataPOT = h_pot.GetBinContent(1)
+# mcPOTprescaled = h_pot.GetBinContent(2)
+# POTScale = dataPOT / mcPOTprescaled
+POTScale = 1.0
 groups = {}
 scaleX = ["Q2QE"]
 scaleY = [

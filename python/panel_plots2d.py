@@ -319,11 +319,11 @@ def main():
     if not os.path.exists(dirname):
         os.mkdir(dirname)
 
-    hist_pot = f.Get("POT_summary").Clone()
-    dataPOT = hist_pot.GetBinContent(1)
-    mcPOTprescaled = hist_pot.GetBinContent(3)
-    POTScale = dataPOT / mcPOTprescaled
-
+    # hist_pot = f.Get("POT_summary").Clone()
+    # dataPOT = hist_pot.GetBinContent(1)
+    # mcPOTprescaled = hist_pot.GetBinContent(3)
+    # POTScale = dataPOT / mcPOTprescaled
+    POTScale = 1.0
     # print("NLinBins: ",myHyperDim.GetNLinBins())
 
 

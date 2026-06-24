@@ -152,12 +152,18 @@ catsnames = {
     }
 
 catscolors = {
+    # "data":ROOT.kBlack, 
+    # "qelike":ROOT.kBlue-6,
+    # "chargedpion":ROOT.kMagenta-6,
+    # "neutralpion":ROOT.kRed-6,
+    # "multipion":ROOT.kGreen-6,
+    # "other":ROOT.kYellow-6,
     "data":ROOT.kBlack, 
-    "qelike":ROOT.kBlue-6,
-    "chargedpion":ROOT.kMagenta-6,
-    "neutralpion":ROOT.kRed-6,
-    "multipion":ROOT.kGreen-6,
-    "other":ROOT.kYellow-6
+    "qelike":ROOT.kP6Blue,
+    "chargedpion":ROOT.kP6Yellow,
+    "neutralpion":ROOT.kP6Red,
+    "multipion":ROOT.kP6Grape,
+    "other":ROOT.kP6Gray,
     }
 
 process=[
@@ -252,10 +258,11 @@ keys = f.GetListOfKeys()
 
 keys = f.GetListOfKeys()
 
-h_pot = f.Get("POT_summary")
-dataPOT = h_pot.GetBinContent(1)
-mcPOTprescaled = h_pot.GetBinContent(2)
-POTScale = dataPOT / mcPOTprescaled
+# h_pot = f.Get("POT_summary")
+# dataPOT = h_pot.GetBinContent(1)
+# mcPOTprescaled = h_pot.GetBinContent(2)
+# POTScale = dataPOT / mcPOTprescaled
+POTScale = 1.0
 print("POTScale: ",POTScale)
 
 groups = {}

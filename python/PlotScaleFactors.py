@@ -8,8 +8,9 @@
 from re import L
 import sys,os
 import ROOT
+ROOT.gROOT.SetBatch(True) # Run in batch mode
 from ROOT import gROOT,gStyle, TFile,THStack,TH1D,TCanvas, TColor,TObjArray,TH2F,THStack,TFractionFitter,TLegend,TLatex, TString
-
+from PlotUtils import MnvH1D
 TEST=False
 noData=True  # use this to plot MC only types
 sigtop=True # use this to place signal on top of background
@@ -42,7 +43,9 @@ catstodo = [
     # "qelikenot",
     "chargedpion",
     "neutralpion",
-    "other"
+    "multipion",
+    "other",
+    "other_np",
 ]
 
 catsnames = {
@@ -50,37 +53,54 @@ catsnames = {
     "qelike":"QElike",
     "chargedpion":"1#pi^{#pm}",
     "neutralpion":"1#pi^{0}",
-    # "qelikenot": "QElikeNot"
-    # "multipion":"N#pi",
-    "other":"Other"
+    "qelikenot": "QElikeNot",
+    "multipion":"N#pi",
+    "other":"Other",
+    "other_np":"Other",
 }
 
+skipcats = [
+#     "other",
+#     "other_np"
+]
+# catscolors = {
+#     "data":ROOT.kBlack, 
+#     "qelike":ROOT.kBlue+2,
+#     "chargedpion":ROOT.kMagenta-1,
+#     "neutralpion":ROOT.kRed-2,
+#     "multipion":ROOT.kGreen-1,
+#     "other":ROOT.kYellow-6,
+#     "other_np":ROOT.kYellow-6,
+# }
 catscolors = {
     "data":ROOT.kBlack, 
-    "qelike":ROOT.kBlue,
-    "chargedpion":ROOT.kMagenta,
-    "neutralpion":ROOT.kRed,
-    # "multipion":ROOT.kGreen-6,
-    "other":ROOT.kYellow-5
+    "qelike":ROOT.kP6Blue,
+    "chargedpion":ROOT.kP6Yellow,
+    "neutralpion":ROOT.kP6Red,
+    "multipion":ROOT.kP6Grape,
+    "other":ROOT.kP6Gray,
+    "other_np":ROOT.kP6Gray,
 }
+hist_fill_style = "PE1"
 
 
 scalevar = ["Q2QE"]
 
 
 
-def CCQECanvas(name,title,xsize=1200,ysize=900):
-    c2 = ROOT.TCanvas(name,title,xsize,ysize)
-    # c2.SetLeftMargin(0.1)
-    # c2.SetRightMargin(0.15)
-    # c2.SetLeftMargin(0.11)
-    # c2.SetTopMargin(0.1)
-    # c2.SetBottomMargin(0.1)
-    c2.SetLeftMargin(0.1)
-    c2.SetRightMargin(0.07)
-    c2.SetBottomMargin(0.11)
-    c2.SetTopMargin(0.1)
-    return c2
+# def CCQECanvas(name,title,xsize,ysize):
+# # def CCQECanvas(name,title,xsize=1200,ysize=900):
+#     c2 = ROOT.TCanvas(name,title,xsize,ysize)
+#     # c2.SetLeftMargin(0.1)
+#     # c2.SetRightMargin(0.15)
+#     # c2.SetLeftMargin(0.11)
+#     # c2.SetTopMargin(0.1)
+#     # c2.SetBottomMargin(0.1)
+#     c2.SetLeftMargin(0.1)
+#     c2.SetRightMargin(0.07)
+#     c2.SetBottomMargin(0.11)
+#     c2.SetTopMargin(0.1)
+#     return c2
 
 def CCQELegend(xlow,ylow,xhigh,yhigh):
     leg = ROOT.TLegend(xlow,ylow,xhigh,yhigh)
@@ -136,12 +156,12 @@ groups = {}
 
 
 hist_dict = {}
-for var in varstodo:
-    hist_dict[var] = {}
-    for cat in catstodo:
-        hist_dict[var][cat] = {}
-        for type in scalefrac:
-            hist_dict[var][cat][type] = None
+# for var in varstodo:
+#     hist_dict[var] = {}
+#     for cat in catstodo:
+#         hist_dict[var][cat] = {}
+#         for htype in scalefrac:
+#             hist_dict[var][cat][htype] = None
 
 for k in keys:
     name = k.GetName()
@@ -153,12 +173,18 @@ for k in keys:
     sample = parse[1]
     cat = parse[2]
     var = parse[3]
-    type = parse[4]
+    htype = parse[4]
     if dim!="h": continue
-    if type not in scalefrac: continue
-    if cat not in catstodo: continue
-    if var not in varstodo: continue
-
+    if htype not in scalefrac: continue
+    if cat in skipcats: continue
+    # if var not in varstodo: continue
+    if var not in hist_dict:
+        hist_dict[var] = {}
+    if cat not in hist_dict[var]:
+        hist_dict[var][cat] = {}
+    if htype not in hist_dict[var][cat]:
+        hist_dict[var][cat][htype] = {}
+    
     hist = f.Get(name).Clone()
     hist.SetLineColor(catscolors[cat])
     hist.SetMarkerColor(catscolors[cat])
@@ -166,28 +192,41 @@ for k in keys:
     # hist.Scale(1.0,"width")
     # hist.RebinY()
     # hist.SetFillColor(catscolors[cat])
-    hist_dict[var][cat][type] = hist
+    hist.Print()
+    hist_dict[var][cat][htype] = hist
+
 
 ROOT.gStyle.SetOptStat(0)
 
-for var in varstodo:
-    for type in scalefrac:
+for var in hist_dict:
+    # canvas = CCQECanvas("scalefactorplots","scalefactorplots")
+    canvas = ROOT.TCanvas()
+    canvas.Print("scalefactorplots.pdf[","pdf")
+    for htype in hist_dict[var]["qelike"]:
+        print(var, htype)
+# for var in varstodo:
+#     for htype in scalefrac:
         logX = False
         logY = False
         if var in scalevar:
             logX = True
         
-        plottitle = "%s vs %s"%(typenames[type],varnames[var])
+        plottitle = "%s vs %s"%(typenames[htype],varnames[var])
 
         first = True
-        canvas_name = "%s_%s"%(var,type)
-        canvas = CCQECanvas(canvas_name,canvas_name)
+        canvas_name = "%s_%s"%(var,htype)
 
         
-        leg = CCQELegend(0.6,0.9,0.9,0.7)
-        leg.SetNColumns(2)
-        for cat in catstodo:
-            leg.AddEntry(hist_dict[var][cat][type],catsnames[cat])
+        # leg = CCQELegend(0.6,0.9,0.9,0.7)
+        # leg.SetNColumns(2)
+        leg = ROOT.TLegend(0.7,0.25,0.9,0.55)
+        leg.SetLineWidth(0)
+        leg.SetFillStyle(-1)
+        leg.SetTextSize(legendfontsize)
+        for cat in hist_dict[var]:
+            print(var, cat, htype)
+            hist_dict[var][cat][htype].Print()
+            leg.AddEntry(hist_dict[var][cat][htype],catsnames[cat],"fl")
 
             if logX:
                 canvas.SetLogx()
@@ -198,31 +237,45 @@ for var in varstodo:
             # hist_dict[var][cat].Draw("BOX")
             # hist_dict[var]["qelike"].Draw("BOX same")
             if first:
-                hist_dict[var][cat][type].SetTitle(plottitle)
-                hist_dict[var][cat][type].GetXaxis().SetTitle(varnames[var])
-                hist_dict[var][cat][type].GetYaxis().SetTitle(typenames[type])
-                hist_dict[var][cat][type].GetXaxis().CenterTitle()
-                hist_dict[var][cat][type].GetYaxis().CenterTitle()
-                hist_dict[var][cat][type].SetMinimum(0.0)
-                hist_dict[var][cat][type].SetLineWidth(4)
-                if type == "scale":
-                    hist_dict[var][cat][type].SetMaximum(1.6)
+                hist_dict[var][cat][htype].SetTitle(plottitle)
+                hist_dict[var][cat][htype].GetXaxis().SetTitle(varnames[var])
+                hist_dict[var][cat][htype].GetYaxis().SetTitle(typenames[htype])
+                hist_dict[var][cat][htype].GetXaxis().CenterTitle()
+                hist_dict[var][cat][htype].GetYaxis().CenterTitle()
+                hist_dict[var][cat][htype].SetMinimum(0.0)
+                hist_dict[var][cat][htype].SetLineWidth(2)
+                if htype == "scale":
+                    hist_dict[var][cat][htype].SetMaximum(1.4)
+                    hist_dict[var][cat][htype].SetMinimum(0.1)                    
                     line = ROOT.TLine(0, 1., 4., 1.)
-                    line.SetLineStyle(2)
+                    line.SetLineStyle(3)
                     line.SetLineWidth(3)
                     line.SetLineColor(36)
-                    hist_dict[var][cat][type].Draw("PE1")
+                    hist_dict[var][cat][htype].Draw("%s"%(hist_fill_style))
+                    # hist_dict[var][cat][htype].GetCVHistoWithError().Draw("%s"%(hist_fill_style))
+                    # hist_dict[var][cat][htype].GetCVHistoWithStatError().Draw("%s same"%(hist_fill_style))
                     line.Draw("same")
-                    hist_dict[var][cat][type].Draw("PE1 same")
+                    hist_dict[var][cat][htype].Draw("%s same"%(hist_fill_style))
+                    # hist_dict[var][cat][htype].GetCVHistoWithStatError().Draw("%s same"%(hist_fill_style))
+
                 else:
-                    hist_dict[var][cat][type].SetMaximum(1.0)
-                    hist_dict[var][cat][type].Draw("PE1")
+                    hist_dict[var][cat][htype].SetMaximum(1.)
+                    hist_dict[var][cat][htype].Draw("%s"%(hist_fill_style))
+                    # hist_dict[var][cat][htype].GetCVHistoWithError().Draw("%s"%(hist_fill_style))
+                    # hist_dict[var][cat][htype].GetCVHistoWithStatError().Draw("%s same"%(hist_fill_style))
                 first = False
             else:
-                hist_dict[var][cat][type].SetLineWidth(3)
-                hist_dict[var][cat][type].Draw("PE1 same")
+                hist_dict[var][cat][htype].SetLineWidth(2)
+                hist_dict[var][cat][htype].Draw("%s same"%(hist_fill_style))
+                # hist_dict[var][cat][htype].GetCVHistoWithError().Draw("%s same"%(hist_fill_style))
+                # hist_dict[var][cat][htype].GetCVHistoWithStatError().Draw("%s same"%(hist_fill_style))
+
+        hist_dict[var]["qelike"][htype].Draw("%s same"%(hist_fill_style))
+
         leg.Draw()
-        canvas.Print(dirname+"/"+canvas_name+".png")
+        # canvas.Print(dirname+"/"+canvas_name+".pdf")
+        canvas.Print("scalefactorplots.pdf","pdf")
+    canvas.Print("scalefactorplots.pdf]","pdf")
 
 
     

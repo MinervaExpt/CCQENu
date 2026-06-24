@@ -485,7 +485,7 @@ var_short_names = {
     "NeutCandsEdep": "E_{dep}",
     "LeadingNeutCandvtxSphereDist": "d_{vtx}",
     "NeutCandsvtxSphereDist": "d_{vtx}",
-    "NeutCandsMuonCosTheta": "cos d#theta_{#mu}",
+    "NeutCandsMuonCosTheta": "cos #Delta #theta_{#mu}",
     "NeutCandsTrackEndDist": "d_{track}",
     "ptmu": "p_{T}",
     "EAvail": "E_{Avail}",
