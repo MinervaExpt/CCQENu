@@ -9,6 +9,24 @@ import numpy as np
 
 plotfiletype = "pdf"
 
+mc_cat_color_dict = {
+    "qelike":ROOT.kBlue-6,
+    "chargedpion":ROOT.kMagenta-6,
+    "neutralpion":ROOT.kRed-6,
+    "multipion":ROOT.kGreen-6,
+    "other":ROOT.kYellow-6,
+    "other_np":ROOT.kYellow-6,
+}
+
+mc_cat_names_dict = {
+    "qelike":"QElike",
+    "chargedpion": "1#pi^{#pm}",
+    "neutralpion": "1#pi^{0}",
+    "multipion": "N#pi",
+    "other": "Other",
+    "other_np": "Other",  
+}
+
 def InitializeCanvas(canvas_name):
     # Initialize a pdf canvas for making plots
     canvas = ROOT.TCanvas(str(canvas_name + "."+plotfiletype))
@@ -51,7 +69,8 @@ def GetScaleHists(i_file,scale_fraction="scale"):
         else:
             hist_dict[sig_key] = {}
 
-        if scale_fraction not in splitnames_list[4]:
+        # if scale_fraction not in splitnames_list[4]:
+        if splitnames_list[4]!=scale_fraction:
             continue
 
         # if "tuned" not in splitnames_list[4]:
@@ -306,11 +325,11 @@ def MakeDataMCPlot(canvas, title, i_data_hist, i_qelike_hist, i_qelikenot_hist, 
     stack.SetMinimum(qelikenot_min)
 
     fit_chi2_label = ''
-    chi2_label = 'Hist \chi^{2} = ' + str("{:.2f}".format(chi2))
+    chi2_label = 'Hist #chi^{2} = ' + str("{:.2f}".format(chi2))
     ndf_label = 'NDF = ' + str(ndf)
 
     if fit_chi2 > 0:
-        fit_chi2_label = 'Fit \chi^{2} = ' + str("{:.2f}".format(fit_chi2))
+        fit_chi2_label = 'Fit #chi^{2} = ' + str("{:.2f}".format(fit_chi2))
 
     legend.AddEntry(data_hist, "Total Data")
     legend.AddEntry("fit_chi2",fit_chi2_label,"")
@@ -494,7 +513,7 @@ def MakeChi2Plot(canvas, i_before_chi2_hist, i_after_chi2_hist, ndf):
     before_chi2_hist.SetMarkerSize(2)
     before_chi2_hist.GetXaxis().SetTitle("Q^{2}_{QE} (GeV^{2})")
     before_chi2_hist.GetXaxis().CenterTitle()
-    before_chi2_hist.GetYaxis().SetTitle("\chi^{2} / NDF")
+    before_chi2_hist.GetYaxis().SetTitle("#chi^{2} / NDF")
     before_chi2_hist.GetYaxis().CenterTitle()
     before_chi2_hist.SetMinimum(0.0)
     before_chi2_hist.SetTitle("\chi^{2} / NDF Before and After Fit")
@@ -530,7 +549,7 @@ def main():
         print("python FitPlotting.py <infile>.root <outfilename>")
     else:
         filename1 = sys.argv[1]
-        filename2 = sys.argv[2]
+        # filename2 = sys.argv[2]
         # if len(sys.argv)>=3:
         #     plotfilename_base = sys.argv[2]
         # else if len(sys.argv)==2:
@@ -539,11 +558,12 @@ def main():
         plotfilename_base = "ScaleFactorComp_Comp100MeVCut"
 
     f1 = ROOT.TFile(filename1, "READONLY")
-    f2 = ROOT.TFile(filename2,"READONLY")
+    # f2 = ROOT.TFile(filename2,"READONLY")
     plotfilename = plotfilename_base # + '_' + sample
 
-    scale_hist_dict1 = GetScaleHists(f1)
-    scale_hist_dict2 = GetScaleHists(f2)
+    scale_hist_dict = GetScaleHists(f1)
+    frac_hist_dict = GetScaleHists(f1,"fraction")
+    # scale_hist_dict2 = GetScaleHists(f2)
 
     canvas = InitializeCanvas(plotfilename)
     canvas.Print(str(plotfilename + "." + plotfiletype+"["), plotfiletype)
@@ -558,8 +578,8 @@ def main():
     # MakeScaleFactorPlot(canvas, scale_hist_dict1['qelikenot'],'QELikeNot, MnvTune v1',ROOT.kRed)
     # MakeScaleFactorPlot(canvas, scale_hist_dict2['qelikenot'],'QELikeNot, MnvTune v2',ROOT.kRed)
 
-    MakeScaleCompPlot(canvas,scale_hist_dict1['qelike'],"No cut",scale_hist_dict2['qelike'],"100 MeV Cut","QElike No cut vs. Cut",h1_color=ROOT.kBlue+4,h2_color=ROOT.kBlue)
-    MakeScaleCompPlot(canvas,scale_hist_dict1['qelikenot'],"No cut",scale_hist_dict2['qelikenot'],"100 MeV Cut","QElikenot Not cut vs. Cut",h1_color=ROOT.kRed+4,h2_color=ROOT.kRed)
+    # MakeScaleCompPlot(canvas,scale_hist_dict1['qelike'],"No cut",scale_hist_dict2['qelike'],"100 MeV Cut","QElike No cut vs. Cut",h1_color=ROOT.kBlue+4,h2_color=ROOT.kBlue)
+    # MakeScaleCompPlot(canvas,scale_hist_dict1['qelikenot'],"No cut",scale_hist_dict2['qelikenot'],"100 MeV Cut","QElikenot Not cut vs. Cut",h1_color=ROOT.kRed+4,h2_color=ROOT.kRed)
     # MakeScaleCompPlot(canvas, scale_hist_dict['qelike']['tuned'],'Tuned', scale_hist_dict['qelike']['untuned'],'Untuned','QELike')
     # MakeScaleCompPlot(canvas, scale_hist_dict['qelikenot']['tuned'],'Tuned', scale_hist_dict['qelikenot']['untuned'],'Untuned','QELikeNot')
 
