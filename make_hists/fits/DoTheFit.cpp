@@ -117,12 +117,17 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             std::cout << " now do the fit for " << univ << " " << iuniv << std::endl;
             // make a local TH1F map unfitHistsCV that the fitter expects
             std::map<const std::string, std::vector<TH1D*>> unfitHistsCV;
+            // std::vector<double> unfitHistsFrac = {0,0,0,0};
+            // double mctot_int = 0.0;
+
             if (univ == "CV") {
                 for (auto sample : unfitHists) {
                     for (int i = 0; i < ncat; i++) {
                         TString name = unfitHists.at(sample.first).at(i)->GetName() + TString("_" + univ);
                         TH1D* hist = (TH1D*)unfitHists.at(sample.first).at(i)->Clone(name);
                         unfitHistsCV[sample.first].push_back(hist);
+                        // unfitHistsFrac[i] += hist->Integral(1, hist->GetNbinsX());
+                        // mctot_int += hist->Integral(1, hist->GetNbinsX());
                     }
                 }
             } else {
@@ -393,6 +398,9 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             std::cout << " now do the fit for " << univ << " " << iuniv << std::endl;
             // make a local TH1F map unfitHistsCV that the fitter expects
             std::map<const std::string, std::vector<TH1D*>> unfitHistsCV;
+            std::vector<double> unfitHistsFrac = {0, 0, 0, 0};
+            double mctot_int = 0.0;
+
             if (univ == "CV") {
                 // std::cout << " after if CV " << std::endl;
                 for (auto sample : unfitHists) {
@@ -400,6 +408,8 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                         TString name = unfitHists.at(sample.first).at(i)->GetName() + TString("_" + univ);
                         TH1D* hist = (TH1D*)unfitHists.at(sample.first).at(i)->Clone(name);
                         unfitHistsCV[sample.first].push_back(hist);
+                        unfitHistsFrac[i] += hist->Integral(1, hist->GetNbinsX());
+                        mctot_int += hist->Integral(1, hist->GetNbinsX());
                     }
                 }
             } else {
@@ -435,19 +445,24 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             int nextPar = 0;
             for (unsigned int i = 0; i < func2.NDim(); ++i) {
                 std::string name = categories[i];
-                // if (name=="other" || name=="multipion") {
-                //     std::cout << " fixing parameter " << i << " " << name << std::endl;
-                //     mini2->SetFixedVariable(i, name, 1.0);
-                //     nextPar++;
-                //     continue;
-                // }
+                if (name == "other" || name == "multipion") {
+                    std::cout << " fixing parameter " << i << " " << name << std::endl;
+                    mini2->SetFixedVariable(i, name, 1.0);
+                    nextPar++;
+                    continue;
+                }
                 double lower_limit = 0.0;
                 // double upper_limit = 2.0;
                 // if (name=="qelike") {
                 //     double lower_limit = 0.5;
                 // }
                 std::cout << " set lower limit "<< lower_limit << " for parameter " << i << " " << name << std::endl;
-                mini2->SetLowerLimitedVariable(i, name, 1.0, 0.1, lower_limit);
+                // mini2->SetLowerLimitedVariable(i, name, 1.0, 0.1, lower_limit);
+                double frac = unfitHistsFrac[i]/mctot_int;
+
+                // mini2->SetVariable(i, name, 1.0, 0.1);
+                mini2->SetVariable(i, name, frac, 0.1);
+                mini2->SetVariableLimits(i, 0.0, 2.0);
                 // std::cout << " set upper limit " << upper_limit << " for parameter " << i << " " << name << std::endl;
 
                 nextPar++;

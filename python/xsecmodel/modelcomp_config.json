@@ -1,0 +1,30 @@
+{
+    "Comments": [
+        "This is for driving the model comp plotting script"
+    ],
+    "basemodel": {
+        "name":"Mnvtunev2.0.1_multipion",
+        "path":"${CCQEMAT}/allcategories_combined_potscaled_combined_FullSample_Extraction_dataandreco_June2026Fit_multipion_fullsyst100Flux_minervameCombined_MnvTunev2.0.1_AntiNu_v15_warping_grid_1_tuned_analyze9.root"
+    },
+    "modelcomps": {
+        "NUISANCE": {
+            "path": "${OUTPUTLOC}/May2026/modelxsec/NUISANCE_hyperondecays",
+            "models": [
+                "G18_02a",
+                "G18_02b",
+                "G18_10a",
+                "G18_10b",
+                "NEUT_tune_LFG",
+                "NEUT_tune_SF",
+                "NuWro_CH_LFG",
+                "NuWro_CH_SF"
+            ]
+        },
+        "MNV":{
+            "MnvTunev2.0.1": "${CCQEMAT}/allcategories_combined_potscaled_combined_FullSample_Extraction_dataandreco_June2026Fit_fullsyst100Flux_minervameCombined_MnvTunev2.0.1_AntiNu_v15_warping_grid_1_tuned_analyze9.root",
+            // "MnvTunev4.3.1": "${CCQEMAT}/potscaled_combined_FullSample_Winter26Collab_fullsyst_100flux_extract_types_500MeVRecoil100mm_minervameCombined_MnvTunev4.3.1_AntiNu_v15_warping_grid_1_tuned_analyze9.root",
+            // "MnvTunev4.3.1_multipion": "${CCQEMAT}/allcategories_combined_potscaled_combined_FullSample_Extraction_dataandreco_June2026Fit_fullsyst100Flux_minervameCombined_MnvTunev2.0.1_AntiNu_v15_warping_grid_1_tuned_analyze9.root",
+            // "GENIEv2": "${CCQEMAT}/allcategories_combined_potscaled_combined_FullSample_Extraction_dataandreco_June2026Fit_fullsyst100Flux_minervameCombined_MnvTunev2.0.1_AntiNu_v15_warping_grid_1_tuned_analyze9.root",
+        }
+    }
+}

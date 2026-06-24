@@ -174,9 +174,9 @@ int main(int argc, char* argv[]) {
             if (s == i) includeInFit[s] = true;
         }
     }
-    std::string fitvarName = config.GetString("FitVariable");         // Which axis variable do you want to fit over (does not actually select, just sets names))
-    std::string projvarName = config.GetString("ProjectionVariable"); // Which axis variable do you want to have scale factors in (does not actually select, just sets names)
-    std::string varName2d = config.GetString("Variable2D"); // Whats the name of the 2D variable
+    std::string fitvarName = config.GetString("FitVariable");          // Which axis variable do you want to fit over (does not actually select, just sets names))
+    std::string projvarName = config.GetString("ProjectionVariable");  // Which axis variable do you want to have scale factors in (does not actually select, just sets names)
+    std::string varName2d = config.GetString("Variable2D");            // Whats the name of the 2D variable
     std::string fitType = config.GetString("FitType");
     std::string h_template = config.GetString("Template");
     std::string tuned_template = config.GetString("TunedTemplate");
@@ -192,10 +192,15 @@ int main(int argc, char* argv[]) {
     // CopyDir(inputFile, outputFile);
 
     // std::vector<TString> tags = {""};
-    TH1F* pot_summary = (TH1F*)inputFile->Get("POT_summary");
+    TH1D* pot_summary = (TH1D*)inputFile->Get("Combined_POT_Summary");
     std::vector<double> potinfo(2);
+    double datapot = pot_summary->GetBinContent(1);
+    double mcpot = pot_summary->GetBinContent(3);
+    std::cout << "here" << std::endl;
+
     potinfo[0] = pot_summary->GetBinContent(1);
     potinfo[1] = pot_summary->GetBinContent(3);  // this includes any prescale
+
     pot_summary->Print("ALL");
     TParameter<double>* mcPOT = (TParameter<double>*)&potinfo[1];
     TParameter<double>* dataPOT = (TParameter<double>*)&potinfo[0];
@@ -208,12 +213,10 @@ int main(int argc, char* argv[]) {
 
     // TODO: Loop over Q^2QE bins, project recoil in each, run fitter for them
 
-
-     
     // make and fill maps that contain pointers to the histograms you want to fit  uses CCQEMAT template
 
     int n_fitbins = 0;
-    bool firstdata = true; // dummy hacky way of just grabbing xbins once
+    bool firstdata = true;  // dummy hacky way of just grabbing xbins once
 
     // TODO: Figure out how to make cname and fname work with and h2D
     // std::string h_template = "h___%s___%s___%s___reconstructed";
@@ -221,7 +224,7 @@ int main(int argc, char* argv[]) {
     char fname[1000];
     std::map<const std::string, PlotUtils::MnvH2D*> dataHist2D;
     std::map<const std::string, std::vector<PlotUtils::MnvH2D*>> fitHists2D;
-    std::map<const std::string, std::vector<PlotUtils::MnvH2D*>> unfitHists2D; 
+    std::map<const std::string, std::vector<PlotUtils::MnvH2D*>> unfitHists2D;
     TString name = varName2d;
     for (auto const side : sidebands) {
         std::string cat = "data";
@@ -231,21 +234,21 @@ int main(int argc, char* argv[]) {
         dataHist2D[side] = (PlotUtils::MnvH2D*)inputFile->Get(cname)->Clone();
         if (firstdata) {
             n_fitbins = dataHist2D[side]->GetXaxis()->GetNbins();
-            firstdata=false;
+            firstdata = false;
         }
         // dataHist[side]->SetNormBinWidth(1.0);
         // dataHist[sidename] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
         for (auto cat : categories) {
-            std::snprintf(cname, sizeof(cname), h_template.c_str(), side.c_str(), cat.c_str(), varName2d.c_str()); // unfit hist name
+            std::snprintf(cname, sizeof(cname), h_template.c_str(), side.c_str(), cat.c_str(), varName2d.c_str());  // unfit hist name
             std::snprintf(fname, sizeof(fname), f_template.c_str(), side.c_str(), cat.c_str(), varName2d.c_str());  // fitted hist name
             name = TString(cname);
             std::cout << " look for " << cname << std::endl;
-            MnvH2D* newhist = (PlotUtils::MnvH2D*)inputFile->Get(cname);//->Clone();
+            MnvH2D* newhist = (PlotUtils::MnvH2D*)inputFile->Get(cname);  //->Clone();
             if (!newhist) {
                 std::cout << " no " << cname << std::endl;
             }
             newhist->Print();
-            newhist->Scale(POTscale);
+            // newhist->Scale(POTscale);
             newhist->Print();
             unfitHists2D[side].push_back((PlotUtils::MnvH2D*)newhist->Clone(TString(fname)));
             fitHists2D[side].push_back((PlotUtils::MnvH2D*)newhist->Clone(TString(fname)));
@@ -298,7 +301,7 @@ int main(int argc, char* argv[]) {
                 // std::string unfitcatname1d = ("h___" + side.c_str() + "___" + cat.c_str() + "___" + varName.c_str() + "_" + std::to_string(fitbin) + "___reconstructed_fitted").c_str();
                 // MnvH1D* tmp_unfitcat1d = (MnvH1D*)unfitHists2D[side][cat]->ProjectionY(catname1d, fitbin, fitbin, "e");
                 // MnvH1D* tmp_fitcat1d = (MnvH1D*)fitHists2D[side][cat]->ProjectionY(catname1d, fitbin, fitbin, "e");
-                std::snprintf(cname1d, sizeof(cname1d), h1d_template.c_str(), side.c_str(), categories[cat].c_str(), fitvarName.c_str(), fitbin);  // This is the data hist name
+                std::snprintf(cname1d, sizeof(cname1d), h1d_template.c_str(), side.c_str(), categories[cat].c_str(), fitvarName.c_str(), fitbin);   // This is the data hist name
                 std::snprintf(fname1d, sizeof(fname1d), fh1d_template.c_str(), side.c_str(), categories[cat].c_str(), fitvarName.c_str(), fitbin);  // This is the data hist name
                 std::cout << " projecting " << cname1d << " in fitbin " << fitbin << std::endl;
 
@@ -312,18 +315,18 @@ int main(int argc, char* argv[]) {
             tmp_fitMap1d[side] = tmp_fitcatlist1d;
         }
         std::cout << " finished projecting hists " << std::endl;
-    //     dataHist1D.push_back(tmp_dataMap1d);
-    //     fitHists1D.push_back(tmp_fitMap1d);
-    //     unfitHists1D.push_back(tmp_unfitMap1d);
-    // }
+        //     dataHist1D.push_back(tmp_dataMap1d);
+        //     fitHists1D.push_back(tmp_fitMap1d);
+        //     unfitHists1D.push_back(tmp_unfitMap1d);
+        // }
 
-    // std::cout << "have extracted the inputs" << std::endl;
-    // outputFile->cd();
+        // std::cout << "have extracted the inputs" << std::endl;
+        // outputFile->cd();
 
-    // std::vector<MnvH1D*> parameters_list;
+        // std::vector<MnvH1D*> parameters_list;
 
-    // // for (auto dataHist : dataHist1D) {
-    // for (int fitbin = 0; fitbin < n_fitbins; fitbin++) {
+        // // for (auto dataHist : dataHist1D) {
+        // for (int fitbin = 0; fitbin < n_fitbins; fitbin++) {
         // std::map<const std::string, PlotUtils::MnvH1D*> dataHist = dataHist1D[fitbin];
         // std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists = fitHists1D[fitbin];
         // std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists = unfitHists1D[fitbin];
@@ -343,156 +346,11 @@ int main(int argc, char* argv[]) {
         std::snprintf(paramname, sizeof(paramname), h1d_template.c_str(), "QElike", "fit_paramters", fitvarName.c_str(), fitbin);  // This is the data hist name
         PlotUtils::MnvH1D* parameters = new PlotUtils::MnvH1D(paramname, "fit parameters", categories.size(), 0.0, double(categories.size()));
         // int ret = fit::DoTheFit(fitHists, parameters, unfitHists, dataHist, includeInFit, categories, type, lowBin, hiBin, binbybin, outputDir, fitbin + 1);
+        std::cout << "parameters nbins" << parameters->GetNbinsX() << std::endl;
         int ret = fit::DoTheFit(tmp_fitMap1d, parameters, tmp_unfitMap1d, tmp_dataMap1d, includeInFit, categories, type, lowBin, hiBin, binbybin, outputDir, fitbin);
         std::cout << " Done with do the fit for fitbin " << fitbin << ", storing parameters " << std::endl;
         parameters_list.push_back(parameters);
         // int ret = fit::DoTheFit(fitHists, unfitHists, dataHist, includeInFit, categories, type, lowBin, hiBin, binbybin, outputDir, fitbin+1);
-
-        // set up for plots
-
-        // PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
-        // mnvPlotter.draw_normalized_to_bin_width = false;
-        // TCanvas cF("fit", "fit");
-        // if (logPlot) gPad->SetLogy(1);
-        // std::map<const std::string, MnvH1D*> tot;
-        // std::map<const std::string, MnvH1D*> pre;
-        // std::map<const std::string, MnvH1D*> bkg;
-        // std::map<const std::string, MnvH1D*> sig;
-        // std::map<const std::string, MnvH1D*> bkgsub;
-
-        // for (auto side : sidebands) {
-        //     dataHist[side]->Print();
-
-        //     // dataHist[side]->Write();
-
-        //     for (int i = 0; i < categories.size(); i++) {
-        //         fitHists[side][i]->Write();
-        //         std::snprintf(fname1d, sizeof(fname1d), fh1d_template.c_str(), side.c_str(), "all", fitvarName.c_str(), fitbin + 1);
-        //         if (i == 0) {
-        //             tot[side] = (MnvH1D*)fitHists[side][i]->Clone(TString(fname1d));
-        //         } else {
-        //             tot[side]->Add(fitHists[side][i]);
-        //         }
-        //     }
-        //     tot[side]->MnvH1DToCSV(tot[side]->GetName(), outputDir + "/csv/", 1., false);
-        //     tot[side]->Print();
-        //     tot[side]->Write();
-        // }
-        // std::cout << "wrote the results " << std::endl;
-
-        // for (auto side : sidebands) {
-        //     for (int i = 0; i < categories.size(); i++) {
-        //         std::snprintf(cname1d, sizeof(cname1d), h1d_template.c_str(), side.c_str(), "all", fitvarName.c_str(), fitbin + 1);
-        //         if (i == 0) {
-        //             pre[side] = (MnvH1D*)unfitHists[side][i]->Clone(TString(cname1d));
-        //         } else {
-        //             pre[side]->Add(unfitHists[side][i]);
-        //         }
-        //     }
-        //     pre[side]->Print();
-        //     pre[side]->Write();
-        //     pre[side]->MnvH1DToCSV(pre[side]->GetName(), outputDir + "/csv/", 1., false);
-        // }
-        // // this loops over, finds the categories that are in the backgrounds and sums those to get a background
-        // // uses this whole counter thing to avoid having to figure out how to do string searches in a list in C++
-
-        // for (auto side : sidebands) {
-        //     int count = 0;
-        //     for (int i = 0; i < categories.size(); i++) {
-        //         for (int j = 0; j < backgrounds.size(); j++) {
-        //             // std::cout << "match " << categories[i] << " " << backgrounds[j] << " " << count << std::endl;
-        //             if (categories[i] == backgrounds[j]) {
-        //                 std::snprintf(fname1d, sizeof(fname1d), fh1d_template.c_str(), side.c_str(), "bkg", fitvarName.c_str(), fitbin + 1);
-        //                 if (count == 0) {
-        //                     bkg[side] = (MnvH1D*)fitHists[side][i]->Clone(TString(fname1d));
-        //                     count += 1;
-        //                 } else {
-        //                     bkg[side]->Add(fitHists[side][i]);
-        //                 }
-        //             }
-        //         }
-        //         if (count > 0) {
-        //             bkg[side]->Print();
-        //             bkg[side]->Write();
-        //             bkg[side]->MnvH1DToCSV(bkg[side]->GetName(), outputDir + "/csv/", 1., false);
-        //         }
-        //     }
-        // }
-        // for (auto side : sidebands) {
-        //     std::snprintf(fname, sizeof(fname), fh1d_template.c_str(), side.c_str(), "bkgsub", fitvarName.c_str(), fitbin + 1);
-        //     bkgsub[side] = (MnvH1D*)dataHist[side]->Clone(fname1d);
-        //     bkgsub[side]->AddMissingErrorBandsAndFillWithCV(*(fitHists[side][0]));
-        //     bkgsub[side]->Add(bkg[side], -1);
-        //     bkgsub[side]->Write();
-        //     dataHist[side]->MnvH1DToCSV(dataHist[side]->GetName(), outputDir + "/csv/", 1., false);
-        //     bkgsub[side]->MnvH1DToCSV(bkgsub[side]->GetName(), outputDir + "/csv/", 1., false);
-        // }
-        // std::cout << "wrote the inputs and outputs " << std::endl;
-
-        // for (auto side : sidebands) {
-        //     // dataHist[side]->Print("ALL");
-        //     dataHist[side]->Scale(1., "width");
-        //     // dataHist[side]->Print("ALL");
-        //     tot[side]->Scale(1., "width");
-        //     pre[side]->Scale(1., "width");
-        //     bkg[side]->Scale(1., "width");
-        //     bkgsub[side]->Scale(1., "width");
-        //     for (int i = 0; i < categories.size(); i++) {
-        //         unfitHists[side][i]->Scale(1., "width");
-        //         fitHists[side][i]->Scale(1., "width");
-        //     }
-        // }
-
-        // for (auto side : sidebands) {
-        //     mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], tot[side], 1., "TR");
-        //     cF.Print(TString(outputDir + "/png/" + side + "_postfit_compare.png").Data());
-
-        //     mnvPlotter.DrawDataMCWithErrorBand(dataHist[side], pre[side], 1., "TR");
-        //     cF.Print(TString(outputDir + "/png/" + side + "_prefit_compare.png").Data());
-
-        //     mnvPlotter.DrawDataMCWithErrorBand(bkgsub[side], fitHists[side][0], 1., "TR");
-        //     cF.Print(TString(outputDir + "/png/" + side + "_bkgsub_compare.png").Data());
-        // }
-
-        // TObjArray* combmcin;
-        // TObjArray* combmcout;
-
-        // for (auto side : sidebands) {
-        //     std::string label;
-        //     label = side + " " + fitvarName;
-        //     combmcin = Vec2TObjArray(unfitHists[side], categories);
-        //     combmcout = Vec2TObjArray(fitHists[side], categories);
-        //     std::cout << " before call to DrawStack" << std::endl;
-        //     PlotUtils::MnvH1D* data = new PlotUtils::MnvH1D(*(dataHist[side]));
-        //     data->SetTitle("Data");
-        //     label = side + " " + fitvarName + " Before fit";
-        //     TText t(.3, .95, label.c_str());
-        //     t.SetTitle(label.c_str());
-        //     t.SetNDC(1);
-        //     t.SetTextSize(.03);
-
-        //     mnvPlotter.DrawDataStackedMC(data, combmcin, 1.0, "TR");
-        //     t.Draw("same");
-        //     cF.Print(TString(outputDir + "/png/" + side + "_prefit_combined.png").Data());
-        //     label = side + " " + fitvarName + " After fit";
-        //     TText t2(.3, .95, label.c_str());
-        //     t2.SetTitle(label.c_str());
-        //     t2.SetNDC(1);
-        //     t2.SetTextSize(.03);
-        //     t2.SetTitle(label.c_str());
-        //     mnvPlotter.DrawDataStackedMC(data, combmcout, 1.0, "TR");
-        //     cF.Print(TString(outputDir + "/png/" + side + "_" + fitType + "_postfit_combined.png").Data());
-        //     label = side + " " + fitvarName + "Background Subtracted";
-
-        //     t2.SetTitle(label.c_str());
-        //     t2.SetNDC(1);
-        //     t2.SetTextSize(.03);
-        //     t2.SetTitle(label.c_str());
-        //     bkgsub[side]->SetTitle("bkgsub");
-        //     mnvPlotter.DrawDataStackedMC(bkgsub[side], combmcout, 1.0, "TR");
-        //     cF.Print(TString(outputDir + "/png/" + side + "_" + fitType + "_bkgsub_combined.png").Data());
-        // }
-        std::cout << " > after drawstack loop, before closign files" << std::endl;
     }
 
     // Now put all the parameters into a file with scale factors
@@ -509,7 +367,7 @@ int main(int argc, char* argv[]) {
         PlotUtils::MnvH1D* catscales = dummy_xproj_hist->Clone(sname);
         catscales->ClearAllErrorBands();
         catscales->Reset("ICES");
-        for (int fitbin = 1; fitbin < n_fitbins+1; fitbin++) {
+        for (int fitbin = 1; fitbin < n_fitbins + 1; fitbin++) {
             PlotUtils::MnvH1D* param_mnvh = parameters_list[fitbin - 1];
             // param_mnvh->Print();
             // Now get the content for that cat, put it in the bin for the scales
@@ -538,18 +396,18 @@ int main(int argc, char* argv[]) {
             }
         }
         SyncBands(catscales);
-        catscales->SetTitle(("scales for "+catname).c_str());
+        catscales->SetTitle(("scales for " + catname).c_str());
         catscales->Print();
         catscales->MnvH1DToCSV((outputDir + "/csv/").c_str());
         catscales->Write();
     }
 
     std::cout << "before closing files" << std::endl;
-    inputFile->cd();
-    inputFile->Close();
+    // inputFile->cd();
+    // inputFile->Close();
     std::cout << "after close input" << std::endl;
     outputFile->cd();
-    // outputFile->Close();
+    outputFile->Close();
     std::cout << "Closing Output File... Does this solve the issue of seg fault." << std::endl;
 
     std::cout << "HEY YOU DID IT!!!" << std::endl;

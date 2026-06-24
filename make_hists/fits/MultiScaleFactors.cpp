@@ -8,7 +8,7 @@
 //  Modified extensively by Heidi Schellman (hschellman on github)
 
 #include "fits/MultiScaleFactors.h"
-//#define DEBUG 
+// #define DEBUG
 
 namespace fit {
 MultiScaleFactors::MultiScaleFactors(const std::map<const std::string, std::vector<TH1D*>> unfitHists,
@@ -63,15 +63,13 @@ double MultiScaleFactors::DoEval(const double* parameters) const {
                 diff = fitSum - dataContent;
                 if (dataErr > 1e-10) chi2 += (diff * diff) / (dataErr * dataErr);
             }
-            if (fType == kSlowChi2){ // use the MC as a better estimator
-                double MCval = fitSum>0?fitSum:-fitSum;
-                
-                diff = fitSum-dataContent;
+            if (fType == kSlowChi2) {  // use the MC as a better estimator
+                double MCval = fitSum > 0 ? fitSum : -fitSum;
+
+                diff = fitSum - dataContent;
                 if (MCval > 0) {
-                    chi2 += (diff*diff)/MCval;
+                    chi2 += (diff * diff) / MCval;
                 }
-            
-                
             }
             if (fType == kML) {
                 diff = fitSum - dataContent;
@@ -84,7 +82,7 @@ double MultiScaleFactors::DoEval(const double* parameters) const {
     }
 
 #ifdef DEBUG
-    
+
     std::cout << "About to return chi2 of: " << chi2 << std::endl;
 #endif
     return chi2;

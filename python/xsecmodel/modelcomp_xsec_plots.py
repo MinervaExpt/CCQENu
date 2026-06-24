@@ -2502,23 +2502,34 @@ vars_info = {
 }
 
 domodelcomp = global_domodelcomp
-# if len(sys.argv) == 1 and not global_domodelcomp:
-#     print("python3 modelcomp_xsec_plots.py <path to analyze output files>")
+# # if len(sys.argv) == 1 and not global_domodelcomp:
+# #     print("python3 modelcomp_xsec_plots.py <path to analyze output files>")
+# #     sys.exit(1)
+# if len(sys.argv) < 2 and global_domodelcomp:
+#     print("python3 modelcomp_xsec_plots.py <path to analyze output file> <path to dir with model comps")
+#     # print("WARNING: no path specified for models for comparison... just doing it without models")
 #     sys.exit(1)
-if len(sys.argv) < 2 and global_domodelcomp:
-    print("python3 modelcomp_xsec_plots.py <path to analyze output file> <path to dir with model comps")
-    # print("WARNING: no path specified for models for comparison... just doing it without models")
-    sys.exit(1)
-    # domodelcomp = False
-# with open(file_config_name,"r") as tmp_file:
-#     file_config = json.load(tmp_file)
-# raw_filename = file_config["basemodel"]
-# if "NUISANCE" in file_config["modelcomps"]:
+#     # domodelcomp = False
+paths_mnv_modelcomp = {}
+with open(file_config_name,"r") as tmp_file:
+    file_config = json.load(tmp_file)
+basemodel = file_config["basemodel"]["name"]
+raw_filename = file_config["basemodel"]["path"]
+if "NUISANCE" in file_config["modelcomps"]:
+    pathtodir_modelcomp = file_config["modelcomps"]["NUISANCE"]["path"]
+    modelcomptodo["NUISANCE"] = file_config["modelcomps"]["NUISANCE"]["models"]
+if "MNV" in file_config["modelcomps"]:
+    paths_mnv_modelcomp = file_config["modelcomps"]["MNV"]
+    tmp_mnvmodel_list = []
+    for model in file_config["modelcomps"]["MNV"]:
+        tmp_mnvmodel_list.append(file_config["modelcomps"]["MNV"][model])
+    modelcomptodo["MNV"] = tmp_mnvmodel_list
 
 
 
 # First get the hists/files for the extracted cross section
 raw_filename = sys.argv[1]
+pathtodir_modelcomp = sys.argv[2]
 
 if "_tuned_analyze9" in raw_filename:
     tuned_filename = raw_filename
@@ -2594,7 +2605,6 @@ else:
 bigvarconfig_dict = json.loads(re.sub("//.*", "", bigvarconfig_string, flags = re.MULTILINE))
 
 # Done with the analyze_v9 files, lets get the files for the model comparison. This has it's own method
-pathtodir_modelcomp = sys.argv[2]
 modelcomppath_dict = GetModelCompFilePathsDict(pathtodir_modelcomp)
 # Dict to put all the model hists in. Structure is {model:{histdim:{sample:{variable:{fluxnorm:TH1D()}}}
 model_hists = {}

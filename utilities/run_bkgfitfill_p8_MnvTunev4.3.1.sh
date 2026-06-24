@@ -45,3 +45,48 @@ python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT
 #  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame6G --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL} \
 #  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9.sh \
 #  --tmpdir=$SCRATCH/tmp --expected-lifetime=36h --memory=5000   #--sample=${MYSAMPLE} #--debug --notimestamp
+v4
+6G
+- blob
+- track
+
+6H
+- track
+
+6I
+- qelike
+- blob
+
+
+export MYWARP=none
+export MYMODEL=MnvTunev4.3.1
+export DATALOC=remote_p8
+export MYSAMPLE=BlobSideband
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/bkgfitting/${MYMODEL}/betterbins_multipi_q2fix_FinerBins_AllSyst200Flux_SampleBreakdown_geanthadroncv_bkgfit_p8_${MYMODEL}/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame6G --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/bkgfitting/${MYMODEL}/betterbins_multipi_q2fix_FinerBins_AllSyst200Flux_SampleBreakdown_geanthadroncv_bkgfit_p8_${MYMODEL}/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame6I --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
+
+export MYSAMPLE=QElike
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/bkgfitting/${MYMODEL}/betterbins_multipi_q2fix_FinerBins_AllSyst200Flux_SampleBreakdown_geanthadroncv_bkgfit_p8_${MYMODEL}/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame6I --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
+
+export MYWARP=none
+export MYMODEL=MnvTunev4.3.1
+export DATALOC=remote_p8
+export MYSAMPLE=BlobSideband
+export MYSAMPLE=TrackSideband
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/bkgfitting/${MYMODEL}/betterbins_multipi_q2fix_FinerBins_AllSyst200Flux_SampleBreakdown_geanthadroncv_bkgfit_p8_${MYMODEL}/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame6G --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/bkgfitting/${MYMODEL}/betterbins_multipi_q2fix_FinerBins_AllSyst200Flux_SampleBreakdown_geanthadroncv_bkgfit_p8_${MYMODEL}/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame6H --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
