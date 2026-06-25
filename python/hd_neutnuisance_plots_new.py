@@ -172,7 +172,9 @@ def GetHistDict(i_file, POTScale):
             h.SetFillColor(catscolors[cat])
             if index != 0:
                 h.SetFillColor(catscolors[index])
-            h.SetLineColor(ROOT.kBlack)
+            # h.SetLineColor(ROOT.kBlack)
+            # h.SetLineColor(ROOT.TColor.GetColorDark(catscolors[cat]))
+
             h.SetLineWidth(typeslinewidth)
             if cat in backgrounds:
                 h.SetFillStyle(bkgfillstyle)
@@ -589,11 +591,17 @@ bin_pid_order = [
     5, 
     3, 
     8, 
+    1,
     2, 
-    1
 ]
 
-sigremoval = [7,6,5,4,3]
+pid_consolidation = [
+    7,
+    6,
+    5,
+    4,
+    3
+]
 
 process = ["data", "QE", "RES", "DIS", "COH", "", "", "", "2p2h", ""]
 whichcats = ["data", "qelike", "qelikenot"]
@@ -724,19 +732,19 @@ for a_sample in groups.keys():
         analysistype = GetHDAnalysisType(f,b_var)
         flowadjust = 1
         new_bin_pid_order = bin_pid_order
-        new_sigremoval = sigremoval
+        new_pid_consolidation = pid_consolidation
         if sig_only:
             new_bin_pid_order = []
             for pid in bin_pid_order:
-                if pid not in sigremoval: new_bin_pid_order.append(pid)
-                # [pid in bin_pid_order if pid not in sigremoval]
+                if pid not in pid_consolidation: new_bin_pid_order.append(pid)
+                # [pid in bin_pid_order if pid not in pid_consolidation]
 
         if analysistype in [0,1]:
             flowadjust = 1
         elif analysistype in [2,3]:
             flowadjust = -1
             new_bin_pid_order = [pid-1 for pid in bin_pid_order]
-            new_sigremoval = [pid -1 for pid in sigremoval]
+            new_pid_consolidation = [pid -1 for pid in pid_consolidation]
         print(analysistype)
         print(bins)
         myhyperdim = HyperDimLinearizer(bins, analysistype)
@@ -764,13 +772,14 @@ for a_sample in groups.keys():
                     h2D_dict[c_cat] = {}
                 if partname not in h2D_dict[c_cat].keys():
                     h2D_dict[c_cat][partname] = {}
-                if sig_only and zbin in new_sigremoval:
+                if sig_only and zbin in new_pid_consolidation:
                     tmp_h2D_list[10].Add(tmp_h2D_list[zbin])
                     continue
                 if zbin == 5:
                     tmp_h2D_list[zbin].Add(tmp_h2D_list[4])                    
                 tmp_h2D_list[zbin].SetFillColor(bin_pid_colors[zbin])
-                tmp_h2D_list[zbin].SetLineColor(ROOT.kBlack)
+                # tmp_h2D_list[zbin].SetLineColor(ROOT.kBlack)
+                tmp_h2D_list[zbin].SetLineColor(ROOT.TColor.GetColorDark(bin_pid_colors[zbin]))
                 tmp_h2D_list[zbin].SetLineWidth(typeslinewidth)
                 if c_cat == "qelikenot":
                     tmp_h2D_list[zbin].SetFillStyle(3244)
@@ -811,6 +820,7 @@ for a_sample in groups.keys():
                 tmp_axisvar = b_var.split("_")[0]
             
             tmp_projvar_shortname = vars_info[tmp_projvar]["shortname"]
+            tmp_projvar_units = vars_info[tmp_projvar]["units"]
             tmp_axisvar_shortname = vars_info[tmp_axisvar]["shortname"]
             tmp_axisvar_units = vars_info[tmp_axisvar]["units"]
             proj_bin_range = range(1,n_projbins_raw-1)
@@ -835,8 +845,8 @@ for a_sample in groups.keys():
                             tmp_proj_name ="%s_projX_%0.3d"%(tmp_hist2D.GetName().replace("hHD","h"),projbin)
                             width = tmp_hist2D.GetYaxis().GetBinWidth(projbin)
                             tmp_proj = tmp_hist2D.ProjectionX(tmp_proj_name, projbin, projbin)
-                        # tmp_proj.Scale(1./width,"width")
-                        tmp_proj.Scale(1.,"width")
+                        tmp_proj.Scale(1./width,"width")
+                        # tmp_proj.Scale(1.,"width")
                         if cat != "qelike":
                             tmp_proj.SetFillStyle(bkgfillstyle)
                         grid_dict[projbin][cat][part] = tmp_proj.Clone()
@@ -870,9 +880,12 @@ for a_sample in groups.keys():
                         grid_dict[projbin][cat][part].Scale(tmp_pad_scale)
                         # grid_dict[projbin][cat][part].SetMaximum(1.2 * global_max)
                 grid_dict[projbin]["data"]["data"].SetMaximum(1.4 * global_max)
-                grid_dict[projbin]["data"]["data"].SetMinimum(0)
+                grid_dict[projbin]["data"]["data"].SetMinimum(0.001)
                 grid_dict[projbin]["data"]["data"].GetXaxis().SetNdivisions(505)
-                grid_dict[projbin]["data"]["data"].GetYaxis().SetNdivisions(505)
+                if n_projbins_raw >= 13:                
+                    grid_dict[projbin]["data"]["data"].GetYaxis().SetNdivisions(504)
+                else:
+                    grid_dict[projbin]["data"]["data"].GetYaxis().SetNdivisions(505)
                 
                 tmp_stack = THStack("stack","")
 
@@ -893,27 +906,37 @@ for a_sample in groups.keys():
             
             tmp_canvas_name = "%s_%s_%s_%s"%(a_sample, b_var, data_var, proj)
             tmp_canvas_title = "%s %s"%(data_var, proj)
-            gc2 = PanelCanvas(tmp_canvas_name, proj_nxbins,proj_nybins)
+            gc2 = PanelCanvas(tmp_canvas_name, proj_nxbins,proj_nybins, _xsize, _ysize)
             gc2.SetLeftMargin(0.1)
             gc2.SetRightMargin(0.05)
             gc2.SetBottomMargin(0.1)
             # gc2.SetFrameLineWidth(1)
             gc2.SetXTitle(tmp_axisvar_shortname)
-            gc2.SetYTitle("Counts/%s"%(tmp_axisvar_units))
-            gc2.SetTitleSize(1500*0.05)
-
+            ytitle_tail = ""
+            if tmp_axisvar_units != "":
+                ytitle_tail+= "/(%s)"%tmp_axisvar_units
+            if tmp_projvar_units != "":
+                ytitle_tail+= "/(%s)"%tmp_projvar_units
+            gc2.SetYTitle("Counts%s"%ytitle_tail)
+            gc2.SetTitleSize(_ysize*0.05)
+            # gc2.SetHistTexts()
             gc2.Draw()
 
             
             for i in proj_bin_range:
                 pad = gc2.cd(i)
-                pad.SetFrameLineWidth(1)
+                # pad.SetFrameLineWidth(1)
                 pad.Draw()
+                grid_dict[i]["data"]["data"].GetYaxis().SetMaxDigits(3)
+                axismini = 0.001
+                if grid_dict[i]["data"]["data"].GetMaximum() < 1:
+                    axismini = grid_dict[i]["data"]["data"].GetMaximum()*0.01
+                grid_dict[i]["data"]["data"].SetMinimum(axismini)
                 grid_dict[i]["data"]["data"].Draw("AXIS")
             for i in proj_bin_range:
                 pad = gc2.cd(i)
                 pad.Draw()
-                grid_dict[i]["stack"].Draw("HIST same")
+                grid_dict[i]["stack"].Draw("HIST ][ same")
                 if do_data:
                     grid_dict[i]["data"]["data"].Draw("E1 X0 SAME")
                     
@@ -945,7 +968,8 @@ for a_sample in groups.keys():
                 binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
                 pad.Modified()
                 pad.Update()
-            pad = gc2.cd(n_projbins_raw)
+                # ROOT.gPad.RedrawAxis()
+            pad = gc2.cd(n_projbins_raw-1)
             pad.Draw()
 
             padwidth = 1 - pad.GetLeftMargin() - pad.GetRightMargin()
@@ -957,6 +981,7 @@ for a_sample in groups.keys():
             leg = TLegend(x1, y1, x2, y2)
             leg.SetBorderSize(0)
             leg.SetFillColor(-1)
+            leg.SetFillStyle(0)
             leg.SetTextSize(round(legendfontsize/3))
             leg.SetNColumns(2)
 
