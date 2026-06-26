@@ -433,7 +433,8 @@ def GetInputHistDict(f, input_dict = {}):
             # print("WARNING: hist ", name, " is empty. Skipping...")
             continue
         h.SetFillColor(catscolors[cat])
-        h.SetLineColor(ROOT.kBlack)
+        # h.SetLineColor(ROOT.kBlack)
+        h.SetLineColor(ROOT.TColor.GetColorDark(catscolors[cat]))
         if "data" in cat:
             # h.Scale(1.0, "width")
             # h.Scale(1.0)
@@ -504,8 +505,8 @@ def GetInputTypesHistDict(f, input_dict = {}):
         else:
             print("\talready have hist %s, skipping for now..."%(name))
             continue
-        # h.SetFillColor(catscolors[cat])
-        h.SetLineColor(typescolors[inttype])
+        h.SetFillColor(catscolors[cat])
+        # h.SetLineColor(ROOT.TColor.GetColorDark(typescolors[inttype]))
         # h.Scale(POTScale, "width")
         h.Scale(POTScale)
         input_dict[hist][sample][variable][cat][recotrutype][inttype] = h
@@ -627,6 +628,7 @@ def GetAnalyzeTypesHistDict(f, tuned = False, analyze_dict = {}):
             print("\talready have hist %s, skipping for now..."%(name))
             continue
         h.SetLineColor(typescolors[inttype])
+        # h.SetLineColor(ROOT.TColor.GetColorDark(typescolors[inttype]))
         # TODO width normalize?
         # h.Scale(1.0, "width")
         analyze_dict[hist][sample][var][stage][inttype] = h
@@ -932,6 +934,8 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
     mc_hist.SetFillColor(0)
     # mc_hist.SetLineColor(2)
     mc_hist.SetLineColor(typescolors[0])
+    # mc_hist.SetLineColor(ROOT.TColor.GetColorDark(typescolors[0]))
+   
     mc_hist.SetLineStyle(1)
     # mc_hist.SetLineWidth(3)
     mc_hist.SetLineWidth(typeslinewidth1D)
@@ -1149,6 +1153,7 @@ def DrawDataMCTypesPlot1D_AxisChange(i_data_hist, i_mctot_hist, i_mc_typeshistdi
     mc_hist = mnv_mc.GetCVHistoWithError(True,False)
     mc_hist.SetFillColor(0)
     mc_hist.SetLineColor(typescolors[0])
+    # mc_hist.SetLineColor(ROOT.TColor.GetColorDark(typescolors[0]))
     mc_hist.SetLineStyle(1)
     mc_hist.SetLineWidth(typeslinewidth1D)
 
@@ -1354,6 +1359,7 @@ def DrawDataMCTypesPlot1D_AxisChange(i_data_hist, i_mctot_hist, i_mc_typeshistdi
         mcerror.SetBinError(bin, max(mcerror.GetBinContent(bin), 1.0e-9))
         mcerror.SetBinContent(bin, 1.0)
     mcerror.SetLineColor(typescolors[0])
+    # mcerror.SetLineColor(ROOT.TColor.GetColorDark(typescolors[0]))
     mcerror.SetLineWidth(typeslinewidth1D)
     # mcerror.SetFillColorAlpha(ROOT.kPink + 1, 0.4)
     mcerror.SetFillColor(ROOT.kRed-10)
@@ -1651,16 +1657,11 @@ def GetMCHistsForPlot(mnv_mchist):
     hist.SetFillColor(0)
     # hist.SetLineColor(2)
     hist.SetLineColor(typescolors[0])
+    # hist.SetLineColor(ROOT.TColor.GetColorDark(typescolors[0]))
     hist.SetLineStyle(1)
     hist.SetLineWidth(3)
 
     return hist, band
-
-def GetModelHistForPlot(th_modelhist,model):
-    th_modelhist.SetFillColor(0)
-    th_modelhist.SetLineColor(modelplotinfo[model]["linecolor"]) # TODO
-    th_modelhist.SetLineStyle(1)
-    th_modelhist.SetLineWidth(3)
 
 
 def DrawDataMCPlot2D(i_data_hist, i_mc_hist, x_title, x_bins, y_title, y_bins, z_title, outdirname, canvas_name, canvas_title, do_ratio = False):
@@ -2197,6 +2198,7 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x
             for bin in range(0,mc_hist_list[i].GetXaxis().GetNbins() + 2):
                 straightline.SetBinContent(bin,1.0)
             straightline.SetLineColor(typescolors[0])
+            # straightline.SetLineColor(ROOT.TColor.GetColorDark(typescolors[0]))
             straightline.SetLineWidth(3)
             straightline.SetFillStyle(0)
             straightline_list.append(straightline)

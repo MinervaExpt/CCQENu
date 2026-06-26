@@ -111,6 +111,11 @@ def GetHistDict(i_file, POTScale):
         flag = "reconstructed_types_"
         if "tuned" in types:
             flag = "reconstructed_tuned_types_"
+        h = f.Get(name).Clone()
+        if h.GetEntries() <= 0 and index not in [1,2,3,4,8]: 
+            print("Skipping hist %s because it has no entries"%name)
+            h.Print()
+            continue
         index = 0
         if "types" in types:
             if not dotypes:
@@ -144,12 +149,12 @@ def GetHistDict(i_file, POTScale):
                 print("Skipping variable that isn't formatted properly: ", variable)
                 continue
         
-        h = f.Get(name).Clone()
-        if h.GetEntries() <= 0 and index not in [1,2,3,4,8]: 
-        # if h.GetEntries() <= 0 and index not in [1,2,3,8]: 
-            print("Skipping hist %s because it has no entries"%name)
-            # h.Print()
-            continue
+        # h = f.Get(name).Clone()
+        # if h.GetEntries() <= 0 and index not in [1,2,3,4,8]: 
+        # # if h.GetEntries() <= 0 and index not in [1,2,3,8]: 
+        #     print("Skipping hist %s because it has no entries"%name)
+        #     # h.Print()
+        #     continue
         if cat in backgrounds and index != 0:
             index += 10
         if sample not in groups.keys():
@@ -871,6 +876,8 @@ for a_sample in groups.keys():
                 if sig_only:
                     tmp_pad_max = grid_dict[projbin]["qelike"]["qeliketot"].GetMaximum()
                 if tmp_pad_max == 0.0:
+                    if global_max == 0.0:
+                        global_max = 1.0
                     tmp_pad_max = global_max
                 tmp_pad_scale = eval('{:.{p}g}'.format(round(global_max / tmp_pad_max), p=2))
                 multipliers.append(tmp_pad_scale)
