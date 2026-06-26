@@ -1,0 +1,97 @@
+{
+  "version": 15,
+  "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
+  "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/blobs/AntiNuCuts_v15_warping_2track.json",
+  "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_neutronnuisance.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
+  "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/blobs/AntiNuParams_v15_warping_hd_3donly.json",
+  "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
+  "outRoot": "DPF26_1dneut_3dblobs_2trackonly_test_${MYPLAYLIST}_${MYMODEL}",
+  "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals_June2026.root",
+  "prescale": 999,
+  "playlist": "${MYPLAYLIST}",
+  "MinervaModel": "${MYMODEL}",
+  "recoName": "MasterAnaDev",
+  "tunedmc": "both",
+  "warpedmc": "none",
+  "closure": 0,
+  "TuneCategories": [
+    "qelike",
+    "chargedpion",
+    "neutralpion"
+  ],
+  "DoResolution": false,
+  "DoTypes": true,
+  "pdg": -14,
+  "mcRecoToCSV": false,
+  "statusbar": false,
+  "runsamples": [
+    "QElike"//,
+  ], 
+  "AnalyzeVariables": [
+    "NeutCandsMuonCosTheta",
+    "NeutCandsvtxSphereDist",
+    "NeutCandsEdep",
+    "NeutCandsTrackEndDist"
+  ],
+  "Analyze2DVariables": [
+    "NeutCandsMuonCosTheta_NeutCandsTopMCPID",
+    "NeutCandsvtxSphereDist_NeutCandsTopMCPID",
+    "NeutCandsEdep_NeutCandsTopMCPID",
+    "NeutCandsTrackEndDist_NeutCandsTopMCPID",
+    // "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist",
+    // "NeutCandsEdep_NeutCandsvtxSphereDist",
+    // "NeutCandsEdep_NeutCandsMuonCosTheta",
+    // "NeutCandsEdep_NeutCandsTrackEndDist"
+  ],
+  "AnalyzeHyperDVariables": [],
+  //   "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
+  //   "NeutCandsEdep_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
+  //   "NeutCandsEdep_NeutCandsMuonCosTheta_NeutCandsTopMCPID",
+  //   "NeutCandsEdep_NeutCandsTrackEndDist_NeutCandsTopMCPID" //,
+  // ],
+  "signal": {
+    "QElike": "qelike",
+    "QElike_old": "qelike_old" //,
+  }, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
+  "background": {
+    "QElike": [
+      "qelikenot",
+      "chargedpion",
+      "neutralpion",
+      "other"
+    ],
+    "QElike_old": [
+      "qelikenot_old",
+      "chargedpion",
+      "neutralpion",
+      "other_old"
+    ]//,
+  },
+  "data": {
+    "QElike": "data",
+    "QElike_old": "data" //,
+  }, 
+  "responseSystematicsVersion": "2024",
+  "systematics": [
+    "Flux"//,
+    // "MuonMINOS",
+    // "MuonResolution",
+    // "MINOSEfficiency",
+    // "Angle",
+    // "GENIE",
+    // "GenieRvx1pi",
+    // "RPA",
+    // "2p2h",
+    // "MuonMinerva",
+    // "geant4",
+    // "response",
+    // "MoNANeutronInelastic"
+  ],
+  "fluxUniverses": 2, //100, //10,
+  "NuEConstraint":1, 
+  "Geant4NeutronCV":1,
+  "Geant4Elastics":1//,
+  //"RPAMaterials":0 
+}
