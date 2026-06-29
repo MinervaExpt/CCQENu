@@ -68,6 +68,7 @@ include/Get2DVariablesFromConfig.h
 include/GetStacked.h
 include/Hist2DWrapperMap.h
 include/HistWrapperMap.h
+include/ModelFromConfig.h
 include/Systematics.h
 include/Variable2DFromConfig.h
 include/VariableFromConfig.h
@@ -78,6 +79,8 @@ fits/MultiScaleFactors.h
 fits/DoTheFit.h
 fits/DoTheFitBinByBin.h
 utils/SyncBands.h
+utils/CoherentPiReweighter.h
+utils/DiffractiveReweighter.h
 )
 
 include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils)
