@@ -1193,11 +1193,6 @@ def DrawDataMCPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x_bins
         gc.Modified()
         gc.Update()
         
-        # Now do the unstacked ones
-
-
-
-
 
         del gc
     # return 0

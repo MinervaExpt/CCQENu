@@ -95,7 +95,7 @@ basemodelplotinfo = {
     }
 }
 
-"linestyles" = [
+linestyles = [
     2,
     3,
     5,
@@ -226,7 +226,7 @@ ratio_frac = 0.3 #0.278
 
 data_marker_style = 20
 data_marker_size = 1.0
-end_error_size = 10
+end_error_size = 4.0
 
 legendfontsize = 0.05
 legx1 = 0.7
@@ -238,7 +238,7 @@ legy2 = 0.95
 lat_xoffset = 0.0
 lat_yoffset = 0.04
 
-typeslinewidth = 2
+typeslinewidth = 1
 
 scaleX = ["Q2QE"]
 scaleY = ["EAvail","E_{Avail}"]#"recoil","EAvail"]
@@ -1057,7 +1057,7 @@ def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title
     areaScale = topArea / bottomArea
 
     ROOT.gStyle.SetErrorX(0) # This turns off the horizontal error bars
-    ROOT.gStyle.SetEndErrorSize(20) # This makes the ticks at the end of the error bars longer
+    ROOT.gStyle.SetEndErrorSize(end_error_size) # This makes the ticks at the end of the error bars longer
 
     # Move to top pad for hists
     top.cd()
@@ -1796,7 +1796,7 @@ def GetMCHistsForPlot(mnv_mchist, model = ""):
     # hist.SetLineColor(2)
     hist.SetLineColor(typescolors[0])
     hist.SetLineStyle(1)
-    hist.SetLineWidth(3)
+    hist.SetLineWidth(typeslinewidth)
 
     if model != "":
         # band.SetFillColor(modelplotinfo[model]["fillcolor"])
@@ -1992,7 +1992,7 @@ def DrawDataMCPlot2D(i_data_hist, i_mc_hist, x_title, x_bins, y_title, y_bins, z
 
             ratio.SetFillStyle(1001)
             ratio.SetLineColor(ROOT.kBlack)
-            ratio.SetLineWidth(2)
+            ratio.SetLineWidth(typeslinewidth)
             # ratio.SetTitle("")
             ratio.GetYaxis().SetNdivisions(205)
             ratio_list.append(ratio)
@@ -2166,7 +2166,7 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
         print("canvas n x bins: ",canvas_nxbins,",\t canvas n y bins: ",canvas_nybins)
 
         ROOT.gStyle.SetErrorX(0) # This turns off the horizontal error bars
-        ROOT.gStyle.SetEndErrorSize(end_error_size/2) # This makes the ticks at the end of the error bars longer
+        ROOT.gStyle.SetEndErrorSize(end_error_size) # This makes the ticks at the end of the error bars longer
 
         gc = PanelCanvas(thename, canvas_nxbins, canvas_nybins, round(xsize), round(ysize))
         gc.SetLeftMargin(0.1)
@@ -2314,17 +2314,17 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
             ratio_hist.SetMaximum(2.999)
             ratio_hist.SetFillStyle(1001)
             ratio_hist.SetLineColor(ROOT.kBlack)
-            ratio_hist.SetLineWidth(2)
+            ratio_hist.SetLineWidth(typeslinewidth)
             # ratio_hist.GetXaxis().SetNdivisions(205)
             ratio_hist.GetYaxis().SetNdivisions(206)
             ratio_hist.GetYaxis().SetLabelSize(ratio_hist.GetXaxis().GetLabelSize())
 
-            ratio_stat.SetLineWidth(2)
+            ratio_stat.SetLineWidth(typeslinewidth)
             ratio_list.append(ratio_hist)
             ratio_stat_list.append(ratio_stat)
             for key in mc_typesproj_listdict:
                 tmp_typesratio = MakeDataMCRatio(mc_typesproj_listdict[key][i],mc_hist_list[i])
-                tmp_typesratio.SetLineWidth(typeslinewidth)
+                tmp_typesratio.SetLineWidth(typeslinewidth+1)
                 if key not in typesratio_listdict.keys():
                     typesratio_listdict[key] = []
                 typesratio_listdict[key].append(tmp_typesratio)
@@ -2502,28 +2502,28 @@ vars_info = {
 }
 
 domodelcomp = global_domodelcomp
-# # if len(sys.argv) == 1 and not global_domodelcomp:
-# #     print("python3 modelcomp_xsec_plots.py <path to analyze output files>")
-# #     sys.exit(1)
-# if len(sys.argv) < 2 and global_domodelcomp:
-#     print("python3 modelcomp_xsec_plots.py <path to analyze output file> <path to dir with model comps")
-#     # print("WARNING: no path specified for models for comparison... just doing it without models")
+# if len(sys.argv) == 1 and not global_domodelcomp:
+#     print("python3 modelcomp_xsec_plots.py <path to analyze output files>")
 #     sys.exit(1)
-#     # domodelcomp = False
-paths_mnv_modelcomp = {}
-with open(file_config_name,"r") as tmp_file:
-    file_config = json.load(tmp_file)
-basemodel = file_config["basemodel"]["name"]
-raw_filename = file_config["basemodel"]["path"]
-if "NUISANCE" in file_config["modelcomps"]:
-    pathtodir_modelcomp = file_config["modelcomps"]["NUISANCE"]["path"]
-    modelcomptodo["NUISANCE"] = file_config["modelcomps"]["NUISANCE"]["models"]
-if "MNV" in file_config["modelcomps"]:
-    paths_mnv_modelcomp = file_config["modelcomps"]["MNV"]
-    tmp_mnvmodel_list = []
-    for model in file_config["modelcomps"]["MNV"]:
-        tmp_mnvmodel_list.append(file_config["modelcomps"]["MNV"][model])
-    modelcomptodo["MNV"] = tmp_mnvmodel_list
+if len(sys.argv) < 2 and global_domodelcomp:
+    print("python3 modelcomp_xsec_plots.py <path to analyze output file> <path to dir with model comps")
+    # print("WARNING: no path specified for models for comparison... just doing it without models")
+    sys.exit(1)
+    # domodelcomp = False
+# paths_mnv_modelcomp = {}
+# with open(file_config_name,"r") as tmp_file:
+#     file_config = json.load(tmp_file)
+# basemodel = file_config["basemodel"]["name"]
+# raw_filename = file_config["basemodel"]["path"]
+# if "NUISANCE" in file_config["modelcomps"]:
+#     pathtodir_modelcomp = file_config["modelcomps"]["NUISANCE"]["path"]
+#     modelcomptodo["NUISANCE"] = file_config["modelcomps"]["NUISANCE"]["models"]
+# if "MNV" in file_config["modelcomps"]:
+#     paths_mnv_modelcomp = file_config["modelcomps"]["MNV"]
+#     tmp_mnvmodel_list = []
+#     for model in file_config["modelcomps"]["MNV"]:
+#         tmp_mnvmodel_list.append(file_config["modelcomps"]["MNV"][model])
+#     modelcomptodo["MNV"] = tmp_mnvmodel_list
 
 
 

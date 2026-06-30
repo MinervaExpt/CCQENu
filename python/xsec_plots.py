@@ -31,6 +31,7 @@ import datetime
 import ctypes
 import math
 import json, re
+from optparse import OptionParser
 
 mydate = datetime.datetime.now()
 month = mydate.strftime("%B")
@@ -63,15 +64,6 @@ modelsampletodo = [
     "QElikeHyp",
 ]
 
-typestodo = [
-    "data",
-    1,  #: "QE",
-    8,  #: "2p2h",
-    2,  #: "RES",
-    3,  #: "DIS",
-    4,  #: "COH",
-]
-typestodo_leg = typestodo[1:]
 staterror_drawopt = "E1 X0"
 typeslinedarker = True
 
@@ -127,8 +119,8 @@ modelplotinfo = {
 }
 
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
-_xsize = 3200
-_ysize = 2400
+_xsize = 3600
+_ysize = 2700
 
 latex_x = 0.55
 latex_y = 0.43
@@ -144,7 +136,8 @@ ratio_frac = 0.3 #0.278
 data_marker_style = 20
 data_marker_size = 3.0
 data_marker_size2d = 2.0
-end_error_size = 7.5
+end_error_size = 8
+do_pinkstat = False
 
 legendfontsize = 0.05
 legx1 = 0.7
@@ -152,12 +145,17 @@ legx2 = 1.0
 legy1 = 0.65
 legy2 = 0.95
 
+do_titleonplot = False
+
 # lat_xoffset = 0.06
 lat_xoffset = 0.0
 lat_yoffset = 0.04
 
 typeslinewidth = 1
 typeslinewidth1D = 2
+
+prelim_string = "MINER#it{^{}#nu}A Work In Progress"
+datapot_string =  "Data POT: 1.12 #times 10^{21}"
 
 scaleX = [
     "Q2QE", 
@@ -169,12 +167,19 @@ scaleY = [
 ]
 
 skipstage_list = [
-    "bkgsub",
-    "unfolded",
-    "effcorr",
+    # "bkgsub",
+    # "unfolded",
+    # "effcorr",
     # "sigma",
     # "modelcomp",
 ]
+
+rangeuser_dict = {
+    # "ptmu": [
+    #     0.0,
+    #     1.5
+    # ],
+}
 
 skipvar_list = [
     # "EAvail",
@@ -301,6 +306,34 @@ errorbands = [
     "response_proton", 
 ]
 
+
+# def writeOptions(parser):
+#     print ("Now write options to the parser")
+#     # Directory to write output
+#     parser.add_option('--analyzefile', dest='analyzefile', help='', default = '')
+#     parser.add_option('--outdir', dest='outdir', help='Directory to write tagged output directory to', default = "/pnfs/minerva/scratch/users/"+_user_+"/default_analysis_loc/")
+#     parser.add_option('--config', dest='config', help='relative path in rundir for json config file (CCQEMAT)', default = "./test_v9")
+#     parser.add_option('--stage', dest='stage', help='Processing type [CCQEMAT or (future) EventLoop]', default="NONE")
+#     parser.add_option('--sample', dest='sample', help='[OPTIONAL] Sample type to set $MYSAMPLE when doing 1 sample/job otherwise you can still use a hardcoded list of samples ', default="QElike")
+#     parser.add_option('--playlist', dest='playlist', help='Playlist type', default="NONE")
+#     parser.add_option('--model', dest='model', help='[OPTIONAL] Model tune type to set $MYMODEL for MinervaModel. Defaults to MnvTunev1 ', default="MnvTunev1")
+#     parser.add_option('--warp', dest='warp', help='[OPTIONAL] Set a warp to $MYWARP for a warp. Defaults to none')
+
+#     parser.add_option('--prescale', dest='prescale', help='Prescale MC by this factor (CCQEMAT)', default="1")
+#     ##########################################################################
+#     #  Options for making tar files....Basically you can make tarfiles
+#     #######################################################################
+#     parser.add_option('--tag', dest='tag', help="Tag your release",default="tag_")
+#     parser.add_option('--mail',dest='mail',help="Want mail after job completion or failure",default=False,action="store_true")
+#     parser.add_option('--sametar',dest='sametar',help="Recycle the same tar file for jobsubmission",default=False,action="store_true")
+#     parser.add_option('--tarfilename',dest='tarfilename',help='Name of the tarfile you want to use',default="NA")
+#     parser.add_option('--memory',dest='memory',help='memory request in MB',default="2000")
+#     parser.add_option('--notimestamp',dest='notimestamp',help='Flag to TURN OFF time stamp in the tag',default=False,action="store_true")
+#     parser.add_option('--debug',dest='debug',help='debug script locally so no ifdh',default=False,action="store_true")
+#     parser.add_option('--tmpdir',dest='tmpdir',help='temporary local directory to store tarfile during this script',default=".")
+#     parser.add_option('--exe',dest='theexe',help='relative path for the executable (CCQEMAT)',default='$CCQEMAT/sidebands_v2')
+#     parser.add_option('--expected-lifetime',dest='lifetime',help='job lifetime in format like 12h, 1d, 60m',default='12h')
+
 def MakePlotDir(subdir=""):
     """
     Subdir is the one for all plots that this script should ouptut. You will need to add
@@ -405,6 +438,14 @@ def GetModelHistDict(f):
         h = f.Get(name).Clone()
         if h.GetEntries() <= 0:
             continue
+        if variable in rangeuser_dict:
+            h.GetXaxis().SetRangeUser(rangeuser_dict[variable][0],rangeuser_dict[variable][1])
+        if hist == "h2D":
+            if variable.split("_")[0] in rangeuser_dict:
+                h.GetXaxis().SetRangeUser(rangeuser_dict[variable.split("_")[0]][0],rangeuser_dict[variable.split("_")[0]][1])
+            if variable.split("_")[1] in rangeuser_dict:
+                h.GetYaxis().SetRangeUser(rangeuser_dict[variable.split("_")[1]][0],rangeuser_dict[variable.split("_")[1]][1])
+
         histdict[hist][sample][variable][fluxnorm] = h
     return histdict
 
@@ -428,12 +469,6 @@ def GetInputHistDict(f, input_dict = {}):
         if "simulfit" in recotrutype:
             continue
         if cat not in catstodo: continue
-        # if "reconstructed" not in recotrutype:
-        #     continue
-        # if "tuned" in recotrutype:
-        #     sample += "_Tuned"
-        #     recotrutype.replace("_tuned","")
-
         if hist not in input_dict.keys():
             input_dict[hist] = {}
         if sample not in input_dict[hist].keys():
@@ -477,6 +512,14 @@ def GetInputHistDict(f, input_dict = {}):
             # h.Scale(1.0, "width")
             # h.Scale(POTScale, "width")
             h.Scale(POTScale)
+        if variable in rangeuser_dict:
+            h.GetXaxis().SetRangeUser(rangeuser_dict[variable][0],rangeuser_dict[variable][1])
+        if hist == "h2D":
+            if variable.split("_")[0] in rangeuser_dict:
+                h.GetXaxis().SetRangeUser(rangeuser_dict[variable.split("_")[0]][0],rangeuser_dict[variable.split("_")[0]][1])
+            if variable.split("_")[1] in rangeuser_dict:
+                h.GetYaxis().SetRangeUser(rangeuser_dict[variable.split("_")[1]][0],rangeuser_dict[variable.split("_")[1]][1])
+
         input_dict[hist][sample][variable][cat][recotrutype] = h
     return input_dict
 
@@ -509,17 +552,10 @@ def GetInputTypesHistDict(f, input_dict = {}):
         if "simulfit" in recotrutype:
             continue
         if cat not in catstodo: continue
-        # if "reconstructed" not in recotrutype:
-        #     continue
 
-        # h = f.Get(name).Clone()
-        # if h.GetEntries() <= 0: 
-        #     # print("WARNING: hist ", name, " is empty. Skipping...")
-        #     continue
         inttype = int(recotrutype.split("_")[-1])
         h = f.Get(name).Clone()
         if h.GetEntries() <= 0 and inttype not in [1,2,3,4,8]: 
-        # if h.GetEntries() <= 0 and index not in [1,2,3,8]: 
             continue
         recotrutype = recotrutype.replace("_types_%s"%(parse[4].split("_")[-1]), "")
         if hist not in input_dict.keys():
@@ -537,11 +573,20 @@ def GetInputTypesHistDict(f, input_dict = {}):
         else:
             print("\talready have hist %s, skipping for now..."%(name))
             continue
+        
         h.SetLineWidth(typeslinewidth)
         h.SetFillColor(catscolors[inttype])
         h.SetLineColor(ROOT.TColor.GetColorDark(catscolors[inttype]))
-        # h.Scale(POTScale, "width")
         h.Scale(POTScale)
+
+        if variable in rangeuser_dict:
+            h.GetXaxis().SetRangeUser(rangeuser_dict[variable][0],rangeuser_dict[variable][1])
+        if hist == "h2D":
+            if variable.split("_")[0] in rangeuser_dict:
+                h.GetXaxis().SetRangeUser(rangeuser_dict[variable.split("_")[0]][0],rangeuser_dict[variable.split("_")[0]][1])
+            if variable.split("_")[1] in rangeuser_dict:
+                h.GetYaxis().SetRangeUser(rangeuser_dict[variable.split("_")[1]][0],rangeuser_dict[variable.split("_")[1]][1])
+
         input_dict[hist][sample][variable][cat][recotrutype][inttype] = h
 
     return input_dict
@@ -598,14 +643,15 @@ def GetAnalyzeHistDict(f, tuned=False, analyze_dict = {}):
         if h.GetEntries() <= 0: 
             # print("WARNING: hist ", name, " is empty. Skipping...")
             continue
-        if "mc" or "MC" in stage:
+        if "MC" in stage or "mc" in stage:
             h.SetLineColor(catscolors[0])
             h.SetFillColorAlpha(catscolors[0], 0.4)
             h.SetLineWidth(typeslinewidth1D)
         else:
             h.SetLineColor(ROOT.kBlack)
-            h.SetFillColor(0)
+            h.SetMarkerColor(ROOT.kBlack)
             h.SetMarkerStyle(data_marker_style)
+            h.SetFillColor(0)
             if hist == "h":
                 h.SetMarkerSize(data_marker_size)
                 h.SetLineWidth(typeslinewidth)
@@ -615,6 +661,14 @@ def GetAnalyzeHistDict(f, tuned=False, analyze_dict = {}):
                 h.SetLineWidth(typeslinewidth)
         # TODO width normalize?
         # h.Scale(1.0, "width")
+        if var in rangeuser_dict:
+            h.GetXaxis().SetRangeUser(rangeuser_dict[var][0],rangeuser_dict[var][1])
+        if hist == "h2D":
+            if var.split("_")[0] in rangeuser_dict:
+                h.GetXaxis().SetRangeUser(rangeuser_dict[var.split("_")[0]][0],rangeuser_dict[var.split("_")[0]][1])
+            if var.split("_")[1] in rangeuser_dict:
+                h.GetYaxis().SetRangeUser(rangeuser_dict[var.split("_")[1]][0],rangeuser_dict[var.split("_")[1]][1])
+
         analyze_dict[hist][sample][var][stage] = h
     return analyze_dict
 
@@ -675,11 +729,23 @@ def GetAnalyzeTypesHistDict(f, tuned = False, analyze_dict = {}):
         elif not tuned:
             print("\talready have hist %s, skipping for now..."%(name))
             continue
-        h.SetFillColor(typescolors[inttype])
-        h.SetLineColor(ROOT.TColor.GetColorDark(typescolors[inttype]))
+        if "MC" not in stage and "mc" not in stage:
+            print(stage)
+            sys.exit(1)
+        
+        h.SetFillColor(catscolors[inttype])
+        h.SetLineColor(ROOT.TColor.GetColorDark(catscolors[inttype]))
         h.SetLineWidth(typeslinewidth)
+        
         # TODO width normalize?
         # h.Scale(1.0, "width")
+        if var in rangeuser_dict:
+            h.GetXaxis().SetRangeUser(rangeuser_dict[var][0],rangeuser_dict[var][1])
+        if hist == "h2D":
+            if var.split("_")[0] in rangeuser_dict:
+                h.GetXaxis().SetRangeUser(rangeuser_dict[var.split("_")[0]][0],rangeuser_dict[var.split("_")[0]][1])
+            if var.split("_")[1] in rangeuser_dict:
+                h.GetYaxis().SetRangeUser(rangeuser_dict[var.split("_")[1]][0],rangeuser_dict[var.split("_")[1]][1])
         analyze_dict[hist][sample][var][stage][inttype] = h
 
     return analyze_dict 
@@ -695,6 +761,13 @@ def MakeDataMCRatioForPlot(i_data, i_mctot):
     mctot.ClearAllErrorBands()
     mctot.AddMissingErrorBandsAndFillWithCV(i_mctot)
     ratio.Divide(ratio,mctot,1.0,1.0)
+    
+    ratio.SetLineColor(i_data.GetLineColor())
+    ratio.SetLineWidth(i_data.GetLineWidth())
+    ratio.SetMarkerColor(i_data.GetMarkerColor())
+    ratio.SetMarkerStyle(i_data.GetMarkerStyle())
+    ratio.SetMarkerSize(i_data.GetMarkerSize())
+    
     return ratio
 
 def MakeTypesMCRatioDict(i_typesdict, i_mctot):
@@ -708,19 +781,22 @@ def MakeTypesMCRatioDict(i_typesdict, i_mctot):
         # Make ratio to total mc
         tmp_hist = i_typesdict[key].Clone(str(i_typesdict[key].GetName()+"_ratiotomctot"))
         tmp_hist.Divide(tmp_hist, i_mctot,1.0,1.0,"B")
+        tmp_hist.SetLineColor(i_typesdict[key].GetLineColor())
+        tmp_hist.SetLineWidth(i_typesdict[key].GetLineWidth())
+        tmp_hist.SetFillColor(0)
         typesratiodict[key] = tmp_hist
 
-        # Add original to get an mctot
-        if first:
-            tmp_typestot = i_typesdict[key].Clone("typestot")
-            first = False
-            continue
-        tmp_typestot.Add(i_typesdict[key])
+    #     # Add original to get an mctot
+    #     if first:
+    #         tmp_typestot = i_typesdict[key].Clone("typestot")
+    #         first = False
+    #         continue
+    #     tmp_typestot.Add(i_typesdict[key])
     
-    # Check if types mctot is similar to the 
-    if tmp_typestot.GetMaximumBin() != i_mctot.GetMaximumBin():
-        print("ERROR: types hist total is different than mctot...", i_mctot.GetName())
-        sys.exit(1)
+    # # Check if types mctot is similar to the 
+    # if tmp_typestot.GetMaximumBin() != i_mctot.GetMaximumBin():
+    #     print("ERROR: types hist total is different than mctot...", i_mctot.GetName())
+    #     sys.exit(1)
     
     return typesratiodict
 
@@ -732,441 +808,15 @@ def GetPadMax(i_data_hist, i_mctot_hist, including_errors = True):
         tmp_data = i_data_hist.Clone()
         if type(i_data_hist)==type(MnvH1D()):
             tmp_data = i_data_hist.GetCVHistoWithError().Clone()
-        
         for i in range(1,tmp_data.GetNbinsX()+1):
-            print("\t%s\t%s"%(tmp_data.GetBinContent(i),tmp_data.GetBinError(i)))
+            # print("\t%s\t%s"%(tmp_data.GetBinContent(i),tmp_data.GetBinError(i)))
             cont_and_err = tmp_data.GetBinContent(i) + tmp_data.GetBinError(i)
             if cont_and_err > tmp_max:
-                print("\tcont_and_err:", cont_and_err, "\ttmp_max", tmp_max)
-                return cont_and_err
-    print("\tGoing with tmp max cont_and_err:", cont_and_err, "\ttmp_max:", tmp_max)
+                # print("\tcont_and_err:", cont_and_err, "\ttmp_max", tmp_max)
+                tmp_max = cont_and_err
+                # return cont_and_err
+    # print("\tGoing with tmp max cont_and_err:", cont_and_err, "\ttmp_max:", tmp_max)
     return tmp_max
-
-
-# def GetChi2NDF(i_data, i_mctot):
-#     chi2 = -9999.
-#     if i_data.GetNbinsX() != i_mctot.GetNbinsX(): return chi2
-#     nbins = i_data.GetNbinsX()
-#     for i in range(1,nbins+1):
-#         datacont = i_data.GetBinContent(i)
-#         mccont = i_mctot.GetBinContnent(i)
-#         if data
-
-def DrawDataMCPlot1D(i_data_hist, i_mc_hist, x_title, y_title, outdirname, canvas_name, canvas_title):
-    mnvPlotter = SetupErrorSummary(MnvPlotter(8))
-
-    # thename = "%s_%s_%s"%(b_sample,c_var,"sigma")
-    # thetitle = "%s %s %s"%(b_sample,c_var,"sigma")
-    thename = canvas_name
-    thetitle = canvas_title
-    ysize = _ysize
-    xsize = _xsize
-    cc = ROOT.TCanvas(thename, thetitle, round(xsize), round(ysize))
-    cc.SetLeftMargin(0.25)
-    cc.SetRightMargin(0.15)
-    cc.SetBottomMargin(0.15)
-    cc.SetFrameLineWidth(1)
-
-    mnv_data = i_data_hist.Clone()
-    mnv_mc = i_mc_hist.Clone()
-    
-    mnv_data.Scale(1.0, "width")
-    mnv_mc.Scale(1.0, "width")
-
-    mnv_data.Print()
-
-    mnv_data.SetMarkerStyle(data_marker_style)
-    mnv_data.SetMarkerColor(ROOT.kBlack)
-    mnv_data.SetLineWidth(typeslinewidth1D)
-    mnv_data.SetLineColor(ROOT.kBlack)
-    mnv_data.SetLineStyle(1)
-    mnv_data.SetMarkerSize(data_marker_size)
-
-    data_hist = mnv_data.GetCVHistoWithError(True,False)
-    data_stat = mnv_data.GetCVHistoWithStatError()
-    data_stat.SetMarkerStyle(1)
-    data_stat.SetMarkerSize(data_marker_size)
-
-    data_hist.GetYaxis().SetTitle(y_title)
-    data_hist.GetYaxis().CenterTitle()
-    data_hist.GetYaxis().SetTitleOffset(0.9)
-    data_hist.GetYaxis().SetTitleSize(0.05)
-    data_hist.GetYaxis().SetLabelSize(0.05)
-
-    data_hist.SetMaximum(1.2* max(mnv_data.GetMaximum(),mnv_mc.GetMaximum()))
-
-    mc_band = mnv_mc.GetCVHistoWithError(True,False)
-    mc_band.SetFillColor(ROOT.kRed-10)
-    mc_band.SetFillStyle(1001)
-    mc_band.SetLineColor(ROOT.kRed)
-    mc_band.SetMarkerStyle(0)
-
-    mc_hist = mnv_mc.GetCVHistoWithError(True,False)
-    mc_hist.SetFillColor(0)
-    mc_hist.SetLineColor(2)
-    mc_hist.SetLineStyle(1)
-    mc_hist.SetLineWidth(typeslinewidth1D)
-
-    # if doratio:
-    top = TPad("hist", "hist", 0, ratio_frac, 1, 1)
-    top.SetRightMargin(pad_rmarg)
-    top.SetLeftMargin(pad_lmarg)
-    top.SetTopMargin(topmarg)
-    top.SetBottomMargin(0)
-    top.SetFrameLineWidth(1)
-
-    bottom = TPad("Ratio", "Ratio", 0, 0, 1, ratio_frac)
-    bottom.SetRightMargin(pad_rmarg)
-    bottom.SetLeftMargin(pad_lmarg)
-    bottom.SetBottomMargin(bottommarg)
-    bottom.SetTopMargin(0)
-    bottom.SetFrameLineWidth(1)
-
-    top.Draw()
-    bottom.Draw()
-
-    bottomArea = bottom.GetWNDC() * bottom.GetHNDC()
-    topArea = top.GetWNDC() * top.GetHNDC()
-    areaScale = topArea / bottomArea
-    # Move to top pad for hists
-    top.cd()
-    if c_var in scaleY:
-        top.SetLogy()
-    if "E_{Avail}" in x_title:
-        top.SetLogy()
-    
-    leg_pos = "TR"
-
-    data_hist.Draw("E1 X0")
-
-    # if not issmooth:
-    mc_band.Draw("SAME E2")
-    mc_hist.Draw("SAME HIST")
-
-    data_stat.Draw("SAME E1 X0")
-    data_hist.Draw("Same E1 X0")
-
-    titlewidth = mnvPlotter.GetLegendWidthInLetters(["Data","Simulation"])
-    # titlewidth = mnvPlotter.GetLegendWidthInLetters(["Data","MnvTunev2.0.1","COH","RES","DIS","2p2h","QE"])
-    # print(titlewidth)
-    x1 = ctypes.c_double(0)
-    y1 = ctypes.c_double(0)
-    x2 = ctypes.c_double(0)
-    y2 = ctypes.c_double(0)
-    mnvPlotter.DecodeLegendPosition(x1,y1,x2,y2, leg_pos, 2, titlewidth, legendfontsize)
-
-    leg = TLegend(x1,y1,x2,y2)
-    leg.SetNColumns(1)
-    leg.SetBorderSize(0)
-    leg.SetFillColor(-1)
-    leg.SetTextSize(legendfontsize)
-
-    leg.AddEntry(data_hist, "Data","pe")
-    leg.AddEntry(mc_band, "Simulation","fl")
-
-    leg.Draw()
-    
-    # if doratio:
-    bottom.cd()
-
-    # ratio = MnvH1D()
-    # ratio = MakeDataMCRatio(data_hist,mc_band)
-    mnv_ratio = MakeDataMCRatioForPlot(mnv_data, mnv_mc)
-    ratio, ratio_stat = GetDataHistsForPlot(mnv_ratio)
-    ratio.SetFillStyle(1001)
-    # ratio.SetMinimum(0.5)
-    # ratio.SetMaximum(1.5)
-    ratio.SetMinimum(0.001)
-    ratio.SetMaximum(3.0)
-
-    ratio.SetLineColor(ROOT.kBlack)
-
-    ratio.SetTitle("")            
-    ratio.GetYaxis().SetTitle("Data / MC")
-    ratio.GetYaxis().CenterTitle()
-    ratio.GetYaxis().SetTitleSize(0.05 * areaScale)
-    ratio.GetYaxis().SetTitleOffset(0.9 / areaScale)
-    ratio.GetYaxis().SetLabelSize(0.05 * areaScale)
-    ratio.GetYaxis().SetNdivisions(205)
-
-    # ratio.GetXaxis().SetTitle(vars_info[c_var]["title"])
-    ratio.GetXaxis().SetTitle(x_title)
-    ratio.GetXaxis().CenterTitle()
-    ratio.GetXaxis().SetTitleSize(0.05 * areaScale)
-    ratio.GetXaxis().SetLabelSize(ratio.GetXaxis().GetLabelSize() * areaScale*1.5)
-    ratio.SetLineWidth(round(2 / areaScale))
-    ratio.Draw("E1 X0")
-    ratio_stat.Draw("E1 X0 same")
-    # Now do mc uncertainties
-    mcerror = TH1D()
-    mnv_mc.SetFillStyle(1001)
-    mcerror = TH1D(mnv_mc.GetTotalError(False, True, False))
-    for bin in range(0, mcerror.GetXaxis().GetNbins() + 2):
-        mcerror.SetBinError(bin, max(mcerror.GetBinContent(bin), 1.0e-9))
-        mcerror.SetBinContent(bin, 1.0)
-    mcerror.SetLineColor(ROOT.kRed)
-    mcerror.SetLineWidth(typeslinewidth1D)
-    # mcerror.SetFillColorAlpha(ROOT.kPink + 1, 0.4)
-    mcerror.SetFillColor(ROOT.kRed-10)
-    mcerror.Draw("same E2")
-
-    # Now do a line at 1
-    straightline = TH1D()
-    straightline = mcerror.Clone()
-    straightline.SetFillStyle(0)
-    straightline.Draw("hist same")
-
-    ratio.Draw("E1 X0 same")
-    ratio_stat.Draw("E1 X0 same")
-
-    top.cd()
-    prelim = AddPreliminary()
-    # titleonplot = MakeTitleOnPlot()
-    prelim.DrawLatex(x1.value-lat_xoffset, y1.value-2*lat_yoffset-0.01, "MINER#nuA Work In Progress")
-    # titleonplot.DrawLatex(0.37, 0.9, plottitle)
-
-    # canvas_name = thename + "_FinalStates"
-    thename += "_FinalStates"
-
-    if dotuned:
-        thename += "_tuned" 
-
-
-    # cc.Print(os.path.join(outdirname, thename + ".png"))
-    cc.Print(os.path.join(outdirname, "source", thename + ".C"))
-    cc.Print(os.path.join(outdirname, canvas_name + ".pdf"),"Title:%s"%(canvas_title + " Final States"))
-
-    cc.cd()
-    cc.Clear()
-    cc.Modified()
-    cc.Update()
-    del cc
-
-def DrawDataMCTypesPlot1D(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title, y_title, outdirname, canvas_name, canvas_title):
-    mnvPlotter = SetupErrorSummary(MnvPlotter(8))
-
-    # thename = "%s_%s_%s"%(b_sample,c_var,"sigma")
-    # thetitle = "%s %s %s"%(b_sample,c_var,"sigma")
-    thename = canvas_name
-    thetitle = canvas_title
-    ysize = _ysize
-    xsize = _xsize
-    cc = ROOT.TCanvas(thename, thetitle, round(xsize), round(ysize))
-    cc.SetLeftMargin(0.25)
-    cc.SetRightMargin(0.15)
-    cc.SetBottomMargin(0.15)
-    cc.SetFrameLineWidth(1)
-    
-    mnv_data = i_data_hist.Clone()
-    mnv_mc = i_mctot_hist.Clone()
-    
-    mnv_data.Scale(1.0, "width")
-    mnv_mc.Scale(1.0, "width")
-
-    typehistdict = {}
-    for key in i_mc_typeshistdict:
-        hist = i_mc_typeshistdict[key].Clone()
-        hist = i_mc_typeshistdict[key].GetCVHistoWithStatError()
-        hist.Scale(1.0, "width")
-        hist.SetLineWidth(typeslinewidth1D)
-        typehistdict[typesnames[key]] = hist
-
-    mnv_data.Print()
-
-    mnv_data.SetMarkerStyle(data_marker_style)
-    mnv_data.SetMarkerColor(ROOT.kBlack)
-    mnv_data.SetLineWidth(2)
-    mnv_data.SetLineColor(ROOT.kBlack)
-    mnv_data.SetLineStyle(1)
-    mnv_data.SetMarkerSize(data_marker_size)
-
-    data_hist = mnv_data.GetCVHistoWithError(True,False)
-    data_stat = mnv_data.GetCVHistoWithStatError()
-
-    data_hist.GetYaxis().SetTitle(y_title)
-    data_hist.GetYaxis().CenterTitle()
-    data_hist.GetYaxis().SetTitleOffset(0.9)
-    data_hist.GetYaxis().SetTitleSize(0.05)
-    data_hist.GetYaxis().SetLabelSize(0.05)
-
-    data_hist.SetMaximum(1.2* max(mnv_data.GetMaximum(),mnv_mc.GetMaximum()))
-    data_stat.SetMarkerStyle(1)
-    data_stat.SetMarkerSize(1)
-    # mc_band = mnv_mc.GetCVHistoWithError(True,False)
-    # mc_band.SetFillColor(ROOT.kRed-10)
-    # mc_band.SetFillStyle(1001)
-    # mc_band.SetLineColor(ROOT.kRed)
-    # mc_band.SetMarkerStyle(0)
-
-    mc_hist = mnv_mc.GetCVHistoWithError(True,False)
-    mc_hist.SetFillColor(0)
-    # mc_hist.SetLineColor(2)
-    mc_hist.SetLineColor(typescolors[0])
-    # mc_hist.SetLineColor(ROOT.TColor.GetColorDark(typescolors[0]))
-   
-    mc_hist.SetLineStyle(1)
-    # mc_hist.SetLineWidth(3)
-    mc_hist.SetLineWidth(typeslinewidth1D)
-
-    # if doratio:
-    top = TPad("hist", "hist", 0, ratio_frac, 1, 1)
-    top.SetRightMargin(pad_rmarg)
-    top.SetLeftMargin(pad_lmarg)
-    top.SetTopMargin(topmarg)
-    top.SetBottomMargin(0)
-    top.SetFrameLineWidth(1)
-
-    bottom = TPad("Ratio", "Ratio", 0, 0, 1, ratio_frac)
-    bottom.SetRightMargin(pad_rmarg)
-    bottom.SetLeftMargin(pad_lmarg)
-    bottom.SetBottomMargin(bottommarg)
-    bottom.SetTopMargin(0)
-    bottom.SetFrameLineWidth(1)
-
-    top.Draw()
-    bottom.Draw()
-
-    bottomArea = bottom.GetWNDC() * bottom.GetHNDC()
-    topArea = top.GetWNDC() * top.GetHNDC()
-    areaScale = topArea / bottomArea
-
-    ROOT.gStyle.SetErrorX(0) # This turns off the horizontal error bars
-    ROOT.gStyle.SetEndErrorSize(end_error_size) # This makes the ticks at the end of the error bars longer
-
-    # Move to top pad for hists
-    top.cd()
-    if c_var in scaleY:
-        top.SetLogy()
-    leg_pos = "TR"
-    top.SetLogy()
-    # E1 draws a point with error bars, X0 turns off horizontal error bars
-    data_hist.Draw("E1 X0")
-    
-    # if not issmooth:
-    # mc_band.Draw("SAME E2")
-    for key in typehistdict.keys():
-        typehistdict[key].SetLineWidth(typeslinewidth1D)
-        typehistdict[key].Draw("HIST SAME")
-
-    typeskeys = typehistdict.keys()
-    # mc_hist.Draw("SAME HIST X0")
-    mc_hist.Draw("HIST SAME")
-    
-    data_hist.Draw("Same E1 X0")
-    data_stat.Draw("SAME E1 X0")
-
-    legend_list = [
-        "Data", 
-        "MnvTune431", # basemodelname,
-    ]
-    # if do_comparison:
-    #     legend_list += [modelplotinfo[model]["shortname"] for model in modelcomptodo]
-    # else:
-    legend_list += [
-        "QE",
-        "2p2h",
-        "RES",
-        "DIS",
-        "COH",
-    ]
-    # titlewidth = mnvPlotter.GetLegendWidthInLetters(["Data","MnvTunev431","COH","RES","DIS","2p2h","QE"])
-    titlewidth = mnvPlotter.GetLegendWidthInLetters(legend_list)
-    # print(titlewidth)
-    x1 = ctypes.c_double(0)
-    y1 = ctypes.c_double(0)
-    x2 = ctypes.c_double(0)
-    y2 = ctypes.c_double(0)
-    mnvPlotter.DecodeLegendPosition(x1,y1,x2,y2, leg_pos, 2+len(typehistdict.keys()), titlewidth, legendfontsize)
-
-    leg = TLegend(x1,y1,x2,y2)
-    leg.SetTextSize(legendfontsize)
-    leg.SetNColumns(1)
-    leg.SetBorderSize(0)
-    leg.SetFillColor(-1)
-    leg.AddEntry(data_hist, "Data","pe")
-    # leg.AddEntry(mc_hist, "MnvTune v2.0.1","fl")
-    leg.AddEntry(mc_hist, typesnames[0],"fl")
-    for key in typehistdict:
-        leg.AddEntry(typehistdict[key],typesnames[typesints[key]], "fl")
-
-    leg.Draw()
-    
-    bottom.cd()
-
-    mnv_ratio = MakeDataMCRatioForPlot(mnv_data, mnv_mc)
-    ratio, ratio_stat = GetDataHistsForPlot(mnv_ratio)
-    typesratiodict= MakeTypesMCRatioDict(typehistdict, mc_hist)
-
-    ratio.SetFillStyle(1001)
-    ratio.SetMinimum(0.0)
-    ratio.SetMaximum(2.0)
-
-    ratio.SetLineColor(ROOT.kBlack)
-
-    ratio.SetTitle("")            
-    ratio.GetYaxis().SetTitle("Data / MC")
-    ratio.GetYaxis().CenterTitle()
-    ratio.GetYaxis().SetTitleSize(0.05 * areaScale)
-    ratio.GetYaxis().SetTitleOffset(0.9 / areaScale)
-    ratio.GetYaxis().SetLabelSize(0.05 * areaScale)
-    ratio.GetYaxis().SetNdivisions(205)
-
-    # ratio.GetXaxis().SetTitle(vars_info[c_var]["title"])
-    ratio.GetXaxis().SetTitle(x_title)
-    ratio.GetXaxis().CenterTitle()
-    ratio.GetXaxis().SetTitleSize(0.05 * areaScale)
-    ratio.GetXaxis().SetLabelSize(ratio.GetXaxis().GetLabelSize() * areaScale*1.5)
-    ratio.SetLineWidth(2)
-    
-    ratio_stat.SetLineColor(ROOT.kBlack)
-    ratio_stat.SetMarkerStyle(1)
-    ratio_stat.SetMarkerSize(1)
-    ratio.Draw("E1 X0")
-    ratio_stat.Draw("E1 X0 SAME")
-    # Now do mc uncertainties
-    mcerror = TH1D()
-    mnv_mc.SetFillStyle(1001)
-    mcerror = TH1D(mnv_mc.GetTotalError(False, True, False))
-    for bin in range(0, mcerror.GetXaxis().GetNbins() + 2):
-        mcerror.SetBinError(bin, max(mcerror.GetBinContent(bin), 1.0e-9))
-        mcerror.SetBinContent(bin, 1.0)
-    mcerror.SetLineColor(ROOT.kRed)
-    mcerror.SetLineWidth(typeslinewidth1D)
-    # mcerror.SetFillColorAlpha(ROOT.kPink + 1, 0.4)
-    # mcerror.SetFillColor(ROOT.kRed-10)
-    # mcerror.Draw("same E2")
-
-    # Now do a line at 1
-    straightline = TH1D()
-    straightline = mcerror.Clone()
-    straightline.SetFillStyle(0)
-    straightline.SetFillColor(typescolors[0])
-    straightline.SetFillColor(typescolors[0])
-    straightline.Draw("hist same")
-
-    for key in typesratiodict:
-        typesratiodict[key].SetLineWidth(typeslinewidth1D)
-        typesratiodict[key].Draw("HIST SAME")
-
-    ratio.Draw("same")
-    top.cd()
-    prelim = AddPreliminary()
-    # titleonplot = MakeTitleOnPlot()
-    prelim.DrawLatex(x1.value-lat_xoffset, y1.value-2*lat_yoffset-0.01, "MINER#nuA Work In Progress")
-    # titleonplot.DrawLatex(0.37, 0.9, plottitle)
-    thename += "_Types"
-    # if dotuned:
-    #     canvas_name += "_tuned" 
-
-    # cc.Print(os.path.join(outdirname, thename + ".png"))
-    cc.Print(os.path.join(outdirname, "source", thename + ".C"))
-    cc.Print(os.path.join(outdirname, canvas_name + ".pdf"),"Title:%s Types"%(thetitle))
-
-    cc.cd()
-    cc.Clear()
-    cc.Modified()
-    cc.Update()
-    del cc
 
 def DrawDataMCTypesPlot1D_AxisChange(i_data_hist, i_mctot_hist, i_mc_typeshistdict, x_title, y_title, outdirname, canvas_name, canvas_title):
     tmp_pad_rmarg = pad_rmarg + 0.02
@@ -1283,6 +933,8 @@ def DrawDataMCTypesPlot1D_AxisChange(i_data_hist, i_mctot_hist, i_mc_typeshistdi
     top.SetRightMargin(tmp_pad_rmarg)
     top.SetLeftMargin(pad_lmarg)
     top.SetTopMargin(topmarg)
+    if do_titleonplot:
+        top.SetTopMargin(topmarg+0.08)
     top.SetBottomMargin(0)
     # top.SetFrameLineWidth(1)
 
@@ -1680,30 +1332,46 @@ def PanelCanvas(name, n_xbins, n_ybins, x_size=1000, y_size=750, do_tall= True):
 
     return gc2
 
-def MakeProjHistList(i_hist, projaxis="x"):
+def MakeProjHistList(i_hist, projaxis="x", n_projbins = 0):
     ret_list = []
     hist = i_hist.Clone()
-    n_projbins = 0
     if projaxis=="x":
-        n_projbins = hist.GetNbinsY()
+        if n_projbins == 0: n_projbins = hist.GetNbinsY()
         proj_nametail = "_projybin"
     elif projaxis == "y":
-        n_projbins = hist.GetNbinsX()
+        if n_projbins == 0: n_projbins = hist.GetNbinsX()
         proj_nametail = "_projxbin"
     else:
         print("ERROR: invalid projaxis %s, exiting"%(projaxis))
         sys.exit(1)
 
+    linecolor = hist.GetLineColor()
+    fillcolor = hist.GetFillColor()
+    linewidth = hist.GetLineWidth()
+    markercolor = hist.GetMarkerColor()
+    markerstyle = hist.GetMarkerStyle()
+    markersize = hist.GetMarkerSize()
+    
     for i in range(n_projbins):
         tmp_proj_name = hist.GetName() + proj_nametail + str(i)
+
         if projaxis == "x":
             tmp_proj = hist.ProjectionX(tmp_proj_name,i+1,i+1)#, "width")
-            ret_list.append(tmp_proj)
-            continue
+            # ret_list.append(tmp_proj)
+            # continue
         else: # if projaxis == "y"
             tmp_proj = hist.ProjectionY(tmp_proj_name,i+1,i+1)#, "width")
-            ret_list.append(tmp_proj)
-            continue
+            # ret_list.append(tmp_proj)
+            # continue
+        tmp_proj.SetLineColor(linecolor)
+        tmp_proj.SetLineWidth(linewidth)
+        tmp_proj.SetFillColor(fillcolor)
+        tmp_proj.SetMarkerColor(markercolor)
+        tmp_proj.SetMarkerStyle(markerstyle)
+        tmp_proj.SetMarkerSize(markersize)
+
+        ret_list.append(tmp_proj)
+
     return ret_list    
 
 def GetDataHistsForPlot(mnv_datahist):
@@ -1717,43 +1385,45 @@ def GetDataHistsForPlot(mnv_datahist):
     # mnvh.SetMarkerSize(data_marker_size)
 
     hist = mnvh.GetCVHistoWithError(True,False)
-    hist.SetMarkerStyle(data_marker_style)
-    hist.SetMarkerColor(ROOT.kBlack)
-    hist.SetLineWidth(typeslinewidth)
-    hist.SetLineColor(ROOT.kBlack)
-    hist.SetLineStyle(1)
-    hist.SetMarkerSize(data_marker_size)
+    hist.SetMarkerColor(mnvh.GetMarkerColor())
+    hist.SetLineWidth(mnvh.GetLineWidth())
+    hist.SetLineColor(mnvh.GetLineColor())
+    hist.SetMarkerSize(data_marker_size2d)
+    hist.SetMarkerStyle(mnvh.GetMarkerStyle())
+    # hist.SetLineStyle(1)
 
     stat = mnvh.GetCVHistoWithStatError()
+    stat.SetMarkerColor(mnvh.GetMarkerColor())
+    # end_error_size
+    stat.SetLineWidth(mnvh.GetLineWidth())
+    stat.SetLineColor(mnvh.GetLineColor())
+    if do_pinkstat:
+        stat.SetLineWidth(4)
+        stat.SetLineColorAlpha(ROOT.kPink, 0.3) #mnvh.GetLineColor())
+        stat.SetFillColorAlpha(ROOT.kPink, 0.3)
+    stat.SetMarkerSize(0)
     stat.SetMarkerStyle(1)
-    stat.SetMarkerColor(ROOT.kBlack)
-    stat.SetLineWidth(typeslinewidth)
-    stat.SetLineColor(ROOT.kBlack)
-    stat.SetFillColorAlpha(ROOT.kPink, 0.3)
-    stat.SetLineStyle(1)
-    stat.SetMarkerSize(1)
+    # stat.SetLineStyle(1)
 
     return hist, stat
 
 def GetMCHistsForPlot(mnv_mchist):
     mnvh = mnv_mchist.Clone()
 
-    band = mnvh.GetCVHistoWithError(True,False)
-    # band.SetFillColor(ROOT.kRed - 10)
-    # band.SetFillColorAlpha(typescolors[0], 0.3)
-    band.SetFillColorAlpha(catscolors[0], 0.3)
-    band.SetFillStyle(1001)
-    band.SetLineColor(ROOT.kRed)
-    band.SetMarkerStyle(0)
-
     hist = mnvh.GetCVHistoWithError(True,False)
     hist.SetFillColor(0)
-    # hist.SetLineColor(2)
-    # hist.SetLineColor(typescolors[0])
     hist.SetLineColor(catscolors[0])
-    # hist.SetLineColor(ROOT.TColor.GetColorDark(typescolors[0]))
-    hist.SetLineStyle(1)
-    hist.SetLineWidth(3)
+    hist.SetLineWidth(typeslinewidth+1)
+    # hist.SetLineStyle(1)
+
+    band = mnvh.GetCVHistoWithError(True,False)
+    band.SetFillStyle(1001)
+    # band.SetFillColorAlpha(typescolors[0], 0.3)
+    # band.SetFillColor(ROOT.kRed - 10)
+    band.SetFillColorAlpha(catscolors[0], 0.3)
+    band.SetLineColor(catscolors[0])
+    band.SetLineWidth(typeslinewidth+1)
+    band.SetMarkerStyle(0)
 
     return hist, band
 
@@ -1766,123 +1436,82 @@ def DrawDataMCPlot1D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, y_
     mnv_data.Scale(1.0, "width")
     mnv_mc.Scale(1.0, "width")
 
-    my_catstodo = catstodo
     tmp_dotypes = False
-    # my_catstodo = list(i_mc_typeshistdict.keys())
-    for key in i_mc_typeshistdict.keys():
-        if key not in catstodo:
-            my_catstodo = typestodo
-            tmp_dotypes = True
-            break
-    # if 4 not in i_mc_typeshistdict:
-    #     my_catstodo.remove(4)
-    # This just hacks to get a legend that works better if you do backgrounds
-    if tmp_dotypes:
-        typesttodo_leg = []
-        if 11 in my_catstodo:
-            types_order_leg = []
-            for itype in my_catstodo:
-                if type(itype) == str:
-                    continue
-                if itype > 10:
-                    continue
-                typestodo_leg.append(itype)
-                typestodo_leg.append(itype+10)
-        else:
-            typesttodo_leg = my_catstodo[1:]
-       
-    my_catscolors = catscolors
-    my_catsnames  = catsnames
-    mc_typehistdict = {}
+    my_catstodo = [cat for cat in catstodo[1:]]
+    bad_keys = []
+    for key in my_catstodo:
+        if key not in i_mc_typeshistdict: 
+            bad_keys.append(key)
+            continue
+    for key in bad_keys:
+        my_catstodo.remove(key)
+
+    mc_typeshistdict = {}
     stack = THStack("stack","")
-    for cat in reversed(my_catstodo[1:]):
-        hist = i_mc_typeshistdict[cat].Clone()
+    for key in reversed(my_catstodo):
+        if key not in i_mc_typeshistdict: continue
+        hist = i_mc_typeshistdict[key].Clone()
         hist.Scale(1.0, "width")
-        # hist.SetLineColor(ROOT.kBlack)
-        # if typeslinedarker:
-        hist.SetLineColor(ROOT.TColor.GetColorDark(my_catscolors[cat]))
-        hist.SetFillColor(my_catscolors[cat])
         hist.SetLineWidth(typeslinewidth1D)
-        # if cat in bkgcats:
-        #     hist.SetFillStyle(bkgfillstyle[cat]+100)
-            # hist.SetFillColor(ROOT.TColor.GetColorDark(my_catscolors[cat]))
-        if type(cat) == int:
-            # hist.SetLineColor(ROOT.kBlack)
-            if cat >= 10: 
-                hist.SetFillStyle(bkgfillstyle[cat]+100)
-                # hist.SetFillColor(ROOT.TColor.GetColorDark(my_catscolors[cat]))
+        if key in bkgcats:
+            hist.SetFillStyle(bkgfillstyle[key]+100)
         stack.Add(hist)
-        mc_typehistdict[cat] = hist.Clone()
+        mc_typeshistdict[key] = hist.Clone()
 
     thename = canvas_name + nametag
     thetitle = canvas_title 
-    if tmp_dotypes:
-        thetitle += " Types"
-    else: 
-        thetitle += " Final States"
 
     ysize = _ysize
     xsize = _xsize
 
-    mnv_data.SetMarkerStyle(data_marker_style)
-    mnv_data.SetMarkerColor(ROOT.kBlack)
+
     mnv_data.SetLineWidth(typeslinewidth1D)
-    mnv_data.SetLineColor(ROOT.kBlack)
-    mnv_data.SetLineStyle(1)
-    mnv_data.SetMarkerSize(data_marker_size)
     data_hist, data_stat = GetDataHistsForPlot(mnv_data)
+    data_hist.SetMarkerSize(data_marker_size)
+    data_stat.SetMarkerSize(data_marker_size)
+    data_hist.GetYaxis().SetTitle(y_title)
+    data_hist.GetYaxis().SetTitleFont(42)
+    data_hist.GetYaxis().CenterTitle()
+    data_hist.GetYaxis().SetTitleOffset(0.6)
+    data_hist.GetYaxis().SetTitleSize(0.07)
+    data_hist.GetYaxis().SetLabelSize(0.05)
 
-    data_hist.SetLineWidth(typeslinewidth1D)
-    data_stat.SetLineWidth(typeslinewidth1D)
-
-    # Stuff for doing the ratios
-    mc_hist = mnv_mc.GetCVHistoWithError(True,False)
-    mc_hist.SetFillColor(0)
-    mc_hist.SetLineColor(my_catscolors["mctot"])
-    mc_hist.SetLineStyle(1)
+    mc_hist, mc_band = GetMCHistsForPlot(mnv_mc)
     mc_hist.SetLineWidth(typeslinewidth1D)
+    mc_band.SetLineWidth(typeslinewidth1D)
+
     mnv_ratio = MakeDataMCRatioForPlot(mnv_data, mnv_mc)
     ratio, ratio_stat = GetDataHistsForPlot(mnv_ratio)
-    
+    ratio.SetMarkerSize(data_marker_size)
+    ratio.SetLineWidth(typeslinewidth1D)
+    ratio_stat.SetMarkerSize(data_marker_size)
+    ratio_stat.SetLineWidth(typeslinewidth1D)
 
     ratio.SetFillStyle(0)
     ratio.SetMinimum(0.0001)
     ratio.SetMaximum(1.999)
 
-    ratio.SetLineColor(ROOT.kBlack)
-    ratio.SetLineWidth(typeslinewidth1D)
-    ratio.SetMarkerSize(data_marker_size)
-
-    ratio_stat.SetLineColor(ROOT.kBlack)
-    ratio_stat.SetMarkerStyle(1)
-    ratio_stat.SetMarkerSize(data_marker_size)
-    ratio_stat.SetLineWidth(typeslinewidth1D)
-
     typesratio_dict = {}
-    for key in my_catstodo[1:]:
-        # tmp_typesratio = MakeDataMCRatio(mc_typehistdict[key], mnv_mc)
-        tmp_typesratio = mc_typehistdict[key].Clone()
+    for key in my_catstodo:
+        if key not in mc_typeshistdict: continue
+        tmp_typesratio = mc_typeshistdict[key].Clone()
         tmp_typesratio.Divide(tmp_typesratio, mnv_mc,1.0,1.0)
         tmp_typesratio.SetLineWidth(typeslinewidth1D)
         tmp_typesratio.SetFillStyle(0)
         tmp_typesratio.SetFillColor(0)
-        tmp_typesratio.SetLineColor(catscolors[key])
-        if tmp_dotypes:
+        tmp_typesratio.SetLineColor(mc_typeshistdict[key].GetLineColor())
+        if type(key) == int:
             if key > 10:
                 tmp_typesratio.SetLineStyle(2)
-            # else:
-            #     if typeslinedarker:
-            #         tmp_typesratio.SetLineColor(ROOT.TColor.GetColorDark(catscolors[key]))
 
         typesratio_dict[key] = tmp_typesratio
     typesratio_stack_dict = {}
-    if tmp_dotypes and 11 in my_catstodo[1:]:
-        for key in reversed(my_catstodo[1:]):
-            if key > 10: continue
+    if tmp_dotypes and 11 in my_catstodo:
+        for key in reversed(my_catstodo):
+            if key > 10 or key not in typesratio_listdict: continue
             tmp_hist = typesratio_listdict[key].Clone()
-            tmp_stack = THStack()
-            if key + 10 not in my_catstodo[1:]:
-                # tmp_stack.Add(tmp_hist)
+            tmp_stack = THStack("tmpstack, i", "")
+            if key + 10 not in my_catstodo:
                 typesratiostack_listdict[key].append(tmp_hist)
                 continue
             tmp_hist_bkg = typesratio_listdict[key+10].Clone()
@@ -1891,41 +1520,23 @@ def DrawDataMCPlot1D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, y_
             if tmp_hist.GetEntries() == 0: continue
             typesratio_stack_dict[key].Add(tmp_hist)
     
+
     ratio_mnvmc_band = mnv_mc.Clone()
     ratio_mnvmc_band.ClearAllErrorBands()
     ratio_mnvmc_band.AddMissingErrorBandsAndFillWithCV(mnv_mc)
     ratio_mnvmc_band.Divide(ratio_mnvmc_band,mnv_mc,1.0,1.0)
-    ratio_mnvmc_band.SetFillColor(catscolors[0])
-    ratio_mnvmc_band.SetFillColorAlpha(catscolors[0],0.3)
-    ratio_mnvmc_band.SetLineColor(catscolors[0])
-    ratio_mnvmc_band.SetLineWidth(typeslinewidth1D)
-    ratio_mnvmc_band.SetMarkerStyle(0)
-    band_ratio = ratio_mnvmc_band.GetCVHistoWithError().Clone()
+    straightline, band_ratio = GetMCHistsForPlot(ratio_mnvmc_band) 
+    straightline.SetLineWidth(typeslinewidth1D)
+    band_ratio.SetLineWidth(typeslinewidth1D)
     
-    straightline = band_ratio.Clone()
-    straightline.SetFillStyle(0)
-    straightline.SetFillColor(0)
-
-    mc_band = mc_hist.Clone()
-    mc_band.SetFillColor(my_catscolors["mctot"])
-    mc_band.SetFillColorAlpha(catscolors["mctot"],0.4)
-    mc_band.SetLineColor(catscolors["mctot"])
-    mc_band.SetLineWidth(typeslinewidth1D)
-    mc_band.SetMarkerStyle(0)
-    mc_line = mc_band.Clone()
-    mc_line.SetFillStyle(0)
-    mc_line.SetFillColor(0)
-    # ROOT.gStyle.SetErrorX(0) # This turns off the horizontal error bars
-    ROOT.gStyle.SetEndErrorSize(10) # This makes the ticks at the end of the error bars longer
+    ROOT.gStyle.SetEndErrorSize(round(end_error_size*1.5)) # This makes the ticks at the end of the error bars longer
 
     pad_max = GetPadMax(mnv_data,mnv_mc,True)
-    stack.SetMaximum(1.2 * pad_max)
-    stack.SetMinimum(stack.GetMaximum()*0.001)
-    mc_band.SetMaximum(1.2 * pad_max)
-    mc_band.SetMinimum(stack.GetMaximum()*0.001)
 
-    stack.SetTitle("the title")
-    mc_band.SetTitle("the title")
+
+    # mc_band.SetMaximum(1.2 * pad_max)
+    # mc_band.SetMinimum(data_hist.GetMaximum()*0.001)
+
     # Now set up the canvas
     cc = ROOT.TCanvas(thename, thetitle,_xsize, _ysize)
     cc.SetCanvasSize(_xsize,_ysize)
@@ -1936,6 +1547,45 @@ def DrawDataMCPlot1D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, y_
     cc.cd()
     cc.Draw()
 
+    top = ROOT.TPad("hist", "hist", 0, ratio_frac, 1.0, 1.0)
+    top.SetRightMargin(pad_rmarg)
+    top.SetLeftMargin(pad_lmarg)
+    top.SetTopMargin(topmarg)
+    top.SetBottomMargin(0)
+    top.SetFrameLineWidth(1)
+
+    bottom = ROOT.TPad("Ratio", "Ratio", 0, 0, 1.0, ratio_frac)
+    bottom.SetRightMargin(pad_rmarg)
+    bottom.SetLeftMargin(pad_lmarg)
+    bottom.SetBottomMargin(bottommarg)
+    bottom.SetTopMargin(0)
+    bottom.SetFrameLineWidth(1)
+    
+    top.Draw()
+    bottom.Draw()
+
+    bottomArea = bottom.GetWNDC() * bottom.GetHNDC()
+    topArea = top.GetWNDC() * top.GetHNDC()
+    areaScale = topArea / bottomArea
+
+    padwidth = 1 - pad_lmarg - pad_rmarg
+    padheight = 1 - topmarg - bottommarg
+
+    x2 = 1. - pad_rmarg - (0.02 * padwidth)
+    x1 = x2 - 0.25 # padwidth * 0.17
+    y2 = 1 - topmarg - (0.02 * padheight)
+    y1 = y2 - 0.45 # * padheight
+    tmp_latex_x = x2
+    tmp_latex_y = y1 - 0.05
+    leg = TLegend(x1, y1, x2, y2)
+    leg.SetBorderSize(0)
+    leg.SetFillColor(-1)
+    leg.SetFillStyle(0)
+    # leg.SetTextSize(legendfontsize)
+    # leg.SetNColumns(2)
+    leg.SetTextFont(42)
+
+    
     stack_unstack = []
     # This will plot the histograms stacked on top of each other
     if do_stack:
@@ -1945,120 +1595,56 @@ def DrawDataMCPlot1D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, y_
         stack_unstack.append("nostack")
     # This will just plot data and total mc
     stack_unstack.append("nobreakdown")
+    npasses = 0
+    for whichstack in stack_unstack:
 
-    for stackopt in stack_unstack:
-        top = ROOT.TPad("hist", "hist", 0, ratio_frac, 1.0, 1.0)
-        top.SetRightMargin(pad_rmarg)
-        top.SetLeftMargin(pad_lmarg)
-        top.SetTopMargin(topmarg)
-        top.SetBottomMargin(0)
-        top.SetFrameLineWidth(1)
-
-        bottom = ROOT.TPad("Ratio", "Ratio", 0, 0, 1.0, ratio_frac)
-        bottom.SetRightMargin(pad_rmarg)
-        bottom.SetLeftMargin(pad_lmarg)
-        bottom.SetBottomMargin(bottommarg)
-        bottom.SetTopMargin(0)
-        bottom.SetFrameLineWidth(1)
-        
-        top.Draw()
-        bottom.Draw()
-
-        bottomArea = bottom.GetWNDC() * bottom.GetHNDC()
-        topArea = top.GetWNDC() * top.GetHNDC()
-        areaScale = topArea / bottomArea
-        # Move to top pad for hists
         top.cd()
+        data_hist.SetMaximum(1.2 * pad_max)
+        data_hist.SetMinimum(data_hist.GetMaximum()*0.001)
         if x_title.split(" (")[0] in scaleY:
+            data_hist.SetMaximum(2.0 * pad_max)
+            data_hist.SetMinimum(data_hist.GetMaximum()*0.0005)
             top.SetLogy()
-        # top.SetLogy()
-        # # E1 draws a point with error bars, X0 turns off horizontal error bars
-        # data_hist.Draw("9 E1 X0")
+
         top.Modified()
         top.Update()
-
-        padwidth = 1 - pad_lmarg - pad_rmarg
-        padheight = 1 - topmarg - bottommarg
-
-        x2 = 1. - pad_rmarg - (0.02 * padwidth)
-        x1 = x2 - 0.25 # padwidth * 0.17
-        y2 = 1 - topmarg - (0.02 * padheight)
-        y1 = y2 - 0.45 # * padheight
-        tmp_latex_x = x2
-        tmp_latex_y = y1 - 0.05
-        leg = TLegend(x1, y1, x2, y2)
-        leg.SetBorderSize(0)
-        leg.SetFillColor(-1)
-        leg.SetFillStyle(0)
-        leg.SetTextSize(legendfontsize)
-        # leg.SetNColumns(2)
-        leg.SetTextFont(42)
-
-        leg.AddEntry(data_hist, "Data","pe")
-        leg.AddEntry(band_ratio, my_catsnames[0],"fl")
-        # leg.AddEntry(mc_hist, my_catsnames[0],"fl")
-        if stackopt == "stack":
-            for cat in my_catstodo[1:]:
-                leg.AddEntry(mc_typehistdict[cat],my_catsnames[cat], "fl")
-        elif stackopt == "nostack":
-            for cat in typestodo_leg:
-                leg.AddEntry(mc_typehistdict[cat],my_catsnames[cat], "fl")
-            # leg.SetNColumns(2)
-
-        if stackopt == "stack":
-            stack.Draw()
-            stack.GetYaxis().SetTitle(y_title)
-            stack.GetYaxis().SetTitleFont(42)
-            stack.GetYaxis().CenterTitle()
-            stack.GetYaxis().SetTitleOffset(0.6)
-            stack.GetYaxis().SetTitleSize(0.07)
-            stack.GetYaxis().SetLabelSize(0.05)
-            stack.Draw("hist noclear 9")
-        elif stackopt == "nostack":
-            stack.Draw()
-            stack.GetYaxis().SetTitle(y_title)
-            stack.GetYaxis().SetTitleFont(42)
-            stack.GetYaxis().CenterTitle()
-            stack.GetYaxis().SetTitleOffset(0.6)
-            stack.GetYaxis().SetTitleSize(0.07)
-            stack.GetYaxis().SetLabelSize(0.05)
+        # leg.Clear()
+        data_hist.Draw("PE1 E0 X0 9")
+        if whichstack == "stack":
+            stack.Draw("hist noclear 9 same")
+        elif whichstack == "nostack":
             mc_band.Draw("9 E2 E0 ][ same")
             tmp_stack = stack.Clone()
-            hist_index = len(my_catstodo[1:])
             for hist in tmp_stack.GetHists():
                 hist.SetFillStyle(0)
-                hist.SetLineColor(catscolors[my_catstodo[hist_index]])
+                hist.SetLineColor(hist.GetFillColor())
                 hist.SetLineWidth(typeslinewidth1D)
-                hist_index -= 1
-            tmp_stack.Draw("hist nostack noclear 9")
-            mc_line.Draw("9 hist same")
+            tmp_stack.Draw("hist nostack noclear 9 same")
+            mc_hist.Draw("9 hist same")
         else:
-            mc_band.SetTitle("")
-            mc_band.GetYaxis().SetTitle(y_title)
-            mc_band.GetYaxis().SetTitleFont(42)
-            mc_band.GetYaxis().CenterTitle()
-            mc_band.GetYaxis().SetTitleOffset(0.6)
-            mc_band.GetYaxis().SetTitleSize(0.07)
-            mc_band.GetYaxis().SetLabelSize(0.05)
-            mc_band.Draw("axis")
             mc_band.Draw("9 E2 E0 ][ same")
-            mc_line.Draw("9 hist same")
-
-
+            mc_hist.Draw("9 hist same")
 
         data_hist.Draw("PE1 E0 X0 same 9")
+        
+        if do_pinkstat:
+            ROOT.gStyle.SetEndErrorSize(0) # This makes the ticks at the end of the error bars longer
+            data_stat.Draw("9 SAME X0 %s E0"%staterror_drawopt)
+            ROOT.gStyle.SetEndErrorSize(end_error_size) # This makes the ticks at the end of the error bars longer
+        else:
+            data_stat.Draw("9 SAME X0 %s E0"%staterror_drawopt)
 
-        # stack.Draw("9 HIST same")    
-        data_stat.Draw("9 SAME E0 %s"%staterror_drawopt)
         data_hist.Draw("9 Same PE1 E0 X0")
         leg.Draw()
+
         prelim = AddPreliminary()
-        # prelim.DrawLatex(x1.value-lat_xoffset, y1.value-2*lat_yoffset-0.01, "MINER#it{#nu}A Work In Progress")
         prelim.SetTextAlign(11)
-        prelim.DrawLatex(x1, y1 - 0.105, "MINER#it{^{}#nu}A Work In Progress")
+        prelim.DrawLatex(x1, y1 - 0.105, prelim_string)
+
         datapottext = AddDataPOTInfo()
         datapottext.SetTextAlign(11)
-        datapottext.DrawLatex(x1, y1 - 0.055, "Data POT: 1.12 #times 10^{21}")
+        datapottext.DrawLatex(x1, y1 - 0.055, datapot_string)
+
         top.Modified()
         top.Update()
 
@@ -2085,23 +1671,40 @@ def DrawDataMCPlot1D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, y_
         # Now do mc uncertainties
         band_ratio.Draw("9 E2 same ][")
         straightline.Draw("9 Hist same, ][")
-        print(typesratio_dict[1])
         if tmp_dotypes and 11 in typestodo_leg:
-            for cat in reversed(typestodo_leg):
-                if cat > 10: continue
-                typesratio_stack_dict[cat].Draw("9 HIST NOCLEAR SAME")
-        elif stackopt!="nobreakdown":
-            for cat in reversed(my_catstodo):
-                if cat == "data": continue
-                typesratio_dict[cat].SetLineColor(catscolors[cat])
-                typesratio_dict[cat].Draw("9 HIST SAME")
-
-        ratio_stat.Draw("9 %s E0 SAME"%staterror_drawopt)
+            for key in reversed(typestodo_leg):
+                if key > 10: continue
+                typesratio_stack_dict[key].Draw("9 HIST NOCLEAR SAME")
+        elif whichstack!="nobreakdown":
+            for key in reversed(my_catstodo):
+                if key not in typesratio_dict: continue
+                if key == "data": continue
+                typesratio_dict[key].SetLineColor(catscolors[key])
+                typesratio_dict[key].Draw("9 HIST SAME")
+        
+        if do_pinkstat:
+            ROOT.gStyle.SetEndErrorSize(0) # This makes the ticks at the end of the error bars longer
+            ratio_stat.Draw("9 SAME X0 %s E0"%staterror_drawopt)
+            ROOT.gStyle.SetEndErrorSize(end_error_size) # This makes the ticks at the end of the error bars longer
+        else:
+            ratio_stat.Draw("9 SAME X0 %s E0"%staterror_drawopt)
         ratio.Draw("9 same E1 E0 X0")
         ratio.Draw("9 same axis")
         bottom.Modified()
         bottom.Update()
 
+        leg.AddEntry(data_hist, "Data","pe")
+        leg.AddEntry(band_ratio, catsnames[0],"fl")
+        if whichstack == "stack":
+            for cat in my_catstodo:
+                if cat not in mc_typeshistdict: continue
+                leg.AddEntry(mc_typeshistdict[cat],catsnames[cat], "fl")
+        elif whichstack == "nostack":
+            for cat in my_catstodo:
+                if cat not in mc_typeshistdict: continue
+                mc_typeshistdict[cat].SetLineColor(mc_typeshistdict[cat].GetFillColor())
+                leg.AddEntry(mc_typeshistdict[cat],catsnames[cat], "l")
+            
         if x_title.split(" (")[0] in scaleX:
             top.SetLogx()
             bottom.SetLogx()
@@ -2109,17 +1712,17 @@ def DrawDataMCPlot1D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, y_
             top.Update()
             bottom.Modified()
             bottom.Update()
+        
         cc.Modified()
         cc.Update
-        # cc.Print(os.path.join(outdirname, canvas_name + ".pdf"),"Title:%s Types"%(thetitle))
-        cc.Print(os.path.join(outdirname,canvas_name+".pdf"),"Title:%s %s %s"%(thetitle," Types2D", stackopt))
-        top.cd()
+        cc.Print(os.path.join(outdirname,canvas_name+".pdf"),"Title:%s %s %s"%(thetitle," Types1D", whichstack))
+        leg.Clear()
         top.Clear()
-        bottom.cd()
         bottom.Clear()
-
-        cc.cd()
-        cc.Clear()
+        top.Modified()
+        top.Update()
+        bottom.Modified()
+        bottom.Update()
         cc.Modified()
         cc.Update()
 
@@ -2127,10 +1730,6 @@ def DrawDataMCPlot1D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, y_
     cc.Clear()
     cc.Modified()
     cc.Update()
-
-    # del stack
-    # del cc
-
 
 def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, x_units, x_bins, y_varname, y_units, y_bins, z_title, outdirname, canvas_name, canvas_title, nametag,i_multipliers = [], do_stack = True, do_nostack = True, do_error_summary = True):
     data_mnv2d = i_data_hist.Clone()
@@ -2142,47 +1741,28 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
     data_mnv2d_unscaled = i_data_hist.Clone()
     mc_mnv2d_unscaled = i_mc_hist.Clone()
 
-    mc_typehistdict = {}
-    mc_typehistdict_unscaled = {}
+    mc_typeshistdict = {}
+    mc_typeshistdict_unscaled = {}
     for key in i_mc_typeshistdict:
         tmphist = i_mc_typeshistdict[key].Clone()
         tmphist_unscaled = i_mc_typeshistdict[key].Clone()
         tmphist.Scale(1.0,"width")
-        mc_typehistdict[key] = tmphist
-        mc_typehistdict_unscaled[key] = tmphist_unscaled
-
-    n_xbins = data_mnv2d.GetNbinsX()
-    n_ybins = data_mnv2d.GetNbinsY()
-    print("hist n x bins: ",n_xbins,",\t hist n y bins: ",n_ybins)
+        mc_typeshistdict[key] = tmphist
+        mc_typeshistdict_unscaled[key] = tmphist_unscaled
+    # n_xbins = data_mnv2d.GetNbinsX()
+    # n_ybins = data_mnv2d.GetNbinsY()
+    n_xbins = len(x_bins) - 1 
+    n_ybins = len(y_bins) - 1
+    print("hist n x bins: ",n_xbins,",\t hist n y bins: ", n_ybins)
     # my_catstodo = catstodo[1:]
     my_catstodo = [cat for cat in catstodo[1:]]
-    # my_catstodo = list(i_mc_typeshistdict.keys())
-
-    tmp_dotypes = False
-    for key in i_mc_typeshistdict.keys():
-        if key not in my_catstodo:
-            # my_catstodo = typestodo[1:]
-            my_catstodo = [cat for cat in typestodo[1:]]
-            tmp_dotypes = True
-            break
-    # if 4 not in i_mc_typeshistdict:
-    #     my_catstodo.remove(4)
-    # This just hacks to get a legend that works better if you do backgrounds
-    if tmp_dotypes:
-        typesttodo_leg = []
-        if 11 in my_catstodo:
-            types_order_leg = []
-            for itype in my_catstodo:
-                if type(itype) == str:
-                    continue
-                if itype > 10:
-                    continue
-                typestodo_leg.append(itype)
-                typestodo_leg.append(itype+10)
-        else:
-            typesttodo_leg = my_catstodo[1:]
-            
-
+    bad_keys = []
+    for key in my_catstodo:
+        if key not in mc_typeshistdict: 
+            bad_keys.append(key)
+            continue
+    for key in bad_keys:
+        my_catstodo.remove(key)
 
     x_title = "%s (%s)"%(x_varname, x_units)
     y_title = "%s (%s)"%(y_varname, y_units)
@@ -2190,108 +1770,107 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
     prelim.SetTextAlign(31)
     datapottext = AddDataPOTInfo()
     datapottext.SetTextAlign(31)
-    for projaxis in ["x","y"]:
 
-        # thetitle = "%s %s %s proj%s"%(b_sample,c_var,"sigma",projaxis)
+    plottitle_string = "%s - %s, %s"%(canvas_title, x_varname, y_varname)
+
+    for projaxis in ["x","y"]:
+        plottitle = ROOT.TLatex(0.5, 0.93,plottitle_string)
+        plottitle.SetTextAlign(22)
+        plottitle.SetTextFont(52)
+        plottitle.SetTextSize(0.058)
+        # Info needed for the canvas
         thename = "%s_%s_proj%s"%(canvas_name, nametag, projaxis)
         thetitle = "%s%s proj%s"%(canvas_title,nametag.replace("_"," "),projaxis)
         ysize = _ysize
         xsize = _xsize
         canvas_nxbins = n_xbins
         canvas_nybins = n_ybins
-        # these are the bin edges for each panel, printed on each panel
+
+        # Info needed for panels
+        # This is the bin ranges for the panels
         plot_bins = y_bins
 
-        proj_xtitle = x_title
-        proj_ytitle = y_title
+        projtot1d_y_title = z_title
+        proj_x_varname = x_varname
+        proj_x_units = x_units
+        proj_y_varname = y_varname
+        proj_y_units = y_units
+
         if projaxis == "y":
             canvas_nxbins = n_ybins
             canvas_nybins = n_xbins
-            plot_bins = x_bins 
-            proj_xtitle = y_title
-            proj_ytitle = x_title
-        
-        # Make the projections
-        data_mnvproj_list = MakeProjHistList(data_mnv2d,projaxis)
-        mc_mnvproj_list = MakeProjHistList(mc_mnv2d,projaxis)
-        mc_typesproj_listdict = {}
+            plot_bins = x_bins
+            proj_x_varname = y_varname
+            proj_x_units = y_units
+            proj_y_varname = x_varname
+            proj_y_units = x_units
+        proj_xtitle = "%s (%s)"%(proj_x_varname, proj_x_units)
+        if "#sigma" in z_title:
+            projtot1d_y_title = "d#sigma /^{} d%s (cm^{2}/^{}%s/^{}Nucleon)"%(proj_x_varname,proj_x_units)
+        else:
+            projtot1d_y_title = "Counts / (%s)"%proj_x_units
+        binrange_list = []
+        for i in range(len(plot_bins)-1):
+            range_string = "{loedge} < {var} < {hiedge}".format(
+                loedge = round(plot_bins[i], 3), 
+                var = "%s #lower[-0.25]{#scale[0.6]{(%s)}}"%(proj_y_varname, proj_y_units), 
+                hiedge = round(plot_bins[i+1], 3)
+            )
+            binrange_list.append(range_string)
 
-        for key in mc_typehistdict:
+        # Make the projections
+        data_mnvproj_list = MakeProjHistList(data_mnv2d, projaxis, canvas_nybins)
+        mc_mnvproj_list = MakeProjHistList(mc_mnv2d, projaxis, canvas_nybins)
+        mc_typesproj_listdict = {}
+        for key in mc_typeshistdict:
             if key not in mc_typesproj_listdict:
                 mc_typesproj_listdict[key] = []
-            tmp_list = MakeProjHistList(mc_typehistdict[key],projaxis)
+            tmp_list = MakeProjHistList(mc_typeshistdict[key],projaxis, canvas_nybins)
             for hist in tmp_list:
                 tmp_hist = hist.Clone()
-                tmp_hist.SetFillColor(catscolors[key])
-                # if key in bkgcats:
-                #     # tmp_hist.SetFillStyle(bkgfillstyle)
-                #     tmp_hist.SetFillStyle(bkgfillstyle[key])
-                if tmp_dotypes:
-                    # if key >= 10: tmp_hist.SetFillStyle(bkgfillstyle)
-                    if key >= 10: 
-                        tmp_hist.SetFillStyle(bkgfillstyle[key])
-                    tmp_hist.SetLineColor(ROOT.TColor.GetColorDark(catscolors[key]))
-                    # tmp_hist.SetLineColor(ROOT.kBlack)
-                    mc_typesproj_listdict[key].append(tmp_hist.Clone())
-                    continue
-
-                tmp_hist.SetLineColor(ROOT.TColor.GetColorDark(catscolors[key]))
+                if key in bkgcats:
+                    tmp_hist.SetFillStyle(bkgfillstyle[key])
                 mc_typesproj_listdict[key].append(tmp_hist.GetCVHistoWithStatError())
 
-        # TODO: the 1D total projections
-        # total projection to 1D
+        # 1D total projections
         data_mnvprojtot = MnvH1D()
         mc_mnvprojtot = MnvH1D()
         mc_typestotproj_dict = {}
         if projaxis == "x":
             data_mnvprojtot = data_mnv2d_unscaled.ProjectionX("%s_proj%s"%(data_mnv2d_unscaled.GetName(),projaxis), 0, data_mnv2d_unscaled.GetNbinsY()+2)#, "width e")
             mc_mnvprojtot = mc_mnv2d_unscaled.ProjectionX("%s_proj%s"%(mc_mnv2d_unscaled.GetName(),projaxis), 0, mc_mnv2d_unscaled.GetNbinsY()+2)#, "width e")
-            for key in mc_typehistdict:
-                tmp_totproj = mc_typehistdict_unscaled[key].ProjectionX("%s_proj%s"%(mc_typehistdict_unscaled[key].GetName(),projaxis), 0, mc_typehistdict_unscaled[key].GetNbinsY()+2)#, "width e")
+            for key in mc_typeshistdict:
+                tmp_totproj = mc_typeshistdict_unscaled[key].ProjectionX("%s_proj%s"%(mc_typeshistdict_unscaled[key].GetName(),projaxis), 0, mc_typeshistdict_unscaled[key].GetNbinsY()+2)#, "width e")
                 mc_typestotproj_dict[key] = tmp_totproj
         if projaxis == "y":
             data_mnvprojtot = data_mnv2d_unscaled.ProjectionY("%s_proj%s"%(data_mnv2d_unscaled.GetName(),projaxis), 0, data_mnv2d_unscaled.GetNbinsX()+2)#, "width e")
             mc_mnvprojtot = mc_mnv2d_unscaled.ProjectionY("%s_proj%s"%(mc_mnv2d_unscaled.GetName(),projaxis), 0, mc_mnv2d_unscaled.GetNbinsX()+2)#, "width e")
-            for key in mc_typehistdict:
-                tmp_totproj = mc_typehistdict_unscaled[key].ProjectionY("%s_proj%s"%(mc_typehistdict_unscaled[key].GetName(),projaxis), 0, mc_typehistdict_unscaled[key].GetNbinsY()+2)#, "width e")
+            for key in mc_typeshistdict:
+                tmp_totproj = mc_typeshistdict_unscaled[key].ProjectionY("%s_proj%s"%(mc_typeshistdict_unscaled[key].GetName(),projaxis), 0, mc_typeshistdict_unscaled[key].GetNbinsY()+2)#, "width e")
                 mc_typestotproj_dict[key] = tmp_totproj
-        projtot1d_y_title = z_title
-        proj_x_varname = ""
-        proj_x_units = x_units
-        proj_y_varname = ""
-        proj_y_units = y_units
-        if projaxis == "x":
-            # tmp_units = "(%s"%x_title.split(" (")[1]
-            # projtot1d_y_title = "Counts / %s"%tmp_units
-            proj_x_varname = x_varname
-            proj_x_units = x_units
-            proj_y_varname = y_varname
-            proj_y_units = y_units
-        if projaxis == "y":
-            # tmp_units = "(%s"%y_title.split(" (")[1]
-            # projtot1d_y_title = "Counts / %s"%tmp_units
-            proj_x_varname = y_varname
-            proj_x_units = y_units
-            proj_y_varname = x_varname
-            proj_y_units = x_units
-        if "#sigma" in z_title:
-            projtot1d_y_title = "d#sigma /^{} d%s (cm^{2}/^{}%s/^{}Nucleon)"%(proj_x_varname,proj_x_units)
-        else:
-            projtot1d_y_title = "Counts / (%s)"%proj_x_units
+        data_mnvprojtot.SetLineColor(data_mnv2d_unscaled.GetLineColor())
+        data_mnvprojtot.SetLineWidth(data_mnv2d_unscaled.GetLineWidth())
+        data_mnvprojtot.SetMarkerStyle(data_mnv2d_unscaled.GetMarkerStyle())
+        data_mnvprojtot.SetMarkerColor(data_mnv2d_unscaled.GetMarkerColor())
+
+        mc_mnvprojtot.SetLineWidth(mc_mnvprojtot.GetLineWidth())
+        mc_mnvprojtot.SetLineColor(mc_mnvprojtot.GetLineColor())
+        mc_mnvprojtot.SetFillColor(mc_mnvprojtot.GetFillColor())
+        for key in mc_typestotproj_dict:
+            mc_typestotproj_dict[key].SetLineWidth(mc_typestotproj_dict[key].GetLineWidth())
+            mc_typestotproj_dict[key].SetLineColor(mc_typestotproj_dict[key].GetLineColor())
+            mc_typestotproj_dict[key].SetFillColor(mc_typestotproj_dict[key].GetFillColor())
 
         # TODO
         DrawDataMCPlot1D_new(data_mnvprojtot, mc_mnvprojtot, mc_typestotproj_dict, proj_xtitle, projtot1d_y_title, outdirname, canvas_name, thetitle,"_totalproj%s"%(projaxis), do_stack, do_nostack)
         # if "E_{Avail}" in proj_xtitle and not do_comparison:
         # if "E_{Avail}" in proj_xtitle:
         #     DrawDataMCTypesPlot1D_AxisChange(data_mnvprojtot, mc_mnvprojtot, mc_typestotproj_dict, proj_xtitle, z_title, outdirname, canvas_name, canvas_title+" total proj")
- 
-        # ROOT.gStyle.SetErrorX(0.) # This turns off the horizontal error bars
-        # ROOT.gStyle.SetEndErrorSize(end_error_size/2) # This makes the ticks at the end of the error bars longer
+
         ROOT.gStyle.SetEndErrorSize(end_error_size) # This makes the ticks at the end of the error bars longer
 
 
         n_pads = len(data_mnvproj_list)
-        print(n_pads)
 
         # These are the hists w/ total error
         data_hist_list = []
@@ -2299,21 +1878,19 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
         data_stat_list = []
         # These are just used for the CV
         mc_hist_list = []
-        # # These are used for the errors, to make a band around MC
+        # These are used for the errors, to make a band around MC
         mc_band_list = []
 
         for hist in data_mnvproj_list:
             data_hist, data_stat = GetDataHistsForPlot(hist)
-            data_hist.SetMarkerSize(data_marker_size2d)
-            data_stat.SetMarkerSize(data_marker_size2d)
             data_hist_list.append(data_hist)
             data_stat_list.append(data_stat)
+
         # TODO: do I actually use these?
         for hist in mc_mnvproj_list:
             mc_hist, mc_band = GetMCHistsForPlot(hist)
             mc_hist_list.append(mc_hist)
             mc_band_list.append(mc_band)
-        # maxlist = [hist.GetMaximum() for hist in data_hist_list] + [hist.GetMaximum() for hist in mc_hist_list]
         maxlist = [GetPadMax(data_hist_list[i],mc_hist_list[i], True) for i in range(len(data_hist_list))]
         global_max = max(maxlist)
 
@@ -2324,12 +1901,10 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             multipliers = i_multipliers
             if "#sigma" in z_title:
                 global_max = 4.0E-37
-        
         # Get the stacks ready
         stack_list = []
         for i in range(n_pads):
             stack_list.append(THStack("%s_%0.3d"%(key,i),"%s_%0.3d"%(key,i)))
-        
         for i in range(n_pads):
             tmp_pad_scale = 1.0
             if calc_tmp_pad_scale:
@@ -2346,33 +1921,19 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             data_stat_list[i].Scale(tmp_pad_scale)
             mc_hist_list[i].Scale(tmp_pad_scale)
             mc_band_list[i].Scale(tmp_pad_scale)
-            mc_hist_list[i].SetLineWidth(typeslinewidth+1)
-            mc_band_list[i].SetLineWidth(typeslinewidth)
-            # tmp_stack = THStack()
-            # for key in mc_typesproj_listdict:
             for cat in reversed(my_catstodo):
                 # if cat == "data": continue
+                if cat not in mc_typesproj_listdict: continue
                 mc_typesproj_listdict[cat][i].Scale(tmp_pad_scale)
                 tmp_type_hist = mc_typesproj_listdict[cat][i].Clone()
-                # tmp_type_hist.Scale(tmp_pad_scale)
-                # if cat in bkgcats:
-                #     tmp_type_hist.SetFillStyle(bkgfillstyle[cat])
-                hist.SetLineColor(ROOT.TColor.GetColorDark(catscolors[cat]))
-                if type(cat) == int:
-                    # hist.SetLineColor(ROOT.kBlack)
-                    if cat >= 10: 
-                        hist.SetFillStyle(bkgfillstyle[cat])
-
-                tmp_type_hist.SetLineWidth(typeslinewidth)
                 stack_list[i].Add(tmp_type_hist)
 
             data_hist_list[i].SetMaximum(1.2 * global_max) #max(data_hist_list[i].GetMaximum(),mc_hist_list[i].GetMaximum()))
-            data_hist_list[i].SetMinimum(0.001*data_hist_list[i].GetMaximum())
+            data_hist_list[i].SetMinimum(0.0001*data_hist_list[i].GetMaximum())
 
             if proj_xtitle.split(" (")[0] in scaleY:
-                # pad.SetLogy()
-                data_hist_list[i].SetMaximum(2 * global_max) #max(data_hist_list[i].GetMaximum(),mc_hist_list[i].GetMaximum()))
-                data_hist_list[i].SetMinimum(0.0005*data_hist_list[i].GetMaximum())
+                data_hist_list[i].SetMaximum(2.5 * global_max) #max(data_hist_list[i].GetMaximum(),mc_hist_list[i].GetMaximum()))
+                data_hist_list[i].SetMinimum(0.00005*data_hist_list[i].GetMaximum())
             
             data_hist_list[i].GetXaxis().SetNdivisions(505)
             data_hist_list[i].GetYaxis().SetNdivisions(505)
@@ -2382,6 +1943,7 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
         #     sys.exit(1)
         gc = PanelCanvas(thename, canvas_nxbins, canvas_nybins, round(xsize), round(ysize))
         my_topmarg = 0.05
+        if do_titleonplot: my_topmarg += 0.08
         my_bottommarg = 0.1
         my_rightmarg = 0.03
         my_leftmarg = 0.08
@@ -2397,6 +1959,7 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
         gc.SetYTitle(z_title)
         gc.SetTitleSize(_xsize*0.03)
 
+
         gc.Draw()
         stack_unstack = []
         # This will plot the histograms stacked on top of each other
@@ -2407,8 +1970,8 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             stack_unstack.append("nostack")
         # This will just plot data and total mc
         stack_unstack.append("nobreakdown")
-        for stackopt in stack_unstack:
-            
+        for whichstack in stack_unstack:
+            print("doing 2D for %s"%whichstack)
             for i in range(n_pads):
                 pad = gc.cd(i+1)
                 if proj_x_varname in scaleY:
@@ -2416,43 +1979,44 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
                 pad.SetFrameLineWidth(2)
                 pad.Draw()
                 data_hist_list[i].Draw("9 axis")
+
             for i in range(n_pads):
                 pad = gc.cd(i+1)
                 pad.Draw()
                 tmp_stack_drawopts = ""
                 if not pad.GetLogy():
                     tmp_stack_drawopts += " ]["
-                if stackopt == "stack":
+                if whichstack == "stack":
                     stack_list[i].Draw("9 HIST noclear same%s"%tmp_stack_drawopts)
-                elif stackopt == "nobreakdown":
+                elif whichstack == "nobreakdown":
                     mc_band_list[i].Draw("9 E2 ][ same")
                     mc_hist_list[i].Draw("9 HIST ][ SAME")
-                else:
+                else: # if whichstack == "nostack":
                     tmp_stack = stack_list[i].Clone()
-                    hist_index = len(my_catstodo) - 1
-                    hist_list = []
                     for tmp_hist in tmp_stack.GetHists():
                         tmp_hist.SetFillStyle(0)
                         tmp_hist.SetLineWidth(typeslinewidth+1)
-                        tmp_hist.SetLineColor(catscolors[my_catstodo[hist_index]])
-                        hist_index -= 1
+                        tmp_hist.SetLineColor(tmp_hist.GetFillColor())
+                    # sys.exit(1)
                     mc_band_list[i].Draw("9 E2 ][ same")
                     tmp_stack.Draw("9 nostack noclear hist same")
                     mc_hist_list[i].Draw("9 HIST ][ SAME")
-                data_stat_list[i].Draw("9 SAME %s E0"%staterror_drawopt)
+                if do_pinkstat:
+                    ROOT.gStyle.SetEndErrorSize(0) # This makes the ticks at the end of the error bars longer
+                    data_stat_list[i].Draw("9 SAME %s E0"%staterror_drawopt)
+                    ROOT.gStyle.SetEndErrorSize(end_error_size) # This makes the ticks at the end of the error bars longer
+                else:
+                    data_stat_list[i].Draw("9 SAME %s E0"%staterror_drawopt)
                 data_hist_list[i].Draw("9 SAME E1 E0 X0")
                 data_hist_list[i].Draw("9 SAME axis")
 
-                range_string = "{loedge} < {var} < {hiedge}".format(
-                    # loedge = round(plot_bins[i], 3), var =proj_ytitle.split(" (")[0], hiedge = round(plot_bins[i+1], 3)
-                    loedge = round(plot_bins[i], 3), var = "%s #lower[-0.25]{#scale[0.6]{ (%s)}}"%(proj_y_varname, proj_y_units), hiedge = round(plot_bins[i+1], 3)
-                )
+                tmp_range_string = binrange_list[i]
                 binrange_latex = ROOT.TLatex()
                 binrange_latex.SetTextAlign(33) # top right
                 binrange_latex.SetNDC()
                 binrange_latex.SetTextFont(42)
                 binrange_latex.SetTextSize(0.025)
-                binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
+                binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),tmp_range_string)
 
                 multip_string = "#times {:g}".format(float('{:.{p}g}'.format(multipliers[i], p=2)))
                 multip_latex = ROOT.TLatex()
@@ -2461,6 +2025,8 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
                 multip_latex.SetTextFont(52)
                 multip_latex.SetTextSize(0.028)
                 multip_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.05),multip_string)
+
+                
                 pad.Modified()
                 pad.Update()
             pad = gc.cd(n_pads+1)
@@ -2472,48 +2038,57 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             y1 = (1.-(pad.GetTopMargin())-0.01)
             x2 =  1 - (pad.GetRightMargin())# + padwidth*.05)
             y2 =  (pad.GetBottomMargin()+0.01)
-            # leg = TLegend(pad.GetLeftMargin()+padwidth*.05,(1.-(pad.GetTopMargin())-0.01), 1 - (pad.GetRightMargin() + padwidth*.05),(pad.GetBottomMargin()+0.15))
-            leg = TLegend(x1, y1, x2, y2)
-            leg.SetTextSize(round(legendfontsize/3))
+            leg = TLegend(x1+0.01, y1, x2-0.01, y2)
+            leg.SetTextSize(legendfontsize/2)
             leg.SetBorderSize(0)
             leg.SetFillColor(-1)
             leg.SetFillStyle(0)
             leg.AddEntry(data_hist_list[0], catsnames["data"],"pe")
             leg.SetNColumns(1) #TODO is this right?
-            if stackopt == "nobreakdown":
+            if whichstack == "nobreakdown":
                 leg.AddEntry(mc_band_list[i], catsnames[0],"fl")
-            elif stackopt == "nostack":
+            elif whichstack == "nostack":
                 leg.AddEntry(mc_band_list[i], catsnames[0],"fl")
-                for cat in my_catstodo:
-                    mc_typesproj_listdict[cat][0].SetLineColor(catscolors[cat])
-                    leg.AddEntry(mc_typesproj_listdict[cat][0],catsnames[cat],"l")
+                for key in my_catstodo:
+                    if key not in mc_typesproj_listdict: continue
+                    mc_typesproj_listdict[key][0].SetLineWidth(typeslinewidth+1)
+                    leg.AddEntry(mc_typesproj_listdict[key][0],catsnames[key],"l")
+                    # mc_typesproj_listdict[key][0].SetLineWidth(typeslinewidth)
             else: # if "stack":
-                for cat in my_catstodo:
-                    leg.AddEntry(mc_typesproj_listdict[cat][0],catsnames[cat],"fl")
+                for key in my_catstodo:
+                    if key not in mc_typesproj_listdict: continue
+                    mc_typesproj_listdict[key][0].SetLineWidth(typeslinewidth+1)
+                    leg.AddEntry(mc_typesproj_listdict[key][0],catsnames[key],"fl")
 
             leg.Draw()
+            for key in my_catstodo:
+                if key not in mc_typesproj_listdict: continue
+                mc_typesproj_listdict[key][0].SetLineWidth(typeslinewidth)
+       
             pad.Modified()
             pad = gc.cd(n_pads+2)
             latex_x = 1.0 - gc.GetRightMargin() - 0.01
             latex_y = (1.-(pad.GetTopMargin())) - 0.18*padheight
             prelim.SetTextSize(legendfontsize*0.55)
             datapottext.SetTextSize(legendfontsize*0.7)
-            prelim.DrawLatex(latex_x, latex_y, "MINER#it{^{}#nu}A Work In Progress")
-            datapottext.DrawLatex(latex_x, latex_y-0.05, "Data POT: 1.12 #times 10^{21}")
-
-
+            # prelim.DrawLatex(latex_x, latex_y, "MINER#it{^{}#nu}A Work In Progress")
+            # datapottext.DrawLatex(latex_x, latex_y-0.05, "Data POT: 1.12 #times 10^{21}")
+            prelim.DrawLatex(latex_x, latex_y, prelim_string)
+            datapottext.DrawLatex(latex_x, latex_y-0.05, datapot_string)
+            
+            if do_titleonplot:
+                plottitle.Draw()
             gc.SetHistTexts()
             gc.Draw()
-            sigma_canvas_name = "%s_Types_%s"%(thename, stackopt)
-            gc.Print(os.path.join(outdirname,canvas_name+".pdf"),"Title:%s %s %s"%(thetitle," Types2D", stackopt))
-
+            sigma_canvas_name = "%s_Types_%s"%(thename, whichstack)
+            gc.Print(os.path.join(outdirname,canvas_name+".pdf"),"Title:%s %s %s"%(thetitle," Types2D", whichstack))
 
             gc.cd()
             gc.ResetPads()
             gc.Modified()
             gc.Update()
-        # gc.SetYTitle("Ratio to "%ref_model)
-        gc.SetYTitle("Data / Simulation")
+        
+        gc.SetYTitle("Ratio to %s"%catsnames[0])
         gc.SetXTitle(proj_xtitle)
         gc.SetLeftMargin(my_leftmarg)
         gc.Modified()
@@ -2530,48 +2105,29 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             ratio_mnvh = MakeDataMCRatioForPlot(data_mnvproj_list[i],mc_mnvproj_list[i])
             ratio_hist, ratio_stat = GetDataHistsForPlot(ratio_mnvh)
 
-            # ratio_hist.SetMinimum(0.001)
             ratio_hist.SetMaximum(2.9999)
-            ratio_hist.SetMinimum(0.00001)
-            # ratio_hist.SetMaximum(1.9999)
-            ratio_hist.SetFillStyle(1001)
-            ratio_hist.SetLineColor(ROOT.kBlack)
-            ratio_hist.SetLineWidth(typeslinewidth)
-            ratio_hist.SetMarkerSize(data_marker_size2d)
+            ratio_hist.SetMinimum(0.0001)
 
             ratio_hist.GetXaxis().SetNdivisions(505)
             ratio_hist.GetYaxis().SetNdivisions(505)
             ratio_hist.GetYaxis().SetLabelSize(ratio_hist.GetXaxis().GetLabelSize())
             ratio_list.append(ratio_hist)
-
-            ratio_stat.SetLineWidth(typeslinewidth)
-            ratio_stat.SetFillStyle(1001)
-            ratio_stat.SetMarkerSize(data_marker_size2d)
-            ratio_stat.SetLineColor(ROOT.kBlack)
             ratio_stat_list.append(ratio_stat)
-
-            # typesratio_dict = {}
-            # for key in mc_typesproj_listdict:
-            print(my_catstodo)
             for key in reversed(my_catstodo):
+                if key not in mc_typesproj_listdict: continue
                 tmp_typesratio = TH1D(mc_typesproj_listdict[key][i].Clone())
                 tmp_typesratio.Divide(tmp_typesratio,mc_hist_list[i],1.0,1.0)
                 tmp_typesratio.SetLineWidth(typeslinewidth+1)
                 tmp_typesratio.SetFillColor(0)
-                tmp_typesratio.SetLineColor(catscolors[key])
-                if tmp_dotypes:
-                    print(key)
-                    if key >= 10:
-                        tmp_typesratio.SetLineStyle(2)
-                    # else:
-                        if typeslinedarker:
-                            tmp_typesratio.SetLineColor(ROOT.TColor.GetColorDark(catscolors[key]))
+                tmp_typesratio.SetLineColor(mc_typesproj_listdict[key][i].GetFillColor())
+                # if type(key) == int:
+                #     if key >= 10: tmp_typesratio.SetLineStyle(2)
                 if key not in typesratio_listdict.keys():
                     typesratio_listdict[key] = []
                 typesratio_listdict[key].append(tmp_typesratio)
-                # typesratio_dict[key] = tmp_typesratio
-            if tmp_dotypes and 11 in my_catstodo[1:]:
+            if 11 in mc_typesproj_listdict:
                 for key in reversed(my_catstodo[1:]):
+                    if key not in mc_typesproj_listdict: continue
                     if key > 10: continue
                     if key not in typesratiostack_listdict: 
                         typesratiostack_listdict[key] = []
@@ -2588,13 +2144,10 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
                     tmp_stack.Add(tmp_hist)
                     typesratiostack_listdict[key].append(tmp_stack)
             straightline = TH1D()
-            # straightline = fmcerror.Clone()
             straightline = mc_hist_list[i].Clone()
-            # for bin in range(1,mc_hist_list[i].GetXaxis().GetNbins() + 1):
             for j in range(1,mc_hist_list[i].GetXaxis().GetNbins() + 1):
                 straightline.SetBinContent(j,1.0)
-            # straightline.SetLineColor(ROOT.kRed)
-            straightline.SetLineColor(catscolors["mctot"])
+            straightline.SetLineColor(catscolors[0])
             straightline.SetLineWidth(typeslinewidth+1)
             straightline.SetFillStyle(0)
             straightline_list.append(straightline)
@@ -2604,14 +2157,20 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             tmp_mnvh_mc.ClearAllErrorBands()
             tmp_mnvh_mc.AddMissingErrorBandsAndFillWithCV(mc_mnvproj_list[i])
             tmp_mnvh_mc.Divide(tmp_mnvh_mc,mc_mnvproj_list[i],1.0,1.0)
-            tmp_mnvh_mc.SetFillColor(catscolors["mctot"])
-            tmp_mnvh_mc.SetFillColorAlpha(catscolors["mctot"],0.3)
-            tmp_mnvh_mc.SetLineColor(catscolors["mctot"])
+            tmp_mnvh_mc.SetFillColor(catscolors[0])
+            tmp_mnvh_mc.SetFillColorAlpha(catscolors[0],0.3)
+            tmp_mnvh_mc.SetLineColor(catscolors[0])
             tmp_mnvh_mc.SetLineWidth(typeslinewidth)
             tmp_mnvh_mc.SetMarkerStyle(0)
             tmp_mnvh_mc.SetFillStyle(1001)
             mcerror_list.append(tmp_mnvh_mc.GetCVHistoWithError())
             
+        ratio_maxlist = [GetPadMax(ratio_list[i],mcerror_list[i], True) for i in range(len(ratio_list))]
+        ratio_global_max = max(ratio_maxlist)
+        if ratio_global_max > 3.:
+            for hist in ratio_list:
+                hist.SetMaximum(int(ratio_global_max * 2 + 1)*0.5-0.0001)
+
         for i in range(n_pads):
             pad = gc.cd(i+1)
             pad.SetLogy(0)
@@ -2620,46 +2179,45 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             ratio_list[i].Draw("9 E1 E0 axis")
             mcerror_list[i].Draw("9 E2 E0 same ][")
             straightline_list[i].Draw("9 hist same X0 ][")
-            if tmp_dotypes and 11 in typestodo_leg:
-                for cat in typestodo_leg:
-                    if cat > 10: continue
-                    typesratiostack_listdict[cat][i].Draw("9 HIST NOCLEAR SAME ][")
+            if 11 in mc_typesproj_listdict:
+                for key in typestodo_leg:
+                    if key > 10: continue
+                    typesratiostack_listdict[key][i].Draw("9 HIST NOCLEAR SAME ][")
             else:
-                for cat in typesratio_listdict:
-                    typesratio_listdict[cat][i].Draw("9 HIST SAME ][")
+                for key in typesratio_listdict:
+                    typesratio_listdict[key][i].Draw("9 HIST SAME ][")
             ratio_stat_list[i].Draw("9 same %s"%staterror_drawopt)
-            ratio_list[i].Draw("9 same E1 X0")
+            ratio_list[i].Draw("9 same E1 E0 X0")
             ratio_list[i].Draw("9 same axis")
 
-            range_string = "{loedge} < {var} < {hiedge}".format(
-                    loedge = round(plot_bins[i], 3), var = "%s #lower[-0.25]{#scale[0.6]{ (%s)}}"%(proj_y_varname, proj_y_units), hiedge = round(plot_bins[i+1], 3)
-            )
+            tmp_range_string = binrange_list[i]
             multip_latex = ROOT.TLatex()
             multip_latex.SetTextAlign(33) # top right
             multip_latex.SetNDC()
             multip_latex.SetTextFont(42)
             multip_latex.SetTextSize(0.028)
-            multip_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
+            multip_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),tmp_range_string)
             pad.Modified()
             pad.Update()
         pad = gc.cd(n_pads+1)
         pad.Draw()
 
         leg.AddEntry(ratio_list[0], catsnames["data"],"pe")
-        # leg.AddEntry(mcerror_list[0], "MnvTune v2.0.1", "fl")
         leg.AddEntry(mcerror_list[0], catsnames[0], "fl")
-        if tmp_dotypes:
-            for cat in typestodo_leg:
-                leg.AddEntry(typesratio_listdict[cat][0],catsnames[cat],"fl")
-        else:
-            for cat in my_catstodo:
-                leg.AddEntry(typesratio_listdict[cat][0],catsnames[cat],"fl")
+        for key in my_catstodo:
+            if key not in typesratio_listdict: continue
+            leg.AddEntry(typesratio_listdict[key][0],catsnames[key],"fl")
         leg.Draw()
         pad.Modified()
         gc.SetHistTexts()
         gc.Draw()
+        plottitle.Modify()
+        plottitle_string = plottitle_string.replace(canvas_title,canvas_title+" Ratio ")
+        plottitle.SetTitle(plottitle_string)
+        if do_titleonplot:
+            plottitle.Draw()
+
         tmp_ratio_name = "%s_Typesratio"%(thename)
-        # gc.Print(os.path.join(outdirname, thename + "_Types_ratio.png"))
         gc.Print(os.path.join(outdirname,"source", tmp_ratio_name + ".C"))
         gc.Print(os.path.join(outdirname,canvas_name+".pdf"),"Title:%s %s"%(thetitle," Types Ratio"))
         gc.cd()
@@ -2670,7 +2228,6 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
         if not do_error_summary:
             del gc 
             continue
-        # Now do the error summaries
         gc.SetYTitle("Fractional Uncertainty")
         gc.SetXTitle(proj_xtitle)
         gc.SetLeftMargin(my_leftmarg)
@@ -2687,20 +2244,16 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
         do_fractional_uncertainty = True
         leg.Clear()
         padwidth = 1.0 - pad.GetLeftMargin() - pad.GetRightMargin()
-        leg = TLegend(pad.GetLeftMargin()+padwidth/10,(1.-(pad.GetTopMargin())-0.01), 1 - (pad.GetRightMargin() + padwidth/10)+padwidth,(pad.GetBottomMargin()+0.01))
-        leg.SetNColumns(2)
+        leg = TLegend(x1+0.01, y1, x2-0.01 + 0.5* padwidth, y2)
         leg.SetBorderSize(0)
         leg.SetFillColor(-1)
-        leg.SetTextSize(round(legendfontsize/3))
         global_max = 0.0
         for i in range(n_pads):
             tmp_data_mnvh = data_mnvproj_list[i].Clone()
             total_error = tmp_data_mnvh.GetTotalError(include_stat_error, do_fractional_uncertainty, do_cov_area_norm).Clone()
-            pad_max = total_error.GetMaximum()
-            print(pad_max)
+            pad_max = total_error.GetBinContent(total_error.GetMaximumBin()) #.GetMaximum()
             if pad_max > global_max:
                 global_max = pad_max
-        print(global_max)
         if global_max > 1.0:
             global_max = 1.0
         # global_max = 0.5
@@ -2708,10 +2261,11 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
         for i in range(n_pads):
             pad = gc.cd(i+1)
             tmp_data_mnvh = data_mnvproj_list[i].Clone()
-            # error_hists = mnvPlotter.GetSysErrorGroupHists(tmp_data_mnvh, do_fractional_uncertainty, do_cov_area_norm, ignore_Threshold)
-            error_hists = GetErrorHistsInGroup(tmp_data_mnvh, "Genie Interaction Model")[:6]
+            error_hists = mnvPlotter.GetSysErrorGroupHists(tmp_data_mnvh, do_fractional_uncertainty, do_cov_area_norm, ignore_Threshold)
+            # error_hists = GetErrorHistsInGroup(tmp_data_mnvh, "Genie Interaction Model")[:6]
             # error_hists = GetErrorHistsInGroup(tmp_data_mnvh, "Tune")
             # error_hists = GetErrorHistsInGroup(tmp_data_mnvh, "FSI Model")
+            # error_hists = GetErrorHistsInGroup(tmp_data_mnvh, "Flux")
 
 
             total_error = tmp_data_mnvh.GetTotalError(include_stat_error, do_fractional_uncertainty, do_cov_area_norm).Clone()
@@ -2740,20 +2294,16 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
                 hist.SetLineWidth(typeslinewidth + 1)
                 if i == 0:
                     leg.AddEntry(hist, hist.GetTitle(), "l")
-                    # hist_index += 1
                 hist.Draw("9 HIST SAME")
-            # mnvPlotter.DrawErrorSummary(tmp_data_mnvh, "N", include_stat_error, solid_lines_only, ignore_Threshold, do_cov_area_norm, error_group_name, do_fractional_uncertainty)
             total_error.Draw("9 axis same")
 
-            range_string = "{loedge} < {var} < {hiedge}".format(
-                    loedge = round(plot_bins[i], 3), var = "%s #lower[-0.25]{#scale[0.6]{ (%s)}}"%(proj_y_varname, proj_y_units), hiedge = round(plot_bins[i+1], 3)
-            )
+            tmp_range_string = binrange_list[i]
             binrange_latex = ROOT.TLatex()
             binrange_latex.SetTextAlign(33) # top right
             binrange_latex.SetNDC()
             binrange_latex.SetTextFont(42)
             binrange_latex.SetTextSize(0.028)
-            binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
+            binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),tmp_range_string)
 
             pad.Update()
             pad.Modified()
@@ -2761,8 +2311,15 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
         pad = gc.cd(n_pads+1)
         pad.Draw()
         leg.Draw()
+        if do_titleonplot:
+            plottitle_string = plottitle_string.replace(canvas_title + " Ratio ",canvas_title+" Error Summary")
+            plottitle.SetTitle(plottitle_string)
+            plottitle.Draw()
+
         gc.SetHistTexts()
         # gc.Draw()
+
+
         tmp_errror_summary_name = "%s_ErrorSummary"%(thename)
         # gc.Print(os.path.join(outdirname, thename + "_Types_ratio.png"))
         gc.Print(os.path.join(outdirname,"source", tmp_errror_summary_name + ".C"))
@@ -2773,303 +2330,6 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
         gc.Update()
     
         del gc
-
-
-def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, x_bins, y_title, y_bins, z_title, outdirname, canvas_name, canvas_title, multipliers = []):#, do_comparison = False):
-    mnvPlotter = SetupErrorSummary(MnvPlotter(8))    
-    data_mnv2d = i_data_hist.Clone()
-    mc_mnv2d = i_mc_hist.Clone()
-    data_mnv2d_unscaled = i_data_hist.Clone()
-    mc_mnv2d_unscaled = i_mc_hist.Clone()
-
-    mc_typehistdict = {}
-    mc_typehistdict_unscaled = {}
-    for key in i_mc_typeshistdict:
-        tmphist = i_mc_typeshistdict[key].Clone()
-        tmphist_unscaled = i_mc_typeshistdict[key].Clone()
-        tmphist.Scale(1.0,"width")
-        mc_typehistdict[key] = tmphist
-        mc_typehistdict_unscaled[key] = tmphist_unscaled
-    data_mnv2d.Scale(1.0, "width")
-    mc_mnv2d.Scale(1.0, "width")
-
-    n_xbins = data_mnv2d.GetNbinsX()
-    n_ybins = data_mnv2d.GetNbinsY()
-    print("hist n x bins: ",n_xbins,",\t hist n y bins: ",n_ybins)
-
-
-    for projaxis in ["x","y"]:
-    # for projaxis in ["y"]:
-        data_mnvproj_list = MakeProjHistList(data_mnv2d,projaxis)
-        mc_mnvproj_list = MakeProjHistList(mc_mnv2d,projaxis)
-        
-        mc_typesproj_listdict = {}
-        # typeskeys = i_mc_typeshistdict.keys()
-        # print("******************2D Plotting typeskeys: ", typeskeys)
-        for key in mc_typehistdict:
-            tmp_list = MakeProjHistList(mc_typehistdict[key],projaxis)
-            mc_typesproj_listdict[typesnames[key]] = [hist.GetCVHistoWithStatError() for hist in tmp_list]
-        typeskeys = mc_typesproj_listdict.keys()
-
-        # total projection to 1D
-        data_mnvprojtot = MnvH1D()
-        mc_mnvprojtot = MnvH1D()
-        mc_typestotproj_dict = {}
-        if projaxis == "x":
-            data_mnvprojtot = data_mnv2d_unscaled.ProjectionX("%s_proj%s"%(data_mnv2d_unscaled.GetName(),projaxis), 0, data_mnv2d_unscaled.GetNbinsY()+2)#, "width e")
-            mc_mnvprojtot = mc_mnv2d_unscaled.ProjectionX("%s_proj%s"%(mc_mnv2d_unscaled.GetName(),projaxis), 0, mc_mnv2d_unscaled.GetNbinsY()+2)#, "width e")
-            for key in mc_typehistdict:
-                tmp_totproj = mc_typehistdict_unscaled[key].ProjectionX("%s_proj%s"%(mc_typehistdict_unscaled[key].GetName(),projaxis), 0, mc_typehistdict_unscaled[key].GetNbinsY()+2)#, "width e")
-                mc_typestotproj_dict[key] = tmp_totproj
-        if projaxis == "y":
-            data_mnvprojtot = data_mnv2d_unscaled.ProjectionY("%s_proj%s"%(data_mnv2d_unscaled.GetName(),projaxis), 0, data_mnv2d_unscaled.GetNbinsX()+2)#, "width e")
-            mc_mnvprojtot = mc_mnv2d_unscaled.ProjectionY("%s_proj%s"%(mc_mnv2d_unscaled.GetName(),projaxis), 0, mc_mnv2d_unscaled.GetNbinsX()+2)#, "width e")
-            for key in mc_typehistdict:
-                tmp_totproj = mc_typehistdict_unscaled[key].ProjectionY("%s_proj%s"%(mc_typehistdict_unscaled[key].GetName(),projaxis), 0, mc_typehistdict_unscaled[key].GetNbinsY()+2)#, "width e")
-                mc_typestotproj_dict[key] = tmp_totproj
-
-        # thename = "%s_%s_%s_proj%s"%(b_sample,c_var,"sigma",projaxis)
-        # thetitle = "%s %s %s proj%s"%(b_sample,c_var,"sigma",projaxis)
-        thename = "%s_proj%s"%(canvas_name,projaxis)
-        thetitle = "%s proj%s"%(canvas_title,projaxis)
-        ysize = _ysize
-        xsize = _xsize
-        canvas_nxbins = n_xbins
-        canvas_nybins = n_ybins
-        # these are the bin edges for each panel, printed on each panel
-        plot_bins = y_bins
-
-        proj_xtitle = x_title
-        proj_ytitle = y_title
-        if projaxis == "y":
-            canvas_nxbins = n_ybins
-            canvas_nybins = n_xbins
-            plot_bins = x_bins 
-            proj_xtitle = y_title
-            proj_ytitle = x_title
-
-        # First do the total projection
-        DrawDataMCTypesPlot1D(data_mnvprojtot, mc_mnvprojtot, mc_typestotproj_dict, proj_xtitle, z_title, outdirname, canvas_name, canvas_title+" total proj")
-        # if "E_{Avail}" in proj_xtitle and not do_comparison:
-        if "E_{Avail}" in proj_xtitle:
-            DrawDataMCTypesPlot1D_AxisChange(data_mnvprojtot, mc_mnvprojtot, mc_typestotproj_dict, proj_xtitle, z_title, outdirname, canvas_name, canvas_title+" total proj")
-
-        print("canvas n x bins: ",canvas_nxbins,",\t canvas n y bins: ",canvas_nybins)
-
-        ROOT.gStyle.SetErrorX(0) # This turns off the horizontal error bars
-        # ROOT.gStyle.SetEndErrorSize(end_error_size/2) # This makes the ticks at the end of the error bars longer
-        ROOT.gStyle.SetEndErrorSize(end_error_size) # This makes the ticks at the end of the error bars longer
-
-        gc = PanelCanvas(thename, canvas_nxbins, canvas_nybins, round(xsize), round(ysize))
-        gc.SetLeftMargin(0.1)
-        gc.SetRightMargin(0.05)
-        gc.SetBottomMargin(0.1)
-        # gc.SetFrameLineWidth(1)
-        gc.SetXTitle(proj_xtitle)
-        gc.SetYTitle(z_title)
-        gc.Draw()
-        n_pads = len(data_mnvproj_list)
-        print(n_pads)
-        data_hist_list = []
-        data_stat_list = []
-
-        mc_hist_list = []
-        # mc_band_list = []
-
-        for hist in data_mnvproj_list:
-            data_hist, data_stat = GetDataHistsForPlot(hist)
-            data_hist_list.append(data_hist)
-            data_stat_list.append(data_stat)
-        for hist in mc_mnvproj_list:
-            mc_hist, mc_band = GetMCHistsForPlot(hist)
-            mc_hist_list.append(mc_hist)
-            # mc_band_list.append(mc_band)
-        
-        maxlist = [hist.GetMaximum() for hist in data_hist_list] + [hist.GetMaximum() for hist in mc_hist_list]
-        global_max = max(maxlist)
-
-        calc_tmp_pad_scale = True
-        # print(multipliers)
-        # print(len(multipliers),n_pads)
-        # sys.exit(1)
-        if len(multipliers) == n_pads:
-            calc_tmp_pad_scale = False
-            global_max = 4.0E-37
-        for i in range(n_pads):
-
-            pad = gc.cd(i+1)
-            pad.SetFrameLineWidth(1)
-            pad.Draw()
-            tmp_pad_scale = 1.0
-            # pad.SetLogy()
-            if calc_tmp_pad_scale:
-                tmp_pad_max = 0.0
-                tmp_pad_max = max(data_hist_list[i].GetMaximum(),mc_hist_list[i].GetMaximum())
-                if tmp_pad_max == 0:
-                    tmp_pad_max = 1.0
-
-                tmp_pad_scale = eval('{:.{p}g}'.format(global_max / tmp_pad_max, p=3))
-            else:
-                tmp_pad_scale = multipliers[i]
-            data_hist_list[i].Scale(tmp_pad_scale)
-            data_stat_list[i].Scale(tmp_pad_scale)
-            mc_hist_list[i].Scale(tmp_pad_scale)
-            mc_hist_list[i].SetLineWidth(typeslinewidth)
-            for key in mc_typesproj_listdict:
-                mc_typesproj_listdict[key][i].Scale(tmp_pad_scale)
-                mc_typesproj_listdict[key][i].SetLineWidth(typeslinewidth)
-            # mc_band_list[i].Scale(tmp_pad_scale)
-
-            data_hist_list[i].SetMaximum(1.2 * global_max) #max(data_hist_list[i].GetMaximum(),mc_hist_list[i].GetMaximum()))
-            data_hist_list[i].SetMinimum(0)
-            if proj_xtitle.split(" (")[0] in scaleY:
-                pad.SetLogy()
-                data_hist_list[i].SetMaximum(1.5 * global_max) #max(data_hist_list[i].GetMaximum(),mc_hist_list[i].GetMaximum()))
-                data_hist_list[i].SetMinimum(data_hist_list[i].GetMaximum()/1000)
-            
-            # data_hist_list[i].GetXaxis().SetNdivisions(207)
-            data_hist_list[i].GetYaxis().SetNdivisions(205)
-            data_hist_list[i].GetYaxis().SetLabelSize(data_hist_list[i].GetXaxis().GetLabelSize())
-
-            data_hist_list[i].Draw("axis")
-            # mc_band_list[i].Draw("SAME E2")
-
-            for key in reversed(list(mc_typesproj_listdict)):
-                mc_typesproj_listdict[key][i].Draw("HIST SAME")
-            mc_hist_list[i].Draw("HIST SAME")
-
-            data_stat_list[i].Draw("SAME E1 X0")
-            data_hist_list[i].Draw("SAME E1 X0")
-            data_hist_list[i].Draw("SAME axis")
-
-            range_string = "{loedge} < {var} < {hiedge}".format(loedge = round(plot_bins[i], 3), var =proj_ytitle.split(" (")[0], hiedge = round(plot_bins[i+1], 3))
-            binrange_latex = ROOT.TLatex()
-            binrange_latex.SetTextAlign(33) # top right
-            binrange_latex.SetNDC()
-            binrange_latex.SetTextFont(42)
-            binrange_latex.SetTextSize(0.025)
-            binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
-
-            multip_string = "#times {:g}".format(float('{:.{p}g}'.format(tmp_pad_scale, p=2)))
-            multip_latex = ROOT.TLatex()
-            multip_latex.SetTextAlign(32)
-            multip_latex.SetNDC()
-            multip_latex.SetTextFont(42)
-            multip_latex.SetTextSize(0.028)
-            multip_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.05),multip_string)
-            pad.Modified()
-        pad = gc.cd(n_pads+1)
-        pad.Draw()
-
-        padwidth = 1 - pad.GetLeftMargin() - pad.GetRightMargin()
-        leg = TLegend(pad.GetLeftMargin()+padwidth/10,(1.-(pad.GetTopMargin())-0.01), 1 - (pad.GetRightMargin() + padwidth/10),(pad.GetBottomMargin()+0.01))
-        leg.SetNColumns(1)
-        leg.SetBorderSize(0)
-        leg.SetFillColor(-1)
-        leg.SetTextSize(round(legendfontsize/3))
-        leg.AddEntry(data_hist_list[0], "Data","pe")
-        leg.AddEntry(mc_hist_list[0], typesnames[0],"fl")
-        # Need to do these in order to put important stuff on top
-        for key in mc_typesproj_listdict.keys():
-            leg.AddEntry(mc_typesproj_listdict[key][0],typesnames[typesints[key]],"fl")
-        leg.Draw()
-        pad.Modified()
-
-        gc.SetHistTexts()
-        gc.Draw()
-        sigma_canvas_name = thename + "_Types"
-        # gc.Print(os.path.join(outdirname, sigma_canvas_name + ".png"))
-        gc.Print(os.path.join(outdirname,"source", sigma_canvas_name + ".C"))
-        gc.Print(os.path.join(outdirname,canvas_name+".pdf"),"Title:%s %s"%(canvas_title," Types"))
-        # del gc
-
-        gc.cd()
-        # leg.Clear()
-        gc.ResetPads()
-        gc.SetYTitle("Data / Simulation")
-        gc.SetTitleSize(_xsize*0.03)
-        gc.SetXTitle(proj_xtitle)
-        gc.Modified()
-        gc.Update()
-
-        ratio_list = []
-        ratio_stat_list = []
-        typesratio_listdict = {}
-        # mcerror_list = []
-        straightline_list = []
-        for i in range(n_pads):
-            ratio_mnvh = MakeDataMCRatioForPlot(data_mnvproj_list[i],mc_mnvproj_list[i])
-            ratio_hist, ratio_stat = GetDataHistsForPlot(ratio_mnvh)
-
-            ratio_hist.SetMinimum(0.001)
-            ratio_hist.SetMaximum(2.999)
-            ratio_hist.SetFillStyle(1001)
-            ratio_hist.SetLineColor(ROOT.kBlack)
-            ratio_hist.SetLineWidth(2)
-            # ratio_hist.GetXaxis().SetNdivisions(205)
-            ratio_hist.GetYaxis().SetNdivisions(206)
-            ratio_hist.GetYaxis().SetLabelSize(ratio_hist.GetXaxis().GetLabelSize())
-
-            ratio_stat.SetLineWidth(2)
-            ratio_list.append(ratio_hist)
-            ratio_stat_list.append(ratio_stat)
-            for key in mc_typesproj_listdict:
-                tmp_typesratio = MakeDataMCRatio(mc_typesproj_listdict[key][i],mc_hist_list[i])
-                tmp_typesratio.SetLineWidth(typeslinewidth)
-                if key not in typesratio_listdict.keys():
-                    typesratio_listdict[key] = []
-                typesratio_listdict[key].append(tmp_typesratio)
-            straightline = TH1D()
-            # straightline = mcerror.Clone()
-            straightline = mc_hist_list[i].Clone()
-            # for bin in range(1,mc_hist_list[i].GetXaxis().GetNbins() + 1):
-            for bin in range(0,mc_hist_list[i].GetXaxis().GetNbins() + 2):
-                straightline.SetBinContent(bin,1.0)
-            straightline.SetLineColor(typescolors[0])
-            # straightline.SetLineColor(ROOT.TColor.GetColorDark(typescolors[0]))
-            straightline.SetLineWidth(3)
-            straightline.SetFillStyle(0)
-            straightline_list.append(straightline)
-
-
-        for i in range(n_pads):
-            pad = gc.cd(i+1)
-            pad.SetLogy(0)
-
-            pad.Draw()
-            ratio_list[i].Draw("axis")
-            for key in reversed(list(typesratio_listdict.keys())):
-                typesratio_listdict[key][i].Draw("HIST SAME")
-                
-            straightline_list[i].Draw("hist same")
-            ratio_stat_list[i].Draw("same E1 X0")
-            ratio_list[i].Draw("same E1 X0")
-            ratio_list[i].Draw("same axis")
-
-            range_string = "{loedge} < {var} < {hiedge}".format(loedge = round(plot_bins[i], 3), var =proj_ytitle.split(" (")[0], hiedge = round(plot_bins[i+1], 3))
-            binrange_latex = ROOT.TLatex()
-            binrange_latex.SetTextAlign(33) # top right
-            binrange_latex.SetNDC()
-            binrange_latex.SetTextFont(42)
-            binrange_latex.SetTextSize(0.03)
-            binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
-        pad = gc.cd(n_pads+1)
-        pad.Draw()
-
-        leg.Draw()
-        pad.Modified()
-        gc.SetHistTexts()
-        gc.Draw()
-        # gc.Print(os.path.join(outdirname, thename + "_Types_ratio.png"))
-        gc.Print(os.path.join(outdirname,"source", thename + "_Types_ratio.C"))
-        gc.Print(os.path.join(outdirname,canvas_name+".pdf"),"Title:%s %s"%(canvas_title," Types Ratio"))
-        gc.cd()
-        gc.ResetPads()
-        gc.Modified()
-        gc.Update()
-            
-        del gc
-    # return 0
 
 
 def DrawEfficiency1D(i_seltrue_hist, i_alltrue_hist, x_varname, x_units, outdirname, canvas_name, canvas_title):
@@ -3170,7 +2430,6 @@ def DrawEfficiency2D(i_seltrue_hist, i_alltrue_hist, i_seltrue_typeshistdict, i_
     toteff_typesdict = {}
     typeseff_typesdict = {}
     for key in i_seltrue_typeshistdict:
-        print(">>>>>>>> Looking at key", key)
         tmp_toteff = i_seltrue_typeshistdict[key].Clone()
         tmp_toteff.Divide(tmp_toteff, alltrue_mnv, 1.0, 1.0, "B")
         tmp_toteff.SetLineColor(catscolors[key])
@@ -3223,37 +2482,12 @@ def DrawEfficiency2D(i_seltrue_hist, i_alltrue_hist, i_seltrue_typeshistdict, i_
     cc.Print(os.path.join(outdirname, "source", thename + ".C"))
     cc.Print(os.path.join(outdirname, canvas_name + ".pdf"),"Title:%s Efficiency"%(thetitle))
 
-    n_xbins = tot_efficiency.GetNbinsX()
-    n_ybins = tot_efficiency.GetNbinsY()
+    # n_xbins = tot_efficiency.GetNbinsX()
+    # n_ybins = tot_efficiency.GetNbinsY()
+    n_xbins = len(x_bins) - 1 
+    n_ybins = len(y_bins) -1
     # Now do the projected efficiencies
     for projaxis in ["x", "y"]:
-        tot_eff_projlist = MakeProjHistList(tot_efficiency, projaxis)
-        for hist in tot_eff_projlist:
-            hist.SetLineColor(catscolors[0])
-            hist.SetFillColor(0)
-            hist.SetMaximum(1.3)
-            hist.SetMinimum(0.0001)
-            hist.SetNdivisions(505)
-            hist.GetYaxis().SetLabelSize(hist.GetXaxis().GetLabelSize())
-
-        toteff_types_projlistdict = {}
-        typeseff_types_projlistdict = {}
-        linestyle = 2
-        for key in toteff_typesdict:
-            print(">>>>>>>>>>>>>>>>Looking at  ", key)
-            tmp_types_projlist = MakeProjHistList(toteff_typesdict[key], projaxis)
-            tmp_typestot_projlist = MakeProjHistList(typeseff_typesdict[key], projaxis)
-            for i in range(len(tmp_types_projlist)):
-                tmp_types_projlist[i].SetLineColor(toteff_typesdict[key].GetLineColor())
-                tmp_types_projlist[i].SetFillColor(0)
-                tmp_types_projlist[i].SetLineStyle(linestyle)
-                tmp_typestot_projlist[i].SetLineColor(typeseff_typesdict[key].GetLineColor())
-                tmp_typestot_projlist[i].SetFillColor(0)
-                tmp_typestot_projlist[i].SetLineStyle(linestyle)
-            linestyle+=1
-                # tmp_typestot_projlist[i].SetLineStyle(typeseff_typesdict[key].GetLineColor())
-            toteff_types_projlistdict[key] = tmp_types_projlist
-            typeseff_types_projlistdict[key] = tmp_typestot_projlist
 
         canvas_nxbins = n_xbins
         canvas_nybins = n_ybins
@@ -3276,7 +2510,43 @@ def DrawEfficiency2D(i_seltrue_hist, i_alltrue_hist, i_seltrue_typeshistdict, i_
             proj_y_varname = x_varname
             proj_x_units = y_units
             proj_y_units = x_units
-        
+
+        tot_eff_projlist = MakeProjHistList(tot_efficiency, projaxis, canvas_nybins)
+        for hist in tot_eff_projlist:
+            hist.SetLineColor(catscolors[0])
+            hist.SetFillColor(0)
+            hist.SetMaximum(1.3)
+            hist.SetMinimum(0.0001)
+            hist.SetNdivisions(505)
+            hist.GetYaxis().SetLabelSize(hist.GetXaxis().GetLabelSize())
+
+        toteff_types_projlistdict = {}
+        typeseff_types_projlistdict = {}
+        linestyle = 2
+        for key in toteff_typesdict:
+            tmp_types_projlist = MakeProjHistList(toteff_typesdict[key], projaxis, canvas_nybins)
+            tmp_typestot_projlist = MakeProjHistList(typeseff_typesdict[key], projaxis, canvas_nybins)
+            for i in range(len(tmp_types_projlist)):
+                tmp_types_projlist[i].SetLineColor(toteff_typesdict[key].GetLineColor())
+                tmp_types_projlist[i].SetFillColor(0)
+                tmp_types_projlist[i].SetLineStyle(linestyle)
+                tmp_typestot_projlist[i].SetLineColor(typeseff_typesdict[key].GetLineColor())
+                tmp_typestot_projlist[i].SetFillColor(0)
+                tmp_typestot_projlist[i].SetLineStyle(linestyle)
+            linestyle+=1
+                # tmp_typestot_projlist[i].SetLineStyle(typeseff_typesdict[key].GetLineColor())
+            toteff_types_projlistdict[key] = tmp_types_projlist
+            typeseff_types_projlistdict[key] = tmp_typestot_projlist
+
+        binrange_list = []
+        for i in range(len(plot_bins)-1):
+            range_string = "{loedge} < {var} < {hiedge}".format(
+                loedge = round(plot_bins[i], 3), 
+                var = "%s #lower[-0.25]{#scale[0.6]{ (%s)}}"%(proj_y_varname, proj_y_units), 
+                hiedge = round(plot_bins[i+1], 3)
+            )
+            binrange_list.append(range_string)
+
         gc = PanelCanvas("%s_proj%s"%(thename,projaxis), canvas_nxbins, canvas_nybins, round(_xsize), round(_ysize))
         my_topmarg = 0.05
         my_bottommarg = 0.1
@@ -3303,7 +2573,7 @@ def DrawEfficiency2D(i_seltrue_hist, i_alltrue_hist, i_seltrue_typeshistdict, i_
             #     # toteff_types_projlistdict[key][i].Draw("HIST same")
             #     typeseff_types_projlistdict[key][i].Draw("HIST same")
             
-
+            tmp_range_string = binrange_list[i]
             range_string = "{loedge} < {var} < {hiedge}".format(
                     loedge = round(plot_bins[i], 3), var = "%s #lower[-0.25]{#scale[0.6]{ (%s)}}"%(proj_y_varname, proj_y_units), hiedge = round(plot_bins[i+1], 3)
             )
@@ -3356,16 +2626,12 @@ def GetErrorHistsInGroup(i_mnv_hist, group_name):
     mnvplotter = SetupErrorSummary(MnvPlotter())
     error_summary_group_dict = mnvplotter.error_summary_group_map
     group_list = error_summary_group_dict[group_name]
-    # if "GENIE_CCQEPauliSupViaKF" in list(error_summary_group_dict[group_name]):
-    #     print("found it")
-    #     print(list(error_summary_group_dict[group_name])[4])
-    # out_dict = {}
     out_list = []
     vertnames = list(mnv_hist.GetVertErrorBandNames())
     for name in vertnames:
         if name not in group_list:
             continue
-        print("found vert band %s"%name)
+        # print("found vert band %s"%name)
         band = mnv_hist.GetVertErrorBand(name)
         band_hist = band.GetErrorBand(do_fractional_uncertainty, do_cov_area_norm).Clone()
         if band_hist.GetBinContent(band_hist.GetMaximumBin()) < ignore_Threshold:
@@ -3380,7 +2646,7 @@ def GetErrorHistsInGroup(i_mnv_hist, group_name):
         if name in out_list:
             print("ERROR: found lat band that is also a vert band")
             sys.exit(1) 
-        print("found lat band %s"%name)
+        # print("found lat band %s"%name)
         band = mnv_hist.GetLatErrorBand(name)
         band_hist = band.GetErrorBand(do_fractional_uncertainty, do_cov_area_norm).Clone()
         if band_hist.GetBinContent(band_hist.GetMaximumBin()) < ignore_Threshold:
@@ -3394,7 +2660,7 @@ def GetErrorHistsInGroup(i_mnv_hist, group_name):
         if name in out_list:
             print("ERROR: found uncorr band that is also a vert band")
             sys.exit(1) 
-        print("found uncorr band %s"%name)
+        # print("found uncorr band %s"%name)
         band_hist = band.GetUncorrErrorAsHist(name, do_fractional_uncertainty).Clone()
         if band_hist.GetBinContent(band_hist.GetMaximumBin()) < ignore_Threshold:
             continue
@@ -3434,6 +2700,7 @@ def MakeTitleOnPlot():
     latex = ROOT.TLatex()
     latex.SetNDC()
     latex.SetTextSize(0.058)
+    latex.SetTextFont(52)
     latex.SetTextAlign(21)
     return latex
 
@@ -3500,6 +2767,11 @@ bkgcats = [
     "neutralpion",
     "multipion",
     "other",
+    11,
+    12,
+    13,
+    14,
+    18,
 ]
 
 catstodo = [
@@ -3510,10 +2782,38 @@ catstodo = [
     "other",
     # "multipion",
     # "other_np",
+    1,
+    8,
+    2,
+    3,
+    4,
+]
+
+typestodo = [
+    "data",
+    1,  #: "QE",
+    8,  #: "2p2h",
+    2,  #: "RES",
+    3,  #: "DIS",
+    4,  #: "COH",
+]
+
+
+typestodo_leg = [
+    1,  #: "QE",
+    11, #: "Bkg QE",
+    8,  #: "2p2h",
+    18, #: "Bkg 2p2h",
+    2,  #: "RES",
+    12, #: "Bkg RES",
+    3,  #: "DIS",
+    13, #: "Bkg DIS",
+    4,  #: "COH",
+    14, #: "Bkg COH",
 ]
 
 catsnames = {
-    "data":"data", 
+    "data":"Data (stat. + syst.)", 
     "qelike":"QElike",
     "chargedpion":"1#pi^{#pm}",
     "neutralpion":"1#pi^{0}",
@@ -3554,12 +2854,6 @@ catscolors = {
     3:              ROOT.kP8Pink,   # DIS
     4:              ROOT.kP8Green,    # COH
     8:              ROOT.TColor.GetColorBright(ROOT.kP8Azure),  # 2p2h
-    # 0:              ROOT.kP8Red,     # total mc
-    # 1:              ROOT.kP8Blue,    # QE
-    # 2:              ROOT.kP8Pink,  # RES
-    # 3:              ROOT.kP8Green,   # DIS
-    # 4:              ROOT.kP8Gray,    # COH
-    # 8:              ROOT.kP8Orange,  # 2p2h
 }
 
 typescolors = {
@@ -3587,7 +2881,7 @@ typescolors = {
     3:              ROOT.kP8Pink,   # DIS
     4:              ROOT.kP8Green,    # COH
     # 8:              ROOT.kP8Azure,  # 2p2h
-    8:              ROOT.kP8Azure,  # 2p2h
+    8:              ROOT.TColor.GetColorBright(ROOT.kP8Azure),  # 2p2h
 }
 
 typesnames = {
@@ -3691,21 +2985,18 @@ for part in raw_filename_split:
 if modelname == "":
     print("Guessing model name is MnvTunev2.0.1")
     modelname = "MnvTunev2.0.1"
+
 # Now write it out so the name is better
 tmpmodelname = modelname
-# if " " not in tmpmodelname:
-    # replace the 
 if "_" in tmpmodelname:
     tmpmodelname = modelname.replace('_',' ')
-    # print(tmpmodelname)
 if tmpmodelname[7]!= " ":
     tmpmodelname = tmpmodelname[:7] + " " + tmpmodelname[7:]
-# if "multipion" in tmpmodelname:
 tmpmodelname = tmpmodelname.replace(" multipion","")
-# print(tmpmodelname)
-# sys.exit(1)
-typesnames[0] = tmpmodelname
+catsnames[0] = str(tmpmodelname)
 typesints[tmpmodelname] = 0
+print(catsnames)
+
 # source_outdirname = os.path.join(outdirname, "source")
 # if not os.path.exists(source_outdirname):
 #     print(source_outdirname)
@@ -3760,24 +3051,11 @@ print("\tLooking at untuned...")
 input_hists = GetInputHistDict(untuned_f)
 print("\tLooking at tuned...")
 input_hists = GetInputHistDict(tuned_f, input_hists)
+
 # Get the "type" histograms that are for the mcinttypes
 print("Making dict of source types hists...")
 input_typeshists = GetInputTypesHistDict(untuned_f)
 input_typeshists = GetInputTypesHistDict(tuned_f,input_typeshists)
-
-# analyze_stage_list = [
-#     "mc_tot",
-#     "mc_bkg_tot",
-#     "signalfraction",
-#     "bkgfraction",
-#     "bkgsub",
-#     "bkgsub_unfolded",
-#     "bkgsub_unfolded_effcorr",
-#     "efficiency",
-#     "bkgsub_unfolded_effcorr_sigma",
-#     "sigmaMC"
-# ]
-
 
 # Next get the histograms that were output by analyze_v9 (ie for each stage)
 print("Making dict of analyze hists...")
@@ -3798,6 +3076,48 @@ else:
     bigvarconfig_string = tuned_f.Get("varsFile").GetTitle()
 bigvarconfig_dict = json.loads(re.sub("//.*", "", bigvarconfig_string, flags = re.MULTILINE))
 
+for b_sample in analyze_hists["h"]:
+    for c_var in analyze_hists["h"][b_sample]:
+        var_title = c_var
+        var_units = "unit"
+        if c_var in vars_info:
+            var_title = vars_info[c_var]["title"]
+            var_units = vars_info[c_var]["units"]
+            if len(vars_info[c_var]["bins"]) == 0:
+                print("making bins")
+                varconfig = bigvarconfig_dict["1D"][c_var]
+                tmp_bins1D = []
+                if "bins" in varconfig.keys():
+                    tmp_bins1D = [float(tmpbin) for tmpbin in varconfig["bins"]]
+                    # vars_info[c_var]["bins"] = tmp_bins1D
+                elif "nbins" in varconfig.keys():
+                    mini = varconfig["min"]
+                    maxi = varconfig["max"]
+                    width = (maxi - mini)/varconfig["nbins"]
+                    tmp_bins1D = [mini + tmpbin * width for tmpbin in range(0,varconfig["nbins"]+1)]
+                    # print(bins1D)
+                bins1D = []
+                if c_var in rangeuser_dict:
+                    # print("I am here")
+                    for edge in tmp_bins1D:
+                        # print("\t",edge)
+                        # print("\t",rangeuser_dict[c_var][0])
+                        # print("\t",rangeuser_dict[c_var][1])
+                        if edge >= rangeuser_dict[c_var][0] and edge < rangeuser_dict[c_var][1]:
+                            bins1D.append(edge)
+                            continue
+                        if edge == rangeuser_dict[c_var][1]:
+                            bins1D.append(edge)
+                            break
+                        if edge > rangeuser_dict[c_var][1]:
+                            bins1D.append(rangeuser_dict[c_var][1])
+                            break
+                else:
+                    bins1D = tmp_bins1D
+                vars_info[c_var]["bins"] = bins1D
+# print(vars_info)
+# sys.exit(1)
+
 # # Done with the analyze_v9 files, lets get the files for the model comparison. This has it's own method
 # pathtodir_modelcomp = sys.argv[2]
 # modelcomppath_dict = GetModelCompFilePathsDict(pathtodir_modelcomp)
@@ -3808,16 +3128,8 @@ bigvarconfig_dict = json.loads(re.sub("//.*", "", bigvarconfig_string, flags = r
 #     with TFile.Open(modelcomppath_dict[model],"READONLY") as tmpfile:
 #         model_hists[model] = GetModelHistDict(tmpfile)
 
-
-# print(analyze_hists)
-# analyze_dict[hist][sample][var][stage] = hist
 ROOT.gStyle.SetOptStat(0)
 for a_hist in analyze_hists.keys():
-    # if a_hist =="h":
-    #     continue
-    # if a_hist == "h2D":
-    #     print("2d not set up, skipping")
-    #     continue
     print(a_hist)
     for b_sample in analyze_hists[a_hist].keys():
         datasample = b_sample
@@ -3836,93 +3148,70 @@ for a_hist in analyze_hists.keys():
             if "pzmu" in c_var: continue
             mnvPlotter = MnvPlotter()
             print(c_var)
-        
-            tmp_mcrecosig_tuned = input_hists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"]
-            tmp_mcseltru_tuned = input_hists[a_hist][b_sample][c_var]["qelike"]["selected_truth_tuned"]
-            tmp_mcalltru_tuned = input_hists[a_hist][b_sample][c_var]["qelike"]["all_truth_tuned"]
 
-            tmp_bkgsub = analyze_hists[a_hist][b_sample][c_var]["bkgsub"]
-            tmp_bkgsub_tuned = analyze_hists[a_hist][b_sample][c_var]["bkgsub_tuned"]
+            # These are total signal mc hists 
+            tmp_mcrecosig_untuned = input_hists[a_hist][b_sample][c_var]["qelike"]["reconstructed"]#.Clone()
+            tmp_mcseltru_untuned = input_hists[a_hist][b_sample][c_var]["qelike"]["selected_truth"]#.Clone()
+            tmp_mcalltru_untuned = input_hists[a_hist][b_sample][c_var]["qelike"]["all_truth"]#.Clone()
 
-            # unfolded
-            tmp_unfolded = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded"]
+            tmp_mcrecosig_tuned = input_hists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"]#.Clone()
+            tmp_mcseltru_tuned = input_hists[a_hist][b_sample][c_var]["qelike"]["selected_truth_tuned"]#.Clone()
+            tmp_mcalltru_tuned = input_hists[a_hist][b_sample][c_var]["qelike"]["all_truth_tuned"]#.Clone()
+
+            # These are data hists from analyze
+            tmp_bkgsub = analyze_hists[a_hist][b_sample][c_var]["bkgsub"]#.Clone()
+            tmp_bkgsub_tuned = analyze_hists[a_hist][b_sample][c_var]["bkgsub_tuned"]#.Clone()
+
+            tmp_unfolded = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded"]#.Clone()
+            tmp_unfolded_tuned = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded_tuned"]#.Clone()
             # Make a list for the unfolded by iteration
             tmp_unfoldediter_list = []
+            tmp_unfoldediter_tuned_list = []
             for key in analyze_hists[a_hist][b_sample][c_var].keys():
                 # print(">>>>>>>unfolded iter check on ", key)
                 if "unfolded" not in key: continue
                 if "iter" not in key: continue
-                if "tuned" in key: continue
-                print("untuned unfolded iter hist:", key)
-                tmp_unfoldediter_list.append(analyze_hists[a_hist][b_sample][c_var][key])
+                if "tuned" in key: 
+                    tmp_unfoldediter_tuned_list.append(analyze_hists[a_hist][b_sample][c_var][key])#.Clone())
+                else:
+                    tmp_unfoldediter_list.append(analyze_hists[a_hist][b_sample][c_var][key])#.Clone())
             # want to add the last iter
             tmp_unfoldediter_list.append(tmp_unfolded)
-
-            tmp_unfolded_tuned = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded_tuned"]
-            tmp_unfoldediter_tuned_list = []
-            index = 0
-            for key in analyze_hists[a_hist][b_sample][c_var].keys():
-                # print(">>>>>>>unfolded iter check on ", key)
-                if "unfolded" not in key: continue
-                if "iter" not in key: continue
-                if "tuned" not in key: continue
-                print("tuned unfolded iter hist:", key)
-                tmp_unfoldediter_tuned_list.append(analyze_hists[a_hist][b_sample][c_var][key])
             tmp_unfoldediter_tuned_list.append(tmp_unfolded_tuned)
 
             # Efficiency related things
-            tmp_efficiency = analyze_hists[a_hist][b_sample][c_var]["efficiency"]
-            tmp_efficiency_tuned = analyze_hists[a_hist][b_sample][c_var]["efficiency_tuned"]
+            tmp_efficiency = analyze_hists[a_hist][b_sample][c_var]["efficiency"].Clone()
+            tmp_efficiency_tuned = analyze_hists[a_hist][b_sample][c_var]["efficiency_tuned"].Clone()
 
-            tmp_effcorr = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded_effcorr"]
-            tmp_effcorr_tuned = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded_effcorr_tuned"]
+            tmp_effcorr = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded_effcorr"].Clone()
+            tmp_effcorr_tuned = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded_effcorr_tuned"].Clone()
 
             # Cross sections  
-            tmp_sigma = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded_effcorr_sigma"]
-            tmp_sigma_tuned = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded_effcorr_sigma_tuned"]
-            tmp_sigmamc = analyze_hists[a_hist][b_sample][c_var]["sigmaMC"]
-            tmp_sigmamc_tuned = analyze_hists[a_hist][b_sample][c_var]["sigmaMC_tuned"]
+            tmp_sigma = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded_effcorr_sigma"].Clone()
+            tmp_sigma_tuned = analyze_hists[a_hist][b_sample][c_var]["bkgsub_unfolded_effcorr_sigma_tuned"].Clone()
+            tmp_sigmamc = analyze_hists[a_hist][b_sample][c_var]["sigmaMC"].Clone()
+            tmp_sigmamc_tuned = analyze_hists[a_hist][b_sample][c_var]["sigmaMC_tuned"].Clone()
             # print(tmp_sigmamc_tuned.GetVertErrorBandNames())
             # sys.exit(1)
             
             found_typessigma = False
             found_typessigmatuned = False
+            tmp_typessigma = {}
+            tmp_typessigma_tuned = {}
             if a_hist in analyze_typeshists:
                 if b_sample in analyze_typeshists[a_hist]:
                     if c_var in analyze_typeshists[a_hist][b_sample]:
                         if "sigmaMC" in analyze_typeshists[a_hist][b_sample][c_var]:
                             print("found types sigmamc")
-                            tmp_typessigma = analyze_typeshists[a_hist][b_sample][c_var]["sigmaMC"]
+                            for itype in analyze_typeshists[a_hist][b_sample][c_var]["sigmaMC"]:
+                                tmp_typessigma[itype] = analyze_typeshists[a_hist][b_sample][c_var]["sigmaMC"][itype].Clone()
                             found_typessigma = True
                         if "sigmaMC_tuned" in analyze_typeshists[a_hist][b_sample][c_var]:
                             print("found tuned types sigmamc")
-                            tmp_typessigma = analyze_typeshists[a_hist][b_sample][c_var]["sigmaMC_tuned"]
+                            for itype in analyze_typeshists[a_hist][b_sample][c_var]["sigmaMC_tuned"]:
+                                tmp_typessigma_tuned[itype] = analyze_typeshists[a_hist][b_sample][c_var]["sigmaMC_tuned"][itype].Clone()
                             found_typessigmatuned = True
-            
-            # print(input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"].keys())
-            if a_hist=="h":
-                var_title = c_var
-                var_units = "unit"
-                if c_var in vars_info:
-                    var_title = vars_info[c_var]["title"]
-                    var_units = vars_info[c_var]["units"]
-                    if len(vars_info[c_var]["bins"]) == 0:
-                        print("making bins")
-                        varconfig = bigvarconfig_dict["1D"][c_var]
-                        if "bins" in varconfig.keys():
-                            bins1D = [float(tmpbin) for tmpbin in varconfig["bins"]]
-                            vars_info[c_var]["bins"] = bins1D
-                        elif "nbins" in varconfig.keys():
-                            mini = varconfig["min"]
-                            maxi = varconfig["max"]
-                            width = (maxi - mini)/varconfig["nbins"]
-                            bins1D = [mini + tmpbin * width for tmpbin in range(0,varconfig["nbins"]+1)]
-                            # print(bins1D)
-                            vars_info[c_var]["bins"] = bins1D
-                counts_ytitle = "Counts/%s"%(var_units)
-                # continue
-            # found_inputtypes = False
-            # found_inputtypestuned = False
+
             found_inputtypes = []
             found_inputtypestuned = []
             if a_hist in input_typeshists:
@@ -3939,44 +3228,40 @@ for a_hist in analyze_hists.keys():
                                 if len(list(input_typeshists[a_hist][b_sample][c_var]["qelike"][d_types].keys())) != 0:
                                     print("found types for ", d_types)
                                     found_inputtypestuned.append(d_types)
-
-                            # if "reconstructed" in input_typeshists[a_hist][b_sample][c_var]["qelike"].keys():
-                            #     print("found types inputhists")
-                            #     found_inputtypes = True
-                            # if "reconstructed_tuned" in input_typeshists[a_hist][b_sample][c_var]["qelike"].keys():
-                            #     print("found tuned types inputhists")
-                            #     found_inputtypestuned = True
             tmp_types_mcreco = []
             tmp_types_mcseltru = []
             tmp_types_mcalltru = []
-            # if found_inputtypes:
-            #     print(a_hist, b_sample, c_var)
-            #     print("keys", input_typeshists[a_hist][b_sample][c_var]["qelike"].keys())
-            #     tmp_types_mcreco = input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed"]
-            #     # print(input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed"])
-            #     # sys.exit(1)
-            #     tmp_types_mcseltru = input_typeshists[a_hist][b_sample][c_var]["qelike"]["selected_truth"]
-            #     tmp_types_mcalltru = input_typeshists[a_hist][b_sample][c_var]["qelike"]["all_truth"]
-            # if found_inputtypestuned:
-            #     print("keys", input_typeshists[a_hist][b_sample][c_var]["qelike"].keys())
-            #     tmp_types_mcreco = input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"]
-            #     tmp_types_mcseltru = input_typeshists[a_hist][b_sample][c_var]["qelike"]["selected_truth_tuned"]
-            #     tmp_types_mcalltru = input_typeshists[a_hist][b_sample][c_var]["qelike"]["all_truth_tuned"]
+
             tmp_types_mcreco = {}
             tmp_types_mcseltru = {}
             tmp_types_mcalltru = {}
+            tmp_types_mcreco_tuned = {}
+            tmp_types_mcseltru_tuned = {}
+            tmp_types_mcalltru_tuned = {}
             if "reconstructed" in found_inputtypes:
-                tmp_types_mcreco = input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed"]
+                tmp_types_mcreco= input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed"]
+                # for itype in input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed"]:
+                #     tmp_types_mcreco[itype] = input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed"][itype].Clone()
             if "selected_truth" in found_inputtypes:
                 tmp_types_mcseltru = input_typeshists[a_hist][b_sample][c_var]["qelike"]["selected_truth"]
+                # for itype in input_typeshists[a_hist][b_sample][c_var]["qelike"]["selected_truth"]:
+                #     tmp_types_mcseltru[itype] = input_typeshists[a_hist][b_sample][c_var]["qelike"]["selected_truth"][itype].Clone()
             if "all_truth" in found_inputtypes:
                 tmp_types_mcalltru = input_typeshists[a_hist][b_sample][c_var]["qelike"]["all_truth"]
+                # for itype in input_typeshists[a_hist][b_sample][c_var]["qelike"]["all_truth"]:
+                #     tmp_types_mcalltru[itype] = input_typeshists[a_hist][b_sample][c_var]["qelike"]["all_truth"][itype].Clone()
             if "reconstructed_tuned" in found_inputtypestuned:
-                tmp_types_mcreco = input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed"]
+                tmp_types_mcreco_tuned = input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"]
+                # for itype in input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"]:
+                #     tmp_types_mcreco_tuned[itype] = input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"][itype].Clone()
             if "selected_truth_tuned" in found_inputtypestuned:
-                tmp_types_mcseltru = input_typeshists[a_hist][b_sample][c_var]["qelike"]["selected_truth_tuned"]
+                tmp_types_mcseltru_tuned = input_typeshists[a_hist][b_sample][c_var]["qelike"]["selected_truth_tuned"]
+                # for itype in input_typeshists[a_hist][b_sample][c_var]["qelike"]["selected_truth_tuned"]:
+                #     tmp_types_mcseltru_tuned[itype] = input_typeshists[a_hist][b_sample][c_var]["qelike"]["selected_truth_tuned"][itype].Clone()
             if "all_truth_tuned" in found_inputtypestuned:
-                tmp_types_mcalltru = input_typeshists[a_hist][b_sample][c_var]["qelike"]["all_truth_tuned"]
+                tmp_types_mcalltru_tuned= input_typeshists[a_hist][b_sample][c_var]["qelike"]["all_truth_tuned"]
+                # for itype in input_typeshists[a_hist][b_sample][c_var]["qelike"]["all_truth_tuned"]:
+                #     tmp_types_mcalltru_tuned[itype] = input_typeshists[a_hist][b_sample][c_var]["qelike"]["all_truth_tuned"][itype].Clone()
 
             # tmp_model_hists = {}
             # for model in modelcomptodo:
@@ -3985,14 +3270,13 @@ for a_hist in analyze_hists.keys():
             #             if c_var in model_hists[model][a_hist][b_sample]:
             #                 tmp_model_hists[model] = model_hists[model][a_hist][b_sample][c_var]["reweight"]
             
-            tmp_canvas_basename = "%s_%s_%s"%(modelname,b_sample,c_var)
-            tmp_canvas_basetitle = "%s %s %s"%(modelname, b_sample,c_var)
+            tmp_canvas_basename = "%s_%s_%s"%(modelname, b_sample, c_var)
+            # tmp_canvas_basetitle = "%s %s %s"%(modelname, b_sample, c_var)
             var_outdir = os.path.join(outdirname,c_var)
             if not os.path.exists(var_outdir):
                 print( var_outdir)
                 os.mkdir(var_outdir)
                 os.mkdir(os.path.join(var_outdir,"source"))
-            
             dimtag = ""
             if a_hist=="h":
                 dimtag = "1D"
@@ -4004,215 +3288,84 @@ for a_hist in analyze_hists.keys():
             if a_hist=="h":
                 var_title = c_var
                 var_units = "unit"
-                if c_var in vars_info:
-                    var_title = vars_info[c_var]["title"]
-                    var_units = vars_info[c_var]["units"]
-                    if len(vars_info[c_var]["bins"]) == 0:
-                        print("making bins")
-                        varconfig = bigvarconfig_dict["1D"][c_var]
-                        if "bins" in varconfig.keys():
-                            bins1D = [float(tmpbin) for tmpbin in varconfig["bins"]]
-                            vars_info[c_var]["bins"] = bins1D
-                        elif "nbins" in varconfig.keys():
-                            mini = varconfig["min"]
-                            maxi = varconfig["max"]
-                            width = (maxi - mini)/varconfig["nbins"]
-                            bins1D = [mini + tmpbin * width for tmpbin in range(0,varconfig["nbins"]+1)]
-                            # print(bins1D)
-                            vars_info[c_var]["bins"] = bins1D
-                counts_ytitle = "Counts/%s"%(var_units)
-                # continue
+                var_title = vars_info[c_var]["title"]
+                var_units = vars_info[c_var]["units"]
+                counts_ytitle = "Counts / (%s)"%(var_units)
                 # bkg subtracted 
                 if "bkgsub" not in skipstage_list:
-                    # bkgsub_canvas_name = tmp_canvas_basename + "_bkgsub"
-                    bkgsub_canvas_name = pdf_canvas_name
-                    bkgsub_canvas_title = tmp_canvas_basetitle + " Background Subtracted"
-                    # DrawDataMCPlot1D(
-                    #     tmp_bkgsub_tuned, tmp_mcrecosig_tuned, 
-                    #     "Reconstructed %s (%s)"%(var_title, var_units), counts_ytitle, 
-                    #     var_outdir, 
-                    #     bkgsub_canvas_name, bkgsub_canvas_title
-                    # )
+                    bkgsub_canvas_title = " Background Subtracted"
                     if "reconstructed_tuned" in found_inputtypestuned:
+                        print(counts_ytitle)
                         DrawDataMCPlot1D_new(
-                            tmp_bkgsub_tuned, tmp_mcrecosig_tuned, tmp_types_mcreco, 
-                            "Reconstructed %s(%s)"%(var_title, var_units), counts_ytitle, 
+                            tmp_bkgsub_tuned, tmp_mcrecosig_tuned, tmp_types_mcreco_tuned, 
+                            "%s (%s)"%(var_title, var_units), counts_ytitle, 
                             var_outdir, 
-                            bkgsub_canvas_name, bkgsub_canvas_title,
+                            pdf_canvas_name, bkgsub_canvas_title,
                             "_bkgsub", 
                             True, True
                         )
-
-                    #     DrawDataMCTypesPlot1D(
-                    #         tmp_bkgsub_tuned, tmp_mcrecosig_tuned, tmp_types_mcreco, 
-                    #         "%s (%s)"%(var_title,var_units), counts_ytitle, 
-                    #         var_outdir, 
-                    #         bkgsub_canvas_name, bkgsub_canvas_title
-                    #     )
-                    # DrawErrorSummary1D(
-                    #     tmp_bkgsub_tuned, 
-                    #     "%s (%s)"%(var_title, var_units), 
-                    #     var_outdir, 
-                    #     bkgsub_canvas_name+"_tuned", bkgsub_canvas_title + " Tuned"
-                    # )
-                    # DrawErrorSummary1D(
-                    #     tmp_bkgsub, 
-                    #     "%s (%s)"%(var_title, var_units), 
-                    #     var_outdir, 
-                    #     bkgsub_canvas_name+"_untuned", bkgsub_canvas_title + " Untuned"
-                    # )
-                    # TODO types
-
                 # unfolded hists
                 if "unfolded" not in skipstage_list:
-                    # unfolded_canvas_name = tmp_canvas_basename + "_unfolded"
-                    unfolded_canvas_name = pdf_canvas_name
-                    unfolded_canvas_title = tmp_canvas_basetitle + " Unfolded"
-                    # DrawDataMCPlot1D(
-                    #     tmp_unfolded_tuned, tmp_mcseltru_tuned, 
-                    #     "%s (%s)"%(var_title,var_units), counts_ytitle, 
-                    #     var_outdir, 
-                    #     unfolded_canvas_name, unfolded_canvas_title
-                    # )
+                    unfolded_canvas_title = "Unfolded"
                     if "selected_truth_tuned" in found_inputtypestuned:
-                        # DrawDataMCTypesPlot1D(
-                        #     tmp_unfolded_tuned, tmp_mcseltru_tuned, tmp_types_mcseltru, 
-                        #     "%s (%s)"%(var_title,var_units), counts_ytitle, 
-                        #     var_outdir, 
-                        #     unfolded_canvas_name, unfolded_canvas_title
-                        # )
                         DrawDataMCPlot1D_new(
-                            tmp_unfolded_tuned, tmp_mcseltru_tuned, tmp_types_mcseltru, 
+                            tmp_unfolded_tuned, tmp_mcseltru_tuned, tmp_types_mcseltru_tuned, 
                             "%s (%s)"%(var_title,var_units), counts_ytitle, 
                             var_outdir, 
-                            unfolded_canvas_name, unfolded_canvas_title,
+                            pdf_canvas_name, unfolded_canvas_title,
                             "_unfolded", 
                             True, True
                         )
                     for i in range(len(tmp_unfoldediter_tuned_list)):
-                        # tmp_canvas_name = "%siter%d"%(unfolded_canvas_name, i+1)
-                        tmp_canvas_name = pdf_canvas_name
                         tmp_canvas_title = "%s iter %d"%(unfolded_canvas_title, i+1)
-                        # DrawDataMCPlot1D(
-                        #     tmp_unfoldediter_tuned_list[i], tmp_mcseltru_tuned, 
-                        #     "Unfolded %s (%s)"%(var_title, var_units), counts_ytitle, 
-                        #     var_outdir, 
-                        #     tmp_canvas_name, tmp_canvas_title
-                        # )
                         if "selected_truth_tuned" in found_inputtypestuned:
-                            # DrawDataMCTypesPlot1D(
-                            #     tmp_unfoldediter_tuned_list[i], tmp_mcseltru_tuned, tmp_types_mcseltru, 
-                            #     "%s (%s)"%(var_title,var_units), counts_ytitle, 
-                            #     var_outdir, 
-                            #     tmp_canvas_name, tmp_canvas_title
-                            # )
                             DrawDataMCPlot1D_new(
-                                tmp_unfoldediter_tuned_list[i], tmp_mcseltru_tuned, tmp_types_mcseltru, 
+                                tmp_unfoldediter_tuned_list[i], tmp_mcseltru_tuned, tmp_types_mcseltru_tuned, 
                                 "%s (%s)"%(var_title,var_units), counts_ytitle, 
                                 var_outdir, 
-                                tmp_canvas_name, tmp_canvas_title,
+                                pdf_canvas_name, tmp_canvas_title,
                                 "_unfolded_iter%02d"%(i+1), 
                                 True, True
                             )
-
-                    # DrawErrorSummary1D(
-                    #     tmp_unfolded_tuned, 
-                    #     "%s (%s)"%(var_title, var_units), 
-                    #     var_outdir, 
-                    #     unfolded_canvas_name, unfolded_canvas_title
-                    # )
-                    # TODO types
-
                 # effcorr hists
                 if "effcorr" not in skipstage_list:
-                    # effcorr_canvas_name = tmp_canvas_basename + "_effcorr"
-                    effcorr_canvas_name = pdf_canvas_name
-                    effcorr_canvas_title = tmp_canvas_basename + " Efficiency Corrected"
-                    # DrawDataMCPlot1D(
-                    #     tmp_effcorr_tuned, tmp_mcalltru_tuned, 
-                    #     "True %s (%s)"%(var_title,var_units), counts_ytitle, 
-                    #     var_outdir, 
-                    #     effcorr_canvas_name, effcorr_canvas_title
-                    #     )
-                    # DrawErrorSummary1D(
-                    #     tmp_effcorr_tuned, 
-                    #     "%s (%s)"%(var_title,var_units), 
-                    #     var_outdir, 
-                    #     effcorr_canvas_name, effcorr_canvas_title
-                    # )
+                    # effcorr_canvas_title = tmp_canvas_basename + " Efficiency Corrected"
+                    effcorr_canvas_title = " Efficiency Corrected"
                     if "all_truth_tuned" in found_inputtypestuned:
-                        # DrawDataMCTypesPlot1D(
-                        #     tmp_effcorr_tuned, tmp_mcalltru_tuned, tmp_types_mcalltru, 
-                        #     "%s (%s)"%(var_title,var_units), counts_ytitle, 
-                        #     var_outdir, 
-                        #     effcorr_canvas_name, effcorr_canvas_title
-                        # )
                         DrawDataMCPlot1D_new(
-                            tmp_effcorr_tuned, tmp_mcalltru_tuned, tmp_types_mcalltru, 
+                            tmp_effcorr_tuned, tmp_mcalltru_tuned, tmp_types_mcalltru_tuned, 
                             "%s (%s)"%(var_title,var_units), counts_ytitle, 
                             var_outdir, 
-                            effcorr_canvas_name, effcorr_canvas_title,
+                            pdf_canvas_name, effcorr_canvas_title,
                             "_effcorr", 
                             True, True
                         )                    
                     if "all_truth_tuned" in found_inputtypestuned and "selected_truth_tuned" in found_inputtypestuned:
+                        eff_canvas_title = " Efficiencys"
                         DrawEfficiency1D(
-                            tmp_mcseltru_tuned, tmp_mcalltru_tuned, 
+                            tmp_mcseltru_tuned, tmp_mcalltru_tuned_tuned, 
                             var_title, var_units,
-                            var_outdir, pdf_canvas_name, tmp_canvas_basename
+                            var_outdir, 
+                            pdf_canvas_name, eff_canvas_title
                         )
-                    # TODO types
-                    # TODO effieciency
-
-                # if "efficiency" not in skipstage_list:
-                #     DrawEfficiency1D(i_seltrue_hist, i_alltrue_hist, x_varname, x_units, outdirname, canvas_name, canvas_title)
-                # cross section
                 if "sigma" not in skipstage_list:
+                    # sigma_canvas_title = tmp_canvas_basetitle + " sigma"
+                    sigma_canvas_title = "Cross Section"
                     sigma_ytitle = "d#sigma/d%s (cm^{2}/%s/Nucleon)"%(var_title,var_units)
-                    # sigma_canvas_name = tmp_canvas_basename + "_sigma"
-                    sigma_canvas_name = pdf_canvas_name
-                    sigma_canvas_title = tmp_canvas_basetitle + " sigma"
-                    # DrawDataMCPlot1D(
-                    #     tmp_sigma_tuned,tmp_sigmamc, 
-                    #     "%s (%s)"%(var_title,var_units), sigma_ytitle, 
-                    #     var_outdir, 
-                    #     sigma_canvas_name, sigma_canvas_title
-                    # )
-                    # DrawErrorSummary1D(
-                    #     tmp_sigma, 
-                    #     "%s (%s)"%(var_title, var_units), 
-                    #     var_outdir, 
-                    #     sigma_canvas_name, sigma_canvas_title
-                    # )
                     if found_typessigma:
-                        # DrawDataMCTypesPlot1D(
-                        #     tmp_sigma_tuned, tmp_sigmamc, tmp_typessigma, 
-                        #     "%s (%s)"%(var_title,var_units), sigma_ytitle, 
-                        #     var_outdir, 
-                        #     sigma_canvas_name, sigma_canvas_title
-                        # )
-                    # if "modelcomp" not in skipstage_list:
-                    #     modelcomp_canvas_name = tmp_canvas_basename + "_sigma_modelcomp"
-                    #     modelcomp_canvas_title = tmp_canvas_basetitle + " sigma Model Comparison"
-                        # DrawDataMCTypesPlot1D(
-                        #     tmp_sigma_tuned,tmpsigmamc, tmp_model_hists,
-                        #     "%s (%s)"%(var_title,var_units), sigma_ytitle, 
-                        #     var_outdir,
-                        #     modelcomp_canvas_name, modelcomp_canvas_title
-                        # )
                         DrawDataMCPlot1D_new(
-                            tmp_sigma_tuned,tmpsigmamc, tmp_model_hists,
+                            tmp_sigma_tuned, tmpsigmamc, tmp_typessigma,
                             "%s (%s)"%(var_title,var_units), sigma_ytitle, 
                             var_outdir, 
-                            modelcomp_canvas_name, modelcomp_canvas_title,
+                            pdf_canvas_name, sigma_canvas_title,
                             "_sigma", 
                             True, True
                         )        
 
             if a_hist == "h2D":
                 print(">>>>>> doing 2D")
-                print(found_inputtypes)
-                print(found_inputtypestuned)
+                # print(found_inputtypes)
+                # print(found_inputtypestuned)
                 xvar = c_var.split("_")[0]
                 yvar = c_var.split("_")[1]
 
@@ -4228,7 +3381,7 @@ for a_hist in analyze_hists.keys():
                     yvar_name = vars_info[yvar]["title"]
                     yvar_units = vars_info[yvar]["units"]
                     yvar_bins =  vars_info[yvar]["bins"]
-                    print(yvar, yvar_bins)
+                    # print(yvar, yvar_bins)
                     
                 xvar_title = "%s (%s)"%(xvar_name,xvar_units)
                 yvar_title = "%s (%s)"%(yvar_name, yvar_units)
@@ -4236,181 +3389,85 @@ for a_hist in analyze_hists.keys():
                 tmp_nametag = ""
                 tmp_do_stack = True
                 tmp_do_nostack = True
-                # if "reconstructed" not in skipstage_list:
-                #     reco_canvas_name = pdf_canvas_name
-                #     bkgsub_canvas_title = tmp_canvas_basetitle + " Reconstructed"
-                #     # Need to make the reco hists
-                #     tmp_bkg_types = []
-                #     tmp_types_mcreco = input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"]
-                #     first = True
-                #     for bkg in bkgcats:
-                #         if bkg in input_typeshists[a_hist][b_sample][c_var][c_cat]:
-                #             for itype in input_typeshists[a_hist][b_sample][c_var][c_cat]["reconstructed_tuned"]:
-                #                 if first:
-                                    
-                #                     first = False
-                #                     continue
-
-
-                #     DrawDataMCPlot2D(
-                #         tmp_bkgsub_tuned, tmp_mcrecosig_tuned, 
-                #         xvar_title, xvar_bins, 
-                #         yvar_title, yvar_bins, 
-                #         counts_ztitle, 
-                #         var_outdir, 
-                #         bkgsub_canvas_name, bkgsub_canvas_title
-                #     )
-
-                # bkgsubtracted
                 if "bkgsub" not in skipstage_list:
-                    eavail_mutlipliers = []
-                    # bkgsub_canvas_name = tmp_canvas_basename + "_bkgsub"
+                    multipliers = []
                     bkgsub_canvas_name = pdf_canvas_name
-                    bkgsub_canvas_title = tmp_canvas_basetitle + " Background Subtracted"
-                    # DrawDataMCPlot2D(
-                    #     tmp_bkgsub_tuned, tmp_mcrecosig_tuned, 
-                    #     xvar_title, xvar_bins, 
-                    #     yvar_title, yvar_bins, 
-                    #     counts_ztitle, 
-                    #     var_outdir, 
-                    #     bkgsub_canvas_name, bkgsub_canvas_title
-                    # )
+                    bkgsub_canvas_title = "Background Subtracted"
                     if "reconstructed_tuned" in found_inputtypestuned:
-                        # DrawDataMCTypesPlot2D(
-                        #     tmp_bkgsub_tuned, tmp_mcrecosig_tuned, tmp_types_mcreco, 
-                        #     xvar_title, xvar_bins, yvar_title, yvar_bins, 
-                        #     counts_ztitle, 
-                        #     var_outdir, 
-                        #     bkgsub_canvas_name, bkgsub_canvas_title
-                        # )
+                        print(vars_info[xvar])
+                        print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Doing bkg sub'd")
                         DrawDataMCPlot2D_new(
-                            tmp_bkgsub_tuned, tmp_mcrecosig_tuned, tmp_types_mcreco, 
+                            tmp_bkgsub_tuned, tmp_mcrecosig_tuned, tmp_types_mcreco_tuned, 
                             xvar_name, xvar_units, xvar_bins, yvar_name, yvar_units, yvar_bins,
                             counts_ztitle, 
                             var_outdir, 
-                            pdf_canvas_name, bkgsub_canvas_title, tmp_nametag,
-                            eavail_mutlipliers,
+                            pdf_canvas_name, bkgsub_canvas_title, 
+                            "_bkgsub", 
+                            multipliers,
                             tmp_do_stack, tmp_do_nostack
                         )                
                 # unfolded
                 if "unfolded" not in skipstage_list:
-                    eavail_mutlipliers = []
-                    # unfolded_canvas_name = tmp_canvas_basename + "_unfolded"
-                    unfolded_canvas_name = pdf_canvas_name
-
-                    unfolded_canvas_title = tmp_canvas_basetitle + " Unfolded"
-                    # DrawDataMCPlot2D(
-                    #     tmp_unfolded_tuned, tmp_mcseltru_tuned, 
-                    #     xvar_title, xvar_bins, 
-                    #     yvar_title, yvar_bins, 
-                    #     counts_ztitle, 
-                    #     var_outdir, 
-                    #     unfolded_canvas_name, unfolded_canvas_title
-                    # )
+                    multipliers = []
+                    unfolded_canvas_title = "Unfolded"
                     if "selected_truth_tuned" in found_inputtypestuned:
-                        # DrawDataMCTypesPlot2D(
-                        #     tmp_unfolded_tuned, tmp_mcseltru_tuned, tmp_types_mcseltru, 
-                        #     xvar_title, xvar_bins, yvar_title, yvar_bins, 
-                        #     counts_ztitle, 
-                        #     var_outdir, 
-                        #     unfolded_canvas_name, unfolded_canvas_title
-                        # )
+                        print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Doing unfolded")
                         DrawDataMCPlot2D_new(
-                            tmp_unfolded_tuned, tmp_mcseltru_tuned, tmp_types_mcseltru, 
+                            tmp_unfolded_tuned, tmp_mcseltru_tuned, tmp_types_mcseltru_tuned, 
                             xvar_name, xvar_units, xvar_bins, yvar_name, yvar_units, yvar_bins,
                             counts_ztitle, 
                             var_outdir, 
-                            pdf_canvas_name, unfolded_canvas_title, tmp_nametag,
-                            eavail_mutlipliers,
+                            pdf_canvas_name, unfolded_canvas_title, 
+                            "_unfolded", 
+                            multipliers,
                             tmp_do_stack, tmp_do_nostack
                         )
                     for i in range(len(tmp_unfoldediter_tuned_list)):
-                        # tmp_canvas_name = "%siter%d"%(unfolded_canvas_name, i+1)
-                        tmp_canvas_name = pdf_canvas_name
                         tmp_canvas_title = "%s iter %d"%(unfolded_canvas_title, i+1)
-                        # DrawDataMCPlot2D(
-                        #     tmp_unfoldediter_tuned_list[i], tmp_mcseltru_tuned, 
-                        #     xvar_title, xvar_bins, 
-                        #     yvar_title, yvar_bins, 
-                        #     counts_ztitle, 
-                        #     var_outdir, 
-                        #     tmp_canvas_name, tmp_canvas_title
-                        # )
                         if "selected_truth_tuned" in found_inputtypestuned:
-                            # DrawDataMCTypesPlot2D(
-                            #     tmp_unfoldediter_tuned_list[i], tmp_mcseltru_tuned, tmp_types_mcseltru, 
-                            #     xvar_title, xvar_bins, yvar_title, yvar_bins, 
-                            #     counts_ztitle, 
-                            #     var_outdir, 
-                            #     unfolded_canvas_name, unfolded_canvas_title
-                            # )
                             DrawDataMCPlot2D_new(
-                                tmp_unfoldediter_tuned_list[i], tmp_mcseltru_tuned, tmp_types_mcseltru, 
+                                tmp_unfoldediter_tuned_list[i], tmp_mcseltru_tuned, tmp_types_mcseltru_tuned, 
                                 xvar_name, xvar_units, xvar_bins, yvar_name, yvar_units, yvar_bins,
                                 counts_ztitle, 
                                 var_outdir, 
-                                pdf_canvas_name, tmp_canvas_title, tmp_nametag,
-                                eavail_mutlipliers,
+                                pdf_canvas_name, tmp_canvas_title, 
+                                "_unfolded_iter%02d"%(i+1), 
+                                multipliers,
                                 tmp_do_stack, tmp_do_nostack
                             )
 
                 # eff corr
                 if "effcorr" not in skipstage_list:
-                    eavail_mutlipliers = []
-                    # effcorr_canvas_name = tmp_canvas_basename + "_effcorr"
-                    effcorr_canvas_name = pdf_canvas_name
-                    effcorr_canvas_title = tmp_canvas_basename + " Efficiency Corrected"
-                    # DrawDataMCPlot2D(
-                    #     tmp_effcorr_tuned, tmp_mcalltru_tuned, 
-                    #     xvar_title, xvar_bins, 
-                    #     yvar_title, yvar_bins, 
-                    #     counts_ztitle, 
-                    #     var_outdir, 
-                    #     effcorr_canvas_name, effcorr_canvas_title
-                    # )
+                    mutlipliers = []
+                    effcorr_canvas_title = "Efficiency Corrected"
                     if "all_truth_tuned" in found_inputtypestuned:
-                        # DrawDataMCTypesPlot2D(
-                        #     tmp_effcorr_tuned, tmp_mcalltru_tuned, tmp_types_mcalltru, 
-                        #     xvar_title, xvar_bins, yvar_title, yvar_bins, 
-                        #     counts_ztitle, 
-                        #     var_outdir, 
-                        #     effcorr_canvas_name, effcorr_canvas_title
-                        # )
+                        print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Doing Efficiency")
                         DrawDataMCPlot2D_new(
-                            tmp_effcorr_tuned, tmp_mcalltru_tuned, tmp_types_mcalltru, 
+                            tmp_effcorr_tuned, tmp_mcalltru_tuned, tmp_types_mcalltru_tuned, 
                             xvar_name, xvar_units, xvar_bins, yvar_name, yvar_units, yvar_bins,
                             counts_ztitle, 
                             var_outdir, 
-                            pdf_canvas_name, effcorr_canvas_title, tmp_nametag,
-                            eavail_mutlipliers,
+                            pdf_canvas_name, effcorr_canvas_title, 
+                            "_effcorr", 
+                            mutlipliers,
                             tmp_do_stack, tmp_do_nostack
                         )
                         if "selected_truth_tuned" in found_inputtypestuned:
-
-                            print("Drawing efficiency")
-                            print("keys", tmp_types_mcseltru, "\t", tmp_types_mcalltru)
+                            eff_canvas_title = "Efficiency"
                             DrawEfficiency2D(
                                 tmp_mcseltru_tuned, tmp_mcalltru_tuned, 
                                 tmp_types_mcseltru, tmp_types_mcalltru,
                                 xvar_name, xvar_units, xvar_bins, yvar_name, yvar_units, yvar_bins,
-                                var_outdir, pdf_canvas_name, effcorr_canvas_title
+                                var_outdir, pdf_canvas_name, eff_canvas_title
                             )
 
                 # cross section
                 if "sigma" not in skipstage_list:
-                    sigma_ztitle = "d^{2}#sigma/d%sd%s (cm^{2}/%s/%s/Nucleon)"%(xvar_name,yvar_name,xvar_units,yvar_units)
-                    # sigma_canvas_name = tmp_canvas_basename + "_sigma"
-                    sigma_canvas_name = pdf_canvas_name
-                    sigma_canvas_title = tmp_canvas_basetitle + " sigma"
-
-                    # DrawDataMCPlot2D(
-                    #     tmp_sigma_tuned, tmp_sigmamc, 
-                    #     xvar_title, xvar_bins, yvar_title, yvar_bins, 
-                    #     sigma_ztitle, 
-                    #     var_outdir, 
-                    #     sigma_canvas_name, sigma_canvas_title
-                    # )
+                    sigma_ztitle = "d^{2}#sigma/d%sd%s (cm^{2}/%s/%s/Nucleon)"%(xvar_name, yvar_name, xvar_units, yvar_units)
+                    sigma_canvas_title = "Cross section"
                     if found_typessigma:
+                        print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Doing cross section")
+
                         eavail_mutlipliers = []
                         #     1.0,
                         #     12.0,
@@ -4421,25 +3478,16 @@ for a_hist in analyze_hists.keys():
                         #     200.0,
                         # ]
                         print(eavail_mutlipliers)
-                        # DrawDataMCTypesPlot2D(
-                        #     tmp_sigma_tuned, tmp_sigmamc, tmp_typessigma, 
-                        #     xvar_title, xvar_bins, yvar_title, yvar_bins, 
-                        #     sigma_ztitle, 
-                        #     var_outdir, 
-                        #     sigma_canvas_name, sigma_canvas_title,
-                        #     eavail_mutlipliers
-                        # )
                         DrawDataMCPlot2D_new(
                             tmp_sigma_tuned, tmp_sigmamc, tmp_typessigma, 
                             xvar_name, xvar_units, xvar_bins, yvar_name, yvar_units, yvar_bins,
                             sigma_ztitle, 
                             var_outdir, 
-                            sigma_canvas_name, sigma_canvas_title, tmp_nametag,
+                            pdf_canvas_name, sigma_canvas_title, 
+                            "_sigma",
                             eavail_mutlipliers,
                             tmp_do_stack, tmp_do_nostack
                         )
-
-
                     # if "modelcomp" not in skipstage_list:
                     #     modelcomp_canvas_name = tmp_canvas_basename + "_sigma_modelcomp"
                     #     modelcomp_canvas_title = tmp_canvas_basetitle + " sigma Model Comparison"
@@ -4451,7 +3499,6 @@ for a_hist in analyze_hists.keys():
                     #         modelcomp_canvas_name, modelcomp_canvas_title
                     #     )
                     # close if found types sigma
-                # DrawErrorSummary2D()
                 # close if sigma
             # Close if h2d
             dummy_canvas.Print(os.path.join(var_outdir,pdf_canvas_name+".pdf")+"]","pdf")

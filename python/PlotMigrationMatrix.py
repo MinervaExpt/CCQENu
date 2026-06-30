@@ -1,4 +1,5 @@
 import ROOT
+ROOT.gROOT.SetBatch(True) # Run in batch mode
 from PlotUtils import MnvH1D, MnvH2D, MnvPlotter
 # import PlotUtils
 import os
@@ -17,6 +18,9 @@ do_manual = True
 # do_manual = False
 categorytodo = "qelike"
 legendfontsize = 0.05
+
+prelim_string = "MINER#it{^{}#nu}A Work In Progress"
+
 
 var_names = {
     "recoil": {"reco": "Recoil", "truth": "E_{Avail}", "units": "(GeV)"},
@@ -143,6 +147,30 @@ def main():
             continue
         print("Found hist ", hist_name)
         hist_dict[hist_name] = f.Get(hist_name).Clone()
+    modelname = ""
+    raw_filename_split = filename1.split("_")
+    for part in raw_filename_split:
+        if "MnvTunev" in part:
+            print("Found model name as %s"%(part))
+            modelname += part
+    # These need to happen in order, so it needs to be in a separate loop
+    for part in raw_filename_split:
+        if part=="multipion" and "no_multipion" not in filename1:
+            modelname += "_" + part
+    if modelname == "":
+        print("Guessing model name is MnvTunev2.0.1")
+        modelname = "MnvTunev2.0.1"
+    tmpmodelname = modelname
+    if "_" in tmpmodelname:
+        tmpmodelname = modelname.replace('_',' ')
+    if tmpmodelname[7]!= " ":
+        tmpmodelname = tmpmodelname[:7] + " " + tmpmodelname[7:]
+    tmpmodelname = tmpmodelname.replace(" multipion","")
+
+    tmp_canvas_basename = "%s_%s"%(tmpmodelname, "QElike")
+    pdf_canvas_name = tmp_canvas_basename+"_migrationplots"
+    dummy_canvas = ROOT.TCanvas(pdf_canvas_name,pdf_canvas_name,3200,3000)
+    dummy_canvas.Print(os.path.join(outdirname,pdf_canvas_name+".pdf")+"[","pdf")
 
     for response_name in hist_dict.keys():
         print("looking at migration ",response_name)
@@ -180,11 +208,12 @@ def main():
                 hist, True, False, True, text_opt
             )
             prelim = AddPreliminary()
-            prelim.DrawLatex(0.5, 0.17, "MINER#nuA Work In Progress")
+            prelim.DrawLatex(0.5, 0.17, prelim_string)
 
             raw_outname = os.path.join(outdirname,"mnv_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
+            # mnv_canvas.Print(raw_outname)
+            mnv_canvas.Print(os.path.join(outdirname, pdf_canvas_name + ".pdf"),"Title: %s %s mnvplot migration"%(var, tuned_tag))
 
-            mnv_canvas.Print(raw_outname)
         if do_manual:
             raw_matrix_name = response_name+"_unnormed"
             norm_matrix_name = response_name+"_rownormed"
@@ -322,6 +351,8 @@ def main():
 
             norm_outname = os.path.join(outdirname,"normd_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
             norm_canvas.Print(norm_outname)
+            norm_canvas.Print(os.path.join(outdirname, pdf_canvas_name + ".pdf"),"Title: %s %s normd migration"%(var, tuned_tag))
+
             # del norm_canvas
             # Do the raw ones now
             # mnv.SetROOT6Palette(ROOT.kNeon)
@@ -346,7 +377,10 @@ def main():
             # raw_canvas.Set
             raw_outname = os.path.join(outdirname,"raw_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
             raw_canvas.Print(raw_outname)
+            raw_canvas.Print(os.path.join(outdirname, pdf_canvas_name + ".pdf"),"Title: %s %s raw plotmigration"%(var, tuned_tag))
+
             # del raw_canvas
+    dummy_canvas.Print(os.path.join(outdirname,pdf_canvas_name+".pdf")+"]","pdf")
 
     print("All done! uwu")
 
