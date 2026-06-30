@@ -51,8 +51,8 @@ legendfontsize = 0.042
 
 # _xsize = 1100.0
 # _ysize = 720.0
-_xsize = 2000
-_ysize = 1500
+_xsize = 3200
+_ysize = 2400
 
 latex_x = 0.72
 latex_y = 0.53
@@ -220,9 +220,16 @@ def GetHistDict(i_file, POTScale):
             for cat in groups[a_sample][b_var]:
                 if cat in ["data","qelike","qelikenot","mctot",]:
                     continue
+                if sig_only and cat in backgrounds:
+                    continue
                 tmp_mctot_hist.Add(groups[a_sample][b_var][cat][0])
             groups[a_sample][b_var]["mctot"][0] = tmp_mctot_hist.Clone()
-
+    # for a_sample in groups:
+    #     for b_var in groups[a_sample]:
+    #         if len(b_var.split("_")) != 3: continue
+    #         if "cumulative" in groups[a_sample][b_var]: continue
+    #         groups[a_sample][b_var]["cumilative"] = {}
+    #         cumulative_name = groups[a_sample][b_var]["qelike"][0].GetName().replace("qelike","cumulative")
     print("Finished making hist dict")
     return groups        
 
@@ -279,6 +286,9 @@ def MakePlotDir(subdir=""):
     any other subdirs in the script itself (e.g. based off input file name)
     """
     plotdir = ""
+    cwd = os.getcwd()
+    outputloc = os.environ.get("OUTPUTLOC")
+    cwd_subpath = cwd.replace(os.path.join(outputloc,"June2026/eventloopout/blobstudies/"),"")
     base_plotdir = os.environ.get("PLOTSLOC")
     if base_plotdir != None:
         plotdir = os.path.join(base_plotdir, month + year)
@@ -289,10 +299,13 @@ def MakePlotDir(subdir=""):
         os.mkdir(plotdir)
     if subdir == "":
         return plotdir
-    if not os.path.exists(os.path.join(plotdir, subdir)):
-        print("Can't find plot dir. Making it now... ", os.path.join(plotdir, subdir))
-        os.mkdir(os.path.join(plotdir, subdir))
-    return os.path.join(plotdir, subdir)
+    if not os.path.exists(os.path.join(plotdir, subdir,cwd_subpath)):
+        print("Can't find plot dir. Making it now... ", os.path.join(plotdir, subdir,cwd_subpath))
+        os.makedirs(os.path.join(plotdir, subdir,cwd_subpath), exist_ok = True)
+    
+    print(os.path.join(plotdir, subdir, cwd_subpath))
+    # sys.exit(1)
+    return os.path.join(plotdir, subdir, cwd_subpath)
 
 def PanelCanvas(name, n_xbins, n_ybins, x_size=2000, y_size=1500):
     """name is the name for the canvas
@@ -308,9 +321,12 @@ def PanelCanvas(name, n_xbins, n_ybins, x_size=2000, y_size=1500):
     if grid_x*grid_y-n_ybins==grid_x:
         grid_y-=1
     if grid_x * grid_y == n_ybins:
-        # grid_y+=1
         grid_x+=1
         print("I'm doing it mr krabs")
+
+    if n_ybins == 15:
+        grid_x = 4
+        grid_y = 4
     print("HyperDPanelCanvas: Making a grid canvas named "+name+" with a grid of ",n_xbins,"    ",n_ybins,"    ",grid_x,"    ",grid_y)
 
     # gc2 = PlotUtils.GridCanvas(name, grid_x, grid_y, x_size, y_size)
@@ -762,6 +778,8 @@ for a_sample in groups.keys():
         h2D_dict = {"data":{"data":tmp_data}}
 
         for c_cat in ["qelike", "qelikenot","mctot"]:
+            # if sig_only and c_cat is "qelikenot":
+            #     continue
             print(c_cat)
             # print(groups[a_sample][b_var][c_cat][0])
             tmp_hHD = groups[a_sample][b_var][c_cat][0].Clone()
@@ -791,6 +809,7 @@ for a_sample in groups.keys():
                 else:
                     tmp_h2D_list[zbin].SetFillStyle(1001)
                 h2D_dict[c_cat][partname] = tmp_h2D_list[zbin].Clone("%s_%s"%(tmp_h2D_list[zbin].GetName(),partname))
+
         first = True
         tmp_mctot = MnvH1D()
         for part in h2D_dict["mctot"]:
@@ -804,7 +823,7 @@ for a_sample in groups.keys():
         first = True
         for part in h2D_dict["qelike"]:
             if first:
-                tmp_qeliketot = h2D_dict["qelike"][part].Clone()
+                tmp_qeliketot = h2D_dict["qelike"][part].Clone(h2D_dict["qelike"][part].GetName().replace("_qelike_", "_qeliketot_"))
                 first = False
                 continue
             tmp_qeliketot.Add(h2D_dict["qelike"][part])
@@ -895,7 +914,7 @@ for a_sample in groups.keys():
                     grid_dict[projbin]["data"]["data"].GetYaxis().SetNdivisions(505)
                 
                 tmp_stack = THStack("stack","")
-
+                tmp_cumul_stack = THStack("cumul_stack", "")
                 for cat in ["qelikenot", "qelike"]:
                     for pid in new_bin_pid_order:
                         tmp_hist = grid_dict[projbin][cat][bin_pid_mechname[pid]].Clone()
@@ -903,8 +922,31 @@ for a_sample in groups.keys():
                             if sig_only: continue
                             tmp_hist.SetFillStyle(bkgfillstyle)
                         tmp_stack.Add(tmp_hist)
+                        tmp_cumul_hist = tmp_hist.Clone()
+                        if sig_only:
+                            tmp_cumul_hist.Divide(tmp_cumul_hist, grid_dict[projbin]["qelike"]["qeliketot"], 1.0, 1.0)
+                            tmp_cumul_stack.Add(tmp_cumul_hist)
+                            continue
+                        tmp_cumul_hist.Divide(tmp_cumul_hist, grid_dict[projbin]["mctot"]["mctot"], 1.0, 1.0)
+                        tmp_cumul_stack.Add(tmp_cumul_hist)
+
                 grid_dict[projbin]["stack"] = tmp_stack
-            
+                grid_dict[projbin]["cumul_stack"] = tmp_cumul_stack
+
+                straightline = grid_dict[projbin]["data"]["data"].Clone()
+                for ibin in range(1,straightline.GetNbinsX()+1):
+                    straightline.SetBinContent(ibin,0.5)
+                straightline.SetFillColor(0)
+                straightline.SetLineColor(ROOT.kRed)
+                straightline.SetLineStyle(7)
+                straightline.SetLineWidth(2)
+                straightline_less = straightline.Clone()
+                for ibin in range(1,straightline_less.GetNbinsX()):
+                    straightline_less.SetBinContent(ibin, 0.6)
+                straightline_less.SetLineWidth(1)
+                grid_dict[projbin]["straightline"] = straightline.Clone()
+                grid_dict[projbin]["straightline_less"] = straightline_less.Clone()
+
             proj_nxbins = n_xbins - 2 
             proj_nybins = n_ybins - 2 
             if proj == "projY":
@@ -916,7 +958,7 @@ for a_sample in groups.keys():
             gc2 = PanelCanvas(tmp_canvas_name, proj_nxbins,proj_nybins, _xsize, _ysize)
             gc2.SetLeftMargin(0.1)
             gc2.SetRightMargin(0.05)
-            gc2.SetBottomMargin(0.1)
+            # gc2.SetBottomMargin(0.1)
             # gc2.SetFrameLineWidth(1)
             gc2.SetXTitle(tmp_axisvar_shortname)
             ytitle_tail = ""
@@ -1012,167 +1054,252 @@ for a_sample in groups.keys():
             gc2.ResetPads()
             gc2.Modified()
             gc2.Update()
+
+            # now do cumulativehist
+            ytitle_tail = "Total"
+            if sig_only:
+                ytitle_tail = "Signal"
+            gc2.SetYTitle("Fraction to %s"%ytitle_tail)
+
+            gc2.Draw()
+
+            for i in proj_bin_range:
+                pad = gc2.cd(i)
+                # pad.SetFrameLineWidth(1)
+                pad.Draw()
+                grid_dict[i]["data"]["data"].GetYaxis().SetMaxDigits(3)
+                axismini = 0.001
+                grid_dict[i]["data"]["data"].SetMaximum(1.2)
+                grid_dict[i]["data"]["data"].SetMinimum(0.0)
+                grid_dict[i]["data"]["data"].GetYaxis().SetNdivisions(205)
+                grid_dict[i]["data"]["data"].Draw("AXIS")
+            for i in proj_bin_range:
+                pad = gc2.cd(i)
+                pad.Draw()
+                grid_dict[i]["cumul_stack"].Draw("HIST ][ same")
+                grid_dict[i]["straightline"].Draw("HIST ][ same")
+                grid_dict[i]["straightline_less"].Draw("HIST ][ same")
+                grid_dict[i]["data"]["data"].Draw("AXIS same")
+            
+                if data_var.split("_")[0] in scaleX and proj=="projX":
+                    pad.SetLogx()
+                if data_var.split("_")[1] in scaleX and proj=="projY":
+                    pad.SetLogx()         
+
+                mutlip_string = "#times {:g}".format(float('{:.{p}g}'.format(multipliers[i-1], p=2)))
+                multip_latex = ROOT.TLatex()
+                multip_latex.SetTextAlign(32)
+                multip_latex.SetNDC()
+                multip_latex.SetTextFont(52)
+                multip_latex.SetTextSize(0.028)
+                multip_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.05),mutlip_string)
+
+                loedge = tmp_projaxis_bins[i-1]
+                hiedge = tmp_projaxis_bins[i]
+                tmp_projvar_shortname
+                range_string = "{min} < {var} < {max}".format(min = round(loedge,2), var = tmp_projvar_shortname, max = round(hiedge,2))
+                binrange_latex = ROOT.TLatex()
+                binrange_latex.SetTextAlign(33) # top right
+                binrange_latex.SetNDC()
+                binrange_latex.SetTextFont(42)
+                binrange_latex.SetTextSize(0.025)
+                binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
+                pad.Modified()
+                pad.Update()
+                # ROOT.gPad.RedrawAxis()
+            pad = gc2.cd(n_projbins_raw-1)
+            pad.Draw()
+
+            padwidth = 1 - pad.GetLeftMargin() - pad.GetRightMargin()
+            x1 = pad.GetLeftMargin()+padwidth/20.0
+            y1 = 1.-(pad.GetTopMargin())-0.01
+            x2 = 1 - pad.GetRightMargin() + padwidth/20
+            y2 = pad.GetBottomMargin()+0.01
+
+            leg = TLegend(x1, y1, x2, y2)
+            leg.SetBorderSize(0)
+            leg.SetFillColor(-1)
+            leg.SetFillStyle(0)
+            leg.SetTextSize(round(legendfontsize/3))
+            leg.SetNColumns(2)
+
+            for part in reversed(list(grid_dict[1]["qelike"])):
+                if part == "qeliketot": continue
+                leg.AddEntry(grid_dict[1]["qelike"][part], bin_pid_names[part], "fl")
+                if sig_only: 
+                    # leg.SetNColumns(1)
+                    continue
+                leg.AddEntry(grid_dict[1]["qelikenot"][part], "Bkg "+bin_pid_names[part], "fl")
+            leg.Draw()
+            pad.Modified()
+
+            gc2.SetHistTexts()
+            gc2.Draw()
+            gc2.Print(os.path.join(outdirname,pdf_canvas_name+".pdf"),"Title:%s %s"%(tmp_canvas_title," TOTAL FRACTION Final States"))
+            gc2.ResetPads()
+            gc2.Modified()
+            gc2.Update()
+
+
+
             del gc2
 
-            
+        # # sys.exit(1)
+        # continue
+        # h2D_dict = {}
+        # for c_cat in cat_order:
+        #     tmp_h2D_list = []
+        #     if c_cat == "data":
+        #         if noData:
+        #             continue
+        #         print(data_sample_name, data_var, c_cat)
+        #         # print(groups[data_sample_name].keys())
+        #         data = groups[data_sample_name][data_var][c_cat].Clone()
+        #         if -1 not in h2D_dict.keys():
+        #             h2D_dict[-1] = {}
+        #         # h2D_dict[-1] = {"data":data}
+        #         h2D_dict[-1] = {"data":data}
+        #         continue
+        #     hHD = groups[a_sample][b_var][c_cat].Clone()
+        #     tmp_h2D_list = myhyperdim.Get2DHistos(hHD,IncludeSysBool)
+        #     if n_zbins!= len(tmp_h2D_list):
+        #         print("bins are wrong!!! You calculated ", n_zbins," zbins but there are ", len(tmp_h2D_list))
+        #         sys.exit(1)
+        #     # n_zbins = len(tmp_h2D_list)
+        #     for zbin in new_bin_pid_order:
+        #         # print ("adjusted pid ", zbin)
+        #         if zbin not in h2D_dict.keys():
+        #             h2D_dict[zbin] = {}
+        #         if c_cat not in h2D_dict[zbin].keys():
+        #             h2D_dict[zbin][c_cat] = {}
 
+        #         h2D_dict[zbin][c_cat] = tmp_h2D_list[zbin]
+        #         if analysistype in [0,1] and zbin == 5:
+        #             h2D_dict[zbin][c_cat].Add(tmp_h2D_list[zbin-1])
+        #         if analysistype in [2,3] and zbin == 4:
+        #             h2D_dict[zbin][c_cat].Add(tmp_h2D_list[zbin-1])
 
-        # sys.exit(1)
-        continue
-        h2D_dict = {}
-        for c_cat in cat_order:
-            tmp_h2D_list = []
-            if c_cat == "data":
-                if noData:
-                    continue
-                print(data_sample_name, data_var, c_cat)
-                # print(groups[data_sample_name].keys())
-                data = groups[data_sample_name][data_var][c_cat].Clone()
-                if -1 not in h2D_dict.keys():
-                    h2D_dict[-1] = {}
-                # h2D_dict[-1] = {"data":data}
-                h2D_dict[-1] = {"data":data}
-                continue
-            hHD = groups[a_sample][b_var][c_cat].Clone()
-            tmp_h2D_list = myhyperdim.Get2DHistos(hHD,IncludeSysBool)
-            if n_zbins!= len(tmp_h2D_list):
-                print("bins are wrong!!! You calculated ", n_zbins," zbins but there are ", len(tmp_h2D_list))
-                sys.exit(1)
-            # n_zbins = len(tmp_h2D_list)
-            for zbin in new_bin_pid_order:
-                # print ("adjusted pid ", zbin)
-                if zbin not in h2D_dict.keys():
-                    h2D_dict[zbin] = {}
-                if c_cat not in h2D_dict[zbin].keys():
-                    h2D_dict[zbin][c_cat] = {}
+        # # h2D dict now has the 2D reco hists of the vars of interest for each pid
 
-                h2D_dict[zbin][c_cat] = tmp_h2D_list[zbin]
-                if analysistype in [0,1] and zbin == 5:
-                    h2D_dict[zbin][c_cat].Add(tmp_h2D_list[zbin-1])
-                if analysistype in [2,3] and zbin == 4:
-                    h2D_dict[zbin][c_cat].Add(tmp_h2D_list[zbin-1])
+        # proton_neutron_dict = {
+        #     "proton": TH2D(),
+        #     "muneut": TH2D(),
+        #     "tot": TH2D(),
+        #     "protonratio": TH2D(),
+        #     "muneutratio": TH2D(),
+        # }
+        # firstcat = True
+        # for c_cat in cat_order:
+        #     if c_cat == "data":
+        #         continue
+        #     if analysistype in [0,1]:
+        #         if firstcat:
+        #             proton_neutron_dict["proton"] = h2D_dict[2][c_cat].Clone()
+        #             proton_neutron_dict["muneut"] = h2D_dict[1][c_cat].Clone()
+        #             proton_neutron_dict["muneut"].Add(h2D_dict[8][c_cat])
+        #             firstcat = False
+        #         else:
+        #             proton_neutron_dict["proton"].Add(h2D_dict[2][c_cat])
+        #             proton_neutron_dict["muneut"].Add(h2D_dict[1][c_cat])
+        #             proton_neutron_dict["muneut"].Add(h2D_dict[8][c_cat])
+        #     else:
+        #         if firstcat:
+        #             proton_neutron_dict["proton"] = h2D_dict[1][c_cat].Clone()
+        #             proton_neutron_dict["muneut"] = h2D_dict[0][c_cat].Clone()
+        #             proton_neutron_dict["muneut"].Add(h2D_dict[7][c_cat])
+        #             firstcat = False
+        #         else:
+        #             proton_neutron_dict["proton"].Add(h2D_dict[1][c_cat])
+        #             proton_neutron_dict["muneut"].Add(h2D_dict[0][c_cat])
+        #             proton_neutron_dict["muneut"].Add(h2D_dict[7][c_cat])
+        # # TODO figure out var names
+        # proton_neutron_dict["proton"].Scale(1.0, "width")
+        # proton_neutron_dict["muneut"].Scale(1.0, "width")
+        # xvar = b_var.split("_")[0]
+        # yvar = b_var.split("_")[1]
+        # xvarname = var_short_names[xvar]
+        # yvarname = var_short_names[yvar]
+        # proton_neutron_dict["proton"].SetLineColor(ROOT.kRed + 1)
+        # proton_neutron_dict["muneut"].SetLineColor(ROOT.kBlue + 2)
+        # proton_neutron_dict["proton"].GetXaxis().SetTitle(xvarname)
+        # proton_neutron_dict["muneut"].GetYaxis().SetTitle(yvarname)
+        # proton_neutron_dict["proton"].GetXaxis().CenterTitle()
+        # proton_neutron_dict["muneut"].GetYaxis().CenterTitle()
 
-        # h2D dict now has the 2D reco hists of the vars of interest for each pid
+        # proton_neutron_dict["total"] = proton_neutron_dict["proton"].Clone("total")
+        # proton_neutron_dict["total"].Add(proton_neutron_dict["muneut"])
 
-        proton_neutron_dict = {
-            "proton": TH2D(),
-            "muneut": TH2D(),
-            "tot": TH2D(),
-            "protonratio": TH2D(),
-            "muneutratio": TH2D(),
-        }
-        firstcat = True
-        for c_cat in cat_order:
-            if c_cat == "data":
-                continue
-            if analysistype in [0,1]:
-                if firstcat:
-                    proton_neutron_dict["proton"] = h2D_dict[2][c_cat].Clone()
-                    proton_neutron_dict["muneut"] = h2D_dict[1][c_cat].Clone()
-                    proton_neutron_dict["muneut"].Add(h2D_dict[8][c_cat])
-                    firstcat = False
-                else:
-                    proton_neutron_dict["proton"].Add(h2D_dict[2][c_cat])
-                    proton_neutron_dict["muneut"].Add(h2D_dict[1][c_cat])
-                    proton_neutron_dict["muneut"].Add(h2D_dict[8][c_cat])
-            else:
-                if firstcat:
-                    proton_neutron_dict["proton"] = h2D_dict[1][c_cat].Clone()
-                    proton_neutron_dict["muneut"] = h2D_dict[0][c_cat].Clone()
-                    proton_neutron_dict["muneut"].Add(h2D_dict[7][c_cat])
-                    firstcat = False
-                else:
-                    proton_neutron_dict["proton"].Add(h2D_dict[1][c_cat])
-                    proton_neutron_dict["muneut"].Add(h2D_dict[0][c_cat])
-                    proton_neutron_dict["muneut"].Add(h2D_dict[7][c_cat])
-        # TODO figure out var names
-        proton_neutron_dict["proton"].Scale(1.0, "width")
-        proton_neutron_dict["muneut"].Scale(1.0, "width")
-        xvar = b_var.split("_")[0]
-        yvar = b_var.split("_")[1]
-        xvarname = var_short_names[xvar]
-        yvarname = var_short_names[yvar]
-        proton_neutron_dict["proton"].SetLineColor(ROOT.kRed + 1)
-        proton_neutron_dict["muneut"].SetLineColor(ROOT.kBlue + 2)
-        proton_neutron_dict["proton"].GetXaxis().SetTitle(xvarname)
-        proton_neutron_dict["muneut"].GetYaxis().SetTitle(yvarname)
-        proton_neutron_dict["proton"].GetXaxis().CenterTitle()
-        proton_neutron_dict["muneut"].GetYaxis().CenterTitle()
+        # proton_neutron_dict["protonratio"] = proton_neutron_dict["proton"].Clone()
+        # proton_neutron_dict["protonratio"].Divide(
+        #     proton_neutron_dict["protonratio"], proton_neutron_dict["total"],1.0,1.0
+        # )
+        # proton_neutron_dict["muneutratio"] = proton_neutron_dict["muneut"].Clone()
+        # proton_neutron_dict["muneutratio"].Divide(
+        #     proton_neutron_dict["muneutratio"], proton_neutron_dict["total"], 1.0, 1.0
+        # )
+        # boxleg = CCQELegend(0.85,0.57,0.97,0.43)
 
-        proton_neutron_dict["total"] = proton_neutron_dict["proton"].Clone("total")
-        proton_neutron_dict["total"].Add(proton_neutron_dict["muneut"])
+        # proton_neutron_dict["proton"].SetTitle(
+        #     "Raw %s vs. %s in %s" % (yvarname, xvarname, a_sample)
+        # )
+        # proton_neutron_dict["protonratio"].SetTitle(
+        #     "Ratio %s vs. %s in %s" % (yvarname, xvarname, a_sample)
+        # )
 
-        proton_neutron_dict["protonratio"] = proton_neutron_dict["proton"].Clone()
-        proton_neutron_dict["protonratio"].Divide(
-            proton_neutron_dict["protonratio"], proton_neutron_dict["total"],1.0,1.0
-        )
-        proton_neutron_dict["muneutratio"] = proton_neutron_dict["muneut"].Clone()
-        proton_neutron_dict["muneutratio"].Divide(
-            proton_neutron_dict["muneutratio"], proton_neutron_dict["total"], 1.0, 1.0
-        )
-        boxleg = CCQELegend(0.85,0.57,0.97,0.43)
+        # dummyproton = proton_neutron_dict["proton"].Clone()
+        # dummyproton.SetFillColor(ROOT.kRed + 1)
+        # boxleg.AddEntry(dummyproton, "Proton", "f")
+        # dummymuneut = proton_neutron_dict["muneut"].Clone()
+        # dummymuneut.SetFillColor(ROOT.kBlue+2)
+        # boxleg.AddEntry(dummymuneut, "n, #mu", "f")
 
-        proton_neutron_dict["proton"].SetTitle(
-            "Raw %s vs. %s in %s" % (yvarname, xvarname, a_sample)
-        )
-        proton_neutron_dict["protonratio"].SetTitle(
-            "Ratio %s vs. %s in %s" % (yvarname, xvarname, a_sample)
-        )
+        # rawcanvas = CCQECanvas(
+        #     "BoxRaw_%s_%s_%s" % (a_sample, xvar, yvar),
+        #     "%s vs. %s in %s" % (yvarname, xvarname, a_sample),
+        # )
+        # if xvar in ["NeutCandEdep", "NeutCandsEdep"]:
+        #     rawcanvas.SetLogx()
+        # if yvar in ["NeutCandEdep", "NeutCandsEdep"]:
+        #     rawcanvas.SetLogy()
+        # proton_neutron_dict["proton"].Draw("BOX")
+        # proton_neutron_dict["muneut"].Draw("BOX same")
+        # boxleg.Draw()
+        # thename = "BoxRaw_%s_%s_%s_%s" % ("raw", a_sample, xvar, yvar)
 
-        dummyproton = proton_neutron_dict["proton"].Clone()
-        dummyproton.SetFillColor(ROOT.kRed + 1)
-        boxleg.AddEntry(dummyproton, "Proton", "f")
-        dummymuneut = proton_neutron_dict["muneut"].Clone()
-        dummymuneut.SetFillColor(ROOT.kBlue+2)
-        boxleg.AddEntry(dummymuneut, "n, #mu", "f")
+        # canvas_name = thename + "_FinalStates"
+        # if dotuned:
+        #     canvas_name = thename + "_FinalStates_tuned"
+        # rawcanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
 
-        rawcanvas = CCQECanvas(
-            "BoxRaw_%s_%s_%s" % (a_sample, xvar, yvar),
-            "%s vs. %s in %s" % (yvarname, xvarname, a_sample),
-        )
-        if xvar in ["NeutCandEdep", "NeutCandsEdep"]:
-            rawcanvas.SetLogx()
-        if yvar in ["NeutCandEdep", "NeutCandsEdep"]:
-            rawcanvas.SetLogy()
-        proton_neutron_dict["proton"].Draw("BOX")
-        proton_neutron_dict["muneut"].Draw("BOX same")
-        boxleg.Draw()
-        thename = "BoxRaw_%s_%s_%s_%s" % ("raw", a_sample, xvar, yvar)
+        # if dotuned:
+        #     canvas_name = thename + "_FinalStates_tuned"
+        # rawcanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
 
-        canvas_name = thename + "_FinalStates"
-        if dotuned:
-            canvas_name = thename + "_FinalStates_tuned"
-        rawcanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
+        # del rawcanvas
 
-        if dotuned:
-            canvas_name = thename + "_FinalStates_tuned"
-        rawcanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
+        # ratiocanvas = CCQECanvas(
+        #     "BoxRatio_%s_%s_%s" % (a_sample, xvar, yvar),
+        #     "Ratio %s vs. %s in %s" % (yvarname, xvarname, a_sample),
+        # )
+        # if xvar in ["NeutCandEdep", "NeutCandsEdep"]:
+        #     ratiocanvas.SetLogx()
+        # if yvar in ["NeutCandEdep", "NeutCandsEdep"]:
+        #     ratiocanvas.SetLogy()
+        # proton_neutron_dict["protonratio"].Draw("BOX")
+        # proton_neutron_dict["muneutratio"].Draw("BOX same")
+        # boxleg.Draw()
+        # thename = "BoxRatio_%s_%s_%s" % (a_sample, yvarname, xvarname)
 
-        del rawcanvas
+        # canvas_name = thename + "_FinalStates"
+        # if dotuned:
+        #     canvas_name = thename + "_FinalStates_tuned"
+        # ratiocanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
 
-        ratiocanvas = CCQECanvas(
-            "BoxRatio_%s_%s_%s" % (a_sample, xvar, yvar),
-            "Ratio %s vs. %s in %s" % (yvarname, xvarname, a_sample),
-        )
-        if xvar in ["NeutCandEdep", "NeutCandsEdep"]:
-            ratiocanvas.SetLogx()
-        if yvar in ["NeutCandEdep", "NeutCandsEdep"]:
-            ratiocanvas.SetLogy()
-        proton_neutron_dict["protonratio"].Draw("BOX")
-        proton_neutron_dict["muneutratio"].Draw("BOX same")
-        boxleg.Draw()
-        thename = "BoxRatio_%s_%s_%s" % (a_sample, yvarname, xvarname)
+        # if dotuned:
+        #     canvas_name = thename + "_FinalStates_tuned"
+        # ratiocanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
 
-        canvas_name = thename + "_FinalStates"
-        if dotuned:
-            canvas_name = thename + "_FinalStates_tuned"
-        ratiocanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
-
-        if dotuned:
-            canvas_name = thename + "_FinalStates_tuned"
-        ratiocanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
-
-        del ratiocanvas
+        # del ratiocanvas
     dummy_canvas.Print(os.path.join(outdirname,pdf_canvas_name+".pdf")+"]","pdf")
 
 
