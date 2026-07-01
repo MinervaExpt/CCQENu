@@ -33,7 +33,7 @@ doareanorm = False
 
 ratio_frac = 0.3 #0.278
 
-staterror_drawopt = "E5 X0"
+staterror_drawopt = "E1 X0"
 
 
 legendfontsize = 0.042
@@ -1255,9 +1255,9 @@ catstodo = [
     "qelike",
     "chargedpion",
     "neutralpion",
-    # "other",
-    "multipion",
-    "other_np",
+    "other",
+    # "multipion",
+    # "other_np",
 ]
 
 bkgcats = [

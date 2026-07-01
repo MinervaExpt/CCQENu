@@ -46,6 +46,18 @@ dotuned=False
 
 global_domodelcomp = False # Set to true if you want to do model comparisons, will need to give path to where files are
 
+bkgfillstyle = {
+    "chargedpion":  1001,
+    "neutralpion":  1001,
+    "other":        1001,
+    "multipion":    1001,
+    "other_np":     1000,
+    11:             3144,    # "Bkg QE"
+    12:             3144,  # "Bkg RES",
+    13:             3144,   # "Bkg DIS",
+    14:             3144,    # "Bkg COH",
+    18:             3144,  #"Bkg 2p2h",
+}
 modelcomptodo = [
     # "Gv3_AR23",
     "G18_02a",
@@ -167,11 +179,12 @@ scaleY = [
 ]
 
 skipstage_list = [
-    # "bkgsub",
-    # "unfolded",
-    # "effcorr",
-    # "sigma",
-    # "modelcomp",
+    # "reconstructed",
+    "bkgsub",
+    "unfolded",
+    "effcorr",
+    "sigma",
+    "modelcomp",
 ]
 
 rangeuser_dict = {
@@ -500,9 +513,9 @@ def GetInputHistDict(f, input_dict = {}):
                 h.SetLineWidth(typeslinewidth)
         else:
             print("scaling hist ", name)
-            # h.SetFillColor(catscolors[0])
-            h.SetFillColorAlpha(catscolors[0], 0.4)
-            h.SetLineColor(ROOT.TColor.GetColorDark(catscolors[0]))
+            h.SetFillColor(catscolors[cat])
+            # h.SetFillColorAlpha(catscolors[0], 0.4)
+            h.SetLineColor(ROOT.TColor.GetColorDark(catscolors[cat]))
             h.SetLineWidth(typeslinewidth1D)
             # if hist == "h":
             #     h.SetLineWidth(typeslinewidth1D)
@@ -1436,7 +1449,6 @@ def DrawDataMCPlot1D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, y_
     mnv_data.Scale(1.0, "width")
     mnv_mc.Scale(1.0, "width")
 
-    tmp_dotypes = False
     my_catstodo = [cat for cat in catstodo[1:]]
     bad_keys = []
     for key in my_catstodo:
@@ -1506,21 +1518,23 @@ def DrawDataMCPlot1D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, y_
 
         typesratio_dict[key] = tmp_typesratio
     typesratio_stack_dict = {}
-    if tmp_dotypes and 11 in my_catstodo:
+    if 11 in my_catstodo:
         for key in reversed(my_catstodo):
-            if key > 10 or key not in typesratio_listdict: continue
-            tmp_hist = typesratio_listdict[key].Clone()
+            if key not in typesratio_dict: continue
+            if key > 10: continue
+            if key not in typesratio_stack_dict:
+                typesratio_stack_dict[key] = {}
+            tmp_hist = typesratio_dict[key].Clone()
             tmp_stack = THStack("tmpstack, i", "")
             if key + 10 not in my_catstodo:
-                typesratiostack_listdict[key].append(tmp_hist)
+                typesratio_stack_dict[key] = tmp_hist
                 continue
-            tmp_hist_bkg = typesratio_listdict[key+10].Clone()
+            tmp_hist_bkg = typesratio_dict[key+10].Clone()
             tmp_hist_bkg.SetLineStyle(7)
             tmp_stack.Add(tmp_hist_bkg)
+            typesratio_stack_dict[key] = tmp_stack
             if tmp_hist.GetEntries() == 0: continue
-            typesratio_stack_dict[key].Add(tmp_hist)
-    
-
+            typesratio_stack_dict[key].Add(tmp_hist)            
     ratio_mnvmc_band = mnv_mc.Clone()
     ratio_mnvmc_band.ClearAllErrorBands()
     ratio_mnvmc_band.AddMissingErrorBandsAndFillWithCV(mnv_mc)
@@ -1671,7 +1685,7 @@ def DrawDataMCPlot1D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_title, y_
         # Now do mc uncertainties
         band_ratio.Draw("9 E2 same ][")
         straightline.Draw("9 Hist same, ][")
-        if tmp_dotypes and 11 in typestodo_leg:
+        if 11 in my_catstodo:
             for key in reversed(typestodo_leg):
                 if key > 10: continue
                 typesratio_stack_dict[key].Draw("9 HIST NOCLEAR SAME")
@@ -1994,9 +2008,12 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
                 else: # if whichstack == "nostack":
                     tmp_stack = stack_list[i].Clone()
                     for tmp_hist in tmp_stack.GetHists():
-                        tmp_hist.SetFillStyle(0)
                         tmp_hist.SetLineWidth(typeslinewidth+1)
                         tmp_hist.SetLineColor(tmp_hist.GetFillColor())
+                        # # Make the bkgs dotted
+                        if tmp_hist.GetFillStyle() not in [0,1001]:
+                            tmp_hist.SetLineStyle(7)
+                        tmp_hist.SetFillStyle(0)
                     # sys.exit(1)
                     mc_band_list[i].Draw("9 E2 ][ same")
                     tmp_stack.Draw("9 nostack noclear hist same")
@@ -2038,8 +2055,10 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             y1 = (1.-(pad.GetTopMargin())-0.01)
             x2 =  1 - (pad.GetRightMargin())# + padwidth*.05)
             y2 =  (pad.GetBottomMargin()+0.01)
+            if 11 in my_catstodo:
+                x2 += padwidth * 0.6
             leg = TLegend(x1+0.01, y1, x2-0.01, y2)
-            leg.SetTextSize(legendfontsize/2)
+            leg.SetTextSize(legendfontsize*0.6)
             leg.SetBorderSize(0)
             leg.SetFillColor(-1)
             leg.SetFillStyle(0)
@@ -2050,31 +2069,44 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             elif whichstack == "nostack":
                 leg.AddEntry(mc_band_list[i], catsnames[0],"fl")
                 for key in my_catstodo:
-                    if key not in mc_typesproj_listdict: continue
-                    mc_typesproj_listdict[key][0].SetLineWidth(typeslinewidth+1)
-                    leg.AddEntry(mc_typesproj_listdict[key][0],catsnames[key],"l")
-                    # mc_typesproj_listdict[key][0].SetLineWidth(typeslinewidth)
+                    mc_typesproj_listdict[key][0].SetLineWidth(typeslinewidth+2)
+                    mc_typesproj_listdict[key][0].SetLineColor(mc_typesproj_listdict[key][0].GetFillColor())
+                if 11 in my_catstodo:
+                    leg.SetNColumns(2)
+                    for key in my_catstodo:
+                        if key > 10: continue
+                        leg.AddEntry(mc_typesproj_listdict[key][0],catsnames[key],"l")
+                        mc_typesproj_listdict[key+10][0].SetLineStyle(7)
+                        leg.AddEntry(mc_typesproj_listdict[key+10][0],catsnames[key+10],"l")
+                else:
+                    for key in my_catstodo:
+                        leg.AddEntry(mc_typesproj_listdict[key][0],catsnames[key],"l")
             else: # if "stack":
                 for key in my_catstodo:
-                    if key not in mc_typesproj_listdict: continue
-                    mc_typesproj_listdict[key][0].SetLineWidth(typeslinewidth+1)
-                    leg.AddEntry(mc_typesproj_listdict[key][0],catsnames[key],"fl")
-
+                    mc_typesproj_listdict[key][0].SetLineWidth(typeslinewidth+2)
+                if 11 in my_catstodo:
+                    leg.AddEntry(0,"","")
+                    leg.SetNColumns(2)
+                    for key in my_catstodo:
+                        if key > 10: continue
+                        leg.AddEntry(mc_typesproj_listdict[key][0],catsnames[key],"fl")
+                        leg.AddEntry(mc_typesproj_listdict[key+10][0],catsnames[key+10],"fl")
+                else:
+                    for key in my_catstodo:
+                        # if key not in mc_typesproj_listdict: continue
+                        leg.AddEntry(mc_typesproj_listdict[key][0],catsnames[key],"fl")
             leg.Draw()
-            for key in my_catstodo:
-                if key not in mc_typesproj_listdict: continue
-                mc_typesproj_listdict[key][0].SetLineWidth(typeslinewidth)
-       
+
             pad.Modified()
             pad = gc.cd(n_pads+2)
             latex_x = 1.0 - gc.GetRightMargin() - 0.01
-            latex_y = (1.-(pad.GetTopMargin())) - 0.18*padheight
-            prelim.SetTextSize(legendfontsize*0.55)
+            latex_y = (1.-(pad.GetTopMargin())) - 0.15*padheight
+            prelim.SetTextSize(legendfontsize*0.465)
             datapottext.SetTextSize(legendfontsize*0.7)
             # prelim.DrawLatex(latex_x, latex_y, "MINER#it{^{}#nu}A Work In Progress")
             # datapottext.DrawLatex(latex_x, latex_y-0.05, "Data POT: 1.12 #times 10^{21}")
             prelim.DrawLatex(latex_x, latex_y, prelim_string)
-            datapottext.DrawLatex(latex_x, latex_y-0.05, datapot_string)
+            datapottext.DrawLatex(latex_x, latex_y-0.035, datapot_string)
             
             if do_titleonplot:
                 plottitle.Draw()
@@ -2082,7 +2114,12 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             gc.Draw()
             sigma_canvas_name = "%s_Types_%s"%(thename, whichstack)
             gc.Print(os.path.join(outdirname,canvas_name+".pdf"),"Title:%s %s %s"%(thetitle," Types2D", whichstack))
+            for key in my_catstodo:
+                if key not in mc_typesproj_listdict: continue
+                mc_typesproj_listdict[key][0].SetLineWidth(typeslinewidth)
+                mc_typesproj_listdict[key][0].SetLineColor(ROOT.TColor.GetColorDark((catscolors[key])))
 
+       
             gc.cd()
             gc.ResetPads()
             gc.Modified()
@@ -2126,7 +2163,7 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
                     typesratio_listdict[key] = []
                 typesratio_listdict[key].append(tmp_typesratio)
             if 11 in mc_typesproj_listdict:
-                for key in reversed(my_catstodo[1:]):
+                for key in reversed(my_catstodo):
                     if key not in mc_typesproj_listdict: continue
                     if key > 10: continue
                     if key not in typesratiostack_listdict: 
@@ -2137,12 +2174,13 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
                         # tmp_stack.Add(tmp_hist)
                         typesratiostack_listdict[key].append(tmp_hist)
                         continue
+                    typesratiostack_listdict[key].append(tmp_stack)
                     tmp_hist_bkg = typesratio_listdict[key+10][i].Clone()
                     tmp_hist_bkg.SetLineStyle(7)
-                    tmp_stack.Add(tmp_hist_bkg)
+                    typesratiostack_listdict[key][i].Add(tmp_hist_bkg)
                     if tmp_hist.GetEntries() == 0: continue
-                    tmp_stack.Add(tmp_hist)
-                    typesratiostack_listdict[key].append(tmp_stack)
+                    typesratiostack_listdict[key][i].Add(tmp_hist)
+
             straightline = TH1D()
             straightline = mc_hist_list[i].Clone()
             for j in range(1,mc_hist_list[i].GetXaxis().GetNbins() + 1):
@@ -2180,6 +2218,7 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             mcerror_list[i].Draw("9 E2 E0 same ][")
             straightline_list[i].Draw("9 hist same X0 ][")
             if 11 in mc_typesproj_listdict:
+                print(typesratiostack_listdict.keys())
                 for key in typestodo_leg:
                     if key > 10: continue
                     typesratiostack_listdict[key][i].Draw("9 HIST NOCLEAR SAME ][")
@@ -2201,12 +2240,20 @@ def DrawDataMCPlot2D_new(i_data_hist, i_mc_hist, i_mc_typeshistdict, x_varname, 
             pad.Update()
         pad = gc.cd(n_pads+1)
         pad.Draw()
+        if 11 in my_catstodo:
+            leg.SetNColumns(2)
 
         leg.AddEntry(ratio_list[0], catsnames["data"],"pe")
         leg.AddEntry(mcerror_list[0], catsnames[0], "fl")
         for key in my_catstodo:
             if key not in typesratio_listdict: continue
+            if 11 in my_catstodo:
+                if key > 10: continue
             leg.AddEntry(typesratio_listdict[key][0],catsnames[key],"fl")
+            if 11 in my_catstodo:
+                typesratio_listdict[key+10][0].SetLineStyle(7)
+                leg.AddEntry(typesratio_listdict[key+10][0],catsnames[key+10],"fl")
+
         leg.Draw()
         pad.Modified()
         gc.SetHistTexts()
@@ -2765,8 +2812,9 @@ def MakeTitleOnPlot():
 bkgcats = [
     "chargedpion",
     "neutralpion",
-    "multipion",
     "other",
+    "multipion",
+    "other_np",
     11,
     12,
     13,
@@ -2787,6 +2835,11 @@ catstodo = [
     2,
     3,
     4,
+    11,
+    18,
+    12,
+    13,
+    14,
 ]
 
 typestodo = [
@@ -2813,7 +2866,7 @@ typestodo_leg = [
 ]
 
 catsnames = {
-    "data":"Data (stat. + syst.)", 
+    "data": "Data", 
     "qelike":"QElike",
     "chargedpion":"1#pi^{#pm}",
     "neutralpion":"1#pi^{0}",
@@ -2826,6 +2879,11 @@ catsnames = {
     3: "DIS",            # DIS
     4: "COH",            # COH
     8: "2p2h",           # 2p2h
+    11: "Bkg-QE",             # QE
+    12: "Bkg-RES",            # RES
+    13: "Bkg-DIS",            # DIS
+    14: "Bkg-COH",            # COH
+    18: "Bkg-2p2h",           # 2p2h
 }
 
 catscolors = {
@@ -2854,6 +2912,11 @@ catscolors = {
     3:              ROOT.kP8Pink,   # DIS
     4:              ROOT.kP8Green,    # COH
     8:              ROOT.TColor.GetColorBright(ROOT.kP8Azure),  # 2p2h
+    11:              ROOT.kP8Blue,    # QE
+    12:              ROOT.kP8Orange,  # RES
+    13:              ROOT.kP8Pink,   # DIS
+    14:              ROOT.kP8Green,    # COH
+    18:              ROOT.TColor.GetColorBright(ROOT.kP8Azure),  # 2p2h
 }
 
 typescolors = {
@@ -3129,16 +3192,224 @@ for b_sample in analyze_hists["h"]:
 #         model_hists[model] = GetModelHistDict(tmpfile)
 
 ROOT.gStyle.SetOptStat(0)
+for a_hist in input_hists:
+    if "reconstructed" in skipstage_list: break
+    # catsnames["data"] = "Data (stat. err.)"
+    for b_sample in input_hists[a_hist]:
+        for c_var in input_hists[a_hist][b_sample]:
+            reco_data = input_hists[a_hist][b_sample][c_var]["data"]["reconstructed"]
+
+            reco_sig_untuned = input_hists[a_hist][b_sample][c_var]["qelike"]["reconstructed"]
+            reco_sig_tuned = input_hists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"]
+            reco_mctot_untuned = reco_sig_untuned.Clone(reco_sig_untuned.GetName().replace("qelike","mctot"))
+            reco_mctot_tuned = reco_sig_tuned.Clone(reco_sig_tuned.GetName().replace("qelike","mctot"))
+
+            reco_sig_untuned_typesdict = input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed"]
+            reco_sig_tuned_typesdict = input_typeshists[a_hist][b_sample][c_var]["qelike"]["reconstructed_tuned"]
+            reco_untuned_typesdict = reco_sig_untuned_typesdict
+            reco_tuned_typesdict = reco_sig_tuned_typesdict
+
+            # reco_mctot_untuned_typesdict = {}
+            # reco_mctot_tuned_typesdict = {}
+            # for itype in reco_sig_untuned_typesdict:
+            #     tmp_type_untuned = reco_sig_untuned_typesdict[itype].Clone(reco_sig_untuned_typesdict[itype].GetName().replace("qelike","mctot"))
+            #     reco_mctot_untuned_typesdict[itype] = tmp_mctot_untuned
+            #     tmp_type_tuned = reco_sig_tuned_typesdict[itype].Clone(reco_sig_tuned_typesdict[itype].GetName().replace("qelike","mctot"))
+            #     reco_mctot_tuned_typesdict[itype] = tmp_mctot_tuned
+
+            # Now build the other dicts
+            reco_untuned_dict = {"qelike": reco_sig_untuned}
+            reco_tuned_dict = {"qelike": reco_sig_tuned}
+            for bkg in bkgcats:
+                if bkg in input_hists[a_hist][b_sample][c_var]: 
+                    reco_untuned_dict[bkg] = input_hists[a_hist][b_sample][c_var][bkg]["reconstructed"]
+                    reco_mctot_untuned.Add(input_hists[a_hist][b_sample][c_var][bkg]["reconstructed"])
+                    reco_tuned_dict[bkg] = input_hists[a_hist][b_sample][c_var][bkg]["reconstructed_tuned"]
+                    reco_mctot_tuned.Add(input_hists[a_hist][b_sample][c_var][bkg]["reconstructed_tuned"])
+                if bkg in input_typeshists[a_hist][b_sample][c_var]:
+                    tmp_untuned_histdict = input_typeshists[a_hist][b_sample][c_var][bkg]["reconstructed"]
+                    tmp_tuned_histdict = input_typeshists[a_hist][b_sample][c_var][bkg]["reconstructed_tuned"]
+                    for itype in tmp_untuned_histdict:
+                        bkgtype = itype
+                        if itype <= 10:
+                            bkgtype += 10
+                        if bkgtype not in reco_untuned_typesdict:
+                            reco_untuned_typesdict[bkgtype] = tmp_untuned_histdict[itype].Clone(tmp_untuned_histdict[itype].GetName().replace(bkg,"qelikenot"))
+                            reco_tuned_typesdict[bkgtype] = tmp_tuned_histdict[itype].Clone(tmp_tuned_histdict[itype].GetName().replace(bkg,"qelikenot"))
+                            continue
+                        reco_untuned_typesdict[bkgtype].Add(tmp_untuned_histdict[itype])
+                        reco_tuned_typesdict[bkgtype].Add(tmp_tuned_histdict[itype])
+
+            # Now make the titles for the plot
+            var_units = "unit"
+            xvar_name = ""
+            xvar_units = "xunits"
+            yvar_name = ""
+            yvar_units = "yunits"
+            tmp_xvar_bins = []
+            tmp_yvar_bins = []
+            if len(c_var.split("_")) == 2:
+                for var in c_var.split("_"):
+                    if var not in vars_info:
+                        vars_info[var] = {"title": var, "units": unit, "bins":[]}
+                        print("ERROR: variable not in varsinfo: %s"%(var))
+                        continue
+                xvar_name = vars_info[c_var.split("_")[0]]["title"]
+                xvar_units = vars_info[c_var.split("_")[0]]["units"]
+                yvar_name = vars_info[c_var.split("_")[1]]["title"]
+                yvar_units = vars_info[c_var.split("_")[1]]["units"]
+                tmp_xvar_bins = vars_info[c_var.split("_")[0]]["bins"]
+                tmp_yvar_bins = vars_info[c_var.split("_")[1]]["bins"]
+            else:
+                if c_var not in vars_info:
+                    vars_info[c_var] = {"title": var, "units": unit, "bins":[]}
+                xvar_name = vars_info[c_var]["title"]
+                xvar_units = vars_info[c_var]["units"]
+                tmp_xvar_bins = vars_info[c_var]["bins"]
+            
+            tmp_xvar_title = "%s (%s)"%(xvar_name,xvar_units)
+            tmp_yvar_title = "%s (%s)"%(yvar_name, yvar_units)
+            tmp_counts_ztitle = "Counts / (%s) / (%s)"%(xvar_units, yvar_units)
+            tmp_counts_ytitle_1d = "Counts / (%s) "%(xvar_units)
+            
+            # Now setup the master canvas
+            tmp_canvas_basename = "%s_%s_%s"%(modelname, b_sample, c_var)
+            dimtag = ""
+            if a_hist=="h":
+                dimtag = "1D"
+            if a_hist=="h2D":
+                dimtag = "2D"
+            pdf_canvas_name = tmp_canvas_basename+"_recoplots_"+ dimtag
+            var_outdir = os.path.join(outdirname,c_var)
+            if not os.path.exists(var_outdir):
+                print( var_outdir)
+                os.mkdir(var_outdir)
+                os.mkdir(os.path.join(var_outdir,"source"))
+            dummy_canvas = ROOT.TCanvas(pdf_canvas_name,pdf_canvas_name,_xsize,_ysize)
+            dummy_canvas.Print(os.path.join(var_outdir,pdf_canvas_name+".pdf")+"[","pdf")
+            
+            tmp_canvas_basetitle = "%s %s %s"%(modelname, b_sample, c_var)
+
+            if a_hist == "h":
+                # print("here")
+                DrawDataMCPlot1D_new(
+                    reco_data, 
+                    reco_mctot_untuned, reco_untuned_dict, 
+                    tmp_xvar_title, 
+                    tmp_counts_ytitle_1d, 
+                    var_outdir, 
+                    pdf_canvas_name,
+                    "Final States Untuned",
+                    "FinalStates_Untuned", 
+                    do_stack = True, do_nostack = True
+                )
+                DrawDataMCPlot1D_new(
+                    reco_data, 
+                    reco_mctot_untuned, reco_untuned_typesdict, 
+                    tmp_xvar_title, 
+                    tmp_counts_ytitle_1d, 
+                    var_outdir, 
+                    pdf_canvas_name,
+                    "Types Untuned",
+                    "Types_Untuned", 
+                    do_stack = True, do_nostack = True
+                )
+                tmp_mctot_name = catsnames[0] + " (w/ tune)"
+                catsnames[0] = tmp_mctot_name
+                DrawDataMCPlot1D_new(
+                    reco_data, 
+                    reco_mctot_tuned, reco_tuned_dict, 
+                    tmp_xvar_title, 
+                    tmp_counts_ytitle_1d, 
+                    var_outdir, 
+                    pdf_canvas_name,
+                    "Final States Tuned",
+                    "FinalStates_Tuned", 
+                    do_stack = True, do_nostack = True
+                )
+                DrawDataMCPlot1D_new(
+                    reco_data, 
+                    reco_mctot_tuned, reco_tuned_typesdict, 
+                    tmp_xvar_title, 
+                    tmp_counts_ytitle_1d, 
+                    var_outdir, 
+                    pdf_canvas_name,
+                    "Types Tuned",
+                    "Types_Tuned", 
+                    do_stack = True, do_nostack = True
+                )
+                catsnames[0] = catsnames[0].replace(" (w/ tune)","")
+            else:
+                DrawDataMCPlot2D_new(
+                    reco_data, 
+                    reco_mctot_untuned, reco_untuned_dict, 
+                    xvar_name, xvar_units, tmp_xvar_bins, 
+                    yvar_name, yvar_units, tmp_yvar_bins,
+                    tmp_counts_ztitle, 
+                    var_outdir, 
+                    pdf_canvas_name, 
+                    "Final States Untuned", 
+                    "_FinalStates_Untuned",
+                    i_multipliers = [],
+                    do_stack = True, do_nostack = True, do_error_summary = True
+                )
+                DrawDataMCPlot2D_new(
+                    reco_data, 
+                    reco_mctot_untuned, reco_untuned_typesdict, 
+                    xvar_name, xvar_units, tmp_xvar_bins, 
+                    yvar_name, yvar_units, tmp_yvar_bins,
+                    tmp_counts_ztitle, 
+                    var_outdir, 
+                    pdf_canvas_name, 
+                    "Types Untuned",
+                    "Types_Untuned", 
+                    i_multipliers = [],
+                    do_stack = True, do_nostack = True, do_error_summary = True
+                )
+                tmp_mctot_name = catsnames[0] + " (w/ tune)"
+                catsnames[0] = tmp_mctot_name
+                DrawDataMCPlot2D_new(
+                    reco_data, 
+                    reco_mctot_tuned, reco_tuned_dict, 
+                    xvar_name, xvar_units, tmp_xvar_bins, 
+                    yvar_name, yvar_units, tmp_yvar_bins,
+                    tmp_counts_ztitle, 
+                    var_outdir, 
+                    pdf_canvas_name, 
+                    "Final States Untuned",
+                    "FinalStates_Untuned", 
+                    i_multipliers = [],
+                    do_stack = True, do_nostack = True, do_error_summary = True
+                )
+                DrawDataMCPlot2D_new(
+                    reco_data, 
+                    reco_mctot_tuned, reco_tuned_typesdict, 
+                    xvar_name, xvar_units, tmp_xvar_bins, 
+                    yvar_name, yvar_units, tmp_yvar_bins,
+                    tmp_counts_ztitle, 
+                    var_outdir, 
+                    pdf_canvas_name, 
+                    "Types Tuned",
+                    "Types_Tuned", 
+                    i_multipliers = [],
+                    do_stack = True, do_nostack = True, do_error_summary = True
+                )
+                catsnames[0] = catsnames[0].replace(" (w/ tune)","")
+
+            dummy_canvas.Print(os.path.join(var_outdir,pdf_canvas_name+".pdf")+"]","pdf")
+print("done with the reconstructed hists")
+catsnames["data"] = "Data (stat. + syst.)"
+
 for a_hist in analyze_hists.keys():
     print(a_hist)
     for b_sample in analyze_hists[a_hist].keys():
-        datasample = b_sample
-        plottitle = ""
-        print(b_sample)
-        if "_Tuned" in b_sample:
-            dotuned = True
-            datasample = datasample.replace("_Tuned","")
-            plottitle += "Tuned "
+        # datasample = b_sample
+        # plottitle = ""
+        # print(b_sample)
+        # if "_Tuned" in b_sample:
+        #     dotuned = True
+        #     datasample = datasample.replace("_Tuned","")
+        #     plottitle += "Tuned "
         # else: 
         #     print ("This is an untuned sample. Skipping...")
         #     continue
