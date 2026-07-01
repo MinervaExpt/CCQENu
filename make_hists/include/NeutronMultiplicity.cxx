@@ -757,11 +757,18 @@ bool NeutEvent::CandPassMuonAngle(int index) {
     ROOT::Math::XYZVector candfp = m_cands[index]->m_flightpath;
     // double angle = m_mupath.Angle(candfp) * 180. / M_PI;  // need this in deg (for user configurability)
     if (m_do_muonangle_edep_funct) {
-        if (m_cands[index]->m_is3D) return true; // don't cut on 3D cands
+        // NEW for 500 MeV recoil100mm cut -NHV 6/30/26
+        if (!m_cands[index]->m_is3D) return true; // don't cut on 2d cands now
         double edep = m_cands[index]->m_recoEDep;
-        if (edep < 12.0) return true; // below 12 MeV this is irrelevant
+        if (edep < 20 || edep > 60.0) return true;  
         double costheta = cos(ROOT::Math::VectorUtil::Angle(m_mupath, candfp));
-        return (costheta < -0.0023 * edep - 0.078) || (costheta > 0.0011 * edep + 0.0864); // fit from edep vs muon costheta plot
+        return (costheta < -0.1) || (costheta > 0.08);  // fit from edep vs muon costheta plot
+
+        // if (m_cands[index]->m_is3D) return true; // don't cut on 3D cands
+        // double edep = m_cands[index]->m_recoEDep;
+        // if (edep < 12.0) return true; // below 12 MeV this is irrelevant
+        // double costheta = cos(ROOT::Math::VectorUtil::Angle(m_mupath, candfp));
+        // return (costheta < -0.0023 * edep - 0.078) || (costheta > 0.0011 * edep + 0.0864); // fit from edep vs muon costheta plot
     }
     double angle = ROOT::Math::VectorUtil::Angle(m_mupath, candfp) * 180. / M_PI;  // need this in deg (for user configurability)
     return angle >= m_muoncone_min;
@@ -886,7 +893,8 @@ bool NeutEvent::CandPassTrackEndDist(int index) {
             return track_dist > 3.75 * edep + 75.0;
         } else {
             // return track_dist > 1.9218 * edep + 52.919;
-            if (edep > 30.0) return track_dist > 175.;
+            // if (edep > 30.0) return track_dist > 175.;
+            if (edep > 60.0) return track_dist > 300.;
             return track_dist > 4.1667 * edep + 50.;
         }
     }
