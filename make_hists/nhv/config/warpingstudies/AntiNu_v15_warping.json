@@ -4,17 +4,17 @@
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "Test_syst_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "DPF2026_test_arachne_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
   "modeltuneFile": "${CCQEMAT}/config/modeltunes/${MYMODEL}.json",
   "recoName": "MasterAnaDev",
-  "tunedmc": "both",
+  "tunedmc": "untuned",
   "warpedmc": "none",
   "closure": 0,
   "TuneCategories": [
@@ -23,10 +23,10 @@
     "neutralpion"
   ],
   "DoResolution": false,
-  "DoTypes": true,
+  "DoTypes": false,
   "pdg": -14,
-  "mcRecoToCSV": false,
-  "statusbar": true,
+  "mcRecoToCSV": true,
+  "statusbar": false,
   "runsamples": [
     "QElike"//,
     // "QElike_old"
@@ -52,7 +52,9 @@
     // "EAvailoldbins",
     "ptmu",
     "pzmu",
-    "Q2QE"
+    "Q2QE",
+    "recoil",
+    "NumberOfProtonCandidates"
     // // "pzmu"
     // // "EAvailFromTruthBlobs",
     // "ERemovedEAvailRatio",
