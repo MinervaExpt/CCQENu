@@ -20,8 +20,8 @@
   "TuneCategories": [
     "qelike",
     "chargedpion",
-    "neutralpion",
-    "multipi"
+    "neutralpion"//,
+    // "multipi"
   ],
   "DoResolution": false,
   "DoTypes": false,
