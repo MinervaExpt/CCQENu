@@ -6,9 +6,9 @@
         "name": "QElike",
         "reco": "QElike",
         "phase_space": "phase_space",
-        "signal": [
-            "qelike"
-        ],
+        "signal": [],
+        //     "qelike"
+        // ],
         "background": [
             "neutralpion",
             "chargedpion",
@@ -18,11 +18,11 @@
             // "qelikenot"
         ],
         "categories": {
-            "qelike": {
-                "for": [
-                    "selected_reco"
-                ]
-            },
+            // "qelike": {
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // },
             "neutralpion": {
                 "for": [
                     "selected_reco"
