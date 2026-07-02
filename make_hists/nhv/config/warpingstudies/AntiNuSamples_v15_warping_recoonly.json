@@ -12,9 +12,9 @@
         "background": [
             "neutralpion",
             "chargedpion",
-            "multipion",
-            "other",
-            "other_np" //,
+            // "multipion",
+            "other"//,
+            // "other_np" //,
             // "qelikenot"
         ],
         "categories": {
@@ -33,21 +33,21 @@
                     "selected_reco"
                 ]
             },
-            "multipion": {
-                "for": [
-                    "selected_reco"
-                ]
-            },
+            // "multipion": {
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // },
             "other": {
                 "for": [
                     "selected_reco"
                 ]
-            },
-            "other_np": {
-                "for": [
-                    "selected_reco"
-                ]
-            } //,
+            }//,
+            // "other_np": {
+            //     "for": [
+            //         "selected_reco"
+            //     ]
+            // } //,
             // "qelikenot": {
             //     // "for": ["selected_reco", "selected_truth", "truth", "response"]                
             //     "for": [
