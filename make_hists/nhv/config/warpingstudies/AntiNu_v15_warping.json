@@ -5,7 +5,7 @@
   "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15.json",
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
-  "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
+  "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping_hd.json",
   "warpdriverFile": "${CCQEMAT}/config/warpingstudies/AntiNuWarps_v15.json",
   "outRoot": "DPF2026_test_arachne_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals.root",
@@ -54,7 +54,12 @@
     "pzmu",
     "Q2QE",
     "recoil",
-    "NumberOfProtonCandidates"
+    "NumberOfProtonCandidates",
+    "NeutCandsEdep",
+    "NeutCandsTrackEndDist",
+    "NeutCandsvtxSphereDist",
+    "NeutCandsMuonCosTheta",
+    "NeutCandsTopMCPID"
     // // "pzmu"
     // // "EAvailFromTruthBlobs",
     // "ERemovedEAvailRatio",
