@@ -471,7 +471,8 @@ class DataGrabber:
                 if DEBUG: 
                     print ("created",self.hists1D[sample]["mctot"][variable][signal_type].GetName(),sample,"mctot",variable,signal_type) 
                 if DEBUG: 
-                    print ("created",self.hists1D[sample]["bkgtot"][variable][background_type].GetName(),sample,"bkgtot",variable,background_type)   
+                    if "Background" in self.allconfigs["Cross"]["Stages"]:
+                        print ("created",self.hists1D[sample]["bkgtot"][variable][background_type].GetName(),sample,"bkgtot",variable,background_type)   
 
 
             

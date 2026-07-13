@@ -1,0 +1,40 @@
+{
+  "InputFiles":{"2track_MultiPionCut":"/Users/schellma/Dropbox/ccqe/sean/fitted/NuFit_2track_MultiPionCut_All_multother_bkgdScaled_Q2QE_2D_qecut8.root"},
+  "Target":"Nucleons", // can be Protons, Neutrons or Nucleons
+  "Samples":["2track_MultiPionCut"],
+  "Categories":["qelike","bkgsub"], 
+  "Data":"bkgsub",
+  "Signal":"qelike",
+  "Migration":"response",
+  "Data_Cat":"bkgsub",
+  "Signal_Cat":"qelike",
+  "Background_Cat":[], // only use if doing Background stage
+  "data_types1D":{
+    "bkgsub":["fitted_combined"],
+    "qelike":["reconstructed","selected_truth","all_truth","response_truth","response_reconstructed"]
+  },
+  "data_types2D":{
+    "bkgsub":[],
+    "qelike": ["response_migration"]
+  },
+  "Data_Type": "fitted_combined",
+  "Signal_Type": "reconstructed",
+  "Background_Type": "none",
+  "Selected_Type":"selected_truth",
+  "Truth_Type":"all_truth",
+  "Migration_Type":"response",
+  "POTScale":0,
+  "Variables":["Q2QE"],
+  "Scales":{"Q2QE":1},    // scale = logx + 2* logy
+  "FluxNorm":{"Q2QE":false},
+  "PixDir":"./pix",
+  "LogPlot":false,
+  "LogMinimum":1.0,
+  "Stages":{
+    "Unfold":{"In":"fitted_combined","Out":"unfolded"},
+    "Efficiency":{"In":"unfolded","Out":"effcorr"},
+    "Flux":{"In":"effcorr","Out":"sigma"}
+  },
+  "Template":"h___%s___%s___%s___reconstructed",
+  "FitTemplate":"h___%s___%s___%s___fitted_combined"
+}
