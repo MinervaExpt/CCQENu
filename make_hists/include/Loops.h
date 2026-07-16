@@ -248,16 +248,17 @@ void LoopAndFillEventSelection(std::string tag,
                                         continue;
                                     }
                                     std::vector<double> fill_vals = v->GetArgRecoValue(*universe, v->GetRecoIndex(*universe));
-                                    // csvFile << ";{";
+                                    csvFile << ";{";
                                     for (int i = 0; i < fill_vals.size(); i++) {
-                                        if (i == 0) csvFile << ";{";
+                                        // if (i == 0) csvFile << ";{";
                                         csvFile << fill_vals[i];
                                         if (i == fill_vals.size()-1) {
-                                            csvFile << "}";
+                                            // csvFile << "}";
                                             break;
                                         }
                                         csvFile << ","; 
                                     }
+                                    csvFile << "}";
                                 }
                             }
 
@@ -326,16 +327,17 @@ void LoopAndFillEventSelection(std::string tag,
                                         continue;
                                     }
                                     std::vector<double> fill_vals = v->GetArgRecoValue(*universe, v->GetRecoIndex(*universe));
-                                    // csvFile << ";{";
+                                    csvFile << ";{";
                                     for (int i = 0; i < fill_vals.size(); i++) {
-                                        if (i == 0) csvFile << ";{";
+                                        // if (i == 0) csvFile << ";{";
                                         csvFile << fill_vals[i];
                                         if (i == fill_vals.size() - 1) {
-                                            csvFile << "}";
+                                            // csvFile << "}";
                                             break;
                                         }
                                         csvFile << ",";
                                     }
+                                    csvFile << "}";
                                 }
                             }
                             csvFile << ";" << universe->GetInt("ev_run");
