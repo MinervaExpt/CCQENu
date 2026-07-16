@@ -1018,7 +1018,7 @@ for a_sample in groups.keys():
                 binrange_latex.SetTextAlign(33) # top right
                 binrange_latex.SetNDC()
                 binrange_latex.SetTextFont(42)
-                binrange_latex.SetTextSize(0.025)
+                binrange_latex.SetTextSize(0.03)
                 binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
 
             if b_var.split("_")[1] in ["NeutCandEdep", "NeutCandsEdep"] and projY:

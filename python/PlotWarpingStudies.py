@@ -49,6 +49,10 @@ max_chi2_dict = {
         "MnvTunev2": 350,
         "no2p2htune": 1500,
     },
+    "EAvailhibin": {
+        "MnvTunev2": 350,
+        "no2p2htune": 1500,
+    }
 }
 
 lineWidth = 5
@@ -68,8 +72,12 @@ def main():
         os.mkdir(outdirname)
     canvas = ROOT.TCanvas("chi2", "chi2", 1800,1500)
     canvas.SetRightMargin(0.17)
+
     # canvas.SetLogx()
     # canvas.SetLogy()
+    pdf_canvas_name = "plots_warp_chi2_niter.pdf"
+    canvas.Print(os.path.join(plotdir, pdf_canvas_name)+"[","pdf")
+
     for file_name in os.listdir(filedir):
         if ".root" not in file_name or "TransWarpOut_" not in file_name:
             continue
@@ -78,10 +86,12 @@ def main():
 
         ymax = -1.
         # filebasename1=os.path.basename(filename1)
-        ymax = 250
+        ymax = 500
 
         if "ptmu" in file_name and "EAvail" not in file_name:
-            ymax = 50
+            ymax = 75
+        if "EAvail_ptmu" in file_name or "EAvailhibin_ptmu" in file_name:
+            ymax = 750
         # for var in max_chi2_dict.keys():
         #     if "_"+var+"_" not in file_name: 
         #         ymax = 1500
@@ -170,8 +180,11 @@ def main():
             leg.AddEntry(doubleNDFLine, "2x Number of Bins", "l")
         # leg.AddEntry(iterLine, str(iterChosen) + " iterations", "l")
         leg.Draw()
-        out_file_name = "plots_"+file_name.replace(".root", "warp_chi2_niter.png")
-        canvas.Print(os.path.join(outdirname, out_file_name))
+        # out_file_name = "plots_"+file_name.replace(".root", "warp_chi2_niter.png")
+        # canvas.Print(os.path.join(outdirname, out_file_name))
+        canvas.Print(os.path.join(plotdir, pdf_canvas_name),"Title:%s"%file_name.replace(".root",""))
+
+    canvas.Print(os.path.join(plotdir, pdf_canvas_name)+"]","pdf")
 
 
 if __name__=="__main__":

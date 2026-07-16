@@ -42,9 +42,11 @@ dotypes = True          # use this if ou want to do by types
 dotuned= False           # use this if you have tuned hists
 doratio = True          # use this if you want to include a data/mc ratio
 # projY = True
-sig_only = True
-do_data = False
-
+sig_only = False
+do_data = True
+do_panelareanorm = True
+do_legendonplot = False
+do_titleonplot = True
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
 
 legendfontsize = 0.042
@@ -57,14 +59,85 @@ _ysize = 2400
 latex_x = 0.72
 latex_y = 0.53
 
+pad_lmarg = 0.1
+pad_rmarg = 0.01
+pad_tmarg = 0.02
+pad_bmarg = 0.01
 
 data_marker_style = 20
-data_marker_size = 2.0
+data_marker_size = 1.5
 data_marker_size2d = 1.5
-end_error_size = 10.0
+end_error_size = 7.5
 typeslinewidth = 1
 typeslinewidth1D = 1
-bkgfillstyle = 3244
+bkgfillstyle = 3144
+prelim_string = "MINER#it{^{}#nu}A Work In Progress"
+prelim_string1 = "MINER#it{^{}#nu}A Work"
+prelim_string2 = "In Progress"
+
+bincomb_dict = {
+    "NeutCandsEdep": [
+        [
+            1,
+            2,
+            3,
+        ],
+        [
+            4,
+        ],
+        [
+            5,
+        ],
+        [
+            6,
+        ],
+        [
+            7,
+        ],
+        [
+            8,
+        ],
+        [
+            9,
+        ],
+        [
+            10,
+        ],
+        [
+            11,
+            12,
+        ],
+        [
+            13,
+        ],
+        [
+            14,
+            15,
+        ]
+    ],
+}
+
+pad_selection = {
+    "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist_NeutCandsTopMCPID": [],
+    "NeutCandsEdep_NeutCandsvtxSphereDist_NeutCandsTopMCPID": 
+        [
+            1,
+            2,
+            11,
+        ],
+    "NeutCandsEdep_NeutCandsMuonCosTheta_NeutCandsTopMCPID":
+        [
+            1,
+            2,
+            7,
+        ],
+    "NeutCandsEdep_NeutCandsTrackEndDist_NeutCandsTopMCPID": 
+        [
+            1,
+            3,
+            9,
+        ],
+}
 
 ROOT.gStyle.SetEndErrorSize(end_error_size) # This makes the ticks at the end of the error bars longer
 
@@ -288,7 +361,8 @@ def MakePlotDir(subdir=""):
     plotdir = ""
     cwd = os.getcwd()
     outputloc = os.environ.get("OUTPUTLOC")
-    cwd_subpath = cwd.replace(os.path.join(outputloc,"June2026/eventloopout/blobstudies/"),"")
+    # cwd_subpath = cwd.replace(os.path.join(outputloc,"June2026/eventloopout/blobstudies/"),"")
+    cwd_subpath = ""
     base_plotdir = os.environ.get("PLOTSLOC")
     if base_plotdir != None:
         plotdir = os.path.join(base_plotdir, month + year)
@@ -307,31 +381,62 @@ def MakePlotDir(subdir=""):
     # sys.exit(1)
     return os.path.join(plotdir, subdir, cwd_subpath)
 
-def PanelCanvas(name, n_xbins, n_ybins, x_size=2000, y_size=1500):
+def PanelCanvas(name, n_xbins, n_ybins, x_size=2000, y_size=1500, legend_shift = 0):
     """name is the name for the canvas
     title is the title for the canvas
     n_xbins and n_ybins are number of x and y bins of each 2D hist
     x_size and y_size is the dimensions of the canvas
     returns a grid canvas with the correct number of pads"""
-
+    if legend_shift < 0:
+        legend_shift = 0
+    n_ybins += legend_shift
     # TODO: These might need the n_xbins swapped for n_ybins (currently set up basically how it is in Dan's), maybe just hard code these for now?
+    # grid_y = int(math.sqrt(n_ybins)+1)
+    # grid_x = int(n_ybins/(grid_y-1))
+    # if grid_x*grid_y-(n_ybins) >= grid_x - legend_shift:
+    #     grid_y-=1
+    #     grid_x = int(n_ybins/(grid_y - 1))
+    # if grid_x*grid_y-(n_ybins) >= grid_x:
+    #     grid_y-=1
+    # if grid_x * grid_y == (n_ybins):
+    #     grid_x+=1
+    #     grid_y = int(n_ybins/(grid_x - 1))
+    #     print("I'm doing it mr krabs")
+
     grid_x = int(math.sqrt(n_ybins)+1)
     grid_y = int(n_ybins/(grid_x-1))
 
-    if grid_x*grid_y-n_ybins==grid_x:
+    if grid_x*grid_y-(n_ybins-legend_shift) == grid_x:
         grid_y-=1
-    if grid_x * grid_y == n_ybins:
+    if grid_x * grid_y == (n_ybins-legend_shift):
         grid_x+=1
         print("I'm doing it mr krabs")
 
-    if n_ybins == 15:
-        grid_x = 4
-        grid_y = 4
+    # if n_ybins == 15:
+    #     grid_x = 4
+    #     grid_y = 4
+    if math.floor(math.sqrt(n_ybins)) == math.sqrt(n_ybins):
+        grid_x = int(math.sqrt(n_ybins))
+        grid_y = int(math.sqrt(n_ybins))
+    if math.floor(math.sqrt(n_ybins+1)) == math.sqrt(n_ybins+1):
+        grid_x = int(math.sqrt(n_ybins+1))
+        grid_y = int(math.sqrt(n_ybins+1))
     print("HyperDPanelCanvas: Making a grid canvas named "+name+" with a grid of ",n_xbins,"    ",n_ybins,"    ",grid_x,"    ",grid_y)
 
     # gc2 = PlotUtils.GridCanvas(name, grid_x, grid_y, x_size, y_size)
     # gc2 = GridCanvas(name, grid_x, grid_y, x_size, y_size)
+    # if legend_shift == 0:
+    #     x_size = round(x_size * ((grid_x+1)/grid_x))
     gc2 = GridCanvas(name, grid_x, grid_y, x_size, y_size)
+    gc2.SetRightMargin(pad_rmarg)
+    gc2.SetLeftMargin(pad_lmarg)
+    gc2.SetTopMargin(pad_tmarg)
+    if do_titleonplot:
+        gc2.SetTopMargin(pad_tmarg+0.06)
+
+    # if legend_shift == 0:
+    #     gc2.SetRightMargin(1/grid_x)
+
     # gc2.SetRightMargin(0.05)
     # gc2.SetLeftMargin(0.05)
     gc2.SetInterpadSpace(0.0)
@@ -339,23 +444,38 @@ def PanelCanvas(name, n_xbins, n_ybins, x_size=2000, y_size=1500):
 
     return gc2
 
-
-def CCQECanvas(name, title, xsize=1800, ysize=1200):
-    c2 = ROOT.TCanvas(name, title, xsize, ysize)
-    # c2.SetLeftMargin(0.1)
-    c2.SetRightMargin(0.15)
-    c2.SetLeftMargin(0.11)
-    c2.SetTopMargin(0.1)
-    c2.SetBottomMargin(0.1)
-    return c2
-
-def CCQELegend(xlow, ylow, xhigh, yhigh):
-    leg = ROOT.TLegend(xlow, ylow, xhigh, yhigh)
-    leg.SetFillStyle(0)
-    leg.SetBorderSize(0)
-    leg.SetTextSize(legendfontsize)
-    return leg
-
+def CombineProjBins(projvar, i_grid_dict, i_projaxis_bins):
+    bincomb_list = bincomb_dict[tmp_projvar]
+    new_grid_dict = {}
+    for projbin in range(1, len(bincomb_list)+1):
+        if projbin not in new_grid_dict: new_grid_dict[projbin] = {}
+        for cat in i_grid_dict[projbin]:
+            if cat not in new_grid_dict[projbin]: new_grid_dict[projbin][cat] = {}
+            for part in i_grid_dict[projbin][cat]:
+                if cat not in new_grid_dict[projbin][cat]: new_grid_dict[projbin][cat][part] = {}
+    new_projaxis_bins = []
+    new_bin_index = 0
+    for bincomb in bincomb_list:
+        comb_loedge = i_projaxis_bins[bincomb[0]-1]
+        new_projaxis_bins.append(comb_loedge)
+        if bincomb == bincomb_list[-1]:
+            comb_hiedge = i_projaxis_bins[bincomb[-1]]
+            new_projaxis_bins.append(comb_hiedge)
+        new_bin_index += 1
+        for cat in i_grid_dict[bincomb[0]]:
+            for part in i_grid_dict[bincomb[0]][cat]:
+                tmp_hist = i_grid_dict[bincomb[0]][cat][part].Clone()
+                new_grid_dict[new_bin_index][cat][part] = tmp_hist
+                if len(bincomb) == 1:
+                    continue
+                for projbin in bincomb[1:]:
+                    new_grid_dict[new_bin_index][cat][part].Add(i_grid_dict[projbin][cat][part], 1.0)
+    print(i_projaxis_bins)
+    print(new_projaxis_bins)
+    print(i_grid_dict.keys())
+    print(new_grid_dict.keys())
+    # sys.exit(1)
+    return new_grid_dict, new_projaxis_bins
 
 def AddPreliminary():
     font = 112
@@ -370,11 +490,14 @@ def AddPreliminary():
     return latex
 
 
-def MakeTitleOnPlot():
-    latex = ROOT.TLatex()
+def MakeTitleOnPlot(title):
+    xpos = pad_lmarg + (1.0 - pad_lmarg - pad_rmarg)/2.
+    ypos = 0.99
+    latex = ROOT.TLatex(xpos, ypos, title)
     latex.SetNDC()
-    latex.SetTextSize(0.058)
-    latex.SetTextAlign(21)
+    latex.SetTextSize(0.05)
+    latex.SetTextAlign(23)
+    latex.SetTextFont(62)
     return latex
 
 
@@ -517,29 +640,34 @@ vars_info = {
     "NeutCandsEdep": {
         "title": "Cluster E_{dep}",
         "shortname": "E_{dep}",
+        "shortshortname": "Edep",
         "units": "MeV",
         "bins": [],
     },
     "NeutCandsMuonCosTheta": {
         "title": "Cluster cos(#Delta#theta_{#mu})",
         "shortname": "cos(#Delta#theta_{#mu})",
+        "shortshortname": "cos(dtm)",
         "units": "",
         "bins": [],
     },
     "NeutCandsvtxSphereDist" : {
         "title": "Cluster d_{vtx}",
         "shortname": "d_{vtx}",
+        "shortshortname": "dvtx",
         "units": "mm",
         "bins": [],
     },
     "NeutCandsTrackEndDist": {
         "title": "Cluster d_{track end}",
         "shortname": "d_{track}",
+        "shortshortname": "dtrack",
         "units": "mm",
         "bins": [],
     },
     "recoil": {
         "title": "recoil",
+        "shortshortname": "recoil",
         "units": "GeV",
         "bins": [],
     },
@@ -574,17 +702,16 @@ bin_pid_mechname = {
     10: "other",
 }
 
-10
 bin_pid_names = {   
-    "neutron": "n",
-    "proton": "p",
-    "pizero": "#pi^{0}",
-    "piplus": "#pi^{+}",
-    "piminus": "#pi^{-}",
-    "pipm": "#pi^{#pm}",
-    "gamma": "#gamma",
-    "electron": "e^{#pm}",
-    "muon": "#mu^{#pm}",
+    "neutron": "#it{n}",
+    "proton": "#it{p}",
+    "pizero": "#it{#pi^{0}}",
+    "piplus": "#it{#pi^{+}}",
+    "piminus": "#it{#pi^{-}}",
+    "pipm": "#it{#pi^{#pm}}",
+    "gamma": "#it{#gamma}",
+    "electron": "#it{e^{#pm}}",
+    "muon": "#it{#mu^{#pm}}",
     "notop": "Non-GENIE",
     "other": "Other",
 }
@@ -617,11 +744,11 @@ bin_pid_order = [
 ]
 
 pid_consolidation = [
-    7,
-    6,
-    5,
-    4,
-    3
+    7, # electron
+    6, # gamma
+    # 5, # piminus
+    # 4, # piplus
+    # 3, # pizero
 ]
 
 process = ["data", "QE", "RES", "DIS", "COH", "", "", "", "2p2h", ""]
@@ -697,8 +824,20 @@ else:
     POTScale = dataPOT / mcPOTprescaled
 print("POTScale: ", POTScale)
 
+plottitle_base = ""
+filename_parse = filename.split("_")
+if "2dblobs" in filename_parse:
+    plottitle_base = "2D Clusters"
+if "3dblobs" in filename_parse:
+    plottitle_base = "3D Clusters"
+if "AllBlobs" in filename_parse:
+    plottitle_base = "2D and 3D Clusters"
+
 groups = {}
-scaleX = ["Q2QE","NeutCandsEdep"]
+scaleX = [
+    "Q2QE",
+    "NeutCandsEdep",
+]
 groups = GetHistDict(f, POTScale)
 
 if not noData:
@@ -708,7 +847,7 @@ else:
 
 ROOT.gStyle.SetOptStat(0)
 # template = "%s___%s___%s___%s"
-
+# mnvPlotter = MnvPlotter()
 for a_sample in groups.keys():
     # # for b_var in groups[a_sample].keys():
     # if "_Tuned" in a_sample:
@@ -748,17 +887,16 @@ for a_sample in groups.keys():
         #         data = groups[data_sample_name][data_var]["data"].Clone()
         #         data.SetMarkerColor(ROOT.kBlack)
         #         data.SetLineColor(ROOT.kBlack)
-
         bins = GetHDBinning(f,b_var)
         analysistype = GetHDAnalysisType(f,b_var)
         flowadjust = 1
         new_bin_pid_order = bin_pid_order
         new_pid_consolidation = pid_consolidation
-        if sig_only:
-            new_bin_pid_order = []
-            for pid in bin_pid_order:
-                if pid not in pid_consolidation: new_bin_pid_order.append(pid)
-                # [pid in bin_pid_order if pid not in pid_consolidation]
+        # if sig_only:
+        new_bin_pid_order = []
+        for pid in bin_pid_order:
+            if pid not in pid_consolidation: new_bin_pid_order.append(pid)
+            # [pid in bin_pid_order if pid not in pid_consolidation]
 
         if analysistype in [0,1]:
             flowadjust = 1
@@ -795,7 +933,8 @@ for a_sample in groups.keys():
                     h2D_dict[c_cat] = {}
                 if partname not in h2D_dict[c_cat].keys():
                     h2D_dict[c_cat][partname] = {}
-                if sig_only and zbin in new_pid_consolidation:
+                # if sig_only and zbin in new_pid_consolidation:
+                if zbin in new_pid_consolidation:
                     tmp_h2D_list[10].Add(tmp_h2D_list[zbin])
                     continue
                 if zbin == 5:
@@ -831,17 +970,21 @@ for a_sample in groups.keys():
         
         for proj in ["projX", "projY"]:
             proj_bin_range = []
+            axisvar_bins = []
             n_projbins_raw = 0
             if proj == "projY":
                 n_projbins_raw = n_xbins
                 tmp_projaxis_bins = bins[0]
                 tmp_projvar = b_var.split("_")[0]
                 tmp_axisvar = b_var.split("_")[1]
+                axisvar_bins = bins[1]
+
             else:
                 n_projbins_raw = n_ybins
                 tmp_projaxis_bins = bins[1]
                 tmp_projvar = b_var.split("_")[1]
                 tmp_axisvar = b_var.split("_")[0]
+                axisvar_bins = bins[0]
             
             tmp_projvar_shortname = vars_info[tmp_projvar]["shortname"]
             tmp_projvar_units = vars_info[tmp_projvar]["units"]
@@ -849,16 +992,21 @@ for a_sample in groups.keys():
             tmp_axisvar_units = vars_info[tmp_axisvar]["units"]
             proj_bin_range = range(1,n_projbins_raw-1)
 
-            grid_dict = {}
+
+            plottitle = "%s: %s vs. %s"%(plottitle_base, tmp_axisvar_shortname, tmp_projvar_shortname)
+            plottitle_latex = MakeTitleOnPlot(plottitle)
+            tmp_grid_dict = {}
+            rangestring_dict = {}
+            # Build the grid dict
             for projbin in proj_bin_range:
-                if projbin not in grid_dict:
-                    grid_dict[projbin] = {}
+                if projbin not in tmp_grid_dict:
+                    tmp_grid_dict[projbin] = {}
                 for cat in h2D_dict:
-                    if cat not in grid_dict[projbin]:
-                        grid_dict[projbin][cat] = {}
+                    if cat not in tmp_grid_dict[projbin]:
+                        tmp_grid_dict[projbin][cat] = {}
                     for part in h2D_dict[cat]:
-                        if part not in grid_dict[projbin][cat]:
-                            grid_dict[projbin][cat][part] = {}
+                        if part not in tmp_grid_dict[projbin][cat]:
+                            tmp_grid_dict[projbin][cat][part] = {}
                         tmp_hist2D = h2D_dict[cat][part].Clone()
                         tmp_proj = MnvH1D()
                         if proj == "projY":
@@ -873,46 +1021,130 @@ for a_sample in groups.keys():
                         # tmp_proj.Scale(1.,"width")
                         if cat != "qelike":
                             tmp_proj.SetFillStyle(bkgfillstyle)
-                        grid_dict[projbin][cat][part] = tmp_proj.Clone()
+                        if data_var.split("_")[0] in scaleX and proj=="projX":
+                            if axisvar_bins[0] == 0.0:
+                                tmp_proj.GetXaxis().SetRangeUser(1.5,axisvar_bins[-1])
+                        if data_var.split("_")[1] in scaleX and proj=="projY":
+                            if axisvar_bins[0] == 0.0:
+                                tmp_proj.GetXaxis().SetRangeUser(1.5,axisvar_bins[-1])
+                        tmp_grid_dict[projbin][cat][part] = tmp_proj.Clone()
+            grid_dict = {}
+            # If you're combining bins, do that, you'll need to loop over the index in grid_dict now
+            if tmp_projvar in bincomb_dict:
+                grid_dict, projaxis_bins = CombineProjBins(tmp_projvar, tmp_grid_dict, tmp_projaxis_bins)
+            else: 
+                grid_dict = tmp_grid_dict
+                projaxis_bins = tmp_projaxis_bins
+            
+            # Now setup all the text stuff
+            for projbin in grid_dict:
+                loedge = projaxis_bins[projbin-1]
+                hiedge = projaxis_bins[projbin]
 
+                range_string = "{min} < {var} < {max}".format(
+                    min = round(loedge,2), 
+                    var = "%s#lower[-0.25]{#scale[0.6]{(%s)}}"%(tmp_projvar_shortname, tmp_projvar_units), 
+                    max = round(hiedge,2)
+                )
+                if tmp_projvar_units == "":
+                    range_string = "{min} < {var} < {max}".format(
+                        min = round(loedge,2), 
+                        var = "%s"%(tmp_projvar_shortname), 
+                        max = round(hiedge,2)
+                    )
+                rangestring_dict[projbin] = range_string
+            # This helps with setting text sizes later
+            longest_string_length = 0
+            for key in rangestring_dict:
+                string = rangestring_dict[key]
+                length = 0
+                substr = string.split( "<")
+                length += len(substr[0])
+                length += len(substr[2])
+                length += len(vars_info[tmp_projvar]["shortshortname"])
+                length += len(tmp_projvar_units)
+                if length > longest_string_length:
+                    longest_string_length = length
+
+            # Area normalize the panes if you need to
+            if do_data: # and do_panelareanorm and (not sig_only):
+                for projbin in grid_dict:
+                    tmp_data = grid_dict[projbin]["data"]["data"].Clone()
+                    tmp_mctot = grid_dict[projbin]["mctot"]["mctot"].Clone()
+                    data_area = tmp_data.Integral(1, tmp_data.GetNbinsX())
+                    mctot_area = tmp_mctot.Integral(1, tmp_mctot.GetNbinsX())
+                    print("\tdata_area: %02f\tmctot_area: %02f"%(data_area, mctot_area))
+                    mc_areascale = 1.0
+                    if mctot_area!=0.0:
+                        mc_areascale = data_area/mctot_area
+                    grid_dict[projbin]["mctot"]["mctot"].Clone()
+                    for cat in grid_dict[projbin]:
+                        # print(cat)
+                        if cat in ["data"]: continue
+                        for part in grid_dict[projbin][cat]:
+                            # print("\t",part)
+                            grid_dict[projbin][cat][part].Scale(mc_areascale)
+            # Now set maxima of the panes
             global_max = 0.0
             datamax = 0.0
-            print(grid_dict[projbin]["qelike"]["qeliketot"])
-            mcmax = max([grid_dict[projbin]["qelike"]["qeliketot"].GetMaximum() for projbin in grid_dict])
-            if not sig_only:
-                if do_data:
-                    datamax = max([grid_dict[projbin]["data"]["data"].GetMaximum() for projbin in grid_dict])
-                mcmax = max([grid_dict[projbin]["mctot"]["mctot"].GetMaximum() for projbin in grid_dict])
+            for projbin in grid_dict:
+                mcmax = max([grid_dict[projbin]["qelike"]["qeliketot"].GetBinContent(grid_dict[projbin]["qelike"]["qeliketot"].GetMaximumBin()) for projbin in grid_dict])
+                if not sig_only:
+                    if do_data:
+                        datamax_list = [grid_dict[projbin]["data"]["data"].GetBinContent(grid_dict[projbin]["data"]["data"].GetMaximumBin()) for projbin in grid_dict]
+                        datamax = max(datamax_list)
+                    mcmax_list = [grid_dict[projbin]["mctot"]["mctot"].GetBinContent(grid_dict[projbin]["mctot"]["mctot"].GetMaximumBin()) for projbin in grid_dict]
+                    mcmax = max(mcmax_list)
             global_max = max(datamax, mcmax)
             multipliers = []
+            multipstring_dict = {}
+            if tmp_projvar in bincomb_dict:
+                print(grid_dict.keys())
+                # sys.exit(1)
             for projbin in grid_dict:
+                if tmp_projvar in bincomb_dict:
+                    print(projbin)
                 tmp_pad_max = 0.0
                 tmp_pad_scale = 1.0
                 if do_data:
-                    tmp_datamax = grid_dict[projbin]["data"]["data"].GetMaximum()
-                    tmp_mcmax = grid_dict[projbin]["mctot"]["mctot"].GetMaximum()
+                    tmp_datamax = grid_dict[projbin]["data"]["data"].GetBinContent(grid_dict[projbin]["data"]["data"].GetMaximumBin())
+                    tmp_mcmax = grid_dict[projbin]["mctot"]["mctot"].GetBinContent(grid_dict[projbin]["mctot"]["mctot"].GetMaximumBin())
                     tmp_pad_max = max(tmp_datamax,tmp_mcmax)
                 if sig_only:
-                    tmp_pad_max = grid_dict[projbin]["qelike"]["qeliketot"].GetMaximum()
+                    tmp_pad_max = grid_dict[projbin]["qelike"]["qeliketot"].GetBinContent(grid_dict[projbin]["qelike"]["qeliketot"].GetMaximumBin())
                 if tmp_pad_max == 0.0:
                     if global_max == 0.0:
                         global_max = 1.0
                     tmp_pad_max = global_max
                 tmp_pad_scale = eval('{:.{p}g}'.format(round(global_max / tmp_pad_max), p=2))
                 multipliers.append(tmp_pad_scale)
-
+                multip_string = "#times {:g}".format(float('{:.{p}g}'.format(multipliers[projbin-1], p=2)))
+                multipstring_dict[projbin] = multip_string
                 for cat in grid_dict[projbin]:
                     for part in grid_dict[projbin][cat]:
                         grid_dict[projbin][cat][part].Scale(tmp_pad_scale)
                         # grid_dict[projbin][cat][part].SetMaximum(1.2 * global_max)
+                        if data_var.split("_")[0] in scaleX and proj=="projX":
+                            if axisvar_bins[0] == 0.0:
+                                grid_dict[projbin][cat][part].GetXaxis().SetRangeUser(1.5,axisvar_bins[-1])
+                        if data_var.split("_")[1] in scaleX and proj=="projY":
+                            if axisvar_bins[0] == 0.0:
+                                grid_dict[projbin][cat][part].GetXaxis().SetRangeUser(1.5,axisvar_bins[-1])
                 grid_dict[projbin]["data"]["data"].SetMaximum(1.4 * global_max)
-                grid_dict[projbin]["data"]["data"].SetMinimum(0.001)
-                grid_dict[projbin]["data"]["data"].GetXaxis().SetNdivisions(505)
+                grid_dict[projbin]["data"]["data"].SetMinimum(grid_dict[projbin]["data"]["data"].GetMaximum()*0.001)
+                grid_dict[projbin]["data"]["data"].GetXaxis().SetNdivisions(504)
+                grid_dict[projbin]["data"]["data"].SetMarkerStyle(data_marker_style)
+                grid_dict[projbin]["data"]["data"].SetMarkerSize(data_marker_size)
                 if n_projbins_raw >= 13:                
                     grid_dict[projbin]["data"]["data"].GetYaxis().SetNdivisions(504)
                 else:
                     grid_dict[projbin]["data"]["data"].GetYaxis().SetNdivisions(505)
                 
+                data_stat = grid_dict[projbin]["data"]["data"].Clone()
+                data_stat.SetMarkerSize(0)
+                data_stat.SetMarkerStyle(1)
+                grid_dict[projbin]["data"]["stat"] = data_stat
+
                 tmp_stack = THStack("stack","")
                 tmp_cumul_stack = THStack("cumul_stack", "")
                 for cat in ["qelikenot", "qelike"]:
@@ -922,99 +1154,122 @@ for a_sample in groups.keys():
                             if sig_only: continue
                             tmp_hist.SetFillStyle(bkgfillstyle)
                         tmp_stack.Add(tmp_hist)
+                        if cat != "qelike": continue
                         tmp_cumul_hist = tmp_hist.Clone()
-                        if sig_only:
-                            tmp_cumul_hist.Divide(tmp_cumul_hist, grid_dict[projbin]["qelike"]["qeliketot"], 1.0, 1.0)
-                            tmp_cumul_stack.Add(tmp_cumul_hist)
-                            continue
-                        tmp_cumul_hist.Divide(tmp_cumul_hist, grid_dict[projbin]["mctot"]["mctot"], 1.0, 1.0)
+                        tmp_cumul_hist.Divide(tmp_cumul_hist, grid_dict[projbin]["qelike"]["qeliketot"], 1.0, 1.0)
                         tmp_cumul_stack.Add(tmp_cumul_hist)
+
+                        # if sig_only:
+                        #     tmp_cumul_hist.Divide(tmp_cumul_hist, grid_dict[projbin]["qelike"]["qeliketot"], 1.0, 1.0)
+                        #     tmp_cumul_stack.Add(tmp_cumul_hist)
+                        #     continue
+                        # tmp_cumul_hist.Divide(tmp_cumul_hist, grid_dict[projbin]["mctot"]["mctot"], 1.0, 1.0)
+                        # tmp_cumul_stack.Add(tmp_cumul_hist)
 
                 grid_dict[projbin]["stack"] = tmp_stack
                 grid_dict[projbin]["cumul_stack"] = tmp_cumul_stack
 
                 straightline = grid_dict[projbin]["data"]["data"].Clone()
-                for ibin in range(1,straightline.GetNbinsX()+1):
+                for ibin in range(0,straightline.GetNbinsX()+2):
                     straightline.SetBinContent(ibin,0.5)
                 straightline.SetFillColor(0)
-                straightline.SetLineColor(ROOT.kRed)
+                straightline.SetLineColorAlpha(ROOT.kP8Red, 0.6)
                 straightline.SetLineStyle(7)
-                straightline.SetLineWidth(2)
+                straightline.SetLineWidth(1)
                 straightline_less = straightline.Clone()
-                for ibin in range(1,straightline_less.GetNbinsX()):
+                for ibin in range(0,straightline_less.GetNbinsX()+2):
                     straightline_less.SetBinContent(ibin, 0.6)
                 straightline_less.SetLineWidth(1)
                 grid_dict[projbin]["straightline"] = straightline.Clone()
                 grid_dict[projbin]["straightline_less"] = straightline_less.Clone()
+            
+            tmp_selected_pads = {}
+            if b_var in pad_selection:
+                for projbin in pad_selection[b_var]:
+                    if projbin not in tmp_selected_pads:
+                        tmp_selected_pads[projbin] = {}
+                    tmp_selected_pads[projbin]["binrange"] = rangestring_dict[projbin]
+                    tmp_selected_pads[projbin]["multip"] = multipstring_dict[projbin]
+                    tmp_selected_pads[projbin]["data"] = grid_dict[projbin]["data"]["data"].Clone()
+                    tmp_selected_pads[projbin]["stat"] = grid_dict[projbin]["data"]["stat"].Clone()
+                    tmp_selected_pads[projbin]["stack"] = grid_dict[projbin]["stack"].Clone()
 
             proj_nxbins = n_xbins - 2 
             proj_nybins = n_ybins - 2 
             if proj == "projY":
                 proj_nxbins = n_ybins - 2 
                 proj_nybins = n_xbins - 2 
-            
+            proj_nybins = len(list(grid_dict))
+
             tmp_canvas_name = "%s_%s_%s_%s"%(a_sample, b_var, data_var, proj)
             tmp_canvas_title = "%s %s"%(data_var, proj)
             gc2 = PanelCanvas(tmp_canvas_name, proj_nxbins,proj_nybins, _xsize, _ysize)
-            gc2.SetLeftMargin(0.1)
-            gc2.SetRightMargin(0.05)
+            # gc2.SetLeftMargin(gc2.GetLeftMargin()+0.1)
+            # gc2.SetRightMargin(gc2.GetRightMargin()+0.05)
             # gc2.SetBottomMargin(0.1)
             # gc2.SetFrameLineWidth(1)
-            gc2.SetXTitle(tmp_axisvar_shortname)
+            xtitle_tail = ""
+            if tmp_axisvar_units != "":
+                xtitle_tail+= " #lower[-0.25]{#scale[0.6]{(%s)}}"%tmp_axisvar_units
+            gc2.SetXTitle(tmp_axisvar_shortname+xtitle_tail)
             ytitle_tail = ""
             if tmp_axisvar_units != "":
                 ytitle_tail+= "/(%s)"%tmp_axisvar_units
             if tmp_projvar_units != "":
                 ytitle_tail+= "/(%s)"%tmp_projvar_units
-            gc2.SetYTitle("Counts%s"%ytitle_tail)
+            # gc2.SetYTitle("Counts%s"%ytitle_tail)
+            gc2.SetYTitle("N_{Clusters}")
             gc2.SetTitleSize(_ysize*0.05)
             # gc2.SetHistTexts()
             gc2.Draw()
 
-            
-            for i in proj_bin_range:
-                pad = gc2.cd(i)
+            aspect_ratio = 1.0
+            for projbin in grid_dict:
+                pad = gc2.cd(projbin)
                 # pad.SetFrameLineWidth(1)
                 pad.Draw()
-                grid_dict[i]["data"]["data"].GetYaxis().SetMaxDigits(3)
+                grid_dict[projbin]["data"]["data"].GetYaxis().SetMaxDigits(3)
                 axismini = 0.001
-                if grid_dict[i]["data"]["data"].GetMaximum() < 1:
-                    axismini = grid_dict[i]["data"]["data"].GetMaximum()*0.01
-                grid_dict[i]["data"]["data"].SetMinimum(axismini)
-                grid_dict[i]["data"]["data"].Draw("AXIS")
-            for i in proj_bin_range:
-                pad = gc2.cd(i)
-                pad.Draw()
-                grid_dict[i]["stack"].Draw("HIST ][ same")
-                if do_data:
-                    grid_dict[i]["data"]["data"].Draw("E1 X0 SAME")
-                    
-                    # grid_dict[i]["data"]["data"].Draw("E1 X0 SAME")
-                grid_dict[i]["data"]["data"].Draw("AXIS same")
-            
+                if grid_dict[projbin]["data"]["data"].GetMaximum() < 1:
+                    axismini = grid_dict[projbin]["data"]["data"].GetMaximum()*0.001
+                grid_dict[projbin]["data"]["data"].SetMinimum(axismini)
+                grid_dict[projbin]["data"]["data"].Draw("AXIS")
                 if data_var.split("_")[0] in scaleX and proj=="projX":
                     pad.SetLogx()
                 if data_var.split("_")[1] in scaleX and proj=="projY":
-                    pad.SetLogx()         
+                    pad.SetLogx()
 
-                mutlip_string = "#times {:g}".format(float('{:.{p}g}'.format(multipliers[i-1], p=2)))
+            for projbin in grid_dict:
+                pad = gc2.cd(projbin)
+                pad.Draw()
+                grid_dict[projbin]["stack"].Draw("HIST ][ same")
+                if do_data:
+                    grid_dict[projbin]["data"]["data"].DrawCopy("E1 X0 SAME")
+                    # grid_dict[projbin]["data"]["data"].Draw("E1 X0 SAME")
+                    grid_dict[projbin]["data"]["stat"].DrawCopy("E1 X0 SAME")
+                grid_dict[projbin]["data"]["data"].Draw("AXIS same")
+
+                # multip_string = "#times {:g}".format(float('{:.{p}g}'.format(multipliers[projbin-1], p=2)))
                 multip_latex = ROOT.TLatex()
                 multip_latex.SetTextAlign(32)
                 multip_latex.SetNDC()
                 multip_latex.SetTextFont(52)
                 multip_latex.SetTextSize(0.028)
-                multip_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.05),mutlip_string)
+                multip_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.05),multipstring_dict[projbin])
+                if projbin == 1:
+                    textsize = 0.0282
+                    padwidth = 1 - pad.GetLeftMargin() - pad.GetRightMargin()
+                    tmp_textsize = (padwidth-0.02)/(longest_string_length*0.35)
+                    if tmp_textsize < textsize: textsize = tmp_textsize
+                    padheight = 1 - pad.GetTopMargin() - pad.GetBottomMargin()
+                    aspect_ratio = padwidth/padheight
 
-                loedge = tmp_projaxis_bins[i-1]
-                hiedge = tmp_projaxis_bins[i]
-                tmp_projvar_shortname
-                range_string = "{min} < {var} < {max}".format(min = round(loedge,2), var = tmp_projvar_shortname, max = round(hiedge,2))
                 binrange_latex = ROOT.TLatex()
                 binrange_latex.SetTextAlign(33) # top right
                 binrange_latex.SetNDC()
                 binrange_latex.SetTextFont(42)
-                binrange_latex.SetTextSize(0.025)
-                binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
+                binrange_latex.SetTextSize(textsize)
+                binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),rangestring_dict[projbin])
                 pad.Modified()
                 pad.Update()
                 # ROOT.gPad.RedrawAxis()
@@ -1022,32 +1277,63 @@ for a_sample in groups.keys():
             pad.Draw()
 
             padwidth = 1 - pad.GetLeftMargin() - pad.GetRightMargin()
-            x1 = pad.GetLeftMargin()+padwidth/20.0
-            y1 = 1.-(pad.GetTopMargin())-0.01
-            x2 = 1 - pad.GetRightMargin() + padwidth/20
-            y2 = pad.GetBottomMargin()+0.01
+            padheight = 1 - pad.GetTopMargin() - pad.GetBottomMargin()
 
-            leg = TLegend(x1, y1, x2, y2)
-            leg.SetBorderSize(0)
-            leg.SetFillColor(-1)
-            leg.SetFillStyle(0)
-            leg.SetTextSize(round(legendfontsize/3))
-            leg.SetNColumns(2)
+            latex_x = 1.0 - gc2.GetRightMargin() - 0.01
+            latex_y = (1.-(pad.GetTopMargin())) - 0.17*padheight
 
-            if do_data:
-                leg.AddEntry(grid_dict[1]["data"]["data"], "Data", "pe")
-            if not sig_only:
-                leg.AddEntry(0, "", "")
-            for part in reversed(list(grid_dict[1]["qelike"])):
-                if part == "qeliketot": continue
-                leg.AddEntry(grid_dict[1]["qelike"][part], bin_pid_names[part], "fl")
-                if sig_only: 
-                    # leg.SetNColumns(1)
-                    continue
-                leg.AddEntry(grid_dict[1]["qelikenot"][part], "Bkg "+bin_pid_names[part], "fl")
-            leg.Draw()
+            # prelim = AddPreliminary()
+            # prelim.SetTextAlign(31)
+            # prelim.SetTextSize(0.02)
+            # prelim.DrawLatex(latex_x, latex_y, prelim_string)
+            prelim1 = AddPreliminary()
+            prelim2 = AddPreliminary()
+            prelim1.SetTextAlign(31)
+            prelim2.SetTextAlign(31)
+            prelim1.SetTextSize(0.04)
+            prelim2.SetTextSize(0.04)
+            prelim1.DrawLatex(latex_x, latex_y, prelim_string1)
+            prelim2.DrawLatex(latex_x, latex_y-0.04, prelim_string2)
+            
+            areanorm_latex = ROOT.TLatex()
+            areanorm_latex.SetTextColor(ROOT.kBlack)
+            areanorm_latex.SetNDC()
+            areanorm_latex.SetTextAlign(31)
+            areanorm_latex.SetTextSize(0.032)
+            areanorm_latex.SetTextFont(52)
+            areanorm_latex.DrawLatex(latex_x, latex_y - 0.10, "Area normalized")
+            areanorm_latex.DrawLatex(latex_x, latex_y - 0.132, "to data by panel")
+
+            if do_legendonplot:
+                padwidth = 1 - pad.GetLeftMargin() - pad.GetRightMargin()
+                x1 = pad.GetLeftMargin()+padwidth/20.0
+                y1 = 1.-(pad.GetTopMargin())-0.01
+                x2 = 1 - pad.GetRightMargin() + padwidth/20
+                y2 = pad.GetBottomMargin()+0.01
+
+                leg = TLegend(x1, y1, x2, y2)
+                leg.SetBorderSize(0)
+                leg.SetFillColor(-1)
+                leg.SetFillStyle(0)
+                # leg.SetTextSize(round(legendfontsize/3))
+                leg.SetNColumns(2)
+
+                if do_data:
+                    leg.AddEntry(grid_dict[1]["data"]["data"], "Data", "pe")
+                if not sig_only:
+                    leg.AddEntry(0, "", "")
+                for part in reversed(list(grid_dict[1]["qelike"])):
+                    if part == "qeliketot": continue
+                    leg.AddEntry(grid_dict[1]["qelike"][part], bin_pid_names[part], "fl")
+                    if sig_only: 
+                        # leg.SetNColumns(1)
+                        continue
+                    leg.AddEntry(grid_dict[1]["qelikenot"][part], "Bkg "+bin_pid_names[part], "fl")
+                leg.Draw()
             pad.Modified()
 
+            if do_titleonplot:
+                plottitle_latex.Draw()
             gc2.SetHistTexts()
             gc2.Draw()
             gc2.Print(os.path.join(outdirname,pdf_canvas_name+".pdf"),"Title:%s %s"%(tmp_canvas_title," Final States"))
@@ -1056,93 +1342,264 @@ for a_sample in groups.keys():
             gc2.Update()
 
             # now do cumulativehist
-            ytitle_tail = "Total"
-            if sig_only:
-                ytitle_tail = "Signal"
+            # ytitle_tail = "Total"
+            # if sig_only:
+            #     ytitle_tail = "Signal"
+            ytitle_tail = "Total Signal"
             gc2.SetYTitle("Fraction to %s"%ytitle_tail)
 
             gc2.Draw()
 
-            for i in proj_bin_range:
-                pad = gc2.cd(i)
+            for projbin in grid_dict:
+                pad = gc2.cd(projbin)
                 # pad.SetFrameLineWidth(1)
                 pad.Draw()
-                grid_dict[i]["data"]["data"].GetYaxis().SetMaxDigits(3)
+                grid_dict[projbin]["data"]["data"].GetYaxis().SetMaxDigits(3)
                 axismini = 0.001
-                grid_dict[i]["data"]["data"].SetMaximum(1.2)
-                grid_dict[i]["data"]["data"].SetMinimum(0.0)
-                grid_dict[i]["data"]["data"].GetYaxis().SetNdivisions(205)
-                grid_dict[i]["data"]["data"].Draw("AXIS")
-            for i in proj_bin_range:
-                pad = gc2.cd(i)
+                grid_dict[projbin]["data"]["data"].SetMaximum(1.2)
+                grid_dict[projbin]["data"]["data"].SetMinimum(0.0)
+                grid_dict[projbin]["data"]["data"].GetYaxis().SetNdivisions(205)
+                grid_dict[projbin]["data"]["data"].Draw("AXIS")
+            for projbin in grid_dict:
+                pad = gc2.cd(projbin)
                 pad.Draw()
-                grid_dict[i]["cumul_stack"].Draw("HIST ][ same")
-                grid_dict[i]["straightline"].Draw("HIST ][ same")
-                grid_dict[i]["straightline_less"].Draw("HIST ][ same")
-                grid_dict[i]["data"]["data"].Draw("AXIS same")
+                grid_dict[projbin]["cumul_stack"].Draw("HIST ][ same")
+                grid_dict[projbin]["straightline"].Draw("HIST ][ same")
+                # grid_dict[projbin]["straightline_less"].Draw("HIST ][ same")
+                grid_dict[projbin]["data"]["data"].Draw("AXIS same")
             
                 if data_var.split("_")[0] in scaleX and proj=="projX":
                     pad.SetLogx()
                 if data_var.split("_")[1] in scaleX and proj=="projY":
                     pad.SetLogx()         
 
-                mutlip_string = "#times {:g}".format(float('{:.{p}g}'.format(multipliers[i-1], p=2)))
-                multip_latex = ROOT.TLatex()
-                multip_latex.SetTextAlign(32)
-                multip_latex.SetNDC()
-                multip_latex.SetTextFont(52)
-                multip_latex.SetTextSize(0.028)
-                multip_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.05),mutlip_string)
+                # multip_string = "#times {:g}".format(float('{:.{p}g}'.format(multipliers[projbin-1], p=2)))
+                # multip_latex = ROOT.TLatex()
+                # multip_latex.SetTextAlign(32)
+                # multip_latex.SetNDC()
+                # multip_latex.SetTextFont(52)
+                # multip_latex.SetTextSize(0.028)
+                # multip_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.045),multip_string)
 
-                loedge = tmp_projaxis_bins[i-1]
-                hiedge = tmp_projaxis_bins[i]
-                tmp_projvar_shortname
-                range_string = "{min} < {var} < {max}".format(min = round(loedge,2), var = tmp_projvar_shortname, max = round(hiedge,2))
                 binrange_latex = ROOT.TLatex()
                 binrange_latex.SetTextAlign(33) # top right
                 binrange_latex.SetNDC()
                 binrange_latex.SetTextFont(42)
-                binrange_latex.SetTextSize(0.025)
-                binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
+                binrange_latex.SetTextSize(textsize)
+                binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),rangestring_dict[projbin])
                 pad.Modified()
                 pad.Update()
                 # ROOT.gPad.RedrawAxis()
             pad = gc2.cd(n_projbins_raw-1)
             pad.Draw()
+            # prelim.DrawLatex(latex_x, latex_y, prelim_string)
+            prelim1.DrawLatex(latex_x, latex_y, prelim_string1)
+            prelim2.DrawLatex(latex_x, latex_y-0.04, prelim_string2)
 
-            padwidth = 1 - pad.GetLeftMargin() - pad.GetRightMargin()
-            x1 = pad.GetLeftMargin()+padwidth/20.0
-            y1 = 1.-(pad.GetTopMargin())-0.01
-            x2 = 1 - pad.GetRightMargin() + padwidth/20
-            y2 = pad.GetBottomMargin()+0.01
+            if do_titleonplot:
+                plottitle_latex.Draw()
 
-            leg = TLegend(x1, y1, x2, y2)
-            leg.SetBorderSize(0)
-            leg.SetFillColor(-1)
-            leg.SetFillStyle(0)
-            leg.SetTextSize(round(legendfontsize/3))
-            leg.SetNColumns(2)
+            if do_legendonplot:
+                legpadwidth = 1 - pad.GetLeftMargin() - pad.GetRightMargin()
+                x1 = pad.GetLeftMargin()+legpadwidth/20.0
+                y1 = 1.-(pad.GetTopMargin())-0.01
+                x2 = 1 - pad.GetRightMargin() + legpadwidth/20
+                y2 = pad.GetBottomMargin()+0.01
 
-            for part in reversed(list(grid_dict[1]["qelike"])):
-                if part == "qeliketot": continue
-                leg.AddEntry(grid_dict[1]["qelike"][part], bin_pid_names[part], "fl")
-                if sig_only: 
-                    # leg.SetNColumns(1)
-                    continue
-                leg.AddEntry(grid_dict[1]["qelikenot"][part], "Bkg "+bin_pid_names[part], "fl")
-            leg.Draw()
+                leg = TLegend(x1, y1, x2, y2)
+                leg.SetBorderSize(0)
+                leg.SetFillColor(-1)
+                leg.SetFillStyle(0)
+                leg.SetTextSize(round(legendfontsize/3))
+                leg.SetNColumns(2)
+
+                for part in reversed(list(grid_dict[1]["qelike"])):
+                    if part == "qeliketot": continue
+                    leg.AddEntry(grid_dict[1]["qelike"][part], bin_pid_names[part], "fl")
+                    if sig_only: 
+                        # leg.SetNColumns(1)
+                        continue
+                    leg.AddEntry(grid_dict[1]["qelikenot"][part], "Bkg "+bin_pid_names[part], "fl")
+                leg.Draw()
             pad.Modified()
+            pad.Update()
 
+            gc2.cd()
             gc2.SetHistTexts()
             gc2.Draw()
             gc2.Print(os.path.join(outdirname,pdf_canvas_name+".pdf"),"Title:%s %s"%(tmp_canvas_title," TOTAL FRACTION Final States"))
+            gc2.cd()
             gc2.ResetPads()
             gc2.Modified()
             gc2.Update()
+            # gc2.Clear()
+            # del gc2
+            # gc2.cd()
+            if b_var in pad_selection and tmp_axisvar!= "NeutCandsEdep":
+                # aspect_ratio = padwidth/padheight
+                # tmp_xsize = _xsize
+                # tmp_ysize = round(_xsize/aspect_ratio)
+                tmp_xsize = 500 #round(_ysize*aspect_ratio)
+                tmp_ysize = round(500/aspect_ratio)
+                print(aspect_ratio,tmp_xsize, tmp_ysize)
+                # sys.exit(1)
+                # tmp_selected_canvas = ROOT.TCanvas(tmp_canvas_name+"_selectedpads", "Selected Pad", _xsize, _ysize)
+                tmp_selected_canvas = ROOT.TCanvas(tmp_canvas_name+"_selectedpads", "Selected Pad", tmp_xsize, tmp_ysize)
+                tmp_selected_canvas.SetBottomMargin(0.28)
+                tmp_selected_canvas.SetTopMargin(0.03)
+                # tmp_selected_canvas.SetBottomMargin()
+                print(tmp_selected_canvas.GetBottomMargin())
+                # sys.exit(1)
+                # tmp_selected_canvas.SetBottomMargin(0.0)
+                tmp_selected_canvas.cd(1)
+                # tmp_selected_canvas.DrawFrame(-4.,-4.,4.,4.)
+                # tmp_selected_canvas.Print(os.path.join(outdirname,pdf_canvas_name+".pdf"),"Title:%s %s selected pad projbin%d"%(tmp_canvas_title,data_var,0))
+                # continue
+                # tmp_selected_canvas.cd()
+                tmp_selected_canvas.Draw()
+                if data_var.split("_")[0] in scaleX and proj=="projX":
+                    tmp_selected_canvas.SetLogx()
+                if data_var.split("_")[1] in scaleX and proj=="projY":
+                    tmp_selected_canvas.SetLogx()      
+                tmp_selected_canvas.ModifiedUpdate()
+                tmp_selected_canvas.Draw()
+                for projbin in tmp_selected_pads:
+                    # pad = ROOT.TPad("hist","hist",0.,0.,1.,1.)
+                    # pad.SetTopMargin(0.0)
+                    # pad.SetBottomMargin(0.0)
+                    # pad.SetRightMargin(0.0)
+                    # pad.SetLeftMargin(0.0)
+                    # pad.Draw()
+                    # pad.cd()
 
+                    tmp_selected_pads[projbin]["data"].GetYaxis().SetMaxDigits(3)
+                    tmp_selected_pads[projbin]["data"].GetYaxis().SetLabelSize(0.05)
+                    tmp_selected_pads[projbin]["data"].GetXaxis().SetLabelSize(0.05)
+                    tmp_selected_pads[projbin]["data"].GetXaxis().SetTitle(tmp_axisvar_shortname+xtitle_tail)
+                    tmp_selected_pads[projbin]["data"].GetXaxis().SetTitleSize(0.07)
+                    tmp_selected_pads[projbin]["data"].GetXaxis().SetTitleOffset(0.8)
+                    tmp_selected_pads[projbin]["data"].GetXaxis().CenterTitle()
+                    # tmp_selected_pads[projbin]["data"].GetXaxis().SetLabelSize(0.2)
+                    axismini = 0.0001
+                    if tmp_selected_pads[projbin]["data"].GetMaximum() < 1:
+                        axismini = tmp_selected_pads[projbin]["data"].GetMaximum()*0.001
+                    tmp_selected_pads[projbin]["data"].SetMinimum(axismini)
+                    tmp_selected_pads[projbin]["data"].Draw("AXIS")
+                    tmp_selected_pads[projbin]["stack"].Draw("HIST ][ SAME")
+                    if do_data:
+                        tmp_selected_pads[projbin]["data"].DrawCopy("E1 X0 SAME")
+                        tmp_selected_pads[projbin]["stat"].DrawCopy("E1 X0 SAME")
+                    tmp_selected_pads[projbin]["data"].Draw("AXIS same")
+                    xpos = (1.-(tmp_selected_canvas.GetRightMargin())-0.01)
+                    ypos = (1.-(tmp_selected_canvas.GetTopMargin())-0.01)
+                    multip_latex = ROOT.TLatex(xpos,ypos-0.037,multipstring_dict[projbin])
+                    multip_latex.SetTextAlign(32)
+                    multip_latex.SetNDC()
+                    multip_latex.SetTextFont(52)
+                    multip_latex.SetTextSize(0.030)
+                    multip_latex.Draw()
+                    textsize = 0.025
+                    tmp_textsize = (padwidth-0.02)/(longest_string_length*0.35)
+                    if tmp_textsize < textsize: textsize = tmp_textsize
+                    binrange_latex = ROOT.TLatex(xpos,ypos,rangestring_dict[projbin])
+                    binrange_latex.SetTextAlign(33) # top right
+                    binrange_latex.SetNDC()
+                    binrange_latex.SetTextFont(42)
+                    binrange_latex.SetTextSize(0.028)
+                    binrange_latex.Draw()
+                    # tmp_selected_canvas.cd()
+                    tmp_selected_canvas.Modified()
+                    tmp_selected_canvas.Update()
+                    tmp_selected_canvas.Print(os.path.join(outdirname,pdf_canvas_name+".pdf"),"Title:%s %s selected pad projbin%d"%(tmp_canvas_title,data_var,projbin))
 
+                    tmp_selected_canvas.Clear()
+            # if b_var in pad_selection and tmp_axisvar!= "NeutCandsEdep":
+            #     # aspect_ratio = padwidth/padheight
+            #     tmp_selected_canvas = ROOT.TCanvas(tmp_canvas_name+"_selectedpads", "Selected Pad", round(_ysize * aspect_ratio), _ysize)
+            #     tmp_selected_canvas.SetTopMargin(0.0)
+            #     tmp_selected_canvas.SetBottomMargin(0.0)
+            #     tmp_selected_canvas.SetRightMargin(0.0)
+            #     tmp_selected_canvas.SetLeftMargin(0.0)
+            #     if data_var.split("_")[0] in scaleX and proj=="projX":
+            #         tmp_selected_canvas.SetLogx()
+            #     if data_var.split("_")[1] in scaleX and proj=="projY":
+            #         tmp_selected_canvas.SetLogx()
+            #     tmp_selected_canvas.cd()
+            #     tmp_selected_canvas.Draw()
+            #     for projbin in pad_selection[b_var]:
+            #         data = grid_dict[projbin]["data"]["data"].Clone()
+            #         stack = grid_dict[projbin]["stack"].Clone()
+            #         stat = grid_dict[projbin]["data"]["stat"].Clone()
+            #         data.GetYaxis().SetMaxDigits(3)
+            #         axismini = 0.0001
+            #         if data.GetMaximum() < 1:
+            #             axismini = data.GetMaximum()*0.001
+            #         data.SetMinimum(axismini)
+            #         data.Draw("AXIS")
+            #         stack.Draw("HIST ][ SAME")
+            #         if do_data:
+            #             data.DrawCopy("E1 X0 SAME")
+            #             stat.DrawCopy("E1 X0 SAME")
+            #         data.Draw("AXIS same")
+            #         xpos = (1.-(tmp_selected_canvas.GetRightMargin())-0.01)
+            #         ypos = (1.-(tmp_selected_canvas.GetTopMargin())-0.01)
+            #         multip_latex = ROOT.TLatex(xpos,ypos-0.035,multipstring_dict[projbin])
+            #         multip_latex.SetTextAlign(32)
+            #         multip_latex.SetNDC()
+            #         multip_latex.SetTextFont(52)
+            #         multip_latex.SetTextSize(0.028)
+            #         multip_latex.Draw()
+            #         textsize = 0.025
+            #         tmp_textsize = (padwidth-0.02)/(longest_string_length*0.35)
+            #         if tmp_textsize < textsize: textsize = tmp_textsize
+            #         binrange_latex = ROOT.TLatex(xpos,ypos,rangestring_dict[projbin])
+            #         binrange_latex.SetTextAlign(33) # top right
+            #         binrange_latex.SetNDC()
+            #         binrange_latex.SetTextFont(42)
+            #         binrange_latex.SetTextSize(textsize)
+            #         binrange_latex.Draw()
 
-            del gc2
+            #         tmp_selected_canvas.cd()
+            #         tmp_selected_canvas.Modified()
+            #         tmp_selected_canvas.Update()
+            #         tmp_selected_canvas.Print(os.path.join(outdirname,pdf_canvas_name+".pdf"),"Title:%s %s selected pad projbin%d"%(tmp_canvas_title,data_var,projbin))
+
+                    # tmp_selected_canvas.Clear()
+            if not do_legendonplot:
+                # leg_canvas = ROOT.TCanvas(tmp_canvas_name+"_legend", "Legend", _xsize,_ysize)
+                leg_canvas = ROOT.TCanvas(tmp_canvas_name+"_legend", "Legend", 500,500)
+                leg_canvas.SetTopMargin(0.)
+                leg_canvas.SetBottomMargin(0.)
+                leg_canvas.SetRightMargin(0.)
+                leg_canvas.SetLeftMargin(0.)
+                # leg = TLegend(0.2, 0.2, 0.8, 0.8)
+                leg = TLegend(0., 0., 1., 1.)
+                leg.SetBorderSize(0)
+                leg.SetFillColor(-1)
+                leg.SetFillStyle(0)
+                # leg.SetTextSize(round(legendfontsize/3))
+                leg.SetNColumns(2)
+
+                if do_data:
+                    leg.AddEntry(grid_dict[1]["data"]["data"], "Data", "pe")
+                if not sig_only:
+                    leg.AddEntry(0, "", "")
+                for part in reversed(list(grid_dict[1]["qelike"])):
+                    if part == "qeliketot": continue
+                    leg.AddEntry(grid_dict[1]["qelike"][part], bin_pid_names[part], "fl")
+                    if sig_only: 
+                        # leg.SetNColumns(1)
+                        continue
+                    grid_dict[1]["qelikenot"][part].SetFillStyle(3244)
+                    leg.AddEntry(grid_dict[1]["qelikenot"][part], "Bkg "+bin_pid_names[part], "fl")
+
+                leg.Draw()
+                leg_canvas.cd()
+                leg_canvas.Modified()
+                leg_canvas.Update()
+                leg_canvas.Print(os.path.join(outdirname,pdf_canvas_name+".pdf"),"Title:%s %s"%(tmp_canvas_title," Legend"))
+                leg_canvas.Modified()
+                leg_canvas.Update()
 
         # # sys.exit(1)
         # continue

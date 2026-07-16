@@ -198,6 +198,12 @@ for k in keys:
 
 ROOT.gStyle.SetOptStat(0)
 
+prelim = ROOT.TLatex(0.88, 0.8, "MINER#it{#nu}A Work in Progress")
+prelim.SetNDC()
+prelim.SetTextFont(112)
+prelim.SetTextSize(0.03)
+prelim.SetTextColor(ROOT.kRed +1)
+prelim.SetTextAlign(31)
 for var in hist_dict:
     # canvas = CCQECanvas("scalefactorplots","scalefactorplots")
     canvas = ROOT.TCanvas()
@@ -271,7 +277,7 @@ for var in hist_dict:
                 # hist_dict[var][cat][htype].GetCVHistoWithStatError().Draw("%s same"%(hist_fill_style))
 
         hist_dict[var]["qelike"][htype].Draw("%s same"%(hist_fill_style))
-
+        prelim.Draw()
         leg.Draw()
         # canvas.Print(dirname+"/"+canvas_name+".pdf")
         canvas.Print("scalefactorplots.pdf","pdf")

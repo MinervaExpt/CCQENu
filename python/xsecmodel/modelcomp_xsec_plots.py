@@ -43,7 +43,7 @@ dotuned=False
 dowarp = False
 doratio = True
 dotypes = False
-
+do_titleonplot = True
 global_domodelcomp = True # Set to true if you want to do model comparisons, will need to give path to where files are
 
 # modelcomptodo = [
@@ -210,14 +210,14 @@ modelplotinfo = {
 }
 
 ROOT.TH1.AddDirectory(ROOT.kFALSE)
-_xsize = 1200.0
-_ysize = 900.0
+_xsize = 3200
+_ysize = 2400
 
 latex_x = 0.55
 latex_y = 0.43
 
 pad_lmarg = 0.10
-pad_rmarg = 0.04
+pad_rmarg = 0.02
 topmarg = 0.05
 bottommarg = 0.3
 
@@ -225,8 +225,8 @@ bottommarg = 0.3
 ratio_frac = 0.3 #0.278
 
 data_marker_style = 20
-data_marker_size = 1.0
-end_error_size = 4.0
+data_marker_size = 2.0
+end_error_size = 8.0
 
 legendfontsize = 0.05
 legx1 = 0.7
@@ -239,6 +239,7 @@ lat_xoffset = 0.0
 lat_yoffset = 0.04
 
 typeslinewidth = 1
+prelim_string = "MINER#it{^{}#nu}A Work In Progress"
 
 scaleX = ["Q2QE"]
 scaleY = ["EAvail","E_{Avail}"]#"recoil","EAvail"]
@@ -2082,8 +2083,8 @@ def DrawDataMCPlot2D(i_data_hist, i_mc_hist, x_title, x_bins, y_title, y_bins, z
 
             
         del gc
-
-def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel, x_title, x_bins, y_title, y_bins, z_title, outdirname, canvas_name, canvas_title, multipliers = []):#, do_comparison = False):
+# def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel, x_title, x_bins, y_title, y_bins, z_title, outdirname, canvas_name, canvas_title, multipliers = []):#, do_comparison = False):
+def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel, x_varname, x_units, x_bins, y_varname, y_units, y_bins, z_title, outdirname, canvas_name, canvas_title, multipliers = []):#, do_comparison = False):
     mnvPlotter = SetupErrorSummary(MnvPlotter(8))    
     data_mnv2d = i_data_hist.Clone()
     mc_mnv2d = i_mc_hist.Clone()
@@ -2108,6 +2109,12 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
 
     for projaxis in ["x","y"]:
     # for projaxis in ["y"]:
+        # plottitle_string = "%s - %s, %s"%(canvas_title, x_varname, y_varname)
+        plottitle_string = "Cross Section Comparison"
+        plottitle = ROOT.TLatex(0.5, 0.93,plottitle_string)
+        plottitle.SetTextAlign(22)
+        plottitle.SetTextFont(52)
+        plottitle.SetTextSize(0.058)
         data_mnvproj_list = MakeProjHistList(data_mnv2d,projaxis)
         mc_mnvproj_list = MakeProjHistList(mc_mnv2d,projaxis)
         
@@ -2136,6 +2143,12 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
             for key in mc_typehistdict:
                 tmp_totproj = mc_typehistdict_unscaled[key].ProjectionY("%s_proj%s"%(mc_typehistdict_unscaled[key].GetName(),projaxis), 0, mc_typehistdict_unscaled[key].GetNbinsY()+2)#, "width e")
                 mc_typestotproj_dict[key] = tmp_totproj
+        canvas_nxbins = n_xbins
+        canvas_nybins = n_ybins
+
+        # Info needed for panels
+        # This is the bin ranges for the panels
+        plot_bins = y_bins
 
         # thename = "%s_%s_%s_proj%s"%(b_sample,c_var,"sigma",projaxis)
         # thetitle = "%s %s %s proj%s"%(b_sample,c_var,"sigma",projaxis)
@@ -2146,16 +2159,32 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
         canvas_nxbins = n_xbins
         canvas_nybins = n_ybins
         # these are the bin edges for each panel, printed on each panel
-        plot_bins = y_bins
+        proj_x_varname = x_varname
+        proj_x_units = x_units
+        proj_y_varname = y_varname
+        proj_y_units = y_units
 
-        proj_xtitle = x_title
-        proj_ytitle = y_title
         if projaxis == "y":
             canvas_nxbins = n_ybins
             canvas_nybins = n_xbins
-            plot_bins = x_bins 
-            proj_xtitle = y_title
-            proj_ytitle = x_title
+            plot_bins = x_bins
+            proj_x_varname = y_varname
+            proj_x_units = y_units
+            proj_y_varname = x_varname
+            proj_y_units = x_units
+        proj_xtitle = "%s (%s)"%(proj_x_varname, proj_x_units)
+        if "#sigma" in z_title:
+            projtot1d_y_title = "d#sigma /^{} d%s (cm^{2}/^{}%s/^{}Nucleon)"%(proj_x_varname,proj_x_units)
+        else:
+            projtot1d_y_title = "Counts / (%s)"%proj_x_units
+        binrange_list = []
+        for i in range(len(plot_bins)-1):
+            range_string = "{loedge} < {var} < {hiedge}".format(
+                loedge = round(plot_bins[i], 3), 
+                var = "%s #lower[-0.25]{#scale[0.6]{(%s)}}"%(proj_y_varname, proj_y_units), 
+                hiedge = round(plot_bins[i+1], 3)
+            )
+            binrange_list.append(range_string)
 
         # First do the total projection
         DrawDataMCTypesPlot1D(data_mnvprojtot, mc_mnvprojtot, mc_typestotproj_dict, proj_xtitle, z_title, outdirname, canvas_name, canvas_title+" total proj", True)
@@ -2169,9 +2198,17 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
         ROOT.gStyle.SetEndErrorSize(end_error_size) # This makes the ticks at the end of the error bars longer
 
         gc = PanelCanvas(thename, canvas_nxbins, canvas_nybins, round(xsize), round(ysize))
-        gc.SetLeftMargin(0.1)
-        gc.SetRightMargin(0.05)
-        gc.SetBottomMargin(0.1)
+        my_topmarg = 0.05
+        if do_titleonplot: my_topmarg += 0.08
+        my_bottommarg = 0.1
+        my_rightmarg = 0.03
+        my_leftmarg = 0.08
+        gc.SetTitleSize(_xsize*0.03)
+
+        gc.SetTopMargin(my_topmarg)
+        gc.SetBottomMargin(my_bottommarg)
+        gc.SetRightMargin(my_rightmarg)
+        gc.SetLeftMargin(my_leftmarg)
         # gc.SetFrameLineWidth(1)
         gc.SetXTitle(proj_xtitle)
         gc.SetYTitle(z_title)
@@ -2186,8 +2223,11 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
 
         for hist in data_mnvproj_list:
             data_hist, data_stat = GetDataHistsForPlot(hist)
+            data_hist.SetLineWidth(typeslinewidth)
+            data_stat.SetLineWidth(typeslinewidth)
             data_hist_list.append(data_hist)
             data_stat_list.append(data_stat)
+            data_hist.SetLineWidth(typeslinewidth)
         for hist in mc_mnvproj_list:
             mc_hist, mc_band = GetMCHistsForPlot(hist)
             mc_hist_list.append(mc_hist)
@@ -2195,6 +2235,8 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
         
         maxlist = [hist.GetMaximum() for hist in data_hist_list] + [hist.GetMaximum() for hist in mc_hist_list]
         global_max = max(maxlist)
+        prelim = AddPreliminary()
+        prelim.SetTextAlign(31)
 
         calc_tmp_pad_scale = True
         # print(multipliers)
@@ -2202,7 +2244,27 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
         # sys.exit(1)
         if len(multipliers) == n_pads:
             calc_tmp_pad_scale = False
-            global_max = 4.0E-37
+            global_max = 4.291580925173734e-37
+        pt_multips = [
+            21, 
+            5.2, 
+            2.2, 
+            1.3, 
+            1.1, 
+            1, 
+            1, 
+            1.1, 
+            1.7, 
+            2.9, 
+            6.2, 
+            24, 
+            520
+        ]
+        if len(pt_multips) == n_pads:
+            calc_tmp_pad_scale = False
+            global_max = 4.291580925173734e-37
+            multipliers = pt_multips
+
         for i in range(n_pads):
 
             pad = gc.cd(i+1)
@@ -2222,25 +2284,29 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
             data_hist_list[i].Scale(tmp_pad_scale)
             data_stat_list[i].Scale(tmp_pad_scale)
             mc_hist_list[i].Scale(tmp_pad_scale)
-            mc_hist_list[i].SetLineWidth(typeslinewidth)
+            mc_hist_list[i].SetLineWidth(typeslinewidth+1)
             for model in mc_typesproj_listdict:
                 mc_typesproj_listdict[model][i].Scale(tmp_pad_scale)
-                mc_typesproj_listdict[model][i].SetLineWidth(typeslinewidth)
+                mc_typesproj_listdict[model][i].SetLineWidth(typeslinewidth+1)
                 mc_typesproj_listdict[model][i].SetLineStyle(modelplotinfo[model]["linestyle"])
                 
             # mc_band_list[i].Scale(tmp_pad_scale)
 
             data_hist_list[i].SetMaximum(1.2 * global_max) #max(data_hist_list[i].GetMaximum(),mc_hist_list[i].GetMaximum()))
             data_hist_list[i].SetMinimum(0)
+
+            # data_hist_list[i].GetXaxis().SetNdivisions(207)
+            # data_hist_list[i].GetYaxis().SetNdivisions(205)
+            data_hist_list[i].GetYaxis().SetLabelSize(data_hist_list[i].GetXaxis().GetLabelSize())
+            data_hist_list[i].GetXaxis().SetNdivisions(505)
+            data_hist_list[i].GetYaxis().SetNdivisions(505)
+            data_hist_list[i].GetYaxis().SetLabelSize(data_hist_list[i].GetXaxis().GetLabelSize())
             if proj_xtitle.split(" (")[0] in scaleY:
                 pad.SetLogy()
-                data_hist_list[i].SetMaximum(1.5 * global_max) #max(data_hist_list[i].GetMaximum(),mc_hist_list[i].GetMaximum()))
-                data_hist_list[i].SetMinimum(data_hist_list[i].GetMaximum()/1000)
+                data_hist_list[i].SetMaximum(2.5 * global_max) #max(data_hist_list[i].GetMaximum(),mc_hist_list[i].GetMaximum()))
+                data_hist_list[i].SetMinimum(0.0001*data_hist_list[i].GetMaximum())
+                data_hist_list[i].GetYaxis().SetLabelSize(data_hist_list[i].GetXaxis().GetLabelSize()*0.67)
             
-            # data_hist_list[i].GetXaxis().SetNdivisions(207)
-            data_hist_list[i].GetYaxis().SetNdivisions(205)
-            data_hist_list[i].GetYaxis().SetLabelSize(data_hist_list[i].GetXaxis().GetLabelSize())
-
             data_hist_list[i].Draw("axis")
             # mc_band_list[i].Draw("SAME E2")
 
@@ -2252,13 +2318,13 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
             data_hist_list[i].Draw("SAME E1 X0")
             data_hist_list[i].Draw("SAME axis")
 
-            range_string = "{loedge} < {var} < {hiedge}".format(loedge = round(plot_bins[i], 3), var =proj_ytitle.split(" (")[0], hiedge = round(plot_bins[i+1], 3))
+            # range_string = "{loedge} < {var} < {hiedge}".format(loedge = round(plot_bins[i], 3), var =proj_ytitle.split(" (")[0], hiedge = round(plot_bins[i+1], 3))
             binrange_latex = ROOT.TLatex()
             binrange_latex.SetTextAlign(33) # top right
             binrange_latex.SetNDC()
             binrange_latex.SetTextFont(42)
             binrange_latex.SetTextSize(0.025)
-            binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
+            binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),binrange_list[i])
 
             multip_string = "#times {:g}".format(float('{:.{p}g}'.format(tmp_pad_scale, p=2)))
             multip_latex = ROOT.TLatex()
@@ -2270,13 +2336,17 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
             pad.Modified()
         pad = gc.cd(n_pads+1)
         pad.Draw()
-
         padwidth = 1 - pad.GetLeftMargin() - pad.GetRightMargin()
-        leg = TLegend(pad.GetLeftMargin()+padwidth/10,(1.-(pad.GetTopMargin())-0.01), 1 - (pad.GetRightMargin() + padwidth/10),(pad.GetBottomMargin()+0.01))
+        padheight = 1 - pad.GetTopMargin() - pad.GetBottomMargin()
+        x1 = pad.GetLeftMargin() #+padwidth*.05
+        y1 = (1.-(pad.GetTopMargin())-0.01)
+        x2 =  1 - (pad.GetRightMargin())# + padwidth*.05)
+        y2 =  (pad.GetBottomMargin())
+        leg = TLegend(x1+0.01, y1, x2-0.01, y2)
         leg.SetNColumns(1)
         leg.SetBorderSize(0)
         leg.SetFillColor(-1)
-        leg.SetTextSize(round(legendfontsize/3))
+        # leg.SetTextSize(round(legendfontsize/3))
         leg.AddEntry(data_hist_list[0], "Data","pe")
         leg.AddEntry(mc_hist_list[0], modelplotinfo[basemodel]["shortname"],"fl")
         # Need to do these in order to put important stuff on top
@@ -2285,10 +2355,22 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
         leg.Draw()
         pad.Modified()
 
+        latex_x = 1.0 - gc.GetRightMargin() - 0.01
+        latex_y = (1.-(pad.GetTopMargin())) - 0.17*padheight
+        prelim.SetTextSize(legendfontsize*0.57)
+        # datapottext.SetTextSize(legendfontsize*0.7)
+        # # prelim.DrawLatex(latex_x, latex_y, "MINER#it{^{}#nu}A Work In Progress")
+        # # datapottext.DrawLatex(latex_x, latex_y-0.05, "Data POT: 1.12 #times 10^{21}")
+        # datapottext.DrawLatex(latex_x, latex_y, datapot_string1)
+        # datapottext.DrawLatex(latex_x, latex_y-0.04, datapot_string2)
+        prelim.DrawLatex(latex_x, latex_y-0.073, prelim_string)
+        if do_titleonplot:
+            plottitle.Draw()
+
         gc.SetHistTexts()
         gc.Draw()
         sigma_canvas_name = thename + "_ModelComp"
-        gc.Print(os.path.join(outdirname, sigma_canvas_name + ".png"))
+        # gc.Print(os.path.join(outdirname, sigma_canvas_name + ".png"))
         gc.Print(os.path.join(outdirname,"source", sigma_canvas_name + ".C"))
         gc.Print(os.path.join(outdirname,canvas_name+".pdf"),"Title:%s %s"%(canvas_title," Model Comp"))
         # del gc
@@ -2296,7 +2378,7 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
         gc.cd()
         # leg.Clear()
         gc.ResetPads()
-        gc.SetYTitle("Data / Simulation")
+        gc.SetYTitle("Ratio to %s"%modelplotinfo[basemodel]["shortname"])
         gc.SetXTitle(proj_xtitle)
         gc.Modified()
         gc.Update()
@@ -2316,7 +2398,8 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
             ratio_hist.SetLineColor(ROOT.kBlack)
             ratio_hist.SetLineWidth(typeslinewidth)
             # ratio_hist.GetXaxis().SetNdivisions(205)
-            ratio_hist.GetYaxis().SetNdivisions(206)
+            ratio_hist.GetYaxis().SetNdivisions(505)
+            ratio_hist.GetXaxis().SetNdivisions(505)
             ratio_hist.GetYaxis().SetLabelSize(ratio_hist.GetXaxis().GetLabelSize())
 
             ratio_stat.SetLineWidth(typeslinewidth)
@@ -2354,22 +2437,27 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
             ratio_list[i].Draw("same E1 X0")
             ratio_list[i].Draw("same axis")
 
-            range_string = "{loedge} < {var} < {hiedge}".format(loedge = round(plot_bins[i], 3), var =proj_ytitle.split(" (")[0], hiedge = round(plot_bins[i+1], 3))
+            # range_string = "{loedge} < {var} < {hiedge}".format(loedge = round(plot_bins[i], 3), var =proj_ytitle.split(" (")[0], hiedge = round(plot_bins[i+1], 3))
             binrange_latex = ROOT.TLatex()
             binrange_latex.SetTextAlign(33) # top right
             binrange_latex.SetNDC()
             binrange_latex.SetTextFont(42)
             binrange_latex.SetTextSize(0.03)
-            binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
+            binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),binrange_list[i])
         pad = gc.cd(n_pads+1)
         pad.Draw()
+        plottitle.Modify()
+        plottitle_string = "Cross Section Comparison Ratio"
+        plottitle.SetTitle(plottitle_string)
+        if do_titleonplot:
+            plottitle.Draw()
 
         padwidth = 1 - pad.GetLeftMargin() - pad.GetRightMargin()
         leg.Draw()
         pad.Modified()
         gc.SetHistTexts()
         gc.Draw()
-        gc.Print(os.path.join(outdirname, thename + "_ModelComp_ratio.png"))
+        # gc.Print(os.path.join(outdirname, thename + "_ModelComp_ratio.png"))
         gc.Print(os.path.join(outdirname,"source", thename + "_ModelComp_ratio.C"))
         gc.Print(os.path.join(outdirname,canvas_name+".pdf"),"Title:%s %s"%(canvas_title," Model Comp Ratio"))
         gc.cd()
@@ -2379,6 +2467,7 @@ def DrawDataMCTypesPlot2D(i_data_hist, i_mc_hist, i_mc_typeshistdict, basemodel,
             
         del gc
     # return 0
+
 
 def DrawErrorSumary2D():
     return 0
@@ -2447,7 +2536,13 @@ typescolors = {
     # 2: ROOT.kP6Yellow,  # RES
     3: ROOT.kP6Gray,    # DIS
     4: ROOT.kP8Azure,   # COH
-    8: ROOT.kP6Blue,   # 2p2h
+    8: ROOT.kP6Blue,   # 2p2h,
+    0:              ROOT.kP8Red,     # total mc
+    1:              ROOT.kP8Blue,    # QE
+    2:              ROOT.kP8Orange,  # RES
+    3:              ROOT.kP8Pink,   # DIS
+    4:              ROOT.kP8Green,    # COH
+    8:              ROOT.TColor.GetColorBright(ROOT.kP8Azure),  # 2p2h
 }
 
 typesnames = {
@@ -2879,22 +2974,36 @@ for a_hist in analyze_hists.keys():
                             1.0,
                             12.0,
                             18.0,
-                            26.0,
-                            41.0,
-                            82.0,
-                            200.0,
+                            27.0,
+                            42.0,
+                            83.0,
+                            240.0,
                         ]
                         # modelcomp_canvas_name = tmp_canvas_basename + "_sigma_modelcomp"
                         modelcomp_canvas_name = pdf_canvas_name
                         modelcomp_canvas_title = tmp_canvas_basetitle + " sigma Model Comparison"
                         DrawDataMCTypesPlot2D(
                             tmp_sigma_tuned, tmp_sigmamc, tmp_model_hists,
-                            basemodel, xvar_title, xvar_bins, yvar_title, yvar_bins,
+                            basemodel, 
+                            xvar_name, xvar_units, xvar_bins, yvar_name, yvar_units, yvar_bins,
+                            # xvar_title, xvar_bins, yvar_title, yvar_bins,
                             sigma_ztitle,
                             var_outdir,
                             modelcomp_canvas_name, modelcomp_canvas_title,
                             eavail_mutlipliers
                         )
+                        # DrawDataMCPlot2D_new(
+                        #     tmp_data_hist, tmp_mctot_hist, tmp_types_dict, 
+                        #     # tmp_xvar_title, tmp_xvar_bins, 
+                        #     # tmp_yvar_title, tmp_yvar_bins, 
+                        #     xvar_name, xvar_units, tmp_xvar_bins, 
+                        #     yvar_name, yvar_units, tmp_yvar_bins, 
+                        #     tmp_counts_ztitle, 
+                        #     outdirname, 
+                        #     pdf_canvas_name, 
+                        #     tmp_canvas_basetitle, 
+                        #     "_Types"
+                        # )
                     # Close if modelcomp
                 # Close if sigma
             # close if ahist=h2d

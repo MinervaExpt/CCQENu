@@ -21,10 +21,21 @@ legendfontsize = 0.05
 
 prelim_string = "MINER#it{^{}#nu}A Work In Progress"
 
+_xsize = 3400
+_ysize = 3300
+topmarg = 0.09 #0.03 + 0.09
+bottommarg = 0.09
+leftmarg = 0.12
+rightmarg = 0.14
+
 
 var_names = {
     "recoil": {"reco": "Recoil", "truth": "E_{Avail}", "units": "(GeV)"},
-    "EAvail": {"reco": "E_{Avail} (MADBlobs)", "truth": "E_{Avail}", "units": "(GeV)"},
+    "EAvail": {
+        "reco": "E^{}_{Avail}^{}", 
+        "truth": "E_{Avail}^{}", 
+        "units": "(GeV)"
+    },
     "EAvail_nohi": {
         "reco": "E_{Avail} (MADBlobs)",
         "truth": "E_{Avail}",
@@ -51,7 +62,11 @@ var_names = {
         "units": "(GeV)",
     },
     "Q2QE": {"reco": "Q^{2}_{QE}", "truth": "Q^{2}_{QE}", "units": "(GeV^{2})"},
-    "ptmu": {"reco": "p_{T}", "truth": "p_{T}", "units": "(GeV)"},
+    "ptmu": {
+        "reco": "p^{}_{T}^{}", 
+        "truth": "p^{}_{T}^{}", 
+        "units": "(GeV/c)"
+    },
     "pzmu": {"reco": "p_{||}", "truth": "p_{||}", "units": "(GeV)"},
     "ptmuHD": {"reco": "p_{T}", "truth": "p_{T}", "units": "(GeV)"},
     "pzmuHD": {"reco": "p_{||}", "truth": "p_{||}", "units": "(GeV)"},
@@ -169,8 +184,34 @@ def main():
 
     tmp_canvas_basename = "%s_%s"%(tmpmodelname, "QElike")
     pdf_canvas_name = tmp_canvas_basename+"_migrationplots"
-    dummy_canvas = ROOT.TCanvas(pdf_canvas_name,pdf_canvas_name,3200,3000)
+    dummy_canvas = ROOT.TCanvas(pdf_canvas_name,pdf_canvas_name,_xsize,_ysize)
     dummy_canvas.Print(os.path.join(outdirname,pdf_canvas_name+".pdf")+"[","pdf")
+
+    plottitle_string = "Migration" # (row normalized)"
+    plottitle_size = 0.06
+    plottitle = ROOT.TLatex(leftmarg+((1-rightmarg -leftmarg)/2), 0.94,plottitle_string)
+    plottitle.SetNDC()
+    plottitle.SetTextAlign(22)
+    plottitle.SetTextFont(52)
+    plottitle.SetTextSize(plottitle_size)
+
+
+    latex_x = leftmarg + 0.08
+    latex_y =  1 - topmarg - 0.04
+    rownormd_string = "Row normalized"
+    rownormd_latex1 = ROOT.TLatex(latex_x, latex_y - 0.04, rownormd_string)
+    rownormd_latex1.SetNDC()
+    rownormd_latex1.SetTextAlign(11)
+    rownormd_latex1.SetTextFont(72)
+    rownormd_latex1.SetTextSize(0.03)
+    # rownormd_latex1.SetTextColor(ROOT.kP10Yellow)
+    rownormd_latex1.SetTextColor(0)
+    # rownormd_latex2 = ROOT.TLatex(latex_x, latex_y - 0.04, rownormd_string)
+    # rownormd_latex2.SetNDC()
+    # rownormd_latex2.SetTextAlign(11)
+    # rownormd_latex2.SetTextFont(82)
+    # rownormd_latex2.SetTextSize(0.03)
+    # rownormd_latex1.SetTextColor(0)
 
     for response_name in hist_dict.keys():
         print("looking at migration ",response_name)
@@ -186,17 +227,21 @@ def main():
         if not do_manual:
             print("in do_mnvplotter")
             mnv_canvas_title = "Migration Row norm'd, " + sample + "_"+ tuned_tag
-            mnv_canvas = ROOT.TCanvas("norm_canvas_" + response_name, mnv_canvas_title)
+            mnv_canvas = ROOT.TCanvas("norm_canvas_" + response_name, mnv_canvas_title, _xsize, _ysize)
             print("here")
+            mnv_canvas.SetLeftMargin(leftmarg)
+            mnv_canvas.SetRightMargin(rightmarg)
+            mnv_canvas.SetTopMargin(topmarg)
+            mnv_canvas.SetBottomMargin(bottommarg)
 
             mnv = MnvPlotter()
             if set_logz:
                 mnv_canvas.SetLogz()
-            # mnv.SetBlackbodyPalette()
+            mnv.SetBlackbodyPalette()
             # mnv.SetWhiteRainbowPalette()
             # mnv.SetRedHeatPalette()
             # mnv.SetROOT6Palette(ROOT.kBird)
-            mnv.SetROOT6Palette(ROOT.kBird)
+            # mnv.SetROOT6Palette(ROOT.kBird)
 
             hist = hist_dict[response_name].Clone()
             hist.GetXaxis().CenterTitle()
@@ -208,7 +253,7 @@ def main():
                 hist, True, False, True, text_opt
             )
             prelim = AddPreliminary()
-            prelim.DrawLatex(0.5, 0.17, prelim_string)
+            prelim.DrawLatex(latex_x, latex_y, prelim_string)
 
             raw_outname = os.path.join(outdirname,"mnv_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
             # mnv_canvas.Print(raw_outname)
@@ -265,14 +310,15 @@ def main():
             print("\tfinished making matrices, now plotting")
 
             # Make the hists pretty
-            # norm_matrix.SetMaximum(1.0)
+            norm_matrix.SetMaximum(0.75)
 
             norm_canvas_title = "Migration Row norm'd, " + sample
             raw_canvas_title = "Migration, no norm, " + sample
 
-            x_title = "Reco"
-            y_title = "True"
+            x_title = "Reco "
+            y_title = "True "
             if parse[0] in ["h2D", "hHD"]:
+                plottitle_tail = ""
                 var_parse = var.split("_")
                 for var1D in var_parse:
                     if var1D not in var_names.keys():
@@ -280,12 +326,21 @@ def main():
                         var_names[var1D]["reco"] = var
                         var_names[var1D]["truth"] = var
                         var_names[var1D]["units"] = "<units>"
-                    x_title += " " + var_names[var1D]["reco"]
-                    y_title += " " + var_names[var1D]["truth"]
+                    plottitle_tail += var_names[var1D]["reco"]
+                    x_title += var_names[var1D]["reco"]
+                    y_title += var_names[var1D]["truth"]
+                    if var1D == var_parse[-1]: continue
+                    plottitle_tail += ", "
+                    x_title += ", "
+                    y_title += ", "
+                plottitle.SetTitle("Migration %s"%plottitle_tail)
+                x_title += " bins"
+                y_title += " bins"
                 norm_matrix.GetXaxis().SetTitle(x_title)
                 norm_matrix.GetYaxis().SetTitle(y_title)
                 raw_matrix.GetXaxis().SetTitle(x_title)
                 raw_matrix.GetYaxis().SetTitle(y_title)
+                rownormd_latex1.SetTextColor(1)
 
             else:
                 if var not in var_names.keys():
@@ -294,10 +349,13 @@ def main():
                     var_names[var]["truth"] = var
                     var_names[var]["units"] = "<units>"
                 # norm_matrix.SetMaximum(1.0)
+                plottitle.SetTitle("Migration %s"%var_names[var]["reco"])
                 norm_matrix.GetXaxis().SetTitle(x_title+" "+var_names[var]["reco"]+" "+var_names[var]["units"])
                 norm_matrix.GetYaxis().SetTitle(y_title+" "+var_names[var]["truth"]+" "+var_names[var]["units"])
                 raw_matrix.GetXaxis().SetTitle(x_title+" "+var_names[var]["reco"]+" "+var_names[var]["units"])
                 raw_matrix.GetYaxis().SetTitle(y_title+" "+var_names[var]["truth"]+" "+var_names[var]["units"])
+                rownormd_latex1.SetTextColor(0)
+
             norm_matrix.GetXaxis().CenterTitle()
             norm_matrix.GetYaxis().CenterTitle()
             raw_matrix.GetXaxis().CenterTitle()
@@ -305,13 +363,16 @@ def main():
 
             norm_matrix.GetZaxis().SetTitle("Fraction of events")
             norm_matrix.GetZaxis().CenterTitle()
+            norm_matrix.GetZaxis().SetTitleOffset(1.2)
             mnv = MnvPlotter()
 
-            # mnv.SetBlackbodyPalette()
-            # mnv.SetWhiteRainbowPalette()
-            mnv.SetROOT6Palette(ROOT.kBird)
-            # mnv.SetRedHeatPalette()
-            # mnv.SetWhiteRainbowPalette()
+            # # mnv.SetBlackbodyPalette()
+            # # mnv.SetWhiteRainbowPalette()
+            # mnv.SetROOT6Palette(ROOT.kBird)
+            # # mnv.SetRedHeatPalette()
+            # # mnv.SetWhiteRainbowPalette()
+
+            ROOT.gStyle.SetPalette(ROOT.kBird)
             norm_matrix.SetTitle(norm_canvas_title)
             raw_matrix.SetTitle(raw_canvas_title)
 
@@ -326,9 +387,14 @@ def main():
             #     norm_canvas = CCQECanvas("norm_canvas_"+response_name, norm_canvas_title)
             # else:
             #     norm_canvas = ROOT.TCanvas("norm_canvas_"+response_name, norm_canvas_title,pix,round(1.3*pix))
-            norm_canvas = ROOT.TCanvas("norm_canvas_"+response_name, norm_canvas_title)
-            norm_canvas.cd()
+            norm_canvas = ROOT.TCanvas("norm_canvas_"+response_name, norm_canvas_title, _xsize, _ysize)
+            norm_canvas.SetLeftMargin(leftmarg)
+            norm_canvas.SetRightMargin(rightmarg)
+            norm_canvas.SetTopMargin(topmarg)
+            norm_canvas.SetBottomMargin(bottommarg)
 
+            norm_canvas.cd()
+            
             if parse[0] in ["h2D","hHD"]:
                 # norm_canvas.cd()
                 norm_matrix.Draw("colz")
@@ -338,6 +404,7 @@ def main():
                     norm_matrix.Draw("colz")
                 else:
                     ROOT.gStyle.SetPaintTextFormat("0.2f")
+                    norm_matrix.SetMarkerSize(0.75)
                     # norm_canvas.cd()
                     norm_matrix.Draw("colz text")
 
@@ -346,11 +413,14 @@ def main():
             #     norm_canvas.SetLogy()  
             if set_logz:
                 norm_canvas.SetLogz()
+            plottitle.Draw()
             prelim = AddPreliminary()
-            prelim.DrawLatex(0.5, 0.17, "MINER#nuA Work In Progress")
-
+            prelim.DrawLatex(latex_x, latex_y, prelim_string)
+            rownormd_latex1.Draw()
+            # rownormd_latex2.Draw()
+            
             norm_outname = os.path.join(outdirname,"normd_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
-            norm_canvas.Print(norm_outname)
+            # norm_canvas.Print(norm_outname)
             norm_canvas.Print(os.path.join(outdirname, pdf_canvas_name + ".pdf"),"Title: %s %s normd migration"%(var, tuned_tag))
 
             # del norm_canvas
@@ -361,12 +431,17 @@ def main():
             #     raw_canvas = CCQECanvas("raw_canvas_"+response_name, raw_canvas_title)
             # else:
             #     raw_canvas = ROOT.TCanvas("raw_canvas_"+response_name, raw_canvas_title,pix,round(1.3*pix))
-            raw_canvas = ROOT.TCanvas("raw_canvas_"+response_name, raw_canvas_title)
+            raw_canvas = ROOT.TCanvas("raw_canvas_"+response_name, raw_canvas_title, _xsize, _ysize)
+            raw_canvas.SetLeftMargin(leftmarg)
+            raw_canvas.SetRightMargin(rightmarg)
+            raw_canvas.SetTopMargin(topmarg)
+            raw_canvas.SetBottomMargin(bottommarg)
 
             raw_canvas.cd()
             raw_matrix.Draw("colz")
+            plottitle.Draw()
             prelim = AddPreliminary()
-            prelim.DrawLatex(0.5, 0.17, "MINER#nuA Work In Progress")
+            prelim.DrawLatex(latex_x, latex_y, prelim_string)
 
             if "Q2QE" in var:
                 raw_canvas.SetLogx()
@@ -376,7 +451,7 @@ def main():
             raw_canvas.SetLogz()
             # raw_canvas.Set
             raw_outname = os.path.join(outdirname,"raw_plotmigration__%s_%s_%s_%s.png"%(sample,category,tuned_tag,var))
-            raw_canvas.Print(raw_outname)
+            # raw_canvas.Print(raw_outname)
             raw_canvas.Print(os.path.join(outdirname, pdf_canvas_name + ".pdf"),"Title: %s %s raw plotmigration"%(var, tuned_tag))
 
             # del raw_canvas

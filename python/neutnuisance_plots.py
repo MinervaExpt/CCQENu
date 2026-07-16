@@ -31,7 +31,7 @@ mydate = datetime.datetime.now()
 month = mydate.strftime("%B")
 year = mydate.strftime("%Y")
 
-sig_only = True
+sig_only = False
 
 
 global_noData = False  # use this to plot MC only types
@@ -60,7 +60,7 @@ rebin_dict = {
 }
 
 topbin_dict = {
-    "NeutCandsEdep": [0.0, 500.0,]
+    "NeutCandsEdep": [0.0, 100.0,]
     # "NeutCandsvtxSphereDist": 2,
     # "NeutCandsTrackEndDist": 600,
 
@@ -163,7 +163,7 @@ def GetHistDict(i_file, POTScale):
             # h.Scale(0.001, "width")
             # h.Scale(0.001)
             h.SetMarkerStyle(20)
-            h.SetMarkerSize(1.0)
+            h.SetMarkerSize(2)
             # if shortenedep and variable in ["NeutCandsEdep"]:
             #     h.GetXaxis().SetRangeUser(0.0,150.)
         if "data" not in cat:
@@ -274,7 +274,7 @@ def AddPreliminary():
     latex = ROOT.TLatex()
     latex.SetNDC()
     # latex.SetTextSize(legendfontsize - 0.004)
-    latex.SetTextSize(legendfontsize - 0.01)
+    latex.SetTextSize(legendfontsize/2)
     latex.SetTextColor(color)
     latex.SetTextFont(font)
     latex.SetTextAlign(31)
@@ -379,7 +379,7 @@ vars_info = {
         "bins": [],
     },
     "NeutCandsTrackEndDist": {
-        "title": "Cluster d_{track end}",
+        "title": "Cluster d_{track}",
         "shortname": "d_{track}",
         "units": "mm",
         "bins": [],
@@ -431,6 +431,20 @@ bin_pid_mechname = {
     9: "notop",
     10: "other",
 }
+bin_pid_names = {   
+    "neutron": "#it{n}",
+    "proton": "#it{p}",
+    "pizero": "#it{#pi^{0}}",
+    "piplus": "#it{#pi^{+}}",
+    "piminus": "#it{#pi^{-}}",
+    "pipm": "#it{#pi^{#pm}}",
+    "gamma": "#it{#gamma}",
+    "electron": "#it{e^{#pm}}",
+    "muon": "#it{#mu^{#pm}}",
+    "notop": "Non-GENIE",
+    "other": "Other",
+}
+
 bin_pid_colors = {
     1: ROOT.kP10Blue,
     2: ROOT.kP10Yellow,
@@ -666,7 +680,8 @@ for a_sample in groups.keys():
                         sys.exit()
                     stack.Add(tmp_h_pid_dict[c_cat][pid])
 
-                    print("added pid ", bin_pid[pid])
+                    # print("added pid ", bin_pid[pid])
+                    print("added pid ", bin_pid_names[bin_pid_mechname[pid]])
                     tmp_h_pid.Print()
 
             # else:
@@ -705,38 +720,55 @@ for a_sample in groups.keys():
         #     cc.SetLeftMargin(0.08)
         #     cc.SetRightMargin(0.05)
         #     cc.SetBottomMargin(0.12)
-        
-        padwidth = 1 - cc.GetLeftMargin() - cc.GetRightMargin()
-        padheight = 1 - cc.GetTopMargin() - cc.GetBottomMargin()
+        pad_rmarg = cc.GetRightMargin()
+        pad_lmarg = cc.GetLeftMargin()
+        topmarg = cc.GetTopMargin()
+        bottommarg = cc.GetBottomMargin()
+        # x2 = (1. - cc.GetRightMargin()) - (0.02 * padwidth)
+        # x1 = x2 - 0.15 # padwidth * 0.17
+        # if not sig_only:
+        #     x1 = x2 - 0.25
+        # y2 = 1 - cc.GetTopMargin() - (0.02 * padheight)
+        # y1 = y2 - 0.35 # * padheight
+        # tmp_latex_x = x2
+        # if data_var in ["NeutCandsMuonCosTheta","NeutCandsTrackEndDist"]:
+        #     x1 = cc.GetLeftMargin() + (0.05 * padwidth)
+        #     x2 = x1 + 0.2
+        #     tmp_latex_x = x1
+        # tmp_latex_y = y1 - 0.04
+        # leg = TLegend(x1, y1, x2, y2)
+        # leg.SetBorderSize(0)
+        # leg.SetFillColor(-1)
+        # leg.SetFillStyle(0)
+        # # leg.SetTextSize(round(legendfontsize/10))
+        # leg.SetNColumns(2)
+        # leg.SetTextFont(42)
 
-        x2 = (1. - cc.GetRightMargin()) - (0.02 * padwidth)
-        x1 = x2 - 0.15 # padwidth * 0.17
-        if not sig_only:
-            x1 = x2 - 0.25
-        y2 = 1 - cc.GetTopMargin() - (0.02 * padheight)
-        y1 = y2 - 0.35 # * padheight
+        padwidth = 1 - pad_lmarg - pad_rmarg
+        padheight = 1 - topmarg - bottommarg
+
+        x2 = 1. - pad_rmarg - 0.01
+        x1 = x2 - 0.35 # padwidth * 0.17
+        y2 = 1 - topmarg - 0.02
+        y1 = y2 - 0.4 # * padheight
         tmp_latex_x = x2
-        if data_var in ["NeutCandsMuonCosTheta","NeutCandsTrackEndDist"]:
-            x1 = cc.GetLeftMargin() + (0.05 * padwidth)
-            x2 = x1 + 0.15
-            tmp_latex_x = x1
-        tmp_latex_y = y1 - 0.04
+        tmp_latex_y = y1 - 0.05
         leg = TLegend(x1, y1, x2, y2)
         leg.SetBorderSize(0)
         leg.SetFillColor(-1)
         leg.SetFillStyle(0)
-        # leg.SetTextSize(round(legendfontsize/10))
+        # leg.SetTextSize(legendfontsize)
         leg.SetNColumns(2)
         leg.SetTextFont(42)
         if not sig_only and not noData:
             leg.AddEntry(data, "Data", "p")
             leg.AddEntry(0, "", "")
         for pid in reversed(cons_bin_pid_order):
-            leg.AddEntry(tmp_h_pid_dict["qelike"][pid], bin_pid[pid], "f")
+            leg.AddEntry(tmp_h_pid_dict["qelike"][pid], bin_pid_names[bin_pid_mechname[pid]], "fl")
             if sig_only: 
                 leg.SetNColumns(1)
                 continue
-            leg.AddEntry(tmp_h_pid_dict["qelikenot"][pid], bin_pid[pid], "f")
+            leg.AddEntry(tmp_h_pid_dict["qelikenot"][pid], "Bkg "+bin_pid_names[bin_pid_mechname[pid]], "fl")
 
         # Now draw everything
         stack.Draw("")
@@ -860,7 +892,7 @@ for a_sample in groups.keys():
         canvas_name = thename + "_FinalStates"
         if dotuned:
             canvas_name = thename + "_FinalStates_tuned"
-        cc.Print(os.path.join(outdirname, canvas_name + ".png"))
+        # cc.Print(os.path.join(outdirname, canvas_name + ".png"))
         cc.Print(os.path.join(outdirname, pdf_canvas_name + ".pdf"),"Title:%s %s"%(tmp_canvas_title,"Final States"))
         
     dummy_canvas.Print(os.path.join(outdirname,pdf_canvas_name+".pdf")+"]","pdf")
