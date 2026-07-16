@@ -22,25 +22,25 @@ skip_univs = [
 ]
 doplots = False
 dosimulfithists = False
-dorebin_internal_global = True
+dorebin_internal_global = False
 combinefirstbins = False
 category_list = [
     "data", 
     "qelike", 
     "chargedpion", 
     "neutralpion", 
-    # "other",
-    "multipion",
-    "other_np",
+    "other",
+    # "multipion",
+    # "other_np",
     # "mctot",
 ]
 mc_category_list = [
     "qelike", 
     "chargedpion", 
     "neutralpion", 
-    # "other",
-    "multipion", 
-    "other_np",
+    "other",
+    # "multipion", 
+    # "other_np",
 ]
 mc_cat_color_list = [
     # ROOT.kBlue-6,
@@ -87,14 +87,14 @@ sample_list = [
     "QElike", 
     "TrackSideband",
     "BlobSideband", 
-    "MultipBlobSideband",
+    # "MultipBlobSideband",
 ]
 
 fit_sample_list = [
     "QElike", 
     "TrackSideband",
     "BlobSideband",
-    "MultipBlobSideband",
+    # "MultipBlobSideband",
 
 ]
 skipbins = [
@@ -115,7 +115,7 @@ for sample in fit_sample_list:
 
 # Do fit on tuned hists or not
 useTuned = 0
-rebin = 5
+rebin = 4
 
 if rebin == 5:
     if len(fit_sample_list) == 4:
@@ -1375,19 +1375,35 @@ def main():
     del pre_fitbin_cat_univ_hist_dict_uncut
     del pre_fitbin_cat_univ_hist_dict_shortlist
     # print("Syncing bands... ")
-    # for cat in scalefrac_mnvh1d_dict.keys():
-    #     SyncBands(scalefrac_mnvh1d_dict[cat]["fraction"])
-    #     SyncBands(scalefrac_mnvh1d_dict[cat]["scale"])
-    # for fitbin in fit_mnvh1d_dict.keys():
-    #     for cat in fit_mnvh1d_dict[fitbin]:
-    #         SyncBands(fit_mnvh1d_dict[fitbin][cat])
-    #     for cat in prefit_mnvh1d_dict[fitbin]:
-    #         SyncBands(prefit_mnvh1d_dict[fitbin][cat])
+    for cat in scalefrac_mnvh1d_dict.keys():
+        SyncBands(scalefrac_mnvh1d_dict[cat]["fraction"])
+        SyncBands(scalefrac_mnvh1d_dict[cat]["scale"])
+    for fitbin in fit_mnvh1d_dict.keys():
+        for cat in fit_mnvh1d_dict[fitbin]:
+            SyncBands(fit_mnvh1d_dict[fitbin][cat])
+        for cat in prefit_mnvh1d_dict[fitbin]:
+            SyncBands(prefit_mnvh1d_dict[fitbin][cat])
     
     if not os.path.exists("plots"):
         os.mkdir("plots")
     plotter = MnvPlotter()
     print(">>>>>>>>> chi2 in fitbin:")
+    postchi2_text = ROOT.TLatex(0.65,0.6, "#chi^{2}")
+    postchi2_text.SetNDC()
+    postchi2_text.SetTextSize(0.03)
+    postchi2_text.SetTextAlign(11)
+    postchi2_text.SetTextFont(42)
+    prechi2_text = ROOT.TLatex(0.65,0.6, "#chi^{2}")
+    prechi2_text.SetNDC()
+    prechi2_text.SetTextSize(0.03)
+    prechi2_text.SetTextAlign(11)
+    prechi2_text.SetTextFont(42)
+
+    prelim = ROOT.TLatex(0.88, 0.7, "MINER#it{#nu}A Work in Progress")
+    prelim.SetTextFont(112)
+    prelim.SetTextSize(0.03)
+    prelim.SetTextColor(ROOT.kRed +1)
+    prelim.SetTextAlign(31)
     for fitbin in fit_mnvh1d_dict.keys():
         # tmp_prefitmctot = prefit_mnvh1d_dict[fitbin]["mctot"].Clone()
         # tmp_fitmctot = fit_mnvh1d_dict[fitbin]["mctot"].Clone()
@@ -1436,7 +1452,7 @@ def main():
 
         ROOT.gStyle.SetOptTitle(1)
 
-        canvas = ROOT.TCanvas()
+        canvas = ROOT.TCanvas("mycanvas%s"%fitbin,"mycanvas",3200,2400)
         prestack = ROOT.THStack()
         poststack = ROOT.THStack()
         leg = ROOT.TLegend(0.65,0.65,0.85,0.85)
@@ -1445,25 +1461,24 @@ def main():
         leg.SetBorderSize(0)
         leg.SetFillColor(-1)
 
-        chi2_text = ROOT.TLatex()
-        chi2_text.SetNDC()
-        chi2_text.SetTextSize(0.03)
-        chi2_text.SetTextAlign(11)
-        chi2_text.SetTextFont(42)
 
         for i in range(len(mc_category_list)):
             prefit_mnvh1d_dict_uncut[fitbin][mc_category_list[i]].SetFillColor(mc_cat_color_list[i])
-            prefit_mnvh1d_dict_uncut[fitbin][mc_category_list[i]].SetLineColor(ROOT.kBlack)
+            prefit_mnvh1d_dict_uncut[fitbin][mc_category_list[i]].SetLineColor(ROOT.TColor.GetColorDark(mc_cat_color_list[i]))
             leg.AddEntry(prefit_mnvh1d_dict_uncut[fitbin][mc_category_list[i]],mc_cat_name_list[mc_category_list[i]])
-            prestack.Add(prefit_mnvh1d_dict_uncut[fitbin][mc_category_list[i]])
             fit_mnvh1d_dict_uncut[fitbin][mc_category_list[i]].SetFillColor(mc_cat_color_list[i])
-            fit_mnvh1d_dict_uncut[fitbin][mc_category_list[i]].SetLineColor(ROOT.kBlack)
-            poststack.Add(fit_mnvh1d_dict_uncut[fitbin][mc_category_list[i]])
+            fit_mnvh1d_dict_uncut[fitbin][mc_category_list[i]].SetLineColor(ROOT.TColor.GetColorDark(mc_cat_color_list[i]))
+        for cat in reversed(mc_category_list):
+            prestack.Add(prefit_mnvh1d_dict_uncut[fitbin][cat])
+            poststack.Add(fit_mnvh1d_dict_uncut[fitbin][cat])
         tmp_data.SetMaximum(max(tmp_data.GetMaximum(),prestack.GetMaximum(),poststack.GetMaximum())*1.2)
         tmp_data.SetMarkerColor(ROOT.kBlack)
         tmp_data.SetLineColor(ROOT.kBlack)
         tmp_data.SetMarkerStyle(20)
         tmp_data.SetLineWidth(2)
+        tmp_data.GetXaxis().CenterTitle()
+        tmp_data.GetXaxis().SetTitle("Recoil (GeV)")
+        tmp_data.GetYaxis().SetTitle("Counts / (GeV)")
         leg.AddEntry(tmp_data,"Data","p")
         tmp_data.SetTitle("prefit MC vs data fitbin%02d"%(fitbin))
 
@@ -1471,14 +1486,18 @@ def main():
         prestack.Draw("HIST same")
         tmp_data.Draw("AP E1 X0 same")
         leg.Draw()
-        chi2_text.DrawLatex(0.65,0.6, "#chi^{2} = %.2f"%(round(pre_chi2,3)))
-
-        canvas.Print("long_prefitvsdata_fitbin%02d.png"%(fitbin))
+        # prechi2_text.Modify()
+        prechi2_text.SetTitle("#chi^{2} = %.2f"%(round(pre_chi2,3)))
+        prechi2_text.Draw()
+        prelim.Draw()
+        canvas.ModifiedUpdate()
+        # canvas.Print("long_prefitvsdata_fitbin%02d.png"%(fitbin))
         if fitbin==1:
             canvas.Print("long_mc_vs_data.pdf(","Title:%s"%(tmp_data.GetTitle()))
         else:
             canvas.Print("long_mc_vs_data.pdf","Title:%s"%(tmp_data.GetTitle()))
 
+        # chi2_text.Modfiy()
 
         tmp_data.SetTitle("postfit MC vs data fitbin%02d"%(fitbin))
 
@@ -1486,11 +1505,13 @@ def main():
         poststack.Draw("HIST same")
         tmp_data.Draw("AP E1 X0 same")
         leg.Draw()
-        chi2_text.DrawLatex(0.65,0.6, "#chi^{2} = %.2f"%(round(post_chi2,3)))
+        postchi2_text.SetTitle("#chi^{2} = %.2f"%(round(post_chi2,3)))
+        postchi2_text.Draw()
+        prelim.Draw()
 
         canvas.Modified()
         canvas.Update()
-        canvas.Print("long_postfitvsdata_fitbin%02d.png"%(fitbin))
+        # canvas.Print("long_postfitvsdata_fitbin%02d.png"%(fitbin))
         if fitbin < n_xbins:    
             canvas.Print("long_mc_vs_data.pdf","Title:%s"%(tmp_data.GetTitle()))
         else:
@@ -1564,7 +1585,6 @@ def main():
             chi2_text.SetTextSize(0.03)
             chi2_text.SetTextAlign(11)
             chi2_text.SetTextFont(42)
-
             for i in range(len(mc_category_list)):
                 prefit_mnvh1d_dict_shortlist[fitbin][mc_category_list[i]][sample].SetFillColor(mc_cat_color_list[i])
                 prefit_mnvh1d_dict_shortlist[fitbin][mc_category_list[i]][sample].SetLineColor(ROOT.kBlack)
@@ -1578,9 +1598,14 @@ def main():
             tmp_data.SetLineColor(ROOT.kBlack)
             tmp_data.SetLineWidth(2)
             tmp_data.SetMarkerStyle(20)
-
+            loedge = dummy_scalevar_th1d.GetXaxis().GetBinLowEdge(int(fitbin))
+            hiedge = dummy_scalevar_th1d.GetXaxis().GetBinUpEdge(int(fitbin))
             tmp_data.SetMaximum(max(tmp_data.GetMaximum(),prestack.GetMaximum(),poststack.GetMaximum())*1.2)
-            tmp_data.SetTitle("%s prefit MC vs data fitbin%02d"%(sample_list[sample],fitbin))
+            # tmp_data.SetTitle("%s prefit MC vs data fitbin%02d"%(sample_list[sample],fitbin))
+            # tmp_data.SetTitle("%s prefit MC vs data %02f < Q^{2}_{QE} < %02f"%(sample_list[sample],loedge,hiedge))
+            pre_title = "Prefit, "+str(loedge)+" < Q^{2}_{QE} <"+str(hiedge)
+            tmp_data.SetTitle(pre_title)
+
             leg.AddEntry(tmp_data,"Data","p")
 
             tmp_data.Draw("P E1 X0")
@@ -1588,6 +1613,7 @@ def main():
             tmp_data.Draw("AP E1 X0 same")
             leg.Draw()
             chi2_text.DrawLatex(0.65+legleft,0.6, "#chi^{2} = %.2f"%(round(pre_chi2,3)))
+            prelim.DrawLatex(0.65+legleft, 0.5, "MINER#it{#nu}A Work in Progress")
 
             canvas.Print("%s_prefitvsdata_fitbin%02d.png" %(sample_list[sample],fitbin))
             if fitbin == 1:
@@ -1595,12 +1621,15 @@ def main():
             else:
                 canvas.Print("%s_mc_vs_data.pdf"%(sample_list[sample]),"Title:%s"%(tmp_data.GetTitle()))
 
-            tmp_data.SetTitle("%s postfit MC vs data fitbin%02d"%(sample_list[sample],fitbin))
+            post_title = "Postfit, "+str(loedge)+" < Q^{2}_{QE} <"+str(hiedge)
+            tmp_data.SetTitle(post_title)
             tmp_data.Draw("P E1 X0")
             poststack.Draw("HIST same")
             tmp_data.Draw("AP E1 X0 same")
             leg.Draw()
             chi2_text.DrawLatex(0.65+legleft,0.6, "#chi^{2} = %.2f"%(round(post_chi2,3)))
+            prelim.DrawLatex(0.45+legleft, 0.57, "MINER#it{#nu}A Work in Progress")
+
             canvas.Modified()
             canvas.Update()
             canvas.Print("%s_postfitvsdata_fitbin%02d.png" %(sample_list[sample],fitbin))
