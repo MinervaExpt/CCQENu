@@ -35,9 +35,9 @@
     "qelike": ["response_migration"],
     "qelikenot": []
   },
-  "Variables":["Q2QE","ptmu","pzmu"],
-  "Scales":{"Q2QE":3,"ptmu":3,"pzmu":3},    // scale = logx + 2* logy
-  "FluxNorm":{"Q2QE":false,"ptmu":false,"pzmu":false}, // true = do bin by bin
+  "Variables":["Q2QE","EnuCCQE"],
+  "Scales":{"Q2QE":3,"ptmu":3,"pzmu":3,"EnuCCQE":1},    // scale = logx + 2* logy
+  "FluxNorm":{"Q2QE":false,"ptmu":false,"pzmu":false,"EnuCCQE":true}, // true = do bin by bin
   "PixDir":"./pix",
   "LogMinimum":0.1,
   "Stages":{

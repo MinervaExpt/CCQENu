@@ -117,7 +117,7 @@ class CrossSectionExtractor:
                     PlotCVAndError(self.plotter.canvas1D, signal_fraction,signal_fraction,sample+": Signal Fraction",True,1,False) # remove binwid                   
                     PlotErrorSummary(self.plotter.canvas1D, signal_fraction, sample + ": Signal Fraction Systematics", logscale%2)
 
-                    PlotCVAndError(self.plotter.canvas1D,bkgsub_hist,sig_hist,sample+": Background Subtracted Data",True,logscale)
+                    PlotCVAndError(self.plotter.canvas1D,bkgsub_hist,sig_hist,sample+": Background Subtracted Data" + grabber.tag ,True,logscale)
                     PlotErrorSummary(self.plotter.canvas1D, bkgsub_hist, sample + ": Background Subtracted Data Systematics", logscale%2)
                                    
                 
@@ -370,6 +370,10 @@ class DataGrabber:
 
         self.samples = theconfig["Samples"]
         self.scaling = theconfig["POTScale"]
+        if "tag" in config:
+            self.tag = theconfig["tag"]
+        else:
+            self.tag = ""
         self.data_files = {}
         self.samples_pot = {}
         count = 0

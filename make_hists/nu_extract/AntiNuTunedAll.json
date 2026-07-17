@@ -1,6 +1,7 @@
 {
   "InputFiles":{
-  "QElike":"/Users/schellma/Dropbox/ccqe/pub_run/pub_v18.root"
+  //"QElike":"/Users/schellma/Dropbox/ccqe/pub_run/pub_v18.root"
+  "QElike":"../v18_p8_minervame5A_MnvTunev2_QElike_p8_run_1.root"
   },
   "Target":"Nucleons", // can be Protons, Neutrons or Nucleons
   "POTScale":1, //1 if you need to POT scale
@@ -35,10 +36,10 @@
     "qelike": ["response_tuned_migration"],
     "qelikenot": []
   },
-  "Variables":["Q2QE","EnuCCQE"],
+  "Variables":["EnuCCQE"],
   "Scales":{"Q2QE":1,
-    "EnuCCQE":2},    // scale = logx + 2* logy
-  "FluxNorm":{"Q2QE":false,"EnuCCQE":false}, // true = do bin by bin
+    "EnuCCQE":0},    // scale = logx + 2* logy
+  "FluxNorm":{"Q2QE":false,"EnuCCQE":true}, // true = do bin by bin
   "PixDir":"./pix",
   "LogMinimum":0.1,
   "Stages":{

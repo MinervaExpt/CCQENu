@@ -3,6 +3,8 @@ from ROOT import TH1D, TH2D, TString
 from PlotUtils import MnvH1D, MnvH2D, MnvVertErrorBand, MnvVertErrorBand2D
 from PlotUtils import FluxReweighter
 import numpy as np
+
+
 # utilities to deal with flux
 
 #ifndef REBIN_FLUX_H
@@ -92,7 +94,7 @@ def TruncateNumberOfFluxUniverses(h, nUniverses):
   #CheckAndFixFluxErrorBand(h)
 
 #2D
-def TruncateNumberOfFluxUniverses(h, nUniverses):
+def TruncateNumberOfFluxUniverses2D(h, nUniverses):
   poppedFluxErrorBand = MnvVertErrorBand2D()
   poppedFluxErrorBand = h.PopVertErrorBand("Flux")
   fluxUniverses = poppedFluxErrorBand.GetHists()
@@ -185,7 +187,7 @@ def  GetFluxEbins(h_flux_dewidthed, ihist, configs , FluxEnormBool):
    else:
       return GetFluxEbins1D(h_flux_dewidthed, ihist, configs , FluxEnormBool)
    
-def  GetFluxEbins1D(h_flux_dewidthed, ihist, configs , FluxEnormBool):
+def  GetFluxEbins1D(h_flux_dewidthed, ihist, configs=None , FluxEnormBool=None):
   newname = ihist.GetName()+"_Flux"
   h_flux_ebins = MnvH1D()
   h_flux_ebins = RebinDeWidthedFluxHist(h_flux_dewidthed,ihist)

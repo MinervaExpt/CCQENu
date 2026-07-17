@@ -58,6 +58,10 @@ def resetLogScale():
     gPad.SetLogy(False)
     gPad.SetLogx(False)
 
+def resetLogScaleY():
+    gPad.SetLogy(False)
+    
+
 
 #void PlotErrorSummary(PlotUtils.MnvH1D hist, label)
 # def PlotErrorSummary(hist, label):  
@@ -358,6 +362,7 @@ def PlotCVAndError1D(cE, idatahist,  ihist, label, cov_area = do_cov_area_norm, 
     plotname = "Title: %s_CV_w_err_%s"%( datahist.GetName(), label)
     t.Draw()
     cE.Print(cE.GetName(), plotname)
+    logsave = logscale
     if idatahist != ihist:   
         d = MnvH1D()   # don't plot ratio for identical hists.
         d = datahist.Clone()
@@ -379,6 +384,7 @@ def PlotCVAndError1D(cE, idatahist,  ihist, label, cov_area = do_cov_area_norm, 
 
         d.GetYaxis().SetTitle("Data/MC")
         m.Divide(m, mc, 1., 1.)
+        cE.SetLogy(False)
         # no idea why I should have to do this
         # m.Print("ALL")
         # datahist.Draw()
@@ -520,7 +526,7 @@ def integrator( h, binwid):
     return inte
 
 # 2D
-def integrator( h, binwid):
+def integrator2D( h, binwid):
     inte = 0
     for ix in range(1,  h.GetXaxis().GetNbins()+1):
         for iy in range(1,  h.GetYaxis().GetNbins()+1):
