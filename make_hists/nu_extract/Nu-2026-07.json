@@ -35,5 +35,6 @@
     "Unfold":{"In":"fitted_combined","Out":"unfolded"},
     "Efficiency":{"In":"unfolded","Out":"effcorr"},
     "Flux":{"In":"effcorr","Out":"sigma"}
-  }
+  },
+  "Iterations":4
 }

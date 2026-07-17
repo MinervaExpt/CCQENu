@@ -125,7 +125,7 @@ class CrossSectionExtractor:
         
     def unfold(self,iterations=4):
         ''' method that unfolds background subtracted data '''
-
+        print (f"Unfolding with {iterations} iterations")
         input_stage = self.grabber.allconfigs["Cross"]["Stages"]["Unfold"]["In"]
         output_stage = self.grabber.allconfigs["Cross"]["Stages"]["Unfold"]["Out"]
         
@@ -657,6 +657,12 @@ if __name__ == "__main__":
     configfile.close()
 
     # set up the plotter
+    if "Iterations" in config:
+        iterations = config["Iterations"]
+        configfilename = configfilename.replace(".json",f"_iter{iterations}.json")
+    else:
+        iterations = 4
+        
     pdffilename1D= configfilename.replace("json","pdf")
     plotter = Plotter(config,pdffilename1D)
 
@@ -678,7 +684,7 @@ if __name__ == "__main__":
     # set up and do the cross section extraction
 
     
-    cross.unfold(iterations=4)
+    cross.unfold(iterations)
     
     grabber.merge(config["Samples"])
     
