@@ -55,10 +55,10 @@
     "Q2QE",
     "recoil",
     "NumberOfProtonCandidates",
-    "NeutCandsEdep",
-    "NeutCandsTrackEndDist",
-    "NeutCandsvtxSphereDist",
-    "NeutCandsMuonCosTheta",
+    // "NeutCandsEdep",
+    // "NeutCandsTrackEndDist",
+    // "NeutCandsvtxSphereDist",
+    // "NeutCandsMuonCosTheta",
     "NeutCandsTopMCPID"
     // // "pzmu"
     // // "EAvailFromTruthBlobs",
