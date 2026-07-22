@@ -1628,6 +1628,53 @@ double CVUniverse::GetTrueEAvailGeV() const {
     return Eavail * MeVGeV;
 }
 
+double CVUniverse::GetTrueEAvailWithRemovalGeV() const {
+    // This one removes the 25 MeV from protons/neutrons
+    double Eavail = 0.0;
+    int pdgsize = GetInt("mc_nFSPart");
+    int n_protons = 0;
+    int n_neutrons = 0;
+    for (int i = 0; i < pdgsize; i++) {
+        int pdg = GetVecElem("mc_FSPartPDG", i);
+        double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
+        if (pdg == 2112) {
+            n_protons += 1;
+            n_neutrons;  // Skip neutrons
+        }
+        else if (abs(pdg) > 1e9)
+            continue;  // ignore nuclear fragments
+        else if (abs(pdg) == 11 || abs(pdg) == 13)
+            continue;  // ignore leptons
+        else if (abs(pdg) == 211)
+            Eavail += energy - 139.57;  // subtracting pion mass to get Kinetic energy
+        else if (pdg == 2212) {
+            Eavail += energy - 938.27;  // proton
+            n_protons += 1;
+        }
+        // Eavail += energy - MinervaUnits::M_p;
+        else if (pdg == 111)
+            Eavail += energy;  // pi0
+        else if (pdg == 22)
+            Eavail += energy;  // photons
+        else if (pdg >= 2000)  // TODO: what is this?
+            Eavail += energy - 938.27;
+        // Eavail += energy - MinervaUnits::M_p;
+        else if (pdg <= -2000)
+            Eavail += energy + 938.27;
+        // Eavail += energy + MinervaUnits::M_p;
+        else
+            Eavail += energy;
+    }
+    if (n_protons >= 1) {
+        // Remove 25 MeV if there are protons, if there's a neutron, it will share that energy
+        double tmp_removal = 0;
+        tmp_removal = n_neutrons >= 1 ? 12.5 : 25.0;
+        Eavail -= tmp_removal;
+    }
+    // return std::max(0.0, Eavail * MeVGeV);
+    return Eavail * MeVGeV;
+}
+
 double CVUniverse::GetTrueEAvailWithNeutronsGeV() const {
     double Eavail = 0.0;
     int pdgsize = GetInt("mc_nFSPart");

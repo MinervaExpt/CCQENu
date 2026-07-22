@@ -306,6 +306,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetCorrectedEAvailGeV() const;
 
     virtual double GetTrueEAvailGeV() const;
+    virtual double GetTrueEAvailWithRemovalGeV() const;
 
     virtual double GetTrueEAvailWithNeutronsGeV() const;
 

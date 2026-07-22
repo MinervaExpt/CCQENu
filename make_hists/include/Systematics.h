@@ -131,12 +131,37 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
     }
 
     // 2P2H
-    if (std::find(flags.begin(), flags.end(), "2p2h") != flags.end()) {
-        std::cout << " do 2p2h systematics " << std::endl;
-        UniverseMap bands_2p2h = PlotUtils::Get2p2hSystematicsMap<CVUniverse>(chain);
-        error_bands.insert(bands_2p2h.begin(), bands_2p2h.end());
-    } else {
-        std::cout << "Warning:  2p2h systematics are turned off" << std::endl;
+    if (modeltune_config.IsMember("LowRecoil2p2h")) {
+        if (modeltune_config.GetString("LowRecoil2p2h") == "CV") {
+            if (std::find(flags.begin(), flags.end(), "2p2h") != flags.end()) {
+                std::cout << " do 2p2h systematics " << std::endl;
+                UniverseMap bands_2p2h = PlotUtils::Get2p2hSystematicsMap<CVUniverse>(chain);
+                error_bands.insert(bands_2p2h.begin(), bands_2p2h.end());
+            } else {
+                std::cout << "Warning: FULL 2p2h systematics are turned off" << std::endl;
+            }
+
+            // 2p2h with QE band turned off
+            if (std::find(flags.begin(), flags.end(), "2p2h_noQE") != flags.end()) {
+                if (std::find(flags.begin(), flags.end(), "2p2h") != flags.end()) {
+                    std::cout << " already have 2p2h set up. I will just remove the QE band instead" << std::endl;
+                    // if (error_bands["2p2h"].size() == 3) error_bands["2p2h"].erase(error_bands["2p2h"].begin(), error_bands["2p2h"].end(), error_bands["2p2h"][2]);
+                    // if (error_bands["2p2h"].size() == 4) error_bands["2p2h"].erase(error_bands["2p2h"].begin(), error_bands["2p2h"].end(), error_bands["2p2h"][3]);
+                    // for (auto band : error_bands) {
+                    //     if ((band.first).find("2p2h") != std::string::npos) {
+                    //         if (band.second.size() == 3) band.second.pop_back();
+                    //         break;
+                    //     }
+                    // }
+                    if (error_bands["2p2h"].size() >= 3) error_bands["2p2h"].pop_back();
+                } else {
+                    std::cout << " do 2p2h systematics without QE band " << std::endl;
+                    UniverseMap bands_2p2h = PlotUtils::Get2p2hSystematicsMap<CVUniverse>(chain);
+                    if (bands_2p2h["2p2h"].size() >= 3) bands_2p2h["2p2h"].pop_back();
+                    error_bands.insert(bands_2p2h.begin(), bands_2p2h.end());
+                }
+            }
+        }
     }
 
     // Geant
