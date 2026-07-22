@@ -1671,8 +1671,8 @@ double CVUniverse::GetTrueEAvailWithRemovalGeV() const {
         tmp_removal = n_neutrons >= 1 ? 12.5 : 25.0;
         Eavail -= tmp_removal;
     }
-    // return std::max(0.0, Eavail * MeVGeV);
-    return Eavail * MeVGeV;
+    return std::max(0.0, Eavail * MeVGeV);
+    // return Eavail * MeVGeV;
 }
 
 double CVUniverse::GetTrueEAvailWithNeutronsGeV() const {

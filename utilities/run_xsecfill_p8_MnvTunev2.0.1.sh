@@ -26,12 +26,12 @@ export MYMODEL=MnvTunev2.0.1
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/July2026/xsec/removal_noqeband_100flux/${MYMODEL}/datareco/ \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract_nonpi_reco \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
- --tmpdir=$SCRATCH/tmp --expected-lifetime=36h --memory=6000   --sample=${MYSAMPLE} #--debug --notimestamp
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=36h --memory=6000   --sample=${MYSAMPLE} #--debug --notimestamp
 
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/July2026/xsec/removal_noqeband_100flux/${MYMODEL}/truth/ \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract_nonpi_truth \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_truth --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
- --tmpdir=$SCRATCH/tmp --expected-lifetime=36h --memory=4000   --sample=${MYSAMPLE} #--debug --notimestamp
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=36h --memory=4000   --sample=${MYSAMPLE} #--debug --notimestamp
 
 export MYMODEL=MnvTunev4.3.1
 # python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/July2026/xsec/DPF26/newfitting_p8_multipion_100flux/${MYMODEL}/datareco/ \
@@ -47,10 +47,10 @@ export MYMODEL=MnvTunev4.3.1
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/July2026/xsec/removal_noqeband_100flux/${MYMODEL}/datareco/ \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract_nonpi_reco \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
- --tmpdir=$SCRATCH/tmp --expected-lifetime=36h --memory=6000   --sample=${MYSAMPLE} #--debug --notimestamp
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=36h --memory=6000   --sample=${MYSAMPLE} #--debug --notimestamp
 
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/July2026/xsec/removal_noqeband_100flux/${MYMODEL}/truth/ \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_xsec_xtract_nonpi_truth \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_truth --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
- --tmpdir=$SCRATCH/tmp --expected-lifetime=36h --memory=4000   --sample=${MYSAMPLE} #--debug --notimestamp
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=36h --memory=4000   --sample=${MYSAMPLE} #--debug --notimestamp
 
