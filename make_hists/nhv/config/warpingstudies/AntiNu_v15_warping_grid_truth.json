@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS_truth.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "DPF26_Extraction_truthonly_June2026Fit_fullsyst100Flux_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "Test_SystNoQE2p2hBand_Extraction_truthonly_June2026Fit_fullsyst2Flux_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals_June2026.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -45,6 +45,7 @@
   ],
   "AnalyzeVariables": [
     "EAvail",
+    "EAvailWithRemoval",
     // "EAvailoldbins",
     // "EAvailoldbinscutoff",
     // "NNeutCands",
@@ -60,7 +61,9 @@
   "Analyze2DVariables": [
     // "recoil_ptmu",
     "EAvail_ptmu",
-    "EAvail_pzmu"//,
+    "EAvail_pzmu",
+    "EAvailWithRemoval_ptmu",
+    "EAvailWithRemoval_pzmu" //,
     // "pzmu_ptmu"
     // "EAvailoldbins_ptmu",
     // "EAvailoldbinscutoff_ptmu"
@@ -102,6 +105,7 @@
     "GenieRvx1pi",
     "RPA",
     "2p2h",
+    "2p2h_noQE",
     "MuonMinerva",
     "geant4",
     "response",
