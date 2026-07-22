@@ -45,6 +45,7 @@
   ],
   "AnalyzeVariables": [
     "EAvail",
+    "EAvailWithRemoval",
     // "EAvailoldbins",
     // "EAvailhibin",
     // "NNeutCands",
@@ -60,7 +61,9 @@
   "Analyze2DVariables": [
     // "recoil_ptmu",
     "EAvail_ptmu",
-    "EAvail_pzmu"//,
+    "EAvail_pzmu",
+    "EAvailWithRemoval_ptmu",
+    "EAvailWithRemoval_pzmu" //,
     // "pzmu_ptmu"
     // "EAvailoldbins_ptmu",
     // "EAvailhibin_ptmu"

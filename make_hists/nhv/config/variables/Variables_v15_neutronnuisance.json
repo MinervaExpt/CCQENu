@@ -1270,6 +1270,24 @@
       "fluxnorm": false,
       "numiter": 10
     },
+    "EAvailWithRemoval": {
+      "reco": "EAvailGeV",
+      "true": "TrueEAvailWithRemovalGeV",
+      "name": "EAvail",
+      "title": "E_{Available} in GeV",
+      "bins": [
+        0.0,
+        0.015,
+        0.04,
+        0.075,
+        0.12,
+        0.18,
+        0.30,
+        0.50
+      ],
+      "fluxnorm": false,
+      "numiter": 10
+    },
     "EAvailhibin": {
       "reco": "EAvailGeV",
       "true": "TrueEAvailGeV",
