@@ -9,7 +9,7 @@ if [[ "$HOSTNAME" == *"$PLACE1"* ]]; then
 	
 elif [[ "$HOSTNAME" == *"$PLACE2"* ]]; then
 	cd /exp/minerva/app/users/$USER/minerva/CCQENu/make_hists/smg
-	source setup_scripts/mnv.sh
+	source setup_scripts/mnv_new.sh
 	
 elif [[ "$HOSTNAME" == *"$PLACE3"* ]]; then
 	cd $HOME/MinervaExpt/CCQENu/make_hists/smg

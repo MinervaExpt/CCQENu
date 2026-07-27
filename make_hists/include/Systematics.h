@@ -180,14 +180,14 @@ UniverseMap GetStandardSystematics(PlotUtils::ChainWrapper* chain, const NuConfi
 
   //GeantHadronUniverse constructor
   //GeantHadronUniverse<T>::GeantHadronUniverse( typename T::config_t chw, double nsigma, int pdg )
-  if(std::find(flags.begin(), flags.end(),"geant4")!=flags.end()){
+  /*if(std::find(flags.begin(), flags.end(),"geant4")!=flags.end()){
     UniverseMap geant4_systematics = PlotUtils::GetGeantHadronSystematicsMap<CVUniverse>(chain);
     error_bands.insert(geant4_systematics.begin(), geant4_systematics.end());
     std::cout << " do make geant4 systematics" << std::endl;
   }
   else{
     std::cout << "Warning:  geant4 systematics are turned off" << std::endl;
-  }
+  }*/
 
   // Response systematics (which also have recoil syst)
   // Stole this from Andrew's code

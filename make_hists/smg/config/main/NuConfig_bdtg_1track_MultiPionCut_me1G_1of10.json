@@ -1,0 +1,39 @@
+{
+  "version":13,  // Dec 2021 large scale tests
+  "mcIn":"${CCQEMAT}/smg/playlists_short/MediumEnergy_FHC_StandardMC_Playlist1G_1of10.txt",
+  "dataIn":"${CCQEMAT}/smg/playlists_short/MediumEnergy_FHC_Data_Playlist1G_1of10.txt",
+  "prescale":1,
+  "playlist":"minervame1G",
+  "MinervaModel":"MnvTunev2",
+  "recoName":"MasterAnaDev",
+  "pdg":14,
+  "useTuned":0,
+  "mcRecoToCSV":0,
+  "tmvaTrees":1,
+  "bdtgVars":1,
+  "TMVAmodels":{"1track_MultiPionCut":"${CCQEMAT}/TMVAUtils/MultiClass_1track_200_all_200_BDTG.weights.xml"},
+  "runsamples":["1track_MultiPionCut"],
+  "cutsFile":"${CCQEMAT}/smg/config/cuts/NuCuts_tmva.json",
+  "paramsFile":"${CCQEMAT}/smg/config/parameters/NuParams_v8.json",
+  "varsFile":"${CCQEMAT}/smg/config/variables/NuVariables_primaryproton.json",
+  "samplesFile":"${CCQEMAT}/smg/config/samples/NuSamples_bdtg.json",
+  "outRoot":"SB",
+  "AnalyzeVariables":["pzmu","ptmu","Q2QE","bdtgQELike","bdtg1ChargedPion",
+                      "bdtg1NeutralPion","bdtgMultiPion","bdtgOther"],
+  "Analyze2DVariables":["bdtgQELike_ptmu","bdtgQELike_pzmu","bdtgQELike_Q2QE"],
+  "tmvaBranches":[],
+  "data":{"1track_MultiPionCut":"data"},
+  "signal":{"1track_MultiPionCut":"qelike"},
+  "background":{"1track_MultiPionCut":["1chargedpion","1neutralpion","multipion","other"]},
+  "useProgressBar":false,
+  "_systematics":["Flux"],
+  "systematics":["Flux","GENIE","GenieRvx1pi","RPA","2p2h","MuonMinerva",
+                 "MuonMINOS","MuonResolution","MINOSEfficiency","Angle","geant4"],
+  "_systematics":[],
+  "fluxUniverses":100,
+  "NuEConstraint":1,
+  "DeuteriumGeniePiTune":1, // set to true?
+  "NonResPiReweight":1, // set to true?
+  "Geant4NeutronCV":1, // set true by default docdb 28556
+  "Geant4Elastics":1 // set to true by default
+}
