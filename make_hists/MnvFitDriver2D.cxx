@@ -170,6 +170,8 @@ int main(int argc, char* argv[]) {
     double logMinimum = config.GetDouble("LogMinimum");
     double logXMinimum = config.GetDouble("LogXMinimum");
     std::vector<std::string> sidebands = config.GetStringVector("Sidebands");
+    std::string binningsideband = sidebands[0];
+    if (config.IsMember("BinningSideband")) binningsideband = config.GetString("BinningSideband");
     std::vector<std::string> categories = config.GetStringVector("Categories");
     std::string pixdirectory = config.GetString("PixDir");
     bool needPOTscale = config.GetBool("NeedPOTScale");
@@ -266,6 +268,8 @@ int main(int argc, char* argv[]) {
 	char fname_slice[1000];
 	char cname_combined[1000];
 	char fname_combined[1000];
+	char cname_migration[1000];
+	char fname_migration[1000];
 	int nbinsy;
 	std::vector<double> sliceLow;
 	std::vector<double> sliceHigh;
@@ -283,8 +287,8 @@ int main(int argc, char* argv[]) {
 	std::map<const std::string, PlotUtils::MnvH1D*> dataHist_combined;
 	std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists_combined;
 	std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists_combined;
-	std::map<const std::string, PlotUtils::MnvH2D*> fitMigration;
-	std::map<const std::string, PlotUtils::MnvH2D*> unfitMigration;
+	//std::map<const std::string, PlotUtils::MnvH2D*> fitMigration;
+	//std::map<const std::string, PlotUtils::MnvH2D*> unfitMigration;
 	
 	TString name = varName;
     for (auto const side:sidebands){
@@ -396,6 +400,16 @@ int main(int argc, char* argv[]) {
 				unfitHists_slices[i][side].push_back(newhist_slice);
 				fitHists_slices[i][side].push_back((PlotUtils::MnvH1D*)newhist_slice->Clone(TString(fname_slice)));
 			}
+			
+			/*if (cat == signal) {
+				std::snprintf(cname_migration,1000,h_migrationtemplate.c_str(),binningsideband.c_str(),cat.c_str(),varName.c_str());
+            	std::snprintf(fname_migration,1000,f_migrationtemplate.c_str(),binningsideband.c_str(),cat.c_str(),varName.c_str());
+            	name = TString(cname_migration);
+            	PlotUtils::MnvH2D* newmigration = (PlotUtils::MnvH2D*)inputFile->Get(cname_migration);
+            	SyncBands(newmigration);
+            	//unfitMigration[side] = newmigration;
+            	//fitMigration[side] = (PlotUtils::MnvH2D*)newmigration->Clone(TString(fname_migration));
+			}*/
 		}
     }
     
@@ -472,7 +486,7 @@ int main(int argc, char* argv[]) {
     outputfile->cd();
 	int ret = fit::DoTheFitSlices(fitHists_slices, unfitHists_slices, dataHist_slices, 
 	                              fitHists_combined, unfitHists_combined, dataHist_combined, 
-	                              fitMigration, unfitMigration, 
+	                              //fitMigration, unfitMigration, 
 	                              includeInFit, categories, type, lowXbin, highXbin, binSliceMap);
     
     

@@ -513,6 +513,8 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 	               std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists_combined,
 	               std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists_combined,
                    const std::map<const std::string, PlotUtils::MnvH1D*> dataHist_combined,
+                   //std::map<const std::string, PlotUtils::MnvH2D*> fitMigration,
+                   //std::map<const std::string, PlotUtils::MnvH2D*> unfitMigration,
                    const std::map<const std::string, bool> includeInFit, 
                    const std::vector<std::string> categories, const fit_type type, 
                    const int lowBin, const int hiBin, const std::vector<int> binSliceMap,
@@ -534,7 +536,7 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 	
 	std::vector<std::string> universes;
 	
-	PlotUtils::MnvH1D scalefactors("ScaleFactors","scale factors",)
+	//PlotUtils::MnvH1D scalefactors("ScaleFactors","scale factors",)
 	
 	for (auto slice : dataHist){
 		// the fit code wants TH1D so make a copy of the data for that purpose
