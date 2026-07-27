@@ -534,6 +534,8 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 	
 	std::vector<std::string> universes;
 	
+	PlotUtils::MnvH1D scalefactors("ScaleFactors","scale factors",)
+	
 	for (auto slice : dataHist){
 		// the fit code wants TH1D so make a copy of the data for that purpose
 		std::map<const std::string, TH1D*> dataHistCV;
@@ -604,6 +606,7 @@ int DoTheFitSlices(std::map<const int, std::map<const std::string, std::vector<P
 		    // loop over universes within a band
 		    for (int iuniv = 0; iuniv < nuniv; iuniv++) {
 		        std::cout << " now do the fit for " << univ << " " << iuniv << std::endl;
+		        
 		        // make a local TH1F map unfitHistsCV that the fitter expects
 		        std::map<const std::string, std::vector<TH1D*>> unfitHistsCV;
 		        if (univ == "CV") {

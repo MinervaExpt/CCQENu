@@ -24,6 +24,7 @@ library(archdata)
 library(jcolors)
 library(ggpp)
 library(MASS)
+library(ggpubr)
 #library(tidymodels)
 ```
 
@@ -84,12 +85,96 @@ events <- events %>%
 
 events$Sideband <- factor(events$Sideband, levels = c("QELike","Michel","Blob","MicBlob","Other"))
 
-events %>% count(Sideband)
-events %>% count(Truth)
 
 events$Truth <- factor(events$Truth, levels = rev(c("qelike","1chargedpion","1neutralpion","multipion","other")))
 truth_colors = rev(c("#0085ad","#af272f","#4c8c2b","#eaaa00","#522506"))
+
+events %>% count(Sideband)
+events %>% count(Truth)
+
 ```
+## PrimaryProtonScore1
+
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+events <- events %>% 
+  filter(PrimaryProtonScore1 >= 0) %>% 
+  mutate(Particle_0 = case_when(PrimaryProtonCandidatePDG == 2212 ~ "Proton",
+                              (PrimaryProtonCandidatePDG %in% c(-211,211)) ~ "Pion +/-",
+                              PrimaryProtonCandidatePDG == 111 ~ "Pion 0",
+                              PrimaryProtonCandidatePDG == -1 ~ "None",
+                              !(PrimaryProtonCandidatePDG %in% c(321,-321,2212,1114,2214,2224,211,-211,111,-1,321,-321,1114,2214,2224)) ~ "Other"))
+
+events <- events %>% mutate(Particle = Particle_0)
+```
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+n1 <- events %>% filter(Particle != "None") %>% filter(Truth != "qelike") %>% nrow()
+n2 <- events %>% filter(BlobCount <= 1) %>% filter(ImprovedMichelCount == 0) %>% filter(Particle != "None") %>% filter(Truth != "qelike") %>% nrow()
+1-n2/n1
+n1 <- events %>% filter(Particle != "None") %>% filter(Truth == "qelike") %>% nrow()
+n2 <- events %>% filter(BlobCount <= 1) %>% filter(ImprovedMichelCount == 0) %>% filter(Particle != "None") %>% filter(Truth == "qelike") %>% nrow()
+n2/n1
+```
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events %>% filter(Particle != "None"), aes(x = PrimaryProtonScore1, color = Particle, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+p2 <- ggplot(events %>% filter(Particle != "None"), aes(x = PrimaryProtonScore1, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events %>% filter(Particle != "None"), aes(x = PrimaryProtonScore1, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scales = "free_y")
+
+p4 <- ggplot(events %>% filter(Particle != "None"), aes(x = PrimaryProtonScore1, color = Particle, fill=Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05), position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+```{r, message = F, warning = F, echo = F, fig.height=7, fig.width=12}
+p1 <- ggplot(events %>% filter(BlobCount <= 1) %>% filter(ImprovedMichelCount == 0) %>% filter(Particle != "None"), aes(x = PrimaryProtonScore1, color = Particle, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+p2 <- ggplot(events %>% filter(BlobCount <= 1) %>% filter(ImprovedMichelCount == 0) %>% filter(Particle != "None"), aes(x = PrimaryProtonScore1, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle))
+
+p3 <- ggplot(events %>% filter(BlobCount <= 1) %>% filter(ImprovedMichelCount == 0) %>% filter(Particle != "None"), aes(x = PrimaryProtonScore1, fill = Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw() +
+  facet_wrap(vars(Particle), scales = "free_y")
+
+p4 <- ggplot(events %>% filter(BlobCount <= 1) %>% filter(ImprovedMichelCount == 0) %>% filter(Particle != "None"), aes(x = PrimaryProtonScore1, color = Particle, fill=Particle)) +
+  geom_histogram(breaks = seq(0,1,0.05), position = 'fill', aes(y=..count../sum(..count..))) +
+  scale_y_continuous(expand = expansion(mult = c(0, .05))) +
+  scale_x_continuous(expand = c(0,0)) +
+  theme_bw()
+
+ggarrange(p1, p2, p3, p4, ncol=2, nrow=2, common.legend = TRUE, legend="right")
+rm(p1,p2,p3,p4)
+```
+
 
 ```{r}
 nrow(events %>% filter(Q2QE <= 4) %>% 

@@ -26,6 +26,7 @@
 
 //ROOT includes
 #include "MnvH1D.h"
+#include "MnvH2D.h"
 #include "PlotUtils/HistogramUtils.h"
 #include "TInterpreter.h"
 #include "TROOT.h"
@@ -61,6 +62,7 @@
 
 //PlotUtils includes??? Trying anything at this point...
 #include "PlotUtils/MnvH1D.h"
+#include "PlotUtils/MnvH2D.h"
 #include "PlotUtils/MnvPlotter.h"
 #include "utils/NuConfig.h"
 #include "utils/SyncBands.h"
@@ -170,10 +172,12 @@ int main(int argc, char* argv[]) {
     std::vector<std::string> sidebands = config.GetStringVector("Sidebands");
     std::vector<std::string> categories = config.GetStringVector("Categories");
     std::string pixdirectory = config.GetString("PixDir");
+    bool needPOTscale = config.GetBool("NeedPOTScale");
     
     // use this to exclude or include sidebands in the global fit
     std::vector<std::string> include = config.GetStringVector("IncludeInFit");
     std::vector<std::string> backgrounds = config.GetStringVector("Backgrounds");
+    std:string signal = config.GetString("Signal");
     std::map<const std::string, bool> includeInFit;
     for (auto s:sidebands){
         includeInFit[s] = false;
@@ -193,6 +197,13 @@ int main(int argc, char* argv[]) {
     std::string f_template = config.GetString("FitTemplate");
     std::string h_template2D = config.GetString("Template2D");
     std::string f_template2D = config.GetString("FitTemplate2D");
+    std::string h_migrationtemplate = config.GetString("ResponseTemplate");
+    std::string f_migrationtemplate = config.GetString("FitResponseTemplate");
+    bool scaleBkgd = false;
+    
+    if (config.IsMember("ScaleBackground")){
+    	scaleBkgd = config.GetBool("ScaleBackground");
+    }
     
     std::vector<int> binSliceMap;
     std::cout << std::endl << std::endl << "{ ";
@@ -206,7 +217,9 @@ int main(int argc, char* argv[]) {
     std::cout << "}" << std::endl << std::endl;
     
     pixdirectory = pixdirectory+"_"+binVarName;
+    std::string pixCdirectory = pixdirectory+"/C";
     std::filesystem::create_directory(pixdirectory.c_str());
+    std::filesystem::create_directory(pixCdirectory.c_str());
 
     int rebin=1;
     if (config.CheckMember("Rebin")){
@@ -224,7 +237,7 @@ int main(int argc, char* argv[]) {
     
     // std::vector<TString> tags = {""};
     TH1F* pot_summary = (TH1F*) inputFile->Get("POT_summary");
-    std:vector<double > potinfo(2);
+    std::vector<double> potinfo(2);
     potinfo[0]=pot_summary->GetBinContent(1);
     potinfo[1]=pot_summary->GetBinContent(3); // this includes any prescale
     pot_summary->Print("ALL");
@@ -233,9 +246,16 @@ int main(int argc, char* argv[]) {
     std::cout << " dataPOT "<< potinfo[0] << " mcPOT " << potinfo[1] << std::endl;
     
     //double POTscale = dataPOT->GetVal()/mcPOT->GetVal();
-    double POTscale = potinfo[0]/potinfo[1];
+    double POTscale = 1;
+    if (needPOTscale) {
+    	POTscale = potinfo[0]/potinfo[1];
+    	cout << "POT scale factor: " << POTscale << endl;
+    }
+    else {
+		cout << "Already POT scaled. Not scaling again." << endl;
+	}
   
-    cout << "POT scale factor: " << POTscale << endl;
+    
     
     // make and fill maps that contain pointers to the histograms you want to fit  uses CCQEMAT template
     
@@ -263,6 +283,9 @@ int main(int argc, char* argv[]) {
 	std::map<const std::string, PlotUtils::MnvH1D*> dataHist_combined;
 	std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists_combined;
 	std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> unfitHists_combined;
+	std::map<const std::string, PlotUtils::MnvH2D*> fitMigration;
+	std::map<const std::string, PlotUtils::MnvH2D*> unfitMigration;
+	
 	TString name = varName;
     for (auto const side:sidebands){
         std::string cat = "data";
@@ -288,7 +311,7 @@ int main(int argc, char* argv[]) {
         }*/
         for (int i=0; i<lowBin.size(); i++){
         	std::snprintf(cname_slice,1000,h_template_slice.c_str(),side.c_str(),cat.c_str(),varName.c_str(),binVarName.c_str(),i);
-        	PlotUtils::MnvH1D* newhist_data_slice = (PlotUtils::MnvH1D*)dataHist2D[side]->ProjectionX(cname_slice,lowBin[i],highBin[i]);
+        	PlotUtils::MnvH1D* newhist_data_slice = (PlotUtils::MnvH1D*)dataHist2D[side]->ProjectionX(cname_slice,lowBin[i],highBin[i],"e");
         	//newhist_data_slice->Rebin(rebin);
         	dataHist_slices[i][side] = newhist_data_slice;
         	if (!sliceboundariesfilled) {
@@ -302,7 +325,7 @@ int main(int argc, char* argv[]) {
         std::snprintf(cname_combined,1000,h_template_combined.c_str(),side.c_str(),cat.c_str(),binVarName.c_str());
         std::snprintf(fname,1000,f_template.c_str(),side.c_str(),cat.c_str(),binVarName.c_str());
         std::cout << " look for " << cname << std::endl;
-        dataHist_combined[side] = (PlotUtils::MnvH1D*)dataHist2D[side]->ProjectionY(cname_combined,lowVarBinCut,20);
+        dataHist_combined[side] = (PlotUtils::MnvH1D*)dataHist2D[side]->ProjectionY(cname_combined,lowVarBinCut,20,"e");
         
         //dataHist[side]->SetNormBinWidth(1.0);
         //dataHist[sidename] = (TH1D*)dataHist->GetCVHistoWithStatError().Clone();
@@ -333,7 +356,7 @@ int main(int argc, char* argv[]) {
 			//std::cout << " look for " << cname << std::endl;
 			//PlotUtils::MnvH1D* newhist_combined = (PlotUtils::MnvH1D*)inputFile->Get(cname);
 			std::cout << " projecting " << cname << " to get " << cname_combined << std::endl;
-			PlotUtils::MnvH1D* newhist_combined = (PlotUtils::MnvH1D*)newhist->ProjectionY(cname_combined,lowVarBinCut,20);
+			PlotUtils::MnvH1D* newhist_combined = (PlotUtils::MnvH1D*)newhist->ProjectionY(cname_combined,lowVarBinCut,20,"e");
 			SyncBands(newhist_combined);
 			if (!newhist_combined){
 				std::cout << " no " << cname_combined << std::endl;
@@ -365,8 +388,8 @@ int main(int argc, char* argv[]) {
 				std::snprintf(cname_slice,1000,h_template_slice.c_str(),side.c_str(),cat.c_str(),varName.c_str(),binVarName.c_str(),i);
 				std::snprintf(fname_slice,1000,f_template_slice.c_str(),side.c_str(),cat.c_str(),varName.c_str(),binVarName.c_str(),i);
 				name = TString(cname_combined);
-				PlotUtils::MnvH1D* newhist_slice = (PlotUtils::MnvH1D*)newhist->ProjectionX(cname_slice,lowBin[i],highBin[i]);
-				newhist_slice->Rebin(rebin);
+				PlotUtils::MnvH1D* newhist_slice = (PlotUtils::MnvH1D*)newhist->ProjectionX(cname_slice,lowBin[i],highBin[i],"e");
+				//newhist_slice->Rebin(rebin);
 				SyncBands(newhist_slice);
 				std::string cname_slice_num = std::string(cname_slice)+"_unfit_"+std::to_string(i);
 				newhist_slice->MnvH1DToCSV(cname_slice_num, "./csv/");
@@ -377,6 +400,62 @@ int main(int argc, char* argv[]) {
     }
     
     std::cout << "have extracted the inputs" << std::endl;
+    
+    // set up for plots
+    
+    PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
+    mnvPlotter.draw_normalized_to_bin_width = false;
+    TCanvas cF("fit","fit");
+    if (logPlot) gPad->SetLogy(1);
+    if (logX) gPad->SetLogx(1);
+    std::map<const std::string, MnvH1D*> tot_combined;
+    std::map<const std::string, MnvH1D*> pre_combined;
+    std::map<const std::string, MnvH1D*> bkg_combined;
+    std::map<const std::string, MnvH1D*> sig_combined;
+    std::map<const std::string, MnvH1D*> purity_unfit_combined;
+    std::map<const std::string, MnvH1D*> purity_fit_combined;
+    std::map<const std::string, MnvH1D*> bkgsub_combined;
+    
+    /*std::map<const std::string, MnvH1D*> tot_bin_combined;
+    std::map<const std::string, MnvH1D*> pre_bin_combined;
+    std::map<const std::string, MnvH1D*> bkg_bin_combined;
+    std::map<const std::string, MnvH1D*> sig_bin_combined;
+    std::map<const std::string, MnvH1D*> bkgsub_bin_combined;*/
+    
+    std::map<const std::string, std::map<const int, MnvH1D*>> tot_slices;
+    std::map<const std::string, std::map<const int, MnvH1D*>> pre_slices;
+    std::map<const std::string, std::map<const int, MnvH1D*>> bkg_slices;
+    std::map<const std::string, std::map<const int, MnvH1D*>> sig_slices;
+    std::map<const std::string, std::map<const int, MnvH1D*>> bkgsub_slices;
+    
+    for (auto side:sidebands){
+    	for (int i=0; i<lowBin.size(); i++){
+		    for (int j=0; j<categories.size(); j++){
+		        std::snprintf(cname,1000, h_template_slice.c_str(),side.c_str(),"all",varName.c_str(),binVarName.c_str(),i);
+		        if (j == 0){
+		            pre_slices[side][i] = (MnvH1D*)unfitHists_slices[i][side][j]->Clone(TString(cname));
+		        }
+		        else{
+		            pre_slices[side][i]->Add(unfitHists_slices[i][side][j]);
+		        }
+		    }
+		    pre_slices[side][i]->Print();
+		    pre_slices[side][i]->Write();
+		    pre_slices[side][i]->MnvH1DToCSV(pre_slices[side][i]->GetName(),"./csv/",1.,false);
+        }
+        for (int j=0; j<categories.size(); j++){
+	        std::snprintf(cname,1000, h_template_combined.c_str(),side.c_str(),"all",binVarName.c_str());
+	        if (j == 0){
+	            pre_combined[side] = (MnvH1D*)unfitHists_combined[side][j]->Clone(TString(cname));
+	        }
+	        else{
+	            pre_combined[side]->Add(unfitHists_combined[side][j]);
+	        }
+	    }
+	    pre_combined[side]->Print();
+	    pre_combined[side]->Write();
+	    pre_combined[side]->MnvH1DToCSV(pre_combined[side]->GetName(),"./csv/",1.,false);
+    }
     
     // now have made a common map for all histograms
     int lowXbin = 1;
@@ -393,32 +472,10 @@ int main(int argc, char* argv[]) {
     outputfile->cd();
 	int ret = fit::DoTheFitSlices(fitHists_slices, unfitHists_slices, dataHist_slices, 
 	                              fitHists_combined, unfitHists_combined, dataHist_combined, 
+	                              fitMigration, unfitMigration, 
 	                              includeInFit, categories, type, lowXbin, highXbin, binSliceMap);
     
-    // set up for plots
     
-    PlotUtils::MnvPlotter mnvPlotter(PlotUtils::kCCQEAntiNuStyle);
-    mnvPlotter.draw_normalized_to_bin_width = false;
-    TCanvas cF("fit","fit");
-    if (logPlot) gPad->SetLogy(1);
-    if (logX) gPad->SetLogx(1);
-    std::map<const std::string, MnvH1D*> tot_combined;
-    std::map<const std::string, MnvH1D*> pre_combined;
-    std::map<const std::string, MnvH1D*> bkg_combined;
-    std::map<const std::string, MnvH1D*> sig_combined;
-    std::map<const std::string, MnvH1D*> bkgsub_combined;
-    
-    /*std::map<const std::string, MnvH1D*> tot_bin_combined;
-    std::map<const std::string, MnvH1D*> pre_bin_combined;
-    std::map<const std::string, MnvH1D*> bkg_bin_combined;
-    std::map<const std::string, MnvH1D*> sig_bin_combined;
-    std::map<const std::string, MnvH1D*> bkgsub_bin_combined;*/
-    
-    std::map<const std::string, std::map<const int, MnvH1D*>> tot_slices;
-    std::map<const std::string, std::map<const int, MnvH1D*>> pre_slices;
-    std::map<const std::string, std::map<const int, MnvH1D*>> bkg_slices;
-    std::map<const std::string, std::map<const int, MnvH1D*>> sig_slices;
-    std::map<const std::string, std::map<const int, MnvH1D*>> bkgsub_slices;
     
     for (auto side:sidebands){
     	
@@ -460,34 +517,7 @@ int main(int argc, char* argv[]) {
     std::cout << "wrote the results " << std::endl;
     
     
-    for (auto side:sidebands){
-    	for (int i=0; i<lowBin.size(); i++){
-		    for (int j=0; j<categories.size(); j++){
-		        std::snprintf(cname,1000, h_template_slice.c_str(),side.c_str(),"all",varName.c_str(),binVarName.c_str(),i);
-		        if (j == 0){
-		            pre_slices[side][i] = (MnvH1D*)unfitHists_slices[i][side][j]->Clone(TString(cname));
-		        }
-		        else{
-		            pre_slices[side][i]->Add(unfitHists_slices[i][side][j]);
-		        }
-		    }
-		    pre_slices[side][i]->Print();
-		    pre_slices[side][i]->Write();
-		    pre_slices[side][i]->MnvH1DToCSV(pre_slices[side][i]->GetName(),"./csv/",1.,false);
-        }
-        for (int j=0; j<categories.size(); j++){
-	        std::snprintf(cname,1000, h_template_combined.c_str(),side.c_str(),"all",binVarName.c_str());
-	        if (j == 0){
-	            pre_combined[side] = (MnvH1D*)unfitHists_combined[side][j]->Clone(TString(cname));
-	        }
-	        else{
-	            pre_combined[side]->Add(unfitHists_combined[side][j]);
-	        }
-	    }
-	    pre_combined[side]->Print();
-	    pre_combined[side]->Write();
-	    pre_combined[side]->MnvH1DToCSV(pre_combined[side]->GetName(),"./csv/",1.,false);
-    }
+    
     // this loops over, finds the categories that are in the backgrounds and sums those to get a background
     // uses this whole counter thing to avoid having to figure out how to do string searches in a list in C++
     
@@ -495,13 +525,20 @@ int main(int argc, char* argv[]) {
     	for (int i=0; i<lowBin.size(); i++){
 		    int count = 0;
 		    for (int j=0; j<categories.size(); j++){
+		    	if (categories[j] == signal){
+		    		std::snprintf(fname_slice,1000,f_template_slice.c_str(),side.c_str(),"sig",varName.c_str(),binVarName.c_str(),i);
+		    		sig_slices[side][i] = (MnvH1D*)fitHists_slices[i][side][j]->Clone(TString(fname_slice));
+		    		sig_slices[side][i]->Print();
+		            sig_slices[side][i]->Write();
+		            sig_slices[side][i]->MnvH1DToCSV(sig_slices[side][i]->GetName(),"./csv/",1.,false);
+		        }
 		        for (int k=0; k<backgrounds.size(); k++){
 		            //std::cout << "match " << categories[i] << " " << backgrounds[j] << " " << count << std::endl;
 		            if (categories[j] == backgrounds[k]){
-		                 std::snprintf(fname_slice,1000,f_template_slice.c_str(),side.c_str(), "bkg",varName.c_str(),binVarName.c_str(),i);
+		                 std::snprintf(fname_slice,1000,f_template_slice.c_str(),side.c_str(),"bkg",varName.c_str(),binVarName.c_str(),i);
 		                if (count == 0){
 		                    bkg_slices[side][i] = (MnvH1D*)fitHists_slices[i][side][j]->Clone(TString(fname_slice));
-		                    count +=1;
+		                    count += 1;
 		                }
 		                else{
 		                    bkg_slices[side][i]->Add(fitHists_slices[i][side][j]);
@@ -517,13 +554,20 @@ int main(int argc, char* argv[]) {
         }
         int count = 0;
         for (int j=0; j<categories.size(); j++){
+        	if (categories[j] == signal){
+        		std::snprintf(fname_combined,1000,f_template_combined.c_str(),side.c_str(),"sig",binVarName.c_str());
+        		sig_combined[side] = (MnvH1D*)fitHists_combined[side][j]->Clone(TString(fname_combined));
+        		sig_combined[side]->Print();
+	            sig_combined[side]->Write();
+	            sig_combined[side]->MnvH1DToCSV(sig_combined[side]->GetName(),"./csv/",1.,false);            
+        	}
 	        for (int k=0; k<backgrounds.size(); k++){
 	            //std::cout << "match " << categories[i] << " " << backgrounds[j] << " " << count << std::endl;
 	            if (categories[j] == backgrounds[k]){
-	                 std::snprintf(fname_combined,1000,f_template_combined.c_str(),side.c_str(),"bkg",binVarName.c_str());
-	                if (count == 0){
-	                    bkg_combined[side] = (MnvH1D*)fitHists_combined[side][j]->Clone(TString(fname_combined));
-	                    count +=1;
+					std::snprintf(fname_combined,1000,f_template_combined.c_str(),side.c_str(),"bkg",binVarName.c_str());
+					if (count == 0){
+						bkg_combined[side] = (MnvH1D*)fitHists_combined[side][j]->Clone(TString(fname_combined));
+						count +=1;
 	                }
 	                else{
 	                    bkg_combined[side]->Add(fitHists_combined[side][j]);
@@ -536,24 +580,69 @@ int main(int argc, char* argv[]) {
 	            bkg_combined[side]->MnvH1DToCSV(bkg_combined[side]->GetName(),"./csv/",1.,false);
 	        }
 	    }
+	    for (int j=0; j<categories.size(); j++){
+        	if (categories[j] == signal){
+        		std::snprintf(fname_combined,1000,f_template_combined.c_str(),side.c_str(),"unfit_purity",binVarName.c_str());
+        		purity_unfit_combined[side] = (MnvH1D*)unfitHists_combined[side][j]->Clone(TString(fname_combined));
+	            purity_unfit_combined[side]->Divide(purity_unfit_combined[side],pre_combined[side]);
+	            purity_unfit_combined[side]->Print();
+	            purity_unfit_combined[side]->Write();
+	            purity_unfit_combined[side]->MnvH1DToCSV(purity_unfit_combined[side]->GetName(),"./csv/",1.,false);
+			}
+		}
+	    for (int j=0; j<categories.size(); j++){
+        	if (categories[j] == signal){
+        		std::snprintf(fname_combined,1000,f_template_combined.c_str(),side.c_str(),"fit_purity",binVarName.c_str());
+        		purity_fit_combined[side] = (MnvH1D*)fitHists_combined[side][j]->Clone(TString(fname_combined));
+	            purity_fit_combined[side]->Divide(purity_fit_combined[side],tot_combined[side]);
+	            purity_fit_combined[side]->Print();
+	            purity_fit_combined[side]->Write();
+	            purity_fit_combined[side]->MnvH1DToCSV(purity_fit_combined[side]->GetName(),"./csv/",1.,false);
+			}
+		}
     }
-    for (auto side:sidebands){
-    	for (int i=0; i<lowBin.size(); i++){
-		    std::snprintf(fname_slice,1000,f_template_slice.c_str(),side.c_str(),"bkgsub",varName.c_str(),binVarName.c_str(),i);
-		    bkgsub_slices[side][i]=(MnvH1D*)dataHist_slices[i][side]->Clone(fname_slice);
-		    bkgsub_slices[side][i]->AddMissingErrorBandsAndFillWithCV(*(fitHists_slices[i][side][0]));
-		    bkgsub_slices[side][i]->Add(bkg_slices[side][i],-1);
-		    bkgsub_slices[side][i]->Write();
-		    dataHist_slices[i][side]->MnvH1DToCSV(dataHist_slices[i][side]->GetName(),"./csv/",1.,false);
-		    bkgsub_slices[side][i]->MnvH1DToCSV(bkgsub_slices[side][i]->GetName(),"./csv/",1.,false);
-        }
-        std::snprintf(fname_combined,1000,f_template_combined.c_str(),side.c_str(),"bkgsub",binVarName.c_str());
-	    bkgsub_combined[side]=(MnvH1D*)dataHist_combined[side]->Clone(fname_combined);
-	    bkgsub_combined[side]->AddMissingErrorBandsAndFillWithCV(*(fitHists_combined[side][0]));
-	    bkgsub_combined[side]->Add(bkg_combined[side],-1);
-	    bkgsub_combined[side]->Write();
-	    dataHist_combined[side]->MnvH1DToCSV(dataHist_combined[side]->GetName(),"./csv/",1.,false);
-	    bkgsub_combined[side]->MnvH1DToCSV(bkgsub_combined[side]->GetName(),"./csv/",1.,false);
+    // Do background subtraction/scaling
+    if (scaleBkgd) {
+		for (auto side:sidebands){
+			for (int i=0; i<lowBin.size(); i++){
+				std::snprintf(fname_slice,1000,f_template_slice.c_str(),side.c_str(),"bkgsub",varName.c_str(),binVarName.c_str(),i);
+				bkgsub_slices[side][i]=(MnvH1D*)dataHist_slices[i][side]->Clone(fname_slice);
+				bkgsub_slices[side][i]->AddMissingErrorBandsAndFillWithCV(*(fitHists_slices[i][side][0]));
+				bkgsub_slices[side][i]->Multiply(bkgsub_slices[side][i],sig_slices[side][i]);
+				bkgsub_slices[side][i]->Divide(bkgsub_slices[side][i],tot_slices[side][i]);
+				bkgsub_slices[side][i]->Write();
+				dataHist_slices[i][side]->MnvH1DToCSV(dataHist_slices[i][side]->GetName(),"./csv/",1.,false);
+				bkgsub_slices[side][i]->MnvH1DToCSV(bkgsub_slices[side][i]->GetName(),"./csv/",1.,false);
+			}
+			std::snprintf(fname_combined,1000,f_template_combined.c_str(),side.c_str(),"bkgsub",binVarName.c_str());
+			bkgsub_combined[side]=(MnvH1D*)dataHist_combined[side]->Clone(fname_combined);
+			bkgsub_combined[side]->AddMissingErrorBandsAndFillWithCV(*(fitHists_combined[side][0]));
+			bkgsub_combined[side]->Multiply(bkgsub_combined[side],sig_combined[side]);
+			bkgsub_combined[side]->Divide(bkgsub_combined[side],tot_combined[side]);
+			bkgsub_combined[side]->Write();
+			dataHist_combined[side]->MnvH1DToCSV(dataHist_combined[side]->GetName(),"./csv/",1.,false);
+			bkgsub_combined[side]->MnvH1DToCSV(bkgsub_combined[side]->GetName(),"./csv/",1.,false);
+		}
+    }
+    else {
+		for (auto side:sidebands){
+			for (int i=0; i<lowBin.size(); i++){
+				std::snprintf(fname_slice,1000,f_template_slice.c_str(),side.c_str(),"bkgsub",varName.c_str(),binVarName.c_str(),i);
+				bkgsub_slices[side][i]=(MnvH1D*)dataHist_slices[i][side]->Clone(fname_slice);
+				bkgsub_slices[side][i]->AddMissingErrorBandsAndFillWithCV(*(fitHists_slices[i][side][0]));
+				bkgsub_slices[side][i]->Add(bkg_slices[side][i],-1);
+				bkgsub_slices[side][i]->Write();
+				dataHist_slices[i][side]->MnvH1DToCSV(dataHist_slices[i][side]->GetName(),"./csv/",1.,false);
+				bkgsub_slices[side][i]->MnvH1DToCSV(bkgsub_slices[side][i]->GetName(),"./csv/",1.,false);
+		    }
+		    std::snprintf(fname_combined,1000,f_template_combined.c_str(),side.c_str(),"bkgsub",binVarName.c_str());
+			bkgsub_combined[side]=(MnvH1D*)dataHist_combined[side]->Clone(fname_combined);
+			bkgsub_combined[side]->AddMissingErrorBandsAndFillWithCV(*(fitHists_combined[side][0]));
+			bkgsub_combined[side]->Add(bkg_combined[side],-1);
+			bkgsub_combined[side]->Write();
+			dataHist_combined[side]->MnvH1DToCSV(dataHist_combined[side]->GetName(),"./csv/",1.,false);
+			bkgsub_combined[side]->MnvH1DToCSV(bkgsub_combined[side]->GetName(),"./csv/",1.,false);
+		}
     }
     std::cout << "wrote the inputs and outputs " << std::endl;
     
@@ -565,6 +654,7 @@ int main(int argc, char* argv[]) {
 		    tot_slices[side][i]->Scale(1.,"width");
 		    pre_slices[side][i]->Scale(1.,"width");
 		    bkg_slices[side][i]->Scale(1.,"width");
+		    sig_slices[side][i]->Scale(1.,"width");
 		    bkgsub_slices[side][i]->Scale(1.,"width");
 		    for (int j=0; j<categories.size(); j++){
 		        unfitHists_slices[i][side][j]->Scale(1.,"width");
@@ -577,6 +667,7 @@ int main(int argc, char* argv[]) {
 	    tot_combined[side]->Scale(1.,"width");
 	    pre_combined[side]->Scale(1.,"width");
 	    bkg_combined[side]->Scale(1.,"width");
+	    sig_combined[side]->Scale(1.,"width");
 	    bkgsub_combined[side]->Scale(1.,"width");
 	    for (int j=0; j<categories.size(); j++){
 	        unfitHists_combined[side][j]->Scale(1.,"width");
@@ -614,6 +705,7 @@ int main(int argc, char* argv[]) {
 			}
 		    dataHist_slices[i][side]->SetTitle(dataHist_slices[i][side]->GetName());
 		    TString pixheader = TString(pixdirectory+ "/" + side + "_" + varName+"_");
+		    TString pixCheader = TString(pixCdirectory+ "/" + side + "_" + varName+"_");
 		    
 		    std::string ytitle;
 			if (varUnit == "") ytitle = "Counts per bin";
@@ -637,6 +729,7 @@ int main(int argc, char* argv[]) {
 			t1.Draw("same");
 			ty.Draw("same");
 		    cF.Print(TString(pixheader + "_postfit_compare_"+binVarName+"_slice"+i+".png").Data());
+		    cF.Print(TString(pixCheader + "_postfit_compare_"+binVarName+"_slice"+i+".C").Data());
 
 		    mnvPlotter.DrawDataMCWithErrorBand(dataHist_slices[i][side], pre_slices[side][i], 1., "TR", false , NULL, NULL, false, true);
 			char label2[1000];
@@ -649,6 +742,7 @@ int main(int argc, char* argv[]) {
 			t2.Draw("same");
 			ty.Draw("same");
 		    cF.Print(TString(pixheader + "_prefit_compare_"+binVarName+"_slice"+i+".png").Data());
+		    cF.Print(TString(pixCheader + "_prefit_compare_"+binVarName+"_slice"+i+".C").Data());
 		    
 		    mnvPlotter.DrawDataMCRatio(dataHist_slices[i][side], tot_slices[side][i], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
 			char label3[1000];
@@ -660,6 +754,7 @@ int main(int argc, char* argv[]) {
 			t3.SetTextSize(.03);
 			t3.Draw("same");
 		    cF.Print(TString(pixheader + "_postfit_compare_ratio_"+binVarName+"_slice"+i+".png").Data());
+		    cF.Print(TString(pixCheader + "_postfit_compare_ratio_"+binVarName+"_slice"+i+".C").Data());
 
 		    mnvPlotter.DrawDataMCRatio(dataHist_slices[i][side], pre_slices[side][i], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
 			char label4[1000];
@@ -671,6 +766,7 @@ int main(int argc, char* argv[]) {
 			t4.SetTextSize(.03);
 			t4.Draw("same");
 		    cF.Print(TString(pixheader + "_prefit_compare_ratio_"+binVarName+"_slice"+i+".png").Data());
+		    cF.Print(TString(pixCheader + "_prefit_compare_ratio_"+binVarName+"_slice"+i+".C").Data());
 
 		    mnvPlotter.DrawErrorSummary(pre_slices[side][i]);
 			char label5[1000];
@@ -682,6 +778,7 @@ int main(int argc, char* argv[]) {
 			t5.SetTextSize(.03);
 			t5.Draw("same");
 		    cF.Print(TString(pixheader + "_prefit_errors_"+binVarName+"_slice"+i+".png").Data());
+		    cF.Print(TString(pixCheader + "_prefit_errors_"+binVarName+"_slice"+i+".C").Data());
 
 		    mnvPlotter.DrawErrorSummary(tot_slices[side][i]);
 			char label6[1000];
@@ -693,6 +790,7 @@ int main(int argc, char* argv[]) {
 			t6.SetTextSize(.03);
 			t6.Draw("same");
 		    cF.Print(TString(pixheader + "_postfit_errors_"+binVarName+"_slice"+i+".png").Data());
+		    cF.Print(TString(pixCheader + "_postfit_errors_"+binVarName+"_slice"+i+".C").Data());
 
         }
         int nbinsX = dataHist_combined[side]->GetXaxis()->GetNbins();
@@ -720,6 +818,7 @@ int main(int argc, char* argv[]) {
 		// Combined Slices
 	    dataHist_combined[side]->SetTitle(dataHist_combined[side]->GetName());
 	    TString pixheader_combined = TString(pixdirectory + "/" + side + "_" + binVarName+"_");
+		TString pixCheader_combined = TString(pixCdirectory+ "/" + side + "_" + binVarName+"_");
 	    
 	    std::string ytitle;
 		if (binVarUnit == "") ytitle = "Counts per bin";
@@ -741,6 +840,7 @@ int main(int argc, char* argv[]) {
 		t1.Draw("same");
 		ty.Draw("same");
 	    cF.Print(TString(pixheader_combined + "_postfit_compare_combined.png").Data());
+	    cF.Print(TString(pixCheader_combined + "_postfit_compare_combined.C").Data());
 
 	    mnvPlotter.DrawDataMCWithErrorBand(dataHist_combined[side], pre_combined[side], 1., "TR", false , NULL, NULL, false, true);
 		char label2[1000];
@@ -753,6 +853,7 @@ int main(int argc, char* argv[]) {
 		t2.Draw("same");
 		ty.Draw("same");
 	    cF.Print(TString(pixheader_combined + "_prefit_compare_combined.png").Data());
+	    cF.Print(TString(pixCheader_combined + "_prefit_compare_combined.C").Data());
 	    
 	    mnvPlotter.DrawDataMCRatio(dataHist_combined[side], tot_combined[side], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
 		char label3[1000];
@@ -764,6 +865,7 @@ int main(int argc, char* argv[]) {
 		t3.SetTextSize(.03);
 		t3.Draw("same");
 	    cF.Print(TString(pixheader_combined + "_postfit_compare_ratio_combined.png").Data());
+	    cF.Print(TString(pixCheader_combined + "_postfit_compare_ratio_combined.C").Data());
 
 	    mnvPlotter.DrawDataMCRatio(dataHist_combined[side], pre_combined[side], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
 		char label4[1000];
@@ -775,6 +877,7 @@ int main(int argc, char* argv[]) {
 		t4.SetTextSize(.03);
 		t4.Draw("same");
 	    cF.Print(TString(pixheader_combined + "_prefit_compare_ratio_combined.png").Data());
+	    cF.Print(TString(pixCheader_combined + "_prefit_compare_ratio_combined.C").Data());
 
 	    mnvPlotter.DrawErrorSummary(pre_combined[side]);
 		char label5[1000];
@@ -786,6 +889,7 @@ int main(int argc, char* argv[]) {
 		t5.SetTextSize(.03);
 		t5.Draw("same");
 	    cF.Print(TString(pixheader_combined + "_prefit_errors_combined.png").Data());
+	    cF.Print(TString(pixCheader_combined + "_prefit_errors_combined.C").Data());
 
 	    mnvPlotter.DrawErrorSummary(tot_combined[side]);
 		char label6[1000];
@@ -797,6 +901,7 @@ int main(int argc, char* argv[]) {
 		t6.SetTextSize(.03);
 		t6.Draw("same");
 	    cF.Print(TString(pixheader_combined + "_postfit_errors_combined.png").Data());
+	    cF.Print(TString(pixCheader_combined + "_postfit_errors_combined.C").Data());
 
 	    //mnvPlotter.DrawDataMCWithErrorBand(bkgsub_slices[side][i], fitHists_slices[i][side][0], 1., "TR");
 	    //cF.Print(TString(side+"_bkgsub_compare_slice"+i+".png").Data());
@@ -807,6 +912,7 @@ int main(int argc, char* argv[]) {
     
     for (auto side:sidebands){
         TString pixheader = TString(pixdirectory + "/" + side + "_" + varName + "_");
+        TString pixCheader = TString(pixCdirectory + "/" + side + "_" + varName + "_");
         for (int i=0; i<lowBin.size(); i++){
 		    int nbinsX = dataHist_slices[i][side]->GetXaxis()->GetNbins();
 			double xMin = dataHist_slices[i][side]->GetXaxis()->GetBinLowEdge(1);
@@ -869,6 +975,7 @@ int main(int argc, char* argv[]) {
 		    t.Draw("same");
 		    ty.Draw("same");
 		    cF.Print(TString(pixheader + "_prefit_combined_"+binVarName+"_slice"+i+".png").Data());
+		    cF.Print(TString(pixCheader + "_prefit_combined_"+binVarName+"_slice"+i+".C").Data());
 		    
 			char label2[1000];
 			std::snprintf(label2,1000,"%s %s after fit, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
@@ -881,19 +988,36 @@ int main(int argc, char* argv[]) {
 		    t2.Draw("same");
 		    ty.Draw("same");
 		    cF.Print(TString(pixheader + "_" + fitType + "_postfit_combined_"+binVarName+"_slice"+i+".png").Data());
+		    cF.Print(TString(pixCheader + "_" + fitType + "_postfit_combined_"+binVarName+"_slice"+i+".C").Data());
 		    
 			char label3[1000];
-			std::snprintf(label3,1000,"%s %s Background Subtracted, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
-		    TText t3(.5,.95,label3);
-		    t3.SetTitle(label3);
-		    t3.SetTextAlign(22);
-		    t3.SetNDC(1);
-		    t3.SetTextSize(.03);
-		    bkgsub_slices[side][i]->SetTitle("bkgsub");
-		    mnvPlotter.DrawDataMCWithErrorBand(bkgsub_slices[side][i],(MnvH1D*)fitHists_slices[i][side][0], 1.0, "TR");
-		    t3.Draw("same");
-		    ty.Draw("same");
-		    cF.Print(TString(pixheader + "_" + fitType + "_bkgsub_combined_"+binVarName+"_slice"+i+".png").Data());
+			if (scaleBkgd) {
+				std::snprintf(label3,1000,"%s %s Background Scaled, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
+				TText t3(.5,.95,label3);
+				t3.SetTitle(label3);
+				t3.SetTextAlign(22);
+				t3.SetNDC(1);
+				t3.SetTextSize(.03);
+				bkgsub_slices[side][i]->SetTitle("bkgscaled");
+				mnvPlotter.DrawDataMCWithErrorBand(bkgsub_slices[side][i],(MnvH1D*)fitHists_slices[i][side][0], 1.0, "TR");
+				t3.Draw("same");
+				ty.Draw("same");
+				cF.Print(TString(pixheader + "_" + fitType + "_bkgscaled_combined_"+binVarName+"_slice"+i+".png").Data());
+				cF.Print(TString(pixCheader + "_" + fitType + "_bkgscaled_combined_"+binVarName+"_slice"+i+".C").Data());
+			} else {
+				std::snprintf(label3,1000,"%s %s Background Subtracted, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
+				TText t3(.5,.95,label3);
+				t3.SetTitle(label3);
+				t3.SetTextAlign(22);
+				t3.SetNDC(1);
+				t3.SetTextSize(.03);
+				bkgsub_slices[side][i]->SetTitle("bkgsub");
+				mnvPlotter.DrawDataMCWithErrorBand(bkgsub_slices[side][i],(MnvH1D*)fitHists_slices[i][side][0], 1.0, "TR");
+				t3.Draw("same");
+				ty.Draw("same");
+				cF.Print(TString(pixheader + "_" + fitType + "_bkgsub_combined_"+binVarName+"_slice"+i+".png").Data());
+				cF.Print(TString(pixCheader + "_" + fitType + "_bkgsub_combined_"+binVarName+"_slice"+i+".C").Data());
+			}
 		    
 		   /* mnvPlotter.DrawDataMCRatio(dataHist_slices[i][side], tot_slices[side][i], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
 		    label = side+" ratio after fit, slice "+i;
@@ -906,20 +1030,38 @@ int main(int argc, char* argv[]) {
 		    cF.Print(TString(pixheader + "_bkgsub_compare_ratio_slice"+i+".png").Data());*/
 		    
 			char label5[1000];
-			std::snprintf(label5,1000,"%s %s errors after Background Subtracted, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
-		    TText t5(.5,.95,label5);
-		    t5.SetTitle(label5);
-		    t5.SetTextAlign(22);
-		    t5.SetNDC(1);
-		    t5.SetTextSize(.03);
-		    //mnvPlotter.axis_maximum = 0.2;
-			mnvPlotter.DrawErrorSummary(bkgsub_slices[side][i]);
-		    //mnvPlotter.axis_maximum = MnvHist::AutoAxisLimit;
-		    std::string label6;
-			t5.Draw("same");
-		    cF.Print(TString(pixheader + "_bkgsub_errors_"+binVarName+"_slice"+i+".png").Data());
+			if (scaleBkgd) {
+				std::snprintf(label5,1000,"%s %s errors after Background Scaled, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
+				TText t5(.5,.95,label5);
+				t5.SetTitle(label5);
+				t5.SetTextAlign(22);
+				t5.SetNDC(1);
+				t5.SetTextSize(.03);
+				mnvPlotter.axis_maximum = 0.2;
+				mnvPlotter.DrawErrorSummary(bkgsub_slices[side][i]);
+				mnvPlotter.axis_maximum = MnvHist::AutoAxisLimit;
+				std::string label6;
+				t5.Draw("same");
+				cF.Print(TString(pixheader + "_bkgscaled_errors_"+binVarName+"_slice"+i+".png").Data());
+				cF.Print(TString(pixCheader + "_bkgscaled_errors_"+binVarName+"_slice"+i+".C").Data());
+			} else {
+				std::snprintf(label5,1000,"%s %s errors after Background Subtracted, %g < %s <= %g",side.c_str(),varName.c_str(),sliceLow[i],binVarName.c_str(),sliceHigh[i]);
+				TText t5(.5,.95,label5);
+				t5.SetTitle(label5);
+				t5.SetTextAlign(22);
+				t5.SetNDC(1);
+				t5.SetTextSize(.03);
+				mnvPlotter.axis_maximum = 0.2;
+				mnvPlotter.DrawErrorSummary(bkgsub_slices[side][i]);
+				mnvPlotter.axis_maximum = MnvHist::AutoAxisLimit;
+				std::string label6;
+				t5.Draw("same");
+				cF.Print(TString(pixheader + "_bkgsub_errors_"+binVarName+"_slice"+i+".png").Data());
+				cF.Print(TString(pixCheader + "_bkgsub_errors_"+binVarName+"_slice"+i+".C").Data());
+			}
         }
         TString pixheader_combined = TString(pixdirectory + "/" + side + "_" + binVarName + "_");
+        TString pixCheader_combined = TString(pixCdirectory + "/" + side + "_" + binVarName + "_");
         int nbinsX = dataHist_combined[side]->GetXaxis()->GetNbins();
 		double xMin = dataHist_combined[side]->GetXaxis()->GetBinLowEdge(1);
 		double xMax = dataHist_combined[side]->GetXaxis()->GetBinUpEdge(nbinsX);
@@ -981,6 +1123,7 @@ int main(int argc, char* argv[]) {
 	    t.Draw("same");
 	    ty.Draw("same");
 	    cF.Print(TString(pixheader_combined + "_prefit_combined_combined.png").Data());
+	    cF.Print(TString(pixCheader_combined + "_prefit_combined_combined.C").Data());
 	    
 		char label2[1000];
 		std::snprintf(label2,1000,"%s %s after fit",side.c_str(),binVarName.c_str());
@@ -993,19 +1136,36 @@ int main(int argc, char* argv[]) {
 	    t2.Draw("same");
 	    ty.Draw("same");
 	    cF.Print(TString(pixheader_combined + "_" + fitType + "_postfit_combined_combined.png").Data());
+	    cF.Print(TString(pixCheader_combined + "_" + fitType + "_postfit_combined_combined.C").Data());
 	    
-		char label3[1000];
-		std::snprintf(label3,1000,"%s %s Background Subtracted",side.c_str(),binVarName.c_str());
-	    TText t3(.5,.95,label3);
-	    t3.SetTitle(label3);
-	    t3.SetTextAlign(22);
-	    t3.SetNDC(1);
-	    t3.SetTextSize(.03);
-	    bkgsub_combined[side]->SetTitle("bkgsub");
-	    mnvPlotter.DrawDataMCWithErrorBand(bkgsub_combined[side],(MnvH1D*)fitHists_combined[side][0], 1.0, "TR");
-	    t3.Draw("same");
-	    ty.Draw("same");
-	    cF.Print(TString(pixheader_combined + "_" + fitType + "_bkgsub_combined_combined.png").Data());
+	    char label3[1000];
+	    if (scaleBkgd) {
+			std::snprintf(label3,1000,"%s %s Background Scaled",side.c_str(),binVarName.c_str());
+			TText t3(.5,.95,label3);
+			t3.SetTitle(label3);
+			t3.SetTextAlign(22);
+			t3.SetNDC(1);
+			t3.SetTextSize(.03);
+			bkgsub_combined[side]->SetTitle("bkgscaled");
+			mnvPlotter.DrawDataMCWithErrorBand(bkgsub_combined[side],(MnvH1D*)fitHists_combined[side][0], 1.0, "TR");
+			t3.Draw("same");
+			ty.Draw("same");
+			cF.Print(TString(pixheader_combined + "_" + fitType + "_bkgscaled_combined_combined.png").Data());
+			cF.Print(TString(pixCheader_combined + "_" + fitType + "_bkgscaled_combined_combined.C").Data());
+	    } else {
+	    	std::snprintf(label3,1000,"%s %s Background Subtracted",side.c_str(),binVarName.c_str());
+			TText t3(.5,.95,label3);
+			t3.SetTitle(label3);
+			t3.SetTextAlign(22);
+			t3.SetNDC(1);
+			t3.SetTextSize(.03);
+			bkgsub_combined[side]->SetTitle("bkgsub");
+			mnvPlotter.DrawDataMCWithErrorBand(bkgsub_combined[side],(MnvH1D*)fitHists_combined[side][0], 1.0, "TR");
+			t3.Draw("same");
+			ty.Draw("same");
+			cF.Print(TString(pixheader_combined + "_" + fitType + "_bkgsub_combined_combined.png").Data());
+			cF.Print(TString(pixCheader_combined + "_" + fitType + "_bkgsub_combined_combined.C").Data());
+	    }
 	    
 	   /* mnvPlotter.DrawDataMCRatio(dataHist_slices[i][side], tot_slices[side][i], 1. ); //, true, true, "TL");// false , NULL, NULL, false, true);
 	    label = side+" ratio after fit, slice "+i;
@@ -1018,18 +1178,67 @@ int main(int argc, char* argv[]) {
 	    cF.Print(TString(pixheader_combined + "_bkgsub_compare_ratio_combined.png").Data());*/
 	    
 		char label5[1000];
-		std::snprintf(label5,1000,"%s %s errors after Background Subtracted",side.c_str(),binVarName.c_str());
-	    TText t5(.5,.95,label5);
-	    t5.SetTitle(label5);
-	    t5.SetTextAlign(22);
-	    t5.SetNDC(1);
-	    t5.SetTextSize(.03);
-	    mnvPlotter.axis_maximum = 0.2;
-	    mnvPlotter.DrawErrorSummary(bkgsub_combined[side],"TL");
-	    mnvPlotter.axis_maximum = MnvHist::AutoAxisLimit;
-	    std::string label6;
-		t5.Draw("same");
-	    cF.Print(TString(pixheader_combined + "_bkgsub_errors_combined.png").Data());
+		if (scaleBkgd) {
+			std::snprintf(label5,1000,"%s %s errors after Background Scaled",side.c_str(),binVarName.c_str());
+			TText t5(.5,.95,label5);
+			t5.SetTitle(label5);
+			t5.SetTextAlign(22);
+			t5.SetNDC(1);
+			t5.SetTextSize(.03);
+			mnvPlotter.axis_maximum = 0.2;
+			mnvPlotter.DrawErrorSummary(bkgsub_combined[side],"TL");
+			mnvPlotter.axis_maximum = MnvHist::AutoAxisLimit;
+			std::string label6;
+			t5.Draw("same");
+			cF.Print(TString(pixheader_combined + "_bkgscaled_errors_combined.png").Data());
+			cF.Print(TString(pixCheader_combined + "_bkgscaled_errors_combined.C").Data());
+	    } else {
+	    	std::snprintf(label5,1000,"%s %s errors after Background Subtracted",side.c_str(),binVarName.c_str());
+			TText t5(.5,.95,label5);
+			t5.SetTitle(label5);
+			t5.SetTextAlign(22);
+			t5.SetNDC(1);
+			t5.SetTextSize(.03);
+			mnvPlotter.axis_maximum = 0.2;
+			mnvPlotter.DrawErrorSummary(bkgsub_combined[side],"TL");
+			mnvPlotter.axis_maximum = MnvHist::AutoAxisLimit;
+			std::string label6;
+			t5.Draw("same");
+			cF.Print(TString(pixheader_combined + "_bkgsub_errors_combined.png").Data());
+			cF.Print(TString(pixCheader_combined + "_bkgsub_errors_combined.C").Data());
+	    }
+	    
+	    gPad->SetGrid();
+	    mnvPlotter.axis_maximum = 1;
+	    mnvPlotter.DrawMCWithErrorBand(purity_unfit_combined[side]);
+		mnvPlotter.axis_maximum = MnvHist::AutoAxisLimit;
+		char label6[1000];
+		std::snprintf(label6,1000,"%s signal purity before fit",side.c_str());
+	    TText t6(.5,.95,label6);
+		t6.SetTitle(label6);
+		t6.SetTextAlign(22);
+		t6.SetNDC(1);
+		t6.SetTextSize(.03);
+		t6.Draw("same");
+	    cF.Print(TString(pixheader_combined + "_prefit_signal_purity_combined.png").Data());
+	    cF.Print(TString(pixCheader_combined + "_prefit_signal_purity_combined.C").Data());
+	    gPad->SetGrid(0);
+	    
+	    gPad->SetGrid();
+	    mnvPlotter.axis_maximum = 1;
+	    mnvPlotter.DrawMCWithErrorBand(purity_fit_combined[side]);
+		mnvPlotter.axis_maximum = MnvHist::AutoAxisLimit;
+		char label7[1000];
+		std::snprintf(label7,1000,"%s signal purity after fit",side.c_str());
+	    TText t7(.5,.95,label7);
+		t7.SetTitle(label7);
+		t7.SetTextAlign(22);
+		t7.SetNDC(1);
+		t7.SetTextSize(.03);
+		t7.Draw("same");
+	    cF.Print(TString(pixheader_combined + "_" + fitType + "_postfit_signal_purity_combined.png").Data());
+	    cF.Print(TString(pixCheader_combined + "_" + fitType + "_postfit_signal_purity_combined.C").Data());
+	    gPad->SetGrid(0);
     }
     
     //inputFile->Close();

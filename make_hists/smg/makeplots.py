@@ -19,25 +19,33 @@ def CCQELegend(xlow,ylow,xhigh,yhigh):
 	leg.SetTextSize(0.035)
 	return leg
 	
-fn = open(sys.argv[1])
-config = commentjson.load(fn)
-fn.close()
+#fn = open(sys.argv[1])
+#config = commentjson.load(fn)
+#filename = "SB_"+sys.argv[1].split("/")[-1].split(".")[0]+"_"+prescale+".root"
+#variables = config["AnalyzeVariables"]
+#samples = config["runsamples"]
+#fn.close()
 
-prescale = config["prescale"]
-if len(sys.argv) == 3:
-	prescale = sys.argv[2]
+#prescale = config["prescale"]
+#if len(sys.argv) == 3:
+#	prescale = sys.argv[2]
 #tracks = sys.argv[1]
 #tag = ""
 #if len(sys.argv) == 3: 
 #	tag = "_"+sys.argv[2]
 	
-filename = "SB_"+sys.argv[1].split("/")[-1].split(".")[0]+"_"+prescale+".root"
+
+
+filename = "SB_NuConfig_bdtg_2track_MultiPionCut_1_scaled_multother.root"
+#samples = ["1track_MultiPionCut"]
+samples = ["2track_MultiPionCut"]
+variables = ["ptmu","pzmu","Q2QE","bdtgQELike","bdtg1ChargedPion",
+             "bdtg1NeutralPion","bdtgMultiPion","bdtgOther"]
+rebin = {"ptmu":1,"pzmu":1,
+         "Q2QE":1,"bdtgQELike":1,"bdtg1ChargedPion":1,
+         "bdtg1NeutralPion":1,"bdtgMultiPion":1,"bdtgOther":1}
 	
 noData = True;
-variables = config["AnalyzeVariables"]
-#variables = ["ptmu","pzmu","Q2QE","bdtgQELike","bdtg1ChargedPion",
-#	"bdtg1NeutralPion","bdtgMultiPion","bdtgOther"]
-
 scaleX = ["Q2QE"]
 scaleY = []#"Q2QE"]#,"bdtg1NeutralPion","bdtgQELike"]
 
@@ -76,18 +84,22 @@ dataPOT = h_pot.GetBinContent(1)
 mcPOTprescaled = h_pot.GetBinContent(3)
 POTScale = dataPOT / mcPOTprescaled
 
-for sample in config["runsamples"]:
-	categories = [config["signal"][sample]] + config["background"][sample]
+for sample in samples:
+	#categories = [config["signal"][sample]] + config["background"][sample]
+	#categories = ["qelike","1chargedpion","1neutralpion","multipionother"]
+	categories = ["qelike","1chargedpion","1neutralpion","multipion","other"]
 	for var in variables:
 
 		cc = CCQECanvas("canvas","canvas")
 		if var in scaleX: cc.SetLogx()
 		if var in scaleY: cc.SetLogy()
-		title = sample+": "+var
+		#title = sample+": "+var
+		title = sample
 		#if len(sys.argv) == 3:
 		#	title = title+" (w/ MultiPion Cut)"
 
 		h_data = f.Get("h___"+sample+"___data___"+var+"___reconstructed")
+		h_data.Rebin(rebin[var])
 		h_data.SetLineColor(TColor.GetColor(0,0,0))
 		h_data.Scale(1,"width")
 		nbins = h_data.GetNbinsX()
@@ -123,12 +135,14 @@ for sample in config["runsamples"]:
 			hs[cat].SetFillColor(colors[cat])
 			hs[cat].SetFillStyle(3001)
 			hs[cat].Scale(POTScale,"width")
+			hs[cat].Rebin(rebin[var])
 			hs[cat].GetXaxis().SetRangeUser(xmin,xmax)
 			
 		centerX = (xmax+xmin)/2
 
 		#leg = CCQELegend(centerX-0.15,0.73,centerX+0.09,0.89)
-		leg = CCQELegend(0.725,0.73,0.942,0.89)
+		#leg = CCQELegend(0.725,0.73,0.942,0.89)
+		leg = CCQELegend(0.425,0.73,0.642,0.89)
 		leg.SetNColumns(1)
 		if not noData: leg.AddEntry(h_data,"Data","pe")
 		for cat in categories:
@@ -164,7 +178,8 @@ for sample in config["runsamples"]:
 		if not noData: 
 			h_data.Draw("PE same")
 			
-		text = TLatex(0.852,0.714,"MINER#nuA Preliminary")
+		#text = TLatex(0.852,0.714,"MINER#nuA Preliminary")
+		text = TLatex(0.52,0.714,"MINER#nuA Preliminary")
 		text.SetNDC()
 		text.SetTextAlign(22)
 		text.SetTextColor(ROOT.kRed)

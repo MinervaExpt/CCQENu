@@ -4,14 +4,14 @@ class POTCounter:
 	def __init__(self):
 		pass
 
-
-
 	def init_chain(self, playlist):
 		fChain = ROOT.TChain("Meta")
 		with open(playlist, "r") as input_pl:
 			for filename in input_pl:
 				filename = filename.strip()
 				if filename and filename[0] == '/':
+					fChain.Add(filename)
+				elif filename and filename[0] == 'r':
 					fChain.Add(filename)
 		return fChain
 
@@ -49,7 +49,7 @@ class POTCounter:
 		fileElements = ch.GetListOfFiles()
 		#print("PlotUtils::POTCounter -- It can take some time depending on the size of the TChain")
 		for chEl in fileElements:
-			f = ROOT.TFile(chEl.GetTitle())
+			f = ROOT.TFile.Open(chEl.GetTitle())
 			t = f.Get("Meta")
 			if not t:
 				print(f"PlotUtils::POTCounter -- No Meta tree in file {chEl.GetTitle()}")

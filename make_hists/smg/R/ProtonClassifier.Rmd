@@ -20,14 +20,15 @@ library(ggforce)
 library(scales)
 library(gbm)
 library(caret)
-library(ggpattern)
+#library(ggpattern)
 library(ggpubr)
 library(grid)
 library(ipred)
 library(rpart)
 library(rpart.plot)
 library(gam)
-events <- read.csv("mc_reco_entries_Mult2p_NuCC.csv", sep=";")
+#events <- read.csv("mc_reco_entries_Mult2p_NuCC.csv", sep=";")
+events <- read.csv("CSV_minervame1N_p4_MC", sep=";")
 events <- events %>% 
   filter(PrimaryProtonScore1 >= 0) %>% 
   mutate(Particle_0 = case_when(PrimaryProtonCandidatePDG == 2212 ~ "Proton",

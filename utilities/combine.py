@@ -1,12 +1,10 @@
 import sys,os,time
-from ROOT import *
-from PlotUtils import *
+from ROOT import TH1D,TH2D,TFile
+from PlotUtils import MnvH1D,MnvH2D
 
-playlists = ["5A","6A","6B","6C","6D","6E","6F","6G","6H","6I","6J"]
+playlists = ["1A","1B","1C","1D","1E","1F","1G","1L","1M","1N","1O","1P"]
 list = '_'.join(playlists)
 template = sys.argv[1]
-prescale = "1000"
-#ofile = TFile.Open(list+".root",'RECREATE')
 potdata ={}
 potmc = {}
 potcorr = {}
@@ -15,7 +13,7 @@ count = 0
 
 for play in playlists:
   count += 1
-  filename = template.replace("5A",play)
+  filename = template.replace("1E",play)
   filepath  = os.path.dirname(filename)
   
   newfilename = os.path.join(filepath,"scaled_"+os.path.basename(filename))
