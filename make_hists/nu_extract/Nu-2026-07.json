@@ -17,6 +17,7 @@
   "Background_Type":"reconstructed",
   "Selected_Type": "selected_truth",
   "Truth_Type": "all_truth",
+  "UnTunedTruth_Type":"all_truth",
   "Migration_Type": "response",
   "data_types1D":{
     "bkgsub":["fitted_combined"],

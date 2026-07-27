@@ -241,6 +241,7 @@ class CrossSectionExtractor:
         output_stage = self.grabber.allconfigs["Cross"]["Stages"]["Flux"]["Out"]
 
         mcoutput_stage=output_stage+"MC"
+        model = self.grabber.model
         for sample in self.grabber.hists1D.keys():
             if sample not in thesamples: 
                 continue
@@ -249,9 +250,15 @@ class CrossSectionExtractor:
                 data_cat = self.allconfigs["Cross"]["Data_Cat"]
                 mc_cat = self.allconfigs["Cross"]["Signal_Cat"]
                 truth_type = self.allconfigs["Cross"]["Truth_Type"]
+                untuned_truth_type = self.allconfigs["Cross"]["UnTunedTruth_Type"]
+                
                 effcorr_hist = self.hists1D[sample][data_cat][variable][input_stage]
                 true_all_hist = self.hists1D[sample][mc_cat][variable][truth_type]
-                
+                true_all_hist.Print()
+                untuned_true_all_hist = self.hists1D[sample][mc_cat][variable][untuned_truth_type]
+                untuned_true_all_hist.Print()
+                print ("truth_type",truth_type, true_all_hist.GetName())
+                print ("untuned_truth_type",untuned_truth_type, untuned_true_all_hist.GetName())
                 sigma_name=effcorr_hist.GetName()+"_"+output_stage
                 sigma_hist = MnvH1D()
                 sigma_hist = effcorr_hist.Clone(sigma_name)
@@ -260,7 +267,14 @@ class CrossSectionExtractor:
                 sigmaMC_hist = MnvH1D()
                 sigmaMC_hist = true_all_hist.Clone(sigmaMC_name)
 
+                untuned_sigmaMC_name= untuned_true_all_hist.GetName()+"_"+model+"_Untuned"
+                print("untunedname",untuned_sigmaMC_name)
+                untuned_sigmaMC_hist = MnvH1D()
+                untuned_sigmaMC_hist = untuned_true_all_hist.Clone(untuned_sigmaMC_name)
+
                 # get the target and POT normalizations
+                if PLOTS:
+                    PlotCVAndError(self.plotter.canvas1D, untuned_sigmaMC_hist,sigmaMC_hist,sample+": Compare Untuned and Tuned  "+self.grabber.model,True,logscale,binwid=True)
 
                 norm = self.norm(ismc=False)
                 normMC = self.norm(ismc=True)
@@ -289,6 +303,13 @@ class CrossSectionExtractor:
 
                     # target/POT normalizationxzx
                     sigmaMC_hist.Scale(normMC)
+
+                    untuned_sigmaMC_hist.AddMissingErrorBandsAndFillWithCV(theflux_hist)
+
+                    untuned_sigmaMC_hist.Divide(untuned_sigmaMC_hist, theflux_hist)
+
+                    # target/POT normalizationxzx
+                    untuned_sigmaMC_hist.Scale(normMC)
                 else:
                     print(" Using energy dependent flux normalization. " )
                     print ("check",self.allconfigs["main"])
@@ -315,23 +336,42 @@ class CrossSectionExtractor:
 
                     SyncBands(sigma_hist)
                     # if (DEBUG): sigma.GetSysErrorMatrix("Unfolding"):.Print():
+                    print ("----------------------------------------------")
+                    sigma_hist.Print()
 
                     h_flux_ebins.AddMissingErrorBandsAndFillWithCV(sigmaMC_hist)
                     sigmaMC_hist.AddMissingErrorBandsAndFillWithCV(h_flux_ebins)
                     sigmaMC_hist.Divide(sigmaMC_hist, h_flux_ebins, 1.0, 1.0)
                     # target normalization
                     sigmaMC_hist.Scale(norm)
+                    SyncBands(sigmaMC_hist)
+                    print ("----------------------------------------------")
+                    sigmaMC_hist.Print()
+
+                    h_flux_ebins.AddMissingErrorBandsAndFillWithCV(untuned_sigmaMC_hist)
+                    untuned_sigmaMC_hist.AddMissingErrorBandsAndFillWithCV(h_flux_ebins)
+                    untuned_sigmaMC_hist.Divide(untuned_sigmaMC_hist, h_flux_ebins, 1.0, 1.0)
+                    # target normalization
+                    untuned_sigmaMC_hist.Scale(norm)
+                    SyncBands(untuned_sigmaMC_hist)
+                    print ("----------------------------------------------")
+                    untuned_sigmaMC_hist.Print()
+
+                if PLOTS:
+                    PlotCVAndError(self.plotter.canvas1D, sigma_hist,sigmaMC_hist,sample+": Cross Section with Tuned "+self.grabber.model,True,logscale,binwid=True)
 
 
 
                 addentry(self.hists1D, sample, data_cat, variable, output_stage, sigma_hist)
-
                 addentry(self.hists1D, sample, mc_cat, variable, mcoutput_stage, sigmaMC_hist)
-
+                addentry(self.hists1D, sample, mc_cat, variable, mcoutput_stage, untuned_sigmaMC_hist)
                 if PLOTS:
                     
-                    PlotCVAndError(self.plotter.canvas1D, sigma_hist,sigmaMC_hist,sample+": Cross Section "+self.grabber.model,True,logscale,binwid=True)
+                    PlotCVAndError(self.plotter.canvas1D, sigma_hist,sigmaMC_hist,sample+": Cross Section with Tuned "+self.grabber.model,True,logscale,binwid=True)
                     PlotErrorSummary(self.plotter.canvas1D, sigma_hist, sample+": Cross Section Systematics", logscale%2)
+                    PlotCVAndError(self.plotter.canvas1D, sigma_hist,untuned_sigmaMC_hist,sample+": Cross Section with Untuned  "+self.grabber.model,True,logscale,binwid=True)
+                   # PlotErrorSummary(self.plotter.canvas1D, sigma_hist, sample+": Cross Section Systematics", logscale%2)
+
         pass
 
     def norm(self,ismc):
@@ -367,6 +407,7 @@ class DataGrabber:
         '''  store the config and input data file'''
         self.config = theconfig
         self.data_source = theconfig["InputFiles"]
+        print ("Input Files", self.data_source)
 
         self.samples = theconfig["Samples"]
         self.scaling = theconfig["POTScale"]
