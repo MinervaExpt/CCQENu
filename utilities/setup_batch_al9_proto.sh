@@ -1,7 +1,7 @@
 # batch version to run - assumes you are in the unfolded CCQEMAT directory
 # BASEDIR needs to be the directory that contains your MAT/MAT-MINERvA/UnfoldUtils/Analysis code
 # RUNDIR is where your analysis executable actually lie, in this case in $BASEDIR/CCQENu/make_hists
-echo " this uses a spack 1.0 setup"
+echo " this uses a spack 1.1.0 setup"
 echo "setup-batch_al9_v1.0.sh"
 #source /cvmfs/dune.opensciencegrid.org/spack/setup-env.sh
 
@@ -18,7 +18,12 @@ echo "setup-batch_al9_v1.0.sh"
 # echo "CMAKE"
 # spack load cmake 
 
-# revert to earliest v1 version
+
+# POMS hack for jobsub
+
+export POMS_TASK_ID=HACK1
+export POMS_CAMPAIGN_ID=HACK2
+export POMS_CAMPAIGN_ID=HACK3
 
 echo "setup-prototype.sh"
 #. /cvmfs/dune.opensciencegrid.org/dune-spack/spack-develop-fermi/setup-env.sh
