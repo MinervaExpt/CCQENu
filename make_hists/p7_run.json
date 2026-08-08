@@ -1,7 +1,7 @@
 {
   "version":18, // turn off tunes, add flux
    // Run major variables in batch, use v16 of cuts, add closure
-  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_p7/MediumEnergy_RHC_StandardMC_Playlist{$MYPLAYLIST}.txt",
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_p7/MediumEnergy_RHC_StandardMC_Playlist${MYPLAYLIST}.txt",
   "dataIn":"${CCQEMAT}/playlists/${DATALOC}_p7/MediumEnergy_RHC_Data_Playlist${MYPLAYLIST}.txt", // hack
   "prescale":999,
   "playlist":"minervame${MYPLAYLIST}",
