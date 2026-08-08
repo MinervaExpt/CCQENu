@@ -250,15 +250,20 @@ class CrossSectionExtractor:
                 data_cat = self.allconfigs["Cross"]["Data_Cat"]
                 mc_cat = self.allconfigs["Cross"]["Signal_Cat"]
                 truth_type = self.allconfigs["Cross"]["Truth_Type"]
-                untuned_truth_type = self.allconfigs["Cross"]["UnTunedTruth_Type"]
-                
+                if "UntunedTruth_Type" in self.allconfigs["Cross"]:
+                    untuned_truth_type = self.allconfigs["Cross"]["UnTunedTruth_Type"]
+                else:
+                    untuned_truth_type = truth_type
+
+                untuned_true_all_hist = self.hists1D[sample][mc_cat][variable][untuned_truth_type]
+                untuned_true_all_hist.Print()
+
                 effcorr_hist = self.hists1D[sample][data_cat][variable][input_stage]
                 true_all_hist = self.hists1D[sample][mc_cat][variable][truth_type]
                 true_all_hist.Print()
-                untuned_true_all_hist = self.hists1D[sample][mc_cat][variable][untuned_truth_type]
-                untuned_true_all_hist.Print()
+                
                 print ("truth_type",truth_type, true_all_hist.GetName())
-                print ("untuned_truth_type",untuned_truth_type, untuned_true_all_hist.GetName())
+                #print ("untuned_truth_type",untuned_truth_type, untuned_true_all_hist.GetName())
                 sigma_name=effcorr_hist.GetName()+"_"+output_stage
                 sigma_hist = MnvH1D()
                 sigma_hist = effcorr_hist.Clone(sigma_name)
