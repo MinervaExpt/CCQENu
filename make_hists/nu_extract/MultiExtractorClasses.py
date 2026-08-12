@@ -202,7 +202,7 @@ class CrossSectionExtractor:
                 efficiency_hist = true_sel_hist.Clone(efficiency_name)
                 efficiency_hist.Divide(efficiency_hist,true_all_hist,1.,1.,"B")
 
-                efficiency_hist.PopVertErrorBand("Flux")
+                #efficiency_hist.PopVertErrorBand("Flux")
 
                 print("removed Flux Error band from efficiency and replace with CV" )
     
@@ -649,7 +649,7 @@ class DataGrabber:
                         for band in allbands.keys():
                             if band not in bands:
                                 self.hists1D[sample][category][variable][data_type].AddMissingErrorBandsAndFillWithCV(allbands[band])
-                                if DEBUG: 
+                                if DEBUG and category!="data": 
                                     print ("added missing band",band,"to",hist.GetName())                
                         SyncBands(self.hists1D[sample][category][variable][data_type])
         return True
