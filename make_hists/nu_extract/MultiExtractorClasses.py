@@ -139,7 +139,7 @@ class CrossSectionExtractor:
                 selected_type = self.allconfigs["Cross"]["Selected_Type"]
                 data_hist = self.hists1D[sample][data_cat][variable][input_stage]
                 unfolded_name = (data_hist.GetName()) + "_"+output_stage
-                migration = self.hists1D[sample][signal_cat][variable][migration_type+"_migration"]
+                migration = self.hists1D[sample][signal_cat][variable][migration_type]
                 true_sel_hist = self.hists1D[sample][signal_cat][variable][selected_type]
 
                 unfolded_hist= MnvH1D()

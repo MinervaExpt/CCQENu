@@ -1,0 +1,41 @@
+{
+  "tag":"July 17, 2026",
+  "InputFiles":{"1track_MultiPionQECut":"/Users/schellma/Dropbox/ccqe/sean/fitted/NuFit_1track_MultiPionCut_All_multother_MnvTunev2.0.1_elastic_bkgdScaled_Q2QE_2D_qecut8.root",
+  "2track_MultiPionQECut": "/Users/schellma/Dropbox/ccqe/sean/fitted/NuFit_2track_MultiPionCut_All_multother_MnvTunev2.0.1_elastic_bkgdScaled_Q2QE_2D_qecut8.root"
+  },
+  "Target":"Nucleons", // can be Protons, Neutrons or Nucleons
+  "POTScale":0, // already POT scaled
+  "Samples":["2track_MultiPionQECut"],//,"1track_MultiPionCutQECut"],
+  "Categories":["qelike","bkgsub"], 
+  "Data_Cat":"bkgsub",
+  "Signal_Cat":"qelike",
+  "Background_Cat":[],
+  "Migration":"response",
+  "Data_Type":"fitted_combined",
+  //"Signal_Type":"reconstructed",
+  "Signal_Type":"fitted",
+  "Background_Type":"reconstructed",
+  "Selected_Type": "selected_truth",
+  "Truth_Type": "all_truth",
+  "UnTunedTruth_Type":"all_truth",
+  "Migration_Type": "response_migration_fitted",
+  "data_types1D":{
+    "bkgsub":["fitted_combined"],
+    "qelike":["fitted","reconstructed","fitted_combined","selected_truth","all_truth","response_truth_fitted","response_reconstructed_fitted","response_migration_fitted"]
+  },
+  "data_types2D":{
+    "bkgsub":[],
+    "qelike": ["response_migration","response_migration_fitted"]
+  },
+  "Variables":["Q2QE"],
+  "Scales":{"Q2QE":3},    // scale = logx + 2* logy
+  "FluxNorm":{"Q2QE":false}, // true = do bin by bin
+  "PixDir":"./pix",
+  "LogMinimum":0.1,
+  "Stages":{
+    "Unfold":{"In":"fitted_combined","Out":"unfolded"},
+    "Efficiency":{"In":"unfolded","Out":"effcorr"},
+    "Flux":{"In":"effcorr","Out":"sigma"}
+  },
+  "Iterations":10
+}
