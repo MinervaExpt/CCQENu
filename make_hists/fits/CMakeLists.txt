@@ -93,6 +93,7 @@ fits/DoTheFitBinByBin.h
 utils/SyncBands.h
 utils/CoherentPiReweighter.h
 utils/DiffractiveReweighter.h
+utils/RemoveUnphysical2p2hExtendedEventsReweighter.h
 )
 
 include_directories($ENV{CCQEMAT} $ENV{CCQEMAT}/include   $ENV{UNFOLDUTILSROOT} $ENV{PLOTUTILSROOT} $ENV{PLOTUTILSROOT}/PlotUtils)
