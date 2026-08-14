@@ -20,7 +20,7 @@
   "Background_Type": "reconstructed",
   "Selected_Type":"selected_truth",
   "Truth_Type":"all_truth",
-  "Migration_Type":"response",
+  "Migration_Type":"response_migration",
   // these data_types below are used to load in the right set of histograms
   "data_types1D":{
     "data":["reconstructed"],

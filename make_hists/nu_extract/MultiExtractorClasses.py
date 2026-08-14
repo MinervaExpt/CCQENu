@@ -616,7 +616,7 @@ class DataGrabber:
 
         for key, theconfig in self.allconfigs.items():
             print (" Store config ", key )
-            obj = commentjson.dumps(theconfig)
+            obj = commentjson.dumps(theconfig,indent=4)
             f = open(os.path.join(outdir,key+".json"),'w')
             f.write(obj)
             f.close()
