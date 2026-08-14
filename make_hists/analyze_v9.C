@@ -557,7 +557,7 @@ int main(const int argc, const char* argv[]) {
                 basename = "h_" + variable;
             }
             if (variable == "ptmu" || variable == "pzmu") num_iter = 4;
-            if (variable == "EAvail") num_iter = 10;
+            if (variable == "EAvail" || variable == "EAvailWithRemoval") num_iter = 10;
             std::cout << "basename is " << basename << std::endl;
             int exit = GetCrossSection(sample, variable, basename,
                                        hists1D[sample][variable], response1D[sample][variable], type_hists1D[sample][variable],
@@ -658,7 +658,7 @@ int main(const int argc, const char* argv[]) {
             if (singlesample) {
                 basename = "h_" + variable;
             }
-            if (variable == "EAvail_ptmu") num_iter = 10;
+            if (variable == "EAvail_ptmu" || variable == "EAvailWithRemoval_ptmu") num_iter = 10;
             if (variable == "pzmu_ptmu") num_iter = 6;
 
             int exit = GetCrossSection(sample, variable, basename,
