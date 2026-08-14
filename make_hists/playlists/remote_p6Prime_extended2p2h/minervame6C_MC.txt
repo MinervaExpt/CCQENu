@@ -1,0 +1,4 @@
+root://fndcadoor.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p6/2p2hExtended/RHC/Merged_mc_ana_minervame6C_DualVertex_P6_Extended2p2hSignal/MasterAnaDev_mc_AnaTuple_run00122390_Playlist.root
+root://fndcadoor.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p6/2p2hExtended/RHC/Merged_mc_ana_minervame6C_DualVertex_P6_Extended2p2hSignal/MasterAnaDev_mc_AnaTuple_run00122391_Playlist.root
+root://fndcadoor.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p6/2p2hExtended/RHC/Merged_mc_ana_minervame6C_DualVertex_P6_Extended2p2hSignal/MasterAnaDev_mc_AnaTuple_run00122392_Playlist.root
+root://fndcadoor.fnal.gov:1094/pnfs/fnal.gov/usr/minerva/persistent/DataPreservation/p6/2p2hExtended/RHC/Merged_mc_ana_minervame6C_DualVertex_P6_Extended2p2hSignal/MasterAnaDev_mc_AnaTuple_run00122393_Playlist.root
