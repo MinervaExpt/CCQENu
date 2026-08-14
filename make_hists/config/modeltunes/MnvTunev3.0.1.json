@@ -1,0 +1,21 @@
+{
+    "name": "MnvTunev3.0.1",
+    "comments": [
+        "This does not apply the EAvail removal for resonance events, use EAvailWithRemoval",
+        "New implementation, kind of mimicing Andrew's 01/09/2026 NHV"
+    ],
+    "GeantNeutronCV": "GeantNeutronCV",
+    "FluxAndCV": "FluxAndCV",
+    "MINOSEfficiency": "MINOSEfficiency",
+    "RPA": "RPA",
+    "GENIE": {
+        "useNonResPi": true,
+        "useDeuteriumPionTune": false
+    },
+    "SuSAFromValencia2p2h": "SuSAFromValencia2p2h",
+    "BodekRitchie": 1,
+    "FSI": {
+        "useElastic": true,
+        "useAbsorption": true
+    }
+}

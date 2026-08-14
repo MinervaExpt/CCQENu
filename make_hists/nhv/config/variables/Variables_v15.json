@@ -661,6 +661,28 @@
       ],
       "fluxnorm": false
     },
+    "EAvailFromTracks": {
+      "reco": "EAvailFromTracksGeV",
+      "true": "TrueEAvailGeV",
+      "name": "EAvailFromTracks",
+      // "title": "E_{Available} in GeV",
+      "title": "E_{Avail} from tracks",
+      "units": "GeV",
+      // "nbins": 25,
+      // "min": 0,
+      // "max": 0.5,
+      "bins": [
+        0.0,
+        0.015,
+        0.04,
+        0.075,
+        0.12,
+        0.18,
+        0.30,
+        0.50
+      ],
+      "fluxnorm": false
+    },
     "EAvailLeadingBlob": {
       "reco": "EAvailLeadingBlobGeV",
       "true": "TrueEAvailGeV",

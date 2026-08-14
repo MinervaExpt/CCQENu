@@ -1273,7 +1273,7 @@
     "EAvailWithRemoval": {
       "reco": "EAvailGeV",
       "true": "TrueEAvailWithRemovalGeV",
-      "name": "EAvail",
+      "name": "EAvailWithRemoval",
       "title": "E_{Available} in GeV",
       "bins": [
         0.0,

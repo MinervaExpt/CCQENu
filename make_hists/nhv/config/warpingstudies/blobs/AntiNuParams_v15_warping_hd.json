@@ -28,7 +28,7 @@
         "edep_min": 1.5,
         "Is3D": 0,
         "vtxdist_edep_funct": true,
-        "muonangle_edep_funct": true,
+        "muonangle_edep_funct": false,
         "trackenddist_edep_funct": false//,
     }
 }
