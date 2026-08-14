@@ -14,8 +14,30 @@ namespace fit {
 MultiScaleFactors::MultiScaleFactors(const std::map<const std::string, std::vector<TH1D*>> unfitHists,
                                      const std::map<const std::string, TH1D*> dataHist,
                                      const std::map<const std::string, bool> include,
-                                     fit_type type, const int firstBin, const int lastBin)
+                                     fit_type type,
+                                     const int firstBin,
+                                     const int lastBin)
     : IBaseFunctionMultiDimTempl<double>(), fUnfitHists(unfitHists), fDataHist(dataHist), fInclude(include), fType(type), fFirstBin(firstBin), fLastBin(lastBin), fDoFit(true) {
+    int check = 0;
+    for (auto side : fUnfitHists) {
+        fNdim = side.second.size();
+        if (check != 0 && fNdim != check) {
+            std::cout << " inconsistent number of fit templates" << check << side.first << fNdim << std::endl;
+        }
+        check = fNdim;
+        fFirstBinMap[side.first] = firstBin;
+        fLastBinMap[side.first] = lastBin;
+    }
+    std::cout << " made the MultiScaleFactor" << std::endl;
+}
+
+MultiScaleFactors::MultiScaleFactors(const std::map<const std::string, std::vector<TH1D*>> unfitHists,
+                                     const std::map<const std::string, TH1D*> dataHist,
+                                     const std::map<const std::string, bool> include,
+                                     fit_type type,
+                                     const std::map<const std::string, int> firstBinMap,
+                                     const std::map<const std::string, int> lastBinMap)
+    : IBaseFunctionMultiDimTempl<double>(), fUnfitHists(unfitHists), fDataHist(dataHist), fInclude(include), fType(type), fFirstBinMap(firstBinMap), fLastBinMap(lastBinMap), fDoFit(true) {
     int check = 0;
     for (auto side : fUnfitHists) {
         fNdim = side.second.size();
@@ -49,10 +71,19 @@ double MultiScaleFactors::DoEval(const double* parameters) const {
     for (auto const sample : fUnfitHists) {  // loop over samples
         std::string whichsample = sample.first;
         if (!fInclude.at(whichsample)) continue;  // skip some samples
-        for (int whichBin = fFirstBin; whichBin <= fLastBin; ++whichBin) {
+        int firstbin = fFirstBinMap.at(whichsample);
+        int lastbin = fLastBinMap.at(whichsample);
+        for (int whichBin = firstbin; whichBin <= fLastBin; ++whichBin) {
+        // for (int whichBin = fFirstBin; whichBin <= fLastBin; ++whichBin) {
             double fitSum = 0.0;
+            double unfitSum = 0.0;
+            std::vector<double> UnfitContent;
+            std::vector<double> FitContent;
             for (int whichFit = 0; whichFit < fNdim; whichFit++) {
                 double temp = fUnfitHists.at(whichsample).at(whichFit)->GetBinContent(whichBin) * parameters[whichFit];
+                UnfitContent.push_back(fUnfitHists.at(whichsample).at(whichFit)->GetBinContent(whichBin));
+                FitContent.push_back(temp);
+                unfitSum += fUnfitHists.at(whichsample).at(whichFit)->GetBinContent(whichBin);
                 fitSum += temp;
             }
             double diff;
@@ -74,6 +105,34 @@ double MultiScaleFactors::DoEval(const double* parameters) const {
             if (fType == kML) {
                 diff = fitSum - dataContent;
                 chi2 -= 2. * TMath::Log(TMath::Poisson(dataContent, fitSum));
+                // chi2 += 2. * TMath::Log(TMath::Poisson(dataContent, fitSum));
+            }
+            if (fType == kBarlowBeeston) {
+                // double logLdata = 0.0;
+                // double logLpred = 0.0;
+                // if (dataContent != 0) logLdata += dataContent * TMath::Log(dataContent) - dataContent;
+                // if (fitSum != 0) logLpred += dataContent * TMath::Log(fitSum) - fitSum;
+                // for (int j = 0; j < fNdim; j++) {
+                //     // Double_t aji = ((TH1*)fMCs.At(j))->GetBinContent(x, y, z); // the untuned one
+                //     // Double_t bji = ((TH1*)fAji.At(j))->GetBinContent(x, y, z); // the tuned one
+                //     // double aji = UnfitContent[j];
+                //     // double bji = FitContent[j];
+                //     double aji = FitContent[j];
+                //     double bji = UnfitContent[j];
+                //     if (bji != 0) logLpred += aji * TMath::Log(bji) - bji;
+                //     if (aji != 0) logLdata += aji * TMath::Log(aji) - aji;
+                // }
+                // chi2 += -2. * logLpred + 2. * logLdata;
+
+                if (fitSum != 0) chi2 += (dataContent * TMath::Log(fitSum) - fitSum);
+                for (int j = 0; j < fNdim; j++) {
+                    double ti = 1 - (dataContent/fitSum);
+                    double denom = 1 + parameters[j]*ti;
+                    double Aji = 0.0;
+                    if (denom != 0) Aji = UnfitContent[j]/denom;
+                    // if (FitContent[j] != 0) chi2 -= UnfitContent[j] * TMath::Log(FitContent[j]) - FitContent[j];
+                    if (Aji != 0) chi2 += UnfitContent[j] * TMath::Log(Aji) - Aji;
+                }
             }
 #ifdef DEBUG
             std::cout << whichsample << "Fit Sum: " << fitSum << ", Data: " << dataContent << ", Difference: " << diff << ", Error: " << dataErr << ", chi2" << chi2 << std::endl;

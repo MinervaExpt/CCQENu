@@ -155,8 +155,9 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                 for (unsigned int i = 0; i < func2.NDim(); ++i) {
                     std::string name = categories[i];
                     std::cout << " set parameter " << i << " " << name << std::endl;
-                    mini2->SetVariable(i, name, 1.0, 0.1);
-                    //mini2->SetUpperLimitedVariable(i, name, 1.0, 0.1, upperLimit);
+                    // mini2->SetVariable(i, name, 1.0, 0.1);
+                    mini2->SetLowerLimitedVariable(i, name, 1.0, 0.1, 0.0);
+                    // mini2->SetUpperLimitedVariable(i, name, 1.0, 0.1, upperLimit);
                     nextPar++;
                 }
 
@@ -326,9 +327,19 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
              const int lowBin, const int hiBin,
              const bool binbybin,
              const std::string outputDir,
-             const int fitbin) {
+             const int fitbin,
+             const std::vector<std::string> fixed_categories) {
     // takes the histograms in unfitHists[sample][category], fits to dataHist by combining all the samples by changing the normalization of the category templates and then makes fitHists[sample][category] which contains the best template fit for each universe.
     // writes the chi2 value, parameters and covariance of the parameters into the output root file but does not return them.
+
+
+    // TODO: jank hard coding things
+    std::map<std::string, int> lowBinMap { 
+        {"QElike", 0}, {"TrackSideband", 2}, {"BlobSideband", 4}, {"MultipBlobSideband", 6} 
+    };
+    std::map<std::string, int> hiBinMap {
+        {"QElike", hiBin}, {"TrackSideband", 8}, {"BlobSideband", hiBin}, { "MultipBlobSideband", hiBin}
+    };
 
     // make a fitter
     auto* mini2 = new ROOT::Minuit2::Minuit2Minimizer(ROOT::Minuit2::kCombined);
@@ -445,7 +456,8 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
             int nextPar = 0;
             for (unsigned int i = 0; i < func2.NDim(); ++i) {
                 std::string name = categories[i];
-                if (name == "other" || name == "multipion") {
+                // if (name == "other" || name == "multipion") {
+                if (std::find(fixed_categories.begin(), fixed_categories.end(), name) != fixed_categories.end()) {
                     std::cout << " fixing parameter " << i << " " << name << std::endl;
                     mini2->SetFixedVariable(i, name, 1.0);
                     nextPar++;
@@ -461,8 +473,9 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                 double frac = unfitHistsFrac[i]/mctot_int;
 
                 // mini2->SetVariable(i, name, 1.0, 0.1);
-                mini2->SetVariable(i, name, frac, 0.1);
-                mini2->SetVariableLimits(i, 0.0, 2.0);
+                // mini2->SetVariable(i, name, frac, 0.1);
+                // mini2->SetVariableLimits(i, 0.0, 2.0);
+                mini2->SetLowerLimitedVariable(i, name, 1.0, 0.1, 0.0);
                 // std::cout << " set upper limit " << upper_limit << " for parameter " << i << " " << name << std::endl;
 
                 nextPar++;
@@ -490,7 +503,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
                 mini2->PrintResults();
                 std::cout << "FIT FAILED" << std::endl;
                 success = false;
-                // return 7;
+                assert(0);
             } else {
                 std::cout << "Printing Results." << std::endl;
                 mini2->PrintResults();

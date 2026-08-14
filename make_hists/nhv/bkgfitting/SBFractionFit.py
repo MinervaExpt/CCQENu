@@ -65,6 +65,7 @@ mc_cat_name_list = {
 }
 
 fixed_cats_list = [
+    # "qelike",
     "other", 
     "other_np", 
     # "multipion"
@@ -74,7 +75,7 @@ overconstraint_cats_list = [
     # "multipion",
     # "other",
 ]
-
+doqelikerebin = False
 scale_var = "Q2QE"
 fit_var = "recoil"
 # scaletype = "area"
@@ -115,7 +116,8 @@ for sample in fit_sample_list:
 
 # Do fit on tuned hists or not
 useTuned = 0
-rebin = 4
+# rebin = 4
+rebin = 2
 
 if rebin == 5:
     if len(fit_sample_list) == 4:
@@ -167,6 +169,20 @@ if rebin in [1,2,4]:
             12,
             14,
         ]
+    skipbins = []
+    up_skipbins = []
+# skipbins = [
+#     0,
+#     4,
+#     4,
+#     # 4,
+# ]
+# up_skipbins = [
+#     0,
+#     4,
+#     4,
+#     # 0,
+# ]
 
 # Some fit parameters globally set
 # min_bin = 51
@@ -373,7 +389,11 @@ def BuildLongTH1D(i_hist_list,doskips=True,out_name = "",dorebin_internal=False)
                 tmp_skipbins = [int(skips/rebin) for skips in skipbins]
                 tmp_up_skipbins = [int(skips/rebin) for skips in up_skipbins]
                 for j in range(len(hist_list)):
-                    hist_list[i].Rebin(rebin)
+                    if i == 0 and rebin%2 == 0 and doqelikerebin:
+                        hist_list[i].Rebin(int(rebin/2))
+                    else:
+                        hist_list[i].Rebin(rebin)
+                    # hist_list[i].Rebin(rebin)
                     nxbins_list[j] = hist_list[j].GetNbinsX()
                     xbins_list[j] = list(hist_list[j].GetXaxis().GetXbins())
                 break
@@ -417,25 +437,31 @@ def BuildLongTH1D(i_hist_list,doskips=True,out_name = "",dorebin_internal=False)
     # for hist in i_hist_list:
     new_hist_content = []
     new_hist_error = []
-    for j in range(len(hist_list)):
-        hist = hist_list[j]
-
-        tmp_skips = tmp_skipbins[j]
-        # for i in range(1,hist.GetNbinsX()+1-tmp_skips):
-        #     new_hist.SetBinContent(i+shift, hist.GetBinContent(i+tmp_skips))
-        #     new_hist.SetBinError(i+shift, hist.GetBinError(i+tmp_skips))
-        # shift += hist.GetNbinsX()-tmp_skips
-        tmp_up_skip = tmp_up_skipbins[j]
-        for i in range(tmp_skips+1, hist.GetNbinsX()+1 - tmp_up_skip):
-            new_hist_content.append(hist.GetBinContent(i))
-            new_hist_error.append(hist.GetBinError(i))
-    if len(new_hist_content) != new_hist.GetNbinsX():
-        print(len(new_hist_content), new_hist.GetNbinsX())
-        sys.exit(1)
-    
+    if nskips != 0:
+        for j in range(len(hist_list)):
+            hist = hist_list[j]
+            tmp_skips = tmp_skipbins[j]
+            # for i in range(1,hist.GetNbinsX()+1-tmp_skips):
+            #     new_hist.SetBinContent(i+shift, hist.GetBinContent(i+tmp_skips))
+            #     new_hist.SetBinError(i+shift, hist.GetBinError(i+tmp_skips))
+            # shift += hist.GetNbinsX()-tmp_skips
+            tmp_up_skip = tmp_up_skipbins[j]
+            for i in range(tmp_skips+1, hist.GetNbinsX()+1 - tmp_up_skip):
+                new_hist_content.append(hist.GetBinContent(i))
+                new_hist_error.append(hist.GetBinError(i))
+        if len(new_hist_content) != new_hist.GetNbinsX():
+            print(len(new_hist_content), new_hist.GetNbinsX())
+            sys.exit(1)
+    else:
+        for j in range(len(hist_list)):
+            hist = hist_list[j]
+            for i in range(1, hist.GetNbinsX()+1):
+                new_hist_content.append(hist.GetBinContent(i))
+                new_hist_error.append(hist.GetBinError(i))
     for i in range(len(new_hist_content)):
         new_hist.SetBinContent(i+1,new_hist_content[i])
         new_hist.SetBinError(i+1,new_hist_error[i])
+
     if dorebin_internal:
         # if new_hist.GetNbinsX() % rebin != 0:
         #     print("SOMETHING WRONG, binning of new hist is not divisible by rebin. Exiting...")
@@ -1134,7 +1160,11 @@ def main():
                     # If you're rebinning inside the buildlong so you can use non-multiple bins to start/end at, you'll need to rebin these outside now
                     if dorebin_internal_global and rebin > 1:
                         for i in range(len(prefit_th1d_dict_shortlist[cat])):
-                            prefit_th1d_dict_shortlist[cat][i].Rebin(rebin)
+                            if i == 0 and rebin%2 == 0 and doqelikerebin:
+                                prefit_th1d_dict_shortlist[cat][i].Rebin(int(rebin/2))
+                            else:
+                                prefit_th1d_dict_shortlist[cat][i].Rebin(int(rebin/2))
+                            # prefit_th1d_dict_shortlist[cat][i].Rebin(rebin)
                 prefit_th1d_dict["data"].Print()
                 
                 if raw_univ_name == "cv":
@@ -1443,11 +1473,51 @@ def main():
             tmp_fitmctot_rebin.Rebin(rebin)
         else:
             print("Hists have already been rebinned, so I won't do that over again.")
-        pre_chi2 = plotter.Chi2DataMC(tmp_data_rebin,tmp_prefitmctot_rebin)
-        post_chi2 = plotter.Chi2DataMC(tmp_data_rebin,tmp_fitmctot_rebin)
+        # pre_chi2 = plotter.Chi2DataMC(tmp_data_rebin,tmp_prefitmctot_rebin)
+        # post_chi2 = plotter.Chi2DataMC(tmp_data_rebin,tmp_fitmctot_rebin)
+        pre_chi2 = plotter.Chi2DataMC(
+            tmp_data_rebin,
+            tmp_prefitmctot_rebin,
+            ctypes.c_int(tmp_data_rebin.GetNbinsX()),
+            ctypes.c_double(1.0),
+            # False,
+            # False,
+            # True,
+            # None,
+        )
+        post_chi2 = plotter.Chi2DataMC(
+            tmp_data_rebin,
+            tmp_fitmctot_rebin,
+            ctypes.c_int(tmp_data_rebin.GetNbinsX()),
+            ctypes.c_double(1.0),
+            # False,
+            # False,
+            # True,
+            # None,
+        )
         print(">>>>>>>>> REBIN\tprefit: %f \t postfit: %f\t delta: %f"%(pre_chi2,post_chi2,post_chi2-pre_chi2))
-        pre_chi2_orig = plotter.Chi2DataMC(tmp_data,tmp_prefitmctot)
-        post_chi2_orig = plotter.Chi2DataMC(tmp_data,tmp_fitmctot)
+        # pre_chi2_orig = plotter.Chi2DataMC(tmp_data,tmp_prefitmctot)
+        # post_chi2_orig = plotter.Chi2DataMC(tmp_data,tmp_fitmctot)
+        pre_chi2_orig = plotter.Chi2DataMC(
+            tmp_data,
+            tmp_prefitmctot,
+            ctypes.c_int(tmp_data.GetNbinsX()),
+            ctypes.c_double(1.0),
+            # False,
+            # False,
+            # True,
+            # None,        
+        )
+        post_chi2_orig = plotter.Chi2DataMC(
+            tmp_data,
+            tmp_fitmctot,
+            ctypes.c_int(tmp_data.GetNbinsX()),
+            ctypes.c_double(1.0),
+            # False,
+            # False,
+            # True,
+            # None,  
+        )
         print(">>>>>>>>> ORIG\tprefit: %f \t postfit: %f\t delta: %f"%(pre_chi2_orig,post_chi2_orig,post_chi2_orig-pre_chi2_orig))
 
         ROOT.gStyle.SetOptTitle(1)
@@ -1482,8 +1552,13 @@ def main():
         leg.AddEntry(tmp_data,"Data","p")
         tmp_data.SetTitle("prefit MC vs data fitbin%02d"%(fitbin))
 
+        tmp_prefitmctot.SetFillColorAlpha(ROOT.kRed, 0.3)
+        tmp_prefitmctot.SetLineColor(ROOT.kRed)
+        tmp_prefitmctot.SetLineWidth(2)
+
         tmp_data.Draw("P E1 X0 same")
         prestack.Draw("HIST same")
+        tmp_prefitmctot.Draw("E2 E0 same")
         tmp_data.Draw("AP E1 X0 same")
         leg.Draw()
         # prechi2_text.Modify()
@@ -1500,9 +1575,13 @@ def main():
         # chi2_text.Modfiy()
 
         tmp_data.SetTitle("postfit MC vs data fitbin%02d"%(fitbin))
+        tmp_fitmctot.SetFillColorAlpha(ROOT.kRed, 0.3)
+        tmp_fitmctot.SetLineColor(ROOT.kRed)
+        tmp_fitmctot.SetLineWidth(2)
 
         tmp_data.Draw("P E1 X0 same")
         poststack.Draw("HIST same")
+        tmp_fitmctot.Draw("E2 E0 same")
         tmp_data.Draw("AP E1 X0 same")
         leg.Draw()
         postchi2_text.SetTitle("#chi^{2} = %.2f"%(round(post_chi2,3)))
@@ -1547,14 +1626,37 @@ def main():
             tmp_fitmctot_rebin = tmp_fitmctot.Clone()
             if not dorebin_internal_global:
                 print("Hists have not been rebinned yet. Doing it now for comparisons.")
-                tmp_data_rebin.Rebin(rebin)
-                tmp_prefitmctot_rebin.Rebin(rebin)
-                tmp_fitmctot_rebin.Rebin(rebin)
+                tmp_rebin = rebin
+                if (sample == "QElike" or sample == 0) and rebin%2 == 0 and doqelikerebin:
+                    tmp_rebin = int(rebin/2)
+                tmp_data_rebin.Rebin(tmp_rebin)
+                tmp_prefitmctot_rebin.Rebin(tmp_rebin)
+                tmp_fitmctot_rebin.Rebin(tmp_rebin)
             else:
                 print("Hists have already been rebinned, so I won't do that over again.")
 
-            pre_chi2 = plotter.Chi2DataMC(tmp_data_rebin,tmp_prefitmctot_rebin)
-            post_chi2 = plotter.Chi2DataMC(tmp_data_rebin,tmp_fitmctot_rebin)
+            # pre_chi2 = plotter.Chi2DataMC(tmp_data_rebin,tmp_prefitmctot_rebin)
+            # post_chi2 = plotter.Chi2DataMC(tmp_data_rebin,tmp_fitmctot_rebin)
+            pre_chi2 = plotter.Chi2DataMC(
+                tmp_data_rebin,
+                tmp_prefitmctot_rebin,
+                ctypes.c_int(tmp_data_rebin.GetNbinsX()),
+                ctypes.c_double(1.0),
+                # False,
+                # False,
+                # True,
+                # None,
+            )
+            post_chi2 = plotter.Chi2DataMC(
+                tmp_data_rebin,
+                tmp_fitmctot_rebin,
+                ctypes.c_int(tmp_data_rebin.GetNbinsX()),
+                ctypes.c_double(1.0),
+                # False,
+                # False,
+                # True,
+                # None,
+            )
             print("%s\t>>>>>>>>> REBIN\tprefit: %f \t postfit: %f \t delta: %f"%(sample_list[sample],pre_chi2,post_chi2,post_chi2-pre_chi2))
 
             tmp_prefitmctot_orig = prefit_mnvh1d_dict_shortlist[fitbin]["mctot"][sample].Clone()
@@ -1562,8 +1664,28 @@ def main():
             tmp_fitmctot_orig = fit_mnvh1d_dict_shortlist[fitbin]["mctot"][sample].Clone()
             # tmp_fitmctot_orig.SetLineColor(ROOT.kRed)
 
-            pre_chi2_orig = plotter.Chi2DataMC(tmp_data,tmp_prefitmctot_orig)
-            post_chi2_orig = plotter.Chi2DataMC(tmp_data,tmp_fitmctot_orig)
+            # pre_chi2_orig = plotter.Chi2DataMC(tmp_data,tmp_prefitmctot_orig)
+            # post_chi2_orig = plotter.Chi2DataMC(tmp_data,tmp_fitmctot_orig)
+            pre_chi2_orig = plotter.Chi2DataMC(
+                tmp_data,
+                tmp_prefitmctot_orig,
+                ctypes.c_int(tmp_data.GetNbinsX()),
+                ctypes.c_double(1.0),
+                # False,
+                # False,
+                # True,
+                # None,
+            )
+            post_chi2_orig = plotter.Chi2DataMC(
+                tmp_data,
+                tmp_fitmctot_orig,
+                ctypes.c_int(tmp_data.GetNbinsX()),
+                ctypes.c_double(1.0),
+                # False,
+                # False,
+                # True,
+                # None,
+            )
             print("%s\t>>>>>>>>> ORIG\tprefit: %f \t postfit: %f \t delta: %f"%(sample_list[sample],pre_chi2_orig,post_chi2_orig,post_chi2_orig-pre_chi2_orig))
             
             ROOT.gStyle.SetOptTitle(1)
@@ -1605,11 +1727,16 @@ def main():
             # tmp_data.SetTitle("%s prefit MC vs data %02f < Q^{2}_{QE} < %02f"%(sample_list[sample],loedge,hiedge))
             pre_title = "Prefit, "+str(loedge)+" < Q^{2}_{QE} <"+str(hiedge)
             tmp_data.SetTitle(pre_title)
+            prefitband = tmp_prefitmctot_orig.GetCVHistoWithError(True,False)
+            prefitband.SetFillColorAlpha(ROOT.kRed, 0.3)
+            prefitband.SetLineColor(ROOT.kRed)
+            prefitband.SetLineWidth(2)
 
             leg.AddEntry(tmp_data,"Data","p")
 
             tmp_data.Draw("P E1 X0")
             prestack.Draw("HIST same")
+            prefitband.Draw("E2 E0 same")
             tmp_data.Draw("AP E1 X0 same")
             leg.Draw()
             chi2_text.DrawLatex(0.65+legleft,0.6, "#chi^{2} = %.2f"%(round(pre_chi2,3)))
@@ -1623,8 +1750,15 @@ def main():
 
             post_title = "Postfit, "+str(loedge)+" < Q^{2}_{QE} <"+str(hiedge)
             tmp_data.SetTitle(post_title)
+
+            fitband = tmp_fitmctot_orig.GetCVHistoWithError(True,False)
+            fitband.SetFillColorAlpha(ROOT.kRed, 0.3)
+            fitband.SetLineColor(ROOT.kRed)
+            fitband.SetLineWidth(2)
+
             tmp_data.Draw("P E1 X0")
             poststack.Draw("HIST same")
+            fitband.Draw("E2 E0 same")
             tmp_data.Draw("AP E1 X0 same")
             leg.Draw()
             chi2_text.DrawLatex(0.65+legleft,0.6, "#chi^{2} = %.2f"%(round(post_chi2,3)))

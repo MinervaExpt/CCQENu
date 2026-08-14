@@ -1,42 +1,52 @@
-{ "InputFile": "/Users/nova/git/output/May2026/bkgfitting/MnvTunev2.0.1/potscaled_combined_FullSample_FixSBs_BkgFittingSub_geanthadroncv_fitfill_fullsyst_p6_minervameCombined_MnvTunev2.0.1_AntiNu_v15_warping_grid_bkgsub_1.root",
+{
+  "InputFile": "/Users/nova/git/output/May2026/bkgfitting/MnvTunev2.0.1/potscaled_combined_FullSample_FixSBs_BkgFittingSub_geanthadroncv_fitfill_fullsyst_p6_minervameCombined_MnvTunev2.0.1_AntiNu_v15_warping_grid_bkgsub_1.root",
+  "InputFiles": [
+    "~/git/output/June2026/eventloopout/bkgfitting/MnvTunev2.0.1/p8_multipi_fullsyst_200flux/allsamples_test/potscaled_combined_FullSample_BetterRecoilBins_FinerQ2Bins_FulSyst_FixSBs_multipi_BkgFittingSub_geanthadroncv_p8_minervameCombined_MnvTunev2.0.1_QElike_AntiNu_v15_warping_grid_bkgsub_1.root",
+    "~/git/output/June2026/eventloopout/bkgfitting/MnvTunev2.0.1/p8_multipi_fullsyst_200flux/allsamples_test/potscaled_combined_FullSample_BetterRecoilBins_FinerQ2Bins_FulSyst_FixSBs_multipi_BkgFittingSub_geanthadroncv_p8_minervameCombined_MnvTunev2.0.1_TrackSideband_AntiNu_v15_warping_grid_bkgsub_1.root",
+    "~/git/output/June2026/eventloopout/bkgfitting/MnvTunev2.0.1/p8_multipi_fullsyst_200flux/allsamples_test/potscaled_combined_FullSample_BetterRecoilBins_FinerQ2Bins_FulSyst_FixSBs_multipi_BkgFittingSub_geanthadroncv_p8_minervameCombined_MnvTunev2.0.1_BlobSideband_AntiNu_v15_warping_grid_bkgsub_1.root",
+    "~/git/output/June2026/eventloopout/bkgfitting/MnvTunev2.0.1/p8_multipi_fullsyst_200flux/allsamples_test/potscaled_combined_FullSample_BetterRecoilBins_FinerQ2Bins_FulSyst_FixSBs_multipi_BkgFittingSub_geanthadroncv_p8_minervameCombined_MnvTunev2.0.1_MultipBlobSideband_AntiNu_v15_warping_grid_bkgsub_1.root"//,
+  ],
   "Sidebands": [
     "QElike",
     "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband",
-    "BlobSideband"//,
-    // "MultipBlobSideband"
+    "BlobSideband",
+    "MultipBlobSideband"
   ],
   "IncludeInFit": [
     "QElike",
     "TrackSideband",
     // "LoPionThetaSideband",
     // "HiPionThetaSideband",
-    "BlobSideband"//,
-    // "MultipBlobSideband"
+    "BlobSideband",
+    "MultipBlobSideband"
   ],
   "Categories": [
     "qelike",
     "neutralpion",
     "chargedpion",
-    // "multipion",
     "other"
+    // "multipion",
+    // "other_np"
   ],
   "Backgrounds": [
     "neutralpion",
     "chargedpion",
-    // "multipion",
     "other"
+    // "multipion",
+    // "other_np"
   ],
-  "FixedCategories": [
-    "other"//,
-    // "multipion"
-  ],
+  "FixedCategories": [],
+  //   "other" //,
+  //   // "multipion",
+  //   // "other_np"
+  // ],
   "FitVariable": "Fitrecoil",
   "ProjectionVariable": "FitQ2QE",
   "Variable2D": "FitQ2QE_Fitrecoil",
-  "FitType": "kSlowChi2",
-  "OutputDir": "${OUTPUTLOC}/May2026/bkgfitting/MnvTunev2.0.1",
+  "FitType": "kBarlowBeeston",
+  "OutputDir": "${OUTPUTLOC}/July2026/bkgfitting/MnvTunev2.0.1/FitDriverTest/multipi/kBarlowBeeston",
   "OutputFile": "cppfitter_test_fits_Test_2Dfits_MnvTunev2.0.1_AntiNu_v15_1.root",
   "LogPlot": false,
   "Template": "h2D___%s___%s___%s___reconstructed",

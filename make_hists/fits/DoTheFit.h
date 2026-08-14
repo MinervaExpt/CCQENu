@@ -28,7 +28,8 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
              const int lowBin = 1, const int hiBin = -1,
              const bool binbybin = false,
              const std::string outputDir = ".",
-             const int fitbin = 0);
+             const int fitbin = 0,
+             const std::vector<std::string> fixed_categories = {"other", "multipion"});
 
 // int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHists,
 //              std::vector<PlotUtils::MnvH1D*> parameters, PlotUtils::MnvH12D* covariance, PlotUtils::MnvH1D* fcn,
