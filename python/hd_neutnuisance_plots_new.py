@@ -112,6 +112,8 @@ bincomb_dict = {
         ],
         [
             14,
+        ],
+        [
             15,
         ]
     ],
@@ -1365,7 +1367,7 @@ for a_sample in groups.keys():
                 pad.Draw()
                 grid_dict[projbin]["cumul_stack"].Draw("HIST ][ same")
                 grid_dict[projbin]["straightline"].Draw("HIST ][ same")
-                # grid_dict[projbin]["straightline_less"].Draw("HIST ][ same")
+                grid_dict[projbin]["straightline_less"].Draw("HIST ][ same")
                 grid_dict[projbin]["data"]["data"].Draw("AXIS same")
             
                 if data_var.split("_")[0] in scaleX and proj=="projX":
