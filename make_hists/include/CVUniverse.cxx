@@ -1335,6 +1335,33 @@ double CVUniverse::GetEAvailGeV() const {
     return recoil - edep * MeVGeV;
 }
 
+double CVUniverse::GetEAvailFromTracksGeV() const {
+    if (CVUniverse::GetMultiplicity() < 2) {
+            return CVUniverse::GetEAvailGeV();
+    }
+    // This adds up all the tracked proton KE, plus the blobs from protons
+    double total = 0.0;
+    double trackE = 0.0;
+    // Add trackE's first
+    double primary_T = CVUniverse::GetProtonTfromdEdx(0);
+    if (primary_T > 0.0) trackE += primary_T;
+
+    int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
+    if (n_sec_proton_scores > 0) {
+        for (int i = 0; i < n_sec_proton_scores; i++) {
+            if (CVUniverse::GetProtonTfromdEdx(i + 1) > 0.0) trackE += CVUniverse::GetProtonTfromdEdx(i + 1);
+        }
+    }
+    if (trackE == 0.0) return CVUniverse::GetEAvailGeV();
+    total += trackE;
+    // Now add blobs
+    if (m_neutevent->GetNProtonCands() == 0) return total * MeVGeV;
+    for (unsigned int i = 0; i < m_neutevent->GetNProtonCands(); i++) {
+        total += m_neutevent->GetProtonCand(i)->GetCandRecoEDep();
+    }
+    return total * MeVGeV;
+}
+
 double CVUniverse::GetERemovedGeV() const {
     if (GetNMADBlobs() == 0) {
         return 0.0;
@@ -1665,8 +1692,8 @@ double CVUniverse::GetTrueEAvailWithRemovalGeV() const {
         else
             Eavail += energy;
     }
-    if (n_protons >= 1) {
-        // Remove 25 MeV if there are protons, if there's a neutron, it will share that energy
+    if (n_protons >= 1 && CVUniverse::GetMCIntType() == 2) {
+        // For resonance events remove 25 MeV if there are protons, if there's a neutron, it will share that energy
         double tmp_removal = 0;
         tmp_removal = n_neutrons >= 1 ? 12.5 : 25.0;
         Eavail -= tmp_removal;

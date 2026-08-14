@@ -265,6 +265,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetEAvailGeV() const;
 
+    virtual double GetEAvailFromTracksGeV() const;
+
     virtual double GetERemovedGeV() const;
 
     virtual double GetERemovedFromTruthBlobsGeV() const;

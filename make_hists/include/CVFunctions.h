@@ -114,6 +114,7 @@ class CVFunctions {
 
         recofunctions["EAvailFromBlobsGeV"] = &CVUNIVERSE::GetEAvailFromBlobsGeV;
         recofunctions["EAvailGeV"] = &CVUNIVERSE::GetEAvailGeV;
+        recofunctions["EAvailFromTracksGeV"] = &CVUNIVERSE::GetEAvailFromTracksGeV;
         recofunctions["EAvailLeadingBlobGeV"] = &CVUNIVERSE::GetEAvailLeadingBlobGeV;
 
         recofunctions["ERemovedGeV"] = &CVUNIVERSE::GetERemovedGeV;
