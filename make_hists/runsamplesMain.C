@@ -77,6 +77,12 @@ int main(const int argc, const char *argv[]) {
         dostatusbar = config.GetBool("statusbar");
     if (dostatusbar)
         std::cout << " Will print out status bar. Not recommended for grid jobs..." << std::endl;
+
+    bool doextended2p2h = false;
+    if (config.IsMember("DoExtended2p2h")) {
+        doextended2p2h = config.GetBool("DoExtended2p2h");
+        std::cout << " Will do extended 2p2h. I will remove unphysical events... " << std::endl;
+    }
     //===========================================================================
     // MacroUtil (makes your anatuple chains)
     //===========================================================================
@@ -90,6 +96,16 @@ int main(const int argc, const char *argv[]) {
     }
 
     const std::string plist_string(config.GetString("playlist"));
+    // 2p2h files don't exist for 6H-J. This will break the code
+    if (doextended2p2h) {
+        std::vector<std::string> badplists = {"minervame6H", "minervame6I", "minervame6J"};
+        if (find(badplists.begin(),badplists.end(), plist_string) != badplists.end()) {
+            std::cout << "ERROR: Requested playlist that is not in extended 2p2h playlists. Exiting..." << std::endl;
+            assert(0);
+        }
+    }
+
+
     const std::string reco_tree_name(config.GetString("recoName"));
 
     const std::string truth_tree_name("Truth");
@@ -167,7 +183,10 @@ int main(const int argc, const char *argv[]) {
         modeltuneConfig.Read(modeltunefilename);
         CCQENu::ModelFromConfig* modeltune = new CCQENu::ModelFromConfig(modeltuneConfig);
         // MnvTune = modeltune->GetModelTunesFromConfig();
-
+        // There are some unphyscal events in the extended 2p2h samples. This will add a reweighter that sets their weights to zero.
+        if (doextended2p2h) {
+            modeltune->SetDoExtended2p2h(true);
+        }
         std::vector<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>*> tunevec = modeltune->GetModelTunesFromConfig();
         for (auto tune : tunevec) {
             MnvTune.emplace_back(tune);
@@ -548,6 +567,7 @@ int main(const int argc, const char *argv[]) {
     //===========================================================================
 
     for (auto tag : datatags) {
+        if (doextended2p2h) break;
         std::cout << "Loop and Fill Data for " << tag << "\n";
         LoopAndFillEventSelection(tag, util, data_error_bands,
                                   variables1D, variables2D, variablesHD,
@@ -569,7 +589,7 @@ int main(const int argc, const char *argv[]) {
                                   variables1D, variables2D, variablesHD,
                                   kMC, *selectionCriteria[tag], model,
                                   mcRescale, warper,
-                                  closure, mc_reco_to_csv, dostatusbar);
+                                  closure, mc_reco_to_csv, dostatusbar, doextended2p2h);
         std::cout << "\nCut summary for MC Reco:" << tag << "\n"
                   << *selectionCriteria[tag] << "\n";
         selectionCriteria[tag]->resetStats();
@@ -581,7 +601,7 @@ int main(const int argc, const char *argv[]) {
                                   variables1D, variables2D, variablesHD,
                                   kTruth, *selectionCriteria[tag], model,
                                   mcRescale, warper,
-                                  closure, mc_reco_to_csv, dostatusbar);
+                                  closure, mc_reco_to_csv, dostatusbar, doextended2p2h);
         std::cout << "\nCut summary for MC Truth:" << tag << "\n";
         // this is a special overload to allow printing truth
         (*selectionCriteria[tag]).summarizeTruthWithStats(std::cout);

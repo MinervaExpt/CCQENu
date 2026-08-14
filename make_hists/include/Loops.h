@@ -78,7 +78,13 @@ void LoopAndFillEventSelection(std::string tag,
                                PlotUtils::weight_MCreScale mcRescale,
                                PlotUtils::weight_warper warper,
                                bool closure = false, bool mc_reco_to_csv = false,
-                               bool dostatusbar = false) {
+                               bool dostatusbar = false,
+                               bool doextended2p2h = false
+                            ) {
+    if (doextended2p2h && data_mc_truth == kData) {
+        std::cout << "WARNING: trying to run data for extended2p2h, I won't fill anything" << std::cout;
+        return; 
+    }
     // Prepare loop
     MinervaUniverse::SetTruth(false);
     int nentries = -1;
@@ -217,11 +223,13 @@ void LoopAndFillEventSelection(std::string tag,
 
 #ifdef CLOSUREDETAIL
                     if (closure && universe->ShortName() == "cv" && selection.isMCSelected(*universe, event, weight).all()) {
+                        if (doextended2p2h && universe->GetMCIntType() != 8) continue;
                         std::cout << universe->GetRun() << " " << universe->GetSubRun() << " " << universe->GetGate() << " " << universe->GetPmuGeV() << " " << weight << " " << selection.isDataSelected(*universe, event).all() << " " << selection.isMCSelected(*universe, event, weight).all() << " " << tag << selection.isSignal(*universe) << " " << universe->ShortName() << std::endl;
                         universe->Print();
                     }
 #endif
                     if (selection.isMCSelected(*universe, event, weight).all() && selection.isSignal(*universe)) {
+                        if (doextended2p2h && universe->GetMCIntType() != 8) continue;
                         universe->SetNeutEvent(true);
                         // if (warp!=1.) std::cout << "warp " << warp << "  tmp_weight " << tmp_weight << "   weight " << weight << std::endl;
                         // double weight = data_mc_truth == kData ? 1. : universe->GetWeight();
@@ -292,7 +300,7 @@ void LoopAndFillEventSelection(std::string tag,
                     }
                 } else if (data_mc_truth == kTruth) {
                     // std::cout << "in truth loop, before selection" << std::endl;
-
+                    if (doextended2p2h && universe->GetMCIntType() != 8) continue;
                     if (selection.isEfficiencyDenom(*universe, weight)) {
                         // std::cout << "in truth loop selection, before setneutevent" << std::endl;
 

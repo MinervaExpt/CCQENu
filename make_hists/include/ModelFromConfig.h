@@ -15,6 +15,7 @@
 #include "utils/CoherentPiReweighter.h"
 #include "utils/DiffractiveReweighter.h"
 #include "utils/NuConfig.h"
+#include "utils/RemoveUnphysical2p2hExtendedEventsReweighter.h"
 #include "weighters/BodekRitchieReweighter.h"
 #include "weighters/FSIReweighter.h"
 #include "weighters/FluxAndCVReweighter.h"
@@ -39,17 +40,20 @@ class ModelFromConfig {
     int m_tuney = 0;
     int m_tunez = 0;
 
+    NuConfig m_config;
    public:
     // systematics stuff
     bool m_do2p2hsyst = false;
     bool m_doRPAsyst = false;
     bool m_doLowQ2Pisyst = false;
+    bool m_doextended2p2h = false;
     // bool m_dosyst = false;
 
     std::string m_LowQ2fittype;
 
     ModelFromConfig(const NuConfig config) {
         if (config.IsMember("name")) m_tunename = config.GetString("name");
+        m_config = config;
         std::string tunever;
         if (m_tunename.find("MnvTunev") != std::string::npos)
             tunever = m_tunename.erase(0, 8);
@@ -133,12 +137,18 @@ class ModelFromConfig {
         if (config.IsMember("SuSAFromValencia2p2h")){
             std::cout << "ModelFromConfig: set up SuSAFromValencia2p2h Reweighter" << std::endl;
             MnvTuneVec.emplace_back(new PlotUtils::SuSAFromValencia2p2hReweighter<CVUniverse, PlotUtils::detail::empty>());
+        // } else if (m_doextended2p2h) {
+        //     std::cout << "ModelFromConfig: set up RemoveUnphysical2p2hExtendedEvents Reweighter" << std::endl;
+        //     MnvTuneVec.emplace_back(new PlotUtils::RemoveUnphysical2p2hExtendedEventsReweighter<CVUniverse, PlotUtils::detail::empty>());
         }
 
         // Bodek-Ritchie Enhancement to QE, part of v3
         if (config.IsMember("BodekRitchie")) {
+            // Can be 1 or 2, I think 1 is all you need
+            int br_opt = config.GetInt("BodekRitchie");
             std::cout << "ModelFromConfig: set up BodekRitchie Reweighter" << std::endl;
-            MnvTuneVec.emplace_back(new PlotUtils::BodekRitchieReweighter<CVUniverse, PlotUtils::detail::empty>(1));
+            // MnvTuneVec.emplace_back(new PlotUtils::BodekRitchieReweighter<CVUniverse, PlotUtils::detail::empty>(1));
+            MnvTuneVec.emplace_back(new PlotUtils::BodekRitchieReweighter<CVUniverse, PlotUtils::detail::empty>(br_opt));
         }
         // v3 also includes a 25MeV EAvail removal for pion events
 
@@ -172,7 +182,25 @@ class ModelFromConfig {
             std::cout << std::endl;
             MnvTuneVec.emplace_back(new PlotUtils::FSIReweighter<CVUniverse, PlotUtils::detail::empty>(useElastic, useAbsorption));
         }
+
+
     };
+
+    void SetDoExtended2p2h(bool doextended2p2h = false) {
+        if (doextended2p2h == false) return;
+        if (m_doextended2p2h) {
+            std::cout << "ModelFromConfig: m_doextended2p2h already set. I'm not changing anything.." << std::endl;
+            return;
+        }
+        m_doextended2p2h = true;
+        if (m_config.IsMember("SuSAFromValencia2p2h")) {
+            std::cout << "ModelFromConfig: SuSAFromValencia2p2h set, not setting remove unphysical rw'er" << std::endl;
+            return;
+        }
+        std::cout << "ModelFromConfig: set up RemoveUnphysical2p2hExtendedEvents Reweighter" << std::endl;
+        MnvTuneVec.emplace_back(new PlotUtils::RemoveUnphysical2p2hExtendedEventsReweighter<CVUniverse, PlotUtils::detail::empty>());
+        return;
+    }
 
     TuneVec GetModelTunesFromConfig() const {
         // std::cout << ">>>>>>>>>> MnvTuneVec vec size is \t" << MnvTuneVec.size() << std::endl;
