@@ -818,29 +818,40 @@ bool NeutEvent::CandPassVtxDist(int index) {
         // }
         // return dist >= 75.611 * log(edep) - 190.03;
         // 2d and 3d are treated seperately here, this new one is for the sample with a 100mm cut -NHV 6/60/2026
-        if (edep < 12.0) return true;
-        // Check 2d first
-        if (!m_cands[index]->GetCandIs3D()) {
+        // if (m_evthastrack) {
+        //     // if (!m_cands[index]->GetCandIs3D()) {
+        //     if (dist < 100.0) return false;
+        //     if (edep > 12.0) return dist >= 82.604 * log(edep) - 44.824;
+        //     return true;
+        //     // } else {
+        //     //     if (dist < 75.0) return false;
+        //     //     if (edep > 12.0) return dist >= 79.997 * log(edep) - 35.213;
+        //     // }
+        // } else {
+            if (edep < 12.0) return true;
+            // Check 2d first
+            if (!m_cands[index]->GetCandIs3D()) {
+                // if (edep < 12.0) return true;
+                // This function targets distances w/ 50% purity in proton at lower edep, and loosens at higher edep
+                return dist >= 60.647 * log(edep) - 127.24;
+                // // This one targets 50% everywhere
+                // return dist >= 50.466 * log(edep) - 102.67;
+                // // This one targets 40% everywhere
+                // return dist >= 50.182 *log(edep) - 80.479;
+            }
+            // Now do 3D
+            // with the 500mm cut this gets complicated, there's a peak close to vtx and second firhter away.
+            // this is looser to keep protons near the vertex and tighter for the ones that are at the second further peak
             // if (edep < 12.0) return true;
-            // This function targets distances w/ 50% purity in proton at lower edep, and loosens at higher edep
-            return dist >= 60.647 * log(edep) - 127.24;
-            // // This one targets 50% everywhere
-            // return dist >= 50.466 * log(edep) - 102.67;
-            // // This one targets 40% everywhere
-            // return dist >= 50.182 *log(edep) - 80.479;
-        }
-        // Now do 3D
-        // with the 500mm cut this gets complicated, there's a peak close to vtx and second firhter away.
-        // this is looser to keep protons near the vertex and tighter for the ones that are at the second further peak
-        // if (edep < 12.0) return true;
-        if (edep <= 35.0 && dist > 100.0) {
-            // This is for the further away peak
-            if (dist < -0.5507 * edep * edep + 27.604 * edep - 152.43) return false;
-        }
-        return dist >= 79.195 * log(edep) - 171.93;
+            if (edep <= 35.0 && dist > 100.0) {
+                // This is for the further away peak
+                if (dist < -0.5507 * edep * edep + 27.604 * edep - 152.43) return false;
+            }
+            return dist >= 79.195 * log(edep) - 171.93;
+        // if (m_cands[index]->GetCandRecoEDep() < 12.0) return true;
+        return dist >= m_vtxdist_min;
+        // }
     }
-    // if (m_cands[index]->GetCandRecoEDep() < 12.0) return true;
-    return dist >= m_vtxdist_min;
 }
 
 bool NeutEvent::CandPassVtxZDist(int index) {
