@@ -818,16 +818,16 @@ bool NeutEvent::CandPassVtxDist(int index) {
         // }
         // return dist >= 75.611 * log(edep) - 190.03;
         // 2d and 3d are treated seperately here, this new one is for the sample with a 100mm cut -NHV 6/60/2026
-        // if (m_evthastrack) {
-        //     // if (!m_cands[index]->GetCandIs3D()) {
-        //     if (dist < 100.0) return false;
-        //     if (edep > 12.0) return dist >= 82.604 * log(edep) - 44.824;
-        //     return true;
-        //     // } else {
-        //     //     if (dist < 75.0) return false;
-        //     //     if (edep > 12.0) return dist >= 79.997 * log(edep) - 35.213;
-        //     // }
-        // } else {
+        if (m_evthastrack) {
+            // if (!m_cands[index]->GetCandIs3D()) {
+            if (dist < 100.0) return false;
+            if (edep > 12.0) return dist >= 82.604 * log(edep) - 44.824;
+            return true;
+            // } else {
+            //     if (dist < 75.0) return false;
+            //     if (edep > 12.0) return dist >= 79.997 * log(edep) - 35.213;
+            // }
+        } else {
             if (edep < 12.0) return true;
             // Check 2d first
             if (!m_cands[index]->GetCandIs3D()) {
@@ -850,7 +850,7 @@ bool NeutEvent::CandPassVtxDist(int index) {
             return dist >= 79.195 * log(edep) - 171.93;
         // if (m_cands[index]->GetCandRecoEDep() < 12.0) return true;
         return dist >= m_vtxdist_min;
-        // }
+        }
     }
 }
 

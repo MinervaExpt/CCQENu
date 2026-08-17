@@ -82,7 +82,7 @@ void LoopAndFillEventSelection(std::string tag,
                                bool doextended2p2h = false
                             ) {
     if (doextended2p2h && data_mc_truth == kData) {
-        std::cout << "WARNING: trying to run data for extended2p2h, I won't fill anything" << std::cout;
+        std::cout << "WARNING: trying to run data for extended2p2h, I won't fill anything" << std::endl;
         return; 
     }
     // Prepare loop
