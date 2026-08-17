@@ -43,21 +43,21 @@
     "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist",
     "NeutCandsEdep_NeutCandsvtxSphereDist",
     "NeutCandsEdep_NeutCandsMuonCosTheta",
-    "NeutCandsEdep_NeutCandsTrackEndDist",
-    "recoil_NeutCandsEdep",
-    "recoil_NeutCandsMuonCosTheta",
-    "recoil_NeutCandsvtxSphereDist",
-    "recoil_NeutCandsTrackEndDist"
+    "NeutCandsEdep_NeutCandsTrackEndDist"//,
+    // "recoil_NeutCandsEdep",
+    // "recoil_NeutCandsMuonCosTheta",
+    // "recoil_NeutCandsvtxSphereDist",
+    // "recoil_NeutCandsTrackEndDist"
   ],
   "AnalyzeHyperDVariables": [
     "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
     "NeutCandsEdep_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
     "NeutCandsEdep_NeutCandsMuonCosTheta_NeutCandsTopMCPID",
-    "NeutCandsEdep_NeutCandsTrackEndDist_NeutCandsTopMCPID",
-    "recoil_NeutCandsEdep_NeutCandsTopMCPID",
-    "recoil_NeutCandsMuonCosTheta_NeutCandsTopMCPID",
-    "recoil_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
-    "recoil_NeutCandsTrackEndDist_NeutCandsTopMCPID"
+    "NeutCandsEdep_NeutCandsTrackEndDist_NeutCandsTopMCPID"//,
+    // "recoil_NeutCandsEdep_NeutCandsTopMCPID",
+    // "recoil_NeutCandsMuonCosTheta_NeutCandsTopMCPID",
+    // "recoil_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
+    // "recoil_NeutCandsTrackEndDist_NeutCandsTopMCPID"
   ],
   "signal": {
     "QElike": "qelike",
