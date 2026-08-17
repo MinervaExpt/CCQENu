@@ -848,9 +848,9 @@ bool NeutEvent::CandPassVtxDist(int index) {
                 if (dist < -0.5507 * edep * edep + 27.604 * edep - 152.43) return false;
             }
             return dist >= 79.195 * log(edep) - 171.93;
+        }
         // if (m_cands[index]->GetCandRecoEDep() < 12.0) return true;
         return dist >= m_vtxdist_min;
-        }
     }
 }
 
