@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_FS.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/blobs/AntiNuParams_v15_warping_hd_2donly.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "DPF26_1dneut_2dblobs_allblobcuts_1trackonly_test_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "recoiltest_1dneut_2dblobs_distcut_1trackonly_test_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals_June2026.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
