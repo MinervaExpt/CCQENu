@@ -7,7 +7,7 @@
   "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_sigonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping_hd.json",
   "warpdriverFile": "${CCQEMAT}/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "Test_eavailfromtracks_${MYPLAYLIST}_${MYMODEL}",
+  "outRoot": "Test_eavailfromtracks_eavailalphadeut_${MYPLAYLIST}_${MYMODEL}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
@@ -50,6 +50,7 @@
     // // "ERemovedFromTruthBlobs",
     "EAvail",
     "EAvailFromTracks",
+    "EAvailAlphaDeut",
     // "EAvailoldbins",
     "ptmu"//,
     // "pzmu",
@@ -73,7 +74,11 @@
   ],
   "Analyze2DVariables": [ 
     "EAvail_ptmu",
-    "EAvailFromTracks_ptmu"
+    "EAvailAlphaDeut_ptmu",
+    "EAvailAlphaDeut_EAvail",
+    "EAvailFromTracks_ptmu",
+    "EAvail_recoil",
+    "EAvailFromTracks_recoil"
   ],
   //   "EAvail_EAvailTotalResidual",
   //   "EAvailTrueAsReco_EAvailTotalResidual",

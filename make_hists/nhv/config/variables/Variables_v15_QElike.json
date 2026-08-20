@@ -638,6 +638,27 @@
       ],
       "fluxnorm": false
     },
+    "EAvailAlphaDeut": {
+      "reco": "EAvailGeV",
+      "true": "TrueEAvailAlphaDeutGeV",
+      "name": "EAvailAlphaDeut",
+      "title": "E_{Available} w/ #alpha & d in GeV",
+      // "nbins": 25,
+      // "min": 0,
+      // "max": 0.5,
+      "bins": [
+        0.0,
+        0.015,
+        0.04,
+        0.075,
+        0.12,
+        0.18,
+        0.30,
+        0.50,
+        1.0
+      ],
+      "fluxnorm": false
+    },
     "EAvailLeadingBlob": {
       "reco": "EAvailLeadingBlobGeV",
       "true": "TrueEAvailGeV",
