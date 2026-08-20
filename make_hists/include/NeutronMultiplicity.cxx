@@ -830,24 +830,35 @@ bool NeutEvent::CandPassVtxDist(int index) {
         } else {
             if (edep < 12.0) return true;
             // Check 2d first
-            if (!m_cands[index]->GetCandIs3D()) {
-                // if (edep < 12.0) return true;
-                // This function targets distances w/ 50% purity in proton at lower edep, and loosens at higher edep
-                return dist >= 60.647 * log(edep) - 127.24;
-                // // This one targets 50% everywhere
-                // return dist >= 50.466 * log(edep) - 102.67;
-                // // This one targets 40% everywhere
-                // return dist >= 50.182 *log(edep) - 80.479;
+            // old VVV as of 8/20/26
+            // if (!m_cands[index]->GetCandIs3D()) {
+            //     // if (edep < 12.0) return true;
+            //     // This function targets distances w/ 50% purity in proton at lower edep, and loosens at higher edep
+            //     return dist >= 60.647 * log(edep) - 127.24;
+            //     // // This one targets 50% everywhere
+            //     // return dist >= 50.466 * log(edep) - 102.67;
+            //     // // This one targets 40% everywhere
+            //     // return dist >= 50.182 *log(edep) - 80.479;
+            // }
+            // // Now do 3D
+            // // with the 500mm cut this gets complicated, there's a peak close to vtx and second firhter away.
+            // // this is looser to keep protons near the vertex and tighter for the ones that are at the second further peak
+            // // if (edep < 12.0) return true;
+            // if (edep <= 35.0 && dist > 100.0) {
+            //     // This is for the further away peak
+            //     if (dist < -0.5507 * edep * edep + 27.604 * edep - 152.43) return false;
+            // }
+            // return dist >= 79.195 * log(edep) - 171.93;
+            // new VVV as of 8/20/26
+            if (edep < 12.0) return true;
+            if (dist < 74.194 * log(edep) - 146.38) return false;
+            if (m_cands[index]->GetCandIs3D()) {
+                // this gets the outer peak in 3D blobs
+                if (edep < 40.0 && dist >= 100.0) {
+                    if (dist >= 0.2055 * edep * edep + 11.139 * edep + 50.204) return true;
+                }
             }
-            // Now do 3D
-            // with the 500mm cut this gets complicated, there's a peak close to vtx and second firhter away.
-            // this is looser to keep protons near the vertex and tighter for the ones that are at the second further peak
-            // if (edep < 12.0) return true;
-            if (edep <= 35.0 && dist > 100.0) {
-                // This is for the further away peak
-                if (dist < -0.5507 * edep * edep + 27.604 * edep - 152.43) return false;
-            }
-            return dist >= 79.195 * log(edep) - 171.93;
+            return true;
         }
     }
         // if (m_cands[index]->GetCandRecoEDep() < 12.0) return true;
@@ -898,17 +909,23 @@ bool NeutEvent::CandPassTrackEndDist(int index) {
     double track_dist = m_cands[index]->GetCandTrackFlightPath().R();
     if (m_do_trackenddist_edep_funct) {
         double edep = m_cands[index]->GetCandRecoEDep();
-        if (m_cands[index]->GetCandIs3D()) {
-            // if (edep > 60.0) return track_dist > 250.;
-            // return track_dist > 2.991453 * edep + 75.0;
-            if (edep > 60.0) return track_dist > 300.;
-            return track_dist > 3.75 * edep + 75.0;
-        } else {
-            // return track_dist > 1.9218 * edep + 52.919;
-            // if (edep > 30.0) return track_dist > 175.;
-            if (edep > 60.0) return track_dist > 300.;
-            return track_dist > 4.1667 * edep + 50.;
-        }
+        // old stuff VVV
+        // if (m_cands[index]->GetCandIs3D()) {
+        //     // if (edep > 60.0) return track_dist > 250.;
+        //     // return track_dist > 2.991453 * edep + 75.0;
+        //     if (edep > 60.0) return track_dist > 300.;
+        //     return track_dist > 3.75 * edep + 75.0;
+        // } else {
+        //     // return track_dist > 1.9218 * edep + 52.919;
+        //     // if (edep > 30.0) return track_dist > 175.;
+        //     if (edep > 60.0) return track_dist > 300.;
+        //     return track_dist > 4.1667 * edep + 50.;
+        // }
+        // new stuff VVV (8/20/2026)
+        // Combining both 2d and 3d here
+        if (edep > 60.0) return track_dist > 250.0;
+        if (edep < 12.0) return track_dist > 85.0;
+        return track_dist > 73.669 * log(edep) - 73.979;
     }
 
     return track_dist > m_trackenddist_max;

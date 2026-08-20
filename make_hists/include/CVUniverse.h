@@ -308,6 +308,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetCorrectedEAvailGeV() const;
 
     virtual double GetTrueEAvailGeV() const;
+    virtual double GetTrueEAvailAlphaDeutGeV() const;
     virtual double GetTrueEAvailWithRemovalGeV() const;
 
     virtual double GetTrueEAvailWithNeutronsGeV() const;
@@ -699,6 +700,8 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetVisEClustsSecProtonEnd_6() const;
 
     virtual double GetProtonTfromdEdx(int index) const;
+
+    virtual double GetProtonCalibE(int index) const;
 
     virtual double GetPrimaryProtonTfromdEdx() const;
     virtual double GetSecProtonTfromdEdx(int i) const;

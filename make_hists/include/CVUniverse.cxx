@@ -967,6 +967,11 @@ double CVUniverse::GetProtonTfromdEdx(int index) const {
     return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_T_fromdEdx").c_str(), index - 1);
 }
 
+double CVUniverse::GetProtonCalibE(int index) const {
+    if (index == 0) return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_calib_energy").c_str());
+    return GetVecElem(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_T_fromCalo").c_str(), index - 1);
+}
+
 double CVUniverse::GetPrimaryProtonTfromdEdx() const {
     return GetDouble(std::string(MinervaUniverse::GetTreeName() + "_proton_T_fromdEdx").c_str());
 }
@@ -1335,21 +1340,48 @@ double CVUniverse::GetEAvailGeV() const {
     return recoil - edep * MeVGeV;
 }
 
+// double CVUniverse::GetEAvailFromTracksGeV() const {
+//     if (CVUniverse::GetMultiplicity() < 2) {
+//             return CVUniverse::GetEAvailGeV();
+//     }
+//     // This adds up all the tracked proton KE, plus the blobs from protons
+//     double total = 0.0;
+//     double trackE = 0.0;
+//     // Add trackE's first
+//     double primary_T = CVUniverse::GetProtonTfromdEdx(0);
+//     if (primary_T > 0.0) trackE += primary_T;
+
+//     int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
+//     if (n_sec_proton_scores > 0) {
+//         for (int i = 0; i < n_sec_proton_scores; i++) {
+//             if (CVUniverse::GetProtonTfromdEdx(i + 1) > 0.0) trackE += CVUniverse::GetProtonTfromdEdx(i + 1);
+//         }
+//     }
+//     if (trackE == 0.0) return CVUniverse::GetEAvailGeV();
+//     total += trackE;
+//     // Now add blobs
+//     if (m_neutevent->GetNProtonCands() == 0) return total * MeVGeV;
+//     for (unsigned int i = 0; i < m_neutevent->GetNProtonCands(); i++) {
+//         total += m_neutevent->GetProtonCand(i)->GetCandRecoEDep();
+//     }
+//     return total * MeVGeV;
+// }
+
 double CVUniverse::GetEAvailFromTracksGeV() const {
     if (CVUniverse::GetMultiplicity() < 2) {
-            return CVUniverse::GetEAvailGeV();
+        return CVUniverse::GetEAvailGeV();
     }
     // This adds up all the tracked proton KE, plus the blobs from protons
     double total = 0.0;
     double trackE = 0.0;
     // Add trackE's first
-    double primary_T = CVUniverse::GetProtonTfromdEdx(0);
+    double primary_T = CVUniverse::GetProtonCalibE(0);
     if (primary_T > 0.0) trackE += primary_T;
 
     int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
     if (n_sec_proton_scores > 0) {
         for (int i = 0; i < n_sec_proton_scores; i++) {
-            if (CVUniverse::GetProtonTfromdEdx(i + 1) > 0.0) trackE += CVUniverse::GetProtonTfromdEdx(i + 1);
+            if (CVUniverse::GetProtonCalibE(i + 1) > 0.0) trackE += CVUniverse::GetProtonCalibE(i + 1);
         }
     }
     if (trackE == 0.0) return CVUniverse::GetEAvailGeV();
@@ -1359,7 +1391,9 @@ double CVUniverse::GetEAvailFromTracksGeV() const {
     for (unsigned int i = 0; i < m_neutevent->GetNProtonCands(); i++) {
         total += m_neutevent->GetProtonCand(i)->GetCandRecoEDep();
     }
-    return total * MeVGeV;
+    double ret = total * MeVGeV;
+    if (ret > GetEAvailGeV()) return ret;
+    return GetEAvailGeV();
 }
 
 double CVUniverse::GetERemovedGeV() const {
@@ -1655,6 +1689,43 @@ double CVUniverse::GetTrueEAvailGeV() const {
     return Eavail * MeVGeV;
 }
 
+double CVUniverse::GetTrueEAvailAlphaDeutGeV() const {
+    double Eavail = 0.0;
+    int pdgsize = GetInt("mc_nFSPart");
+    for (int i = 0; i < pdgsize; i++) {
+        int pdg = GetVecElem("mc_FSPartPDG", i);
+        double energy = GetVecElem("mc_FSPartE", i);  // hopefully this is in MeV
+        if (pdg == 2112)
+            continue;  // Skip neutrons
+        else if (pdg == 1000020040)
+            Eavail += energy - 3727.38;
+        else if (pdg == 1000010020)
+            Eavail += energy - 1875.61;
+        else if (abs(pdg) > 1e9)
+            continue;  // ignore nuclear fragments
+        else if (abs(pdg) == 11 || abs(pdg) == 13)
+            continue;  // ignore leptons
+        else if (abs(pdg) == 211)
+            Eavail += energy - 139.57;  // subtracting pion mass to get Kinetic energy
+        else if (pdg == 2212)
+            Eavail += energy - 938.27;  // proton
+        // Eavail += energy - MinervaUnits::M_p;
+        else if (pdg == 111)
+            Eavail += energy;  // pi0
+        else if (pdg == 22)
+            Eavail += energy;  // photons
+        else if (pdg >= 2000)  // TODO: what is this?
+            Eavail += energy - 938.27;
+        // Eavail += energy - MinervaUnits::M_p;
+        else if (pdg <= -2000)
+            Eavail += energy + 938.27;
+        // Eavail += energy + MinervaUnits::M_p;
+        else
+            Eavail += energy;
+    }
+    // return std::max(0.0, Eavail * MeVGeV);
+    return Eavail * MeVGeV;
+}
 double CVUniverse::GetTrueEAvailWithRemovalGeV() const {
     // This one removes the 25 MeV from protons/neutrons
     double Eavail = 0.0;
