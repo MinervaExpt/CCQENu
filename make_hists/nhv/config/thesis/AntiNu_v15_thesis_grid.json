@@ -36,10 +36,15 @@
     "PrimaryProtonScore1"
   ],
   "Analyze2DVariables": [
+    "PrimaryProtonScore_PlotPrimaryProtonCandMCPID",
+    "PrimaryProtonScore1_PlotPrimaryProtonCandMCPID",
     "Q2QE_PrimaryProtonScore",
     "Q2QE_PrimaryProtonScore1"
   ],
-  "AnalyzeHyperDVariables": [], 
+  "AnalyzeHyperDVariables": [
+    "Q2QE_PrimaryProtonScore_PlotPrimaryProtonCandMCPID",
+    "Q2QE_PrimaryProtonScore1_PlotPrimaryProtonCandMCPID"
+  ], 
   "signal": {
     "QElike": "qelike" //,
     // "Background": "qelike",
