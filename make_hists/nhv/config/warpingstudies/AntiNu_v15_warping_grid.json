@@ -29,47 +29,21 @@
   "statusbar": false,
   "runsamples": [ 
     "${MYSAMPLE}"
-    // "QElike",
-    // "QElike_maxrecoil",
-    // "QElike_maxrecoil_hiEAvail"
-    // "QElike_2track"
-    // "QElikeNeut"
-    // "QElike_0blob",
-    // "QElike_1blob"
-    // "QElikeNeutrons"//,
-    // "TrackSideband",
-    // "LoPionThetaSideband",
-    // "HiPionThetaSideband"//,
-    // "BlobSideband",
-    // "MultipBlobSideband"
+
   ],
   "AnalyzeVariables": [
     "EAvail",
     "EAvailWithRemoval",
-    // "EAvailoldbins",
-    // "EAvailhibin",
-    // "NNeutCands",
-    // "TotalNeutBlobE",
-    // "EAvail_nohi",
-    // "EAvailNoNonVtxBlobs",
-    // "EAvailWithNeutrons",
-    // "CalibEAvailWithNeutrons",
-    // "recoil",
     "ptmu",
     "pzmu"
   ],
   "Analyze2DVariables": [
-    // "recoil_ptmu",
     "EAvail_ptmu",
     "EAvail_pzmu",
     "EAvailWithRemoval_ptmu",
-    "EAvailWithRemoval_pzmu" //,
-    // "pzmu_ptmu"
-    // "EAvailoldbins_ptmu",
-    // "EAvailhibin_ptmu"
-  //   "EAvailNoNonVtxBlobs_ptmu"
-  ], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
-  "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
+    "EAvailWithRemoval_pzmu" ,
+  ],
+  "AnalyzeHyperDVariables": [], 
   "signal": {
     "QElike": "qelike" //,
     // "Background": "qelike",
