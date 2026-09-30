@@ -2126,6 +2126,60 @@ int CVUniverse::GetTruthIsCCQELikeAll() const {  // cut hardwired for now
     return passes;
 }
 
+// all ccqelike where neutron is highest energy nucleon
+int CVUniverse::GetTruthIsCCQELikeAllNeutron() const {  // cut hardwired for now
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+    bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    // int mc_incoming = GetInt("mc_incoming");
+    // int mc_current = GetInt("mc_current");
+    bool passes = (CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, 1000000.));
+    if (!passes) return false;
+    // Check if proton is highest KE
+    double proton_maxKE = -9999.0;
+    double neutron_maxKE = -9999.0;
+    for (int i = 0; i < mc_FSPartPDG.size(); i++) {
+        int pdg = mc_FSPartPDG[i];
+        if (pdg != 2212 || pdg != 2112) continue;
+        if (pdg == 2212) {  // proton
+            if (mc_FSPartE[i] - 938.27 > proton_maxKE) proton_maxKE = mc_FSPartE[i] - 938.27;
+        }
+        if (pdg == 2112) {  // neutron
+            if (mc_FSPartE[i] - 939.56 > neutron_maxKE) neutron_maxKE = mc_FSPartE[i] - 939.56;
+        }
+    }
+    if (proton_maxKE <= neutron_maxKE) return true;
+    return false;
+}
+
+// all ccqelike where proton is highest energy nucleon
+int CVUniverse::GetTruthIsCCQELikeAllProton() const {  // cut hardwired for now
+    std::vector<int> mc_FSPartPDG = GetVecInt("mc_FSPartPDG");
+    std::vector<double> mc_FSPartE = GetVecDouble("mc_FSPartE");
+    bool neutrinoMode = CVUniverse::GetTruthNuPDG() > 0;
+    int mc_nFSPart = GetInt("mc_nFSPart");
+    // int mc_incoming = GetInt("mc_incoming");
+    // int mc_current = GetInt("mc_current");
+    bool passes = (CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, 1000000.));
+    if (!passes) return false;
+    // Check if proton is highest KE
+    double proton_maxKE = -9999.0;
+    double neutron_maxKE = -9999.0;
+    for (int i = 0; i < mc_FSPartPDG.size(); i++) {
+        int pdg = mc_FSPartPDG[i];
+        if (pdg != 2212 || pdg != 2112) continue;
+        if (pdg == 2212) {  // proton
+            if (mc_FSPartE[i] - 938.27 > proton_maxKE) proton_maxKE = mc_FSPartE[i] - 938.27;
+        }
+        if (pdg == 2112) {  // neutron
+            if (mc_FSPartE[i] - 939.56 > neutron_maxKE) neutron_maxKE = mc_FSPartE[i] - 939.56;
+        }
+    }
+    if (proton_maxKE > neutron_maxKE) return true;
+    return false;
+}
+
 int CVUniverse::GetTruthIsQELike() const {
     if (CVUniverse::GetTruthIsCCQELikeAll() == 1 &&
         CVUniverse::GetTruthNuPDG() == m_analysis_neutrino_pdg &&

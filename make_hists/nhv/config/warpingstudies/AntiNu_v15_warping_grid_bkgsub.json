@@ -46,7 +46,7 @@
     // // "MultipBlobSideband"
   ],
   "AnalyzeVariables": [],
-    // "EAvail",
+    "EAvail",
     // "NNeutCands",
     // "TotalNeutBlobE",
     // "EAvail_nohi",
@@ -54,37 +54,38 @@
     // "EAvailWithNeutrons",
     // "CalibEAvailWithNeutrons",
   //   "recoil",
-  //   "ptmu"
+    "ptmu"
   // ],
   "Analyze2DVariables": [
-    "FitQ2QE_Fitrecoil"
+    // "FitQ2QE_Fitrecoil"
   ],
-  //   "recoil_ptmu",
-  //   "EAvail_ptmu",
-  //   "EAvailNoNonVtxBlobs_ptmu"
-  // ], //"NBlobs_NNeutBlobs"], //"recoil_ptmu","pzmu_ptmu"],//"Q2QE_recoil"],//["pzmu_ptmu"], 
-  "AnalyzeHyperDVariables": [], //"pzmu_ptmu_recoil","pmu_ThetamuDegrees_recoil"],// ["pzmu_ptmu_recoil"],//"pzmu_ptmu_EAvail"], 
+  "AnalyzeHyperDVariables": [], 
   "signal": {
-    "QElike": "qelike" //,
-    // "Background": "qelike",
-    // "QElikeNP": "qelike_np",
-    // "QElikeALLAngles": "qelike_np"
-  }, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
+    "QElike": "qelike",
+    "TrackSideband": "qelike",
+    "BlobSideband": "qelike"
+  },
   "background": {
     "QElike": [
       "charged_pion",
       "neutralpion",
       "other"
-    ] //,
-    // "Background": "qelikenot",
-    // "QElikeNP": "qelikenot_np",
-    // "QElikeALLAngles": "qelikenot_np"
+    ],
+    "TrackSideband": [
+      "charged_pion",
+      "neutralpion",
+      "other"
+    ],
+    "BlobSideband": [
+      "charged_pion",
+      "neutralpion",
+      "other"
+    ]
   },
   "data": {
-    "QElike": "data" //,
-    // "Background": "data",
-    // "QElikeNP": "data",
-    // "QElikeALLAngles": "data"
+    "QElike": "data",
+    "TrackSideband": "data",
+    "BlobSideband": "data"
   },
   "responseSystematicsVersion": "2024",
   "systematics": [
@@ -94,7 +95,6 @@
     "MINOSEfficiency",
     "Angle",
     "GENIE",
-    // "GenieRvx1pi",
     "RPA",
     "2p2h",
     "MuonMinerva",
@@ -103,9 +103,9 @@
     // "MoNANeutronInelastic",
     "LowQ2Pi" //,
   ],
-  "fluxUniverses": 200,//200,
+  "fluxUniverses": 200,
   "NuEConstraint": 1,
   "Geant4NeutronCV": 1,
-  "Geant4Elastics": 1 //,
+  "Geant4Elastics": 1//,
   //"RPAMaterials":0 
 }

@@ -26,6 +26,7 @@
 #include "weighters/MINOSEfficiencyReweighter.h"
 #include "weighters/RPAReweighter.h"
 #include "weighters/SuSAFromValencia2p2hReweighter.h"
+#include "weighters/ZExpansionReweighter.h"
 
 namespace CCQENu {
 typedef std::vector<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>*> TuneVec;
@@ -47,6 +48,7 @@ class ModelFromConfig {
     bool m_doRPAsyst = false;
     bool m_doLowQ2Pisyst = false;
     bool m_doextended2p2h = false;
+    bool m_dozexpansion = false;
     // bool m_dosyst = false;
 
     std::string m_LowQ2fittype;
@@ -183,7 +185,12 @@ class ModelFromConfig {
             MnvTuneVec.emplace_back(new PlotUtils::FSIReweighter<CVUniverse, PlotUtils::detail::empty>(useElastic, useAbsorption));
         }
 
-
+        // Zexpansion axial form factor for vX.4
+        if (config.IsMember("ZExpansion")) {
+            std::cout << "ModelFromConfig: set up ZExpansion Reweighter" << std::endl;
+            MnvTuneVec.emplace_back(new PlotUtils::ZExpansionReweighter<CVUniverse, PlotUtils::detail::empty>());
+            bool m_dozexpansion = true;
+        }
     };
 
     void SetDoExtended2p2h(bool doextended2p2h = false) {
@@ -201,6 +208,8 @@ class ModelFromConfig {
         MnvTuneVec.emplace_back(new PlotUtils::RemoveUnphysical2p2hExtendedEventsReweighter<CVUniverse, PlotUtils::detail::empty>());
         return;
     }
+
+    bool GetDoZExpansion() { return m_dozexpansion; }
 
     TuneVec GetModelTunesFromConfig() const {
         // std::cout << ">>>>>>>>>> MnvTuneVec vec size is \t" << MnvTuneVec.size() << std::endl;

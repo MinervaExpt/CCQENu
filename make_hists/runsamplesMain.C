@@ -149,7 +149,7 @@ int main(const int argc, const char *argv[]) {
     PlotUtils::MinervaUniverse::SetMHRWeightElastics(config.GetInt("Geant4Elastics"));
     PlotUtils::MinervaUniverse::SetTreeName(reco_tree_name);
 
-    PlotUtils::MinervaUniverse::SetZExpansionFaReweight(false);
+    // PlotUtils::MinervaUniverse::SetZExpansionFaReweight(false);
     
     // if (config.IsMember("RPAMaterials")){
     //     PlotUtils::MinervaUniverse::RPAMaterials(config.GetInt("RPAMaterials"));
@@ -188,12 +188,15 @@ int main(const int argc, const char *argv[]) {
             modeltune->SetDoExtended2p2h(true);
         }
         std::vector<PlotUtils::Reweighter<CVUniverse, PlotUtils::detail::empty>*> tunevec = modeltune->GetModelTunesFromConfig();
+        bool dozexpansion = modeltune->GetDoZExpansion() ? true : false;
+        PlotUtils::MinervaUniverse::SetZExpansionFaReweight(dozexpansion);
         for (auto tune : tunevec) {
             MnvTune.emplace_back(tune);
         }
         std::cout << ">>>>>>>>>> MnvTune vec size is \t" << MnvTune.size() << std::endl;
 
     } else {
+        PlotUtils::MinervaUniverse::SetZExpansionFaReweight(false);
         std::string modeltune = "MnvTunev1";
         if (config.IsMember("MinervaModel")) {  // TODO
             modeltune = config.GetString("MinervaModel");

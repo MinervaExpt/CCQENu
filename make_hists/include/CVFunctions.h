@@ -212,6 +212,8 @@ class CVFunctions {
 
         trueintfunctions["TruthIsCCQELike"] = &CVUNIVERSE::GetTruthIsCCQELike;
         trueintfunctions["TruthIsCCQELikeAll"] = &CVUNIVERSE::GetTruthIsCCQELikeAll;
+        trueintfunctions["TruthIsCCQELikeAllNeutron"] = &CVUNIVERSE::GetTruthIsCCQELikeAllNeutron;
+        trueintfunctions["TruthIsCCQELikeAllProton"] = &CVUNIVERSE::GetTruthIsCCQELikeAllProton;
 
         trueintfunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;
         truefunctions["TruthIsCC"] = &CVUNIVERSE::GetTruthIsCC;

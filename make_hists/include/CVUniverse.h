@@ -392,6 +392,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual int GetTruthIsCCQELikeAll() const;  // cut hardwired for now
 
+    virtual int GetTruthIsCCQELikeAllNeutron() const;
+
+    virtual int GetTruthIsCCQELikeAllProton() const;
+
     virtual int GetTruthIsQELike() const;
 
     virtual int GetTruthNNucleons() const;
