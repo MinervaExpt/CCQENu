@@ -993,7 +993,10 @@ def main():
     universe_names_list = ['cv']
     for univ_name in category_dict["qelike"][0].GetVertErrorBandNames():
         universe_names_list.append(univ_name)
-
+    areascale_dict = {}
+    areascale_mnvh1d_dict = {}
+    for sample in fit_sample_list:
+        areascale_mnvh1d_dict[sample] = dummy_scalevar_mnvh1d.Clone()
     for raw_univ_name in universe_names_list:
         print("  Starting universe ", raw_univ_name, "...")
         univ_name = raw_univ_name
@@ -1007,7 +1010,9 @@ def main():
             scale_univhist_dict[cat] = []
             frac_univhist_dict[cat] = []
             fitfrac_univhist_dict[cat] = []
-
+        areascale_univhist_dict = {}
+        for sample in fit_sample_list:
+            areascale_univhist_dict[sample] = []
         # This holds the pre fit hists to build the error band later
         pre_fitbin_cat_univ_hist_dict = {}
         pre_fitbin_cat_univ_hist_dict_uncut = {}
@@ -1042,7 +1047,8 @@ def main():
                     fitfrac_univhist_dict[key].append(dummy_scalevar_th1d.Clone())
                 # tmp_th2d_dict[key] = tmp_th2d
                 tmp_th2d_shortlist_dict[key] = tmp_th2d_shortlist
-            
+            for sample in fit_sample_list:
+                areascale_univhist_dict[sample].append(dummy_scalevar_th1d.Clone())
             print("***********************************************",frac_univhist_dict.keys())
             for key in frac_univhist_dict.keys():
                 print(len(frac_univhist_dict[key]))
@@ -1119,6 +1125,9 @@ def main():
                 # if not dosimulfithists:
                 #     tmp_min_bin = 1
                 # max_xbin = prefit_th1d_dict["data"].GetNbinsX()
+                if raw_univ_name == "cv" and fitbin == 1:
+                    for i in range(len(prefit_th1d_dict_shortlist["data"])):
+                        areascale_dict[i] = []
                 for i in range(len(prefit_th1d_dict_shortlist["data"])):
                     # tmp_max_bin = max_xbin
                     # tmp_max_bin = max_xbin - skipbins[i]
@@ -1140,6 +1149,12 @@ def main():
                     print("\tarea scale for fitbin %s univ %s%03d: %f"%(fitbin_name, raw_univ_name,univ,tmp_area_scale))
                     for cat in mc_category_list + ["mctot"]:
                         prefit_th1d_dict_shortlist[cat][i].Scale(tmp_area_scale)
+                    if raw_univ_name == "cv":
+                        areascale_dict[i].append(round(tmp_area_scale,2))
+                        areascale_mnvh1d_dict[fit_sample_list[i]].SetBinContent(fitbin,tmp_area_scale)
+                        # areascale_mnvh1d_dict[fit_sample_list[i]].SetBinError(fitbin,0.00001)
+                    else:
+                        areascale_univhist_dict[fit_sample_list[i]][univ].SetBinContent(fitbin, tmp_area_scale)
                 # Now we can combine these histograms
                 prefit_th1d_dict = {}
                 for cat in prefit_th1d_dict_shortlist:
@@ -1383,6 +1398,8 @@ def main():
                 scalefrac_mnvh1d_dict[cat]["fitfrac"].AddVertErrorBand(raw_univ_name,fitfrac_univhist_dict[cat])
                 scalefrac_mnvh1d_dict[cat]["fraction"].AddVertErrorBand(raw_univ_name,frac_univhist_dict[cat])
                 scalefrac_mnvh1d_dict[cat]["scale"].AddVertErrorBand(raw_univ_name,scale_univhist_dict[cat])
+            for sample in fit_sample_list:
+                areascale_mnvh1d_dict[sample].AddVertErrorBand(raw_univ_name,areascale_univhist_dict[sample])
     # end univ_name loop
     print("Done filling hists... ")
     del prefit_th1d_dict
@@ -1820,9 +1837,76 @@ def main():
 
     # histfile_tail = "_FractionFitHists"
     # histfile_name = outfilebase.replace(".root", histfile_tail)
-    fit_mnvh1d_dict
+    # fit_mnvh1d_dict
+    sample_color_dict = {
+        "QElike": ROOT.kBlack,
+        "TrackSideband": ROOT.kP10Orange,
+        "BlobSideband": ROOT.kP10Blue,
+    }
+    sample_name_dict = {
+        "QElike": "Signal Sample",
+        "TrackSideband": "Track Sideband",
+        "BlobSideband": "Blob Sideband"
+    }
+    for key in areascale_dict:
+        print(areascale_dict[key])
+        tmp_area_scale_hist = dummy_scalevar_mnvh1d.Clone()
     
-    
+    areascale_canvas = ROOT.TCanvas("areascale","areascale", 1500, 1200)
+    areascale_canvas.cd()
+    areascale_canvas.SetLeftMargin(0.1)
+    areascale_canvas.SetRightMargin(0.05)
+    # areascale_canvas.Draw()
+    areascale_canvas.SetLogx()
+
+    ROOT.gStyle.SetEndErrorSize(10) # This makes the ticks at the end of the error bars longer
+
+    areascale_cvhist_list = []
+    areascale_band_list = []
+    marker_i = 0
+    for sample in fit_sample_list:
+        tmp_hist = MnvH1D()
+        band = MnvH1D()
+        tmp_hist = areascale_mnvh1d_dict[sample].Clone()
+        tmp_hist.SetLineColor(sample_color_dict[sample])
+        tmp_hist.SetLineWidth(2)
+        tmp_hist.SetMarkerSize(2)
+        tmp_hist.SetMarkerStyle(53 + marker_i)
+        marker_i+=1
+        tmp_hist.SetMarkerColor(sample_color_dict[sample])
+        areascale_cvhist_list.append(tmp_hist)
+        band = tmp_hist.Clone().GetCVHistoWithError()
+        band.SetFillColorAlpha(sample_color_dict[sample],0.3)
+        areascale_band_list.append(band)
+
+    as_leg = ROOT.TLegend(0.15, 0.2, 0.45, 0.35)
+    as_leg.SetBorderSize(0)
+    as_leg.SetFillColor(-1)
+    for i in range(len(fit_sample_list)):
+        as_leg.AddEntry(areascale_cvhist_list[i], sample_name_dict[fit_sample_list[i]])
+
+
+
+    basehist = areascale_mnvh1d_dict["QElike"].Clone()
+    for fitbin in fit_mnvh1d_dict:
+        basehist.SetBinContent(fitbin, 1.0)
+    basehist.SetLineColorAlpha(ROOT.kP10Red,0.5)
+    basehist.SetLineStyle(2)
+    basehist.SetMinimum(0.5)
+    basehist.SetMaximum(1.9)
+    basehist.GetXaxis().SetTitle("Fit-bin Q^{2}_{QE} [(GeV/c)^{2}]")
+    basehist.GetXaxis().CenterTitle()
+    basehist.GetXaxis().SetTitleOffset(1.5)
+    basehist.GetYaxis().SetTitle("Area norm. scale factor")
+    basehist.GetYaxis().CenterTitle()
+    basehist.Draw("HIST")
+
+    for i in reversed(range(len(areascale_band_list))):
+        areascale_band_list[i].Draw("E1 X0 same")
+        areascale_cvhist_list[i].Draw("L HIST same")
+        # areascale_cvhist_list[i].Draw("h same")
+    as_leg.Draw()
+    areascale_canvas.Print("area_scale.pdf")
     print("Success")
 
 

@@ -79,7 +79,11 @@ bincomb_dict = {
     "NeutCandsEdep": [
         [
             1,
+        ],
+        [
             2,
+        ],
+        [
             3,
         ],
         [
