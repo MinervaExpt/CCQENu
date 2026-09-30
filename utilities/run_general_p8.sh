@@ -16,5 +16,5 @@ export MYMODEL=MnvTunev2.0.1
 
 python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/protonscore \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_neutronblob_plotstuff_hd_AllBlobs_2trackonly \
- --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
  --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
