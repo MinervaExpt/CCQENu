@@ -3,7 +3,7 @@
   "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
   "cutsFile": "${CCQEMAT}/nhv/config/thesis/AntiNuCuts_v15_thesis.json",
-  "varsFile": "${CCQEMAT}/nhv/config/thesis/Variables_v15_thesis.json",
+  "varsFile": "${CCQEMAT}/nhv/config/thesis/Variables_v15_thesis_blobshd.json",
   "samplesFile": "${CCQEMAT}/nhv/config/thesis/AntiNuSamples_v15_thesis_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/thesis/AntiNuParams_v15_thesis.json",
   "warpdriverFile": "${CCQEMAT}/config/thesis/AntiNuWarps_v15.json",

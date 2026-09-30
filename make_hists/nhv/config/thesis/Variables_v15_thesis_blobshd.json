@@ -1878,7 +1878,8 @@
       "reco": "Q2QEGeV",
       "true": "TrueQ2QEGeV",
       "name": "Q2QE",
-      "title": "Q^{2} (QE)(GeV^{2})",
+      "title": "Q^{2}_{QE}",
+      "units": "GeV^{2}",
       "bins": [
         0.001,
         0.0125,
@@ -1902,7 +1903,21 @@
       "true": "TruthHasSingleProton",
       "name": "PrimaryProtonScore",
       "title": "Proton Score of Primary non-Muon Track",
-      "nbins": 25,
+      "nbins": 50,
+      "min": 0.0,
+      "max": 1.0,
+      "fluxnorm": false,
+      "for": [
+        "selected_reco",
+        "data"
+      ]
+    },
+    "PrimaryProtonScore1": {
+      "reco": "PrimaryProtonScore1",
+      "true": "TruthHasSingleProton",
+      "name": "PrimaryProtonScore1",
+      "title": "Proton Score1 of Primary non-Muon Track",
+      "nbins": 50,
       "min": 0.0,
       "max": 1.0,
       "fluxnorm": false,
