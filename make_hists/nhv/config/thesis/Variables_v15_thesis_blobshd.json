@@ -1,0 +1,1970 @@
+{
+  "Comments": [
+    "4-4-2023 added analysistype to HyperD vars",
+    "2-13-2023 add multidim options",
+    "10-9-2022 reproduce PRD",
+    "7-5-2022 change to Amit's binning,Q2 and pzmu change",
+    "6-5-2022 change the zstart cut to include the start",
+    "add log10recoil"
+  ],
+  "HyperD": {
+    "ptmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name": "ptmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "ptmu",
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "ptmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+      "name": "ptmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+      "vars": [
+        "ptmu",
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "ptmu_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+      "name": "ptmu_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      "vars": [
+        "ptmu",
+        "LeadingNeutCandMuonCosTheta",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name": "EAvail_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID": {
+      "name": "EAvail_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "SecNeutCandvtxSphereDist",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID": {
+      "name": "EAvail_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "LeadingNeutCandvtxBoxDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID": {
+      "name": "EAvail_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "SecNeutCandvtxBoxDist",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+      "name": "EAvail_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_SecNeutCandEdep_SecNeutCandTopMCPID": {
+      "name": "EAvail_SecNeutCandEdep_SecNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "SecNeutCandEdep",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "EAvail_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+      "name": "EAvail_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      "vars": [
+        "EAvail",
+        "LeadingNeutCandMuonCosTheta",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name": "recoil_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID": {
+      "name": "recoil_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "SecNeutCandvtxSphereDist",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+      "name": "recoil_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_SecNeutCandEdep_SecNeutCandTopMCPID": {
+      "name": "recoil_SecNeutCandEdep_SecNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "SecNeutCandEdep",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+      "name": "recoil_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "LeadingNeutCandMuonCosTheta",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID": {
+      "name": "recoil_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "LeadingNeutCandvtxBoxDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "recoil_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID": {
+      "name": "recoil_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID",
+      "vars": [
+        "recoil",
+        "SecNeutCandvtxBoxDist",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "pzmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name": "pzmu_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "pzmu",
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "pzmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+      "name": "pzmu_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+      "vars": [
+        "pzmu",
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "pzmu_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+      "name": "pzmu_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      "vars": [
+        "pzmu",
+        "LeadingNeutCandMuonCosTheta",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "pzmu_ptmu_recoil": {
+      "name": "pzmu_ptmu_recoil",
+      "vars": [
+        // "pzmuHD",
+        // "ptmuHD",
+        // "recoil"
+        "pzmu",
+        "ptmu",
+        "recoil"
+      ],
+      "analysistype": 3
+    },
+    "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandEdep_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandEdep_SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
+      "vars": [
+        "SecNeutCandEdep",
+        "SecNeutCandvtxSphereDist",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID",
+      "vars": [
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandvtxBoxDist",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandEdep_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandEdep_SecNeutCandvtxBoxDist_SecNeutCandTopMCPID",
+      "vars": [
+        "SecNeutCandEdep",
+        "SecNeutCandvtxBoxDist",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+      "vars": [
+        "LeadingNeutCandvtxSphereDist",
+        "LeadingNeutCandMuonCosTheta",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+      "name": "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+      "vars": [
+        "LeadingNeutCandMuonCosTheta",
+        "LeadingNeutCandEdep",
+        "LeadingNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandMuonCosTheta_SecNeutCandEdep_SecNeutCandTopMCPID": {
+      "name": "SecNeutCandMuonCosTheta_SecNeutCandEdep_SecNeutCandTopMCPID",
+      "vars": [
+        "SecNeutCandMuonCosTheta",
+        "SecNeutCandEdep",
+        "SecNeutCandTopMCPID"
+      ],
+      "analysistype": 1,
+      "for": [
+        "selected_reco"
+      ]
+    }
+  },
+  // "2D": {
+  //   "recoil_ptmu": {
+  //     "name": "recoil_ptmu",
+  //     "xvar": "recoil",
+  //     "yvar": "ptmu"
+  //   },
+  //   "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandvtxZDist_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandvtxZDist",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandvtxSphereDist_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandvtxSphereDist",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandEdep_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandEdep_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandEdep",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandvtxZDist_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandvtxZDist_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandvtxZDist",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandvtxSphereDist_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandvtxSphereDist_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandvtxSphereDist",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandEdep_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandEdep_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandEdep",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandvtxZDist_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandvtxZDist_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandvtxZDist",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandvtxSphereDist_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandvtxSphereDist_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandvtxSphereDist",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandEdep_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandEdep_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandEdep",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandvtxBoxDist_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandvtxBoxDist",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandvtxBoxDist_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandvtxBoxDist_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandvtxBoxDist",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandvtxBoxDist_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandvtxBoxDist_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandvtxBoxDist",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandMuonDist_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandMuonDist_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandMuonDist",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandMuonDist_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandMuonDist_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandMuonDist",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandMuonDist_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandMuonDist_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandMuonDist",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandMuonAngle_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandMuonAngle_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandMuonAngle",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandMuonAngle_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandMuonAngle_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandMuonAngle",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandMuonAngle_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandMuonAngle_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandMuonAngle",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandMuonCosTheta_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandMuonCosTheta",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandMuonCosTheta_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandMuonCosTheta_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandMuonCosTheta",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandClusterMaxE_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandClusterMaxE",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandClusterMaxE_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandClusterMaxE_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandClusterMaxE",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "ThirdNeutCandClusterMaxE_ThirdNeutCandTopMCPID": {
+  //     "name": "ThirdNeutCandClusterMaxE_ThirdNeutCandTopMCPID",
+  //     "xvar": "ThirdNeutCandClusterMaxE",
+  //     "yvar": "ThirdNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandAngleToParent_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandAngleToParent_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandAngleToParent",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "SecNeutCandAngleToParent_SecNeutCandTopMCPID": {
+  //     "name": "SecNeutCandAngleToParent_SecNeutCandTopMCPID",
+  //     "xvar": "SecNeutCandAngleToParent",
+  //     "yvar": "SecNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID": {
+  //     "name": "LeadingNeutCandCosThetaToParent_LeadingNeutCandTopMCPID",
+  //     "xvar": "LeadingNeutCandCosThetaToParent",
+  //     "yvar": "LeadingNeutCandTopMCPID"
+  //   },
+  //   "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist": {
+  //     "name": "LeadingNeutCandEdep_LeadingNeutCandvtxSphereDist",
+  //     "xvar": "LeadingNeutCandEdep",
+  //     "yvar": "LeadingNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "SecNeutCandEdep_SecNeutCandvtxSphereDist": {
+  //     "name": "SecNeutCandEdep_SecNeutCandvtxSphereDist",
+  //     "xvar": "SecNeutCandEdep",
+  //     "yvar": "SecNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist": {
+  //     "name": "LeadingNeutCandEdep_LeadingNeutCandvtxBoxDist",
+  //     "xvar": "LeadingNeutCandEdep",
+  //     "yvar": "LeadingNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "SecNeutCandEdep_SecNeutCandvtxBoxDist": {
+  //     "name": "SecNeutCandEdep_SecNeutCandvtxBoxDist",
+  //     "xvar": "SecNeutCandEdep",
+  //     "yvar": "SecNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta":{
+  //     "name": "LeadingNeutCandvtxSphereDist_LeadingNeutCandMuonCosTheta",
+  //     "xvar": "LeadingNeutCandvtxSphereDist",
+  //     "yvar": "LeadingNeutCandMuonCosTheta",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_LeadingNeutCandEdep": {
+  //     "name": "EAvail_LeadingNeutCandEdep",
+  //     "xvar": "EAvail",
+  //     "yvar": "LeadingNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_SecNeutCandEdep": {
+  //     "name": "EAvail_SecNeutCandEdep",
+  //     "xvar": "EAvail",
+  //     "yvar": "SecNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_LeadingNeutCandvtxSphereDist": {
+  //     "name": "EAvail_LeadingNeutCandvtxSphereDist",
+  //     "xvar": "EAvail",
+  //     "yvar": "LeadingNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_SecNeutCandvtxSphereDist": {
+  //     "name": "EAvail_SecNeutCandvtxSphereDist",
+  //     "xvar": "EAvail",
+  //     "yvar": "SecNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_LeadingNeutCandMuonCosTheta": {
+  //     "name": "EAvail_LeadingNeutCandMuonCosTheta",
+  //     "xvar": "EAvail",
+  //     "yvar": "LeadingNeutCandMuonCosTheta",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_LeadingNeutCandvtxBoxDist": {
+  //     "name": "EAvail_LeadingNeutCandvtxBoxDist",
+  //     "xvar": "EAvail",
+  //     "yvar": "LeadingNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_SecNeutCandvtxBoxDist": {
+  //     "name": "EAvail_SecNeutCandvtxBoxDist",
+  //     "xvar": "EAvail",
+  //     "yvar": "SecNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "ptmu_LeadingNeutCandvtxSphereDist": {
+  //     "name": "ptmu_LeadingNeutCandvtxSphereDist",
+  //     "xvar": "ptmu",
+  //     "yvar": "LeadingNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "ptmu_LeadingNeutCandEdep": {
+  //     "name": "ptmu_LeadingNeutCandEdep",
+  //     "xvar": "ptmu",
+  //     "yvar": "LeadingNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "ptmu_LeadingNeutCandMuonCosTheta": {
+  //     "name": "ptmu_LeadingNeutCandMuonCosTheta",
+  //     "xvar": "ptmu",
+  //     "yvar": "LeadingNeutCandMuonCosTheta",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "pzmu_LeadingNeutCandEdep": {
+  //     "name": "pzmu_LeadingNeutCandEdep",
+  //     "xvar": "pzmu",
+  //     "yvar": "LeadingNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "pzmu_LeadingNeutCandvtxSphereDist": {
+  //     "name": "pzmu_LeadingNeutCandvtxSphereDist",
+  //     "xvar": "pzmu",
+  //     "yvar": "LeadingNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "pzmu_LeadingNeutCandMuonCosTheta": {
+  //     "name": "pzmu_LeadingNeutCandMuonCosTheta",
+  //     "xvar": "pzmu",
+  //     "yvar": "LeadingNeutCandMuonCosTheta",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_LeadingNeutCandEdep": {
+  //     "name": "recoil_LeadingNeutCandEdep",
+  //     "xvar": "recoil",
+  //     "yvar": "LeadingNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_SecNeutCandEdep": {
+  //     "name": "recoil_SecNeutCandEdep",
+  //     "xvar": "recoil",
+  //     "yvar": "SecNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_LeadingNeutCandvtxSphereDist": {
+  //     "name": "recoil_LeadingNeutCandvtxSphereDist",
+  //     "xvar": "recoil",
+  //     "yvar": "LeadingNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_SecNeutCandvtxSphereDist": {
+  //     "name": "recoil_SecNeutCandvtxSphereDist",
+  //     "xvar": "recoil",
+  //     "yvar": "SecNeutCandvtxSphereDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_LeadingNeutCandMuonCosTheta": {
+  //     "name": "recoil_LeadingNeutCandMuonCosTheta",
+  //     "xvar": "recoil",
+  //     "yvar": "LeadingNeutCandMuonCosTheta",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_LeadingNeutCandvtxBoxDist": {
+  //     "name": "recoil_LeadingNeutCandvtxBoxDist",
+  //     "xvar": "recoil",
+  //     "yvar": "LeadingNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "recoil_SecNeutCandvtxBoxDist": {
+  //     "name": "recoil_SecNeutCandvtxBoxDist",
+  //     "xvar": "recoil",
+  //     "yvar": "SecNeutCandvtxBoxDist",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "EAvail_TotalNeutBlobE": {
+  //     "name": "EAvail_TotalNeutBlobE",
+  //     "xvar": "EAvail",
+  //     "yvar": "TotalNeutBlobE"
+  //   },
+  //   "recoil_TotalNeutBlobE": {
+  //     "name": "recoil_TotalNeutBlobE",
+  //     "xvar": "recoil",
+  //     "yvar": "TotalNeutBlobE"
+  //   },
+  //   "EAvail_RecoTotalNeutBlobE": {
+  //     "name": "EAvail_RecoTotalNeutBlobE",
+  //     "xvar": "EAvail",
+  //     "yvar": "RecoTotalNeutBlobE"
+  //   },
+  //   "recoil_RecoTotalNeutBlobE": {
+  //     "name": "recoil_RecoTotalNeutBlobE",
+  //     "xvar": "recoil",
+  //     "yvar": "RecoTotalNeutBlobE"
+  //   },
+  //   "EAvail_TrueTotalNeutBlobE": {
+  //     "name": "EAvail_TrueTotalNeutBlobE",
+  //     "xvar": "EAvail",
+  //     "yvar": "TrueTotalNeutBlobE"
+  //   },
+  //   "recoil_TrueTotalNeutBlobE": {
+  //     "name": "recoil_TrueTotalNeutBlobE",
+  //     "xvar": "recoil",
+  //     "yvar": "TrueTotalNeutBlobE"
+  //   },
+  //   "LeadingNeutCandLength_LeadingNeutCandEdep": {
+  //     "name": "LeadingNeutCandLength_LeadingNeutCandEdep",
+  //     "xvar": "LeadingNeutCandLength",
+  //     "yvar": "LeadingNeutCandTopMCPID",
+  //     "for": [
+  //       "selected_reco"
+  //     ]
+  //   },
+  //   "SecondNeutCandLength_LeadingNeutCandEdep": {
+  //     "name": "SecondNeutCandLength_LeadingNeutCandEdep",
+  //     "xvar": "SecondNeutCandLength",
+  //     "yvar": "SecNeutCandTopMCPID",
+  //     "for": [
+  //       "selected_reco"
+  //     ]
+  //   },
+  //   "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep": {
+  //     "name": "LeadingNeutCandMuonCosTheta_LeadingNeutCandEdep",
+  //     "xvar": "LeadingNeutCandMuonCosTheta",
+  //     "yvar": "LeadingNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   },
+  //   "SecNeutCandMuonCosTheta_SecNeutCandEdep": {
+  //     "name": "SecNeutCandMuonCosTheta_SecNeutCandEdep",
+  //     "xvar": "SecNeutCandMuonCosTheta",
+  //     "yvar": "SecNeutCandEdep",
+  //     "for": [
+  //       "data"
+  //     ]
+  //   }
+  // },
+  "1D": {
+    "NeutCandsNClusters": {
+      "reco": "NeutCandsNClusters",
+      "true": "NeutCandsNClusters",
+      "index": "NNeutCands",
+      "name": "NeutCandsNClusters",
+      "title": "Blob NClsuters",
+      "nbins": 25,
+      "min": 0,
+      "max": 25,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsNHIClusters": {
+      "reco": "NeutCandsNHIClusters",
+      "true": "NeutCandsNHIClusters",
+      "index": "NNeutCands",
+      "name": "NeutCandsNHIClusters",
+      "title": "Blob NHIClsuters",
+      "nbins": 15,
+      "min": 0,
+      "max": 15,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsTopMCPID": {
+      "reco": "NeutCandsTopMCPID",
+      "true": "NeutCandsTopMCPID",
+      "index": "NNeutCands",
+      "name": "NeutCandsTopMCPID",
+      "title": "Blob parent Top PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandTopMCPID": {
+      "reco": "LeadingNeutCandTopMCPID",
+      "true": "LeadingNeutCandTopMCPID",
+      "name": "LeadingNeutCandTopMCPID",
+      "title": "1st Blob parent Top PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandTopMCPID": {
+      "reco": "SecNeutCandTopMCPID",
+      "true": "SecNeutCandTopMCPID",
+      "name": "SecNeutCandTopMCPID",
+      "title": "2nd Blob parent Top PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandTopMCPID": {
+      "reco": "ThirdNeutCandTopMCPID",
+      "true": "ThirdNeutCandTopMCPID",
+      "name": "ThirdNeutCandTopMCPID",
+      "title": "3rd Blob parent Top PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "NeutCandsvtxTDist": {
+      "reco": "NeutCandsvtxTDist",
+      "true": "NeutCandsvtxTDist",
+      "index": "NNeutCands",
+      "name": "NeutCandsvtxTDist",
+      "title": "Blob Tdist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandvtxTDist": {
+      "reco": "LeadingNeutCandvtxTDist",
+      "true": "LeadingNeutCandvtxTDist",
+      "name": "LeadingNeutCandvtxTDist",
+      "title": "Leading Blob Tdist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandvtxTDist": {
+      "reco": "SecNeutCandvtxTDist",
+      "true": "SecNeutCandvtxTDist",
+      "name": "SecNeutCandvtxTDist",
+      "title": "Second Blob Tdist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandvtxTDist": {
+      "reco": "ThirdNeutCandvtxTDist",
+      "true": "ThirdNeutCandvtxTDist",
+      "name": "ThirdNeutCandvtxTDist",
+      "title": "Third Blob Tdist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsvtxZDist": {
+      "reco": "NeutCandsvtxZDist",
+      "true": "NeutCandsvtxZDist",
+      "index":"NNeutCands",
+      "name": "NeutCandsvtxZDist",
+      "title": "Leading Blob zdist from vtx",
+      "nbins": 10,
+      "min": 0.0,
+      "max": 1000.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandvtxZDist": {
+      "reco": "LeadingNeutCandvtxZDist",
+      "true": "LeadingNeutCandvtxZDist",
+      "name": "LeadingNeutCandvtxZDist",
+      "title": "Leading Blob zdist from vtx",
+      "nbins": 10,
+      "min": 0.0,
+      "max": 1000.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandvtxZDist": {
+      "reco": "SecNeutCandvtxZDist",
+      "true": "SecNeutCandvtxZDist",
+      "name": "SecNeutCandvtxZDist",
+      "title": "Second Blob zdist from vtx",
+      "nbins": 10,
+      "min": 0.0,
+      "max": 1000.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandvtxZDist": {
+      "reco": "ThirdNeutCandvtxZDist",
+      "true": "ThirdNeutCandvtxZDist",
+      "name": "ThirdNeutCandvtxZDist",
+      "title": "Third Blob zdist from vtx",
+      "nbins": 10,
+      "min": 0.0,
+      "max": 1000.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsvtxSphereDist": {
+      "reco": "NeutCandsvtxSphereDist",
+      "true": "NeutCandsvtxSphereDist",
+      "index":"NNeutCands",
+      "name": "NeutCandsvtxSphereDist",
+      // "title": "Leading Blob spherical dist from vtx",
+      "title": "d_{vtx}",
+      "units": "mm",
+      // "nbins": 10,
+      "nbins": 20,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandvtxSphereDist": {
+      "reco": "LeadingNeutCandvtxSphereDist",
+      "true": "LeadingNeutCandvtxSphereDist",
+      "name": "LeadingNeutCandvtxSphereDist",
+      "title": "Leading Blob spherical dist from vtx",
+      // "nbins": 10,
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandvtxSphereDist": {
+      "reco": "SecNeutCandvtxSphereDist",
+      "true": "SecNeutCandvtxSphereDist",
+      "name": "SecNeutCandvtxSphereDist",
+      "title": "Second Blob spherical dist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandvtxSphereDist": {
+      "reco": "ThirdNeutCandvtxSphereDist",
+      "true": "ThirdNeutCandvtxSphereDist",
+      "name": "ThirdNeutCandvtxSphereDist",
+      "title": "Third Blob spherical dist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsTrackEndDist": {
+      "reco": "NeutCandsTrackEndDist",
+      "true": "NeutCandsTrackEndDist",
+      "index": "NNeutCands",
+      "name": "NeutCandsTrackEndDist",
+      // "title": "Leading Blob dist from track end",
+      "title": "Cluster d_{track end}",
+      "units": "mm",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandTrackEndDist": {
+      "reco": "LeadingNeutCandTrackEndDist",
+      "true": "LeadingNeutCandTrackEndDist",
+      "name": "LeadingNeutCandTrackEndDist",
+      "title": "Leading Blob dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandTrackEndDist": {
+      "reco": "SecNeutCandTrackEndDist",
+      "true": "SecNeutCandTrackEndDist",
+      "name": "SecNeutCandTrackEndDist",
+      "title": "Second Blob dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandTrackEndDist": {
+      "reco": "ThirdNeutCandTrackEndDist",
+      "true": "ThirdNeutCandTrackEndDist",
+      "name": "ThirdNeutCandTrackEndDist",
+      "title": "Third Blob dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsTrackEndZDist": {
+      "reco": "NeutCandsTrackEndZDist",
+      "true": "NeutCandsTrackEndZDist",
+      "index":"NNeutCands",
+      "name": "NeutCandsTrackEndZDist",
+      "title": "Blob z dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandTrackEndZDist": {
+      "reco": "LeadingNeutCandTrackEndZDist",
+      "true": "LeadingNeutCandTrackEndZDist",
+      "name": "LeadingNeutCandTrackEndZDist",
+      "title": "Leading Blob z dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandTrackEndZDist": {
+      "reco": "SecNeutCandTrackEndZDist",
+      "true": "SecNeutCandTrackEndZDist",
+      "name": "SecNeutCandTrackEndZDist",
+      "title": "Second Blob z dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandTrackEndZDist": {
+      "reco": "ThirdNeutCandTrackEndZDist",
+      "true": "ThirdNeutCandTrackEndZDist",
+      "name": "ThirdNeutCandTrackEndZDist",
+      "title": "Third Blob z dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsTrackEndTDist": {
+      "reco": "NeutCandsTrackEndTDist",
+      "true": "NeutCandsTrackEndTDist",
+      "index": "NNeutCands",
+      "name": "NeutCandsTrackEndTDist",
+      "title": "Leading Blob T dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandTrackEndTDist": {
+      "reco": "LeadingNeutCandTrackEndTDist",
+      "true": "LeadingNeutCandTrackEndTDist",
+      "name": "LeadingNeutCandTrackEndTDist",
+      "title": "Leading Blob T dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandTrackEndTDist": {
+      "reco": "SecNeutCandTrackEndTDist",
+      "true": "SecNeutCandTrackEndTDist",
+      "name": "SecNeutCandTrackEndTDist",
+      "title": "Second Blob T dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandTrackEndTDist": {
+      "reco": "ThirdNeutCandTrackEndTDist",
+      "true": "ThirdNeutCandTrackEndTDist",
+      "name": "ThirdNeutCandTrackEndTDist",
+      "title": "Third Blob T dist from track end",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsvtxBoxDist": {
+      "reco": "NeutCandsvtxBoxDist",
+      "true": "NeutCandsvtxBoxDist",
+      "index": "NNeutCands",
+      "name": "NeutCandsvtxBoxDist",
+      "title": "Blob box dist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandvtxBoxDist": {
+      "reco": "LeadingNeutCandvtxBoxDist",
+      "true": "LeadingNeutCandvtxBoxDist",
+      "name": "LeadingNeutCandvtxBoxDist",
+      "title": "Leading Blob box dist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandvtxBoxDist": {
+      "reco": "SecNeutCandvtxBoxDist",
+      "true": "SecNeutCandvtxBoxDist",
+      "name": "SecNeutCandvtxBoxDist",
+      "title": "Second Blob box dist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandvtxBoxDist": {
+      "reco": "ThirdNeutCandvtxBoxDist",
+      "true": "ThirdNeutCandvtxBoxDist",
+      "name": "ThirdNeutCandvtxBoxDist",
+      "title": "Third Blob box dist from vtx",
+      "nbins": 16,
+      "min": 0.0,
+      "max": 400.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsEdep": {
+      "reco": "NeutCandsEdep",
+      "true": "NeutCandsEdep",
+      "index": "NNeutCands",
+      "name": "NeutCandsEdep",
+      // "title": "Blob Deposited E",
+      "title": "E_{dep}",
+      "units": "MeV",
+      "bins": [
+        0.0,
+        5.0,
+        8.0,
+        12.0,
+        20.0,
+        25.0,
+        30.0,
+        35.0,
+        40.0,
+        45.0,
+        50.0,
+        55.0,
+        60.0,
+        100.0,
+        150.0,
+        500.0
+        // 1.5,
+        // 5.0,
+        // 7.0, // test
+        // 10.0, // test
+        // 11.0, // test
+        // 12.0,
+        // 15.0, // test
+        // 18.0, // test
+        // 21.0, // test
+        // 25.0,
+        // 30.0, // test
+        // 35.0, // test
+        // 40.0, // test
+        // 45.0, // test
+        // 50.0,
+        // 60.0, // test
+        // // 75.0, // test remove
+        // 70.0, // test
+        // 80.0, // test
+        // 90.0, // test
+        // 100.0,
+        // 150.0,
+        // 200.0,
+        // 300.0,
+        // 500.0 //,
+        // 1000.0
+      ],
+      // "nbins": 50,
+      // "min": 0.0,
+      // "max": 200.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandEdep": {
+      "reco": "LeadingNeutCandEdep",
+      "true": "LeadingNeutCandEdep",
+      "name": "LeadingNeutCandEdep",
+      "title": "Leading Blob Total E",
+      "bins": [
+        1.5,
+        5.0,
+        // 7.0, // test
+        // 10.0, // test
+        // 11.0, // test
+        12.0,
+        // 15.0, // test
+        // 18.0, // test
+        // 21.0, // test
+        25.0,
+        // 30.0, // test
+        // 35.0, // test
+        // 40.0, // test
+        // 45.0, // test
+        50.0,
+        // 60.0, // test
+        75.0, // test remove
+        // 70.0, // test
+        // 80.0, // test
+        // 90.0, // test
+        100.0,
+        150.0,
+        200.0,
+        300.0,
+        500.0 //,
+        // 1000.0
+      ],
+      // "nbins": 50,
+      // "min": 0.0,
+      // "max": 200.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandEdep": {
+      "reco": "SecNeutCandEdep",
+      "true": "SecNeutCandEdep",
+      "name": "SecNeutCandEdep",
+      "title": "Second Blob Total E",
+      "bins": [
+        1.5,
+        5.0,
+        // 7.0, // test
+        // 10.0, // test
+        // 11.0, // test
+        12.0,
+        // 15.0, // test
+        // 18.0, // test
+        // 21.0, // test
+        25.0,
+        // 30.0, // test
+        // 35.0, // test
+        // 40.0, // test
+        // 45.0, // test
+        50.0,
+        // 60.0, // test
+        75.0, // test remove
+        // 70.0, // test
+        // 80.0, // test
+        // 90.0, // test
+        100.0,
+        150.0,
+        200.0,
+        300.0,
+        500.0 //,
+        // 1000.0
+      ],
+      // "nbins": 50,
+      // "min": 0.0,
+      // "max": 100.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandEdep": {
+      "reco": "ThirdNeutCandEdep",
+      "true": "ThirdNeutCandEdep",
+      "name": "ThirdNeutCandEdep",
+      "title": "Third Blob Total E",
+      "bins": [
+        1.5,
+        10,
+        30,
+        70,
+        150,
+        310,
+        500.0
+      ],
+      // "nbins": 50,
+      // "min": 0.0,
+      // "max": 100.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandClusterMaxE": {
+      "reco": "LeadingNeutCandClusterMaxE",
+      "true": "LeadingNeutCandClusterMaxE",
+      "name": "LeadingNeutCandClusterMaxE",
+      "title": "Leading Blob Total E",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 100.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandClusterMaxE": {
+      "reco": "SecNeutCandClusterMaxE",
+      "true": "SecNeutCandClusterMaxE",
+      "name": "SecNeutCandClusterMaxE",
+      "title": "Second Blob Total E",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 100.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandClusterMaxE": {
+      "reco": "ThirdNeutCandClusterMaxE",
+      "true": "ThirdNeutCandClusterMaxE",
+      "name": "ThirdNeutCandClusterMaxE",
+      "title": "Third Blob Total E",
+      "nbins": 50,
+      "min": 0.0,
+      "max": 100.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandMuonDist": {
+      "reco": "LeadingNeutCandMuonDist",
+      "true": "LeadingNeutCandMuonDist",
+      "name": "LeadingNeutCandMuonDist",
+      "title": "Leading Blob Dist from muon track",
+      "nbins": 10,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandMuonDist": {
+      "reco": "SecNeutCandMuonDist",
+      "true": "SecNeutCandMuonDist",
+      "name": "SecNeutCandMuonDist",
+      "title": "Second Blob Dist from muon track",
+      "nbins": 10,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandMuonDist": {
+      "reco": "ThirdNeutCandMuonDist",
+      "true": "ThirdNeutCandMuonDist",
+      "name": "ThirdNeutCandMuonDist",
+      "title": "Third Blob Dist from muon track",
+      "nbins": 10,
+      "min": 0.0,
+      "max": 500.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandMuonAngle": {
+      "reco": "LeadingNeutCandMuonAngle",
+      "true": "LeadingNeutCandMuonAngle",
+      "name": "LeadingNeutCandMuonAngle",
+      "title": "Leading Blob Angle from muon track",
+      "nbins": 10,
+      "min": 0,
+      "max": 180.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandMuonAngle": {
+      "reco": "SecNeutCandMuonAngle",
+      "true": "SecNeutCandMuonAngle",
+      "name": "SecNeutCandMuonAngle",
+      "title": "Second Blob Angle from muon track",
+      "nbins": 10,
+      "min": 0,
+      "max": 180.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandMuonAngle": {
+      "reco": "ThirdNeutCandMuonAngle",
+      "true": "ThirdNeutCandMuonAngle",
+      "name": "ThirdNeutCandMuonAngle",
+      "title": "Third Blob Angle from muon track",
+      "nbins": 10,
+      "min": 0,
+      "max": 180.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "NeutCandsMuonCosTheta": {
+      "reco": "NeutCandsMuonCosTheta",
+      "true": "NeutCandsMuonCosTheta",
+      "name": "NeutCandsMuonCosTheta",
+      "index": "NNeutCands",
+      // "title": "Blob CosTheta from muon track",
+      "title": "cos(#Delta#theta_{#mu})",
+      "units": "",
+      "nbins": 20,
+      "min": -1.0,
+      "max": 1.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandMuonCosTheta": {
+      "reco": "LeadingNeutCandMuonCosTheta",
+      "true": "LeadingNeutCandMuonCosTheta",
+      "name": "LeadingNeutCandMuonCosTheta",
+      "title": "Leading Blob CosTheta from muon track",
+      "nbins": 10,
+      "min": -1.0,
+      "max": 1.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandMuonCosTheta": {
+      "reco": "SecNeutCandMuonCosTheta",
+      "true": "SecNeutCandMuonCosTheta",
+      "name": "SecNeutCandMuonCosTheta",
+      "title": "Second Blob CosTheta from muon track",
+      "nbins": 10,
+      "min": -1.0,
+      "max": 1.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "ThirdNeutCandMuonCosTheta": {
+      "reco": "ThirdNeutCandMuonCosTheta",
+      "true": "ThirdNeutCandMuonCosTheta",
+      "name": "ThirdNeutCandMuonCosTheta",
+      "title": "Third Blob CosTheta from muon track",
+      "nbins": 10,
+      "min": -1.0,
+      "max": 1.0,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingIsoBlobsPrimaryMCPID": {
+      "reco": "LeadingIsoBlobsPrimaryMCPID",
+      "true": "LeadingIsoBlobsPrimaryMCPID",
+      "name": "LeadingIsoBlobsPrimaryMCPID",
+      "title": "Leading NonvtxIsoBlob primary parent PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "SecondIsoBlobsPrimaryMCPID": {
+      "reco": "SecondIsoBlobsPrimaryMCPID",
+      "true": "SecondIsoBlobsPrimaryMCPID",
+      "name": "SecondIsoBlobsPrimaryMCPID",
+      "title": "Second NonvtxIsoBlob primary parent PID",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandAngleToParent": {
+      "reco": "LeadingNeutCandAngleToParent",
+      "true": "LeadingNeutCandAngleToParent",
+      "name": "LeadingNeutCandAngleToParent",
+      "title": "Leadning Cand angle to parent",
+      "nbins": 36,
+      "min": 0.0,
+      "max": 180.0,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "SecNeutCandAngleToParent": {
+      "reco": "SecNeutCandAngleToParent",
+      "true": "SecNeutCandAngleToParent",
+      "name": "SecNeutCandAngleToParent",
+      "title": "Leadning Cand angle to parent",
+      "nbins": 36,
+      "min": 0.0,
+      "max": 180.0,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandCosThetaToParent": {
+      "reco": "LeadingNeutCandCosThetaToParent",
+      "true": "LeadingNeutCandCosThetaToParent",
+      "name": "LeadingNeutCandCosThetaToParent",
+      "title": "Leadning Cand CosTheta to parent",
+      "nbins": 50,
+      "min": -1.0,
+      "max": 1.0,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "NProtonPionTracks": {
+      "reco": "NProtonPionTracks",
+      "true": "NProtonPionTracks",
+      "name": "NProtonPionTracks",
+      "title": "NProtonPionTracks",
+      "nbins": 10,
+      "min": 0,
+      "max": 10,
+      "for": [
+        "data",
+        "selected_reco"
+      ]
+    },
+    "LeadingNeutCandLength": {
+      "reco": "LeadingNeutCandLength",
+      "true": "LeadingNeutCandLength",
+      "name": "LeadingNeutCandLength",
+      "title": "Leadning Cand length",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 10000.0,
+      "for": [
+        "selected_reco",
+        "data"
+      ]
+    },
+    "SecondNeutCandLength": {
+      "reco": "SecondNeutCandLength",
+      "true": "SecondNeutCandLength",
+      "name": "SecondNeutCandLength",
+      "title": "Second Cand length",
+      "nbins": 100,
+      "min": 0.0,
+      "max": 10000.0,
+      "for": [
+        "selected_reco",
+        "data"
+      ]
+    },
+    "NNonVtxIsoBlobs": {
+      "reco": "NNonVtxIsoBlobs",
+      "true": "TrueNeutralPionCount",
+      "name": "NNonVtxIsoBlobs",
+      "title": "Number of NonVtxIsoBlobs",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "NNonVtxIsoBlobsAll": {
+      "reco": "NNonVtxIsoBlobsAll",
+      "true": "TrueNeutralPionCount",
+      "name": "NNonVtxIsoBlobsAll",
+      "title": "Number of NonVtxIsoBlobsAll",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "NNeutCands": {
+      "reco": "NNeutCands",
+      "true": "TrueNNeutCands",
+      "name": "NNeutCands",
+      "title": "Number of blobs tagged as neutrons",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5
+    },
+    "TrueNNeutCands": {
+      "reco": "TrueNNeutCands",
+      "true": "TrueNNeutCands",
+      "name": "TrueNNeutCands",
+      "title": "Number of blobs tagged as neutrons",
+      "nbins": 11,
+      "min": -0.5,
+      "max": 10.5,
+      "for": [
+        "selected_reco",
+        "selected_truth"
+      ]
+    },
+    "TrueNeutronEnergy": {
+      "reco": "TrueNeutronEGeV",
+      "true": "TrueNeutronEGeV",
+      "name": "TrueNeutronEGeV",
+      "title": "True Neutron Energy (GeV)",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 2.0,
+      "for": [
+        "selected_reco",
+        "selected_truth"
+      ]
+    },
+    "TotalNeutBlobE": {
+      "reco": "TotNeutBlobEGeV",
+      "true": "TrueTotNeutBlobEGeV",
+      "name": "TotalNeutBlobE",
+      "title": "Total Neutron Blob Energy",
+      "nbins": 30,
+      "min": 0.0,
+      "max": 0.6,
+      "for": [
+        "selected_reco",
+        "selected_truth",
+        "response"
+      ]
+    },
+    "RecoTotalNeutBlobE": {
+      "reco": "TotNeutBlobEGeV",
+      "true": "TotNeutBlobEGeV",
+      "name": "RecoTotalNeutBlobE",
+      "title": "Total Neutron Blob Energy",
+      "nbins": 30,
+      "min": 0.0,
+      "max": 0.6,
+      "for": [
+        "selected_reco",
+        "selected_truth",
+        "response"
+      ]
+    },
+    "TrueTotalNeutBlobE": {
+      "reco": "TrueTotNeutBlobEGeV",
+      "true": "TrueTotNeutBlobEGeV",
+      "name": "TrueTotalNeutBlobE",
+      "title": "Total Neutron Blob Energy",
+      "nbins": 30,
+      "min": 0.0,
+      "max": 0.6,
+      "for": [
+        "selected_reco",
+        "selected_truth",
+        "response"
+      ]
+    },
+    "EAvail": {
+      "reco": "EAvailGeV",
+      "true": "TrueEAvailGeV",
+      "name": "EAvail",
+      "title": "E_{Available} in GeV",
+      "bins": [
+        // -1.0,
+        // 0.0,
+        // 0.045,
+        // 0.1125,
+        // 0.2025, 5 6 8 11 15  4 5 7 10 14
+        // 0.315,
+        // 0.5,
+        // 1.0
+        0.0,
+        0.015,
+        0.04,
+        0.075,
+        0.12,
+        0.18,
+        0.30,
+        0.50
+      ],
+      "for": [
+        "data",
+        "selected_reco"
+      ],
+      "fluxnorm": false
+    },
+    "EAvail_nohi": {
+      "reco": "EAvailGeV",
+      "true": "TrueEAvailGeV",
+      "name": "EAvail_nohi",
+      "title": "E_{Available} in GeV",
+      "bins": [
+        // -1.0,
+        0.0,
+        0.045,
+        0.1125,
+        0.2025,
+        0.315,
+        0.5//,
+        // 1.0
+      ],
+      "fluxnorm": false
+    },
+    "recoil": {
+      // "dofitFill": true,
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueEAvailGeV",
+      "name": "recoil",
+      "title": "Recoil in GeV",
+      "bins": [
+        // 0.0,
+        // 0.045,
+        // 0.1125,
+        // 0.2025,
+        // 0.315,
+        // 0.5,
+        // 1.0
+        0.0,
+        0.015,
+        0.04,
+        0.075,
+        0.12,
+        0.18,
+        0.30,
+        0.50,
+        1.0
+      ],
+      // "for": [
+      //   "data",
+      //   "selected_reco"
+      // ],
+      "fluxnorm": false
+    },
+    "recoil_nohi": {
+      // "dofitFill": true,
+      "reco": "RecoilEnergyGeV",
+      "true": "TrueEAvailGeV",
+      "name": "recoil_nohi",
+      "title": "Recoil in GeV",
+      "bins": [
+        0.0,
+        0.045,
+        0.1125,
+        0.2025,
+        0.315,
+        0.5
+      ],
+      // "for": [
+      //   "data",
+      //   "selected_reco"
+      // ],
+      "fluxnorm": false
+    },
+    "ptmu": {
+      "reco": "PperpMuGeV",
+      "true": "TruePperpMuGeV",
+      "name": "ptmu",
+      "title": "muon p_{T} (GeV/c)",
+      "bins": [
+        0,
+        0.075,
+        0.15,
+        0.25,
+        0.325,
+        0.4,
+        0.475,
+        0.55,
+        0.7,
+        0.85,
+        1,
+        1.25,
+        1.5,
+        2.5
+      ],
+      "fluxnorm": false
+    },
+    "pzmu": {
+      "reco": "PparMuGeV",
+      "true": "TruePparMuGeV",
+      "name": "pzmu",
+      "title": "muon p_{||} (GeV/c)",
+      "bins": [
+        1.5,
+        2,
+        2.5,
+        3,
+        3.5,
+        4,
+        4.5,
+        5,
+        5.5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        15
+      ],
+      "fluxnorm": false
+    },
+    "Q2QE": {
+      "reco": "Q2QEGeV",
+      "true": "TrueQ2QEGeV",
+      "name": "Q2QE",
+      "title": "Q^{2} (QE)(GeV^{2})",
+      "bins": [
+        0.001,
+        0.0125,
+        0.025,
+        0.05,
+        0.1,
+        0.2,
+        0.4,
+        0.8,
+        1.6,
+        4.0
+      ],
+      "fluxnorm": false,
+      "for": [
+        "selected_reco",
+        "data"
+      ]
+    },
+    "PrimaryProtonScore": {
+      "reco": "PrimaryProtonScore",
+      "true": "TruthHasSingleProton",
+      "name": "PrimaryProtonScore",
+      "title": "Proton Score of Primary non-Muon Track",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 1.0,
+      "fluxnorm": false,
+      "for": [
+        "selected_reco",
+        "data"
+      ]
+    },
+    "PlotPrimaryProtonCandMCPID": {
+      "reco": "PlotPrimaryProtonCandMCPID",
+      "true": "PlotPrimaryProtonCandMCPID",
+      "name": "PlotPrimaryProtonCandMCPID",
+      "title": "PDG Primary Proton Candidate",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "ProtonScores": {
+      "reco": "ProtonScores",
+      "true": "ProtonScores",
+      "index": "NumberOfProtonCandidates",
+      "name": "ProtonScores",
+      "title": "Proton Scores of all Proton Candidates",
+      "nbins": 25,
+      "min": 0.0,
+      "max": 1.0,
+      "fluxnorm": false,
+      "for": [
+        "selected_reco",
+        "data"
+      ]
+    },
+    "PlotProtonCandsMCPID": {
+      "reco": "PlotProtonCandsMCPID",
+      "true": "PlotProtonCandsMCPID",
+      "index": "NumberOfProtonCandidates",
+      "name": "PlotProtonCandsMCPID",
+      "title": "PDGs of all Proton Candidates",
+      "nbins": 11,
+      "min": 0.5,
+      "max": 11.5,
+      "for": [
+        "selected_reco"
+      ]
+    },
+    "ProtonTfromdEdx": {
+      "reco": "ProtonTfromdEdx",
+      "true": "ProtonTfromdEdx",
+      "index": "NumberOfProtonCandidates",
+      "name": "ProtonTfromdEdx",
+      "title": "T_{p}",
+      "nbins": 20,
+      "min": 0.0,
+      "max": 1000.0,
+      "fluxnorm": false,
+      "for": [
+        "selected_reco",
+        "data"
+      ]
+    }
+  }
+}
