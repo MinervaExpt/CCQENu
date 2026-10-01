@@ -1,0 +1,93 @@
+{
+  "version": 15,
+  "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
+  "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
+  "cutsFile": "${CCQEMAT}/nhv/config/thesis/AntiNuCuts_v15_thesis.json",
+  "varsFile": "${CCQEMAT}/nhv/config/thesis/Variables_v15_thesis_blobshd.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/thesis/AntiNuSamples_v15_thesis_recoonly.json",
+  "paramsFile": "${CCQEMAT}/nhv/config/thesis/AntiNuParams_v15_thesis_2d.json",
+  "warpdriverFile": "${CCQEMAT}/config/thesis/AntiNuWarps_v15.json",
+  "outRoot": "Thesis_blobshd_2dblobs_noselection_${MYPLAYLIST}_${MYMODEL}",
+  "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals_June2026.root",
+  "prescale": 999,
+  "playlist": "${MYPLAYLIST}",
+  "MinervaModel": "${MYMODEL}",
+  "modeltuneFile": "${CCQEMAT}/config/modeltunes/${MYMODEL}.json",
+  "recoName": "MasterAnaDev",
+  "tunedmc": "both",
+  "warpedmc": "${MYWARP}",
+  "closure": 0,
+  "TuneCategories": [
+    "qelike",
+    "chargedpion",
+    "neutralpion"
+  ],
+  "DoExtended2p2h": false,
+  "DoResolution": false,
+  "DoTypes": true,
+  "pdg": -14,
+  "mcRecoToCSV": false,
+  "statusbar": false,
+  "runsamples": [
+    "${MYSAMPLE}"
+  ],
+  "AnalyzeVariables": [],
+  "Analyze2DVariables": [
+    "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist",
+    "NeutCandsEdep_NeutCandsvtxSphereDist",
+    "NeutCandsEdep_NeutCandsMuonCosTheta",
+    "NeutCandsEdep_NeutCandsTrackEndDist",
+    "recoil_ptmu"
+  ],
+  "AnalyzeHyperDVariables": [
+    "NeutCandsMuonCosTheta_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
+    "NeutCandsEdep_NeutCandsvtxSphereDist_NeutCandsTopMCPID",
+    "NeutCandsEdep_NeutCandsMuonCosTheta_NeutCandsTopMCPID",
+    "NeutCandsEdep_NeutCandsTrackEndDist_NeutCandsTopMCPID",
+    "recoil_ptmu_NeutCandsTopMCPID"
+  ], 
+  "signal": {
+    "QElike": "qelike" //,
+    // "Background": "qelike",
+    // "QElikeNP": "qelike_np",
+    // "QElikeALLAngles": "qelike_np"
+  }, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
+  "background": {
+    "QElike": [
+      "chargedpion",
+      "neutralpion",
+      "other"
+    ] //,
+    // "Background": "qelikenot",
+    // "QElikeNP": "qelikenot_np",
+    // "QElikeALLAngles": "qelikenot_np"
+  },
+  "data": {
+    "QElike": "data" //,
+    // "Background": "data",
+    // "QElikeNP": "data",
+    // "QElikeALLAngles": "data"
+  },
+  "responseSystematicsVersion": "2024",
+  "systematics": [
+    "Flux",
+    "MuonMINOS",
+    "MuonResolution",
+    "MINOSEfficiency",
+    "Angle",
+    "GENIE",
+    "GenieRvx1pi",
+    "RPA",
+    // "2p2h",
+    "2p2h_noQE",
+    "MuonMinerva",
+    "geant4",
+    "response",
+    "LowQ2Pi"
+  ],
+  "fluxUniverses": 100, //100, //10,
+  "NuEConstraint": 1,
+  "Geant4NeutronCV": 1,
+  "Geant4Elastics": 1 //,
+  //"RPAMaterials":0 
+}

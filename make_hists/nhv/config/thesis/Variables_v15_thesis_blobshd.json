@@ -1782,7 +1782,8 @@
       "reco": "RecoilEnergyGeV",
       "true": "TrueEAvailGeV",
       "name": "recoil",
-      "title": "Recoil in GeV",
+      "title": "Recoil",
+      "units": "GeV",
       "bins": [
         // 0.0,
         // 0.045,
@@ -1801,10 +1802,10 @@
         0.50,
         1.0
       ],
-      // "for": [
-      //   "data",
-      //   "selected_reco"
-      // ],
+      "for": [
+        "data",
+        "selected_reco"
+      ],
       "fluxnorm": false
     },
     "recoil_nohi": {
@@ -1831,7 +1832,8 @@
       "reco": "PperpMuGeV",
       "true": "TruePperpMuGeV",
       "name": "ptmu",
-      "title": "muon p_{T} (GeV/c)",
+      "title": "muon p_{T}",
+      "units": "GeV/c",
       "bins": [
         0,
         0.075,
@@ -1847,6 +1849,10 @@
         1.25,
         1.5,
         2.5
+      ],
+      "for": [
+        "data",
+        "selected_reco"
       ],
       "fluxnorm": false
     },
