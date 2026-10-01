@@ -39,6 +39,7 @@ class PDFPlotter:
 
     def __init__(self, theconfig, pdffilename):
         self.pdfname = pdffilename
+        self.filename = pdffilename.replace(".pdf","")
         self.canvas1D = TCanvas(pdffilename)
         self.canvas1D.SetLeftMargin(0.15)
         self.canvas1D.SetRightMargin(0.15)
@@ -47,7 +48,7 @@ class PDFPlotter:
         self.canvas1D.Print(pdffilename+"(", "pdf")
         self.logx=0
         self.scales=theconfig["Scales"]
-        self.PDFALL=False
+        self.PDFALL=True
         if "PDFALL" in theconfig:
             self.PDFALL = theconfig["PDFALL"]
 
@@ -276,7 +277,7 @@ class PDFPlotter:
             cE.Print(cE.GetName(), plotname)
         else:
             for format in self.Formats:
-                alternate = format+"/"+hist.GetName()+"."+format
+                alternate = format+"/"+self.filename+"_"+hist.GetName()+"."+format
                 cE.SetName(alternate)
             #print ("alternate",alternate)  
                 cE.Print(alternate)
@@ -302,7 +303,8 @@ class PDFPlotter:
                     cE.Print(cE.GetName(), plotname)
                 else:
                     for format in self.Formats:
-                        alternate = format+"/"+hist.GetName()+"."+format
+                        alternate = format+"/"+self.filename+"_"+hist.GetName()+"."+format
+                        #alternate = format+"/"+hist.GetName()+"."+format
                         cE.SetName(alternate) 
                         cE.Print(alternate)
 
@@ -456,7 +458,8 @@ class PDFPlotter:
             cE.Print(cE.GetName(), plotname)
         else:
             for format in self.Formats:
-                alternate = format+"/"+hist.GetName()+"."+format
+                alternate = format+"/"+self.filename+"_"+hist.GetName()+"."+format
+                #alternate = format+"/"+hist.GetName()+"."+format
                 cE.SetName(alternate) 
                 cE.Print(alternate)
         logsave = logscale
@@ -501,7 +504,8 @@ class PDFPlotter:
                     cE.Print(cE.GetName(), plotname2)
             else:
                 for format in self.Formats:
-                    alternate = format+"/ratio"+hist.GetName()+"."+format
+                    alternate = format+"/"+self.filename+"_"+hist.GetName()+"_ratio."+format
+                    #alternate = format+"/ratio"+hist.GetName()+"."+format
                     cE.SetName(alternate) 
                     cE.Print(alternate)
         
@@ -541,7 +545,8 @@ class PDFPlotter:
                 cE.Print(cE.GetName(), plotname)
         else:
             for format in self.Formats:
-                alternate = format+"/"+hist.GetName()+"."+format
+                alternate = format+"/"+self.filename+"_"+hist.GetName()+"."+format
+                #alternate = format+"/"+hist.GetName()+"."+format
                 cE.SetName(alternate) 
                 cE.Print(alternate)
         resetLogScale()
@@ -590,7 +595,8 @@ class PDFPlotter:
             cE.Print(cE.GetName(), plotname)
         else:
             for format in self.Formats:
-                alternate = format+"/"+hist.GetName()+"."+format
+                alternate = format+"/"+self.filename+"_"+hist.GetName()+"."+format
+                #alternate = format+"/"+hist.GetName()+"."+format
                 cE.SetName(alternate) 
                 cE.Print(alternate)
         resetLogScale()
