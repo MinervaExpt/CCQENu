@@ -25,9 +25,9 @@
         "Is3D": 1,
         // "muoncone_min": 15.0,
         // "muondist_min": 100.0,
-        "vtxdist_edep_funct": true,
-        "trackenddist_edep_funct": true,
-        "muonangle_edep_funct": true,
+        // "vtxdist_edep_funct": true,
+        // "trackenddist_edep_funct": true,
+        // "muonangle_edep_funct": true,
         "edep_min": 1.5
     }
 }

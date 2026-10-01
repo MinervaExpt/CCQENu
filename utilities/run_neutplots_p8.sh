@@ -13,41 +13,91 @@
 export MYSAMPLE=QElike
 export MYWARP=none
 export MYMODEL=MnvTunev2.0.1
+export MYBLOBSELECTION=noselection
+
+# 1dplots
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplots1d/blobs2d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_2d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobs1D_2d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplots1d/blobs3d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_3d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobs1D_3d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplots1d/blobsall/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_all \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobs1D_all --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+
+# hdplots
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplotshd/blobs2d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_2d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobsHD_2d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplotshd/blobs3d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_3d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobsHD_3d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplotshd/blobsall/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_all \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobsHD_all --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
 
 # # ============== onetrack
-# # allblobs
-# python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/July2026/blobstudy_fixed/${MYMODEL}/allblobcuts/1trackonly_AllBlobs/twodim \
-#  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_neutronblob_plotstuff_hd_AllBlobs_1trackonly \
-#  --mail --prescale=1 --config=nhv/config/warpingstudies/blobs/AntiNu_v15_warping_hdneut_1track --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
-#  --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+# 1dplots
+export MYSAMPLE=QElike1track
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplots1d/blobs2d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_2d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobs1D_2d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplots1d/blobs3d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_3d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobs1D_3d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplots1d/blobsall/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_all \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobs1D_all --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
 
-# # 2dblobs
-# python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/July2026/blobstudy_fixed/${MYMODEL}/allblobcuts/1trackonly_2donly/twodim \
-#  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_neutronblob_plotstuff_hd_2dblobs_1trackonly \
-#  --mail --prescale=1 --config=nhv/config/warpingstudies/blobs/AntiNu_v15_warping_hdneut_2dblobs_1track --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
-#  --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+# hdplots
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplotshd/blobs2d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_2d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobsHD_2d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplotshd/blobs3d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_3d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobsHD_3d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplotshd/blobsall/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYSAMPLE}_thesis_blobplots1d_all \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobsHD_all --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
 
-# # 3dblobs
-# python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/July2026/blobstudy_fixed/${MYMODEL}/allblobcuts/1trackonly_3donly/twodim \
-#  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_neutronblob_plotstuff_hd_3dblobs_1trackonly \
-#  --mail --prescale=1 --config=nhv/config/warpingstudies/blobs/AntiNu_v15_warping_hdneut_3dblobs_1track --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
-#  --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
 
 # ============== twotrack
-# allblobs
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/July2026/blobstudy_fixed_tracktest/${MYMODEL}/allblobcuts/2trackonly_AllBlobs/twodim \
- --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_neutronblob_plotstuff_hd_AllBlobs_2trackonly \
- --mail --prescale=1 --config=nhv/config/warpingstudies/blobs/AntiNu_v15_warping_hdneut_2track --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplots1d/blobs2d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_thesis_blobplots1d_2d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobs1D_2d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplots1d/blobs3d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_thesis_blobplots1d_3d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobs1D_3d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplots1d/blobsall/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_thesis_blobplots1d_all \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobs1D_all --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
  --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
 
-# 2dblobs
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/July2026/blobstudy_fixed_tracktest/${MYMODEL}/allblobcuts/2trackonly_2donly/twodim \
- --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_neutronblob_plotstuff_hd_2dblobs_2trackonly \
- --mail --prescale=1 --config=nhv/config/warpingstudies/blobs/AntiNu_v15_warping_hdneut_2dblobs_2track --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+# hdplots
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplotshd/blobs2d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_thesis_blobplots1d_2d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobsHD_2d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
  --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
-
-# 3dblobs
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/July2026/blobstudy_fixed_tracktest/${MYMODEL}/allblobcuts/2trackonly_3donly/twodim \
- --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_neutronblob_plotstuff_hd_3dblobs_2trackonly \
- --mail --prescale=1 --config=nhv/config/warpingstudies/blobs/AntiNu_v15_warping_hdneut_3dblobs_2track --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplotshd/blobs3d/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_thesis_blobplots1d_3d \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobsHD_3d --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/thesis/blobs/${MYBLOBSELECTION}/blobplotshd/blobsall/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=${MYMODEL}_thesis_blobplots1d_all \
+ --mail --prescale=1 --config=nhv/config/thesis/AntiNu_v15_thesis_grid_blobsHD_all --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
  --tmpdir=/exp/minerva/data/users/nvaughan/tmp --expected-lifetime=4h --memory=3000   --sample=${MYSAMPLE} #--debug --notimestamp
