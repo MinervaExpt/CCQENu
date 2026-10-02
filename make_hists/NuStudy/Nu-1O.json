@@ -1,46 +1,91 @@
 {
-  "tag":"September 30, 2026",
-  "InputFiles":{"QElike_1Track":"${CCQEMAT}/ptmu_Fit1O_1Track.root",
-  "QElike_2Track": "${CCQEMAT}/ptmu_Fit1O_2Track.root"
-  },
-  "Target":"Nucleons", // can be Protons, Neutrons or Nucleons
-  "ZeroBinFixer":1,
-  "POTScale":0, // already POT scaled
-  "Samples":["QElike_1Track","QElike_2Track"],
-  "Categories":["bkgsub","qelike"],//,"1chargedpion","1neutralpion","multipion","other"], 
-  "Data_Cat":"bkgsub",
-  "Signal_Cat":"qelike",
-  "Background_Cat":[],
-  "Migration":"response",
-  "Data_Type":"fitted",
-  //"Signal_Type":"reconstructed",
-  "Signal_Type":"fitted",
-  "Background_Type":"reconstructed",
-  "Selected_Type": "selected_truth",
-  "Truth_Type": "all_truth",
-  "UnTunedTruth_Type":"all_truth",
-  "Migration_Type": "response_migration",
-  "data_types1D":{
-    "bkgsub":["fitted"],
-    "qelike":["fitted","reconstructed","fitted_combined","selected_truth","all_truth","response_truth","response_reconstructed","response_migration"]
-  },
-  "data_types2D":{
-    "bkgsub":[],
-    "qelike": ["response_migration","response_migration_fitted"]
-  },
-  "Variables":["ptmu"],
-  "Scales":{"ptmu":3},    // scale = logx + 2* logy
-  "FluxNorm":{"ptmu":false}, // true = do bin by bin
-  "PixDir":"./pix",
-  "LogMinimum":0.1,
-  "Stages":{
-    "Unfold":{"In":"fitted","Out":"unfolded"},
-    "Efficiency":{"In":"unfolded","Out":"effcorr"},
-    "Flux":{"In":"effcorr","Out":"sigma"}
-  },
-  "Iterations":10,
-  "PDFALL":1, // put all plots in one pdf file
-  "Formats":["png","C"], // or make these formats
-  "AreaNorm":1, // set to 1 to area normalize
-  "FractionalUncertainty":1
+    "tag": "September 30, 2026",
+    "InputFiles": {
+        "QElike_1Track": "${CCQEMAT}/NuStudy/ptmu_Fit1O_1Track.root",
+        "QElike_2Track": "${CCQEMAT}/NuStudy/ptmu_Fit1O_2Track.root"
+    },
+    "Target": "Nucleons",
+    "ZeroBinFixer": 0,
+    "POTScale": 1,
+    "Samples": [
+        "QElike_1Track",
+        "QElike_2Track"
+    ],
+    "Categories": [
+        "bkgsub",
+        "qelike"
+    ],
+    "Data_Cat": "bkgsub",
+    "Signal_Cat": "qelike",
+    "Background_Cat": [],
+    "Migration": "response",
+    "Data_Type": "fitted",
+    "UnTunedSignal_Type": "reconstructed",
+    "Signal_Type": "fitted",
+    "Background_Type": "reconstructed",
+    "Selected_Type": "selected_truth",
+    "Truth_Type": "all_truth",
+    "UnTunedTruth_Type": "all_truth",
+    "Migration_Type": "response_migration",
+    "data_types1D": {
+        "bkgsub": [
+            "fitted"
+        ],
+        "qelike": [
+            "fitted",
+            "reconstructed",
+            "fitted_combined",
+            "selected_truth",
+            "all_truth",
+            "response_truth",
+            "response_reconstructed",
+            "response_migration"
+        ]
+    },
+    "data_types2D": {
+        "bkgsub": [],
+        "qelike": [
+            "response_migration",
+            "response_migration_fitted"
+        ]
+    },
+    "Variables": [ "ptmu"
+        // "ptmu",
+        // "Q2QE",
+        // "pzmu",
+        // "EnuCCQE"
+    ],
+    "Scales": {
+        "ptmu": 3,
+        "Q2QE": 3,
+        "pzmu": 1,
+        "EnuCCQE": 2
+    },
+    "FluxNorm": {
+        "ptmu": false, "Q2QE": false, "pzmu": false, "EnuCCQE": true
+    },
+    "PixDir": "./pix",
+    "LogMinimum": 0.1,
+    "Stages": {
+        "Unfold": {
+            "In": "fitted",
+            "Out": "unfolded"
+        },
+        "Efficiency": {
+            "In": "unfolded",
+            "Out": "effcorr"
+        },
+        "Flux": {
+            "In": "effcorr",
+            "Out": "sigma"
+        }
+    },
+    "Iterations": 5,
+    "PDFALL": 1,
+    "Formats": [
+        "png",
+        "C"
+    ],
+    "AreaNorm": 1,
+    "FractionalUncertainty": 1
 }

@@ -1,8 +1,8 @@
 {
   "version":18, // turn off tunes, add flux
    // Run major variables in batch, use v16 of cuts, add closure
-  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_p8/minervame${MYPLAYLIST}_MC.txt",
-  "dataIn":"${CCQEMAT}/playlists/${DATALOC}_p8/minervame${MYPLAYLIST}_Data.txt", // hack for type plot of resolution
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_p8/P8_Playlist${MYPLAYLIST}_MC.txt",
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}_p8/P8_Playlist${MYPLAYLIST}_Data.txt", // hack for type plot of resolution
   "prescale":999,
   "playlist":"minervame${MYPLAYLIST}",
   "DoResolution":0,
@@ -18,7 +18,7 @@
   "samplesFile":"${CCQEMAT}/NuStudy/NuSamples_1Track_v18.json",  // describe the samples, cuts are chosen here
   "runsamples":["${MYSAMPLE}"], // chose which samples to run can provide a list or chose 1 using the batch
   "outRoot":"v18_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // name for output files
-  "AnalyzeVariables":["pzmu","ptmu"], // choose the 1D variables
+  "AnalyzeVariables":["pzmu","ptmu","Q2QE","EnuCCQE"], // choose the 1D variables
   "Analyze2DVariables":[], // choose 2D variables, 1D variables must be chosen
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"}, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
   "background":{"QElike":"qelikenot","Background":"qelikenot","QElikeNP":"qelikenot_np","QElikeALLAngles":"qelikenot_np"},
