@@ -1,0 +1,8 @@
+/Volumes/MINERvA_data/p8/MC/Playlist1O/MasterAnaDev_mc_AnaTuple_run00113375_Playlist.root
+/Volumes/MINERvA_data/p8/MC/Playlist1O/MasterAnaDev_mc_AnaTuple_run00113376_Playlist.root
+/Volumes/MINERvA_data/p8/MC/Playlist1O/MasterAnaDev_mc_AnaTuple_run00113377_Playlist.root
+/Volumes/MINERvA_data/p8/MC/Playlist1O/MasterAnaDev_mc_AnaTuple_run00113378_Playlist.root
+/Volumes/MINERvA_data/p8/MC/Playlist1O/MasterAnaDev_mc_AnaTuple_run00113379_Playlist.root
+/Volumes/MINERvA_data/p8/MC/Playlist1O/MasterAnaDev_mc_AnaTuple_run00113380_Playlist.root
+/Volumes/MINERvA_data/p8/MC/Playlist1O/MasterAnaDev_mc_AnaTuple_run00113381_Playlist.root
+/Volumes/MINERvA_data/p8/MC/Playlist1O/MasterAnaDev_mc_AnaTuple_run00113382_Playlist.root
