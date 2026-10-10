@@ -3,6 +3,33 @@ from ROOT import TMatrixD,TMatrixDSym,TVectorD,TFile,TMatrixDSymEigen, TH1D, TOb
 from PlotUtils import MnvH1D,MnvVertErrorBand
 import math
 
+def copyThings(source, target,veto=[]):
+    # Open the source file for reading and the target file for writing
+    #source = ROOT.TFile.Open(source_file_name, "READ")
+    #target = ROOT.TFile.Open(target_file_name, "RECREATE")
+    
+    # Loop over all keys in the source file
+    source.cd()
+    for key in source.GetListOfKeys():
+        obj = key.ReadObj()
+        skip = False
+        for st in veto:
+            # print ("check", st, obj.GetName())
+            if st in obj.GetName():
+                skip = True
+                break
+        if skip: continue        
+        obj.Write(key.GetName())
+        target.cd()
+        
+        # Write the object to the target file using its original name
+        obj.Write(key.GetName())
+        
+    # Close both files to save changes
+    #target.Close()
+    #source.Close()
+
+
 def map2TObjArray(thing):
     #print (thing)
     r = TObjArray()
@@ -63,8 +90,8 @@ def ToVectorD(hist):
         vector[ii] = hist.GetBinContent(i)
     return vector
 
-def SyncBands(thehist):
-  print (thehist.GetName())
+def SyncBands(thehist,debug=False):
+  #print (thehist.GetName())
   theCVHisto = TH1D(thehist);
   theCVHisto.SetDirectory(0);
   bandnames = thehist.GetErrorBandNames();
@@ -75,8 +102,8 @@ def SyncBands(thehist):
     band = thehist.GetVertErrorBand(bandname)
    
     for i in range(0,band.GetNbinsX()+2):
-      if(i < 4 and i != 0):
-        print ("Sync band ", thehist.GetName(), bandname, i, theCVHisto.GetBinContent(i), theCVHisto.GetBinContent(i)-band.GetBinContent(i))
+      if debug:
+         print ("Sync band ", thehist.GetName(), bandname, i, theCVHisto.GetBinContent(i), theCVHisto.GetBinContent(i)-band.GetBinContent(i))
       band.SetBinContent(i,theCVHisto.GetBinContent(i))
       band.SetBinError(i,theCVHisto.GetBinError(i))
 

@@ -1,10 +1,11 @@
 import os,sys
 import ROOT
-from ROOT import TH1D, gPad, TCanvas, TText
+from ROOT import TH1D, gPad, TCanvas, TText, gStyle
 from PlotUtils import MnvH1D, MnvH2D, MnvPlotter
 #ifndef plotting_functions_H
 #define plotting_functions_H
 FULLDUMP=False
+PDFALL=True
 # #define FULLDUMP  # dumps all syst error subgroups
 #include <iostream>
 #include <string>
@@ -42,6 +43,14 @@ if do_fractional_uncertainty == "Abs":
 
 #do_fractional_uncertainty_str = do_fractional_uncertainty ? ("Frac") : ("Abs")
 do_cov_area_norm_str = (do_cov_area_norm == "CovAreaNorm")
+
+def smallest_nonzero_bin(hist):
+    minbin = 1.e9
+    for i in range(1, hist.GetNbinsX() + 1):
+        if (hist.GetBinContent(i) > 0 and hist.GetBinContent(i) < minbin): 
+            minbin = hist.GetBinContent(i)
+    
+    return minbin
 
 def setLogScale(logscale):
     gPad.SetLogy(False)
@@ -201,6 +210,9 @@ def PlotErrorSummary(cE, hist, label, logscale):
     t = TText(.3, .95, label)
     t.SetNDC(1)
     t.SetTextSize(.03)
+    
+
+
     setLogScale(logscale)
     #  gPad.SetLogy(False)
     #  gPad.SetLogx(False)
@@ -210,7 +222,14 @@ def PlotErrorSummary(cE, hist, label, logscale):
     #  
     #  if (logscale== 1 || logscale ==3): gPad.SetLogx():
     t.Draw()
-    cE.Print(cE.GetName(), plotname)
+    #cE.Print(cE.GetName(), plotname)
+    if PDFALL: 
+        cE.Print(cE.GetName(), plotname)
+    else:
+        alternate = "png/"+hist.GetName()+".png"
+        cE.SetName(alternate)
+        #print ("alternate",alternate)  
+        cE.Print(alternate)
     resetLogScale()
     if FULLDUMP:
         for group in mnvPlotter.error_summary_group_map: 
@@ -229,7 +248,14 @@ def PlotErrorSummary(cE, hist, label, logscale):
             #  
             #  if (logscale== 1 || logscale ==3): gPad.SetLogx():
             t.Draw()
-            cE.Print(cE.GetName(), plotname)
+            if PDFALL:
+                cE.Print(cE.GetName(), plotname)
+            else:
+                alternate = "png/"+hist.GetName()+".png"
+                cE.SetName(alternate)
+                print ("alternate",alternate)  
+                cE.Print(alternate)
+
             resetLogScale()
     
 #endif
@@ -312,6 +338,16 @@ def PlotCVAndError1D(cE, idatahist,  ihist, label, cov_area = do_cov_area_norm, 
     hist = MnvH1D()
     hist = ihist.Clone()
     hist.SetDirectory(0)
+    # if logscale > 1: 
+    #     minbin = smallest_nonzero_bin(datahist)
+    #     datahist.SetMinimum(minbin * 0.5)
+    #     for ybin in range(1, datahist.GetNbinsX() + 1):
+    #         if (datahist.GetBinContent(ybin) < minbin): 
+    #             datahist.SetBinContent(ybin, minbin)
+    #     hist.SetMinimum(minbin * 0.5)
+    #     print ("reset minimum to", minbin * 0.5, " for ", datahist.GetName(),logscale)
+    # hist.Print("ALL")
+    # datahist.Print("ALL")
     # TCanvas cE ("c1","c1")
     # hist.GetXaxis().SetTitle(Form("%s",hist.GetTitle() ))
     hist.GetXaxis().GetTitle()
@@ -348,8 +384,11 @@ def PlotCVAndError1D(cE, idatahist,  ihist, label, cov_area = do_cov_area_norm, 
     # mnvPlotter.SetBinWidthNorm(not binwid)
     # print(label , " BinWidthNorm after" , datahist.GetNormBinWidth() )
     mnvPlotter.SetROOT6Palette(57)  # kBird
+    # if (logscale > 1):
+    #     print ("set minimum to non-0 for log scale" , datahist.GetName() )
+    #     gStyle.SetHistMinimumZero(False)
+    print ("datahist minimum",type(datahist), datahist.GetMinimum())
     
-    print ("datahist",type(datahist))
     mnvPlotter.DrawDataMCWithErrorBand(datahist, hist, mcScale, "TL", useHistTitles, 0, 0, cov_area, statPlusSys)
     #gPad.BuildLegend()
     stat = TH1D()
@@ -361,7 +400,13 @@ def PlotCVAndError1D(cE, idatahist,  ihist, label, cov_area = do_cov_area_norm, 
     # mnvPlotter.DrawMCWithErrorBand(hist) #I think that this call only shows stat errors.
     plotname = "Title: %s_CV_w_err_%s"%( datahist.GetName(), label)
     t.Draw()
-    cE.Print(cE.GetName(), plotname)
+    if PDFALL:
+        cE.Print(cE.GetName(), plotname)
+    else:
+        alternate = "png/"+hist.GetName()+".png"
+        cE.SetName(alternate)
+        print ("alternate",alternate)  
+        cE.Print(alternate)
     logsave = logscale
     if idatahist != ihist:   
         d = MnvH1D()   # don't plot ratio for identical hists.
@@ -390,12 +435,23 @@ def PlotCVAndError1D(cE, idatahist,  ihist, label, cov_area = do_cov_area_norm, 
         # datahist.Draw()
         cov_area = False
         # mnvPlotter.SetBinWidthNorm(False)
+        if d.GetMaximum() > 5 : d.SetMaximum(5.0)
+        if d.GetMinimum() < 0.0: d.SetMinimum(0.0)
+        if m.GetMaximum() > 5 : m.SetMaximum(5.0)
+        if m.GetMinimum() < 0.0: m.SetMinimum(0.0)
         mnvPlotter.DrawDataMCRatio(d, m, mcScale, True, True)  # "TL", useHistTitles, NULL, NULL,cov_area, statPlusSys)
 
         t.Draw()
         plotname2 = "Title: ratio %s_CV_w_err_%s"%( datahist.GetName(), label)
 
-        cE.Print(cE.GetName(), plotname2)
+        #cE.Print(cE.GetName(), plotname2)
+        if PDFALL: 
+                cE.Print(cE.GetName(), plotname2)
+        else:
+            alternate = "png/"+hist.GetName()+".png"
+            cE.SetName(alternate)
+            #print ("alternate",alternate)  
+            cE.Print(alternate)
     
     resetLogScale()
     # mnvPlotter.MultiPrint(&cE, plotname, "pdf")
@@ -428,7 +484,14 @@ def Plot2D(cE, ihist, label, logscale = 0, binwid = True):
     plotname = "Title: %s_CV_%s"%( hist.GetName(), label)
     t.Draw()
 
-    cE.Print(cE.GetName(), plotname)
+    #cE.Print(cE.GetName(), plotname)
+    if PDFALL: 
+            cE.Print(cE.GetName(), plotname)
+    else:
+        alternate = "png/"+hist.GetName()+".png"
+        cE.SetName(alternate)
+        #print ("alternate",alternate)  
+        cE.Print(alternate)
     resetLogScale()
 
 
@@ -470,7 +533,14 @@ def Plot2DFraction( cE, ihist1,  ihist2, label, logscale = 0, binwid = False):
     hist2.Draw("BOX SAME")
     hist1.Print()
     hist2.Print()
-    cE.Print(cE.GetName(), plotname)
+    #cE.Print(cE.GetName(), plotname)
+    if PDFALL: 
+            cE.Print(cE.GetName(), plotname)
+    else:
+            alternate = "png/"+hist.GetName()+".png"
+            cE.SetName(alternate)
+            #print ("alternate",alternate)  
+            cE.Print(alternate)
     resetLogScale()
 
 

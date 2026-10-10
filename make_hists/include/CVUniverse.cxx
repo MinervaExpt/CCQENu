@@ -947,7 +947,10 @@ double CVUniverse::GetTrueLog10RecoilEnergyGeV() const { return std::log10(CVUni
 
 double CVUniverse::GetLog10RecoilEnergyGeV() const { return std::log10(GetRecoilEnergy()) - 3.; }
 
-
+// for Noah analysis
+double CVUniverse::GetRecoilEnergy100mmGeV() const {
+    return GetDouble("recoil_energy_nonmuon_nonvtx100mm")*MeVGeV;
+}
 // return CVUniverse::GetCalRecoilEnergy();
 // std::cout << GetRecoilEnergy()*MeVGeV <<  " " << std::log10(GetRecoilEnergy()) << std::log10(GetRecoilEnergy())  - 3. << std::endl;
 
@@ -978,6 +981,35 @@ double CVUniverse::GetTrueQ2GeV() const {
 }
 
 // ----------------------------- Other Variables -----------------------------
+
+int CVUniverse::GetNPionTracks() const {
+    int n_pions = 0;
+    // Check that there are actually tracks to look at
+    if (CVUniverse::GetMultiplicity() < 2)
+        return n_pions;  // Since no non-muon tracks, there can't be any pions
+
+    double tree_Q2 = GetQ2QEGeV();
+
+    // First check primary proton candidates
+    double prim_proton_score = GetPrimaryProtonScore();
+    int prim_is_proton = GetPassProtonScoreCut(prim_proton_score, tree_Q2);
+    if (prim_is_proton == 0)
+        n_pions += 1;  // if it fails, that's a pion, so add to count
+
+    // Next check secondary proton candidates
+    int n_sec_proton_scores = GetInt(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores_sz").c_str());
+    if (n_sec_proton_scores == 0)
+        return n_pions;  // If no secondary candidates, just return value from the first one
+
+    std::vector<double> sec_proton_scores = GetVecDouble(std::string(MinervaUniverse::GetTreeName() + "_sec_protons_proton_scores").c_str());
+    for (auto score : sec_proton_scores) {  // Loop over the scores
+        if (GetPassProtonScoreCut(score, tree_Q2) == 0)
+            n_pions += 1; // If that doesn't pass the score cut, then it's a pion so add to count
+    }
+
+    return n_pions;  // Return how many pions there are
+}
+
 
 //  virtual double GetWgenie() const { return GetDouble("mc_w"); }
 int CVUniverse::GetIntType() const {

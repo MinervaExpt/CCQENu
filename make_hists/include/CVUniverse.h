@@ -218,7 +218,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     virtual double GetRecoilEnergyGeV() const;
     virtual double GetTrueRecoilEnergyGeV() const;
-
+    virtual double GetRecoilEnergy100mmGeV() const;
     virtual double GetLog10RecoilEnergyGeV() const;
     virtual double GetTrueLog10RecoilEnergyGeV() const;
 
@@ -228,6 +228,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
 
     // ----------------------------- Other Variables -----------------------------
 
+    virtual int GetNPionTracks() const;
     //  virtual double GetWgenie() const { return GetDouble("mc_w"); }
     virtual int GetIntType() const;
     virtual int GetMCIntType() const;
