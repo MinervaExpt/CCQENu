@@ -27,13 +27,13 @@
       "TrueEnuRatio":{"reco":"TrueEnuRatio","true":"TrueEnuRatio","name":"TrueEnuRatio","title":"True E_{#nu}_{QE}/True E_{#nu}","nbins":40,"min":0.5, "max":1.5,"fluxnorm":1,"for":["selected_truth","all_truth"]},
       "RecoTrueEnuRatio":{"reco":"RecoTrueEnuRatio","true":"RecoTrueEnuRatio","name":"RecoTrueEnuRatio","title":"Reco E_{#nu}_{QE}/True E_{#nu}","nbins":40,"min":0.5, "max":1.5,"fluxnorm":1,"for":["selected_reco","selected_truth","all_truth"]},
       
-        "EnuCCQE":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"EnuCCQE","title":"E_{#nu}_{QE} (GeV)","bins":[0.5,1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],"fluxnorm":1},
+        "EnuCCQE":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"EnuCCQE","title":"E_{#nu}_{QE} (GeV)","bins":[1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],"fluxnorm":1},
         "Enu":{
           "reco":"EnuCCQEGeV",
           "true":"TrueEnuGeV",
           "name":"Enu",
           "title":"E_{#nu} (GeV)",
-          "bins":[0.5,1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],
+          "bins":[1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],
           "fluxnorm":1},
         "EnuHad":{
           "reco":"EnuHadGeV",
@@ -41,7 +41,7 @@
           "name":"EnuHad",
           "title":"E_{#nu}_{hadronic} (GeV)",
           "bins":[0.5,
-            1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],
+            1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],
           "fluxnorm":1},
         "total":{"reco":"EnuCCQEGeV","true":"TrueEnuCCQEGeV","name":"total","title":"total for Enu from 2 to 15 GeV","bins":[2.0,15.0],"fluxnorm":0},
         "ptmu":{"reco":"PperpMuGeV",
@@ -52,11 +52,10 @@
             "fluxnorm":false},
         "pzmu":{"reco":"PparMuGeV","true":"TruePparMuGeV","name":"pzmu","title":"muon p_{||} (GeV/c)",
           "bins":
-          [ 0.5,
-            1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],
+          [ 1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],
           "fluxnorm":false},
         "pmu":{"reco":"PmuGeV","true":"TruePmuGeV","name":"pmu","title":"muon p (GeV/c)","bins":[0.5,
-            1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15,20,30,50],
+            1.0,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10,15],
           "fluxnorm":false},
         "Q2QE":{"reco":"Q2QEGeV","true":"TrueQ2QEGeV","name":"Q2QE",
           "title":"Q^{2} (QE)(GeV^{2})",

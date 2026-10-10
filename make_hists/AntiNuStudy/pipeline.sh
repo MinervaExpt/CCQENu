@@ -18,7 +18,7 @@ python combine.py ${MYPLAYLIST}_${MYMODEL}_${MAINSAMPLE}_${RUNJSON}_1.root >& co
 
 export COMBINED=scaled_${MYPLAYLIST}_${MYMODEL}_${MAINSAMPLE}_${RUNJSON}_1
 
-../MnvFitDriver FitAntiNuTest.json >& fit.log
+../MnvFitDriver FitAntiNu.json >& fit.log
 
 export FITTED=${FITVAR}_Fit_${FITVAR}_${COMBINED} 
 
