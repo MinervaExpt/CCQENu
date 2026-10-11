@@ -11,9 +11,9 @@ FHCplaylists = ["1A","1B","1C","1D","1F","1G","1L","1M","1N","1O","1P"]
 FHCsamples = ["QElike","BlobSideband","MichelSideBand","MicBlobSideBand"]
 
 if DEBUG:
-    PRESCALE=10
+    PRESCALE=1
     MYMODEL="MnvTunev2"
-    RUNJSON="Nu_p8_test"
+    RUNJSON="Nu_p8_run"
     FHCplaylists = ["1B"]
 
 for playlist in FHCplaylists:
