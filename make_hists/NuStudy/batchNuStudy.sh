@@ -15,7 +15,7 @@ export MAINSAMPLE=QElike
 export FITVAR="ptmu"
 export TRACKS=1
 
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/test \
- --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=${MYPLAYLIST} --model=MnvTunev2 --tag=AL9-p8 \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/p8 \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=${MYPLAYLIST} --model=${MYMODEL} --tag=AL9-p8 \
  --mail --prescale=${PRESCALE} --config=NuStudy/${RUNJSON} --exe=sidebands_v2 --sample=${MYSAMPLE} --setup=CCQENu/utilities/setup_batch_al9_proto.sh \
  --tmpdir=/exp/minerva/data/users/$USER/tmp --expected-lifetime=4h --memory=3000   #--debug --notimestamp

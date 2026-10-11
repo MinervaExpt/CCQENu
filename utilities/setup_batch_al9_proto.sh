@@ -87,4 +87,5 @@ export PRESCALE=100
 export DATALOC=remote
 export MYSAMPLE=QElike
 export MYMODEL=MnvTunev1
+export TRACKS=${TRACKS}
 
