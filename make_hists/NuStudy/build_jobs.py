@@ -23,7 +23,7 @@ for playlist in FHCplaylists:
     for sample in FHCsamples:
         for tracks in range(1,3):
             f.write(f"export MYPLAYLIST={playlist}\n")
-            f.write(f"export SAMPLE={sample}\n")
+            f.write(f"export MYSAMPLE={sample}_{tracks}Track\n")
             f.write(f"export PRESCALE={PRESCALE}\n")
             f.write(f"export MYMODEL={MYMODEL}\n")
             f.write(f"export RUNJSON={RUNJSON}\n")
