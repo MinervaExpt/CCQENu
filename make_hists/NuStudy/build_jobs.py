@@ -14,7 +14,7 @@ if DEBUG:
     PRESCALE=1
     MYMODEL="MnvTunev2"
     RUNJSON="Nu_p8_run"
-    FHCplaylists = ["1B"]
+    FHCplaylists = ["1A","1C","1D"]
 
 for playlist in FHCplaylists:
     name = f"batch_{playlist}.sh" 
@@ -29,8 +29,8 @@ for playlist in FHCplaylists:
             f.write(f"export RUNJSON={RUNJSON}\n")
             f.write(f"export TRACKS={tracks}\n")
             
-            command = "python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/p8 \
-    --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=${MYPLAYLIST} --model=MnvTunev2 --tag=AL9-p8 \
+            command = "python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/p8/${MYPLAYLIST} \
+    --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=${MYPLAYLIST} --model=MnvTunev2 --tag=p8-$MYPLAYLIST \
     --prescale=${PRESCALE} --config=NuStudy/${RUNJSON} --exe=sidebands_v2 --sample=${MYSAMPLE} --setup=CCQENu/utilities/setup_batch_al9_proto.sh \
     --tmpdir=/exp/minerva/data/users/$USER/tmp --expected-lifetime=24h --memory=3000 \n"
 
