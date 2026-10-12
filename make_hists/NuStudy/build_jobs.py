@@ -8,7 +8,7 @@ RUNJSON = os.getenv("RUNJSON")
 MYMODEL = os.getenv("MYMODEL")
 FHCplaylists = ["1A","1B","1C","1D","1F","1G","1L","1M","1N","1O","1P"]
 
-FHCsamples = ["QElike","BlobSideband","MichelSideBand","MicBlobSideBand"]
+FHCsamples = ["QElike","BlobSideBand","MichelSideBand","MicBlobSideBand"]
 
 if DEBUG:
     PRESCALE=1
