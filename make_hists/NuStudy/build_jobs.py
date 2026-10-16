@@ -6,7 +6,7 @@ DEBUG=True
 PRESCALE = os.getenv("PRESCALE")
 RUNJSON = os.getenv("RUNJSON")
 MYMODEL = os.getenv("MYMODEL")
-FHCplaylists = ["1A","1B","1C","1D","1F","1G","1L","1M","1N","1O","1P"]
+FHCplaylists = ["1A","1B","1C","1D","1E","1F","1G","1L","1M","1N","1O","1P"]
 
 FHCsamples = ["QElike","BlobSideBand","MichelSideBand","MicBlobSideBand"]
 
@@ -19,6 +19,9 @@ if DEBUG:
 for playlist in FHCplaylists:
     name = f"batch_{playlist}.sh" 
     f = open(name,'w')
+    outdir = os.path.join(os.getenv("SCRATCH"),"p8",playlist)
+    if not os.path.exists(outdir):
+        os.path.mkdir(outdir)
 
     for sample in FHCsamples:
         for tracks in range(1,3):
