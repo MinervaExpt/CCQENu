@@ -21,7 +21,7 @@ for playlist in FHCplaylists:
     f = open(name,'w')
     outdir = os.path.join(os.getenv("SCRATCH"),"p8",playlist)
     if not os.path.exists(outdir):
-        os.path.mkdir(outdir)
+        os.mkdir(outdir)
 
     for sample in FHCsamples:
         for tracks in range(1,3):
