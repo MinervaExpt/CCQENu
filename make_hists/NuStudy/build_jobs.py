@@ -14,7 +14,7 @@ if DEBUG:
     PRESCALE=1
     MYMODEL="MnvTunev2"
     RUNJSON="Nu_p8_run"
-    FHCplaylists = ["1D","1E","1F","1G"]
+    #FHCplaylists = ["1D","1E","1F","1G"]
 
 for playlist in FHCplaylists:
     name = f"batch_{playlist}.sh" 
