@@ -308,11 +308,13 @@ cmd += configstring+" " #the environments for the tunes to bee applied
 #cmd += "-f "+opts.outdir+"/myareatar_"+tag_name+".tar.gz "
 cmd += " --tar_file_name dropbox://"+os.path.join(opts.tardir,"myareatar_"+tag_name+".tar.gz") 
 cmd += " --use-cvmfs-dropbox "
+
+
 #cmd += "-i /cvmfs/minerva.opensciencegrid.org/minerva/software_releases/v22r1p1"+" "
 cmd += "file://"+os.environ["PWD"]+"/"+wrapper_name
 print (cmd+"\n")
-
-
+tarloc = os.path.join(opts.tardir,"myareatar_"+tag_name+".tar.gz")
+print ("tarloc = ",tarloc)
 if not opts.debug:
     sf = open(wrapper_name.replace(".sh",".log"),'w')
     jg = open(wrapper_name.replace(".sh",".job"),'w')

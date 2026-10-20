@@ -20,7 +20,11 @@ export MYSAMPLE=BlobSideBand_${TRACKS}Track
 export MYSAMPLE=MicBlobSideBand_${TRACKS}Track
 ../sidebands_v2 ${RUNJSON} $PRESCALE >&mic${TRACKS}.log
 
+# this actually scales the MC and does not do the hadd
+
 python combine.py ${MYPLAYLIST}_${MYMODEL}_${MAINSAMPLE}_${TRACKS}Track_${RUNJSON}_${PRESCALE}.root >& combine${TRACKS}.log
+
+# then hadd to make the full samples. 
 
 export COMBINED=scaled_${MYPLAYLIST}_${MYMODEL}_${MAINSAMPLE}_${TRACKS}Track_${RUNJSON}_${PRESCALE}
 

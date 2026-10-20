@@ -370,7 +370,7 @@ def ApplyVariants(fitvar, unfitHists, parameters, covariance, correlation, catto
         # add in fit variations 
         if DEBUG: print ("Try doing fit variations",htag)
 
-        neigen = 3
+        neigen = variants.GetNrows()
         fitscale = 10
         ncat = variants.GetNrows()
         variantsname = "FitVariations"
@@ -379,21 +379,21 @@ def ApplyVariants(fitvar, unfitHists, parameters, covariance, correlation, catto
             variantsname = f"FitVariations_x{fitscale}"
         vhists = []
         ptag = ("CV",0) # use the CV fit variations
+        newHists[ntag].AddVertErrorBand(variantsname, neigen*2)
+        errorband = newHists[ntag].GetVertErrorBand(variantsname);
         for i in range(ncat):  # loop over categories for that sample
-             for var in range (neigen):
+            for var in range (neigen):
                 for k in range(2):
                     iuniv = var*2+k    
-                    hist = newHists[ntag].GetCVHistoWithStatError().Clone()
-                    hist.SetDirectory(0)
                     sign = (2*k)-1
                     # central value already scaled by the fit parameter so have to back it off. 
                     variation = (1. + variants[var][i] * sign/parameters[ptag][i]*fitscale)
-                    hist.Scale(variation)    
-                    vhists.append(hist)
+                    errorband.GetHist(i).Scale(variation)    
+                    #vhists.append(hist)
                     #hist.Print("ALL")
                     print("varied by " , htag , " " , i , " " , iuniv , " " , parameters[ptag][i]*fitscale , " " , variants[var][i] , " " , variation , " " , parameters[ptag][i]*variation )
-        print ("vhists",vhists)
-        newHists[ntag].AddVertErrorBand(variantsname, vhists)  # only need neigen*2 HMS 2025-07-07
+        #print ("vhists",vhists)
+        #newHists[ntag].AddVertErrorBand(variantsname, vhists)  # only need neigen*2 HMS 2025-07-07
                                                 
         if sample == "QElike":
             newHists[ntag].MnvH1DToCSV(newHists[ntag].GetName(),"./csv",1.,False)
