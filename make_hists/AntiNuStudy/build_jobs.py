@@ -14,6 +14,7 @@ RHCsamples = ["QElike","BlobSideBand","TrackSideBand"]
 if DEBUG:
     PRESCALE=1
     MYMODEL="MnvTunev2"
+    RHCplaylists=["5A"]
     RUNJSON=f"AntiNu_{VERSION}_run"
     #RHCplaylists = ["1D","1E","1F","1G"]
 
