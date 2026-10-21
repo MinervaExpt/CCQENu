@@ -1,7 +1,7 @@
 {
   "version":20, // use Noah's cuts for validation 
-  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_{VERSION}/minervame${MYPLAYLIST}_MC.txt",
-  "dataIn":"${CCQEMAT}/playlists/${DATALOC}_{VERSION}/minervame${MYPLAYLIST}_Data.txt", // hack for type plot of resolution
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_${VERSION}/${VERSION}_Playlist${MYPLAYLIST}_MC.txt",
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}_${VERSION}/${VERSION}_Playlist${MYPLAYLIST}_Data.txt", // hack for type plot of resolution
   "prescale":999,
   "playlist":"minervame${MYPLAYLIST}",
   "DoResolution":1,

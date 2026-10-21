@@ -11,6 +11,7 @@ RHCplaylists = ["5A","6A","6B","6C","6D","6E","6F","6G","6H","6I","6J"]
 
 RHCsamples = ["QElike","BlobSideBand","TrackSideBand"]
 
+
 HOME = os.getenv("HOME")
 if DEBUG:
     PRESCALE=1
@@ -33,7 +34,7 @@ for playlist in RHCplaylists:
             f.write(f"export PRESCALE={PRESCALE}\n")
             f.write(f"export MYMODEL={MYMODEL}\n")
             f.write(f"export RUNJSON={RUNJSON}\n")
-            #f.write(f"export TRACKS={tracks}\n")
+            f.write(f"export TRACKS=1\n") # not used here but required for Nu
             f.write(f"export VERSION={VERSION}\n")
             
             command = "python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/${VERSION}/${MYPLAYLIST} \
