@@ -48,10 +48,13 @@ def makeLocalCopy(locationlist=None,cache="cache",debug=False):
             cp_args = ["xrdcp",location,cache]
             print ("cp command", cp_args)
             try:
-                completed_process = run(cp_args, capture_output=True,text=True)   
+                completed_process = run(cp_args, capture_output=True, text=True)
+                print("Error code:", completed_process.returncode)
+                print("Error:", completed_process.stderr)
+                print("Output:", completed_process.stdout)
                 if debug: print (completed_process)       
             except Exception as e:
-                print ("WARNING: error doing local copy",e,location)
+                print ("WARNING: error doing copy",e,location)
                 continue
             local.append(os.path.join(cache,os.path.basename(location)))
     retcode = len(locationlist)-len(local)
@@ -63,8 +66,15 @@ def cleanup(local,debug=False):
         os.remove(file)
 
 if __name__ == "__main__":
+
+    
     locations = "/Users/schellma/Dropbox/ccqe/p8/nu/1B.txt"
+    if len(sys.argv) > 0:
+        locations = sys.argv[1]
     locationlist = open(locations,'r').readlines()
     print (locationlist)
+    cache = "/Users/schellma/tmp/"
+    if len(sys.argv) > 0 :
+        cache = sys.argv[2]
 
-    makeLocalCopy(locationlist=locationlist,cache="/Users/schellma/Dropbox/ccqe/p8/nu/",debug=True)
+    makeLocalCopy(locationlist=locationlist,cache=cache,debug=False)
