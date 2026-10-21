@@ -21,7 +21,7 @@ if DEBUG:
 for playlist in RHCplaylists:
     name = f"batch_{playlist}_{RUNJSON}.sh" 
     f = open(name,'w')
-    outdir = os.path.join(os.getenv("SCRATCH"),version,playlist)
+    outdir = os.path.join(os.getenv("SCRATCH"),VERSION,playlist)
     if not os.path.exists(outdir):
         os.mkdir(outdir)
 
