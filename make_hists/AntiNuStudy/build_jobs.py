@@ -21,9 +21,9 @@ if DEBUG:
     #RHCplaylists = ["1D","1E","1F","1G"]
 
 for playlist in RHCplaylists:
-    name = f"batch_{playlist}_{RUNJSON}_{VERSION}.sh" 
+    name = f"batch_{playlist}_{RUNJSON}_P{VERSION}.sh" 
     f = open(name,'w')
-    outdir = os.path.join(os.getenv("SCRATCH"),VERSION,playlist)
+    outdir = os.path.join(os.getenv("SCRATCH"),"P"+VERSION,playlist)
     if not os.path.exists(outdir) and "/Users" not in HOME:
         os.mkdir(outdir)
 
@@ -38,7 +38,7 @@ for playlist in RHCplaylists:
             f.write(f"export VERSION={VERSION}\n")
             
             command = "python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/${VERSION}/${MYPLAYLIST} \
-    --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=${MYPLAYLIST} --model=MnvTunev2 --tag=${VERSION}-${MYPLAYLIST}-${MYSAMPLE} \
+    --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=${MYPLAYLIST} --model=MnvTunev2 --tag=P${VERSION}-${MYPLAYLIST}-${MYSAMPLE} \
     --prescale=${PRESCALE}  --config=AntiNuStudy/${RUNJSON} --exe=sidebands_v2 --sample=${MYSAMPLE} --setup=CCQENu/utilities/setup_batch_al9_proto.sh \
     --tmpdir=/exp/minerva/data/users/$USER/tmp --expected-lifetime=36h --memory=2000 \n"
 

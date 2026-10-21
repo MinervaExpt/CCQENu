@@ -1,7 +1,7 @@
 {
   "version":20, // use Noah's cuts for validation 
-  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_${VERSION}/${VERSION}_Playlist${MYPLAYLIST}_MC.txt",
-  "dataIn":"${CCQEMAT}/playlists/${DATALOC}_${VERSION}/${VERSION}_Playlist${MYPLAYLIST}_Data.txt", // hack for type plot of resolution
+  "mcIn":"${CCQEMAT}/playlists/${DATALOC}_P${VERSION}/P${VERSION}_Playlist${MYPLAYLIST}_MC.txt",
+  "dataIn":"${CCQEMAT}/playlists/${DATALOC}_P${VERSION}/P${VERSION}_Playlist${MYPLAYLIST}_Data.txt", // hack for type plot of resolution
   "prescale":999,
   "playlist":"minervame${MYPLAYLIST}",
   "DoResolution":1,
@@ -18,7 +18,7 @@
   "varsFile":"${CCQEMAT}/AntiNuStudy/Variables_v20.json", // describe the variables, choose them below
   "samplesFile":"${CCQEMAT}/AntiNuStudy/AntiNuSamples_v20.json",  // describe the samples, cuts are chosen here
   "runsamples":["${MYSAMPLE}"], // chose which samples to run can provide a list or chose 1 using the batch
-  "outRoot":"${VERSION}_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // name for output files
+  "outRoot":"P${VERSION}_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // name for output files
   "AnalyzeVariables":["Q2QE","pzmu","ptmu","ZVertex","EnuCCQE","recoil"], // choose the 1D variables
   "Analyze2DVariables":[], // choose 2D variables, 1D variables must be chosen
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"}, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag
