@@ -35,7 +35,7 @@ for playlist in RHCplaylists:
             f.write(f"export TRACKS={tracks}\n")
             f.write(f"export VERSION={VERSION}\n")
             
-            command = "python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/p8/${MYPLAYLIST} \
+            command = "python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/${VERSION}/${MYPLAYLIST} \
     --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=${MYPLAYLIST} --model=MnvTunev2 --tag=${VERSION}-${MYPLAYLIST}-${MYSAMPLE} \
     --prescale=${PRESCALE}  -e ${VERSION} --config=AntiNuStudy/${RUNJSON} --exe=sidebands_v2 --sample=${MYSAMPLE} --setup=CCQENu/utilities/setup_batch_al9_proto.sh \
     --tmpdir=/exp/minerva/data/users/$USER/tmp --expected-lifetime=36h --memory=2000 \n"
