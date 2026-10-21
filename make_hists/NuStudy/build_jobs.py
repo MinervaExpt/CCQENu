@@ -6,6 +6,7 @@ DEBUG=True
 PRESCALE = os.getenv("PRESCALE")
 RUNJSON = os.getenv("RUNJSON")
 MYMODEL = os.getenv("MYMODEL")
+version = "p9"
 FHCplaylists = ["1A","1B","1C","1D","1E","1F","1G","1L","1M","1N","1O","1P"]
 
 FHCsamples = ["QElike","BlobSideBand","MichelSideBand","MicBlobSideBand"]
@@ -13,13 +14,13 @@ FHCsamples = ["QElike","BlobSideBand","MichelSideBand","MicBlobSideBand"]
 if DEBUG:
     PRESCALE=1
     MYMODEL="MnvTunev2"
-    RUNJSON="Nu_p8_run"
+    RUNJSON=f"Nu_{version}_run"
     #FHCplaylists = ["1D","1E","1F","1G"]
 
 for playlist in FHCplaylists:
-    name = f"batch_{playlist}.sh" 
+    name = f"batch_{playlist}_{RUNJSON}.sh" 
     f = open(name,'w')
-    outdir = os.path.join(os.getenv("SCRATCH"),"p8",playlist)
+    outdir = os.path.join(os.getenv("SCRATCH"),version,playlist)
     if not os.path.exists(outdir):
         os.mkdir(outdir)
 
