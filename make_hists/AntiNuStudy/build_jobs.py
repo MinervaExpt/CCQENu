@@ -26,13 +26,13 @@ for playlist in RHCplaylists:
         os.mkdir(outdir)
 
     for sample in RHCsamples:
-        for tracks in range(1,3):
+        #for tracks in range(1,3):
             f.write(f"export MYPLAYLIST={playlist}\n")
-            f.write(f"export MYSAMPLE={sample}_{tracks}Track\n")
+            f.write(f"export MYSAMPLE={sample}\n")
             f.write(f"export PRESCALE={PRESCALE}\n")
             f.write(f"export MYMODEL={MYMODEL}\n")
             f.write(f"export RUNJSON={RUNJSON}\n")
-            f.write(f"export TRACKS={tracks}\n")
+            #f.write(f"export TRACKS={tracks}\n")
             f.write(f"export VERSION={VERSION}\n")
             
             command = "python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/${VERSION}/${MYPLAYLIST} \
