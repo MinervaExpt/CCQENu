@@ -6,23 +6,24 @@ DEBUG=True
 PRESCALE = os.getenv("PRESCALE")
 RUNJSON = os.getenv("RUNJSON")
 MYMODEL = os.getenv("MYMODEL")
-VERSION = "p9"
+VERSION = os.getenv("VERSION")
 RHCplaylists = ["5A","6A","6B","6C","6D","6E","6F","6G","6H","6I","6J"]
 
 RHCsamples = ["QElike","BlobSideBand","TrackSideBand"]
 
+HOME = os.getenv("HOME")
 if DEBUG:
     PRESCALE=1
     MYMODEL="MnvTunev2"
     RHCplaylists=["5A"]
-    RUNJSON=f"AntiNu_{VERSION}_run"
+    RUNJSON=f"AntiNu_run"
     #RHCplaylists = ["1D","1E","1F","1G"]
 
 for playlist in RHCplaylists:
-    name = f"batch_{playlist}_{RUNJSON}.sh" 
+    name = f"batch_{playlist}_{RUNJSON}_{VERSION}.sh" 
     f = open(name,'w')
     outdir = os.path.join(os.getenv("SCRATCH"),VERSION,playlist)
-    if not os.path.exists(outdir):
+    if not os.path.exists(outdir) and "/Users" not in HOME:
         os.mkdir(outdir)
 
     for sample in RHCsamples:
