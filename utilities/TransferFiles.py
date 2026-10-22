@@ -69,12 +69,16 @@ if __name__ == "__main__":
 
     
     locations = "/Users/schellma/Dropbox/ccqe/p8/nu/1B.txt"
-    if len(sys.argv) > 0:
+    if len(sys.argv) > 1:
         locations = sys.argv[1]
+    else:
+        print ("arguments are playlist.txt and location you want files to go")
     locationlist = open(locations,'r').readlines()
-    print (locationlist)
+    print ("you have asked to move",len(locationlist),"files")
     cache = "/Users/schellma/tmp/"
-    if len(sys.argv) > 0 :
+    if len(sys.argv) > 2 :
         cache = sys.argv[2]
+    else:
+        cache = os.getenv("PWD")
 
     makeLocalCopy(locationlist=locationlist,cache=cache,debug=False)
