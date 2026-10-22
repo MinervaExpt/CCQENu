@@ -24,7 +24,9 @@ export FITTED=${FITVAR}_Fit_${FITVAR}_${COMBINED}
 
 python ../fits/ApplyVariants.py ${FITTED}.root >& apply_v3.log
 
-python ../nu_extract/ExtractorClasses.py AntiNuCrossScaled.json >& cross_v3.log
+ln -s AntiNuCrossScaled.json v3_AntiNuCrossScaled.json
+
+python ../nu_extract/ExtractorClasses.py v3_AntiNuCrossScaled.json >& cross_v3.log
 
 
 
