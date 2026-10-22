@@ -35,7 +35,7 @@ for playlist in FHCplaylists:
             f.write(f"export TRACKS={tracks}\n")
             
             command = "python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/P9/${MYPLAYLIST} \
-    --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=${MYPLAYLIST} --model=MnvTunev2 --tag=P"+version"+"-${MYPLAYLIST}-${MYSAMPLE} \
+    --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=${MYPLAYLIST} --model=MnvTunev2 --tag=P"+version+"-${MYPLAYLIST}-${MYSAMPLE} \
     --prescale=${PRESCALE} --config=NuStudy/${RUNJSON} --exe=sidebands_v2 --sample=${MYSAMPLE} --setup=CCQENu/utilities/setup_batch_al9_proto.sh \
     --tmpdir=/exp/minerva/data/users/$USER/tmp --expected-lifetime=36h --memory=2000 \n"
 
