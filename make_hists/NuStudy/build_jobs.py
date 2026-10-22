@@ -19,7 +19,7 @@ if DEBUG:
     #FHCplaylists = ["1D","1E","1F","1G"]
 
 for playlist in FHCplaylists:
-    name = f"batch_{playlist}_{RUNJSON}.sh" 
+    name = f"batch_p{version}_{playlist}_{RUNJSON}.sh" 
     f = open(name,'w')
     outdir = os.path.join(os.getenv("SCRATCH"),"P"+version,playlist)
     if not os.path.exists(outdir):
