@@ -16,7 +16,7 @@ HOME = os.getenv("HOME")
 if DEBUG:
     PRESCALE=1
     MYMODEL="MnvTunev2"
-    RHCplaylists=["5A","6A"]
+    #RHCplaylists=["5A","6A"]
     RUNJSON=f"AntiNu_run"
     #RHCplaylists = ["1D","1E","1F","1G"]
 
@@ -25,8 +25,8 @@ for sample in RHCsamples:
     f = open(name,'w')    
     for playlist in RHCplaylists:
         outdir = os.path.join(os.getenv("SCRATCH"),"P"+VERSION,playlist)
-            if not os.path.exists(outdir) and "/Users" not in HOME:
-                os.mkdir(outdir)  
+        if not os.path.exists(outdir) and "/Users" not in HOME:
+            os.mkdir(outdir)  
         name = f"batch_{sample}_{RUNJSON}_P{VERSION}.sh" 
         
         f.write(f"export MYPLAYLIST={playlist}\n")
