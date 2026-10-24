@@ -451,8 +451,8 @@ class DataGrabber:
             if count == 0:
                 self.reference_sample = sample
                 count += 1
-        if DEBUG:
-            self.data_files[sample].ls()
+        # if DEBUG:
+        #     self.data_files[sample].ls()
             
         self.allconfigs = {}
         for key in ["main","varsFile","cutsFile","samplesFile"]:
@@ -533,7 +533,7 @@ class DataGrabber:
                 signal_type = self.allconfigs["Cross"]["Signal_Type"]
                 background_type = self.allconfigs["Cross"]["Background_Type"]
                 if DEBUG:
-                    print ("data_cat ",data_cat," signal_cat ",signal_cat, " data_type ", data_type, " signal_type", signal_type)
+                    print ("find sample",sample,"variable",variable,"data_cat",data_cat," signal_cat ",signal_cat, " data_type ", data_type, " signal_type", signal_type)
                 data_hist = self.hists1D[sample][data_cat][variable][data_type]
                 mc_hist = self.hists1D[sample][signal_cat][variable][signal_type]
                 mctot_hist = mc_hist.Clone(mc_hist.GetName()+"_mctot")

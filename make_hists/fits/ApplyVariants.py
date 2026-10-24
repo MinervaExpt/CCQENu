@@ -69,7 +69,7 @@ def driver(filename):
     fitvar = fconfig["Variable"]
     categories = fconfig["Categories"]
     fithists = {}
-    if DEBUG: f.ls()
+    #if DEBUG: f.ls()
     samples = fconfig["Sidebands"]
     print ("samples",samples)
     mconfig = json.loads(f.Get("main").GetTitle())
@@ -227,6 +227,15 @@ def BkgSub(Hists,variables,samples,categories,signalcat,type="scaled"):
             bkgHist.SetDirectory(0)
             bkgHist.Reset()
 
+            signame = Hists[stag].GetName().replace(signalcat,"sig").replace("reconstructed","scaled")
+            sigtag = (variable,sample,"sig",type)
+            # make an empty histogram to sum things up. 
+            sigHist = Hists[stag].Clone(signame)
+            sigHist.SetDirectory(0)
+            sigHist.Print()
+
+            moreHists[sigtag]=sigHist
+
             for category in categories:
                 if category == signalcat:
                     continue
@@ -241,16 +250,24 @@ def BkgSub(Hists,variables,samples,categories,signalcat,type="scaled"):
             totHist.SetDirectory(0)
             totHist.Add(Hists[stag],1.0)
             moreHists[ttag] = totHist
-
+            sigfracname = sigHist.GetName().replace("_sig_","_sigfrac_")
+            sigfracHist=sigHist.Clone(sigfracname)
+            sftag = (variable,sample,"sigfrac",type)
+            sigfracHist.Divide(sigfracHist,totHist,1.,1.,"B")
+            sigfracHist.Print("ALL")
+            sigfracHist.SetDirectory(0)
+            moreHists[sftag] = sigfracHist
             ## substract the background from the data
             dtag = (variable,sample,"data","reconstructed")
             bkgsubname = Hists[dtag].GetName().replace("data","bkgsub").replace("reconstructed","scaled")
             bkgsubHist = Hists[dtag].Clone(bkgsubname)
             bkgsubHist.SetDirectory(0)
-            bkgsubHist.Add(bkgHist,-1.)
+            #bkgsubHist.Add(bkgHist,-1.)
+            bkgsubHist.Multiply(bkgsubHist,sigfracHist,1.,1.)
             bkgtag = (variable,sample,"bkgsub",type)
             moreHists[bkgtag] = bkgsubHist
             if DEBUG:
+                sigfracHist.Print("ALL")
                 bkgHist.Print()
                 totHist.Print()
                 bkgsubHist.Print()
@@ -391,14 +408,14 @@ def ApplyVariants(fitvar, unfitHists, parameters, covariance, correlation, catto
                     errorband.GetHist(i).Scale(variation)    
                     #vhists.append(hist)
                     #hist.Print("ALL")
-                    print("varied by " , htag , " " , i , " " , iuniv , " " , parameters[ptag][i]*fitscale , " " , variants[var][i] , " " , variation , " " , parameters[ptag][i]*variation )
+                    #print("varied by " , htag , " " , i , " " , iuniv , " " , parameters[ptag][i]*fitscale , " " , variants[var][i] , " " , variation , " " , parameters[ptag][i]*variation )
         #print ("vhists",vhists)
         #newHists[ntag].AddVertErrorBand(variantsname, vhists)  # only need neigen*2 HMS 2025-07-07
                                                 
         if sample == "QElike":
             newHists[ntag].MnvH1DToCSV(newHists[ntag].GetName(),"./csv",1.,False)
             unfitHists[htag].MnvH1DToCSV(unfitHists[htag].GetName(),"./csv",1.,False)
-        SyncBands(newHists[ntag],True)
+        SyncBands(newHists[ntag],False)
         print ("made scaled ",ntag)
 
     return newHists

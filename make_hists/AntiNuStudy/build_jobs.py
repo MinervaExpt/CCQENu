@@ -9,7 +9,7 @@ MYMODEL = os.getenv("MYMODEL")
 VERSION = os.getenv("VERSION")
 RHCplaylists = ["5A","6A","6B","6C","6D","6E","6F","6G","6H","6I","6J"]
 
-RHCsamples = ["QElike","BlobSideBand","TrackSideBand"]
+RHCsamples = ["QElike","BlobSideband","TrackSideband"]
 
 
 HOME = os.getenv("HOME")
@@ -25,6 +25,7 @@ for sample in RHCsamples:
     f = open(name,'w')    
     for playlist in RHCplaylists:
         outdir = os.path.join(os.getenv("SCRATCH"),"P"+VERSION,playlist)
+        print ("output directory will be ",outdir)
         if not os.path.exists(outdir) and "/Users" not in HOME:
             os.mkdir(outdir)  
         name = f"batch_{sample}_{RUNJSON}_P{VERSION}.sh" 
@@ -37,7 +38,7 @@ for sample in RHCsamples:
         f.write(f"export TRACKS=1\n") # not used here but required for Nu
         f.write(f"export VERSION={VERSION}\n")
         
-        command = "python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/${VERSION}/${MYPLAYLIST} \
+        command = "python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/P${VERSION}/${MYPLAYLIST} \
 --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=${MYPLAYLIST} --model=MnvTunev2 --tag=P${VERSION}-${MYPLAYLIST}-${MYSAMPLE} \
 --prescale=${PRESCALE}  --config=AntiNuStudy/${RUNJSON} --exe=sidebands_v2 --sample=${MYSAMPLE} --setup=CCQENu/utilities/setup_batch_al9_proto.sh \
 --tmpdir=/exp/minerva/data/users/$USER/tmp --expected-lifetime=36h --memory=2000 \n"
