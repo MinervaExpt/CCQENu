@@ -558,7 +558,7 @@ class DataGrabber:
                 if PLOTS:
                     logscale = self.allconfigs["Cross"]["Scales"][variable]
                     self.plotter.PlotCVAndError(self.plotter.canvas1D, data_hist,mctot_hist,sample + ": data compared to "+self.model,True,self.plotter.scales[variable])
-                    self.plotter.PlotErrorSummary(self.plotter.canvas1D, data_hist, sample + ": Data", logscale%2)
+                    self.plotter.PlotErrorSummary(self.plotter.canvas1D, data_hist, sample + ": Data "+ data_cat, logscale%2)
                    
         pass
 

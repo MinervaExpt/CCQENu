@@ -64,7 +64,7 @@ def ClassifyHists(f):
 def driver(filename):
 
     f = TFile(filename, "READONLY")
-
+    
     fconfig = json.loads(f.Get("Fit").GetTitle())
     fitvar = fconfig["Variable"]
     categories = fconfig["Categories"]
@@ -261,6 +261,7 @@ def BkgSub(Hists,variables,samples,categories,signalcat,type="scaled"):
             dtag = (variable,sample,"data","reconstructed")
             bkgsubname = Hists[dtag].GetName().replace("data","bkgsub").replace("reconstructed","scaled")
             bkgsubHist = Hists[dtag].Clone(bkgsubname)
+            bkgsubHist.AddMissingErrorBandsAndFillWithCV(sigfracHist)
             bkgsubHist.SetDirectory(0)
             #bkgsubHist.Add(bkgHist,-1.)
             bkgsubHist.Multiply(bkgsubHist,sigfracHist,1.,1.)
@@ -417,7 +418,6 @@ def ApplyVariants(fitvar, unfitHists, parameters, covariance, correlation, catto
             unfitHists[htag].MnvH1DToCSV(unfitHists[htag].GetName(),"./csv",1.,False)
         SyncBands(newHists[ntag],False)
         print ("made scaled ",ntag)
-
     return newHists
 
 
