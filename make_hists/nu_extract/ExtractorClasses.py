@@ -15,7 +15,7 @@
 
 import os
 import sys
-from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixD
+from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixD, addressof
 from PlotUtils import MnvH1D, MnvH2D
 import commentjson
 from SyncBands import SyncBands
@@ -167,14 +167,17 @@ class CrossSectionExtractor:
                 covmatrix = TMatrixD(n,n) 
                 kBayes = 1
                 unfolder = MnvUnfold()
+                #status  = unfolder.UnfoldHisto(unfolded_hist, addressof(covmatrix), migration, data_hist, kBayes, iterations, True, True)
                 status  = unfolder.UnfoldHisto(unfolded_hist, covmatrix, migration, data_hist, kBayes, iterations, True, True)
 
-                print ("unfolding returned status",status)
+                print ("unfolding done")
+                print (unfolded_hist.GetCovMatricesNames())
+                #covmatrix.Print()
 
-                for i in range(0,  covmatrix.GetNrows()):  
-                    covmatrix[i][i] = 0.0
+                #for i in range(0,  covmatrix.GetNrows()):  
+                 #   covmatrix[i][i] = 0.0
 
-                unfolded_hist.FillSysErrorMatrix("Unfolding", covmatrix)
+                #unfolded_hist.FillSysErrorMatrix("Unfolding", covmatrix)
                 SyncBands(unfolded_hist)
                 addentry(self.hists1D, sample, data_cat, variable, output_stage, unfolded_hist)
                 unfolded_hist.Print()
