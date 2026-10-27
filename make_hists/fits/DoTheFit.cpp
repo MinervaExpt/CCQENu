@@ -347,7 +347,7 @@ int DoTheFit(std::map<const std::string, std::vector<PlotUtils::MnvH1D*>> fitHis
 
     
 
-    int neigen=3;
+    int neigen=ncat;
     if (CovMatrix.GetNrows() < neigen){
         neigen = CovMatrix.GetNrows();
     }

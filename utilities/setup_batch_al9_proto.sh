@@ -88,4 +88,5 @@ export DATALOC=remote
 export MYSAMPLE=QElike
 export MYMODEL=MnvTunev1
 export TRACKS=${TRACKS}
+export VERSION=${VERSION}
 

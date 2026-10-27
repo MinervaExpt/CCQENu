@@ -15,7 +15,7 @@
 
 import os
 import sys
-from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixD
+from ROOT import TFile,TNamed, TH1D, TCanvas, TMatrixD, addressof
 from PlotUtils import MnvH1D, MnvH2D
 import commentjson
 from SyncBands import SyncBands
@@ -167,14 +167,17 @@ class CrossSectionExtractor:
                 covmatrix = TMatrixD(n,n) 
                 kBayes = 1
                 unfolder = MnvUnfold()
+                #status  = unfolder.UnfoldHisto(unfolded_hist, addressof(covmatrix), migration, data_hist, kBayes, iterations, True, True)
                 status  = unfolder.UnfoldHisto(unfolded_hist, covmatrix, migration, data_hist, kBayes, iterations, True, True)
 
-                print ("unfolding returned status",status)
+                print ("unfolding done")
+                print (unfolded_hist.GetCovMatricesNames())
+                #covmatrix.Print()
 
-                for i in range(0,  covmatrix.GetNrows()):  
-                    covmatrix[i][i] = 0.0
+                #for i in range(0,  covmatrix.GetNrows()):  
+                 #   covmatrix[i][i] = 0.0
 
-                unfolded_hist.FillSysErrorMatrix("Unfolding", covmatrix)
+                #unfolded_hist.FillSysErrorMatrix("Unfolding", covmatrix)
                 SyncBands(unfolded_hist)
                 addentry(self.hists1D, sample, data_cat, variable, output_stage, unfolded_hist)
                 unfolded_hist.Print()
@@ -451,8 +454,8 @@ class DataGrabber:
             if count == 0:
                 self.reference_sample = sample
                 count += 1
-        if DEBUG:
-            self.data_files[sample].ls()
+        # if DEBUG:
+        #     self.data_files[sample].ls()
             
         self.allconfigs = {}
         for key in ["main","varsFile","cutsFile","samplesFile"]:
@@ -533,7 +536,7 @@ class DataGrabber:
                 signal_type = self.allconfigs["Cross"]["Signal_Type"]
                 background_type = self.allconfigs["Cross"]["Background_Type"]
                 if DEBUG:
-                    print ("data_cat ",data_cat," signal_cat ",signal_cat, " data_type ", data_type, " signal_type", signal_type)
+                    print ("find sample",sample,"variable",variable,"data_cat",data_cat," signal_cat ",signal_cat, " data_type ", data_type, " signal_type", signal_type)
                 data_hist = self.hists1D[sample][data_cat][variable][data_type]
                 mc_hist = self.hists1D[sample][signal_cat][variable][signal_type]
                 mctot_hist = mc_hist.Clone(mc_hist.GetName()+"_mctot")
@@ -558,7 +561,7 @@ class DataGrabber:
                 if PLOTS:
                     logscale = self.allconfigs["Cross"]["Scales"][variable]
                     self.plotter.PlotCVAndError(self.plotter.canvas1D, data_hist,mctot_hist,sample + ": data compared to "+self.model,True,self.plotter.scales[variable])
-                    self.plotter.PlotErrorSummary(self.plotter.canvas1D, data_hist, sample + ": Data", logscale%2)
+                    self.plotter.PlotErrorSummary(self.plotter.canvas1D, data_hist, sample + ": Data "+ data_cat, logscale%2)
                    
         pass
 
