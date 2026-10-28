@@ -1735,7 +1735,7 @@
       "reco": "EAvailGeV",
       "true": "TrueEAvailGeV",
       "name": "EAvail",
-      "title": "E_{Available} in GeV",
+      "title": "E_{Available}",
       "bins": [
         // -1.0,
         // 0.0,
@@ -1832,7 +1832,7 @@
       "reco": "PperpMuGeV",
       "true": "TruePperpMuGeV",
       "name": "ptmu",
-      "title": "muon p_{T}",
+      "title": "p^{}_{T}^{}",
       "units": "GeV/c",
       "bins": [
         0,
@@ -1860,7 +1860,8 @@
       "reco": "PparMuGeV",
       "true": "TruePparMuGeV",
       "name": "pzmu",
-      "title": "muon p_{||} (GeV/c)",
+      "title": "p_{||}",
+      "units": "GeV/c",
       "bins": [
         1.5,
         2,
@@ -1885,7 +1886,7 @@
       "true": "TrueQ2QEGeV",
       "name": "Q2QE",
       "title": "Q^{2}_{QE}",
-      "units": "GeV^{2}",
+      "units": "(GeV/c)^{2}",
       "bins": [
         0.001,
         0.0125,
@@ -1894,6 +1895,7 @@
         0.1,
         0.2,
         0.4,
+        0.6,
         0.8,
         1.6,
         4.0

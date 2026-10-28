@@ -2,19 +2,19 @@
   "version": 15,
   "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
-  "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_warping.json",
+  "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_thesis.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_${MYSAMPLE}.json",
-  "samplesFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuSamples_v15_warping_recoonly.json",
+  "samplesFile": "${CCQEMAT}/nhv/config/thesis/AntiNuSamples_v15_thesis_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
   "warpdriverFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuWarps_v15.json",
-  "outRoot": "BkgSub_runwithtune_June2026_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}",
+  "outRoot": "BkgSub_Oct2026_NewProtonScoreCut_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}",
   "scalefileIn": "${CCQEMAT}/data/bkgfitting_sidebands_${MYMODEL}_FractionFitOutVals_June2026.root",
   "prescale": 999,
   "playlist": "${MYPLAYLIST}",
   "MinervaModel": "${MYMODEL}",
   "modeltuneFile": "${CCQEMAT}/config/modeltunes/${MYMODEL}.json",
   "recoName": "MasterAnaDev",
-  "tunedmc": "both",
+  "tunedmc": "untuned",
   "warpedmc": "${MYWARP}",
   "closure": 0,
   "TuneCategories": [
@@ -27,37 +27,16 @@
   "DoTypes": false,
   "pdg": -14,
   "mcRecoToCSV": false,
-  "statusbar": true,
+  "statusbar": false,
   "runsamples": [ 
     "${MYSAMPLE}"
-    // "QElike",
-    // // "QElike_maxrecoil",
-    // // "QElike_maxrecoil_hiEAvail"
-    // // "QElike1track",
-    // // "QElike2track",
-    // // "QElikeNeut"
-    // // "QElike_0blob",
-    // // "QElike_1blob"
-    // // "QElikeNeutrons"//,
-    // "TrackSideband",
-    // // "LoPionThetaSideband",
-    // // "HiPionThetaSideband"//,
-    // "BlobSideband"//,
-    // // "MultipBlobSideband"
   ],
-  "AnalyzeVariables": [],
-    "EAvail",
-    // "NNeutCands",
-    // "TotalNeutBlobE",
-    // "EAvail_nohi",
-    // "EAvailNoNonVtxBlobs",
-    // "EAvailWithNeutrons",
-    // "CalibEAvailWithNeutrons",
-  //   "recoil",
-    "ptmu"
-  // ],
+  "AnalyzeVariables": [
+    "FitQ2QE",
+    "Fitrecoil"    
+  ],
   "Analyze2DVariables": [
-    // "FitQ2QE_Fitrecoil"
+    "FitQ2QE_Fitrecoil"
   ],
   "AnalyzeHyperDVariables": [], 
   "signal": {

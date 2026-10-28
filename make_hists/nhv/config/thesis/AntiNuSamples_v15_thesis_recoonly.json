@@ -7,8 +7,8 @@
         "reco": "QElike",
         "phase_space": "phase_space",
         "signal": [
-            // "qelike_neutron",
-            // "qelike_proton",
+            "qelike_neutron",
+            "qelike_proton",
             "qelike"
         ],
         "background": [
@@ -25,16 +25,16 @@
                     "selected_reco"
                 ]
             },
-            // "qelike_neutron": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
-            // "qelike_proton": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
+            "qelike_neutron": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelike_proton": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
             "neutralpion": {
                 "for": [
                     "selected_reco"
@@ -70,8 +70,8 @@
         "legend_entries": {
             "data": "Data",
             "qelike": "QElike",
-            // "qelike_neutron": "QElike Neutron",
-            // "qelike_proton": "QElike Proton",
+            "qelike_neutron": "QElike Neutron",
+            "qelike_proton": "QElike Proton",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
             "multipion": "N#pi",
@@ -85,8 +85,8 @@
         "reco": "QElike1track",
         "phase_space": "phase_space",
         "signal": [
-            // "qelike_neutron",
-            // "qelike_proton",
+            "qelike_neutron",
+            "qelike_proton",
             "qelike"
         ],
         "background": [
@@ -103,16 +103,16 @@
                     "selected_reco"
                 ]
             },
-            // "qelike_neutron": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
-            // "qelike_proton": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
+            "qelike_neutron": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelike_proton": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
             "neutralpion": {
                 "for": [
                     "selected_reco"
@@ -163,8 +163,8 @@
         "reco": "QElike2track",
         "phase_space": "phase_space",
         "signal": [
-            // "qelike_neutron",
-            // "qelike_proton",
+            "qelike_neutron",
+            "qelike_proton",
             "qelike"
         ],
         "background": [
@@ -181,16 +181,16 @@
                     "selected_reco"
                 ]
             },
-            // "qelike_neutron": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
-            // "qelike_proton": {
-            //     "for": [
-            //         "selected_reco"
-            //     ]
-            // },
+            "qelike_neutron": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelike_proton": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
             "neutralpion": {
                 "for": [
                     "selected_reco"
@@ -226,8 +226,8 @@
         "legend_entries": {
             "data": "Data",
             "qelike": "QElike",
-            // "qelike_neutron": "QElike Neutron",
-            // "qelike_proton": "QElike Proton",
+            "qelike_neutron": "QElike Neutron",
+            "qelike_proton": "QElike Proton",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
             "multipion": "N#pi",
@@ -709,6 +709,8 @@
         "reco": "BlobSideband",
         "phase_space": "phase_space",
         "signal": [
+            "qelike_neutron",
+            "qelike_proton",
             "qelike"
         ],
         "background": [
@@ -721,6 +723,16 @@
         ],
         "categories": {
             "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelike_neutron": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelike_proton": {
                 "for": [
                     "selected_reco"
                 ]
@@ -760,6 +772,8 @@
         "legend_entries": {
             "data": "Data",
             "qelike": "QElike",
+            "qelike_neutron": "QElike Neutron",
+            "qelike_proton": "QElike Proton",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
             "multipion": "N#pi",
@@ -773,6 +787,8 @@
         "reco": "TrackSideband",
         "phase_space": "phase_space",
         "signal": [
+            "qelike_neutron",
+            "qelike_proton",
             "qelike"
         ],
         "background": [
@@ -785,6 +801,16 @@
         ],
         "categories": {
             "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelike_neutron": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelike_proton": {
                 "for": [
                     "selected_reco"
                 ]
@@ -824,6 +850,8 @@
         "legend_entries": {
             "data": "Data",
             "qelike": "QElike",
+            "qelike_neutron": "QElike Neutron",
+            "qelike_proton": "QElike Proton",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
             "multipion": "N#pi",
@@ -893,6 +921,8 @@
         "reco": "MultipBlobSideband",
         "phase_space": "phase_space",
         "signal": [
+            "qelike_neutron",
+            "qelike_proton",
             "qelike"
         ],
         "background": [
@@ -905,6 +935,16 @@
         ],
         "categories": {
             "qelike": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelike_neutron": {
+                "for": [
+                    "selected_reco"
+                ]
+            },
+            "qelike_proton": {
                 "for": [
                     "selected_reco"
                 ]
@@ -944,6 +984,8 @@
         "legend_entries": {
             "data": "Data",
             "qelike": "QElike",
+            "qelike_neutron":"QElike Neutron",
+            "qelike_proton":"QElike Proton",
             "neutralpion": "1#pi^{0}",
             "chargedpion": "1#pi^{+/-}",
             "multipion": "N#pi",
