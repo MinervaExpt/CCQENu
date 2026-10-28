@@ -1,19 +1,5 @@
 {
-  "Comments": [
-    "Adding stuff for one track protons in signal",
-    "Adding stuff for pion angle cut",
-    "This one has a Multiplicity sideband that is agnostic to Michels",
-    "Adding mc_int_type sig defs. 7/14/2023",
-    "Changed Proton score cuts to avoid duplicated multiplicity cut. 7/13/2023",
-    "Fixed 'other' category to use not passing TruthIsCCQELikeAll instead of TruthIsCCQELike. 7/10/2023",
-    "Added qelike_trackp sig def that only allows protons > 120MeV. Maybe used in proton sideband. 7/10/2023",
-    "Added 2p2h samples, qelikenot samples, & '_np' samples without proton KE constraint - NHV 7/7/2023",
-    "v15 - make more similar to Neutrino cuts/sig def 6/20/2023",
-    "v13 - make CCQELike a single cut so you can reverse it.",
-    "v9 - May 28, 2022, remove the FULL cuts and stick with all angles",
-    "also add QElikeNot which is complement to QElike with recoil cut reversed"
-  ],
-  "QElike": [
+ "QElike": [
     {
       "name": "Max Recoil 100mm",
       "max": 0.5,
