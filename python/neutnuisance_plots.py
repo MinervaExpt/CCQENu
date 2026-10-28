@@ -361,25 +361,25 @@ varstodo = []
 
 vars_info = {
     "NeutCandsEdep": {
-        "title": "Cluster E_{dep}",
+        "title": "Blob E_{dep}",
         "shortname": "E_{dep}",
         "units": "MeV",
         "bins": [],
     },
     "NeutCandsMuonCosTheta": {
-        "title": "Cluster cos(#Delta#theta_{#mu})",
+        "title": "Blob cos(#Delta#theta_{#mu})",
         "shortname": "cos(#Delta#theta_{#mu})",
         "units": "",
         "bins": [],
     },
     "NeutCandsvtxSphereDist" : {
-        "title": "Cluster d_{vtx}",
+        "title": "Blob d_{vtx}",
         "shortname": "d_{vtx}",
         "units": "mm",
         "bins": [],
     },
     "NeutCandsTrackEndDist": {
-        "title": "Cluster d_{track}",
+        "title": "Blob d_{track}",
         "shortname": "d_{track}",
         "units": "mm",
         "bins": [],
@@ -394,6 +394,8 @@ vars_info = {
 
 samplestodo = [
     "QElike",
+    "QElike1track",
+    "QElike2track",
     "TrackSideband",
     "BlobSideband",
     # "QElike_old"
@@ -518,7 +520,9 @@ type_colors = {
 
 
 samplenames = {
-    "QElike": "QElike Signal Sample",
+    "QElike": "Signal Sample",
+    "QElike1track": "Signal Sample, 1-track",
+    "QElike1track": "Signal Sample, 2-track",
     "QElike_old": "QElike 120MeV Protons Signal Sample",
     "QElike0Blob": "QElike Signal w/o Blobs",
     "QElike1Blob": "QElike Signal w/ 1 Blob",

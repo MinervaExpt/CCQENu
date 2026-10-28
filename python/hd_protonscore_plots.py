@@ -38,7 +38,7 @@ IncludeSysBool = False
 global_noData = True  # use this to plot MC only types
 noData = global_noData  # dummy bc dumb
 dotypes = False  # use this if ou want to do by types
-# dotuned=False  # use this if you have tuned hists
+dotuned=False  # use this if you have tuned hists
 doratio = True  # use this if you want to include a data/mc ratio
 projY = False
 
@@ -52,8 +52,98 @@ _ysize = 720.0
 latex_x = 0.72
 latex_y = 0.53
 
+data_marker_size = 0.5
 
-def GetHistDict(i_file, POTScale):
+def GetHistDict(i_file,POTScale):
+    groups = {}
+    keys = i_file.GetListOfKeys()
+    for k in keys:
+        name = k.GetName()
+        if "___" not in name: continue
+        parse = name.split("___")
+        if len(parse) < 5: continue
+        hist = parse[0]
+        sample = parse[1]
+        cat = parse[2]
+        variable = parse[3]
+        recotrutype = parse[4]
+        # print("looking at %s"%name)
+
+        if "types" in recotrutype and not dotypes:
+            continue
+        if "types" not in recotrutype and dotypes:
+            continue
+        if "reconstructed" not in recotrutype:
+            continue
+        if cat != "data":
+            if "tuned" not in recotrutype and dotuned:
+                continue
+            if "tuned" in recotrutype and not dotuned:
+                continue
+        if cat not in catstodo:
+            continue
+        if sample not in samplestodo:
+            continue
+
+        h = i_file.Get(name).Clone()
+        if h.GetEntries() <= 0:
+            print("hist %s has no entries. Skipping..."%name)
+            continue
+        if "data" in cat:
+            h.SetMarkerColor(ROOT.kBlack)
+            h.SetLineColor(ROOT.kBlack)
+            h.SetMarkerSize(data_marker_size)
+            h.SetMarkerStyle(20)
+            h.SetLineWidth(1)
+            h.Scale(1.0,"width")
+        else:
+            if POTScale >= 0:
+                h.Scale(POTScale)
+
+        if hist not in groups.keys():
+            groups[hist] = {}
+        if sample not in groups[hist].keys():
+            groups[hist][sample] = {}
+        if variable not in groups[hist][sample]:
+            groups[hist][sample][variable] = {}
+        if cat not in groups[hist][sample][variable]:
+            groups[hist][sample][variable][cat] = {}
+        # if "qelikenot" not in groups[hist][sample][variable]:
+        #     groups[hist][sample][variable]["qelikenot"] = {}
+        # if "mctot" not in groups[hist][sample][variable]:
+        #     groups[hist][sample][variable]["mctot"] = {}
+        groups[hist][sample][variable][cat] = h
+    # check if mctot and qelikenot in there
+    for a_hist in groups:
+        for b_sample in groups[a_hist]:
+            for c_var in groups[a_hist][b_sample]:
+                missing_bkg = False
+                for bkgcat in backgrounds:
+                    if bkgcat not in groups[a_hist][b_sample][c_var]:
+                        missing_bkg = True
+                        break
+                if missing_bkg or "qelike" not in groups[a_hist][b_sample][c_var]:
+                    continue
+                tmp_qelikenot_hist = groups[a_hist][b_sample][c_var][backgrounds[0]].Clone(
+                    groups[a_hist][b_sample][c_var][backgrounds[0]].GetName().replace(backgrounds[0],"qelikenot")
+                )
+                tmp_mctot_hist = groups[a_hist][b_sample][c_var]["qelike"].Clone(
+                    groups[a_hist][b_sample][c_var]["qelike"].GetName().replace(backgrounds[0],"mctot")
+                )
+                for bkgcat in backgrounds:
+                    tmp_qelikenot_hist.Add(groups[a_hist][b_sample][c_var][bkgcat])
+                    tmp_mctot_hist.Add(groups[a_hist][b_sample][c_var][bkgcat])
+                if "qelikenot" not in groups[a_hist][b_sample][c_var]:
+                    groups[a_hist][b_sample][c_var]["qelikenot"] = tmp_qelikenot_hist
+                if "mctot" not in groups[a_hist][b_sample][c_var]:
+                    groups[a_hist][b_sample][c_var]["mctot"] = tmp_mctot_hist
+    return groups
+    
+        
+
+
+
+def GetHistHDDict(i_file, POTScale):
     groups = {}
     keys = i_file.GetListOfKeys()
 
@@ -177,11 +267,124 @@ def GetHistDict(i_file, POTScale):
 
     return groups
 
+def GetHist2DDict(i_file, POTScale):
+    groups = {}
+    keys = i_file.GetListOfKeys()
+
+    # find all the valid histogram and group by keywords
+    for k in keys:
+        name = k.GetName()
+        if "___" not in name:
+            continue
+        parse = name.split("___")
+        if len(parse) < 5:
+            continue
+
+        hist = parse[0]
+        sample = parse[1]
+        cat = parse[2]
+        variable = parse[3]
+        # print("checking hist ", name)
+        if "reconstructed" not in parse[4]:
+            continue
+        if ("types" in parse[4]) and (not dotypes):
+            continue
+        if ("types" not in parse[4]) and dotypes:
+            continue
+        if "simulfit" in parse[4]:
+            continue
+        if hist == "hHD":
+            continue
+        if cat == "data" and hist != "h":
+            continue
+        if cat not in catstodo:
+            continue
+        # if variable not in varsHDtodo+vars2Dtodo:
+        #     continue
+        if sample not in samplestodo:
+            continue
+
+        if "tuned" in parse[4]:
+            sample += "_Tuned"
+        if hist == "h2D":
+            if "_" in variable:
+                if len(variable.split("_")) == 2:
+                    # Skip 2D vars that don't have the PID as a y axis
+                    if variable.split("_")[1] != "PlotPrimaryProtonCandMCPID":
+                        print("this hist %s does not have PlotPrimaryProtonCandMCPID, skipping"%(name))
+                        continue
+                    # Add to list to loop over later
+                    if variable not in vars2Dtodo:
+                        vars2Dtodo.append(variable)
+                    # Add to list to check later if there's a 1D data that exists
+                    if variable.split("_")[0] not in vars1Dtodo:
+                        vars1Dtodo.append(variable.split("_")[0])
+                else:
+                    print("Skipping variable that isn't formatted properly: ", variable)
+                    continue
+            else:
+                print("Skipping variable that isn't formatted properly: ", variable)
+                continue
+
+        print("adding hist to the list ", name)
+        if sample not in groups.keys():
+            groups[sample] = {}
+        if variable not in groups[sample].keys():
+            groups[sample][variable] = {}
+        if cat not in groups[sample][variable].keys():
+            groups[sample][variable][cat] = {}
+
+        # print("\t",sample, variable, cat)
+        h = i_file.Get(name).Clone()
+        if h.GetEntries() <= 0:
+            print("hist ", name, " has no entries, skipping...")
+            continue
+        h.SetFillColor(catscolors[cat])
+        # h.SetLineColor(catscolors[cat] + 1)
+        h.SetLineColor(ROOT.TColor.GetColorDark(catscolors[cat]))
+        # if "data" in cat:
+        #     if h.GetEntries() <= 0:
+        #         continue
+        #     # h.SetMarkerStyle(20)
+        #     # h.SetMarkerSize(1.5)
+        # else:
+        #     h.Scale(POTScale)
+        # # if cat in backgrounds:
+        # #     h.SetFillStyle(3244)
+
+        groups[sample][variable][cat] = h
+    # do the plotting
+    if "qelikenot" not in backgrounds:
+        backgrounds.append("qelikenot")
+        print("Combining backgrounds to make a background total")
+        for a_sample in groups.keys():
+            for b_var in groups[a_sample].keys():
+                if "_" not in b_var:
+                    continue
+                if len(b_var.split("_"))!=3:
+                    continue
+                if "qelikenot" in groups[a_sample][b_var].keys():
+                    continue
+                groups[a_sample][b_var]["qelikenot"] = {}
+                first_cat = True
+                for c_cat in backgrounds:
+                    if c_cat == "qelikenot":
+                        continue
+                    tmp_hist = groups[a_sample][b_var][c_cat].Clone()
+                    if first_cat:
+                        groups[a_sample][b_var]["qelikenot"] = tmp_hist.Clone(
+                            tmp_hist.GetName().replace(c_cat, "qelikenot")
+                        )
+                        first_cat = False
+                        continue
+                    groups[a_sample][b_var]["qelikenot"].Add(tmp_hist)
+
+    return groups
 
 def GetHDBinning(i_file, varHD_name):
     bins = []
 
-    bigvarconfig_string = i_file.Get("varsFile").GetTitle()
+    bigvarconfig_string = i_file.Get("varsFile_5A").GetTitle()
     # print(bigvarconfig_string)
     bigvarconfig_dict = json.loads(re.sub("//.*","",bigvarconfig_string,flags=re.MULTILINE))
     if varHD_name in bigvarconfig_dict["HyperD"].keys():
@@ -207,7 +410,7 @@ def GetHDBinning(i_file, varHD_name):
     return bins
 
 def GetHDAnalysisType(i_file,varHD_name):
-    bigvarconfig_string = i_file.Get("varsFile").GetTitle()
+    bigvarconfig_string = i_file.Get("varsFile_5A").GetTitle()
     # print(bigvarconfig_string)
     bigvarconfig_dict = json.loads(re.sub("//.*","",bigvarconfig_string,flags=re.MULTILINE))
     if varHD_name not in bigvarconfig_dict["HyperD"].keys():
@@ -231,13 +434,30 @@ def MakePlotDir(subdir=""):
         plotdir = os.path.join("/Users/nova/git/plots/", month + year)
     if not os.path.exists(plotdir):
         print("Can't find plot dir. Making it now... ", plotdir)
-        os.mkdir(plotdir)
+        os.makedirs(plotdir)
     if subdir == "":
         return plotdir
     if not os.path.exists(os.path.join(plotdir, subdir)):
         print("Can't find plot dir. Making it now... ", os.path.join(plotdir, subdir))
-        os.mkdir(os.path.join(plotdir, subdir))
+        os.makedirs(os.path.join(plotdir, subdir))
     return os.path.join(plotdir, subdir)
+
+def MakeThesisPlotDir(subdir = ""):
+    plotdir = ""
+    base_plotdir = os.environ.get("THESISPLOTDIR")
+    if base_plotdir == None:
+        return plotdir
+    plotdir = base_plotdir
+    if not os.path.exists(plotdir):
+        print("Can't find plot dir. Making it now... ", plotdir)
+        os.makedirs(plotdir)
+    if subdir == "":
+        return plotdir
+    if not os.path.exists(os.path.join(plotdir, subdir)):
+        print("Can't find plot dir. Making it now... ", os.path.join(plotdir, subdir))
+        os.makedirs(os.path.join(plotdir, subdir))
+    return os.path.join(plotdir, subdir)
+
 
 def PanelCanvas(name, n_xbins, n_ybins, x_size=1000, y_size=750):
     """name is the name for the canvas
@@ -432,6 +652,7 @@ var_short_names = {
 
 samplestodo = [
     "QElike",
+    "QElike2trackNoPID",
     "TrackSideband",
     "BlobSideband",
     # "QElike_old"
@@ -461,8 +682,10 @@ bin_pid_colors = {
     2: ROOT.kP10Yellow,
     3: ROOT.kP10Green,
     # 4: ROOT.kP10Ash, # decided to combine pi+ (4) with pi- (5)
-    4: ROOT.kP10Orange,
-    5: ROOT.kP10Orange,
+    # 4: ROOT.kP10Orange,
+    # 5: ROOT.kP10Orange,
+    4: ROOT.kP10Blue,
+    5: ROOT.kP10Blue,
     6: ROOT.kP10Violet,
     7: ROOT.kP10Cyan,
     8: ROOT.kP10Red,
@@ -473,6 +696,18 @@ bin_pid_colors = {
 # bin_pid_order = list([10, 7, 6, 5, 4, 3, 8, 2, 1])
 # decided to combine pi+ (4) with pi- (5)
 bin_pid_order = list([10, 9, 7, 6, 5, 3, 8, 2, 1]) 
+
+bin_pid_order = [
+    10, 
+    9, 
+    7, 
+    6, 
+    5, 
+    3, 
+    8, 
+    1,
+    2, 
+] 
 
 process = ["data", "QE", "RES", "DIS", "COH", "", "", "", "2p2h", ""]
 whichcats = ["data", "qelike", "qelikenot"]
@@ -529,7 +764,7 @@ f = TFile.Open(filename, "READONLY")
 plotdirbase = os.getenv("OUTPUTLOC")
 
 plotdir = MakePlotDir("ProtonScorePlotsHD")
-dirname = filename.replace(".root", "_neutnuisanceplots")
+dirname = filename.replace(".root", "_protonscore")
 for cat in catstodo:
     dirname += "_" + cat
 # outfilename=filebasename1.replace(".root","_2DPlots")
@@ -539,408 +774,664 @@ if not os.path.exists(outdirname):
     os.mkdir(outdirname)
 
 
-h_pot = f.Get("POT_summary")
-dataPOT = h_pot.GetBinContent(1)
-mcPOTprescaled = h_pot.GetBinContent(2)
-POTScale = dataPOT / mcPOTprescaled
-print("POTScale: ", POTScale)
+# h_pot = f.Get("POT_summary")
+# dataPOT = h_pot.GetBinContent(1)
+# mcPOTprescaled = h_pot.GetBinContent(2)
+# POTScale = dataPOT / mcPOTprescaled
+# print("POTScale: ", POTScale)
+POTScale = -1
+
+# groupsHD = {}
+# logvars = ["Q2QE"]
+# groupsHD = GetHistHDDict(f, POTScale)
+
+# if not noData:
+#     cat_order = list(["qelikenot", "qelike", "data"])
+# else:
+#     cat_order = list(["qelikenot","qelike"])
+
+# ROOT.gStyle.SetOptStat(0)
+# # template = "%s___%s___%s___%s"
+
+# for a_sample in groupsHD.keys():
+#     # for b_var in groupsHD[a_sample].keys():
+#     if "_Tuned" in a_sample:
+#         dotuned = True
+#         tunedname = a_sample.replace("_Tuned", "")
+#     else:
+#         dotuned = False
+#     data_sample_name = a_sample
+#     for b_var in varsHDtodo:
+#         if b_var not in groupsHD[a_sample].keys():
+#             continue
+#         xvar = b_var.split("_")[0]
+#         yvar = b_var.split("_")[1]
+#         noData = global_noData
+#         data_var = b_var.split("_")[0]+"_"+b_var.split("_")[1]
+#         if data_var not in vars2Dtodo:
+#             print("bad data_var", data_var, " skipping data for HD var ", b_var)
+#             noData = True
+#         if not noData:
+#             # data_sample_name = a_sample
+#             if dotuned:
+#                 data_sample_name = tunedname
+#             if data_var not in groupsHD[data_sample_name].keys():
+#                 print("Couldn't find data_var. Skipping", b_var)
+#                 # noData = True
+#                 continue
+#             else:
+#                 data = groupsHD[data_sample_name][data_var]["data"].Clone()
+#                 data.SetMarkerColor(ROOT.kBlack)
+#                 data.SetLineColor(ROOT.kBlack)
+
+#         bins = GetHDBinning(f,b_var)
+#         analysistype = GetHDAnalysisType(f,b_var)
+#         flowadjust = 1
+#         new_bin_pid_order = bin_pid_order
+#         if analysistype in [0,1]:
+#             flowadjust = 1
+#         elif analysistype in [2,3]:
+#             flowadjust = -1
+#             new_bin_pid_order = [pid-1 for pid in bin_pid_order]
+#         print(analysistype)
+#         print(bins)
+#         myhyperdim = HyperDimLinearizer(bins, analysistype)
+
+#         n_xbins = len(bins[0]) + flowadjust
+#         n_ybins = len(bins[1]) + flowadjust
+#         n_zbins = len(bins[2]) + flowadjust
+#         h2D_dict = {}
+#         for c_cat in cat_order:
+#             tmp_h2D_list = []
+#             if c_cat == "data":
+#                 if noData:
+#                     continue
+#                 print(data_sample_name, data_var, c_cat)
+#                 # print(groupsHD[data_sample_name].keys())
+#                 data = groupsHD[data_sample_name][data_var][c_cat].Clone()
+#                 if -1 not in h2D_dict.keys():
+#                     h2D_dict[-1] = {}
+#                 # h2D_dict[-1] = {"data":data}
+#                 h2D_dict[-1] = {"data":data}
+#                 continue
+#             hHD = groupsHD[a_sample][b_var][c_cat].Clone()
+#             tmp_h2D_list = myhyperdim.Get2DHistos(hHD,IncludeSysBool)
+#             if n_zbins!= len(tmp_h2D_list):
+#                 print("bins are wrong!!! You calculated ", n_zbins," zbins but there are ", len(tmp_h2D_list))
+#                 sys.exit(1)
+#             # n_zbins = len(tmp_h2D_list)
+#             for zbin in new_bin_pid_order:
+#                 # print ("adjusted pid ", zbin)
+#                 if zbin not in h2D_dict.keys():
+#                     h2D_dict[zbin] = {}
+#                 if c_cat not in h2D_dict[zbin].keys():
+#                     h2D_dict[zbin][c_cat] = {}
+
+#                 h2D_dict[zbin][c_cat] = tmp_h2D_list[zbin]
+#                 if analysistype in [0,1] and zbin == 5:
+#                     h2D_dict[zbin][c_cat].Add(tmp_h2D_list[zbin-1])
+#                 if analysistype in [2,3] and zbin == 4:
+#                     h2D_dict[zbin][c_cat].Add(tmp_h2D_list[zbin-1])
+
+#         pionproton_h2d_dict = {"pi":TH2D(), "proton":TH2D(),"total":TH2D()}
+#         firstcat = True
+#         for c_cat in cat_order:
+#             if analysistype in [0,1]:
+#                 if firstcat:
+#                     pionproton_h2d_dict["pi"] = h2D_dict[5][c_cat].Clone()
+#                     pionproton_h2d_dict["proton"] = h2D_dict[2][c_cat].Clone()
+#                     firstcat = False
+#                 else:
+#                     pionproton_h2d_dict["pi"].Add(h2D_dict[5][c_cat])
+#                     pionproton_h2d_dict["proton"].Add(h2D_dict[2][c_cat])
+#             else:
+#                 if firstcat:
+#                     pionproton_h2d_dict["pi"] = h2D_dict[4][c_cat].Clone()
+#                     pionproton_h2d_dict["proton"] = h2D_dict[1][c_cat].Clone()
+#                     firstcat = False
+#                 else:
+#                     pionproton_h2d_dict["pi"].Add(h2D_dict[4][c_cat])
+#                     pionproton_h2d_dict["proton"].Add(h2D_dict[1][c_cat])
+#         # TODO make naming smarter
+#         xvarname = var_short_names[xvar]
+#         yvarname = var_short_names[yvar]
+#         pionproton_h2d_dict["pi"].Scale(1.0,"width")
+#         pionproton_h2d_dict["proton"].Scale(1.0, "width")
+#         pionproton_h2d_dict["pi"].SetLineColor(ROOT.kRed+1)
+#         pionproton_h2d_dict["proton"].SetLineColor(ROOT.kBlue + 2)
+#         pionproton_h2d_dict["proton"].GetXaxis().SetTitle(xvarname)
+#         pionproton_h2d_dict["proton"].GetYaxis().SetTitle(yvarname)
+#         pionproton_h2d_dict["proton"].GetXaxis().CenterTitle()
+#         pionproton_h2d_dict["proton"].GetYaxis().CenterTitle()
+
+#         pionproton_h2d_dict["total"] = pionproton_h2d_dict["proton"].Clone("total")
+#         pionproton_h2d_dict["total"].Add(pionproton_h2d_dict["pi"])
+
+#         pionproton_h2d_dict["protonratio"] = pionproton_h2d_dict["proton"].Clone(
+#             "protonratio"
+#         )
+#         pionproton_h2d_dict["protonratio"].Divide(pionproton_h2d_dict["protonratio"], pionproton_h2d_dict["total"] , 1.,1.)
+
+#         pionproton_h2d_dict["piratio"] = pionproton_h2d_dict["pi"].Clone(
+#             "piratio"
+#         )
+#         pionproton_h2d_dict["piratio"].Divide(pionproton_h2d_dict["piratio"], pionproton_h2d_dict["total"], 1.,1.)
+
+#         leg = CCQELegend(0.85,0.57,0.97,0.43)
+
+#         pionproton_h2d_dict["proton"].SetTitle("Raw %s vs. %s in %s"%(yvarname,xvarname,a_sample))
+#         pionproton_h2d_dict["protonratio"].SetTitle(
+#             "Ratio %s vs. %s in %s" % (yvarname, xvarname, a_sample)
+#         )
+
+#         dummyproton = pionproton_h2d_dict["proton"].Clone()
+#         dummyproton.SetFillColor(ROOT.kBlue+2)
+#         leg.AddEntry(dummyproton,"Proton","f")
+#         dummypion = pionproton_h2d_dict["pi"].Clone()
+#         dummypion.SetFillColor(ROOT.kRed + 1)
+#         leg.AddEntry(dummypion, "#pi^{#pm}", "f")
+
+#         rawcanvas = CCQECanvas(
+#             "Raw_%s_%s_%s"% (a_sample, xvar, yvar), "%s vs. %s in %s" % (yvarname, xvarname, a_sample)
+#         )
+#         if xvar in ["Q2QE"]:
+#             rawcanvas.SetLogx()
+#         pionproton_h2d_dict["proton"].Draw("BOX")
+#         pionproton_h2d_dict["pi"].Draw("BOX same")
+#         leg.Draw()
+#         thename = "%s_%s_%s_%s" % ("raw",a_sample, xvar, yvar)
+
+#         canvas_name = thename + "_FinalStates"
+#         if dotuned:
+#             canvas_name = thename + "_FinalStates_tuned"
+#         rawcanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
+
+#         if dotuned:
+#             canvas_name = thename + "_FinalStates_tuned"
+#         rawcanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
+
+#         del rawcanvas
+
+#         ratiocanvas = CCQECanvas(
+#             "Ratio_%s_%s_%s" % (a_sample, xvar, yvar),
+#             "Raio %s vs. %s in %s" % (yvarname, xvarname, a_sample),
+#         )
+#         if xvar in ["Q2QE"]:
+#             ratiocanvas.SetLogx()
+#         pionproton_h2d_dict["protonratio"].Draw("BOX")
+#         pionproton_h2d_dict["piratio"].Draw("BOX same")
+#         leg.Draw()
+#         thename = "%s_%s_%s" % (a_sample, yvarname, xvarname)
+
+#         canvas_name = thename + "_FinalStates"
+#         if dotuned:
+#             canvas_name = thename + "_FinalStates_tuned"
+#         ratiocanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
+
+#         if dotuned:
+#             canvas_name = thename + "_FinalStates_tuned"
+#         ratiocanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
+
+#         del ratiocanvas
 
 groups = {}
 logvars = ["Q2QE"]
 groups = GetHistDict(f, POTScale)
-
-if not noData:
-    cat_order = list(["qelikenot", "qelike", "data"])
-else:
-    cat_order = list(["qelikenot","qelike"])
-
+bin_pid_particle = {
+    1: "neutron",
+    2: "proton",
+    3: "pizero",
+    4: "piplus", # decided to combine pi+ (4) with pi- (5)
+    5: "piminus",
+    # 4: "#pi^{#pm}",
+    # 5: "#pi^{#pm}",
+    6: "gamma",
+    7: "electron",
+    8: "muon",
+    9: "notop",
+    10: "other",
+}
+part_colors = {
+    "data": ROOT.kBlack,
+    "neutron": ROOT.kP10Blue,
+    "proton": ROOT.kP10Yellow,
+    "pizero": ROOT.kP10Green,
+    # 4: ROOT.kP10Ash, # decided to combine pi+ (4) with pi- (5)
+    # 4: ROOT.kP10Orange,
+    # 5: ROOT.kP10Orange,
+    "piplus": ROOT.kP10Blue,
+    "piminus": ROOT.kP10Blue,
+    "pipm": ROOT.kP10Blue,
+    "gamma": ROOT.kP10Violet,
+    "electron": ROOT.kP10Cyan,
+    "muon": ROOT.kP10Red,
+    "notop": ROOT.kP10Brown,
+    "other": ROOT.kP10Gray,
+}
+particle_names = {   
+    "neutron": "#it{n}",
+    "proton": "#it{p}",
+    "pizero": "#it{#pi^{0}}",
+    "piplus": "#it{#pi^{+}}",
+    "piminus": "#it{#pi^{-}}",
+    "pipm": "#it{#pi^{#pm}}",
+    "gamma": "#it{#gamma}",
+    "electron": "#it{e^{#pm}}",
+    "muon": "#it{#mu^{#pm}}",
+    "notop": "Non-GENIE",
+    "other": "Other",
+}
+tunedtag = "Untuned"
+if dotuned:
+    tunedtag = "Tuned"
+# print(groups)
+ROOT.gStyle.SetErrorX(0) # This turns off the horizontal error bars
 ROOT.gStyle.SetOptStat(0)
-# template = "%s___%s___%s___%s"
 
-for a_sample in groups.keys():
-    # for b_var in groups[a_sample].keys():
-    if "_Tuned" in a_sample:
-        dotuned = True
-        tunedname = a_sample.replace("_Tuned", "")
-    else:
-        dotuned = False
-    data_sample_name = a_sample
-    for b_var in varsHDtodo:
-        if b_var not in groups[a_sample].keys():
-            continue
-        xvar = b_var.split("_")[0]
-        yvar = b_var.split("_")[1]
-        noData = global_noData
-        data_var = b_var.split("_")[0]+"_"+b_var.split("_")[1]
-        if data_var not in vars2Dtodo:
-            print("bad data_var", data_var, " skipping data for HD var ", b_var)
-            noData = True
-        if not noData:
-            # data_sample_name = a_sample
-            if dotuned:
-                data_sample_name = tunedname
-            if data_var not in groups[data_sample_name].keys():
-                print("Couldn't find data_var. Skipping", b_var)
-                # noData = True
+plotsubdir = os.path.join("plots","protonscore")
+thesisplotdir = MakeThesisPlotDir(plotsubdir)
+
+for a_hist in groups.keys():
+    if a_hist in ["hHD", "h2D"]: continue
+    for b_sample in groups[a_hist]:
+        for c_var in groups[a_hist][b_sample]:
+            print("looking at %s %s %s"%(a_hist, b_sample, c_var))
+            pidvarname = c_var + "_PlotPrimaryProtonCandMCPID"
+            if pidvarname not in groups["h2D"][b_sample]:
+                print("Couldn't find the mcpid hist to match hist %s. Skipping..."%c_var)
                 continue
-            else:
-                data = groups[data_sample_name][data_var]["data"].Clone()
-                data.SetMarkerColor(ROOT.kBlack)
-                data.SetLineColor(ROOT.kBlack)
-
-        bins = GetHDBinning(f,b_var)
-        analysistype = GetHDAnalysisType(f,b_var)
-        flowadjust = 1
-        new_bin_pid_order = bin_pid_order
-        if analysistype in [0,1]:
-            flowadjust = 1
-        elif analysistype in [2,3]:
-            flowadjust = -1
-            new_bin_pid_order = [pid-1 for pid in bin_pid_order]
-        print(analysistype)
-        print(bins)
-        myhyperdim = HyperDimLinearizer(bins, analysistype)
-
-        n_xbins = len(bins[0]) + flowadjust
-        n_ybins = len(bins[1]) + flowadjust
-        n_zbins = len(bins[2]) + flowadjust
-        h2D_dict = {}
-        for c_cat in cat_order:
-            tmp_h2D_list = []
-            if c_cat == "data":
-                if noData:
+            if "mctot" not in groups["h2D"][b_sample][pidvarname]: continue
+            data = groups[a_hist][b_sample][c_var]["data"].Clone()
+            pid2d_mctot = groups["h2D"][b_sample][pidvarname]["mctot"].Clone()
+            
+            pid_histdict = {}
+            for i in range(1,11):
+                tmp_projname = "%s_%s"%(pid2d_mctot.GetName().replace("h2D", "h"), bin_pid_particle[i]) 
+                tmp_h_pid = pid2d_mctot.ProjectionX(tmp_projname, i, i)
+                tmp_h_pid.Scale(1., "width")
+                tmp_h_pid.SetFillColor(bin_pid_colors[i])
+                tmp_h_pid.SetLineColor(ROOT.TColor.GetColorDark(bin_pid_colors[i]))
+                pid_histdict[bin_pid_particle[i]] = tmp_h_pid
+            plot_histdict = {
+                "proton": pid_histdict["proton"].Clone()
+            }
+            plot_histdict["pipm"] = pid_histdict["piplus"].Clone("%s_%s"%(pid2d_mctot.GetName().replace("h2D", "h"), "pipm"))
+            plot_histdict["pipm"].Add(pid_histdict["piminus"])
+            plot_histdict["other"] = pid_histdict["other"].Clone()
+            for part in pid_histdict:
+                if part in ["pipm", "piminus", "piplus","proton", "other"]:
                     continue
-                print(data_sample_name, data_var, c_cat)
-                # print(groups[data_sample_name].keys())
-                data = groups[data_sample_name][data_var][c_cat].Clone()
-                if -1 not in h2D_dict.keys():
-                    h2D_dict[-1] = {}
-                # h2D_dict[-1] = {"data":data}
-                h2D_dict[-1] = {"data":data}
+                plot_histdict["other"].Add(pid_histdict[part])
+            stack = THStack("stack_%s%s%s"%(a_hist,b_sample,c_var),"Proton Score")
+            stack.Add(plot_histdict["other"])
+            stack.Add(plot_histdict["pipm"])
+            stack.Add(plot_histdict["proton"])
+
+            leg = ROOT.TLegend(0.7,0.6,0.9,0.9)
+            leg.SetFillColor(-1)
+            leg.SetFillStyle(0)
+            leg.AddEntry(data,"Data", "pe")
+            leg.AddEntry(plot_histdict["proton"],"Proton", "fl")
+            leg.AddEntry(plot_histdict["pipm"],"#pi^{#pm}", "fl")
+            leg.AddEntry(plot_histdict["other"],"Other", "fl")
+            leg.SetBorderSize(0)
+
+            # stack.GetXaxis().SetNdivisions(505)
+            # stack.GetYaxis().SetNdivisions(505)
+            data.GetXaxis().SetNdivisions(505)
+            data.GetYaxis().SetNdivisions(505)
+            data.GetXaxis().SetTitle("Proton score")
+            data.GetYaxis().SetTitle("N_{events} (bin width normalized)")
+            data.GetXaxis().CenterTitle()
+            data.GetYaxis().CenterTitle()
+            data.SetTitle("Proton Score for Signal sample w/o Track PID")
+            canvas_name = "canvas_%s_%s_%s"%(b_sample, c_var, tunedtag)
+            canvas = ROOT.TCanvas(canvas_name)
+            # canvas.Draw()
+
+            plotmax = 1.2*max(data.GetMaximum(), stack.GetMaximum())
+            data.SetMaximum(plotmax)
+            stack.SetMaximum(plotmax)
+            # stack.Draw("hist")
+            # data.Draw("axis")
+            data.Draw("E1 X0")
+
+            stack.Draw("HIST same")
+            data.Draw("E1 X0 same")
+            data.Draw("axis same")
+            leg.Draw()
+            stackedplot_outfilename = os.path.join(outdirname,"protonscore1D_%s_%s_%s.pdf"%(b_sample,c_var,tunedtag))
+            canvas.Print(stackedplot_outfilename)
+            if thesisplotdir != "":
+                thesis_stackedplot_outfilename = os.path.join(thesisplotdir,"protonscore1D_%s_%s_%s.pdf"%(b_sample,c_var,tunedtag))
+                canvas.Print(thesis_stackedplot_outfilename)
+
+            # Now make a cumulative plot
+            proton_cumul = plot_histdict["proton"].GetCumulative(False)
+            pipm_cumul = plot_histdict["pipm"].GetCumulative(False)
+
+            
+            proton_cumul.SetFillStyle(0)
+            pipm_cumul.SetFillStyle(0)
+
+            proton_cumul.SetLineWidth(3)
+            pipm_cumul.SetLineWidth(3)
+            
+            sum_cumul = proton_cumul.Clone("cumul_ratio")
+            sum_cumul.Add(pipm_cumul.Clone())
+            
+            proton_ratio_cumul = proton_cumul.Clone("proton_cumul_ratio")
+            proton_ratio_cumul.Divide(proton_ratio_cumul,sum_cumul.Clone(), 1.,1.)            
+        
+            pipm_ratio_cumul = pipm_cumul.Clone("pipm_cumul_ratio")
+            pipm_ratio_cumul.Divide(pipm_ratio_cumul,sum_cumul.Clone(), 1.,1.)
+            proton_ratio_cumul.SetMinimum(0.0)
+            proton_ratio_cumul.Draw("HIST")
+            pipm_ratio_cumul.Draw("HIST same")
+            # proton_cumul.Draw("HIST")
+            # pipm_cumul.Draw("HIST same")
+            leg.Draw()
+            cumul_outname = "cumul_protonscore1D_%s_%s_%s.pdf"%(b_sample,c_var,tunedtag)
+            canvas.Print(os.path.join(outdirname,cumul_outname))
+            canvas.Print(os.path.join(thesisplotdir,cumul_outname))
+
+
+print("Now doing hyperdim ones")
+for a_hist in groups.keys():
+    if a_hist in ["h","hHD"]: continue
+    for b_sample in groups[a_hist]:
+        for c_var in groups[a_hist][b_sample]:
+            print("looking at %s %s %s"%(a_hist, b_sample, c_var))
+            if "PlotPrimaryProtonCandMCPID" in c_var: continue
+            pidvarname = c_var + "_PlotPrimaryProtonCandMCPID"
+            if pidvarname not in groups["hHD"][b_sample]:
+                print("Couldn't find the mcpid hist to match hist %s. Skipping..."%c_var)
                 continue
-            hHD = groups[a_sample][b_var][c_cat].Clone()
-            tmp_h2D_list = myhyperdim.Get2DHistos(hHD,IncludeSysBool)
-            if n_zbins!= len(tmp_h2D_list):
-                print("bins are wrong!!! You calculated ", n_zbins," zbins but there are ", len(tmp_h2D_list))
-                sys.exit(1)
-            # n_zbins = len(tmp_h2D_list)
-            for zbin in new_bin_pid_order:
-                # print ("adjusted pid ", zbin)
-                if zbin not in h2D_dict.keys():
-                    h2D_dict[zbin] = {}
-                if c_cat not in h2D_dict[zbin].keys():
-                    h2D_dict[zbin][c_cat] = {}
+            if "mctot" not in groups["hHD"][b_sample][pidvarname]: continue
+            data = groups[a_hist][b_sample][c_var]["data"].Clone()
+            pidhd_mctot = groups["hHD"][b_sample][pidvarname]["mctot"].Clone()
 
-                h2D_dict[zbin][c_cat] = tmp_h2D_list[zbin]
-                if analysistype in [0,1] and zbin == 5:
-                    h2D_dict[zbin][c_cat].Add(tmp_h2D_list[zbin-1])
-                if analysistype in [2,3] and zbin == 4:
-                    h2D_dict[zbin][c_cat].Add(tmp_h2D_list[zbin-1])
+            x_var = c_var.split("_")[0]
+            y_var = c_var.split("_")[1]
 
-        pionproton_h2d_dict = {"pi":TH2D(), "proton":TH2D(),"total":TH2D()}
-        firstcat = True
-        for c_cat in cat_order:
+            bins = GetHDBinning(f,pidvarname)
+            analysistype = GetHDAnalysisType(f,pidvarname)
+            flowadjust = 1
+            new_bin_pid_order = bin_pid_order
             if analysistype in [0,1]:
-                if firstcat:
-                    pionproton_h2d_dict["pi"] = h2D_dict[5][c_cat].Clone()
-                    pionproton_h2d_dict["proton"] = h2D_dict[2][c_cat].Clone()
-                    firstcat = False
-                else:
-                    pionproton_h2d_dict["pi"].Add(h2D_dict[5][c_cat])
-                    pionproton_h2d_dict["proton"].Add(h2D_dict[2][c_cat])
-            else:
-                if firstcat:
-                    pionproton_h2d_dict["pi"] = h2D_dict[4][c_cat].Clone()
-                    pionproton_h2d_dict["proton"] = h2D_dict[1][c_cat].Clone()
-                    firstcat = False
-                else:
-                    pionproton_h2d_dict["pi"].Add(h2D_dict[4][c_cat])
-                    pionproton_h2d_dict["proton"].Add(h2D_dict[1][c_cat])
-        # TODO make naming smarter
-        xvarname = var_short_names[xvar]
-        yvarname = var_short_names[yvar]
-        pionproton_h2d_dict["pi"].Scale(1.0,"width")
-        pionproton_h2d_dict["proton"].Scale(1.0, "width")
-        pionproton_h2d_dict["pi"].SetLineColor(ROOT.kRed+1)
-        pionproton_h2d_dict["proton"].SetLineColor(ROOT.kBlue + 2)
-        pionproton_h2d_dict["proton"].GetXaxis().SetTitle(xvarname)
-        pionproton_h2d_dict["proton"].GetYaxis().SetTitle(yvarname)
-        pionproton_h2d_dict["proton"].GetXaxis().CenterTitle()
-        pionproton_h2d_dict["proton"].GetYaxis().CenterTitle()
+                flowadjust = 1
+            elif analysistype in [2,3]:
+                flowadjust = -1
+                new_bin_pid_order = [pid-1 for pid in bin_pid_order]
+            print(analysistype)
+            print(bins)
+            myhyperdim = HyperDimLinearizer(bins, analysistype)
 
-        pionproton_h2d_dict["total"] = pionproton_h2d_dict["proton"].Clone("total")
-        pionproton_h2d_dict["total"].Add(pionproton_h2d_dict["pi"])
+            n_xbins = len(bins[0]) + flowadjust
+            n_ybins = len(bins[1]) + flowadjust
+            n_zbins = len(bins[2]) + flowadjust
+            h2D_dict = {}
+            
+            tmp_h2D_list = myhyperdim.Get2DHistos(pidhd_mctot.Clone(),False)
+            pid_histdict = {}
 
-        pionproton_h2d_dict["protonratio"] = pionproton_h2d_dict["proton"].Clone(
-            "protonratio"
-        )
-        pionproton_h2d_dict["protonratio"].Divide(pionproton_h2d_dict["protonratio"], pionproton_h2d_dict["total"] , 1.,1.)
+            for i in range(1,11):
+                tmp_hist = tmp_h2D_list[i].Clone()
+                tmp_hist.Scale(1.0,"width")
+                # tmp_hist.RebinY(2)
+                # tmp_hist.SetFillColor(bin_pid_colors[i])
+                # tmp_hist.SetLineColor(ROOT.TColor.GetColorDark(bin_pid_colors[i]))
+                pid_histdict[bin_pid_particle[i]] = tmp_hist
+            # data.RebinY(2)
+            plot_histdict = {
+                "data": data.Clone(),
+                "proton": pid_histdict["proton"].Clone(),
+            }
+            plot_histdict["pipm"] = pid_histdict["piplus"].Clone("%s_%s"%(pid2d_mctot.GetName().replace("h2D", "h"), "pipm"))
+            plot_histdict["pipm"].Add(pid_histdict["piminus"])
+            plot_histdict["pipm"].Add(pid_histdict["pizero"])
+            plot_histdict["other"] = pid_histdict["other"].Clone()
+            for part in pid_histdict:
+                if part in ["pipm", "piminus", "piplus","proton","pizero", "other","data"]:
+                    continue
+                plot_histdict["other"].Add(pid_histdict[part])
+            plot_histdict["proton"].GetXaxis().SetNdivisions(505)
+            plot_histdict["proton"].GetXaxis().SetNdivisions(505)
+            plot_histdict["proton"].GetXaxis().SetTitle("Q^{2}_{QE} [(GeV/c)^{2}]")
+            plot_histdict["proton"].GetYaxis().SetTitle("Proton score")
+            plot_histdict["proton"].GetXaxis().CenterTitle()
+            plot_histdict["proton"].GetYaxis().CenterTitle()
+            plot_histdict["proton"].SetLineColor(ROOT.kBlue)
+            plot_histdict["pipm"].SetLineColor(ROOT.kRed)
 
-        pionproton_h2d_dict["piratio"] = pionproton_h2d_dict["pi"].Clone(
-            "piratio"
-        )
-        pionproton_h2d_dict["piratio"].Divide(pionproton_h2d_dict["piratio"], pionproton_h2d_dict["total"], 1.,1.)
+            tot = plot_histdict["proton"].Clone(plot_histdict["proton"].GetName().replace("proton","total"))
+            tot.Add(plot_histdict["pipm"])
 
-        leg = CCQELegend(0.85,0.57,0.97,0.43)
+            proton_ratio = plot_histdict["proton"].Clone(plot_histdict["proton"].GetName()+"_ratio")
+            proton_ratio.Divide(proton_ratio,tot, 1., 1.)
 
-        pionproton_h2d_dict["proton"].SetTitle("Raw %s vs. %s in %s"%(yvarname,xvarname,a_sample))
-        pionproton_h2d_dict["protonratio"].SetTitle(
-            "Ratio %s vs. %s in %s" % (yvarname, xvarname, a_sample)
-        )
+            pipm_ratio = plot_histdict["pipm"].Clone(plot_histdict["pipm"].GetName()+"_ratio")
+            pipm_ratio.Divide(pipm_ratio,tot, 1., 1.)
 
-        dummyproton = pionproton_h2d_dict["proton"].Clone()
-        dummyproton.SetFillColor(ROOT.kBlue+2)
-        leg.AddEntry(dummyproton,"Proton","f")
-        dummypion = pionproton_h2d_dict["pi"].Clone()
-        dummypion.SetFillColor(ROOT.kRed + 1)
-        leg.AddEntry(dummypion, "#pi^{#pm}", "f")
+            proton_ratio.SetTitle("Ratio of proton and pion event rates")
 
-        rawcanvas = CCQECanvas(
-            "Raw_%s_%s_%s"% (a_sample, xvar, yvar), "%s vs. %s in %s" % (yvarname, xvarname, a_sample)
-        )
-        if xvar in ["Q2QE"]:
-            rawcanvas.SetLogx()
-        pionproton_h2d_dict["proton"].Draw("BOX")
-        pionproton_h2d_dict["pi"].Draw("BOX same")
-        leg.Draw()
-        thename = "%s_%s_%s_%s" % ("raw",a_sample, xvar, yvar)
+            canvas_name = "canvas_%s_%s_%s"%(b_sample, c_var, tunedtag)
+            canvas2d = ROOT.TCanvas(canvas_name, canvas_name, 900,3200)
+            if x_var in ["Q2QE"]: canvas2d.SetLogx()
+            if y_var in ["Q2QE"]: canvas2d.SetLogy()
+            plotmax = 1.05*max(proton_ratio.GetMaximum(), pipm_ratio.GetMaximum())
+            # print(plotmax)
+            proton_ratio.SetMaximum(1.0)
 
-        canvas_name = thename + "_FinalStates"
-        if dotuned:
-            canvas_name = thename + "_FinalStates_tuned"
-        rawcanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
+            ROOT.gStyle.SetPaintTextFormat("0.2f")
+            proton_ratio.SetMarkerSize(0.75)
+            proton_ratio.Draw("Colz text")
+            # pipm_ratio.Draw("Box same")
+            # proton_ratio.Draw("axis same")
 
-        if dotuned:
-            canvas_name = thename + "_FinalStates_tuned"
-        rawcanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
+            plot_outfilename = "protonscore2D_%s_%s_%s.pdf"%(b_sample,c_var,tunedtag)
+            canvas2d.Print(os.path.join(outdirname,plot_outfilename))
+            if thesisplotdir != "":
+                canvas2d.Print(os.path.join(thesisplotdir,plot_outfilename))
+            canvas2d.SetLogx(0)
+            canvas2d.SetLogy(0)
 
-        del rawcanvas
+            # Now do the 2D cumulative hist
+            n_xbins = plot_histdict["proton"].GetNbinsX()
+            n_ybins = plot_histdict["proton"].GetNbinsY()
+            projdict = {}
+            cumuldict = {}
+            global_max = 0.0
 
-        ratiocanvas = CCQECanvas(
-            "Ratio_%s_%s_%s" % (a_sample, xvar, yvar),
-            "Raio %s vs. %s in %s" % (yvarname, xvarname, a_sample),
-        )
-        if xvar in ["Q2QE"]:
-            ratiocanvas.SetLogx()
-        pionproton_h2d_dict["protonratio"].Draw("BOX")
-        pionproton_h2d_dict["piratio"].Draw("BOX same")
-        leg.Draw()
-        thename = "%s_%s_%s" % (a_sample, yvarname, xvarname)
 
-        canvas_name = thename + "_FinalStates"
-        if dotuned:
-            canvas_name = thename + "_FinalStates_tuned"
-        ratiocanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
+            gc2 = PanelCanvas("gridcanvas_%s_%s_cumul"%(b_sample,c_var), n_ybins, n_xbins)
+            gc2.Draw()
+            for projbin in range(1, n_xbins+1):
+                projdict[projbin] = {}
+                cumuldict[projbin] = {}
 
-        if dotuned:
-            canvas_name = thename + "_FinalStates_tuned"
-        ratiocanvas.Print(os.path.join(outdirname, canvas_name + ".png"))
+                loedge = plot_histdict["proton"].GetXaxis().GetBinLowEdge(projbin)
+                upedge = plot_histdict["proton"].GetXaxis().GetBinUpEdge(projbin)
+                range_string = "{min} < {var} < {max}".format(
+                    min = round(loedge,4), 
+                    var = "Q^{2}_{QE} #lower[-0.25]{#scale[0.6]{[(GeV/c)^{2}]}}", 
+                    max = round(upedge,4)
+                )
+                projdict[projbin]["mctot"] = {}
+                first_part = True
+                for part in ["other", "pipm", "proton","data"]:
+                    projname = "%s_projY%s"%(plot_histdict[part].GetName(), str(projbin))
+                    tmp_proj = plot_histdict[part].ProjectionY(projname, projbin, projbin)
+                    tmp_proj.Scale(1/(upedge - loedge))
 
-        del ratiocanvas
+                    # tmp_proj.SetFillStyle(0)
+                    projdict[projbin][part] = tmp_proj
+                    
+                    if part == "data": 
+                        tmp_proj.SetMarkerStyle(20)
+                        tmp_proj.SetMarkerSize(data_marker_size)
+                        tmp_proj.SetLineColor(ROOT.kBlack)
+                        tmp_proj.SetMarkerColor(ROOT.kBlack)
+                        if tmp_proj.GetMaximum()>global_max: 
+                            global_max = tmp_proj.GetMaximum()
+                        continue
+                    tmp_proj.SetLineColor(ROOT.TColor.GetColorDark(part_colors[part]))
+                    tmp_proj.SetFillColor(part_colors[part])
+                    tmp_proj.SetLineWidth(2)
+                    if first_part:
+                        projdict[projbin]["mctot"] = tmp_proj.Clone("%s_%s"%(tmp_proj.GetName(),"mctot"))
+                        first_part = False
+                        # projdict[projbin]["stack"].Add(tmp_proj)        
+                    else:
+                        projdict[projbin]["mctot"].Add(tmp_proj)
 
-        # stack_first = 0
-        # if stack_first == 0:
-        #     print("starting with var ", b_var)
+                    tmp_cumul = tmp_proj.GetCumulative(False)
+                    tmp_cumul.SetLineColor(part_colors[part])
+                    tmp_cumul.SetLineWidth(2)
+                    tmp_cumul.SetFillStyle(0)
+                    cumuldict[projbin][part] = tmp_cumul
+                if projdict[projbin]["mctot"].GetMaximum() > global_max: 
+                    global_max = projdict[projbin]["stack"].GetMaximum()
+                # cumuldict[projbin]["pipm"].Add(cumuldict[projbin]["other"])
+                cumul_sum = cumuldict[projbin]["proton"].Clone()
+                cumul_sum.Add(cumuldict[projbin]["pipm"])
+                # cumul_sum.Add(cumuldict[projbin]["other"])
+                
+                for part in cumuldict[projbin]:
+                    # cumuldict[projbin][part].Divide(cumuldict[projbin][part], cumul_sum, 1.0, 1.0)
+                    cumuldict[projbin][part].Scale(1.0/cumuldict[projbin][part].GetBinContent(1))
+                cumul_integral = cumul_sum.GetBinContent(1)
+                cumul_sum.Scale(1.0/cumul_integral)
+                cumul_sum.SetLineColor(ROOT.kP10Gray)
 
-        # # thename = "%s_%s" % (a_sample.replace("_Tuned", ""), data_var)
-        # thename = "%s_%s" % (a_sample, data_var)
-        # thetitle = "%s %s" % (a_sample, data_var)
+                cumuldict[projbin]["total"] = cumul_sum
+                cumuldict[projbin]["pipm"].GetXaxis().SetTitle("Proton Score")
+                cumuldict[projbin]["pipm"].GetXaxis().SetTitle("Cumulative")
+                cumuldict[projbin]["pipm"].SetMaximum(1.2)
+                cumuldict[projbin]["pipm"].SetMinimum(0.0)
+                cumuldict[projbin]["pipm"].GetXaxis().SetNdivisions(505)
+                cumuldict[projbin]["pipm"].GetYaxis().SetNdivisions(507)
 
-        # # if doratio and not noData:
-        # #     leg = CCQELegend(0.65, 0.45, 0.95, 0.85)
-        # # else:
-        # #     leg = CCQELegend(0.65, 0.65, 0.95, 0.95)
-        # leg = CCQELegend(0.75, 0.55, 0.98, 0.95)
-        # leg.SetNColumns(2)
+                pad = gc2.cd(projbin)
+                pad.SetGrid()
+                pad.Draw()
+                cumuldict[projbin]["pipm"].Draw("AXIS")
+                cumuldict[projbin]["pipm"].Draw("AXIG same")
+                # cumuldict[projbin]["other"].Draw("HIST same")
+                cumul_sum.Draw("HIST same")
+                cumuldict[projbin]["pipm"].Draw("HIST same")
+                cumuldict[projbin]["proton"].Draw("HIST same")
+                # cumuldict[projbin]["pipm"].Draw("AXIG same")
 
-        # if a_sample not in samplenames.keys():
-        #     plottitle = a_sample
-        # else:
-        #     plottitle = samplenames[a_sample]
-        # if dotuned:
-        #     plottitle = tunedname
-        #     plottitle = "Tuned " + plottitle
-        # # if stack_first == 0:  # make a stack
-        # stack = THStack("stack", "")
-        # # stack_first += 1
+                binrange_latex = ROOT.TLatex()
+                binrange_latex.SetTextAlign(33) # top right
+                binrange_latex.SetNDC()
+                binrange_latex.SetTextFont(42)
+                binrange_latex.SetTextSize(0.02)
+                binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),range_string)
 
-        # firstpid = True
-        # mctot = MnvH1D()
-        # for c_cat in cat_order:
-        #     if c_cat not in groups[a_sample][b_var].keys():
-        #         print("skipping cat not found in groups: ", c_cat)
-        #         continue
+            gc2.SetYTitle("Cumultive fraction")
+            gc2.SetXTitle("Proton Score")
+            gc2.SetHistTexts()
+            gc2.Draw()
 
-        #     hist = groups[a_sample][b_var][c_cat]
-        #     first_pipm = True
-        #     for pid in bin_pid_order:
-        #         lobin = pid
-        #         hibin = pid
-        #         if pid in [4,5]:
-        #             if first_pipm:
-        #                 lobin = 4
-        #                 hibin = 5
-        #                 first_pipm = False
-        #             else:
-        #                 continue
-        #         tmp_h_pid = hist.ProjectionX(
-        #             str(hist.GetName().replace("h2D", "h") + "_" + bin_pid[pid]),
-        #             lobin,
-        #             hibin,
-        #         )
-        #         if pid == 9:
-        #             tmp_h_pid.Print()
-        #         # if pid == 3:
-        #         #     tmp_h_pid.Scale(3.0)
-        #         tmp_h_pid.SetFillColor(bin_pid_colors[pid])
-        #         tmp_h_pid.SetLineColor(bin_pid_colors[pid])
-        #         # tmp_h_pid.SetLineColor(ROOT.TColor.GetColorDark(bin_pid_colors[pid]))
-        #         if c_cat in backgrounds:
-        #             tmp_h_pid.SetFillStyle(3244)
-        #         stack.Add(tmp_h_pid)
-        #         if firstpid:
-        #             mctot = tmp_h_pid.Clone()
-        #             firstpid = False
-        #         else:
-        #             mctot.Add(tmp_h_pid)
-        # # Jank to get legend order correct
-        # firstpis = {}
-        # for c_cat in cat_order:
-        #     firstpis[c_cat] = True
-        # for pid in reversed(bin_pid_order):
-        #     for c_cat in reversed(cat_order):
-        #         if c_cat not in groups[a_sample][b_var].keys():
-        #             continue
-        #         hist = groups[a_sample][b_var][c_cat]
-        #         lobin = pid
-        #         hibin = pid
-        #         if pid in [4,5]:
-        #             if firstpis[c_cat]:
-        #                 lobin = 4
-        #                 hibin = 5
-        #                 first_pipm = False
-        #             else:
-        #                 continue
-        #         tmp_h_pid = hist.ProjectionX(
-        #             str(hist.GetName().replace("h2D", "h") + "_" + bin_pid[pid]),
-        #             lobin,
-        #             hibin,
-        #         )
-        #         tmp_h_pid.SetFillColor(bin_pid_colors[pid])
-        #         tmp_h_pid.SetLineColor(bin_pid_colors[pid])
-        #         # tmp_h_pid.SetLineColor(ROOT.TColor.GetColorDark(bin_pid_colors[pid]))
-        #         if c_cat in backgrounds:
-        #             tmp_h_pid.SetFillStyle(3244)
-        #         if c_cat in backgrounds:
-        #             leg.AddEntry(tmp_h_pid, bin_pid[pid] + "-not", "f")
-        #         else:
-        #             leg.AddEntry(tmp_h_pid, bin_pid[pid], "f")
+            cumul_outfilename = "cumulativepanel_"+plot_outfilename
+            gc2.Print(os.path.join(outdirname,cumul_outfilename))
+            if thesisplotdir != "":
+                gc2.Print(os.path.join(thesisplotdir,cumul_outfilename))
 
-        # if not noData:
-        #     leg.AddEntry(data, "Data", "p")
-        # print("Intgeral of mctot", mctot.Integral())
-        # ysize = _ysize
-        # if doratio and not noData:
-        #     ysize = 1.2 * _ysize
-        # cc = CCQECanvas(thename, thetitle, _xsize, ysize)
-        # if doratio and not noData:
-        #     top = TPad("hist", "hist", 0, 0.278, 1, 1)
-        #     top.SetRightMargin(0.04)
-        #     top.SetBottomMargin(0)
-        #     top.SetTopMargin(0.04)
-        #     bottom = TPad("Ratio", "Ratio", 0, 0, 1, 0.278)
-        #     bottom.SetRightMargin(0.04)
-        #     bottom.SetTopMargin(0)
-        #     top.Draw()
-        #     bottom.Draw()
+            # Now make the non cumulative stacked panel plot:
+            gc2.ResetPads()
+            gc2.Modified()
+            gc2.Update()
 
-        #     bottomArea = bottom.GetWNDC() * bottom.GetHNDC()
-        #     topArea = top.GetWNDC() * top.GetHNDC()
-        #     areaScale = topArea / bottomArea
+            # gc3 = PanelCanvas("gridcanvas_%s_%s_panel"%(b_sample,c_var), n_ybins, n_xbins)
+            # gc3.Draw()
+            for projbin in projdict:
+                pad = gc2.cd(projbin)
+                pad.Draw()
+                loedge = plot_histdict["proton"].GetXaxis().GetBinLowEdge(projbin)
+                upedge = plot_histdict["proton"].GetXaxis().GetBinUpEdge(projbin)
 
-        #     top.cd()
+                projdict[projbin]["data"].GetXaxis().SetNdivisions(505)
+                projdict[projbin]["data"].GetYaxis().SetNdivisions(505)
+                projdict[projbin]["data"].SetMinimum(0.0)
 
-        # # Now draw everything
-        # stack.Draw("")
-        # # stack.GetYaxis().SetTitle("Counts #times 10^{3}")
-        # stack.GetYaxis().SetTitle("Counts")
-        # stack.GetYaxis().CenterTitle()
-        # stack.GetYaxis().SetTitleOffset(0.6)
-        # stack.GetYaxis().SetTitleSize(0.05)
-        # stack.GetYaxis().SetLabelSize(stack.GetYaxis().GetLabelSize() * 1.2)
-        # title = ""
-        # if b_var not in titles.keys():
-        #     title = b_var.split("_")[0]
-        # else:
-        #     title = titles[b_var]
-        # if not doratio or noData:
-        #     stack.GetXaxis().SetTitle(title)
-        #     stack.GetXaxis().CenterTitle()
-        #     stack.GetXaxis().SetTitleSize(0.05)
-        # if not noData:
-        #     if data.GetMaximum() > stack.GetMaximum():
-        #         stack.SetMaximum(data.GetMaximum())
-        # stack.Draw("hist")
-        # if not noData:
-        #     data.Draw("PE same")
-        # leg.Draw()
-        # if doratio and not noData:
-        #     bottom.cd()
-        #     bottom.SetBottomMargin(0.3)
-        #     mctot.SetFillStyle(1001)
-        #     ratio = MakeDataMCRatio(data, mctot)
-        #     ratio.SetMinimum(0.5)
-        #     ratio.SetMaximum(1.5)
+                tmp_pad_scale = 1.0
+                tmp_pad_max = max(projdict[projbin]["data"].GetMaximum(), projdict[projbin]["mctot"].GetMaximum())
+                if global_max != 0.0:
+                    if tmp_pad_max < global_max and tmp_pad_max > 0.0:
+                        tmp_pad_scale = round(global_max / tmp_pad_max, 3)
+                        print(tmp_pad_max, tmp_pad_scale)
+                for part in projdict[projbin]:
+                    projdict[projbin][part].Scale(tmp_pad_scale)
+                projdict[projbin]["stack"] = THStack()
+                for part in ["other","pipm","proton"]:
+                    projdict[projbin]["stack"].Add(projdict[projbin][part])
+                
+                projdict[projbin]["data"].SetMaximum(
+                    1.2*max(projdict[projbin]["data"].GetMaximum(), projdict[projbin]["stack"].GetMaximum())
+                )
+                
+                range_string = "{min} < {var} < {max}".format(
+                    min = round(loedge,4), 
+                    var = "Q^{2}_{QE} #lower[-0.25]{#scale[0.6]{[(GeV/c)^{2}]}}", 
+                    max = round(upedge,4)
+                )
+                projdict[projbin]["rangestring"] = range_string
 
-        #     ratio.SetLineColor(ROOT.kBlack)
-        #     ratio.SetLineWidth(3)
+                projdict[projbin]["scalestring"] = "#times {:g}".format(float('{:.{p}g}'.format(tmp_pad_scale, p=2)))
 
-        #     ratio.SetTitle("")
-        #     ratio.GetYaxis().SetTitle("Data / MC")
-        #     ratio.GetYaxis().CenterTitle()
-        #     ratio.GetYaxis().SetTitleSize(0.05 * areaScale)
-        #     # ratio.GetYaxis().SetTitleOffset(0.8)
-        #     ratio.GetYaxis().SetLabelSize(ratio.GetYaxis().GetLabelSize() * areaScale*1.2)
-        #     ratio.GetYaxis().SetNdivisions(-505)
 
-        #     ratio.GetXaxis().SetTitle(title)
-        #     ratio.GetXaxis().CenterTitle()
-        #     ratio.GetXaxis().SetTitleSize(0.05 * areaScale)
-        #     ratio.GetXaxis().SetLabelSize(ratio.GetXaxis().GetLabelSize() * areaScale*1.2)
+            for projbin in projdict:
+                pad = gc2.cd(projbin)
+                pad.Draw()
 
-        #     ratio.Draw()
+                projdict[projbin]["data"].Draw("axis")
+                projdict[projbin]["stack"].Draw("HIST same")
+                projdict[projbin]["data"].Draw("E1 E0 X0 same")
 
-        #     mcratio = TH1D(
-        #         # groups[a_sample][data_var]["mctot"].GetTotalError(False, True, False)
-        #         mctot.GetTotalError(False, True, False)
-        #     )
-        #     for bin in range(1, mcratio.GetXaxis().GetNbins() + 1):
-        #         mcratio.SetBinError(bin, max(mcratio.GetBinContent(bin), 1.0e-9))
-        #         mcratio.SetBinContent(bin, 1.0)
-        #     mcratio.SetLineColor(ROOT.kRed)
-        #     mcratio.SetLineWidth(3)
-        #     mcratio.SetFillColorAlpha(ROOT.kPink + 1, 0.4)
-        #     mcratio.Draw("same E2")
 
-        #     straightline = mcratio.Clone()
-        #     straightline.SetFillStyle(0)
-        #     straightline.Draw("hist same")
+                binrange_latex = ROOT.TLatex()
+                binrange_latex.SetTextAlign(33) # top right
+                binrange_latex.SetNDC()
+                binrange_latex.SetTextFont(42)
+                binrange_latex.SetTextSize(0.02)
+                binrange_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.01),projdict[projbin]["rangestring"])
 
-        #     ratio.Draw("same")
+                multip_latex = ROOT.TLatex()
+                multip_latex.SetTextAlign(32)
+                multip_latex.SetNDC()
+                multip_latex.SetTextFont(52)
+                multip_latex.SetTextSize(0.03)
+                multip_latex.DrawLatex((1.-(pad.GetRightMargin())-0.01),(1.-(pad.GetTopMargin())-0.052),projdict[projbin]["scalestring"])
 
-        #     # cc.Update()
-        #     top.cd()
-        #     # titleonplot.DrawLatex(0.37, 0.85, plottitle)
-        #     # prelim.DrawLatex(0.62, 0.62, "MINER#nuA Work In Progress")
-        # prelim = AddPreliminary()
-        # titleonplot = MakeTitleOnPlot()
-        # # else:
-        # prelim.DrawLatex(latex_x, latex_y, "MINER#nuA Work In Progress")
-        # titleonplot.DrawLatex(0.37, 0.9, plottitle)
 
-        # # cc.Draw()
-        # # cc.SetLogy()
-        # canvas_name = thename + "_FinalStates"
-        # if dotuned:
-        #     canvas_name = thename + "_FinalStates_tuned"
-        # cc.Print(os.path.join(outdirname, canvas_name + ".png"))
+            gc2.SetYTitle("N_{events} / (GeV/c)^{2} / Score")
+            gc2.SetXTitle("Proton Score")
+
+            gc2.SetHistTexts()
+            gc2.Draw()
+
+            panel_outfilename = "panel_"+plot_outfilename
+            gc2.Print(os.path.join(outdirname,panel_outfilename))
+            if thesisplotdir != "":
+                gc2.Print(os.path.join(thesisplotdir,panel_outfilename))
+
+
+                
+
+                
+
+
+
+
+
+
+
+
+
+
+                
+
+        

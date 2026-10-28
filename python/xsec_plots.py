@@ -68,8 +68,27 @@ vars_info = {
         "title": "p_{||}",
         "units": "GeV/c",
         "bins": [],
-
-    }
+    },
+    "Q2QE": {
+        "title": "Q^{2}_{QE}",
+        "units": "GeV^{2}",
+        "bins": [],
+    },
+    "FitQ2QE": {
+        "title": "Q^{2}_{QE}",
+        "units": "GeV^{2}",
+        "bins": [],
+    },
+    "recoil": {
+        "title": "recoil",
+        "units": "GeV",
+        "bins": [],
+    },
+    "Fitrecoil": {
+        "title": "recoil",
+        "units": "GeV",
+        "bins": [],
+    },
 }
 bkgfillstyle = {
     "chargedpion":  3144,
@@ -3508,22 +3527,32 @@ if len(sys.argv) > 2:
 # First get the hists/files for the extracted cross section
 raw_filename = sys.argv[1]
 
+do_analyze = False
+
 if "_tuned_analyze9" in raw_filename:
     tuned_filename = raw_filename
     untuned_filename = raw_filename.replace("_tuned_","_untuned_")
-elif "_untuned_analyze9":
+    do_analyze = True
+elif "_untuned_analyze9" in raw_filename:
     untuned_filename = raw_filename
     tuned_filename = raw_filename.replace("_untuned_","_tuned_")
-
-tuned_f = TFile.Open(tuned_filename,"READONLY")
-untuned_f = TFile.Open(untuned_filename,"READONLY")
+    do_analyze = True
+else:
+    file_name = raw_filename
+    
 
 # Make your output directory if it doesn't exist, and store the path for later
 plotdirbase = os.getenv("OUTPUTLOC")
 
-plotdir = MakePlotDir("XSecPlots")
-dirname = untuned_filename.replace("_untuned_analyze9.root", "_XSec")
-
+if do_analyze:
+    plotdir = MakePlotDir("XSecPlots")
+    dirname = untuned_filename.replace("_untuned_analyze9.root", "_XSec")
+    tuned_f = TFile.Open(tuned_filename,"READONLY")
+    untuned_f = TFile.Open(untuned_filename,"READONLY")
+else:
+    plotdir = MakePlotDir("RecoPlots")
+    dirname = file_name.replace(".root", "_RecoPlots")
+    i_file = TFile.Open(file_name,"READONLY")
 # outfilename=filebasename1.replace(".root","_2DPlots")
 if dothesisplot:
     outdirname = plotdir
@@ -3573,44 +3602,72 @@ if domodelcomp and len(sys.argv) > 2:
 
 
 POTScale = 1.0
-# if ("potscaled_combined_" in filename):
-#     POTScale = 1.0
-# else:
-h_pot = untuned_f.Get("POT_summary")
-dataPOT = h_pot.GetBinContent(1)
-print("data pot:", dataPOT)
-# sys.exit(1)
-# mcPOTprescaled = h_pot.GetBinContent(2)
-print("POTScale: ", POTScale)
-
-
+if do_analyze:
+    h_pot = untuned_f.Get("POT_summary")
+    dataPOT = h_pot.GetBinContent(1)
+    print("data pot:", dataPOT)
+    # sys.exit(1)
+    # mcPOTprescaled = h_pot.GetBinContent(2)
+    print("POTScale: ", POTScale)
+else:
+    if ("potscaled_combined_" in file_name):
+        POTScale = 1.0
+    else:
+        h_pot = i_file.Get("POT_summary")
+        dataPOT = h_pot.GetBinContent(1)
 # Find all the valid histograms from the analyze_v9 files and group by keywords
 # First get the histograms that were inputs to analyze_v9
-print("Making dict of source hists...")
-print("\tLooking at untuned...")
+
 input_hists = {}
-input_hists = GetInputHistDict(untuned_f,input_hists)
-print("\tLooking at tuned...")
-input_hists = GetInputHistDict(tuned_f, input_hists)
-
-# Get the "type" histograms that are for the mcinttypes
-print("Making dict of source types hists...")
 input_typeshists = {}
-input_typeshists = GetInputTypesHistDict(untuned_f,input_typeshists)
-input_typeshists = GetInputTypesHistDict(tuned_f,input_typeshists)
-
-# Next get the histograms that were output by analyze_v9 (ie for each stage)
-print("Making dict of analyze hists...")
-print("\tLooking at untuned...")
 analyze_hists = {}
-analyze_hists = GetAnalyzeHistDict(untuned_f, False, analyze_hists)
-print("\tLooking at tuned...")
-analyze_hists = GetAnalyzeHistDict(tuned_f, True, analyze_hists)
-# And get their type histograms also (though really should only need them for the "truth" stage)
-print("Making dict of analyze types hists...")
 analyze_typeshists = {}
-analyze_typeshists = GetAnalyzeTypesHistDict(untuned_f, False, analyze_typeshists)
-analyze_typeshists = GetAnalyzeTypesHistDict(tuned_f, True, analyze_typeshists)
+
+if do_analyze:
+    print("Making dict of source hists...")
+    print("\tLooking at untuned...")
+    input_hists = GetInputHistDict(untuned_f,input_hists)
+    print("\tLooking at tuned...")
+    input_hists = GetInputHistDict(tuned_f, input_hists)
+    print("Making dict of source types hists...")
+    input_typeshists = GetInputTypesHistDict(untuned_f,input_typeshists)
+    input_typeshists = GetInputTypesHistDict(tuned_f,input_typeshists)
+
+    # Next get the histograms that were output by analyze_v9 (ie for each stage)
+    print("Making dict of analyze hists...")
+    print("\tLooking at untuned...")
+    analyze_hists = GetAnalyzeHistDict(untuned_f, False, analyze_hists)
+    print("\tLooking at tuned...")
+    analyze_hists = GetAnalyzeHistDict(tuned_f, True, analyze_hists)
+    # And get their type histograms also (though really should only need them for the "truth" stage)
+    print("Making dict of analyze types hists...")
+    analyze_typeshists = GetAnalyzeTypesHistDict(untuned_f, False, analyze_typeshists)
+    analyze_typeshists = GetAnalyzeTypesHistDict(tuned_f, True, analyze_typeshists)
+else: 
+    print("Making dict of source hists...")
+    GetInputHistDict(i_file,input_hists)
+    print("Making dict of source types hists...")
+    input_typeshists = GetInputTypesHistDict(i_file,input_typeshists)
+
+
+# # Get the "type" histograms that are for the mcinttypes
+# print("Making dict of source types hists...")
+# input_typeshists = {}
+# input_typeshists = GetInputTypesHistDict(untuned_f,input_typeshists)
+# input_typeshists = GetInputTypesHistDict(tuned_f,input_typeshists)
+
+# # Next get the histograms that were output by analyze_v9 (ie for each stage)
+# print("Making dict of analyze hists...")
+# print("\tLooking at untuned...")
+# analyze_hists = {}
+# analyze_hists = GetAnalyzeHistDict(untuned_f, False, analyze_hists)
+# print("\tLooking at tuned...")
+# analyze_hists = GetAnalyzeHistDict(tuned_f, True, analyze_hists)
+# # And get their type histograms also (though really should only need them for the "truth" stage)
+# print("Making dict of analyze types hists...")
+# analyze_typeshists = {}
+# analyze_typeshists = GetAnalyzeTypesHistDict(untuned_f, False, analyze_typeshists)
+# analyze_typeshists = GetAnalyzeTypesHistDict(tuned_f, True, analyze_typeshists)
 
 if docompdata:
     compraw_filename = sys.argv[2]
@@ -3647,59 +3704,34 @@ if docompdata:
 
 
 # Next get the variable configs set up. This is useful for building the histograms and making plot info
-keys = tuned_f.GetListOfKeys()
-if "varsFile" not in keys:
-    bigvarconfig_string = tuned_f.Get("varsFile_5A").GetTitle()
+# keys = tuned_f.GetListOfKeys()
+if do_analyze:
+    keys = tuned_f.GetListOfKeys()
+    if "varsFile" not in keys:
+        bigvarconfig_string = tuned_f.Get("varsFile_5A").GetTitle()
+    else:
+        bigvarconfig_string = tuned_f.Get("varsFile").GetTitle()
 else:
-    bigvarconfig_string = tuned_f.Get("varsFile").GetTitle()
+    keys = i_file.GetListOfKeys()
+    if "varsFile" not in keys:
+        bigvarconfig_string = i_file.Get("varsFile_5A").GetTitle()
+    else:
+        bigvarconfig_string = i_file.Get("varsFile").GetTitle()
+
 bigvarconfig_dict = json.loads(re.sub("//.*", "", bigvarconfig_string, flags = re.MULTILINE))
 
-for b_sample in analyze_hists["h"]:
-    for c_var in analyze_hists["h"][b_sample]:
-        var_title = c_var
-        var_units = "unit"
-        if c_var in vars_info:
-            var_title = vars_info[c_var]["title"]
-            var_units = vars_info[c_var]["units"]
-            if len(vars_info[c_var]["bins"]) == 0:
-                print("making bins")
-                varconfig = bigvarconfig_dict["1D"][c_var]
-                tmp_bins1D = []
-                if "bins" in varconfig.keys():
-                    tmp_bins1D = [float(tmpbin) for tmpbin in varconfig["bins"]]
-                    # vars_info[c_var]["bins"] = tmp_bins1D
-                elif "nbins" in varconfig.keys():
-                    mini = varconfig["min"]
-                    maxi = varconfig["max"]
-                    width = (maxi - mini)/varconfig["nbins"]
-                    tmp_bins1D = [mini + tmpbin * width for tmpbin in range(0,varconfig["nbins"]+1)]
-                    # print(bins1D)
-                bins1D = []
-                if c_var in rangeuser_dict:
-                    # print("I am here")
-                    for edge in tmp_bins1D:
-                        # print("\t",edge)
-                        # print("\t",rangeuser_dict[c_var][0])
-                        # print("\t",rangeuser_dict[c_var][1])
-                        if edge >= rangeuser_dict[c_var][0] and edge < rangeuser_dict[c_var][1]:
-                            bins1D.append(edge)
-                            continue
-                        if edge == rangeuser_dict[c_var][1]:
-                            bins1D.append(edge)
-                            break
-                        if edge > rangeuser_dict[c_var][1]:
-                            bins1D.append(rangeuser_dict[c_var][1])
-                            break
-                else:
-                    bins1D = tmp_bins1D
-                vars_info[c_var]["bins"] = bins1D
-                print(bins1D)
-    for c_var in analyze_hists["h2D"][b_sample]:
-        for tmpvar in c_var.split("_"):
-            if tmpvar in vars_info:
-                if len(vars_info[tmpvar]["bins"])==0:
+for a_hist in analyze_hists:
+    if a_hist != "h": continue 
+    for b_sample in analyze_hists["h"]:
+        for c_var in analyze_hists["h"][b_sample]:
+            var_title = c_var
+            var_units = "unit"
+            if c_var in vars_info:
+                var_title = vars_info[c_var]["title"]
+                var_units = vars_info[c_var]["units"]
+                if len(vars_info[c_var]["bins"]) == 0:
                     print("making bins")
-                    varconfig = bigvarconfig_dict["1D"][tmpvar]
+                    varconfig = bigvarconfig_dict["1D"][c_var]
                     tmp_bins1D = []
                     if "bins" in varconfig.keys():
                         tmp_bins1D = [float(tmpbin) for tmpbin in varconfig["bins"]]
@@ -3711,25 +3743,61 @@ for b_sample in analyze_hists["h"]:
                         tmp_bins1D = [mini + tmpbin * width for tmpbin in range(0,varconfig["nbins"]+1)]
                         # print(bins1D)
                     bins1D = []
-                    if tmpvar in rangeuser_dict:
+                    if c_var in rangeuser_dict:
                         # print("I am here")
                         for edge in tmp_bins1D:
                             # print("\t",edge)
                             # print("\t",rangeuser_dict[c_var][0])
                             # print("\t",rangeuser_dict[c_var][1])
-                            if edge >= rangeuser_dict[tmpvar][0] and edge < rangeuser_dict[tmpvar][1]:
+                            if edge >= rangeuser_dict[c_var][0] and edge < rangeuser_dict[c_var][1]:
                                 bins1D.append(edge)
                                 continue
-                            if edge == rangeuser_dict[tmpvar][1]:
+                            if edge == rangeuser_dict[c_var][1]:
                                 bins1D.append(edge)
                                 break
-                            if edge > rangeuser_dict[tmpvar][1]:
-                                bins1D.append(rangeuser_dict[tmpvar][1])
+                            if edge > rangeuser_dict[c_var][1]:
+                                bins1D.append(rangeuser_dict[c_var][1])
                                 break
                     else:
                         bins1D = tmp_bins1D
-                    vars_info[tmpvar]["bins"] = bins1D
+                    vars_info[c_var]["bins"] = bins1D
                     print(bins1D)
+        for c_var in analyze_hists["h2D"][b_sample]:
+            for tmpvar in c_var.split("_"):
+                if tmpvar in vars_info:
+                    if len(vars_info[tmpvar]["bins"])==0:
+                        print("making bins")
+                        varconfig = bigvarconfig_dict["1D"][tmpvar]
+                        tmp_bins1D = []
+                        if "bins" in varconfig.keys():
+                            tmp_bins1D = [float(tmpbin) for tmpbin in varconfig["bins"]]
+                            # vars_info[c_var]["bins"] = tmp_bins1D
+                        elif "nbins" in varconfig.keys():
+                            mini = varconfig["min"]
+                            maxi = varconfig["max"]
+                            width = (maxi - mini)/varconfig["nbins"]
+                            tmp_bins1D = [mini + tmpbin * width for tmpbin in range(0,varconfig["nbins"]+1)]
+                            # print(bins1D)
+                        bins1D = []
+                        if tmpvar in rangeuser_dict:
+                            # print("I am here")
+                            for edge in tmp_bins1D:
+                                # print("\t",edge)
+                                # print("\t",rangeuser_dict[c_var][0])
+                                # print("\t",rangeuser_dict[c_var][1])
+                                if edge >= rangeuser_dict[tmpvar][0] and edge < rangeuser_dict[tmpvar][1]:
+                                    bins1D.append(edge)
+                                    continue
+                                if edge == rangeuser_dict[tmpvar][1]:
+                                    bins1D.append(edge)
+                                    break
+                                if edge > rangeuser_dict[tmpvar][1]:
+                                    bins1D.append(rangeuser_dict[tmpvar][1])
+                                    break
+                        else:
+                            bins1D = tmp_bins1D
+                        vars_info[tmpvar]["bins"] = bins1D
+                        print(bins1D)
 
 # # Done with the analyze_v9 files, lets get the files for the model comparison. This has it's own method
 # pathtodir_modelcomp = sys.argv[2]
@@ -4279,7 +4347,7 @@ for a_hist in analyze_hists.keys():
                         tmp_compbkgsub_tuned = companalyze_hists[a_hist][b_sample][c_var]["bkgsub_tuned"].Clone()
                         DrawDataMCPlot2D_new(
                             tmp_bkgsub_tuned, 
-                            tmp_mcrec`osig_tuned, 
+                            tmp_mcrecosig_tuned, 
                             tmp_types_mcreco_tuned, 
                             xvar_name, xvar_units, xvar_bins, 
                             yvar_name, yvar_units, yvar_bins,

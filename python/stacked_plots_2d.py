@@ -2934,7 +2934,7 @@ for a_hist in groups.keys():
             if len(b_var.split("_")) == 2:
                 for var in b_var.split("_"):
                     if var not in vars_info:
-                        vars_info[var] = {"title": var, "units": unit, "bins":[]}
+                        vars_info[var] = {"title": var, "units": var_units, "bins":[]}
                         print("ERROR: variable not in varsinfo: %s"%(var))
                         continue
                 xvar_name = vars_info[b_var.split("_")[0]]["title"]
