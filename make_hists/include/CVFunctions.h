@@ -532,7 +532,7 @@ class CVFunctions {
         recointfunctions["IsAllTracksProtons"] = &CVUNIVERSE::GetIsAllTracksProtons;
         
         recointfunctions["IsPrimaryProton"] = &CVUNIVERSE::GetIsPrimaryProton;
-        recointfunctions["IsPrimaryProton1"] = &CVUNIVERSE::GetIsPrimaryProton1;
+        // recointfunctions["IsPrimaryProton1"] = &CVUNIVERSE::GetIsPrimaryProton1;
         recofunctions["PrimaryProtonScore"] = &CVUNIVERSE::GetPrimaryProtonScore;
         recofunctions["PrimaryProtonScore1"] = &CVUNIVERSE::GetPrimaryProtonScore1;
         recofunctions["PrimaryProtonScore2"] = &CVUNIVERSE::GetPrimaryProtonScore2;

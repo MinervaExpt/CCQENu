@@ -619,7 +619,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetProtonScore_9() const;
 
     virtual int GetPassProtonScoreCut(double score, double tree_Q2) const;
-    virtual int GetPassProtonScoreCut_1(double score, double tree_Q2) const;
+    // virtual int GetPassProtonScoreCut_1(double score, double tree_Q2) const;
     virtual int GetPassScoreCutProton_0() const;
     virtual int GetPassScoreCutProton_1() const;
     // virtual int GetPassScoreCutProton_1() const;
@@ -768,7 +768,7 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual int GetIsAllTracksProtons() const;  // special for Antinu, assumes you have multiplicity cuts
 
     virtual int GetIsPrimaryProton() const;
-    virtual int GetIsPrimaryProton1() const;
+    // virtual int GetIsPrimaryProton1() const;
     virtual int GetTruthHasSingleProton() const;
 
     virtual int GetPassAllProtonScoreCuts(std::vector<double> scores, double tree_Q2) const;
