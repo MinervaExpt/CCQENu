@@ -2,7 +2,7 @@
   "version": 15,
   "mcIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_MC.txt",
   "dataIn": "${CCQEMAT}/playlists/${DATALOC}/${MYPLAYLIST}_Data.txt",
-  "cutsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuCuts_v15_thesis.json",
+  "cutsFile": "${CCQEMAT}/nhv/config/thesis/AntiNuCuts_v15_thesis.json",
   "varsFile": "${CCQEMAT}/nhv/config/variables/Variables_v15_${MYSAMPLE}.json",
   "samplesFile": "${CCQEMAT}/nhv/config/thesis/AntiNuSamples_v15_thesis_recoonly.json",
   "paramsFile": "${CCQEMAT}/nhv/config/warpingstudies/AntiNuParams_v15_warping.json",
