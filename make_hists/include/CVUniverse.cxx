@@ -516,7 +516,11 @@ int CVUniverse::GetDeadTime() const { return GetInt("phys_n_dead_discr_pair_upst
 
 // ----------------------- Analysis-related Variables ------------------------
 
-int CVUniverse::GetIsMinosMatchTrack() const { return GetInt("muon_is_minos_match_track"); }
+int CVUniverse::GetIsMinosMatchTrack() const {
+    return GetInt("isMinosMatchTrack");
+    // return GetInt("muon_is_minos_match_track"); 
+}
+
 double CVUniverse::GetEnuHadGeV() const { return CVUniverse::GetEmuGeV() + CVUniverse::GetHadronEGeV(); }  // GetEnuGeV()?
 double CVUniverse::GetTrueEnuGeV() const { return GetDouble("mc_incomingE") * MeVGeV; }
 
@@ -692,29 +696,88 @@ double CVUniverse::GetProtonScore_7() const { return GetProtonScore(7); }
 double CVUniverse::GetProtonScore_8() const { return GetProtonScore(8); }
 double CVUniverse::GetProtonScore_9() const { return GetProtonScore(9); }
 
+// int CVUniverse::GetPassProtonScoreCut(double score, double tree_Q2) const {
+//     if (score < 0) return -1;
+//     // These values based off fit to proton scores of protons and pions, targetting bins with 50% each
+//     if (tree_Q2 < 0.025) {
+//         if (score > 0.3428) return 1;
+//         else return 0;
+//     }
+//     if (tree_Q2 > 0.8) {
+//         if (score > 0.1383) return 1;
+//         else return 0;
+//     } 
+//     double passingscore = -0.059*log(tree_Q2) + 0.1251;
+//     if (score > passingscore) return 1;
+//     return 0;
+//     // int index = 0;
+//     // for (int i = 0; i < m_proton_score_Q2QEs.size(); i++) {
+//     //     if (tree_Q2 >= m_proton_score_Q2QEs[i]) index++;
+//     // }
+//     // if (score < m_proton_score_mins[index])
+//     //     return 0;
+//     // else
+//     //     return 1;
+// }
+
 int CVUniverse::GetPassProtonScoreCut(double score, double tree_Q2) const {
+    // This one is designed to work with protonscore1
+    // This is prioritizing 80% purity of tracks as protons
+    // if (score < 0) return -1;
+    // if (tree_Q2 < 0.025) {
+    //     if (score > 0.28)
+    //         return 1;
+    //     else
+    //         return 0;
+    // }
+    // if (tree_Q2 > 0.4) {
+    //     if (score > 0.12)
+    //         return 1;
+    //     else
+    //         return 0;
+    // }
+    // double passingscore = -0.058 * log(tree_Q2) + 0.671;
+    // if (score > passingscore) return 1;
+    // return 0;
+
+    // // This one priortizes 80% efficiency to get proton tracks
+    // if (score < 0) return -1;
+    // if (tree_Q2 < 0.4) {
+    //     if (score > 0.18)
+    //         return 1;
+    //     else
+    //         return 0;
+    // }
+    // if (tree_Q2 > 1.6) {
+    //     if (score > 0.08)
+    //         return 1;
+    //     else
+    //         return 0;
+    // }
+    // double passingscore = -0.072 * log(tree_Q2) + 0.1172;
+    // if (score > passingscore) return 1;
+    // return 0;
+
+    // This is a hybrid approach, favoring low q2 acceptance esp
     if (score < 0) return -1;
-    // These values based off fit to proton scores of protons and pions, targetting bins with 50% each
-    if (tree_Q2 < 0.025) {
-        if (score > 0.3428) return 1;
-        else return 0;
+    if (tree_Q2 < 0.1) {
+        if (score > 0.18)
+            return 1;
+        else
+            return 0;
     }
-    if (tree_Q2 > 0.8) {
-        if (score > 0.1383) return 1;
-        else return 0;
-    } 
-    double passingscore = -0.059*log(tree_Q2) + 0.1251;
+    if (tree_Q2 > 1.6) {
+        if (score > 0.06)
+            return 1;
+        else
+            return 0;
+    }
+    double passingscore = -0.043 * log(tree_Q2) + 0.0843;
     if (score > passingscore) return 1;
     return 0;
-    // int index = 0;
-    // for (int i = 0; i < m_proton_score_Q2QEs.size(); i++) {
-    //     if (tree_Q2 >= m_proton_score_Q2QEs[i]) index++;
-    // }
-    // if (score < m_proton_score_mins[index])
-    //     return 0;
-    // else
-    //     return 1;
+    // return GetPassProtonScoreCut(GetProtonScore_1(), GetQ2QEGeV());
 }
+
 int CVUniverse::GetPassScoreCutProton_0() const { return GetPassProtonScoreCut(GetProtonScore_0(), GetQ2QEGeV()); }
 int CVUniverse::GetPassScoreCutProton_1() const { return GetPassProtonScoreCut(GetProtonScore_1(), GetQ2QEGeV()); }
 int CVUniverse::GetPassScoreCutProton_2() const { return GetPassProtonScoreCut(GetProtonScore_2(), GetQ2QEGeV()); }
@@ -777,15 +840,15 @@ int CVUniverse::GetIsAllTracksProtons() const {
     return sec_pass; // Since we got primaries checked to get here, just need to return value for secondaries here
 }
 
+// int CVUniverse::GetIsPrimaryProton() const {
+//     if (GetMultiplicity() < 2) return 1;  // NA when multiplicity is < 2
+//     // define and get applicable variables
+//     double tree_Q2 = GetQ2QEGeV();
+//     double proton_score = GetPrimaryProtonScore();
+//     int passes = GetPassProtonScoreCut(proton_score, tree_Q2);
+//     return passes;
+// }
 int CVUniverse::GetIsPrimaryProton() const {
-    if (GetMultiplicity() < 2) return 1;  // NA when multiplicity is < 2
-    // define and get applicable variables
-    double tree_Q2 = GetQ2QEGeV();
-    double proton_score = GetPrimaryProtonScore();
-    int passes = GetPassProtonScoreCut(proton_score, tree_Q2);
-    return passes;
-}
-int CVUniverse::GetIsPrimaryProton1() const {
     if (GetMultiplicity() < 2) return 1;  // NA when multiplicity is < 2
     // define and get applicable variables
     double tree_Q2 = GetQ2QEGeV();
@@ -3511,7 +3574,7 @@ int CVUniverse::GetNPionTracks() const {
     double tree_Q2 = GetQ2QEGeV();
 
     // First check primary proton candidates
-    double prim_proton_score = GetPrimaryProtonScore();
+    double prim_proton_score = GetPrimaryProtonScore1();
     int prim_is_proton = GetPassProtonScoreCut(prim_proton_score, tree_Q2);
     if (prim_is_proton == 0)
         n_pions += 1;  // if it fails, that's a pion, so add to count

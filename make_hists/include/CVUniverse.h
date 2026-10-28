@@ -619,8 +619,10 @@ class CVUniverse : public PlotUtils::MinervaUniverse {
     virtual double GetProtonScore_9() const;
 
     virtual int GetPassProtonScoreCut(double score, double tree_Q2) const;
+    virtual int GetPassProtonScoreCut_1(double score, double tree_Q2) const;
     virtual int GetPassScoreCutProton_0() const;
     virtual int GetPassScoreCutProton_1() const;
+    // virtual int GetPassScoreCutProton_1() const;
     virtual int GetPassScoreCutProton_2() const;
     virtual int GetPassScoreCutProton_3() const;
     virtual int GetPassScoreCutProton_4() const;
