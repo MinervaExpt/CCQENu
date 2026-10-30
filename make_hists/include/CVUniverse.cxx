@@ -2199,21 +2199,38 @@ int CVUniverse::GetTruthIsCCQELikeAllNeutron() const {  // cut hardwired for now
     // int mc_current = GetInt("mc_current");
     bool passes = (CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, 1000000.));
     if (!passes) return false;
-    // Check if proton is highest KE
-    double proton_maxKE = -9999.0;
-    double neutron_maxKE = -9999.0;
-    for (int i = 0; i < mc_FSPartPDG.size(); i++) {
+    double sum_Tp = 0.0;
+    double sum_Tn = 0.0;
+    for (int i = 0 ; i < mc_FSPartPDG.size(); i++) {
         int pdg = mc_FSPartPDG[i];
-        if (pdg != 2212 || pdg != 2112) continue;
-        if (pdg == 2212) {  // proton
-            if (mc_FSPartE[i] - 938.27 > proton_maxKE) proton_maxKE = mc_FSPartE[i] - 938.27;
+        if (pdg == 2212) {
+            sum_Tp += mc_FSPartE[i] - 938.27;
         }
-        if (pdg == 2112) {  // neutron
-            if (mc_FSPartE[i] - 939.56 > neutron_maxKE) neutron_maxKE = mc_FSPartE[i] - 939.56;
+        if (pdg == 2112) {
+            sum_Tn += mc_FSPartE[i] - 939.56;
         }
     }
-    if (proton_maxKE <= neutron_maxKE) return true;
-    return false;
+    return sum_Tn > sum_Tp;
+    // Check if proton is highest KE
+    // double proton_maxKE = -9999.0;
+    // double neutron_maxKE = -9999.0;
+    // for (int i = 0; i < mc_FSPartPDG.size(); i++) {
+    //     int pdg = mc_FSPartPDG[i];
+    //     if (pdg == 2212) {  // proton
+    //         if (mc_FSPartE[i] - 938.27 > 120.0) return false;
+    //     }
+    // }
+    // return true;
+    //     if (pdg != 2212 || pdg != 2112) continue;
+    //     if (pdg == 2212) {  // proton
+    //         if (mc_FSPartE[i] - 938.27 > proton_maxKE) proton_maxKE = mc_FSPartE[i] - 938.27;
+    //     }
+    //     if (pdg == 2112) {  // neutron
+    //         if (mc_FSPartE[i] - 939.56 > neutron_maxKE) neutron_maxKE = mc_FSPartE[i] - 939.56;
+    //     }
+    // }
+    // if (proton_maxKE <= neutron_maxKE) return true;
+    // return false;
 }
 
 // all ccqelike where proton is highest energy nucleon
@@ -2226,21 +2243,38 @@ int CVUniverse::GetTruthIsCCQELikeAllProton() const {  // cut hardwired for now
     // int mc_current = GetInt("mc_current");
     bool passes = (CVUniverse::passTrueCCQELike(neutrinoMode, mc_FSPartPDG, mc_FSPartE, mc_nFSPart, 1000000.));
     if (!passes) return false;
-    // Check if proton is highest KE
-    double proton_maxKE = -9999.0;
-    double neutron_maxKE = -9999.0;
+    double sum_Tp = 0.0;
+    double sum_Tn = 0.0;
     for (int i = 0; i < mc_FSPartPDG.size(); i++) {
         int pdg = mc_FSPartPDG[i];
-        if (pdg != 2212 || pdg != 2112) continue;
-        if (pdg == 2212) {  // proton
-            if (mc_FSPartE[i] - 938.27 > proton_maxKE) proton_maxKE = mc_FSPartE[i] - 938.27;
+        if (pdg == 2212) {
+            sum_Tp += mc_FSPartE[i] - 938.27;
         }
-        if (pdg == 2112) {  // neutron
-            if (mc_FSPartE[i] - 939.56 > neutron_maxKE) neutron_maxKE = mc_FSPartE[i] - 939.56;
+        if (pdg == 2112) {
+            sum_Tn += mc_FSPartE[i] - 939.56;
         }
     }
-    if (proton_maxKE > neutron_maxKE) return true;
-    return false;
+    return sum_Tp >= sum_Tn;
+    // Check if proton is highest KE
+    // double proton_maxKE = -9999.0;
+    // double neutron_maxKE = -9999.0;
+    // for (int i = 0; i < mc_FSPartPDG.size(); i++) {
+    //     int pdg = mc_FSPartPDG[i];
+    //     if (pdg == 2212) { // proton
+    //         if (mc_FSPartE[i] - 938.27 > 120.0) return true;
+    //     }
+    // }
+    // return false;
+    //     if (pdg != 2212 || pdg != 2112) continue;
+    //     if (pdg == 2212) {  // proton
+    //         if (mc_FSPartE[i] - 938.27 > proton_maxKE) proton_maxKE = mc_FSPartE[i] - 938.27;
+    //     }
+    //     if (pdg == 2112) {  // neutron
+    //         if (mc_FSPartE[i] - 939.56 > neutron_maxKE) neutron_maxKE = mc_FSPartE[i] - 939.56;
+    //     }
+    // }
+    // if (proton_maxKE > neutron_maxKE) return true;
+    // return false;
 }
 
 int CVUniverse::GetTruthIsQELike() const {
