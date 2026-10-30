@@ -14,41 +14,41 @@ export MYWARP=none
 export MYMODEL=MnvTunev2.0.1
 export DATALOC=remote_p8
 
-# export MYSAMPLE=QElike
-# python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/bkgfitting/${MYMODEL}/fit_Jun2026_fit${MYMODEL}/${MYSAMPLE} \
-#  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
-#  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
-#  --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
+export MYSAMPLE=QElike
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/October2026/bkgfitting/${MYMODEL}/fit_Oct2026_${MYMODEL}/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
 
 export MYSAMPLE=QElike1track
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/bkgfitting/${MYMODEL}/fit_Jun2026_fit${MYMODEL}/${MYSAMPLE} \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/October2026/bkgfitting/${MYMODEL}/fit_Oct2026_${MYMODEL}/${MYSAMPLE} \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
 
 export MYSAMPLE=QElike2track
-python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/bkgfitting/${MYMODEL}/fit_Jun2026_fit${MYMODEL}/${MYSAMPLE} \
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/October2026/bkgfitting/${MYMODEL}/fit_Oct2026_${MYMODEL}/${MYSAMPLE} \
  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
  --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
 
-# export MYSAMPLE=BlobSideband
-# python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/bkgfitting/${MYMODEL}/fit_Jun2026_fit${MYMODEL}/${MYSAMPLE} \
-#  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
-#  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
-#  --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
+export MYSAMPLE=BlobSideband
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/October2026/bkgfitting/${MYMODEL}/fit_Oct2026_${MYMODEL}/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
 
-# export MYSAMPLE=TrackSideband
-# python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/bkgfitting/${MYMODEL}/fit_Jun2026_fit${MYMODEL}/${MYSAMPLE} \
-#  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
-#  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
-#  --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
+export MYSAMPLE=TrackSideband
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/October2026/bkgfitting/${MYMODEL}/fit_Oct2026_${MYMODEL}/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
 
-# export MYSAMPLE=MultipBlobSideband
-# python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/June2026/bkgfitting/${MYMODEL}/fit_Jun2026_fit${MYMODEL}/${MYSAMPLE} \
-#  --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
-#  --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
-#  --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
+export MYSAMPLE=MultipBlobSideband
+python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=$SCRATCH/eventloopout/October2026/bkgfitting/${MYMODEL}/fit_Oct2026_${MYMODEL}/${MYSAMPLE} \
+ --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist=minervame5A --model=${MYMODEL} --warp=${MYWARP} --tag=bkgfitting_${MYMODEL}_${MYSAMPLE} \
+ --mail --prescale=1 --config=nhv/config/warpingstudies/AntiNu_v15_warping_grid_bkgsub --exe=sidebands_v2 --setup=CCQENu/utilities/setup_batch_mat9_p8.sh \
+ --tmpdir=$SCRATCH/tmp --expected-lifetime=24h --memory=4000 --sample=${MYSAMPLE} #--debug --notimestamp
 
 # export MYWARP=none
 # export MYMODEL=MnvTunev2
