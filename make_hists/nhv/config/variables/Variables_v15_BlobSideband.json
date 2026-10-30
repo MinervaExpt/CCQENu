@@ -1390,7 +1390,7 @@
       "true": "TrueEAvailGeV",
       "name": "recoil",
       "title": "Recoil in GeV",
-      "nbins": 40,
+      "nbins": 80,
       "min": 0.0,
       "max": 1.0,
       // "bins": [
