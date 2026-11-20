@@ -1,7 +1,7 @@
 # build jobs
 
 import os, sys
-
+SCRATCH = os.getenv("SCRATCH")
 DEBUG=True
 PRESCALE = os.getenv("PRESCALE")
 RUNJSON = os.getenv("RUNJSON")
@@ -37,7 +37,7 @@ for playlist in FHCplaylists:
             f.write(f"export TRACKS={tracks}\n")
             f.write(f"export VERSION={VERSION}\n")
             
-            command = f"python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir=${SCRATCH}/P{VERSION}/{MYPLAYLIST} \
+            command = f"python $WHEREIPUTMYCODE/CCQENu/utilities/SubmitJobsToGrid_MAT.py --stage=CCQEMAT --outdir={SCRATCH}/P{VERSION}/{MYPLAYLIST} \
     --basedir=$WHEREIPUTMYCODE --rundir=CCQENu/make_hists --playlist={MYPLAYLIST} --model=MnvTunev2 --tag=P{VERSION}-{MYPLAYLIST}-{MYSAMPLE} \
     --prescale={PRESCALE} --config=NuStudy/{RUNJSON} --exe=sidebands_v3 --sample={MYSAMPLE} --setup=CCQENu/utilities/setup_batch_al9_proto.sh \
     --tmpdir=/exp/minerva/data/users/$USER/tmp --expected-lifetime=36h --memory=2000 \n"
