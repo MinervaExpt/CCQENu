@@ -305,6 +305,8 @@ class CrossSectionExtractor:
                     
                     theflux_hist = GetFluxFlat(self.allconfigs, sigma_hist)
 
+                    theflux_hist.Print("ALL")
+
                     theflux_hist.AddMissingErrorBandsAndFillWithCV(sigma_hist)
                     addentry(self.hists1D, sample, "flat_flux", variable, output_stage, theflux_hist)
 
@@ -330,6 +332,9 @@ class CrossSectionExtractor:
 
                     # target/POT normalizationxzx
                     untuned_sigmaMC_hist.Scale(normMC)
+                    if PLOTS:
+                        self.plotter.PlotCVAndError(self.plotter.canvas1D, theflux_hist,theflux_hist,sample+": Flat flux "+self.grabber.model,True,False,binwid=False)
+            
                 else:
                     print(" Using energy dependent flux normalization. " )
                     print ("check",self.allconfigs["main"])
@@ -360,6 +365,9 @@ class CrossSectionExtractor:
                     sigma_hist.Print()
 
                     h_flux_ebins.AddMissingErrorBandsAndFillWithCV(sigmaMC_hist)
+                    if PLOTS:
+                        self.plotter.PlotCVAndError(self.plotter.canvas1D, h_flux_ebins,h_flux_ebins,sample+": Binned flux "+self.grabber.model,True,False,binwid=False)
+                               
                     sigmaMC_hist.AddMissingErrorBandsAndFillWithCV(h_flux_ebins)
                     sigmaMC_hist.Divide(sigmaMC_hist, h_flux_ebins, 1.0, 1.0)
                     # target normalization
@@ -379,7 +387,7 @@ class CrossSectionExtractor:
 
                 if PLOTS:
                     self.plotter.PlotCVAndError(self.plotter.canvas1D, sigma_hist,sigmaMC_hist,sample+": Cross Section with Tuned "+self.grabber.model,True,logscale,binwid=True)
-
+                                        
 
 
                 addentry(self.hists1D, sample, data_cat, variable, output_stage, sigma_hist)
@@ -446,6 +454,11 @@ class DataGrabber:
         count = 0
         self.reference_sample = ""
         for sample in self.samples:
+            self.data_source[sample] = os.path.expandvars(self.data_source[sample])
+
+            if not os.path.exists(self.data_source[sample]):
+                print ("Could not find file ",self.data_source[sample])
+                sys.exit(1)
             self.data_files[sample] = TFile.Open(self.data_source[sample],'READ')
             h_pot = TH1D()
             h_pot = self.data_files[sample].Get("POT_summary")
@@ -731,6 +744,10 @@ if __name__ == "__main__":
     configfile = open(configfilename,'r')
     config = commentjson.load(configfile)
     configfile.close()
+    outname = configfilename
+    if "OutName" in config:
+        outname = os.path.expandvars(config["OutName"])
+    print ("output will go to ", outname) 
 
     # set up the plotter after tagging with number of iterations
     if "Iterations" in config:
@@ -739,7 +756,7 @@ if __name__ == "__main__":
     else:
         iterations = 4
         
-    pdffilename1D= configfilename.replace("json","pdf")
+    pdffilename1D= outname.replace(".json",".pdf").replace(".root",".pdf")
     plotter = PDFPlotter(config,pdffilename1D)
     
     # set up and grab the data
@@ -776,6 +793,6 @@ if __name__ == "__main__":
 
     # write to root file and csv directory
     
-    grabber.write(configfilename.replace(".json",".root"))
-    grabber.store(os.path.join("csv",configfilename.replace(".json","")))
+    grabber.write(outname.replace(".json",".root"))
+    grabber.store(os.path.join("csv",outname.replace(".json","").replace(".root","")))
     grabber.delete()
