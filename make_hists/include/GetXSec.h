@@ -268,20 +268,38 @@ MnvH1D* DoResponseUnfolding<MnvH1D>(std::string basename, MnvH2D* iresponse, Mnv
     // MnvH1D* empty = (MnvH1D*)bkgsub->Clone((std::string(bkgsub->GetName())+"_empty").c_str());
     // empty->Reset();
     //  make an empty covariance matrix for the unfolding to give back to you
+    int n = unsmeared->GetXaxis()->GetNbins();
     TMatrixD covmatrix;
+    covmatrix.ResizeTo(n,n);
 
     // try doing with variable size matrices.
     bool data_unfolded = unfold.UnfoldHisto(unsmeared, covmatrix, migration, bkgsub, RooUnfold::kBayes, num_iter, true, true);
     // bool MnvUnfold::UnfoldHistoWithFakes(PlotUtils::MnvH1D* &h_unfold, TMatrixD &covmx, const PlotUtils::MnvH2D* const h_migration, const PlotUtils::MnvH1D* const h_data, const PlotUtils::MnvH1D* const  h_model_reco, const PlotUtils::MnvH1D* const h_model_truth, const PlotUtils::MnvH1D* const h_model_background, double regparam,bool addSystematics,bool useSysVariatedMigrations) const
     // this defaults to Bayesian
     // bool data_unfolded = unfold.UnfoldHistoWithFakes(unsmeared,covmatrix,migration,bkgsub,imcsighist,iseltruhist,empty,4.,true, true);
-    if (DEBUG) bkgsub->Print("ALL");
+    
+    std::cout << " after call to unfolding  in GetXSec" << std::endl;
+    covmatrix.Print();
 
-    for (int i = 0; i < covmatrix.GetNrows(); i++) {
-        covmatrix[i][i] = 0.0;
+    std::cout << " Try to get unfolding matrix from the MnvH1D" << std::endl;
+
+    
+    // covMatrixInternal.Print();
+
+    // if (DEBUG) bkgsub->Print("ALL");
+
+    // for (int i = 0; i < covmatrix.GetNrows(); i++) {
+    //     covmatrix[i][i] = 0.0;
+    // }
+
+    // unsmeared->FillSysErrorMatrix("Unfolding", covmatrix);
+
+    std::vector<std::string> matrices=unsmeared->GetCovMatricesNames();
+    for (int i=0; i < matrices.size(); i++ ){
+        std::cout << "error matrix name " <<  matrices[i] << std::endl;
     }
-
-    unsmeared->FillSysErrorMatrix("Unfolding", covmatrix);
+    TMatrixD covMatrixInternal=unsmeared->GetSysErrorMatrix("unfoldingCov");
+    covMatrixInternal.Print();
 
     // Commenting out since may not be necessary.
     SyncBands(unsmeared);

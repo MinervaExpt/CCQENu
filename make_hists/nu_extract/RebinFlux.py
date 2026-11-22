@@ -119,6 +119,8 @@ def GetFlux(configmap):
   m_nue_constraint = configmap["main"]["NuEConstraint"]
   pdg = configmap["main"]["pdg"]
 
+  print ("TRACE: GetFlux for playlist " , playlist , " with " , m_fluxUniverses , " universes and nue constraint " , m_nue_constraint , " for pdg " , pdg )
+
   #++++++++++++++++++=  Initialization +++++++++++++++++++++++++
 
   # Get the flux hist, clean it up a bit, remove binwidth correction that should not be there and return
@@ -138,8 +140,8 @@ def GetFlux(configmap):
 #  fluxplaylist["minervame1K"] = FluxReweighter.minervame1K
   fluxplaylist["minervame1L"] = FluxReweighter.minervame1L
   fluxplaylist["minervame1M"] = FluxReweighter.minervame1M
-  fluxplaylist["minervame1N"] = FluxReweighter.minervame1N
-  fluxplaylist["minervame1O"] = FluxReweighter.minervame1N
+  fluxplaylist["minervame1N"] = FluxReweighter.minervame1M
+  fluxplaylist["minervame1O"] = FluxReweighter.minervame1M
   fluxplaylist["minervame5A"] = FluxReweighter.minervame5A
   fluxplaylist["minervame6A"] = FluxReweighter.minervame6A
   fluxplaylist["minervame6B"] = FluxReweighter.minervame6A
@@ -156,7 +158,9 @@ def GetFlux(configmap):
     print(" playlist " , playlist , " not yet implemented in RebinFlux.h " )
     sys.exit(0)
   
-
+  if ("1" in playlist):
+     print ("hack in correct pdg for 1A-1N fluxes, which are all nu_mu. ")
+     pdg = 14
   
   frw = FluxReweighter(pdg,m_nue_constraint,fluxplaylist[playlist],FluxReweighter.gen2thin, FluxReweighter.g4numiv6,m_fluxUniverses)
 
@@ -177,6 +181,7 @@ def GetFlux(configmap):
   #h_flux_dewidthed.Print("ALL")
   h_flux_dewidthed.SetName("flux_dewidthed")
   h_flux_dewidthed.Scale(1/10000.) # convert from m^2 to cm^2
+  print ("The integral of the flux histogram is " , h_flux_dewidthed.Integral() , " cm^-2" )
   return h_flux_dewidthed
   
 
@@ -378,6 +383,9 @@ def GetFluxFlat(configs, h):
       print(" playlist " , playlist , " not yet implemented in RebinFlux.h " )
       sys.exit(0)
     
+    if ("1" in playlist):
+       print ("hack in correct pdg for 1A-1N fluxes, which are all nu_mu.  This is a hack to get around the fact that the flux reweighter doesn't have a nu_mu option for these fluxes.  It should be fixed in the future.")
+       pdg = 14
 
     #frw = FluxReweighter()
     frw = FluxReweighter(pdg,m_nue_constraint,fluxplaylist[playlist],FluxReweighter.gen2thin, FluxReweighter.g4numiv6,m_fluxUniverses)

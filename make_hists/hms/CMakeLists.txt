@@ -121,6 +121,7 @@ target_link_libraries(${PROJECT_NAME} ${ROOT_LIBRARIES} MathCore -L$ENV{PLOTUTIL
 
 #add_executable(runsamples runsamples.C)
 add_executable(sidebands_v2 sidebands_v2.C)
+add_executable(sidebands_v3 sidebands_v3.C)
 
 #add_executable(analyze_v8 analyze_v8.C)
 add_executable(analyze_v9 analyze_v9.C)
@@ -139,6 +140,7 @@ add_executable(ccqemadd ../utils/ccqemadd.cxx)
 
 #target_link_libraries(runsamples  PRIVATE ${PROJEC_NAME} )
 target_link_libraries(sidebands_v2  PRIVATE ${PROJECT_NAME} )
+target_link_libraries(sidebands_v3  PRIVATE ${PROJECT_NAME} )
 
 #target_link_libraries(analyze_v8  PRIVATE ${PROJECT_NAME} )
 target_link_libraries(analyze_v9  PRIVATE ${PROJECT_NAME} )

@@ -3,12 +3,21 @@ from ROOT import TFile, TH1D, TH2D
 from PlotUtils import MnvH1D, MnvH2D
 
 DEBUG=False
+version = os.getenv("VERSION")
 samples = ["QElike","BlobSideband","MichelSideBand","MicBlobSideBand"]
 playlists = ["1A","1B","1C","1D","1E","1F","1G","1L","1M","1N","1O","1P"]
 list = '_'.join(playlists)
-template = "1B_MnvTunev2_QElike_1Track_Nu_p8_run_1.root"
+version = int(version)
+template = f"1B_MnvTunev2_QElike_1Track_Nu_p{version}_run_1.root"
+if version == 9:
+  template = f"v3_P9_1B_MnvTunev2_QElike_1Track_Nu_p9_run_1.root" #f"v3_P{version}_1B_MnvTunev2_QElike_1Track_Nu_p{version}_run_1.root"
+
 if len(sys.argv) > 1: 
   template = sys.argv[1]
+
+if not os.path.exists(template):
+  print ("template file ", template, " does not exist")
+  sys.exit(1)
 prescale = "1000"
 #ofile = TFile.Open(list+".root",'RECREATE')
 potdata ={}
@@ -22,8 +31,11 @@ tracks = ["1Track","2Track"]
 for play in playlists:
   for track in tracks:
     #for sample in samples:
-      thefilename = template.replace("1B",play).replace("1Track",track)#.replace("QElike",sample)
-      if not os.path.exists(thefilename): continue
+      thefilename = template.replace("1B",play).replace("1Track",track) #.replace("QElike",sample)
+      print ("thefilename = ", thefilename)
+      if not os.path.exists(thefilename): 
+        print ("file ", thefilename, " does not exist, quitting")
+        sys.exit(1)
       filepath  = os.path.dirname(thefilename)
       if not os.path.exists("scaled"):
         os.mkdir("scaled")
@@ -36,9 +48,10 @@ for play in playlists:
       for sample in samples:
         count += 1
         filename = thefilename.replace("QElike",sample)
-        print ("filename = ", filename)
+        #print ("filename = ", filename)
         if not os.path.exists(filename): 
-          sys.exit(0)
+          print ("file ", filename, " does not exist, quitting")
+          sys.exit(1)
         
         #newfilename = os.path.join(filepath,"scaled_"+os.path.basename(filename))
         #print ("newfilename",newfilename)

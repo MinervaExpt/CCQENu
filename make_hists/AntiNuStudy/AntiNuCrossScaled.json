@@ -1,8 +1,9 @@
 {
     "tag": "October 8, 2026 - this works on scaled input",
     "InputFiles": {
-        "QElike": "${FITTED}_scaled.root"
+        "QElike": "${FITVAR}_Fit_${FITVAR}_scaled_P${VERSION}_${THEPLAYLIST}_${MYMODEL}_QElike_${RUNJSON}_1_scaled.root"
     },
+    "OutName":"rescaled_${THEPLAYLIST}_${MYMODEL}_${FITVAR}_${RUNJSON}.root",
     "Target": "Nucleons",
     "ZeroBinFixer": 0,
     "POTScale": 0,

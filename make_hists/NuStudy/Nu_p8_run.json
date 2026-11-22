@@ -12,12 +12,12 @@
   "closure":0, // set to 1 if you want to do closure test, otherwise 0
   "scalefileIn":"${CCQEMAT}/data/FullSample_${MYMODEL}_Q2QErecoil.root", // location of anti-nu background tuning
   "TuneCategories":["qelike","qelikenot"], // categories that have tunes
-  "pdg":-14, // I'm anti-neutrino
+  "pdg":14, // I'm neutrino
   "cutsFile":"${CCQEMAT}/NuStudy/NuCuts_v18_${TRACKS}Track.json", // describe the cuts, choose them in samples
   "varsFile":"${CCQEMAT}/NuStudy/Variables_v16.json", // describe the variables, choose them below
   "samplesFile":"${CCQEMAT}/NuStudy/NuSamples_${TRACKS}Track_v18.json",  // describe the samples, cuts are chosen here
   "runsamples":["${MYSAMPLE}"], // chose which samples to run can provide a list or chose 1 using the batch
-  "outRoot":"${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // prefix for output files
+  "outRoot":"P8_${MYPLAYLIST}_${MYMODEL}_${MYSAMPLE}", // prefix for output files
   "AnalyzeVariables":["pzmu","ptmu","Q2QE","EnuCCQE"], // choose the 1D variables
   "Analyze2DVariables":[], // choose 2D variables, 1D variables must be chosen
   "signal":{"QElike":"qelike","Background":"qelike","QElikeNP":"qelike_np","QElikeALLAngles":"qelike_np"}, // used in analysis to define signal/background, key is the sample, value is what category is signal_tag

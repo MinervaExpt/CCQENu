@@ -48,10 +48,13 @@ def makeLocalCopy(locationlist=None,cache="cache",debug=False):
             cp_args = ["xrdcp",location,cache]
             print ("cp command", cp_args)
             try:
-                completed_process = run(cp_args, capture_output=True,text=True)   
+                completed_process = run(cp_args, capture_output=True, text=True)
+                print("Error code:", completed_process.returncode)
+                print("Error:", completed_process.stderr)
+                print("Output:", completed_process.stdout)
                 if debug: print (completed_process)       
             except Exception as e:
-                print ("WARNING: error doing local copy",e,location)
+                print ("WARNING: error doing copy",e,location)
                 continue
             local.append(os.path.join(cache,os.path.basename(location)))
     retcode = len(locationlist)-len(local)
@@ -63,8 +66,19 @@ def cleanup(local,debug=False):
         os.remove(file)
 
 if __name__ == "__main__":
-    locations = "/Users/schellma/Dropbox/ccqe/p8/nu/1B.txt"
-    locationlist = open(locations,'r').readlines()
-    print (locationlist)
 
-    makeLocalCopy(locationlist=locationlist,cache="/Users/schellma/Dropbox/ccqe/p8/nu/",debug=True)
+    
+    locations = "/Users/schellma/Dropbox/ccqe/p8/nu/1B.txt"
+    if len(sys.argv) > 1:
+        locations = sys.argv[1]
+    else:
+        print ("arguments are playlist.txt and location you want files to go")
+    locationlist = open(locations,'r').readlines()
+    print ("you have asked to move",len(locationlist),"files")
+    cache = "/Users/schellma/tmp/"
+    if len(sys.argv) > 2 :
+        cache = sys.argv[2]
+    else:
+        cache = os.getenv("PWD")
+
+    makeLocalCopy(locationlist=locationlist,cache=cache,debug=False)

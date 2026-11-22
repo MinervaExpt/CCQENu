@@ -1,12 +1,12 @@
 # pipeline for cross section extraction
 
-export MYPLAYLIST=1O
-export PRESCALE=1
-export DATALOC=local
-export MYMODEL=MnvTunev2
-export RUNJSON=Nu_p8_run
-export MAINSAMPLE=All
-export FITVAR="ptmu"
+# export MYPLAYLIST=1O
+# export PRESCALE=1
+# export DATALOC=local
+# export MYMODEL=MnvTunev2
+# export RUNJSON=Nu_p8_run
+# export MAINSAMPLE=All
+# export FITVAR="ptmu"
 export TRACKS=$1
 
 # these happen using batch

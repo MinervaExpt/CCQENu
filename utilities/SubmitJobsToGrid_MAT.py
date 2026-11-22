@@ -301,6 +301,7 @@ cmd += " --auth-methods=token "  # added 2025-05 to use tokens
 cmd += " -c has_avx2==True" # added 2025-05 to avoid old hardware
 cmd += " --role=Analysis "
 cmd += " --environment TRACKS "
+cmd += " --environment VERSION "
 #cmd += " --disk=10GB " # comment out for test
 cmd += " --expected-lifetime " + opts.lifetime
 cmd += " --memory "+str(memory)+"MB "
