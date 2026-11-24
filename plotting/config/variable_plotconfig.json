@@ -1,0 +1,87 @@
+{
+    "Comments": [
+        "Making a config for plots that can be used broadly"
+    ],
+    "vars": {
+        "EAvail": {
+            "shortname": "EAvail",
+            "shorttitle": "E_{Avail}^",
+            "longtitle": "Available Energy",
+            "units": "GeV",
+            "logx": false,
+            "logy": true
+        },
+        "ptmu": {
+            "shortname": "ptmu",
+            "shorttitle": "p_{T}^",
+            "longtitle": "Muon Transverse Momentum",
+            "units": "GeV/#it{c}",
+            "logx": false,
+            "logy": false
+        },
+        "pzmu": {
+            "shortname": "pzmu",
+            "shorttitle": "p_{||}^",
+            "longtitle": "Muon Parallel Momentum",
+            "units": "GeV/#it{c}",
+            "logx": false,
+            "logy": false
+        },
+        "Q2QE": {
+            "shortname": "Q2QE",
+            "shorttitle": "Q^2_{QE}^",
+            "longtitle": "Four-momentum Transferred Squared",
+            "units": "GeV^{2}",
+            "logx": true,
+            "logy": false
+        },
+        "recoil": {
+            "shortname": "recoil",
+            "shorttitle": "recoil",
+            "longtitle": "Recoil Energy",
+            "units": "GeV",
+            "logx": false,
+            "logy": false
+        },
+        "FitQ2QE": {
+            "shortname": "FitQ2QE",
+            "shorttitle": "Q^2_{QE}^",
+            "longtitle": "Four-momentum Transferred Squared",
+            "units": "GeV^{2}",
+            "logx": true,
+            "logy": false
+        },
+        "Fitrecoil": {
+            "shortname": "Fitrecoil",
+            "shorttitle": "recoil",
+            "longtitle": "Recoil Energy",
+            "units": "GeV",
+            "logx": false,
+            "logy": false
+        },
+        "recoil100mm": {
+            "shortname": "recoil",
+            "shorttitle": "recoil_{100mm}",
+            "longtitle": "Recoil Energy 100mm from vertex",
+            "units": "GeV",
+            "logx": false,
+            "logy": false
+        },
+        "PrimaryProtonScore1": {
+            "shortname": "PrimaryProtonScore1",
+            "shorttitle": "Proton Score 1",
+            "longtitle": "Proton Score 1",
+            "units": "",
+            "logx": false,
+            "logy": false
+        },
+        "PrimaryProtonScore": {
+            "shortname": "PrimaryProtonScore",
+            "shorttitle": "Proton Score",
+            "longtitle": "Proton Score",
+            "units": "",
+            "logx": false,
+            "logy": false
+        }
+    }
+}

@@ -1,0 +1,72 @@
+{
+    "Comments": [
+        "Making a config for plots that can be used broadly"
+    ],
+    "inputfiles": [
+        {
+            "file": "/Users/nova/git/output/thesis/bkgfitting/normalsamples/potscaled_combined_FullSample_BkgSub_Oct2026_NewProtonScoreCut_minervameCombined_MnvTunev2.0.1_BlobSideband_AntiNu_v15_warping_grid_bkgsub_1.root",
+            "model": "MnvTunev2.0.1",
+            "istuned": false
+        }//,
+        // {
+        //     "file": "/Users/nova/git/output/thesis/bkgfitting/normalsamples/potscaled_combined_FullSample_BkgSub_Oct2026_NewProtonScoreCut_minervameCombined_MnvTunev2.0.1_TrackSideband_AntiNu_v15_warping_grid_bkgsub_1.root",
+        //     "model": "MnvTunev2.0.1",
+        //     "istuned": false
+        // },
+        // {
+        //     "file": "/Users/nova/git/output/thesis/bkgfitting/normalsamples/potscaled_combined_FullSample_BkgSub_Oct2026_NewProtonScoreCut_minervameCombined_MnvTunev2.0.1_QElike_AntiNu_v15_warping_grid_bkgsub_1.root",
+        //     "model": "MnvTunev2.0.1",
+        //     "istuned": false
+        // }
+    ],
+    "modelcompfilelist": [],
+    //     {"file": "path", "model": "G18_10a"}
+    // ],
+    "datacompfilelist": [],
+    //     {"file": "path", "model": "MnvTunev4.3.1", "istuned": true}
+    // ],
+    "mccatconfigFile": "${CCQEMAT}/../plotting/config/mccat_plotconfig.json",
+    "stageconfigFile": "${CCQEMAT}/../plotting/config/stage_plotconfig.json",
+    "variableconfigFile": "${CCQEMAT}/../plotting/config/variable_plotconfig.json",
+    "modelcompconfigFile": "${CCQEMAT}/../plotting/config/modelcomp_plotconfig.json",
+    "plotstyleconfigFile": "${CCQEMAT}/../plotting/config/plotstyle_plotconfig.json",
+    "particlecatconfigFile": "${CCQEMAT}/../plotting/config/particlecat_plotconfig.json",
+    "errorsummconfigFile": "${CCQEMAT}/../plotting/config/errorsumm_plotconfig.json",
+    "basemodel": "MnvTunev2.0.1",
+    "modelcomptodo": [],
+    "datacomptodo": [],
+    "varstodo": [],
+    "catgroupstodo": [
+        "normal",
+        "multipi"
+    ],
+    "typecatgroupstodo": [
+        "sigbkg"//,
+        // "multipi",
+        // "normal"
+    ],
+    "typestacks": [
+        "stack"//,
+        // "unstack"
+    ],
+    "catstacks": [
+        "stack"
+    ],
+    "ratiostacks": [
+        "unstack"//,
+        // "doublestack"
+    ],
+    "errorsumm": [
+        "qelikemat"
+    ],
+    "stagestodo": [
+        "reconstructed"//,
+        // "bkgsub",
+        // "unfolded",
+        // "unfoldediter",
+        // "effcorr",
+        // "sigma",
+        // "migration"
+    ],
+    "ratioref": "mctot"
+}

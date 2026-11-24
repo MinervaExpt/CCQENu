@@ -1,0 +1,89 @@
+{
+    "Comments": [
+        "Making a config for plots that can be used broadly"
+    ],
+    "groups": {
+        "protonscore": [
+            "proton",
+            "pipm",
+            "other"
+        ],
+
+        "blobs": [
+            "proton",
+            "neutron",
+            "muon",
+            "pipm",
+            "pizero",
+            "notop",
+            "other"
+        ]
+    },
+    "combinecats": {
+        "protonscore": {
+            "other": [
+                "other",
+                "neutron", // are we sure about this?
+                "notop",
+                "electron",
+                "gamma",
+                "muon" // are we sure about this one?
+            ],
+            "pipm": [
+                "piplus",
+                "piminus"
+            ]
+        },
+        "blobs": {
+            "other": [
+                "other",
+                "electron",
+                "gamma"
+            ],
+            "pipm": [
+                "piplus",
+                "piminus"
+            ]
+        }
+    },
+    "binpidnames": {
+        "1": "neutron",
+        "2": "proton",
+        "3": "pizero",
+        "4": "piplus",
+        "5": "piminus",
+        // "4": "pipm",
+        // "5": "pipm",
+        "6": "gamma",
+        "7": "electron",
+        "8": "muon",
+        "9": "notop",
+        "10": "other"
+    },
+    "particlenames": {
+        "neutron": "#it{n}",
+        "proton": "#it{p}",
+        "pizero": "#it{#pi^{0}}",
+        "piplus": "#it{#pi^{+}}",
+        "piminus": "#it{#pi^{-}}",
+        "pipm": "#it{#pi^{#pm}}",
+        "gamma": "#it{#gamma}",
+        "electron": "#it{e^{#pm}}",
+        "muon": "#it{#mu^{#pm}}",
+        "notop": "Non-GENIE",
+        "other": "Other"
+    },
+    "particlecolors": {
+        "neutron": 117,
+        "proton": 118,
+        "pizero": 124,
+        "piplus": 123, //117, in proton score
+        "piminus": 123, //117,
+        "pipm": 123, //117,
+        "gamma": 121,
+        "electron": 126,
+        "muon": 119,
+        "notop": 122,
+        "other": 120
+    }
+}

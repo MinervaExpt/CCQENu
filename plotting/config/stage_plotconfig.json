@@ -1,0 +1,249 @@
+{
+    "Comments": [
+        "These stages are for different eventloop and analyze stages",
+        "stages contains what goes into each stage, the cats are general terms and will need to be interpretted and config'd elsewhere.",
+        "mcstages and datastages tells you what mc and data might have."
+    ],
+    "stages": {
+        "reconstructed": {
+            "title": "Reconstructed",
+            "cats": [
+                "signal",
+                "background"
+            ],
+            "data": "reconstructed",
+            "mc": "reconstructed",
+            "is1D": true,
+            "is2D": true
+        },
+        "bkgsub": {
+            "title": "Background Subtracted",
+            "cats": [
+                "signal"
+            ],
+            "data": "bkgsub",
+            "mc": "reconstructed",
+            "is1D": true,
+            "is2D": true
+        },
+        "unfoldediter": {
+            "title": "Unfolded Iteration",
+            "cats": [
+                "signal"
+            ],
+            "data": "unfoldediter",
+            "mc": "selected_truth",
+            "is1D": true,
+            "is2D": true
+        },
+        "unfolded": {
+            "title": "Unfolded",
+            "cats": [
+                "signal"
+            ],
+            "data": "unfolded",
+            "mc": "selected_truth",
+            "is1D": true,
+            "is2D": true
+        },
+        "effcorr": {
+            "title": "Efficiency Corrected",
+            "cats": [
+                "signal"
+            ],
+            "data": "effcorr",
+            "mc": "all_truth",
+            "is1D": true,
+            "is2D": true
+        },
+        "sigma": {
+            "title": "Cross section",
+            "cats": [
+                "signal"
+            ],
+            "data": "sigma",
+            "mc": "sigmaMC",
+            "is1D": true,
+            "is2D": true
+        },
+        "efficiency": {
+            "title": "Efficiency",
+            "cats": [
+                "signal"
+            ],
+            "data": "",
+            "mc": "efficiency",
+            "is1D": true,
+            "is2D": true
+        },
+        "bkgfraction": {
+            "title": "Simulated Background Fraction",
+            "cats": [
+                "signal"
+            ],
+            "data": "",
+            "mc": "bkgfraction",
+            "is1D": true,
+            "is2D": true
+        },
+        "signalfraction": {
+            "title": "Simulated Signal Fraction",
+            "cats": [
+                "signal"
+            ],
+            "data": "",
+            "mc": "signalfraction",
+            "is1D": true,
+            "is2D": true
+        },
+        "migration": {
+            "title": "Simulated Signal Fraction",
+            "cats": [
+                "signal"
+            ],
+            "data": "",
+            "mc": "migration",
+            "is1D": false,
+            "is2D": true
+        }
+    },
+    "mcstages": {
+        "reconstructed": "reconstructed",
+        "bkgsub": "reconstructed",
+        "unfolded": "selected_truth",
+        "unfoldediter": "selected_truth",
+        "effcorr": "all_truth",
+        "sigma": "sigmaMC",
+        "efficiency": "efficiency",
+        "bkgfraction": "bkgfraction",
+        "signalfraction": "signalfraction",
+        "migration": "migration"
+    },
+    "datastages": {
+        "reconstructed": "reconstructed",
+        "bkgsub": "bkgsub",
+        "unfolded": "unfolded",
+        "unfoldediter": "unfoldediter",
+        "effcorr": "effcorr",
+        "sigma": "sigma"
+    },
+    "stagetunecombo": {
+        "reconstructed": [
+            {
+                "data": "tuned",
+                "mc": "untuned"
+            },
+            {
+                "data": "untuned",
+                "mc": "tuned"
+            },
+            {
+                "data": "untuned",
+                "mc": "untuned"
+            }
+        ],
+        "bkgsub": [
+            {
+                "data": "tuned",
+                "mc": "tuned"
+            },
+            {
+                "data": "tuned",
+                "mc": "untuned"
+            },
+            {
+                "data": "untuned",
+                "mc": "untuned"
+            }
+        ],
+        "unfolded": [
+            {
+                "data": "tuned",
+                "mc": "tuned"
+            },
+            {
+                "data": "tuned",
+                "mc": "untuned"
+            },
+            {
+                "data": "untuned",
+                "mc": "untuned"
+            }
+        ],
+        "unfoldediter": [
+            {
+                "data": "tuned",
+                "mc": "tuned"
+            },
+            {
+                "data": "tuned",
+                "mc": "untuned"
+            },
+            {
+                "data": "untuned",
+                "mc": "untuned"
+            }
+        ],
+        "effcorr":[
+            {
+                "data": "tuned",
+                "mc": "tuned"
+            },
+            {
+                "data": "tuned",
+                "mc": "untuned"
+            },
+            {
+                "data": "untuned",
+                "mc": "untuned"
+            }
+        ],
+        "sigma": [
+            {
+                "data": "tuned",
+                "mc": "tuned"
+            },
+            {
+                "data": "tuned",
+                "mc": "untuned"
+            },
+            {
+                "data": "untuned",
+                "mc": "untuned"
+            }
+        ],
+        "efficiency": [
+            {
+                "mc": "tuned"
+            },
+            {
+                "mc": "untuned"
+            }
+        ],
+        "bkgfraction": [
+            {
+                "mc": "tuned"
+            },
+            {
+                "mc": "untuned"
+            }
+        ],
+        "signalfraction": [
+            {
+                "mc": "tuned"
+            },
+            {
+                "mc": "untuned"
+            }
+        ],
+        "migration": [
+            {
+                "mc": "tuned"
+            },
+            {
+                "mc": "untuned"
+            }
+        ]
+    }
+
+}

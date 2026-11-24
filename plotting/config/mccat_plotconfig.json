@@ -1,0 +1,143 @@
+{
+    "Comments": [
+        "Making a config for plots that can be used broadly"
+    ],
+    "groups": {
+        "sigbkg": [
+            "qelike",
+            "qelikenot"
+        ],
+        "normal": [
+            "qelike",
+            "chargedpion",
+            "neutralpion",
+            "other"
+        ],
+        "splitsig": [
+            "qelike_proton",
+            "qelike_neutron",
+            "chargedpion",
+            "neutralpion",
+            "other"
+        ],
+        "multipi": [
+            "qelike",
+            "chargedpion",
+            "neutralpion",
+            "multipion",
+            "other_np"
+        ],
+        "splitsig_multipi": [
+            "qelike_proton",
+            "qelike_neutron",
+            "chargedpion",
+            "neutralpion",
+            "multipion",
+            "other_np"
+        ]
+    },
+    "signalcats": [
+        "qelike",
+        "qelike_neutron",
+        "qelike_proton"
+    ],
+    "backgroundcats": [
+        "chargedpion",
+        "neutralpion",
+        "other",
+        "multipion",
+        "other_np"
+    ],
+    "catnames": {
+        "qelike": "QElike",
+        "qelike_proton": "QElike Proton",
+        "qelike_neutron": "QElike Neutron",
+        "neutralpion": "1#pi^{0}",
+        "chargedpion": "1#pi^{#pm}",
+        "other": "Other",
+        "multipion": "N#pi",
+        "other_np": "Other"
+    },
+    "catscolors": {
+        "data": 1,
+        "qelike": 117,
+        "qelikenot": 119,
+        "qelike_proton": 128,
+        "qelike_neutron": 129,
+        "chargedpion": 118,
+        "neutralpion": 123,
+        "multipion": 121,
+        "other": 125,
+        "other_np": 125,
+        "mctot": 111
+    },
+    "typesnames": {
+        "1": "QE",
+        "2": "RES",
+        "3": "DIS",
+        "4": "COH",
+        "8": "2p2h"
+    },
+    "typescolors": {
+        "1": 109,
+        "2": 110,
+        "3": 112,
+        "4": 113,
+        "8": 130
+    },
+    "typesorder": [
+        "1",
+        "8",
+        "2",
+        "3",
+        "4"
+    ],
+    "samplenames": {
+        "QElike": "Signal Sample",
+        "TrackSideband": "Track Sideband",
+        "BlobSideband": "Blob Sideband",
+        "MultipBlobSideband": "Multi-pion Sideband",
+        "QElike_1track": "Signal Sample, one track",
+        "QElike_2track": "Signal Sample, two track"
+    },
+    "particlenames": {
+        "neutron": "#it{n}",
+        "proton": "#it{p}",
+        "pizero": "#it{#pi^{0}}",
+        "piplus": "#it{#pi^{+}}",
+        "piminus": "#it{#pi^{-}}",
+        "pipm": "#it{#pi^{#pm}}",
+        "gamma": "#it{#gamma}",
+        "electron": "#it{e^{#pm}}",
+        "muon": "#it{#mu^{#pm}}",
+        "notop": "Non-GENIE",
+        "other": "Other"
+    },
+    "binpidname": {
+        "1": "neutron",
+        "2": "proton",
+        "3": "pizero",
+        // "4": "piplus",
+        // "5": "piminus",
+        "4": "pipm",
+        "5": "pipm",
+        "6": "gamma",
+        "7": "electron",
+        "8": "muon",
+        "9": "notop",
+        "10": "other"
+    },
+    "particlecolors": {
+        "neutron": 117,
+        "proton": 118,
+        "pizero": 124,
+        "piplus": 123, //117,
+        "piminus": 123, //117,
+        "pipm": 123, //117,
+        "gamma": 121,
+        "electron": 126,
+        "muon": 119,
+        "notop": 122,
+        "other": 120
+    }
+}

@@ -1,0 +1,155 @@
+{
+    "Comments": [
+        "Making a config for plots that can be used broadly"
+    ],
+    "canvas": {
+        "1D": {
+            "xsize": 3200,
+            "ysize": 2800,
+            "leftmarg": 0.1,
+            "rightmarg": 0.1,
+            "topmarg": 0.1,
+            "botmarg": 0.1
+        },
+        "2D":{
+            "xsize": 3200,
+            "ysize": 2800,
+            "leftmarg": 0.1,
+            "rightmarg": 0.1,
+            "topmarg": 0.1,
+            "botmarg": 0.1
+        }
+    },
+    "1D": {
+        "linewidth": 2,
+        "datamarkersize": 3.0,
+        "enderrorsize": 12.0
+    },
+    "2D": {
+        "linewidth": 1,
+        "datamarkersize": 2.0,
+        "enderrorsize": 12.0
+    },
+    
+    "datacomp": {
+        "color": 112, 
+        "markeralpha": 0.8,
+        "linealpha": 0.8
+    },
+    "modelcomp": {
+        "G18_02a": {
+            "color": 109,
+            "linestyle": 2
+        },
+        "G18_02b": {
+            "color": 109,
+            "linestyle": 2
+        },
+        "G18_10a": {
+            "color": 109,
+            "linestyle": 2
+        },
+        "G18_10b": {
+            "color": 109,
+            "linestyle": 3
+        },
+        "NEUT_tune_LFG": {
+            "color": 110,
+            "linestyle": 3
+        },
+        "NEUT_tune_SF": {
+            "color": 110,
+            "linestyle": 3
+        },
+        "NuWro_CH_LFG": {
+            "color": 112,
+            "linestyle": 3
+        },
+        "NuWro_CH_SF": {
+            "color": 112,
+            "linestyle": 3
+        },
+        "MnvTunev1": {
+            "color": 111,
+            "linestyle": 1
+        },
+        "MnvTunev4.3.1": {
+            "color": 111,
+            "linestyle": 1
+        }
+    },
+    "catscolors": {
+        "data": 1,
+        "qelike": 117,
+        "qelikenot": 119,
+        "qelike_proton": 128,
+        "qelike_neutron": 129,
+        "chargedpion": 118,
+        "neutralpion": 123,
+        "multipion": 121,
+        "other": 125,
+        "other_np": 125,
+        "mctot": 111
+    },
+    "catnames": {
+        "qelike": "QElike",
+        "qelike_proton": "QElike Proton",
+        "qelike_neutron": "QElike Neutron",
+        "neutralpion": "1#pi^{0}",
+        "chargedpion": "1#pi^{#pm}",
+        "other": "Other",
+        "multipion": "N#pi",
+        "other_np": "Other"
+    },
+    "typescolors": {
+        "1": 109,
+        "2": 110,
+        "3": 112,
+        "4": 113,
+        "8": 130
+    },
+    "typesnames": {
+        "1": "QE",
+        "2": "RES",
+        "3": "DIS",
+        "4": "COH",
+        "8": "2p2h"
+    },
+    "samplenames": {
+        "QElike": "Signal Sample",
+        "TrackSideband": "Track Sideband",
+        "BlobSideband": "Blob Sideband",
+        "MultipBlobSideband": "Multi-pion Sideband",
+        "QElike_1track": "Signal Sample, one track",
+        "QElike_2track": "Signal Sample, two track"
+    },
+    "bandalpha": 0.3,
+    "particlecolors": {
+        "protonscore": {
+            "neutron": 117,
+            "proton": 118,
+            "pizero": 124,
+            "piplus": 117,
+            "piminus": 117,
+            "pipm": 117,
+            "gamma": 121,
+            "electron": 126,
+            "muon": 119,
+            "notop": 122,
+            "other": 120
+        },
+        "blobs": {
+            "neutron": 117,
+            "proton": 118,
+            "pizero": 124,
+            "piplus": 123, 
+            "piminus": 123,
+            "pipm": 123,
+            "gamma": 121,
+            "electron": 126,
+            "muon": 119,
+            "notop": 122,
+            "other": 120
+        }
+    }
+}

@@ -1,0 +1,107 @@
+{
+    "Comments": [
+        "Making a config for plots that can be used broadly"
+    ],
+    "mcmodels": {
+        "G18_02a": {
+            "base": "GENIEv3",
+            "name": "GENIE v3.0.6 G18_02a_02_11a",
+            "shortname": "GENIEv3 G18_02a",
+            "shortshortname": "02a",
+            "color": "kP8Blue",
+            "linecolor":"kP8Blue",
+            "linestyle": 2
+        },
+        "G18_02b": {
+            "base": "GENIEv3",
+            "name": "GENIE v3.0.6 G18_02b_02_11a",
+            "shortname": "GENIEv3 G18_02b",
+            "shortshortname": "02b",
+            "color": "kP8Blue",
+            "linecolor": "kP8Blue",
+            "linestyle": 3
+        },
+        "G18_10a": {
+            "base": "GENIEv3",
+            "name": "GENIE v3.0.6 G18_10a_02_11a",
+            "shortname": "GENIEv3 G18_10a",
+            "shortshortname": "10a",
+            "color": "kP8Blue",
+            "linecolor": "kP8Blue",
+            "linestyle": 5
+        },
+        "G18_10b": {
+            "base": "GENIEv3",
+            "name": "GENIE v3.0.6 G18_10b_02_11a",
+            "shortname": "GENIEv3 G18_10b",
+            "shortshortname": "10b",
+            "fillcolor": "kP8Blue",
+            "linecolor": "kP8Blue",
+            "linestyle": 2
+        },
+        "NEUT_tune_LFG": {
+            "base": "NEUT",
+            "name": "NEUT v5.4.1 LFG",
+            "shortname": "NEUT LFG",
+            "fillcolor": "kP8Orange",
+            "linecolor": "kP8Orange",
+            "linestyle": 8
+        },
+        "NEUT_tune_SF": {
+            "base": "NEUT",
+            "name": "NEUT v5.4.1 SF",
+            "shortname": "NEUT SF",
+            "fillcolor": "kP8Orange",
+            "linecolor": "kP8Orange",
+            "linestyle": 3
+        },
+        "NuWro_CH_LFG": {
+            "base": "NuWro",
+            "name": "NuWro v21.09 LFG",
+            "shortname": "NuWro LFG",
+            "fillcolor": "kP8Pink",
+            "linecolor": "kP8Pink",
+            "linestyle": 2
+        },
+        "NuWro_CH_SF": {
+            "base": "NuWro",
+            "name": "NuWro v21.09 SF",
+            "shortname": "NuWro SF",
+            "fillcolor": "kP8Pink",
+            "linecolor": "kP8Pink",
+            "linestyle": 3
+        },
+        "MnvTunev4.3.1": {
+            "base": "MnvTune",
+            "name": "MINERvA Tune v4.3.1",
+            "shortname": "MnvTune v4.3.1",
+            "fillcolor": "kP8Red",
+            "linecolor": "kP8Red",
+            "linestyle": 1
+        },
+        "MnvTunev2.0.1": {
+            "base": "MnvTune",
+            "name": "MINERvA Tune v2.0.1",
+            "shortname": "MnvTune v2.0.1",
+            "fillcolor": "kP8Red",
+            "linecolor": "kP8Red",
+            "linestyle": 1
+        },
+        "MnvTunev4.3.1_multipion": {
+            "base": "MnvTune",
+            "name": "MINERvA Tune v4.3.1 w/ multi-pion fit",
+            "shortname": "MnvTune v4.3.1 N#pi",
+            "fillcolor": "kP8Red",
+            "linecolor": "kP8Red",
+            "linestyle": 1
+        },
+        "MnvTunev2.0.1_multipion": {
+            "base": "MnvTune",
+            "name": "MINERvA Tune v2.0.1 w/ multi-pion fit",
+            "shortname": "MnvTune v2.0.1 N#pi",
+            "fillcolor": "kP8Red",
+            "linecolor": "kP8Red",
+            "linestyle": 1
+        }
+    }
+}
